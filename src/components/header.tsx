@@ -1,3 +1,4 @@
+import { SoonBadge } from "@/components/soon-badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -30,9 +31,12 @@ export function Header() {
           <Link href="/blog" className="text-sm text-gray-300 hover:text-white">
             Blog
           </Link>
-          {/* <Link href="#" className="text-sm text-gray-300  hover:text-white">
-                      Documentation <Badge className="">Soon</Badge>
-                    </Link> */}
+          <Link href="#" className="text-sm text-gray-300  hover:text-white">
+            Documentation <SoonBadge />
+          </Link>
+          <Link href="#" className="text-sm text-gray-300  hover:text-white">
+            Pricing <SoonBadge />
+          </Link>
         </nav>
         <Popover>
           <PopoverTrigger asChild>

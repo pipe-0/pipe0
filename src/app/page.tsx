@@ -310,17 +310,18 @@ const enriched = await pipeRunner.resolveSync();
               Customer Relationship System
             </h3>
             <p className="text-gray-400">
-              Build flexible enrichment pipelines that can be configured by your
-              users. Create rich UI experiences that provide real time feedback
-              during enrichments.
+              Effective data enrichment is a requirement for CRMs. New
+              enrichment tools have shifted the user&apos;s perception on
+              what&apos;s possible. Create customizable features based on
+              cutting-edge enrichment flows.
             </p>
           </Card>
           <Card className="bg-white/5 border-white/10 p-6">
             <h3 className="text-xl font-semibold mb-4">Sales Copilot</h3>
             <p className="text-gray-400">
-              Finding lead info before your next email or call, real-time lead
-              intelligence during calls? We power various use-cases for sales
-              copilots.
+              Finding up-to-date information on leads before and during sales
+              calls is critical for sales copilots. Real-time intelligence
+              requires context. We power various use-cases for sales copilots.
             </p>
           </Card>
           <Card className="bg-white/5 border-white/10 p-6">
@@ -338,9 +339,9 @@ const enriched = await pipeRunner.resolveSync();
               Customer Outreach System
             </h3>
             <p className="text-gray-400">
-              The next generation of outreach tools needs be hyper personalized.
-              AI systems and humans alike require deeply enriched data for
-              successful campaigns.
+              The next generation of outreach tools needs to be hyper
+              personalized. AI systems and humans alike require deeply enriched
+              data for successful campaigns.
             </p>
           </Card>
           <Card className="bg-white/5 border-white/10 p-6">
@@ -357,8 +358,10 @@ const enriched = await pipeRunner.resolveSync();
           <Card className="bg-white/5 border-white/10 p-6">
             <h3 className="text-xl font-semibold mb-4">Marketing Audiences</h3>
             <p className="text-gray-400">
-              Are you a cutting edge marketer that wants to build marketing
-              audiences from an email list?
+              Is your marketing pushing the boundaries of what&apos;s
+              technologically possible? Deduplicate emails effectively and link
+              them to social media platforms and marketing audiences with
+              precision.
             </p>
           </Card>
           <div className="flex justify-end pt-4 col-span-full">
