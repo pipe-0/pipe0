@@ -1,4 +1,5 @@
 import { SoonBadge } from "@/components/soon-badge";
+import { constants } from "@/lib/const";
 import Link from "next/link";
 
 export function Footer() {
@@ -85,7 +86,8 @@ export function Footer() {
         </div>
         <div className="mt-12 pt-8 border-t border-white/10">
           <p className="text-sm text-gray-400">
-            © {new Date().getFullYear()} Pipe0. All rights reserved.
+            © {new Date().getFullYear()} {constants.productName}. All rights
+            reserved.
           </p>
         </div>
       </div>

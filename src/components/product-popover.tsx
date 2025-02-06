@@ -5,6 +5,7 @@ import {
 } from "@/components/ui/popover";
 import Link from "next/link";
 import { ChevronDown } from "lucide-react";
+import { constants } from "@/lib/const";
 
 export function ProductPopover() {
   return (
@@ -18,7 +19,7 @@ export function ProductPopover() {
           <div className="grid gap-2">
             <h4 className="font-medium leading-none">Features</h4>
             <p className="text-sm text-gray-400">
-              Explore what Pipe0 can do for you
+              Explore what {constants.productName} can do for you
             </p>
           </div>
           <div className="grid gap-2">

@@ -252,7 +252,7 @@ const enriched = await pipeRunner.resolveSync();
                         Analyse last LinkedIn posts with AI model
                       </div>
                       <p className="text-xs text-white/70 mt-2">
-                        Set boolean to custom field if user posted about Pipe0
+                        Set boolean to custom field if user posted about pipe0
                       </p>
                     </div>
                   </div>
@@ -351,8 +351,8 @@ const enriched = await pipeRunner.resolveSync();
             <p className="text-gray-400">
               Is your tool automating activities performed by human SDRs like
               building lead lists, doing outreach, scheduling follow ups and
-              demos? Benefit from custom lead enrichment for all these use
-              cases.
+              demos? Benefit from custom lead enrichment for all these
+              use-cases.
             </p>
           </Card>
           <Card className="bg-white/5 border-white/10 p-6">

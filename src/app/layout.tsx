@@ -15,9 +15,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Pipe0: A new standard for lead and comapny enrichment",
+  title: "pipe0: A new standard for lead and comapny enrichment",
   description:
-    "Combine 50+ data providers to create custom enrichment pipelines like email lookup waterfalls, social media lookups, company info, and custom AI logic. Seamlessly integrate Clay-like enrichments into your application with full visibility on cost, usage, and data quality. Powered by a data model designed for scale.",
+    "Combine 50+ data providers to into custom pipelines for lead and company data enrichment. Add business email waterfalls, social media info, company details, and AI logic to your application. Create Clay-like functionality in hours. Powered by a data model designed for scale, quality, and cost control.",
 };
 
 export default function RootLayout({
