@@ -1,26 +1,53 @@
 ---
-title: "Getting Started with Next.js"
+title: "Introducing pipe0"
 date: "2024-02-05"
 category: "Web Development"
 image: "/media/blog/1-sun-rising.png"
+excerpt: "Lorem ipsum"
+authors:
+    - name: Florian
+      title: Founder
 ---
 
-# Getting Started with Next.js
+# Introducing pipe0: The Next Generation of Sales Intelligence
 
-Next.js is a popular React framework that makes it easy to build fast, modern web applications. In this post, we'll cover the basics of getting started with Next.js.
+pipe0 is a universal lead and company enrichment API that combines 50+ data providers into customizable 
+enrichment pipelines, powered by AI. Whether you need email lookups, social media intelligence, or company 
+information, pipe0 delivers enriched data at scale.
 
-## Why Next.js?
+## Key Features
 
-Next.js offers several benefits over traditional React applications:
+Our platform enables you to:
+- Build custom enrichment waterfalls using 50+ integrated data providers
+- Access comprehensive lead data including business emails, LinkedIn profiles, and social activity
+- Deploy AI-powered analysis of social posts and company information
+- Scale from single records to thousands with consistent performance
+- Integrate enrichments seamlessly with a unified API
 
-1. **Server-Side Rendering (SSR)**: Improves initial load time and SEO.
-2. **Static Site Generation (SSG)**: Creates static HTML pages for even faster loading.
-3. **File-based Routing**: Simplifies the creation of new pages and routes.
-4. **API Routes**: Allows you to create serverless API endpoints easily.
+## Simple Integration
 
-## Setting Up a Next.js Project
+```javascript
+const pipe = new Pipe({ apiKey: "..." }) 
+  .addResolver(new BusinessEmailResolver())
+  .addResolver(new CompanyDescriptionResolver())
 
-To create a new Next.js project, you can use the following command:
+const pipeRunner = new PipeRunner({pipe}).addData([{name: "John Doe"}]);
+const enriched = await pipeRunner.resolveSync();
+```
 
-```bash
-npx create-next-app@latest my-next-app
+## Built for Tool Makers
+
+pipe0 powers enrichment across various platforms:
+- Customer Relationship Systems with configurable enrichment pipelines
+- Sales Copilots providing real-time lead intelligence
+- Applicant Tracking Systems with candidate social insights
+- Customer Outreach Systems for personalized engagement
+- SDR Automation tools for lead list building
+- Marketing Audience construction from email lists
+
+## Comprehensive Data Sources
+
+Access leading platforms including Google Maps, Salesforce, HubSpot, GitHub, GitLab, and Typeform through a 
+single subscription. Build waterfall enrichments to ensure optimal data quality without additional provider charges.
+
+Join us in shaping the future of data enrichment.

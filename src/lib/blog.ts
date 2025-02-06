@@ -4,16 +4,26 @@ import matter from "gray-matter";
 import { compileMDX } from "next-mdx-remote/rsc";
 import type React from "react"; // Import React
 import { mdxComponents } from "@/mdx-components";
+import remarkGfm from "remark-gfm";
+import rehypeHighlight from "rehype-highlight";
+import "highlight.js/styles/github-dark.css";
 
 const postsDirectory = path.join(process.cwd(), "content/blog");
+
+type Author = {
+  name: string;
+  title: string;
+};
 
 export type Post = {
   slug: string;
   title: string;
   date: string;
   category: string;
-  image?: string;
   content: React.ReactNode;
+  authors: Author[];
+  excerpt?: string;
+  image?: string;
 };
 
 export async function getAllPosts(): Promise<Omit<Post, "content">[]> {
@@ -35,6 +45,7 @@ export async function getAllPosts(): Promise<Omit<Post, "content">[]> {
           date: data.date,
           category: data.category,
           image: data.image,
+          authors: data.authors,
         };
       })
   );
@@ -54,6 +65,10 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
       source: content,
       options: {
         parseFrontmatter: true,
+        mdxOptions: {
+          remarkPlugins: [remarkGfm],
+          rehypePlugins: [[rehypeHighlight, { detect: true }]], // Configure plugin
+        },
       },
       components: mdxComponents,
     });
@@ -65,6 +80,7 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
       category: data.category,
       image: data.image,
       content: mdxContent,
+      authors: data.authors,
     };
   } catch (error) {
     console.error(error);

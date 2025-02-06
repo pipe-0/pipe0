@@ -1,13 +1,50 @@
-import Link from "next/link";
+import { getAllPosts, getPostBySlug } from "@/lib/blog";
 import { ChevronRight } from "lucide-react";
-import { getPostBySlug, getAllPosts } from "@/lib/blog";
-import { Button } from "@/components/ui/button";
+import { Metadata } from "next";
+import Link from "next/link";
 
 export async function generateStaticParams() {
   const posts = await getAllPosts();
   return posts.map((post) => ({
     slug: post.slug,
   }));
+}
+
+// Generate metadata for each blog post
+export async function generateMetadata({
+  params,
+}: {
+  params: { slug: string };
+}): Promise<Metadata> {
+  const post = await getPostBySlug(params.slug);
+
+  if (!post) {
+    return {};
+  }
+
+  return {
+    title: post.title,
+    description: post.excerpt, // Use excerpt or first 160 characters of content
+    openGraph: {
+      title: post.title,
+      description: post.excerpt,
+      type: "article",
+      publishedTime: post.date,
+      authors: post.authors.map((a) => a.name), // Replace with actual author or default
+      images: [
+        {
+          url: post.image || "media/blog/0-default-blog-image.jpg", // Replace with actual image or default
+          alt: post.title,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description: post.excerpt,
+      images: [post.image || "/default-blog-image.jpg"], // Replace with actual image or default
+    },
+  };
 }
 
 export default async function BlogPost({
@@ -39,14 +76,6 @@ export default async function BlogPost({
               day: "numeric",
               year: "numeric",
             })}
-          </div>
-          <div className="flex gap-2">
-            <Button variant="outline" size="sm">
-              Share on Twitter
-            </Button>
-            <Button variant="outline" size="sm">
-              Share on LinkedIn
-            </Button>
           </div>
         </div>
 
