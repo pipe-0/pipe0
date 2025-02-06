@@ -378,10 +378,10 @@ const enriched = await pipeRunner.resolveSync();
               <HighlightSection>Integrations</HighlightSection>
             </h1>
             <p className="text-lg text-gray-400">
-              Access <b>50+ data providers</b>. Aggregate similar providers into
+              Access <b>50+ data providers</b>. Aggregate providers into
               pipelines or waterfall enrichments. Achieve higher data quality
-              with one single subscription. Use external providers without an
-              additional charge from us.
+              with a single subscription. Use external providers without
+              additional charge from us or bring your own API key.
             </p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 border-y">
