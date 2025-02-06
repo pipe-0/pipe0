@@ -1,1 +1,3 @@
-export const PRODUCT_NAME = "pipe0";
+export const constants = {
+  productName: "pipe0",
+};

@@ -3,6 +3,7 @@ import path from "path";
 import matter from "gray-matter";
 import { compileMDX } from "next-mdx-remote/rsc";
 import type React from "react"; // Import React
+import { mdxComponents } from "@/mdx-components";
 
 const postsDirectory = path.join(process.cwd(), "content/blog");
 
@@ -51,7 +52,10 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
     const { content, data } = matter(source);
     const { content: mdxContent } = await compileMDX({
       source: content,
-      options: { parseFrontmatter: true },
+      options: {
+        parseFrontmatter: true,
+      },
+      components: mdxComponents,
     });
 
     return {

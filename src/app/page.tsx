@@ -1,13 +1,13 @@
 import LandingPageTable from "@/app/data-model-table";
 import EmailForm from "@/app/email-form";
 import CodeBlock from "@/components/code-block";
+import { Footer } from "@/components/footer";
+import { Header } from "@/components/header";
 import { SoonBadge } from "@/components/soon-badge";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ArrowDown, ArrowRight, Computer, Linkedin, Mail } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
 import { PropsWithChildren, ReactNode } from "react";
 
 function HighlightSection({ children }: PropsWithChildren) {
@@ -85,7 +85,7 @@ const integrations: Integration[] = [
   },
   {
     name: "Github",
-    text: "Github usernames and activity",
+    text: "Github usernames and activity.",
     icon: (
       <svg
         role="img"
@@ -104,7 +104,7 @@ const integrations: Integration[] = [
   },
   {
     name: "Gitlab",
-    text: "Gitlab usernames and contributions",
+    text: "Gitlab usernames and contributions.",
     icon: (
       <svg
         role="img"
@@ -123,7 +123,7 @@ const integrations: Integration[] = [
   },
   {
     name: "Typeform",
-    text: "Information provided via surveys",
+    text: "Information provided via surveys.",
     icon: (
       <svg
         role="img"
@@ -146,42 +146,10 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-black text-white">
       {/* Header */}
-      <header className="fixed top-0 w-full z-50 bg-black/50 backdrop-blur-sm border-b border-white/10">
-        <div className="container flex items-center justify-between h-16 mx-auto">
-          <Link href="/" className="text-xl font-bold font-mono">
-            <Image
-              src="/logo-dark.svg"
-              width={208}
-              height={65}
-              alt="logo-dark"
-              className="w-20"
-            />
-          </Link>
-          <nav className="hidden md:flex space-x-8">
-            <Link href="#" className="text-sm text-gray-300 hover:text-white">
-              Product
-            </Link>
-            <Link
-              href="/blog"
-              className="text-sm text-gray-300 hover:text-white"
-            >
-              Blog
-            </Link>
-            {/* <Link href="#" className="text-sm text-gray-300  hover:text-white">
-              Documentation <Badge className="">Soon</Badge>
-            </Link> */}
-          </nav>
-          <Button
-            variant="outline"
-            className="hidden md:inline-flex border-gray-500 border-2"
-          >
-            Sign in
-          </Button>
-        </div>
-      </header>
+      <Header />
 
       {/* Hero Section */}
-      <section className="pt-32 pb-20">
+      <section className="pt-24 lg:pt-32 pb-20 px-6 lg:px-0">
         <div className="container lg:grid-cols-2 gap-12 items-center mx-auto ">
           <div className="space-y-8 max-w-screen-lg">
             <h1 className="text-5xl font-serif tracking-tight">
@@ -207,7 +175,7 @@ export default function Home() {
 
       {/* Code Example Section */}
       <section>
-        <div className="relative aspect-square lg:aspect-auto lg:h-[600px] rounded-lg overflow-hidden">
+        <div className="relative aspect-square lg:aspect-auto lg:h-[800px] rounded-lg overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-green-400 via-blue-400 to-slate-400 rounded-lg overflow-hidden" />
           <div className="absolute inset-0 p-8">
             <div className="bg-black/80 h-full w-full rounded-lg border border-white/10 grid grid-cols-[1fr,min-content]">
@@ -240,7 +208,7 @@ const enriched = await pipeRunner.resolveSync();
                 {/* Grid Background Pattern */}
 
                 {/* Pipeline Flow */}
-                <div className="relative z-10 p-6 bg-blue-900 h-full flex items-center justify-center">
+                <div className="invisible lg:visible relative z-10 p-6 bg-blue-900 h-full flex items-center justify-center">
                   <div
                     className="absolute inset-0 opacity-[7%]"
                     style={{
@@ -294,7 +262,7 @@ const enriched = await pipeRunner.resolveSync();
       </section>
 
       {/* Data model section */}
-      <section className="pt-32 pb-20">
+      <section className="px-6 lg:px-0 pt-32 pb-20">
         <div className="container lg:grid-cols-2 gap-12 items-center mx-auto ">
           <div className="space-y-8 max-w-screen-lg pb-12">
             <h1 className="text-5xl font-serif tracking-tight">
@@ -304,11 +272,15 @@ const enriched = await pipeRunner.resolveSync();
               </HighlightSection>
             </h1>
             <p className="text-lg text-gray-400">
-              An intuitive API and SDKs to enrich one or thousands of records at
-              the same time. Power everything from server-side enrichments to
-              complex user-defined dynamic UI interactions. Offer extensible
-              enrichment pipelines to your users or configure your servers to
-              perform actions based on enriched data.
+              An intuitive API to enrich <b>one</b> or{" "}
+              <b>thousands of records</b> at record speed. Power everything from
+              server-side enrichments to complex user-defined dynamic UI
+              interactions.{" "}
+              <b>Access a unified API with 50+ enrichment providers </b>
+              <b>
+                and extend the SDK with your own enrichment server if you need
+                more.
+              </b>
             </p>
           </div>
           <div>
@@ -333,7 +305,7 @@ const enriched = await pipeRunner.resolveSync();
         <div className="container mx-auto grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           <Card className="bg-white/5 border-white/10 p-6">
             <h3 className="text-xl font-semibold mb-4">
-              Customer Relationship Systems
+              Customer Relationship System
             </h3>
             <p className="text-gray-400">
               Build flexible enrichment pipelines that can be configures by your
@@ -342,7 +314,7 @@ const enriched = await pipeRunner.resolveSync();
             </p>
           </Card>
           <Card className="bg-white/5 border-white/10 p-6">
-            <h3 className="text-xl font-semibold mb-4">Sales Copilots</h3>
+            <h3 className="text-xl font-semibold mb-4">Sales Copilot</h3>
             <p className="text-gray-400">
               Finding lead info before your next email or call, real-time lead
               intelligence during calls? We power various use-cases for sales
@@ -351,7 +323,7 @@ const enriched = await pipeRunner.resolveSync();
           </Card>
           <Card className="bg-white/5 border-white/10 p-6">
             <h3 className="text-xl font-semibold mb-4">
-              Applicant Tracking Systems
+              Applicant Tracking System
             </h3>
             <p className="text-gray-400">
               Add candidate enrichment functionalities to your applicant
@@ -360,7 +332,9 @@ const enriched = await pipeRunner.resolveSync();
             </p>
           </Card>
           <Card className="bg-white/5 border-white/10 p-6">
-            <h3 className="text-xl font-semibold mb-4">AI Outreach Tools</h3>
+            <h3 className="text-xl font-semibold mb-4">
+              Customer Outreach System
+            </h3>
             <p className="text-gray-400">
               The next generation of outreach tools needs to creaft hyper
               personalized email with humans-in-the-loops or completely
@@ -369,7 +343,9 @@ const enriched = await pipeRunner.resolveSync();
             </p>
           </Card>
           <Card className="bg-white/5 border-white/10 p-6">
-            <h3 className="text-xl font-semibold mb-4">Autonomous SDRs</h3>
+            <h3 className="text-xl font-semibold mb-4">
+              Automating Sales Development Representatives
+            </h3>
             <p className="text-gray-400">
               Is your tool automating activities performed by human SDRs like
               building lead lists, doing outreach, scheduling followups and
@@ -386,7 +362,7 @@ const enriched = await pipeRunner.resolveSync();
           </Card>
           <div className="flex justify-end pt-4 col-span-full">
             <Button variant="ghost">
-              Explopre case studies <SoonBadge /> <ArrowRight />
+              Explore all case studies <SoonBadge /> <ArrowRight />
             </Button>
           </div>
         </div>
@@ -394,18 +370,25 @@ const enriched = await pipeRunner.resolveSync();
 
       {/* Integrations Section */}
       <section className="py-20 bg-black">
-        <div className="container mx-auto border-x">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-serif">Seamless Integrations</h2>
-            <p className="text-gray-400 text-lg mt-4">
-              Connect with your favorite tools and automate your workflow
+        <div className="container mx-auto border-x px-6 lg:px-0">
+          <div className="space-y-8 max-w-screen-lg pb-12">
+            <h1 className="text-5xl font-serif tracking-tight">
+              Seamless
+              <br />
+              <HighlightSection>Integrations</HighlightSection>
+            </h1>
+            <p className="text-lg text-gray-400">
+              Access <b>50+ data providers</b>. Aggregate similar providers into
+              pipelines or waterfall enrichments. Achieve higher data quality
+              with one single subscription. Use external providers without an
+              additional charge from us.
             </p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 border-y">
             {integrations.map((integration) => (
               <div
                 key={integration.name}
-                className="bg-black/50 backdrop-blur-sm border border-white/20 rounded-lg p-8 hover:border-white/20 transition-colors"
+                className="bg-black/50 backdrop-blur-sm border border-white/20 p-8 hover:border-white/20 transition-colors"
               >
                 <div className="flex justify-between items-start mb-4">
                   <div className="flex items-center gap-3">
@@ -435,7 +418,7 @@ const enriched = await pipeRunner.resolveSync();
       </section>
 
       {/* CTA Section */}
-      <section className="py-32 relative overflow-hidden">
+      <section className="px-6 lg:px-0 py-32 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-blue-600/20 via-purple-600/20 to-black" />
         <div className="container relative mx-auto">
           <div className="max-w-2xl mx-auto text-center">
@@ -448,101 +431,7 @@ const enriched = await pipeRunner.resolveSync();
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-white/10 py-12 bg-black">
-        <div className="container mx-auto">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            <div>
-              <h4 className="font-semibold mb-4">Company</h4>
-              <ul className="space-y-2">
-                <li>
-                  <Link
-                    href="#"
-                    className="text-sm text-gray-400 hover:text-white"
-                  >
-                    About
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="#"
-                    className="text-sm text-gray-400 hover:text-white"
-                  >
-                    Blog
-                  </Link>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-4">Resources</h4>
-              <ul className="space-y-2">
-                <li>
-                  <Link
-                    href="#"
-                    className="text-sm text-gray-400 hover:text-white"
-                  >
-                    Documentation <SoonBadge />
-                  </Link>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-4">Legal</h4>
-              <ul className="space-y-2">
-                <li>
-                  <Link
-                    href="#"
-                    className="text-sm text-gray-400 hover:text-white"
-                  >
-                    Privacy
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="#"
-                    className="text-sm text-gray-400 hover:text-white"
-                  >
-                    Terms
-                  </Link>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-4">Contact</h4>
-              <ul className="space-y-2">
-                <li>
-                  <Link
-                    href="#"
-                    className="text-sm text-gray-400 hover:text-white"
-                  >
-                    Sales
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="#"
-                    className="text-sm text-gray-400 hover:text-white"
-                  >
-                    Support
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="#"
-                    className="text-sm text-gray-400 hover:text-white"
-                  >
-                    Status
-                  </Link>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div className="mt-12 pt-8 border-t border-white/10">
-            <p className="text-sm text-gray-400">
-              © {new Date().getFullYear()} Pipe0. All rights reserved.
-            </p>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

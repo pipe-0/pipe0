@@ -331,28 +331,28 @@ export default function LandingPageTable() {
       <TableHeader className="">
         <TableRow className="">
           <TableHead className="w-[100px] font-bold">FirstName</TableHead>
-          <TableHead className="invisible lg:visible font-bold">
+          <TableHead className="hidden lg:table-cell font-bold">
             LastName
           </TableHead>
           <TableHead className="font-bold">LinkedInProfileUrl</TableHead>
-          <TableHead className="invisible lg:visible font-bold">
+          <TableHead className="hidden lg:table-cell font-bold">
             ProfileSummary
           </TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {data.map((person, i) => (
-          <TableRow key={i}>
+          <TableRow key={i} className={cn(i > 4 && "hidden lg:table-row")}>
             <TableCell className="border bg-white/10 font-medium">
               <CellContent cell={person.firstName} />
             </TableCell>
-            <TableCell className="border bg-white/10 font-medium invisible lg:visible">
+            <TableCell className="hidden lg:table-cell border bg-white/10 font-medium ">
               <CellContent cell={person.lastName} />
             </TableCell>
             <TableCell className="border bg-white/10">
               <CellContent cell={person.linkedInUrl} />
             </TableCell>
-            <TableCell className="border bg-white/10 invisible lg:visible">
+            <TableCell className="hidden lg:table-cell border bg-white/10">
               <CellContent cell={person.profileSummary} />
             </TableCell>
           </TableRow>
