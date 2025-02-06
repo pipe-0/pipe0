@@ -278,11 +278,8 @@ const enriched = await pipeRunner.resolveSync();
               <b>thousands of records</b> with speed and precision. Power
               everything from server-side enrichments to complex user-defined
               dynamic UI interactions.{" "}
-              <b>Access to a unified API with 50+ enrichment providers </b>
-              <b>
-                and extend the SDK with your own enrichment server if you need
-                more.
-              </b>
+              <b>Access a unified API with 50+ enrichment providers </b>
+              <b>or extend with your own enrichment server if you need more.</b>
             </p>
           </div>
           <div>
