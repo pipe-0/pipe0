@@ -196,7 +196,7 @@ const pipe = new Pipe({ apiKey: "..." })
   .addResolver(new BusinessEmailResolver())
   .addResolver(new CompanyDescriptionResolver())
 
-// Validate incomming request
+// Validate incoming request
 const pipeRunner = new PipeRunner({pipe}).addData([{name: "John Doe"}]);
 const enriched = await pipeRunner.resolveSync();
                       `}
@@ -308,7 +308,7 @@ const enriched = await pipeRunner.resolveSync();
               Customer Relationship System
             </h3>
             <p className="text-gray-400">
-              Build flexible enrichment pipelines that can be configures by your
+              Build flexible enrichment pipelines that can be configured by your
               users. Create rich UI experiences that provide real time feedback
               during enrichments.
             </p>
@@ -336,7 +336,7 @@ const enriched = await pipeRunner.resolveSync();
               Customer Outreach System
             </h3>
             <p className="text-gray-400">
-              The next generation of outreach tools needs to creaft hyper
+              The next generation of outreach tools needs to craft hyper
               personalized email with humans-in-the-loops or completely
               autonomous. Getting your delivery just right requires detailed
               lead information.
@@ -348,7 +348,7 @@ const enriched = await pipeRunner.resolveSync();
             </h3>
             <p className="text-gray-400">
               Is your tool automating activities performed by human SDRs like
-              building lead lists, doing outreach, scheduling followups and
+              building lead lists, doing outreach, scheduling follow ups and
               demos? Benefit from custom lead enrichment for all these use
               cases.
             </p>
