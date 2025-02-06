@@ -160,12 +160,14 @@ export default function Home() {
               for the next generation of sales tools. Powered by AI.
             </h1>
             <p className="text-lg text-gray-400">
-              Combine <b>50+ data providers</b> to create custom enrichment
-              pipelines like <b>email lookup waterfalls</b>,{" "}
-              <b>social media lookups</b>, <b>company info</b>, and{" "}
-              <b>custom AI logic</b>. Seamlessly integrate Clay-like enrichments
-              into your application with full visibility on cost, usage, and
-              data quality. Powered by a data model designed for scale.
+              Seamlessly combine <b>50+ data providers</b> and create custom
+              enrichment pipelines. Lookup{" "}
+              <b>business emails with waterfall enrichments</b>,{" "}
+              <b>social media urls</b>, <b>company info</b>, and{" "}
+              <b>define custom logic with AI</b>. Seamlessly integrate Clay-like
+              enrichments into your application with full visibility on cost,
+              usage, and data quality. Powered by a data model designed for
+              scale.
             </p>
 
             <EmailForm />
@@ -273,10 +275,10 @@ const enriched = await pipeRunner.resolveSync();
             </h1>
             <p className="text-lg text-gray-400">
               An intuitive API to enrich <b>one</b> or{" "}
-              <b>thousands of records</b> at record speed. Power everything from
-              server-side enrichments to complex user-defined dynamic UI
-              interactions.{" "}
-              <b>Access a unified API with 50+ enrichment providers </b>
+              <b>thousands of records</b> with speed and precision. Power
+              everything from server-side enrichments to complex user-defined
+              dynamic UI interactions.{" "}
+              <b>Access to a unified API with 50+ enrichment providers </b>
               <b>
                 and extend the SDK with your own enrichment server if you need
                 more.
