@@ -338,10 +338,9 @@ const enriched = await pipeRunner.resolveSync();
               Customer Outreach System
             </h3>
             <p className="text-gray-400">
-              The next generation of outreach tools needs to craft hyper
-              personalized email with humans-in-the-loops or completely
-              autonomous. Getting your delivery just right requires detailed
-              lead information.
+              The next generation of outreach tools needs be hyper personalized.
+              AI systems and humans alike require deeply enriched data for
+              successful campaigns.
             </p>
           </Card>
           <Card className="bg-white/5 border-white/10 p-6">
