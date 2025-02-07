@@ -7,6 +7,7 @@ import { SoonBadge } from "@/components/soon-badge";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { constants } from "@/lib/const";
 import { ArrowDown, ArrowRight, Computer, Linkedin, Mail } from "lucide-react";
 import { PropsWithChildren, ReactNode } from "react";
 
@@ -66,7 +67,7 @@ const integrations: Integration[] = [
   },
   {
     name: "Hubspot",
-    text: "LLead information stored in your Hubspot cloud.",
+    text: "Lead information stored in your Hubspot cloud.",
     icon: (
       <svg
         role="img"
@@ -85,7 +86,7 @@ const integrations: Integration[] = [
   },
   {
     name: "Github",
-    text: "Github usernames and activity.",
+    text: "GitHub usernames and activity.",
     icon: (
       <svg
         role="img"
@@ -163,11 +164,10 @@ export default function Home() {
               Seamlessly combine <b>50+ data providers</b> and create custom
               enrichment pipelines. Lookup{" "}
               <b>business emails with waterfall enrichments</b>,{" "}
-              <b>social media urls</b>, <b>company info</b>, and{" "}
-              <b>define custom logic with AI</b>. Seamlessly integrate Clay-like
-              enrichments into your application with full visibility on cost,
-              usage, and data quality. Powered by a data model designed for
-              scale.
+              <b>social media URLs</b>, <b>and company info</b>. Connect
+              enriched fields with AI. Seamlessly add Clay-like enrichments into
+              your application with full visibility on cost, usage, and data
+              quality. Powered by a data model built for scale.
             </p>
 
             <EmailForm />
@@ -268,7 +268,7 @@ const enriched = await pipeRunner.resolveSync();
         <div className="container lg:grid-cols-2 gap-12 items-center mx-auto ">
           <div className="space-y-8 max-w-screen-lg pb-12">
             <h1 className="text-5xl font-serif tracking-tight">
-              A data-model designed for{" "}
+              A data model designed for{" "}
               <HighlightSection>
                 striking server and UI interactions.
               </HighlightSection>
@@ -279,7 +279,7 @@ const enriched = await pipeRunner.resolveSync();
               everything from server-side enrichments to complex user-defined
               dynamic UI interactions.{" "}
               <b>Access a unified API with 50+ enrichment providers </b>
-              <b>or extend with your own enrichment server if you need more.</b>
+              <b>or extend with your enrichment server if you need more.</b>
             </p>
           </div>
           <div>
@@ -308,9 +308,9 @@ const enriched = await pipeRunner.resolveSync();
             </h3>
             <p className="text-gray-400">
               Effective data enrichment is a requirement for CRMs. New
-              enrichment tools have shifted the user&apos;s perception on
-              what&apos;s possible. Create customizable features based on
-              cutting-edge enrichment flows.
+              enrichment tools have shifted the perception of what&apos;s
+              possible. Create customizable features based on cutting-edge
+              enrichment flows and striking UIs.
             </p>
           </Card>
           <Card className="bg-white/5 border-white/10 p-6">
@@ -318,7 +318,7 @@ const enriched = await pipeRunner.resolveSync();
             <p className="text-gray-400">
               Finding up-to-date information on leads before and during sales
               calls is critical for sales copilots. Real-time intelligence
-              requires context. We power various use-cases for sales copilots.
+              requires context. We power various use cases for sales copilots.
             </p>
           </Card>
           <Card className="bg-white/5 border-white/10 p-6">
@@ -328,7 +328,7 @@ const enriched = await pipeRunner.resolveSync();
             <p className="text-gray-400">
               Add candidate enrichment functionalities to your applicant
               tracking system. Provide information on social media accounts and
-              activity for even more insight on candidate quality and fit.
+              activity for insight into candidate quality and fit.
             </p>
           </Card>
           <Card className="bg-white/5 border-white/10 p-6">
@@ -336,9 +336,9 @@ const enriched = await pipeRunner.resolveSync();
               Customer Outreach System
             </h3>
             <p className="text-gray-400">
-              The next generation of outreach tools needs to be hyper
-              personalized. AI systems and humans alike require deeply enriched
-              data for successful campaigns.
+              The next generation of outreach tools needs to be
+              hyper-personalized. AI systems and humans alike require deeply
+              enriched data for successful campaigns.
             </p>
           </Card>
           <Card className="bg-white/5 border-white/10 p-6">
@@ -346,10 +346,10 @@ const enriched = await pipeRunner.resolveSync();
               Automating Sales Development Representatives
             </h3>
             <p className="text-gray-400">
-              Is your tool automating activities performed by human SDRs like
-              building lead lists, doing outreach, scheduling follow ups and
-              demos? Benefit from custom lead enrichment for all these
-              use-cases.
+              Is your tool automating activities performed by human SDRs, such
+              as building lead lists, doing outreach, scheduling follow-ups, and
+              demos? Benefit from custom lead enrichment for all these use
+              cases.
             </p>
           </Card>
           <Card className="bg-white/5 border-white/10 p-6">
@@ -382,7 +382,7 @@ const enriched = await pipeRunner.resolveSync();
               Access <b>50+ data providers</b>. Aggregate providers into
               pipelines or waterfall enrichments. Achieve higher data quality
               with a single subscription. Use external providers without
-              additional charge from us or bring your own API key.
+              additional charge from us or bring your API key.
             </p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 border-y">
@@ -424,7 +424,7 @@ const enriched = await pipeRunner.resolveSync();
         <div className="container relative mx-auto">
           <div className="max-w-2xl mx-auto text-center">
             <h2 className="text-3xl md:text-4xl font-serif mb-8">
-              Join the future of data enrichment.
+              Get in touch with {constants.productName}
             </h2>
             <EmailForm />
           </div>
