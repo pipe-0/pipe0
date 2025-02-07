@@ -161,13 +161,13 @@ export default function Home() {
               for the next generation of sales tools. Powered by AI.
             </h1>
             <p className="text-lg text-gray-400">
-              Seamlessly combine <b>50+ data providers</b> and create custom
-              enrichment pipelines. Lookup{" "}
+              Combine <b>50+ data providers</b> into custom enrichment pipelines
+              for your application. Find{" "}
               <b>business emails with waterfall enrichments</b>,{" "}
-              <b>social media URLs</b>, <b>and company info</b>. Connect
-              enriched fields with AI. Seamlessly add Clay-like enrichments into
-              your application with full visibility on cost, usage, and data
-              quality. Powered by a data model built for scale.
+              <b>company info</b>, and much more. Connect enriched fields with
+              AI. Seamlessly add Clay-like enrichments to your application with
+              full visibility on cost, usage, and data quality. Powered by a
+              data model built for scale.
             </p>
 
             <EmailForm />
@@ -276,8 +276,8 @@ const enriched = await pipeRunner.resolveSync();
             <p className="text-lg text-gray-400">
               An intuitive API to enrich <b>one</b> or{" "}
               <b>thousands of records</b> with speed and precision. Power
-              everything from server-side enrichments to complex user-defined
-              dynamic UI interactions.{" "}
+              everything from server-side enrichments to complex UI
+              interactions.{" "}
               <b>Access a unified API with 50+ enrichment providers </b>
               <b>or extend with your enrichment server if you need more.</b>
             </p>
