@@ -162,12 +162,10 @@ export default function Home() {
             </h1>
             <p className="text-lg text-gray-400">
               Combine <b>50+ data providers</b> into custom enrichment pipelines
-              for your application. Find{" "}
-              <b>business emails with waterfall enrichments</b>,{" "}
-              <b>company info</b>, and much more. Connect enriched fields with
-              AI. Seamlessly add Clay-like enrichments to your application with
-              full visibility on cost, usage, and data quality. Powered by a
-              data model built for scale.
+              for your application. Find <b>business emails</b>,{" "}
+              <b>company info</b>, and much more. Connect enrichments with AI
+              agents. Seamlessly add Clay-like functionality to your application
+              with full control over cost, usage, and data quality.
             </p>
 
             <EmailForm />
