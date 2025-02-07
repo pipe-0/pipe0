@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "A composable API for lead and comapny enrichment",
   description:
-    "Combine 50+ data providers to into custom pipelines for lead and company data enrichment. Add business email waterfalls, social media info, company details, and AI logic to your application. Create Clay-like functionality in hours. Powered by a data model designed for scale, quality, and cost control.",
+    "Combine 50+ data providers into custom pipelines for lead and company enrichment. Add search for business emails, company details, and much more. Connect related enrichments with AI and waterfalls. Add Clay-like functionality to your application with ease.",
 };
 
 export default function RootLayout({
