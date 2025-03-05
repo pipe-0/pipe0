@@ -1,4 +1,3 @@
-import { SoonBadge } from "@/components/soon-badge";
 import { constants } from "@/lib/const";
 import Link from "next/link";
 
@@ -25,10 +24,10 @@ export function Footer() {
             <ul className="space-y-2">
               <li>
                 <Link
-                  href="#"
+                  href="/docs"
                   className="text-sm text-gray-400 hover:text-white"
                 >
-                  Documentation <SoonBadge />
+                  Documentation
                 </Link>
               </li>
             </ul>

@@ -1,0 +1,31 @@
+---
+title: Enrichment Table
+category: Examples
+priority: 0
+description: Learn about Test Mode. A sanbox environment for your requests.
+icon: test
+date: 2025-03-07
+isPublished: true
+---
+
+## Introduction
+
+Pipe0 is built arond the idea of unifying various enrichment providers in a unified API. While this is infinitely powerful,
+it can lead to test requests incurring costs.
+
+Pipe0 ships with a built-in "Test Mode" for every pipe.
+
+## Test mode
+
+Test mode can be used in [pipeline requests](/docs/pipeline#pipeline-request). To send a test request 
+add the `X-Test-Mode` header with a value of `true` to your requests.
+
+```bash
+curl -X POST 'https://api.pipe0.com/v1/run' \
+-H "Authorization: Bearer YOUR_TOKEN" \
+-H "X-Test-Mode: true" \
+--data-raw '{
+	"input": [],
+	"pipes": []
+}'
+```

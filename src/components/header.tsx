@@ -1,3 +1,4 @@
+import { Logo } from "@/components/logo";
 import { SoonBadge } from "@/components/soon-badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,22 +9,13 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
-import Image from "next/image";
 import Link from "next/link";
 
 export function Header() {
   return (
     <header className="px-6 lg:px-0 fixed top-0 w-full z-50 bg-black/50 backdrop-blur-sm border-b border-white/10">
       <div className="container flex items-center justify-between h-16 mx-auto">
-        <Link href="/" className="text-xl font-bold font-mono">
-          <Image
-            src="/logo-dark.svg"
-            width={208}
-            height={65}
-            alt="logo-dark"
-            className="w-20"
-          />
-        </Link>
+        <Logo />
         <nav className="hidden md:flex space-x-8">
           <Link href="/" className="text-sm text-gray-300 hover:text-white">
             Product
@@ -31,8 +23,11 @@ export function Header() {
           <Link href="/blog" className="text-sm text-gray-300 hover:text-white">
             Blog
           </Link>
-          <Link href="#" className="text-sm text-gray-300  hover:text-white">
-            Documentation <SoonBadge />
+          <Link
+            href="/docs"
+            className="text-sm text-gray-300  hover:text-white"
+          >
+            Documentation
           </Link>
           <Link href="#" className="text-sm text-gray-300  hover:text-white">
             Pricing <SoonBadge />

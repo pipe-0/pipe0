@@ -1,26 +1,59 @@
+import { Mermaid } from "@/components/mermaid-diagram";
 import type { MDXComponents } from "mdx/types";
 import Link from "next/link";
 
 export const mdxComponents: MDXComponents = {
-  h1: ({ children }) => (
-    <h1 className="text-4xl font-bold tracking-tight text-gray-900 dark:text-gray-100 mt-8 mb-4">
-      {children}
-    </h1>
+  h1: ({ children, id }) => (
+    <a className="block" href={`#${id}`}>
+      <h1
+        id={id}
+        className="group cursor-pointer text-4xl font-bold tracking-tight text-gray-900 dark:text-gray-100 mt-8 mb-4 relative"
+      >
+        <span className="absolute -left-6 hidden font-normal text-zinc-400 lg:group-hover:inline">
+          #
+        </span>
+        {children}
+      </h1>
+    </a>
   ),
-  h2: ({ children }) => (
-    <h2 className="text-3xl font-semibold text-gray-800 dark:text-gray-200 mt-8 mb-4">
-      {children}
-    </h2>
+  h2: ({ children, id }) => (
+    <a className="block" href={`#${id}`}>
+      <h2
+        id={id}
+        className="group cursor-pointer text-3xl font-semibold text-gray-800 dark:text-gray-200 mt-8 mb-4 relative"
+      >
+        <span className="absolute -left-6 hidden font-normal text-zinc-400 lg:group-hover:inline">
+          #
+        </span>
+        {children}
+      </h2>
+    </a>
   ),
-  h3: ({ children }) => (
-    <h3 className="text-2xl font-medium text-gray-700 dark:text-gray-300 mt-6 mb-3">
-      {children}
-    </h3>
+  h3: ({ children, id }) => (
+    <a className="block" href={`#${id}`}>
+      <h3
+        id={id}
+        className="group cursor-pointer text-2xl font-medium text-gray-700 dark:text-gray-300 mt-6 mb-3 relative"
+      >
+        <span className="absolute -left-6 hidden font-normal text-zinc-400 lg:group-hover:inline-block">
+          #
+        </span>
+        {children}
+      </h3>
+    </a>
   ),
-  h4: ({ children }) => (
-    <h4 className="text-xl font-medium text-gray-600 dark:text-gray-400 mt-4 mb-2">
-      {children}
-    </h4>
+  h4: ({ children, id }) => (
+    <a className="block" href={`#${id}`}>
+      <h4
+        id={id}
+        className="group cursor-pointer text-xl font-medium text-gray-600 dark:text-gray-400 mt-4 mb-2 relative"
+      >
+        <span className="absolute -left-6 hidden font-normal text-zinc-400 lg:group-hover:inline">
+          #
+        </span>
+        {children}
+      </h4>
+    </a>
   ),
   p: ({ children }) => (
     <p className="text-base leading-7 text-gray-600 dark:text-gray-400 mb-4">
@@ -43,7 +76,7 @@ export const mdxComponents: MDXComponents = {
   a: ({ href, children }) => (
     <Link
       href={href as string}
-      className="text-blue-600 dark:text-blue-400 hover:underline"
+      className="text-brand dark:text-brand font-semibold hover:underline"
     >
       {children}
     </Link>
@@ -80,6 +113,7 @@ export const mdxComponents: MDXComponents = {
       {children}
     </td>
   ),
+  Mermaid: Mermaid,
 };
 
 export function useMDXComponents(components: MDXComponents): MDXComponents {

@@ -1,12 +1,10 @@
-import fs from "fs/promises";
-import path from "path";
-import matter from "gray-matter";
-import { compileMDX } from "next-mdx-remote/rsc";
-import type React from "react"; // Import React
+import { compileMdxContent } from "@/lib/mdx";
 import { mdxComponents } from "@/mdx-components";
-import remarkGfm from "remark-gfm";
-import rehypeHighlight from "rehype-highlight";
+import fs from "fs/promises";
+import matter from "gray-matter";
 import "highlight.js/styles/github-dark.css";
+import path from "path";
+import type React from "react"; // Import React
 
 const postsDirectory = path.join(process.cwd(), "content/blog");
 
@@ -22,6 +20,7 @@ export type Post = {
   category: string;
   content: React.ReactNode;
   authors: Author[];
+  isPublished: boolean;
   excerpt?: string;
   image?: string;
 };
@@ -46,6 +45,7 @@ export async function getAllPosts(): Promise<Omit<Post, "content">[]> {
           category: data.category,
           image: data.image,
           authors: data.authors,
+          isPublished: data.isPublished,
         };
       })
   );
@@ -61,17 +61,7 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
     const source = await fs.readFile(filePath, "utf8");
 
     const { content, data } = matter(source);
-    const { content: mdxContent } = await compileMDX({
-      source: content,
-      options: {
-        parseFrontmatter: true,
-        mdxOptions: {
-          remarkPlugins: [remarkGfm],
-          rehypePlugins: [[rehypeHighlight, { detect: true }]], // Configure plugin
-        },
-      },
-      components: mdxComponents,
-    });
+    const mdxContent = await compileMdxContent(content, mdxComponents);
 
     return {
       slug,
@@ -79,6 +69,7 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
       date: data.date,
       category: data.category,
       image: data.image,
+      isPublished: data.isPublished,
       content: mdxContent,
       authors: data.authors,
     };

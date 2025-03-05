@@ -175,10 +175,10 @@ export default function Home() {
 
       {/* Code Example Section */}
       <section>
-        <div className="relative aspect-square lg:aspect-auto lg:h-[800px] rounded-lg overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-green-400 via-blue-400 to-slate-400 rounded-lg overflow-hidden" />
+        <div className="relative aspect-square lg:aspect-auto lg:h-[800px] overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-green-400 via-blue-400 to-slate-400 overflow-hidden" />
           <div className="absolute inset-0 p-8">
-            <div className="bg-black/80 h-full w-full rounded-lg border border-white/10 grid grid-cols-[1fr,min-content]">
+            <div className="bg-black/80 h-full w-full rounded-lg border border-white/10 grid grid-cols-[1fr_min-content] overflow-scroll">
               <div className="space-y-4 p-6">
                 <div className="flex items-center gap-2">
                   <div className="w-2 h-2 bg-green-500 rounded-full" />
@@ -191,14 +191,28 @@ export default function Home() {
                   <pre>
                     <CodeBlock
                       codeString={`
-// Define allowed enrichments
-const pipe = new Pipe({ apiKey: "..." }) 
-  .addResolver(new BusinessEmailResolver())
-  .addResolver(new CompanyDescriptionResolver())
+// Perform complex enrichments with 10 LOC
 
-// Validate incoming request
-const pipeRunner = new PipeRunner({pipe}).addData([{name: "John Doe"}]);
-const enriched = await pipeRunner.resolveSync();
+// Configure the sdk on the client
+const pipe0 = new Pipe0({ url: "htttps://your-sever.com" });
+
+// Combine 50+ enrichments into tailed enrichment pipelines
+const response = await pipe0.request.create({
+    pipes: [
+      {
+        name: "PeopleBusinessEmailWaterfallV1"
+      },
+      {
+        name: "CompanyInfoPipe0V1"
+      }
+    ],
+    input: [
+      {
+        name: "John Doe",
+        companyName: "Google LLC"
+      }
+    ],
+  }).send();
                       `}
                     />
                   </pre>
