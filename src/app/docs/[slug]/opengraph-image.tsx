@@ -1,9 +1,10 @@
-import { getDocPageBySlug } from "@/lib/docs";
+import { DocsPage } from "@/lib/docs";
+import { getBaseUrl } from "@/lib/utils";
 import { readFile } from "fs/promises";
+import { notFound } from "next/navigation";
 import { ImageResponse } from "next/og";
 import { join } from "path";
 
-export const runtime = "nodejs";
 export const alt = "pipe0";
 export const size = {
   width: 1200,
@@ -19,7 +20,14 @@ export default async function Image({ params }: { params: { slug: string } }) {
   const calSemiBold = await readFile(
     join(process.cwd(), "src/assets/cal-sans-semibold.ttf")
   );
-  const docPage = await getDocPageBySlug(params.slug);
+
+  const docPage = (await fetch(`${getBaseUrl()}/api/docs/${params.slug}`).then(
+    (res) => {
+      if (!res.ok) return notFound();
+      return res.json();
+    }
+  )) as DocsPage;
+  // const docPage = await getDocPageBySlug(params.slug);
 
   return new ImageResponse(
     (

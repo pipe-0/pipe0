@@ -1,12 +1,7 @@
 import { getDocPages } from "@/lib/docs";
 import { getPipePages } from "@/lib/pipes";
+import { getBaseUrl } from "@/lib/utils";
 import { MetadataRoute } from "next";
-
-export function getBaseUrl() {
-  return process.env.NODE_ENV === "production"
-    ? "https://pipe0.com"
-    : "http://localhost:3000";
-}
 
 const basePath = getBaseUrl();
 

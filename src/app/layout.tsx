@@ -3,7 +3,7 @@ import { Analytics } from "@vercel/analytics/react";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { getBaseUrl } from "@/app/sitemap";
+import { getBaseUrl } from "@/lib/utils";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
