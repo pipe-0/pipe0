@@ -186,10 +186,9 @@ export default function Home() {
                       codeString={`
 // Perform complex enrichments with 10 LOC
 
-// Configure the sdk on the client
 const pipe0 = new Pipe0({ url: "htttps://your-sever.com" });
 
-// Combine 50+ enrichments into tailed enrichment pipelines
+// Combine 50+ enrichments into custom enrichment pipelines
 const response = await pipe0.request.create({
     pipes: [
       {
