@@ -6,7 +6,7 @@ import "highlight.js/styles/github-dark.css";
 import path from "path";
 import type React from "react"; // Import React
 
-const postsDirectory = path.join(process.cwd(), "content/blog");
+const postsDirectory = path.join(process.cwd(), "/content/blog");
 
 type Author = {
   name: string;

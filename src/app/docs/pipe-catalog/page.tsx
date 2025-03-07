@@ -28,8 +28,8 @@ export default async function IntegrationsPage() {
           links={[
             { href: "/docs", label: "Documentation" },
             {
-              href: "/docs/working-with-integrations",
-              label: "Working with Integrations",
+              href: "/docs/quick-start",
+              label: "Quick Start",
             },
           ]}
         />

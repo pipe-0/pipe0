@@ -1,9 +1,9 @@
 import { DocsPage } from "@/lib/docs";
 import { getBaseUrl } from "@/lib/utils";
-import { readFile } from "fs/promises";
 import { notFound } from "next/navigation";
 import { ImageResponse } from "next/og";
-import { join } from "path";
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
 
 export const alt = "pipe0";
 export const size = {
@@ -13,26 +13,29 @@ export const size = {
 
 export const contentType = "image/png";
 
-export default async function Image({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
-  const { slug } = await params;
+export default async function Image({ params }: { params: { slug: string } }) {
+  const { slug } = params;
+  const url = `${getBaseUrl()}/api/docs/${slug}`;
+  let docPage: DocsPage | null = null;
+
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`Fetch failed with status: ${res.status}`);
+    docPage = (await res.json()) as DocsPage;
+  } catch (error) {
+    console.error("Error fetching docPage:", error);
+    return notFound();
+  }
+
+  console.log({ url, docPage });
+  if (!docPage) return notFound();
+
   const interLight = await readFile(
-    join(process.cwd(), "src/assets/inter-light.ttf")
+    join(process.cwd(), "assets/inter-light.ttf")
   );
   const calSemiBold = await readFile(
-    join(process.cwd(), "src/assets/cal-sans-semibold.ttf")
+    join(process.cwd(), "assets/cal-sans-semibold.ttf")
   );
-
-  const docPage = (await fetch(`${getBaseUrl()}/api/docs/${slug}`).then(
-    (res) => {
-      if (!res.ok) return notFound();
-      return res.json();
-    }
-  )) as DocsPage;
-  // const docPage = await getDocPageBySlug(params.slug);
 
   return new ImageResponse(
     (
@@ -57,7 +60,7 @@ export default async function Image({
         <div style={{ color: "white", fontSize: 64, fontFamily: "Inter" }}>
           {docPage?.title || "pipe0 Documentation"}
         </div>
-        <div style={{ color: "#A1A1AB", fontSize: 32, fontFamily: "Cal" }}>
+        <div style={{ color: "#A1A1AB", fontSize: 32 }}>
           {docPage?.description || "Pipe description missing"}
         </div>
       </div>

@@ -7,7 +7,7 @@ import { JSONSchema7 } from "json-schema";
 import path from "path";
 import type React from "react"; // Import React
 
-const pipesCatalog = path.join(process.cwd(), "content/pipes");
+const pipesCatalog = path.join(process.cwd(), "/content/pipes");
 
 type FieldDescription = {
   name: string;

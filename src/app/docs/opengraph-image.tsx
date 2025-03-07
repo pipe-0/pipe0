@@ -18,10 +18,10 @@ export const contentType = "image/png";
 
 export default async function Image() {
   const interLight = await readFile(
-    join(process.cwd(), "src/assets/inter-light.ttf")
+    join(process.cwd(), "assets/inter-light.ttf")
   );
   const calSemiBold = await readFile(
-    join(process.cwd(), "src/assets/cal-sans-semibold.ttf")
+    join(process.cwd(), "assets/cal-sans-semibold.ttf")
   );
 
   const element: OgElement = {

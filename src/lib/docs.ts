@@ -18,7 +18,7 @@ const orderedDocsCategories = [
 
 export type DocCategory = (typeof orderedDocsCategories)[number];
 
-const docsDirectory = path.join(process.cwd(), "content/docs");
+const docsDirectory = path.join(process.cwd(), "/content/docs");
 
 export type DocsPage = {
   slug: string;

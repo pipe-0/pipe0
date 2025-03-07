@@ -16,10 +16,10 @@ export default async function Image({ params }: { params: { slug: string } }) {
   const blogPage = await getPostBySlug(params.slug);
 
   const interLight = await readFile(
-    join(process.cwd(), "src/assets/inter-light.ttf")
+    join(process.cwd(), "assets/inter-light.ttf")
   );
   const calSemiBold = await readFile(
-    join(process.cwd(), "src/assets/cal-sans-semibold.ttf")
+    join(process.cwd(), "assets/cal-sans-semibold.ttf")
   );
 
   return new ImageResponse(
