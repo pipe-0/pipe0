@@ -13,7 +13,12 @@ export const size = {
 
 export const contentType = "image/png";
 
-export default async function Image({ params }: { params: { slug: string } }) {
+export default async function Image({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
   const interLight = await readFile(
     join(process.cwd(), "src/assets/inter-light.ttf")
   );
@@ -21,7 +26,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
     join(process.cwd(), "src/assets/cal-sans-semibold.ttf")
   );
 
-  const docPage = (await fetch(`${getBaseUrl()}/api/docs/${params.slug}`).then(
+  const docPage = (await fetch(`${getBaseUrl()}/api/docs/${slug}`).then(
     (res) => {
       if (!res.ok) return notFound();
       return res.json();

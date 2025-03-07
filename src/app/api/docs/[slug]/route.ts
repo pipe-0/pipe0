@@ -6,9 +6,9 @@ import { NextResponse } from "next/server";
 // GET handler for the dynamic route
 export async function GET(
   _request: Request,
-  context: { params: { slug: string } }
+  { params }: { params: Promise<{ slug: string }> }
 ) {
-  const { slug } = context.params;
+  const { slug } = await params;
   const docsPages = await getDocPages();
   const page = docsPages.find((p) => p.slug === slug);
 
