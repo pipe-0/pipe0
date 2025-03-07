@@ -34,6 +34,9 @@ export function TableOfContents() {
             setActiveId(entry.target.id);
           }
         });
+        if (!hasPrevious && entries[0]?.target.id) {
+          setActiveId(entries[0].target.id);
+        }
       },
       { rootMargin: "20px 0% -80% 0%" }
     );

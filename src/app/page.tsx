@@ -3,21 +3,14 @@ import EmailForm from "@/app/email-form";
 import CodeBlock from "@/components/code-block";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
+import { HighlightSection } from "@/components/highlight-section";
 import { SoonBadge } from "@/components/soon-badge";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { constants } from "@/lib/const";
 import { ArrowDown, ArrowRight, Computer, Linkedin, Mail } from "lucide-react";
-import { PropsWithChildren, ReactNode } from "react";
-
-function HighlightSection({ children }: PropsWithChildren) {
-  return (
-    <span className="inline-block text-transparent font-sans font-bold bg-clip-text bg-gradient-to-r from-green-400 via-blue-400 to-slate-400">
-      {children}
-    </span>
-  );
-}
+import { ReactNode } from "react";
 
 type Integration = {
   name: string;

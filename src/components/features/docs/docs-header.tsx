@@ -4,7 +4,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { ThemeToggle } from "@/components/features/docs/theme-toggle";
-import { Button } from "@/components/ui/button";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
 import { ComponentProps } from "react";
@@ -73,13 +72,13 @@ export function DocsHeader() {
             </nav>
           </div>
 
-          <div className="ml-auto flex items-center space-x-4">
+          {/* <div className="ml-auto flex items-center space-x-4">
             <nav className="flex items-center space-x-2">
-              <Button variant="default" size="sm" asChild>
-                <Link href="/login">Log in</Link>
+              <Button variant="default" size="sm" disabled>
+                Log in
               </Button>
             </nav>
-          </div>
+          </div> */}
         </div>
       </div>
 

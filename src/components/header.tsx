@@ -1,5 +1,4 @@
 import { Logo } from "@/components/logo";
-import { SoonBadge } from "@/components/soon-badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -29,8 +28,11 @@ export function Header() {
           >
             Documentation
           </Link>
-          <Link href="#" className="text-sm text-gray-300  hover:text-white">
-            Pricing <SoonBadge />
+          <Link
+            href="/pricing"
+            className="text-sm text-gray-300  hover:text-white"
+          >
+            Pricing
           </Link>
         </nav>
         <Popover>
