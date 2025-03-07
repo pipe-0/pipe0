@@ -2,6 +2,7 @@ import { readFile } from "fs/promises";
 import { ImageResponse } from "next/og";
 import { join } from "path";
 
+export const runtime = "nodejs";
 export const alt = "pipe0";
 export const size = {
   width: 1200,

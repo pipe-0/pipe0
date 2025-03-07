@@ -73,7 +73,7 @@ export function IntegrationCatalog({
         </TabsList>
 
         <TabsContent value={activeCategory} className="mt-0">
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-4 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-2">
             {filteredIntegrations.map((integration) => (
               <Card key={integration.name}>
                 <CardHeader>
