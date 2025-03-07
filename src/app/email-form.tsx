@@ -50,7 +50,6 @@ export default function EmailForm() {
           }),
         }
       );
-      console.log("here");
       form.reset();
       toast({
         title: "Success",

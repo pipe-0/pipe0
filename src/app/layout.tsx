@@ -3,6 +3,7 @@ import { Analytics } from "@vercel/analytics/react";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { getBaseUrl } from "@/app/sitemap";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -15,7 +16,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "A composable API for lead and comapny enrichment",
+  metadataBase: new URL(getBaseUrl()),
+  title:
+    "pipe0 | A unified API for lead and comapny enrichment. Powered by AI.",
   description:
     "Combine 50+ data providers into custom pipelines for lead and company enrichment. Add search for business emails, company details, and much more. Connect related enrichments with AI and waterfalls. Add Clay-like functionality to your application with ease.",
 };

@@ -1,7 +1,8 @@
 import { getPostBySlug } from "@/lib/blog";
+import { readFile } from "fs/promises";
 import { ImageResponse } from "next/og";
+import { join } from "path";
 
-export const runtime = "edge";
 export const alt = "pipe0";
 export const size = {
   width: 1200,
@@ -13,14 +14,12 @@ export const contentType = "image/png";
 export default async function Image({ slug }: { slug: string }) {
   const blogPage = await getPostBySlug(slug);
 
-  const [inter, calSans] = await Promise.all([
-    fetch(new URL("../../assets/inter-light.ttf", import.meta.url)).then(
-      (res) => res.arrayBuffer()
-    ),
-    fetch(new URL("../../assets/cal-sans-semibold.ttf", import.meta.url)).then(
-      (res) => res.arrayBuffer()
-    ),
-  ] as const);
+  const interLight = await readFile(
+    join(process.cwd(), "src/assets/inter-light.ttf")
+  );
+  const calSemiBold = await readFile(
+    join(process.cwd(), "src/assets/cal-sans-semibold.ttf")
+  );
 
   return new ImageResponse(
     (
@@ -55,15 +54,15 @@ export default async function Image({ slug }: { slug: string }) {
       fonts: [
         {
           name: "Inter",
-          data: inter,
+          data: interLight,
           style: "normal",
-          weight: 300,
+          weight: 400,
         },
         {
-          name: "CalSans",
-          data: calSans,
+          name: "Cal",
+          data: calSemiBold,
           style: "normal",
-          weight: 600,
+          weight: 400,
         },
       ],
     }

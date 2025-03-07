@@ -1,9 +1,9 @@
 import { compileMdxContent } from "@/lib/mdx";
 import { mdxComponents } from "@/mdx-components";
-import fs from "fs/promises";
+import fs from "node:fs/promises";
 import matter from "gray-matter";
 import "highlight.js/styles/github-dark.css";
-import path from "path";
+import path from "node:path";
 import type React from "react";
 
 const orderedDocsCategories = [

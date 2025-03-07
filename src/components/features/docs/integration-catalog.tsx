@@ -32,7 +32,6 @@ export function IntegrationCatalog({
   const [activeCategory, setActiveCategory] = useState("all");
 
   const filteredIntegrations = pagesAndMeta.pages.filter((page) => {
-    console.log({ page });
     const matchesSearch =
       page.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       page.description.toLowerCase().includes(searchQuery.toLowerCase()) ||

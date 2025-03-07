@@ -78,7 +78,7 @@ export async function getPipePages(): Promise<
           vendor: data.vendor,
           dataLabel: data.dataName,
           priority: data.priority,
-          date: data.datte,
+          date: data.date,
           isPublished: data.isPublished,
           outputFields: data.outputFields,
           inputFields: data.inputFields,

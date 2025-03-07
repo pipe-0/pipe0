@@ -29,15 +29,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
     ...pipePages
       .filter((p) => p.isPublished)
-      .map(
-        ({ slug, date }) =>
-          ({
-            url: `${basePath}/docs/pipe-catalog/${slug}`,
-            lastModified: new Date(date),
-            priority: 1,
-            changeFrequency: "daily",
-          } as const)
-      ),
+      .map(({ slug, date }) => {
+        return {
+          url: `${basePath}/docs/pipe-catalog/${slug}`,
+          lastModified: new Date(date),
+          priority: 1,
+          changeFrequency: "daily",
+        } as const;
+      }),
     ...docsPages
       .filter((p) => p.isPublished)
       .map(({ slug, date }) => {
