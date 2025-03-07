@@ -11,14 +11,14 @@ export const size = {
 
 export const contentType = "image/png";
 
-export default async function Image({ slug }: { slug: string }) {
+export default async function Image({ params }: { params: { slug: string } }) {
   const interLight = await readFile(
     join(process.cwd(), "src/assets/inter-light.ttf")
   );
   const calSemiBold = await readFile(
     join(process.cwd(), "src/assets/cal-sans-semibold.ttf")
   );
-  const docPage = await getDocPageBySlug(slug);
+  const docPage = await getDocPageBySlug(params.slug);
 
   return new ImageResponse(
     (

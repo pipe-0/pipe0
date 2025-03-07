@@ -11,8 +11,8 @@ export const size = {
 
 export const contentType = "image/png";
 
-export default async function Image({ slug }: { slug: string }) {
-  const pipePage = await getPipePageBySlug(slug);
+export default async function Image({ params }: { params: { slug: string } }) {
+  const pipePage = await getPipePageBySlug(params.slug);
 
   const interLight = await readFile(
     join(process.cwd(), "src/assets/inter-light.ttf")
