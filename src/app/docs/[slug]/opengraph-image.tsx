@@ -2,8 +2,6 @@ import { DocsPage } from "@/lib/docs";
 import { getBaseUrl } from "@/lib/utils";
 import { notFound } from "next/navigation";
 import { ImageResponse } from "next/og";
-import { readFile } from "node:fs/promises";
-import { join } from "node:path";
 
 export const alt = "pipe0";
 export const size = {
@@ -30,12 +28,14 @@ export default async function Image({ params }: { params: { slug: string } }) {
   console.log({ url, docPage });
   if (!docPage) return notFound();
 
-  const interLight = await readFile(
-    join(process.cwd(), "assets/inter-light.ttf")
-  );
-  const calSemiBold = await readFile(
-    join(process.cwd(), "assets/cal-sans-semibold.ttf")
-  );
+  const [inter, calSans] = await Promise.all([
+    fetch(new URL("../../../../assets/inter-light.ttf", import.meta.url)).then(
+      (res) => res.arrayBuffer()
+    ),
+    fetch(
+      new URL("../../../../assets/cal-sans-semibold.ttf", import.meta.url)
+    ).then((res) => res.arrayBuffer()),
+  ] as const);
 
   return new ImageResponse(
     (
@@ -70,13 +70,13 @@ export default async function Image({ params }: { params: { slug: string } }) {
       fonts: [
         {
           name: "Inter",
-          data: interLight,
+          data: inter,
           style: "normal",
           weight: 400,
         },
         {
           name: "Cal",
-          data: calSemiBold,
+          data: calSans,
           style: "normal",
           weight: 400,
         },
