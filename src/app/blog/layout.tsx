@@ -1,4 +1,3 @@
-import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
 import { cn } from "@/lib/utils";
 import { Inter } from "next/font/google";
@@ -17,7 +16,6 @@ export default function BlogLayout({
     >
       <Header />
       <div className="grow pt-16">{children}</div>
-      <Footer />
     </div>
   );
 }

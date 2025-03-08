@@ -1,7 +1,6 @@
-import { getPostBySlug } from "@/lib/blog";
-import { readFile } from "fs/promises";
+import { getPostBySlug, Post } from "@/lib/blog";
+import { notFound } from "next/navigation";
 import { ImageResponse } from "next/og";
-import { join } from "path";
 
 export const runtime = "nodejs";
 export const alt = "pipe0";
@@ -13,14 +12,16 @@ export const size = {
 export const contentType = "image/png";
 
 export default async function Image({ params }: { params: { slug: string } }) {
-  const blogPage = await getPostBySlug(params.slug);
+  let blogPage: Post | null = null;
 
-  const interLight = await readFile(
-    join(process.cwd(), "assets/inter-light.ttf")
-  );
-  const calSemiBold = await readFile(
-    join(process.cwd(), "assets/cal-sans-semibold.ttf")
-  );
+  try {
+    blogPage = await getPostBySlug(params.slug);
+  } catch (error) {
+    console.error("Error fetching blog post:", error);
+    return notFound();
+  }
+
+  if (!blogPage) return notFound();
 
   return new ImageResponse(
     (
@@ -42,9 +43,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
           alt="pipe0 Logo"
           height="64"
         />
-        <div style={{ color: "white", fontSize: 64, fontFamily: "Inter" }}>
-          {blogPage?.title}
-        </div>
+        <div style={{ color: "white", fontSize: 64 }}>{blogPage?.title}</div>
         <div style={{ color: "#A1A1AB", fontSize: 32 }}>
           {blogPage?.excerpt || "Blog post"}
         </div>
@@ -52,20 +51,6 @@ export default async function Image({ params }: { params: { slug: string } }) {
     ),
     {
       ...size,
-      fonts: [
-        {
-          name: "Inter",
-          data: interLight,
-          style: "normal",
-          weight: 400,
-        },
-        {
-          name: "Cal",
-          data: calSemiBold,
-          style: "normal",
-          weight: 400,
-        },
-      ],
     }
   );
 }

@@ -13,7 +13,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { VendorLogo } from "@/components/vendor-logo";
-import { IntegrationPage } from "@/lib/pipes";
+import { PipePage } from "@/lib/pipes";
 import { Search } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
@@ -25,7 +25,7 @@ export function IntegrationCatalog({
     toolCategories: string[];
     vendors: string[];
     dataLabels: string[];
-    pages: Omit<IntegrationPage, "content">[];
+    pages: Omit<PipePage, "content">[];
   };
 }) {
   const [searchQuery, setSearchQuery] = useState("");

@@ -1,7 +1,6 @@
-import { getPipePageBySlug } from "@/lib/pipes";
-import { readFile } from "fs/promises";
+import { getPipePageBySlug, PipePage } from "@/lib/pipes";
+import { notFound } from "next/navigation";
 import { ImageResponse } from "next/og";
-import { join } from "path";
 
 export const runtime = "nodejs";
 export const alt = "pipe0";
@@ -13,14 +12,16 @@ export const size = {
 export const contentType = "image/png";
 
 export default async function Image({ params }: { params: { slug: string } }) {
-  const pipePage = await getPipePageBySlug(params.slug);
+  let pipePage: PipePage | null = null;
 
-  const interLight = await readFile(
-    join(process.cwd(), "assets/inter-light.ttf")
-  );
-  const calSemiBold = await readFile(
-    join(process.cwd(), "assets/cal-sans-semibold.ttf")
-  );
+  try {
+    pipePage = await getPipePageBySlug(params.slug);
+  } catch (error) {
+    console.error("Error fetching pipe page:", error);
+    return notFound();
+  }
+
+  if (!pipePage) return notFound();
 
   return new ImageResponse(
     (
@@ -52,20 +53,6 @@ export default async function Image({ params }: { params: { slug: string } }) {
     ),
     {
       ...size,
-      fonts: [
-        {
-          name: "Inter",
-          data: interLight,
-          style: "normal",
-          weight: 400,
-        },
-        {
-          name: "Cal",
-          data: calSemiBold,
-          style: "normal",
-          weight: 400,
-        },
-      ],
     }
   );
 }

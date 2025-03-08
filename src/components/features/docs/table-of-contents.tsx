@@ -61,9 +61,9 @@ export function TableOfContents() {
     <div className="space-y-2">
       <p className="font-medium">On This Page</p>
       <ul className="m-0 list-none p-0">
-        {headings.map((heading) => {
+        {headings.map((heading, i) => {
           return (
-            <li key={heading.id} className="mt-0 pt-2">
+            <li key={heading.id + i} className="mt-0 pt-2">
               <a
                 href={`#${heading.id}`}
                 className={cn(

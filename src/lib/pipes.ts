@@ -17,7 +17,7 @@ type FieldDescription = {
   schema: null | JSONSchema7;
 };
 
-export type IntegrationPage = {
+export type PipePage = {
   slug: string;
   name: string;
   label: string;
@@ -56,9 +56,7 @@ export async function getPipePagesAndMetadata() {
   };
 }
 
-export async function getPipePages(): Promise<
-  Omit<IntegrationPage, "content">[]
-> {
+export async function getPipePages(): Promise<Omit<PipePage, "content">[]> {
   const files = await fs.readdir(pipesCatalog);
 
   const integrations = await Promise.all(
@@ -91,7 +89,7 @@ export async function getPipePages(): Promise<
 
 export async function getPipePageBySlug(
   slug: string
-): Promise<IntegrationPage | null> {
+): Promise<PipePage | null> {
   try {
     const filePath = path.join(pipesCatalog, `${slug}.mdx`);
     const source = await fs.readFile(filePath, "utf8");
