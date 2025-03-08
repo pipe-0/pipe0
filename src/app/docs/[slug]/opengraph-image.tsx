@@ -1,5 +1,4 @@
-import { DocsPage } from "@/lib/docs";
-import { getBaseUrl } from "@/lib/utils";
+import { DocsPage, getDocPageBySlug } from "@/lib/docs";
 import { notFound } from "next/navigation";
 import { ImageResponse } from "next/og";
 
@@ -12,20 +11,15 @@ export const size = {
 export const contentType = "image/png";
 
 export default async function Image({ params }: { params: { slug: string } }) {
-  const { slug } = params;
-  const url = `${getBaseUrl()}/api/docs/${slug}`;
   let docPage: DocsPage | null = null;
 
   try {
-    const res = await fetch(url);
-    if (!res.ok) throw new Error(`Fetch failed with status: ${res.status}`);
-    docPage = (await res.json()) as DocsPage;
+    docPage = await getDocPageBySlug(params.slug);
   } catch (error) {
     console.error("Error fetching docPage:", error);
     return notFound();
   }
 
-  console.log({ url, docPage });
   if (!docPage) return notFound();
 
   return new ImageResponse(
