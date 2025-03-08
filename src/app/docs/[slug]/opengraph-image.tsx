@@ -1,4 +1,4 @@
-import { DocsPage, getDocPageBySlug } from "@/lib/docs";
+import { DocsPage, getDocPageBySlug, getDocPages } from "@/lib/docs";
 import { notFound } from "next/navigation";
 import { ImageResponse } from "next/og";
 
@@ -10,7 +10,18 @@ export const size = {
 
 export const contentType = "image/png";
 
-export default async function Image({ params }: { params: { slug: string } }) {
+export async function generateStaticParams() {
+  const docPages = await getDocPages();
+  return docPages.map((post) => ({
+    slug: post.slug,
+  }));
+}
+
+export default async function Image(props: {
+  params: Promise<{ slug: string }>;
+}) {
+  const params = await props.params;
+
   let docPage: DocsPage | null = null;
 
   try {

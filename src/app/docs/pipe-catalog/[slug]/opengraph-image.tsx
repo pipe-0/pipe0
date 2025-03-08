@@ -1,4 +1,4 @@
-import { getPipePageBySlug, PipePage } from "@/lib/pipes";
+import { getPipePageBySlug, getPipePages, PipePage } from "@/lib/pipes";
 import { notFound } from "next/navigation";
 import { ImageResponse } from "next/og";
 
@@ -11,7 +11,18 @@ export const size = {
 
 export const contentType = "image/png";
 
-export default async function Image({ params }: { params: { slug: string } }) {
+export async function generateStaticParams() {
+  const pipePages = await getPipePages();
+  return pipePages.map((post) => ({
+    slug: post.slug,
+  }));
+}
+
+export default async function Image(props: {
+  params: Promise<{ slug: string }>;
+}) {
+  const params = await props.params;
+
   let pipePage: PipePage | null = null;
 
   try {
