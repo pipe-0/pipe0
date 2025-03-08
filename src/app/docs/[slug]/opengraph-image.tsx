@@ -2,8 +2,6 @@ import { DocsPage } from "@/lib/docs";
 import { getBaseUrl } from "@/lib/utils";
 import { notFound } from "next/navigation";
 import { ImageResponse } from "next/og";
-import { readFile } from "node:fs/promises";
-import { join } from "node:path";
 
 export const alt = "pipe0";
 export const size = {
@@ -30,10 +28,6 @@ export default async function Image({ params }: { params: { slug: string } }) {
   console.log({ url, docPage });
   if (!docPage) return notFound();
 
-  const interLight = await readFile(
-    join(process.cwd(), "assets/inter-light.ttf")
-  );
-
   return new ImageResponse(
     (
       <div
@@ -54,7 +48,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
           alt="pipe0 Logo"
           height="64"
         />
-        <div style={{ color: "white", fontSize: 64, fontFamily: "Inter" }}>
+        <div style={{ color: "white", fontSize: 64 }}>
           {docPage?.title || "pipe0 Documentation"}
         </div>
         <div style={{ color: "#A1A1AB", fontSize: 32 }}>
@@ -64,14 +58,6 @@ export default async function Image({ params }: { params: { slug: string } }) {
     ),
     {
       ...size,
-      fonts: [
-        {
-          name: "Inter",
-          data: interLight,
-          style: "normal",
-          weight: 400,
-        },
-      ],
     }
   );
 }

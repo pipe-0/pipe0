@@ -16,21 +16,27 @@ export function Header() {
       <div className="container flex items-center justify-between h-16 mx-auto">
         <Logo />
         <nav className="hidden md:flex space-x-8">
-          <Link href="/" className="text-sm text-gray-300 hover:text-white">
+          <Link
+            href="/"
+            className="text-sm font-semibold text-gray-300 hover:text-white"
+          >
             Product
           </Link>
-          <Link href="/blog" className="text-sm text-gray-300 hover:text-white">
+          <Link
+            href="/blog"
+            className="text-sm font-semibold text-gray-300 hover:text-white"
+          >
             Blog
           </Link>
           <Link
             href="/docs"
-            className="text-sm text-gray-300  hover:text-white"
+            className="text-sm text-gray-300 font-semibold hover:text-white"
           >
             Documentation
           </Link>
           <Link
             href="/pricing"
-            className="text-sm text-gray-300  hover:text-white"
+            className="text-sm text-gray-300 font-semibold hover:text-white"
           >
             Pricing
           </Link>

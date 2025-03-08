@@ -195,7 +195,7 @@ const response = await pipe0.request.create({
         name: "PeopleBusinessEmailWaterfallV1"
       },
       {
-        name: "CompanyInfoPipe0V1"
+        name: "CompanyDescriptionGoogleMapsV1"
       }
     ],
     input: [
