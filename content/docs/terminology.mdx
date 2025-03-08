@@ -17,5 +17,8 @@ While building pipe0 we invest heavily in consistent naming conventions. Learnin
 | Pipeline  | An enrichment workflow consisting of one or multiple [pipes](/docs/pipe-catalog). A pipeline defines what data you want to add to an input. Example: You have the first and last name of a person and want to find a matching LinkedIn profile.    |
 | Pipeline Request  | Defines a valid payload for the `/v1/run` endpoint. Describes the request that can be processessed or validated before processing. |
 | Pipeline Response  | The response to a pipeline request. [Pipeline responses](/docs/terminology) can be generated via the SDK (without a request to the server) to produce validation information. `Pipeline responses` can also be generated on the server when a `Pipeline Request` is sent to the server. |
-| Input | Data objects that you send as part of the request. `Inputs` are plain JSON objects that are send along `Pipeline requests`. |
+| Input | A list of data objects that you send as part of the request. |
+| Input Object | Input objects are plain JSON objects. `Input` consists out of multiple input objects. |
+| Input Property | A key-value pair inside an input object. |
 | Record | Part of the server response after a pipeline request. Records contain all (normalized) fields of `inputs` along with metadata such as the processing state (`queued` | `processing` | `completed`) of the record. |
+| Record Field | After processing `Input Properties` are mapped and normalized into Record Fields. Record fields contain a value and meta information about the processing state of a field. |

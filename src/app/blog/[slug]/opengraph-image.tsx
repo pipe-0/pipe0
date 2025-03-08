@@ -1,4 +1,4 @@
-import { getPostBySlug, Post } from "@/lib/blog";
+import { getAllPosts, getPostBySlug, Post } from "@/lib/blog";
 import { notFound } from "next/navigation";
 import { ImageResponse } from "next/og";
 
@@ -11,7 +11,17 @@ export const size = {
 
 export const contentType = "image/png";
 
-export default async function Image({ params }: { params: { slug: string } }) {
+export async function generateStaticParams() {
+  const posts = await getAllPosts();
+  return posts.map((post) => ({
+    slug: post.slug,
+  }));
+}
+
+export default async function Image(props: {
+  params: Promise<{ slug: string }>;
+}) {
+  const params = await props.params;
   let blogPage: Post | null = null;
 
   try {
