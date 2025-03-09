@@ -13,6 +13,8 @@ import {
 } from "@/components/ui/breadcrumb";
 import Link from "next/link";
 
+export const dynamicParams = false;
+
 interface DocPageProps {
   params: Promise<{ slug: string }>;
 }

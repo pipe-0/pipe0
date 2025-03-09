@@ -5,6 +5,8 @@ import { ChevronRight } from "lucide-react";
 import { Metadata } from "next";
 import Link from "next/link";
 
+export const dynamicParams = false;
+
 export async function generateStaticParams() {
   const posts = await getAllPosts();
   return posts.map((post) => ({
