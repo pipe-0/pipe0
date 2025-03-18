@@ -147,18 +147,16 @@ export default function Home() {
         <div className="container lg:grid-cols-2 gap-12 items-center mx-auto ">
           <div className="space-y-8 max-w-screen-lg">
             <h1 className="text-5xl font-serif tracking-tight">
-              Universal{" "}
-              <HighlightSection>
-                lead and company enrichment API
-              </HighlightSection>{" "}
-              for the next generation of sales tools. Powered by AI.
+              The world&apos;s most powerful{" "}
+              <HighlightSection>lead and company data</HighlightSection>{" "}
+              enrichment framework. Powered by AI.
             </h1>
             <p className="text-lg text-gray-400">
-              Combine <b>50+ data providers</b> into custom enrichment pipelines
-              for your application. Find <b>business emails</b>,{" "}
-              <b>company info</b>, and much more. Connect enrichments with AI
-              agents. Seamlessly add Clay-like functionality to your application
-              with full control over cost, usage, and data quality.
+              Combine 50+ data providers into custom enrichment pipelines. Find
+              email addresses, phone numbers, company info, and much more. Add
+              Clay-like functionality to your application with just a few lines
+              of code. Discover the data framework for the next generation of
+              sales tools.
             </p>
 
             <EmailForm />
@@ -185,16 +183,17 @@ export default function Home() {
                     <CodeBlock
                       codeString={`
 // Perform complex enrichments with 10 LOC
-
 const pipe0 = new Pipe0({ url: "htttps://your-sever.com" });
 
 // Combine 50+ enrichments into custom enrichment pipelines
 const response = await pipe0.request.create({
     pipes: [
       {
+        // Find work email for "John Doe" using a waterfall enrichment
         name: "PeopleBusinessEmailWaterfallV1"
       },
       {
+        // Find the business description for "Google LLC" on Google Maps
         name: "CompanyDescriptionGoogleMapsV1"
       }
     ],
@@ -253,7 +252,7 @@ const response = await pipe0.request.create({
                     <div className="bg-white/10 rounded-lg p-4">
                       <div className="flex items-center gap-2 text-sm font-medium">
                         <Computer className="w-4 h-4" />
-                        Analyse last LinkedIn posts with AI model
+                        Analyse last LinkedIn posts with AI
                       </div>
                       <p className="text-xs text-white/70 mt-2">
                         Set boolean to custom field if user posted about pipe0
