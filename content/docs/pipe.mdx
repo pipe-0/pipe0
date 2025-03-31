@@ -25,62 +25,45 @@ Enriching data works by fist defining a pipeline and adding `pipes` to said pipe
 
 Our data enrichment catalog uses a consistent naming schema to make it easy to understand what each enrichment does, how it works, and how it’s versioned. Every enrichment name follows this format:
 
-**[Category]-[Action][Target]-[Variant]-[Provider]-[Version]**
+```
+{Category}{Action}{Target}{Provider}[:{InputType}]@{Version}
+```
 
 Here’s what each part means:
 
 #### Components
 1. **Category**  
    - **What it is**: The broad group or scope this enrichment applies to.
-   - **Examples**: `People` (individual-related), `Company` (business-related).
-   - **Purpose**: Helps you quickly filter enrichments by their domain.
 
 2. **Action[Target]**  
    - **What it is**: A fused term combining the *action* (what the enrichment does) and the *target* (what it works on or produces).
-   - **Actions**: Examples include `Get` (retrieve), `Check` (evaluate), `Split` (transform), `Validate` (verify).
-   - **Targets**: Examples include `BusinessEmail`, `WorkEmail`, `Name`, `Revenue`.
-   - **Examples**: `GetBusinessEmail` (retrieve an email), `CheckWorkEmail` (assess if it’s a work email), `SplitName` (divide a name into parts).
-   - **Purpose**: Clearly states the enrichment’s goal in a compact way.
 
-3. **Variant**  
-   - **What it is**: The specific method, input source, or approach used to perform the action.
-   - **Examples**: `LinkedIn` (uses a LinkedIn URL), `NameDomain` (uses name + domain), `Logic` (rule-based check), `Standard` (basic method).
-   - **Purpose**: Distinguishes between enrichments that achieve the same result in different ways.
-
-4. **Provider**  
+3. **Provider**  
    - **What it is**: The tool, service, or approach powering the enrichment.
-   - **Examples**: `Waterfall` (multi-source strategy), `ZeroBounce` (specific provider), `Internal` (custom-built).
-   - **Purpose**: Identifies who or what delivers the enrichment.
+
+4. **InputType (optional)**  
+   - **What it is**: Optional property listing the main input. This is used when there is a name conflict between two pipes from the same category with the same action and target.
 
 5. **Version**  
    - **What it is**: The version number of the enrichment, showing updates or iterations.
-   - **Format**: Simple numbers (e.g., `1`, `2`, `2.1`).
-   - **Purpose**: Tracks improvements or changes over time.
 
-#### How It Works
-- **Delimiters**: Hyphens (`-`) separate each component for easy reading and parsing.
-- **Case**: Multi-word terms use CamelCase (e.g., `BusinessEmail`, `NameDomain`) for clarity; single words stay as-is (e.g., `People`).
+#### Naming target
 
-#### Examples
-| Name                                   | Meaning                                                                 |
-|----------------------------------------|-------------------------------------------------------------------------|
-| `People-GetBusinessEmail-LinkedIn-Waterfall-1` | Retrieve a business email for a person using LinkedIn, via Waterfall, v1. |
-| `People-CheckWorkEmail-Logic-Internal-1`       | Check if an email is work-related using logic, built internally, v1.     |
-| `People-SplitName-Standard-Internal-1`         | Split a person’s name into first/last using a standard method, v1.       |
-| `People-ValidateEmail-ZeroBounce-ZeroBounce-1` | Validate an email using ZeroBounce’s method and service, v1.            |
-| `Company-PredictRevenue-Model-Internal-2.1`   | Predict company revenue with a model, built internally, v2.1.           |
+When looking for a specific pipe you may ask yourself if a pipe will be found in the  'people' or 'company' category. While this is clear for 
+most pipes it gets trickier for others. Let's take the pipe `PeopleGetCompanyWebsitePipe0@1`. The pipe uses the email address input of a **person** 
+to generate a the website URL of a **company**.
 
-#### Why This Format?
-- **Clarity**: Instantly see what an enrichment does and how it does it.
-- **Flexibility**: Supports retrieval, validation, logical checks, transformations, and more.
-- **Scalability**: Easy to add new categories, actions, or variants as the catalog grows.
-- **Organization**: Group by category (e.g., all `People-*`) or provider (e.g., all `*-Waterfall-*`).
+In cases like these you can assume that the input of the pipe conveys intent. The pipes inputs (email address) are people data. We assume users
+are using the pipe to enrich people data since a person is the subject of the action.
+
+In short, the pipe category is determined by its inputs.
+
 
 This naming convention ensures our enrichment catalog is intuitive, consistent, and powerful—making it simple for you to find and use the right tool for your data needs.
 
 ## Core Concepts
 
-Before you started we recommend familiarizing yourself with the following core concepts: 
+Before you started we recommend familiarizing yourself with the following core concepts:
 
 - [Pipelines](/docs/pipeline)
 - [Pipes](/docs/pipe-catalog)
