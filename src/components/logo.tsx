@@ -2,16 +2,22 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 
-export function Logo() {
+export function LogoRaw() {
+  return (
+    <Image
+      src="/logo-dark.svg"
+      width={208}
+      height={65}
+      alt="logo-dark"
+      className="w-20"
+    />
+  );
+}
+
+export function LinkLogo() {
   return (
     <Link href="/" className="text-xl font-bold font-mono">
-      <Image
-        src="/logo-dark.svg"
-        width={208}
-        height={65}
-        alt="logo-dark"
-        className="w-20"
-      />
+      <LogoRaw />
     </Link>
   );
 }

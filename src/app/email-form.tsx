@@ -1,11 +1,8 @@
 "use client";
 
+import { HighlightSection } from "@/components/highlight-section";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { ArrowRight, Loader } from "lucide-react";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import {
   Form,
   FormControl,
@@ -13,10 +10,15 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader } from "lucide-react";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { z } from "zod";
 
 const formSchema = z.object({
-  email: z.string().email("Ungütiges Email Format"),
+  email: z.string().email("Invalid format"),
   prot: z.string(),
 });
 
@@ -85,14 +87,21 @@ export default function EmailForm() {
 
           <Button
             type="submit"
-            className="font-normal text-black rounded-full sm:w-auto bg-green-200 hover:bg-green-300"
+            variant="outline"
+            className="flex gap-1 px-0 py-0 rounded-full sm:w-auto border-brand border-2"
             disabled={form.formState.isSubmitting}
           >
-            Request Access
+            <div className="flex px-3 items-center gap-2 py-2  rounded-l-full rounded-r-full text-secondary-foreground">
+              <HighlightSection>〷</HighlightSection>
+              <span>Talk to us</span> <HighlightSection>〷</HighlightSection>
+            </div>
             {form.formState.isSubmitting ? (
               <Loader size={15} className="animate-spin" />
             ) : (
-              <ArrowRight size={15} className="" />
+              <Avatar>
+                <AvatarImage src="https://github.com/florianmartens.png" />
+                <AvatarFallback>FM</AvatarFallback>
+              </Avatar>
             )}
           </Button>
         </div>

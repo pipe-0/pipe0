@@ -41,6 +41,15 @@
 
   --color-brand: hsl(138 92% 81%);
   --color-brand-foreground: hsl(138, 50%, 23%);
+
+  --color-brasdfasd: hsl(138, 92%, 30%);
+
+  /* Nextra */
+  --nextra-content-width: 1400px;
+
+  --nextra-primary-hue: 138;
+  --nextra-primary-saturation: 92%;
+  --nextra-primary-lightness: 30%;
 }
 
 .dark {
@@ -79,6 +88,11 @@
 
   --color-brand: hsl(138 92% 81%);
   --color-brand-foreground: hsl(138, 50%, 23%);
+
+  /* Nextra */
+  --nextra-primary-hue: 138;
+  --nextra-primary-saturation: 92%;
+  --nextra-primary-lightness: 81%;
 }
 
 @theme inline {

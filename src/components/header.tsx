@@ -1,4 +1,4 @@
-import { Logo } from "@/components/logo";
+import { LinkLogo } from "@/components/logo";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -14,7 +14,7 @@ export function Header() {
   return (
     <header className="px-6 lg:px-0 fixed top-0 w-full z-50 bg-black/50 backdrop-blur-sm border-b border-white/10">
       <div className="container flex items-center justify-between h-16 mx-auto">
-        <Logo />
+        <LinkLogo />
         <nav className="hidden md:flex space-x-8">
           <Link
             href="/"
@@ -29,7 +29,7 @@ export function Header() {
             Blog
           </Link>
           <Link
-            href="/docs"
+            href="/resources/documentation"
             className="text-sm text-gray-300 font-semibold hover:text-white"
           >
             Documentation

@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://pipe0.com
+
+# Sitemaps
+Sitemap: https://pipe0.com/sitemap.xml

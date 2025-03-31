@@ -1,47 +1,42 @@
 "use client";
 
+import { PipeEntry } from "@/app/resources/pipe-catalog/get-pipes";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import {
   Card,
-  CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { VendorLogo } from "@/components/vendor-logo";
-import { PipePage } from "@/lib/pipes";
+import { getLastPipeVersionEntry } from "@/lib/utils";
 import { Search } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
 export function IntegrationCatalog({
-  pagesAndMeta,
+  pipeEntries,
+  allTags,
 }: {
-  pagesAndMeta: {
-    toolCategories: string[];
-    vendors: string[];
-    dataLabels: string[];
-    pages: Omit<PipePage, "content">[];
-  };
+  pipeEntries: PipeEntry[];
+  allTags: Record<string, number>;
 }) {
   const [searchQuery, setSearchQuery] = useState("");
-  const [activeCategory, setActiveCategory] = useState("all");
 
-  const filteredIntegrations = pagesAndMeta.pages.filter((page) => {
+  const filteredPipes = pipeEntries.filter((pipe) => {
+    // Last available version of the pipe
+    const lastChildEntry = getLastPipeVersionEntry(pipe);
     const matchesSearch =
-      page.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      page.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      page.dataLabel.includes(searchQuery.toLowerCase()) ||
-      page.toolCategory.toLowerCase().includes(searchQuery.toLowerCase());
+      pipe.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      lastChildEntry?.frontMatter.pipe
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase()) ||
+      (lastChildEntry?.frontMatter.tags || []).includes(
+        searchQuery.toLowerCase()
+      );
 
-    const matchesCategory =
-      activeCategory === "all" || page.toolCategory === activeCategory;
-
-    return matchesSearch && matchesCategory;
+    return matchesSearch;
   });
 
   return (
@@ -58,63 +53,55 @@ export function IntegrationCatalog({
           />
         </div>
       </div>
-
-      <Tabs
-        defaultValue="all"
-        value={activeCategory}
-        onValueChange={setActiveCategory}
+      <div
+        className="not-prose"
+        style={{ display: "flex", flexWrap: "wrap", gap: ".5rem" }}
       >
-        <TabsList className="mb-4 flex h-auto flex-wrap justify-start gap-2">
-          {pagesAndMeta.toolCategories.map((category) => (
-            <TabsTrigger key={category} value={category}>
-              {category}
-            </TabsTrigger>
-          ))}
-        </TabsList>
+        {Object.entries(allTags).map(([tag, count]) => (
+          <Badge
+            key={tag}
+            variant="secondary"
+            onClick={() => setSearchQuery(tag.toLowerCase())}
+            className="cursor-pointer"
+          >
+            {tag} ({count})
+          </Badge>
+        ))}
+      </div>
 
-        <TabsContent value={activeCategory} className="mt-0">
-          <div className="grid gap-4 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-2">
-            {filteredIntegrations.map((integration) => (
-              <Card key={integration.name}>
-                <CardHeader>
-                  <div className="flex gap-2 items-center pb-2">
-                    <VendorLogo vendor={integration.vendor} />
-                    <div>
-                      <CardDescription>{integration.vendor}</CardDescription>
-                      <CardTitle>{integration.label}</CardTitle>
-                    </div>
-                  </div>
-                  <CardDescription>{integration.description}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex flex-wrap gap-2">
-                    <Badge variant="secondary">{integration.target}</Badge>
-                    <Badge variant="secondary">
-                      {integration.toolCategory}
-                    </Badge>
-                    <Badge variant="secondary">{integration.dataLabel}</Badge>
-                  </div>
-                </CardContent>
-                <CardFooter>
-                  <Button asChild>
-                    <Link href={`/docs/pipe-catalog/${integration.slug}`}>
-                      View Details
-                    </Link>
-                  </Button>
-                </CardFooter>
-              </Card>
-            ))}
-          </div>
+      <div className="grid gap-4 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-2">
+        {filteredPipes.map((pipe) => {
+          const lastChildEntry = getLastPipeVersionEntry(pipe);
+          if (!lastChildEntry) return null;
+          return (
+            <Card key={pipe.route} className="bg-secondary">
+              <CardHeader>
+                <CardTitle>
+                  {lastChildEntry.frontMatter.root || pipe.name}
+                </CardTitle>
+                <CardDescription>
+                  {lastChildEntry.frontMatter.description}
+                </CardDescription>
+              </CardHeader>
+              <CardFooter>
+                {pipe.children.map((version) => (
+                  <Link href={version.route} key={version.name}>
+                    <Badge>{version.name}</Badge>
+                  </Link>
+                ))}
+              </CardFooter>
+            </Card>
+          );
+        })}
+      </div>
 
-          {filteredIntegrations.length === 0 && (
-            <div className="flex h-[200px] flex-col items-center justify-center rounded-md border border-dashed p-8 text-center">
-              <p className="text-sm text-muted-foreground">
-                No integrations found. Try adjusting your search or filter.
-              </p>
-            </div>
-          )}
-        </TabsContent>
-      </Tabs>
+      {filteredPipes.length === 0 && (
+        <div className="flex h-[200px] flex-col items-center justify-center rounded-md border border-dashed p-8 text-center">
+          <p className="text-sm text-muted-foreground">
+            No integrations found. Try adjusting your search or filter.
+          </p>
+        </div>
+      )}
     </div>
   );
 }

@@ -1,21 +1,42 @@
-import { Header } from "@/components/header";
-import { cn } from "@/lib/utils";
-import { Inter } from "next/font/google";
-import type React from "react"; // Import React
+import { LogoRaw } from "@/components/logo";
+import { appInfo } from "@/lib/const";
+import { Footer, Layout, Navbar } from "nextra-theme-docs";
+import "nextra-theme-docs/style.css";
+import { Banner, Search } from "nextra/components";
+import { getPageMap } from "nextra/page-map";
+import { PropsWithChildren } from "react";
 
-const inter = Inter({ subsets: ["latin"] });
+export const metadata = {};
 
-export default function BlogLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+const navbar = <Navbar logo={<LogoRaw />} />;
+
+const search = (
+  <Search
+    placeholder="Search blog"
+    // ... Your additional navbar options
+  />
+);
+
+export default async function RootLayout({ children }: PropsWithChildren) {
+  const banner = (
+    <Banner storageKey="4.0-release">🎉 Our new blog is live!</Banner>
+  );
   return (
-    <div
-      className={cn("min-h-screen flex flex-col antialiased", inter.className)}
+    <Layout
+      banner={banner}
+      pageMap={await getPageMap("/blog")}
+      navbar={navbar}
+      search={search}
+      sidebar={{ defaultOpen: false, toggleButton: false }}
     >
-      <Header />
-      <div className="grow pt-16">{children}</div>
-    </div>
+      <div className="max-w-screen-xl mx-auto">{children}</div>
+
+      <Footer>
+        {new Date().getFullYear()} © {appInfo.productName} |&nbsp;
+        <a href="/feed.xml" style={{ float: "right" }}>
+          RSS
+        </a>
+      </Footer>
+    </Layout>
   );
 }

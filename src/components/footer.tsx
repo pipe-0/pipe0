@@ -1,4 +1,4 @@
-import { constants } from "@/lib/const";
+import { appInfo } from "@/lib/const";
 import Link from "next/link";
 
 export function Footer() {
@@ -24,7 +24,7 @@ export function Footer() {
             <ul className="space-y-2">
               <li>
                 <Link
-                  href="/docs"
+                  href="/resources/documentation"
                   className="text-sm text-gray-400 hover:text-white"
                 >
                   Documentation
@@ -85,7 +85,7 @@ export function Footer() {
         </div>
         <div className="mt-12 pt-8 border-t border-white/10">
           <p className="text-sm text-gray-400">
-            © {new Date().getFullYear()} {constants.productName}. All rights
+            © {new Date().getFullYear()} {appInfo.productName}. All rights
             reserved.
           </p>
         </div>

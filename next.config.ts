@@ -1,25 +1,74 @@
-import createMDX from "@next/mdx";
-import rehypeHighlight from "rehype-highlight";
-import remarkGfm from "remark-gfm";
 import nextra from "nextra";
 
 /** @type {import('next').NextConfig} */
-const nextConfig = {
-  // Configure `pageExtensions` to include markdown and MDX files
-  pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
-  // Optionally, add any other Next.js config below
+const nextConfig = {};
+
+const DEFAULT_PROPERTY_PROPS = {
+  type: "Property",
+  kind: "init",
+  method: false,
+  shorthand: false,
+  computed: false,
 };
 
-// const withMDX = createMDX({
-//   options: {
-//     remarkPlugins: [remarkGfm],
-//     rehypePlugins: [[rehypeHighlight, { detect: true }]],
-//   },
-// });
+// @ts-expect-error -- fixme
+function isExportNode(node, varName: string) {
+  if (node.type !== "mdxjsEsm") return false;
+  const [n] = node.data.estree.body;
+
+  if (n.type !== "ExportNamedDeclaration") return false;
+
+  const name = n.declaration?.declarations?.[0].id.name;
+  if (!name) return false;
+
+  return name === varName;
+}
+
+// @ts-expect-error -- fixme
+export function createAstObject(obj) {
+  return {
+    type: "ObjectExpression",
+    properties: Object.entries(obj).map(([key, value]) => ({
+      ...DEFAULT_PROPERTY_PROPS,
+      key: { type: "Identifier", name: key },
+      value:
+        value && typeof value === "object" ? value : { type: "Literal", value },
+    })),
+  };
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const rehypeOpenGraphImage = () => (ast: any) => {
+  // @ts-expect-error -- fixme
+  const frontMatterNode = ast.children.find((node) =>
+    isExportNode(node, "metadata")
+  );
+  if (!frontMatterNode) {
+    return;
+  }
+  const { properties } =
+    frontMatterNode.data.estree.body[0].declaration.declarations[0].init;
+  // @ts-expect-error -- fixme
+  const title = properties.find((o) => o.key.value === "title")?.value.value;
+  if (!title) {
+    return;
+  }
+  const [prop] = createAstObject({
+    openGraph: createAstObject({
+      images: `https://pipe0.com/og?title=${title}`,
+    }),
+  }).properties;
+  properties.push(prop);
+};
 
 const withNextra = nextra({
-  // ... Other Nextra config options
+  defaultShowCopyCode: true,
+  mdxOptions: {
+    rehypePlugins: [
+      // Provide only on `build` since turbopack on `dev` supports only serializable values
+      process.env.NODE_ENV === "production" && rehypeOpenGraphImage,
+    ],
+  },
 });
 
-// Merge MDX config with Next.js config
 export default withNextra(nextConfig);

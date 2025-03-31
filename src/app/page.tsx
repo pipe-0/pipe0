@@ -1,6 +1,7 @@
+import CodeExampleCard from "@/app/code-example-card";
 import LandingPageTable from "@/app/data-model-table";
 import EmailForm from "@/app/email-form";
-import CodeBlock from "@/components/code-block";
+import { Feature } from "@/app/feature";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
 import { HighlightSection } from "@/components/highlight-section";
@@ -8,9 +9,10 @@ import { SoonBadge } from "@/components/soon-badge";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { constants } from "@/lib/const";
-import { ArrowDown, ArrowRight, Computer, Linkedin, Mail } from "lucide-react";
+import { appInfo } from "@/lib/const";
+import { ArrowRight } from "lucide-react";
 import { ReactNode } from "react";
+import "./globals.css";
 
 type Integration = {
   name: string;
@@ -143,127 +145,63 @@ export default function Home() {
       <Header />
 
       {/* Hero Section */}
-      <section className="pt-24 lg:pt-32 pb-20 px-6 lg:px-0">
+      <section className="pt-24 lg:pt-32 pb-4 px-6 lg:px-0">
         <div className="container lg:grid-cols-2 gap-12 items-center mx-auto ">
           <div className="space-y-8 max-w-screen-lg">
             <h1 className="text-5xl font-serif tracking-tight">
-              The world&apos;s most powerful{" "}
-              <HighlightSection>lead and company data</HighlightSection>{" "}
-              enrichment framework. Powered by AI.
+              Add{" "}
+              <HighlightSection>Clay-like 🌈 data enrichment</HighlightSection>{" "}
+              to your application in one day. Powered l
+              <HighlightSection>ooooo</HighlightSection>ts of AI.
             </h1>
-            <p className="text-lg text-gray-400">
-              Combine 50+ data providers into custom enrichment pipelines. Find
-              email addresses, phone numbers, company info, and much more. Add
-              Clay-like functionality to your application with just a few lines
-              of code. Discover the data framework for the next generation of
-              sales tools.
+            <p className="text-lg text-muted-foreground">
+              Looking to integrate data enrichment into your app - phone
+              numbers, email addresses, company info? We&apos;re building the
+              fastest and most complete data enrichment framework in the world.
+              We power next-gen experiences for sales technology applications.
             </p>
-
-            <EmailForm />
+            <div className="flex">
+              <EmailForm />
+            </div>
           </div>
         </div>
       </section>
 
       {/* Code Example Section */}
-      <section>
-        <div className="relative aspect-square lg:aspect-auto lg:h-[800px] overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-green-400 via-blue-400 to-slate-400 overflow-hidden" />
-          <div className="absolute inset-0 p-8">
-            <div className="bg-black/80 h-full w-full rounded-lg border border-white/10 grid grid-cols-[1fr_min-content] overflow-scroll">
-              <div className="space-y-4 p-6">
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-green-500 rounded-full" />
-                  <span className="text-sm">
-                    Compose enrichment pipeline...
-                  </span>
-                </div>
-                <div className="p-4 rounded-lg">
-                  <code className="text-sm text-green-400"></code>
-                  <pre>
-                    <CodeBlock
-                      codeString={`
-// Perform complex enrichments with 10 LOC
-const pipe0 = new Pipe0({ url: "htttps://your-sever.com" });
-
-// Combine 50+ enrichments into custom enrichment pipelines
-const response = await pipe0.request.create({
-    pipes: [
-      {
-        // Find work email for "John Doe" using a waterfall enrichment
-        name: "PeopleBusinessEmailWaterfallV1"
-      },
-      {
-        // Find the business description for "Google LLC" on Google Maps
-        name: "CompanyDescriptionGoogleMapsV1"
-      }
-    ],
-    input: [
-      {
-        name: "John Doe",
-        companyName: "Google LLC"
-      }
-    ],
-  }).send();
-                      `}
-                    />
-                  </pre>
-                </div>
-              </div>
-              <div className="lg:min-w-80 relative">
-                {/* Grid Background Pattern */}
-
-                {/* Pipeline Flow */}
-                <div className="invisible lg:visible relative z-10 p-6 bg-blue-900 h-full flex items-center justify-center">
-                  <div
-                    className="absolute inset-0 opacity-[7%]"
-                    style={{
-                      backgroundImage: `
-                    linear-gradient(to right, white 1px, transparent 1px),
-                    linear-gradient(to bottom, white 1px, transparent 1px)
-                  `,
-                      backgroundSize: "60px 60px",
-                    }}
-                  />
-                  <div className="relative space-y-3 bg-blue-900 bg-radial px-2 py-12">
-                    <div className="bg-white/10 rounded-lg p-4">
-                      <div className="flex items-center gap-2 text-sm font-medium">
-                        <Mail className="w-4 h-4" />
-                        Find business email
-                      </div>
-                      <p className="text-xs text-white/70 mt-2">
-                        Use waterfall enrichment with up to 8 providers.
-                      </p>
-                    </div>
-
-                    <ArrowDown className="w-4 h-4 mx-auto text-white/40" />
-
-                    <div className="bg-white/10 rounded-lg p-4">
-                      <div className="flex items-center gap-2 text-sm font-medium">
-                        <Linkedin className="w-4 h-4" />
-                        Find LinkedIn Profile
-                      </div>
-                      <p className="text-xs text-white/70 mt-2">
-                        Enrich with last X posts
-                      </p>
-                    </div>
-
-                    <ArrowDown className="w-4 h-4 mx-auto text-white/40" />
-
-                    <div className="bg-white/10 rounded-lg p-4">
-                      <div className="flex items-center gap-2 text-sm font-medium">
-                        <Computer className="w-4 h-4" />
-                        Analyse last LinkedIn posts with AI
-                      </div>
-                      <p className="text-xs text-white/70 mt-2">
-                        Set boolean to custom field if user posted about pipe0
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+      <section className="container mx-auto grid grid-cols-1 lg:grid-cols-[3fr_2fr] grid-rows-2 gap-8">
+        <div className=" relative py-4 overflow-hidden row-span-2">
+          <div className="absolute rounded-lg inset-0 bg-gradient-to-br from-green-400 via-blue-400 to-slate-400 opacity-80" />
+          <CodeExampleCard />
         </div>
+        <Feature
+          index={4}
+          centered
+          className="hidden lg:flex flex-col items-center justify-center bg-cover bg-center text-white"
+          href="/docs/guide/markdown"
+        >
+          <p
+            style={{ textShadow: "0 2px 4px rgb(0 0 0 / 20%)" }}
+            className="text-2xl"
+          >
+            {" "}
+            Run dozends of enrichments over{" "}
+            <HighlightSection>thousands of records</HighlightSection> in
+            parallel. Or just one or two over a handful of records.
+          </p>
+        </Feature>
+        <Feature
+          index={4}
+          centered
+          className=" hidden lg:flex flex-col items-center justify-center bg-gradient-to-tl from-orange-200/80 via-red-300 to-yellow-400 bg-cover bg-center text-white"
+          href="/docs/guide/markdown"
+        >
+          <h2
+            className="text-7xl font-bold"
+            style={{ textShadow: "0 2px 4px rgb(0 0 0 / 20%)" }}
+          >
+            A Single API ⭕️
+          </h2>
+        </Feature>
       </section>
 
       {/* Data model section */}
@@ -427,7 +365,7 @@ const response = await pipe0.request.create({
         <div className="container relative mx-auto">
           <div className="max-w-2xl mx-auto text-center">
             <h2 className="text-3xl md:text-4xl font-serif mb-8">
-              Get in touch with {constants.productName}
+              Get in touch with {appInfo.productName}
             </h2>
             <EmailForm />
           </div>
