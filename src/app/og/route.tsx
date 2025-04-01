@@ -1,10 +1,6 @@
 import { ImageResponse } from "next/og";
 
-export const runtime = "edge";
-
-const font = fetch(new URL("Inter-SemiBold.otf", import.meta.url)).then((res) =>
-  res.arrayBuffer()
-);
+export const runtime = "nodejs";
 
 export async function GET(req: Request): Promise<Response> {
   try {
@@ -62,20 +58,13 @@ export async function GET(req: Request): Promise<Response> {
             {title}
           </h1>
           <p tw="m-0 text-3xl tracking-tight">
-            Powering data enrichment for next-gen sales software
+            Powering data enrichment for the next generation of software
           </p>
         </div>
       ),
       {
         width: 1200,
         height: 630,
-        fonts: [
-          {
-            name: "inter",
-            data: await font,
-            style: "normal",
-          },
-        ],
       }
     );
   } catch (error) {
