@@ -1,6 +1,10 @@
 import { ImageResponse } from "next/og";
 
-export const runtime = "nodejs";
+export const runtime = "edge";
+
+const font = fetch(new URL("Inter-SemiBold.otf", import.meta.url)).then((res) =>
+  res.arrayBuffer()
+);
 
 export async function GET(req: Request): Promise<Response> {
   try {
@@ -65,6 +69,13 @@ export async function GET(req: Request): Promise<Response> {
       {
         width: 1200,
         height: 630,
+        fonts: [
+          {
+            name: "inter",
+            data: await font,
+            style: "normal",
+          },
+        ],
       }
     );
   } catch (error) {
