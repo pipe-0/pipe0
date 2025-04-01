@@ -151,7 +151,7 @@ export default function Home() {
             <h1 className="text-5xl font-serif tracking-tight">
               Add{" "}
               <HighlightSection>Clay-like 🌈 data enrichment</HighlightSection>{" "}
-              to your application in one day. Powered l
+              to your application in one day. Powered by l
               <HighlightSection>ooooo</HighlightSection>ts of AI.
             </h1>
             <p className="text-lg text-muted-foreground">
