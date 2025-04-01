@@ -157,8 +157,12 @@ export default function Home() {
             <p className="text-lg text-muted-foreground">
               Looking to integrate data enrichment into your app - phone
               numbers, email addresses, company info? We&apos;re building the
-              fastest and most complete data enrichment framework in the world.
-              We power next-gen experiences for sales technology applications.
+              fastest and most complete data enrichment framework in the{" "}
+              <span className="inline-block rounded-md border-brand px-2">
+                🌍&nbsp;
+                <HighlightSection>world</HighlightSection>
+              </span>
+              . We power next-gen sales technology applications.
             </p>
             <div className="flex">
               <EmailForm />

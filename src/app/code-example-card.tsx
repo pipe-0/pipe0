@@ -12,10 +12,10 @@ export default function CodeExampleCard({}: CodeExampleCardProps) {
         filename="DummyComponent.jsx"
         highlightLines={[9, 13, 14, 18]}
         code={`
-// Perform complex enrichments with 10 LOC
+// Enrich data with 10 lines of code
 const pipe0 = new Pipe0({ url: "htttps://your-sever.com" });
 
-// Combine 50+ enrichments into custom enrichment pipelines
+// Combine enrichments (pipes 🚰) into custom pipelines
 const response = await pipe0.request.create({
     pipes: [
       {
