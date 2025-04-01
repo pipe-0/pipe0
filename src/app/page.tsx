@@ -177,7 +177,7 @@ export default function Home() {
           index={4}
           centered
           className="hidden lg:flex flex-col items-center justify-center bg-cover bg-center text-white"
-          href="/docs/guide/markdown"
+          href="/resources/documentation"
         >
           <p
             style={{ textShadow: "0 2px 4px rgb(0 0 0 / 20%)" }}
@@ -193,7 +193,7 @@ export default function Home() {
           index={4}
           centered
           className=" hidden lg:flex flex-col items-center justify-center bg-gradient-to-tl from-orange-200/80 via-red-300 to-yellow-400 bg-cover bg-center text-white"
-          href="/docs/guide/markdown"
+          href="/resources/documentation"
         >
           <h2
             className="text-7xl font-bold"
