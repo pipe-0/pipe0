@@ -1,31 +1,51 @@
 ---
-title: Quick Start
-category: Getting Started
-priority: 2
+title: Introduction
 description: Introduction to Pipe0
-icon: play
-date: 2025-03-07
-isPublished: true
+date: 2025-04-01
 ---
 
 ## Introduction
 
-> pipe0 pipe0 is a unified enrichment API for people and company data. You can leanr more about pipe0 by [visiting our landing page](/)
+[Pipe0](https://pipe0.com) is framework for data enrichment. If you have some data about a person or company 
+but want more, you can do that in an infinite number of ways with pipe0.
 
-With pipe0 it becomes easy to add any kind of enrichment flows into your application. Weather you're planning to enrich just a couple of records 
-or millions, pipe0 is designed for you.
+The ability to enrich data is a requirement for many apps. You may dream of a 
+CRM tht updates itself or a sales copilot helping SDRs prepare for upcoming meetings. Data enrichment 
+enables these features but is surprisingly hard to build.
 
-Out goal is to build an API that is infinitely powerful but can be understood and implemented in just a couple of minutes. Check out our example of [building Clay.com](https://google.com) in less than 1k lines of code.
+At pipe0, we're on a mission to built the fastest, most extensible data enrichment framework in the world.
 
-Our API has only two endpoints: `/v1/run` (create a task to enrich data) and `/v1/check`. Check the status of your enrichment task.
+Here are some things pipe0 does for you:
 
-Enriching data works by fist defining a pipeline and adding `pipes` to said pipeline.
+🔌 Connect 50+ data providers <br />
+💨 Analyze enrichment pipelines and parallelize execution (we're fast!)<br />
+💰 Run enrichment, scraping and AI infrastructure at low cost (we take 0% margin on external providers)<br />
+
+## What makes a framework?
+The term `framework` may surprise you because pipe0 is an API, dashboard, and <AppLink linkType="externalSDKNpm">SDK</AppLink>.
+
+While you can perform powerful enrichments in just 10 lines of code, you can choose to express logic and direction of data flow 
+with it too.
+
+The following is an example of an enrichment flow that requires logic.
+
+```text filename="Flow that needs logic"
+FIND phone number of person
+IF found
+    FIND website of current employer
+IF NOT found
+    FIND work email address
+```
+
+Your first instinct might be to implement this with code. However, pipe0 offers a much simpler way to express this
+and gets rid of brittle spaghetti code once and for all.
+
+
 
 ## Core Concepts
 
 Before you started we recommend familiarizing yourself with the following core concepts: 
 
-- [Pipelines](/docs/pipeline)
-- [Pipes](/docs/pipe-catalog)
-- [Terminology](/docs/terminology).
+- <AppLink linkType="quickstart">Quickstart</AppLink>
+- <AppLink linkType="terminology">Terminology</AppLink>
 

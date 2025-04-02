@@ -141,72 +141,84 @@ const integrations: Integration[] = [
 export default function Home() {
   return (
     <div className="min-h-screen bg-black text-white">
-      {/* Header */}
-      <Header />
+      <div>
+        {/* Checkerboard background */}
+        {/* <div className="absolute inset-0 w-full h-full z-0">
+          <div className="grid grid-cols-8 md:grid-cols-16 lg:grid-cols-24 grid-rows-8 md:grid-rows-16 lg:grid-rows-24 h-full w-full">
+            {Array.from({ length: 24 * 24 }).map((_, i) => {
+              return <div key={i} className={`border border-slate-700/40`} />;
+            })}
+          </div>
+        </div> */}
+        {/* Header */}
+        <Header />
 
-      {/* Hero Section */}
-      <section className="pt-24 lg:pt-32 pb-4 px-6 lg:px-0">
-        <div className="container lg:grid-cols-2 gap-12 items-center mx-auto ">
-          <div className="space-y-8 max-w-screen-lg">
-            <h1 className="text-5xl font-serif tracking-tight">
-              Add{" "}
-              <HighlightSection>Clay-like 🌈 data enrichment</HighlightSection>{" "}
-              to your application in one day. Powered by l
-              <HighlightSection>ooooo</HighlightSection>ts of AI.
-            </h1>
-            <p className="text-lg text-muted-foreground">
-              Looking to integrate data enrichment into your app - phone
-              numbers, email addresses, company info? We&apos;re building the
-              fastest and most complete data enrichment framework in the{" "}
-              <span className="inline-block rounded-md border-brand px-2">
-                🌍&nbsp;
-                <HighlightSection>world</HighlightSection>
-              </span>
-              . We power next-gen sales technology applications.
-            </p>
-            <div className="flex">
-              <EmailForm />
+        {/* Hero Section */}
+        <section className="pt-24 lg:pt-32 pb-4 px-6 lg:px-0 relative">
+          <div className="container lg:grid-cols-2 gap-12 items-center mx-auto relative">
+            <div className="space-y-8 max-w-screen-lg">
+              <h1 className="text-5xl font-serif tracking-tight">
+                Add{" "}
+                <HighlightSection>
+                  Clay-like 🌈 data enrichment
+                </HighlightSection>{" "}
+                to your application fast. Powered by l
+                <HighlightSection>ooooo</HighlightSection>ts of AI.
+              </h1>
+              <p className="text-lg text-muted-foreground">
+                Looking to integrate data enrichment into your app? We&apos;re
+                building the fastest and most complete data enrichment framework
+                in the{" "}
+                <span className="inline-block rounded-md border-brand px-2">
+                  🌍&nbsp;
+                  <HighlightSection>world</HighlightSection>
+                </span>
+                . Build 🌈 software with enriched data.
+              </p>
+              <div className="flex">
+                <EmailForm />
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Code Example Section */}
-      <section className="container mx-auto grid grid-cols-1 lg:grid-cols-[3fr_2fr] grid-rows-2 gap-8">
-        <div className=" relative py-4 overflow-hidden row-span-2">
-          <div className="absolute rounded-lg inset-0 bg-gradient-to-br from-green-400 via-blue-400 to-slate-400 opacity-80" />
-          <CodeExampleCard />
-        </div>
-        <Feature
-          index={4}
-          centered
-          className="hidden lg:flex flex-col items-center justify-center bg-cover bg-center text-white"
-          href="/resources/documentation"
-        >
-          <p
-            style={{ textShadow: "0 2px 4px rgb(0 0 0 / 20%)" }}
-            className="text-2xl"
+        {/* Code Example Section */}
+        <section className="container mx-auto grid grid-cols-1 lg:grid-cols-[5fr_2fr] xl:grid-cols-[6fr_2fr] grid-rows-1 gap-8">
+          <div className=" relative py-4 overflow-hidden">
+            <div className="absolute inset-0 w-full h-full z-0">
+              <div className="grid grid-cols-8 md:grid-cols-16 lg:grid-cols-24 grid-rows-8 md:grid-rows-16 lg:grid-rows-24 h-full w-full">
+                {Array.from({ length: 24 * 24 }).map((_, i) => {
+                  return (
+                    <div key={i} className={`border border-slate-700/40`} />
+                  );
+                })}
+              </div>
+            </div>
+            <div className="absolute rounded-lg inset-0 bg-gradient-to-br from-green-400 via-blue-400 to-slate-400 opacity-80" />
+            <CodeExampleCard />
+          </div>
+          <Feature
+            index={4}
+            centered
+            className="hidden lg:flex flex-col items-center justify-center bg-cover bg-center text-white"
+            href="/resources/documentation"
           >
-            {" "}
-            Run dozends of enrichments over{" "}
-            <HighlightSection>thousands of records</HighlightSection> in
-            parallel. Or just one or two over a handful of records.
-          </p>
-        </Feature>
-        <Feature
-          index={4}
-          centered
-          className=" hidden lg:flex flex-col items-center justify-center bg-gradient-to-tl from-orange-200/80 via-red-300 to-yellow-400 bg-cover bg-center text-white"
-          href="/resources/documentation"
-        >
-          <h2
-            className="text-7xl font-bold"
-            style={{ textShadow: "0 2px 4px rgb(0 0 0 / 20%)" }}
-          >
-            A Single API ⭕️
-          </h2>
-        </Feature>
-      </section>
+            <p
+              style={{ textShadow: "0 2px 4px rgb(0 0 0 / 20%)" }}
+              className="text-3xl 2xl:text-4xl font-semibold text-muted-foreground"
+            >
+              {" "}
+              Run dozends of enrichments over{" "}
+              <HighlightSection>thousands of records</HighlightSection> in
+              parallel.{" "}
+              <span className="text-secondary-foreground">
+                Or just one or two
+              </span>{" "}
+              over a handful of records.
+            </p>
+          </Feature>
+        </section>
+      </div>
 
       {/* Data model section */}
       <section className="px-6 lg:px-0 pt-32 pb-20">

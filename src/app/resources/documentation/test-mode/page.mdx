@@ -1,31 +1,96 @@
 ---
 title: Test Mode
-category: Concepts
-priority: 0
 description: Learn about Test Mode. A sanbox environment for your requests.
-icon: test
 date: 2025-03-07
-isPublished: true
 ---
 
-## Introduction
+## Test Mode
 
-Pipe0 is built arond the idea of unifying various enrichment providers in a unified API. While this is infinitely powerful,
-it can lead to test requests incurring costs.
+Running pipelines in production incurs usage costs. This is why all pipes offer a 
+<AppLink linkType="testMode">test mode</AppLink>. **Making requests in test mode is always free.**
 
-Pipe0 ships with a built-in "Test Mode" for every pipe.
+Do not expect data returned in test mode to make sense. However, expect the data returned in test mode to be structurally 
+correct in regards to type, content length, and format.
 
-## Test mode
+To send requests in test mode, include the `"X-Test-Mode": "true"` header.
 
-Test mode can be used in [pipeline requests](/docs/pipeline#pipeline-request). To send a test request 
-add the `X-Test-Mode` header with a value of `true` to your requests.
-
-```bash
-curl -X POST 'https://api.pipe0.com/v1/run' \
--H "Authorization: Bearer YOUR_TOKEN" \
--H "X-Test-Mode: true" \
---data-raw '{
-	"input": [],
-	"pipes": []
-}'
+<CodeTabs items={["Typescript", "Python", "cURL"]}>
+    <div>
+```typescript
+const result = await fetch("https://pipe0.com/api/v1/run", {
+method: "POST",
+headers: {
+    "Authorization": `Bearer ${YOUR_API_TOKEN}`,
+    "X-Test-Mode": "true" // Enable test mode
+},
+body: JSON.stringify({
+    pipes: [
+    {
+        name: "PeopleBusinessEmailWaterfallV1"
+    },
+    {
+        name: "CompanyDescriptionGoogleMapsV1"
+    }
+    ],
+    input: [
+        {
+            name: "John Doe",
+            companyName: "Google LLC"
+        }
+    ]
+})
+});
 ```
+    </div>
+    <div>
+     ```python
+import requests
+import json
+
+headers = {
+    "Authorization": f"Bearer {YOUR_API_TOKEN}",
+    "X-Test-Mode": "true"  # Enable test mode
+}
+payload = {
+    "pipes": [
+        {
+            "name": "PeopleBusinessEmailWaterfallV1"
+        },
+        {
+            "name": "CompanyDescriptionGoogleMapsV1"
+        }
+    ],
+    "input": [
+        {
+            "name": "John Doe",
+            "companyName": "Google LLC"
+        }
+    ]
+}
+response = requests.post("https://pipe0.com/api/v1/run", headers=headers, json=payload)
+```
+    </div>
+    <div>
+    ```bash
+curl -X POST "https://pipe0.com/api/v1/run" \
+-H "Authorization: Bearer YOUR_API_TOKEN" \
+-H "X-Test-Mode: true" \
+-d '{
+        "pipes": [
+            {
+            "name": "PeopleBusinessEmailWaterfallV1"
+            },
+            {
+            "name": "CompanyDescriptionGoogleMapsV1"
+            }
+        ],
+        "input": [
+            {
+            "name": "John Doe",
+            "companyName": "Google LLC"
+            }
+        ]
+    }'
+```
+    </div>
+</CodeTabs>

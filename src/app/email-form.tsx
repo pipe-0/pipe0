@@ -1,6 +1,5 @@
 "use client";
 
-import { HighlightSection } from "@/components/highlight-section";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -66,7 +65,7 @@ export default function EmailForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="">
-        <div className="flex sm:flex-row items-center p-2 rounded-full border-2 border-white/40 bg-white/5">
+        <div className="flex sm:flex-row items-center p-2 rounded-full shadow-md border-2 bg-background border-white/40">
           <FormField
             control={form.control}
             name="email"
@@ -87,14 +86,11 @@ export default function EmailForm() {
 
           <Button
             type="submit"
-            variant="outline"
-            className="flex gap-1 px-0 py-0 rounded-full sm:w-auto border-brand border-2"
+            variant="default"
+            className="flex gap-1 pr-0 rounded-full sm:w-auto border-brand border-2 bg-brand text-brand-foreground hover:border-brand/90 hover:bg-brand/90"
             disabled={form.formState.isSubmitting}
           >
-            <div className="flex px-3 items-center gap-2 py-2  rounded-l-full rounded-r-full text-secondary-foreground">
-              <HighlightSection>〷</HighlightSection>
-              <span>Talk to us</span> <HighlightSection>〷</HighlightSection>
-            </div>
+            <span className="inline-block mr-2">Talk to us</span>
             {form.formState.isSubmitting ? (
               <Loader size={15} className="animate-spin" />
             ) : (

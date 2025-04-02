@@ -8,117 +8,167 @@ date: 2025-03-07
 isPublished: true
 ---
 
-## Introduction
+# Pipeline
 
-When you enrich data, you send a [pipeline request]() to our severs. After processing you receive a [pipeline response]().
+<AppLink linkType="pipeline">Pipeline</AppLink> is the data model we use to enrich data. There is no object called "pipeline"
+you can interact with. Instead, "pipeline" is an internal data representation we use for data enrichment.
 
-Our API provides only two endpoints allowing you to build flexible pipelines that combine both enrichments pipes for `people` and `companies`.
+A pipeline is made up of:
 
-<br />
-When we receive your request, our servers (or [SDK]()) do the heavy lifting:
+⛓️‍💥 Pipes and their order <br />
+🔢 Fields added by your <AppLink linkType="inputObject">input</AppLink> <br />
+🧮 Logic and conditions
 
-- Validate the request
-- Determine best order of execution of pipes (pipes in your request can be unsorted)
-- Normalizing your input
-- Enriching data by always using all required fields and optional fields when they are present.
+## A big flexible table
 
-## Async processing
+When thinking of <AppLink linkType="uiApps">UI based applications</AppLink> it can help to think of the underlying data model 
+as a table with ordered columns. Each field in your pipeline is a column. So, every property of your input objects is a column
+and every output field of a pipe is a column too.
 
-All processing is done asynchonously. After sending a pipeline request, our severs return a pipeline responnse with an `id`
-and processing status.
+A lot of thought has gone into the data model to allow complex use cases. Here's what's possible:
 
-As of today, we anly offer asynchonous processing. This has several advantages:
+- 🧪 Processing individual rows and cells of tables
+- ℁ Add columns with flexibility
+- 😢 Processing with partially incomplete inputs
 
-- Avoid request timeouts while processing pipelines 
-- Failed tasks can be retried up to 5 times
+Check out this <AppLink linkType="externalClayExample">example</AppLink> where we try to build the core functionality of Clay in 
+less than 1000 lines of code (we're still trying to get below 1000).
 
-We expect users to poll the endpoint `/v1/check` and stop the polling once the status of a task is set to `complete`. Appropriate
-polling intervalls are 500-5000ms.
+## Validation
 
-Excessive polling results in rate limiting.
+Before pipelines are used to process data, they are checked for validity.
 
-## Pipeline Request
+In a valid pipeline:
 
-Pipeline requests define two things:
+- All pipes have their input requirements met
+- All logical conditions between pipes can be resolved
 
-- What data should be enriched (Input)
-- What enrichments should be added to your data (Pipes)
+Only valid pipelines can be run. If you send an invalid pipeline to our servers, we will respond 
+with a [400 Bad Request](https://developer.mozilla.org/de/docs/Web/HTTP/Reference/Status/400) status code instantly.
 
-It's best to think of pipelines like lego. The pieces must fit into each other. Each [pipe](/docs/pipe) will define a set of input fields 
-and one or more output fields.
+## Pipeline request
 
-Input fields of a pipe _must_ be provided by the input _or_ be output by another pipe.
-
-If a property exists in every input it is considered _required_ if it only exists in some input, it is marked as _optional_.
-
-You can find all available pipes in the [Pipe Catalog](/docs/pipe-catalog).
-
-### Request Inputs
-
-Input sent with your pipeline request is normalized. So, if a property exists in some inputs it will be added to the remaining input with a 
-value of `null`.
-
-Every input must contain a unique Id. To create unique ids you can use libraries like [uuid](https://www.npmjs.com/package/uuid) or [cuid](https://www.npmjs.com/package/@paralleldrive/cuid2).
-
-### Request Validation
-
-Your request is validated before it is processed. If inputs and outputs don't line up, the request will be rejected without processing.
-
-If your request fails during processing, we do our best to process your request to completion by only marking affected fields as `failed`.
-
-Requests can fail during processing due to various reasons. Here are some examples:
-
-- Vendor downtime
-- Network issues
-- Expired credentials
+You can run a pipeline by sending a pipeline request:
 
 
-### Example Pipeline Request
-
-
-```bash
-curl -X POST 'https://api.pipe0.com/v1/run' \
--H "Authorization: Bearer YOUR_TOKEN" \
---data-raw '{
-"input": [
+<CodeTabs items={["Typescript", "Python", "cURL"]}>
+    <div>
+```typescript
+const result = await fetch("https://pipe0.com/api/v1/run", {
+method: "POST",
+headers: {
+    "Authorization": `Bearer ${YOUR_API_TOKEN}`,
+    "X-Test-Mode": "true" // Remove this header for production requests
+},
+body: JSON.stringify({
+    pipes: [
     {
-        "id": "15991b91-4b3c-4907-a7cc-b838e223004d",
-        "email": "jane@me.com",
-        "name": "Jane Smith",
-        "businessEmail": null
+        name: "PeopleBusinessEmailWaterfallV1"
     },
     {
-        "id": "15991b91-4b3c-4907-a7cc-b838e223004d",
-        "email": "jane@me.com",
-        "linkedInProfileUrl": "https://linkedin.com/in/janesmith",
-        "name": "Jane Smith",
-        "businessEmail": null
-    }],
-    "pipes": [{           # <- This is a pipeline
-        "name": "PeopleBusinessEmailWaterfallV1",
-        "config": {
-        "providers": [{"name": "clearbit"}],
-        "outputFieldNames": {"businessEmail": ""},
-        "inputFieldNames": {"name": "", "email": "", "random": ""}
-        }
+        name: "CompanyDescriptionGoogleMapsV1"
     }
-]
-}'
+    ],
+    input: [
+        {
+            name: "John Doe",
+            companyName: "Google LLC"
+        }
+    ]
+})
+});
 ```
+    </div>
+    <div>
+     ```python
+import requests
+import json
+
+headers = {
+    "Authorization": f"Bearer {YOUR_API_TOKEN}",
+    "X-Test-Mode": "true"  # Remove this header for production requests
+}
+payload = {
+    "pipes": [
+        {
+            "name": "PeopleBusinessEmailWaterfallV1"
+        },
+        {
+            "name": "CompanyDescriptionGoogleMapsV1"
+        }
+    ],
+    "input": [
+        {
+            "name": "John Doe",
+            "companyName": "Google LLC"
+        }
+    ]
+}
+response = requests.post("https://pipe0.com/api/v1/run", headers=headers, json=payload)
+```
+    </div>
+    <div>
+    ```bash
+curl -X POST "https://pipe0.com/api/v1/run" \
+-H "Authorization: Bearer YOUR_API_TOKEN" \
+-H "X-Test-Mode: true" \
+-d '{
+        "pipes": [
+            {
+            "name": "PeopleBusinessEmailWaterfallV1"
+            },
+            {
+            "name": "CompanyDescriptionGoogleMapsV1"
+            }
+        ],
+        "input": [
+            {
+            "name": "John Doe",
+            "companyName": "Google LLC"
+            }
+        ]
+    }'
+```
+    </div>
+</CodeTabs>
+
+When your pipeline is run, input objects get converted to <AppLink linkType="record">output records</AppLink>.
+You can see the shape of output records in the <AppLink linkType="pipelineResponse">pipeline response</AppLink> section.
+
+### Order of pipes
+
+You may spend time reading pipe documentation to make sure pipes are added in the correct order - this is not necessary!
+Internally, we analyze pipelines to find the best pipe order. As a user, the only thing you need to ensure is that the pipeline can be 
+processed. For this all pipes must have their input requirements met.
+
+If your application runs in the browser or is based on Javascript you can use the <AppLink linkType="sdk">browser SDK</AppLink> to 
+validate your pipeline before sending a request to our servers.
+
+
+### Async processing
+
+When you run a pipeline, the processing happens asynchonously. The pipeline response includes an `id` property which you can 
+use to poll the task until it is complete.
+
+> [!NOTE]
+> 
+> If you're using the <AppLink linkType="sdk">browser SDK</AppLink> to validate pipelines you will receive a pipeline
+> response as a validation result. However, this rsult will neither have an `id` nor `status` property.
 
 ## Pipeline Response
 
-After a successful [pipeline request](/docs/pipeline#pipeline-request) you will receive a pipeline response.
+Both endpoints:
+- `POST https://pipe0.com/api/v1/run` (used to run the pipeline)
+- `GET https://pipe0.com/api/v1/check` (used to check the processing state)
 
-Depending on your configures pipes and input values a response might look like this.
-
+return the exact same response format: A <AppLink linkType="pipelineResponse">pipeline response</AppLink>.
 
 ```JSON
 {
 	"success": true,
 	"error": null,
 	"data": {
-		"id": "x36s4vhai2q0opr19s950476",
+		"id": "...",
 		"type": "enrichment",
 		"status": "pending",
 		"order": [
@@ -290,3 +340,9 @@ Depending on your configures pipes and input values a response might look like t
 }
 ```
 
+## Failure modes
+
+If your pipeline was run the endpoint will always return a http 200 OK status.
+The result of the processing can be read from global task status as well as the field status'
+of each individual record field. Please remember that just because your pipeline has passed validation 
+it does not mean that processing will succeed. 

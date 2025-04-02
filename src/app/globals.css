@@ -47,6 +47,7 @@
   /* Nextra */
   --nextra-content-width: 1400px;
 
+  --x-color-nextra-bg: white;
   --nextra-primary-hue: 138;
   --nextra-primary-saturation: 92%;
   --nextra-primary-lightness: 30%;
@@ -90,6 +91,7 @@
   --color-brand-foreground: hsl(138, 50%, 23%);
 
   /* Nextra */
+  --x-color-nextra-bg: black;
   --nextra-primary-hue: 138;
   --nextra-primary-saturation: 92%;
   --nextra-primary-lightness: 81%;

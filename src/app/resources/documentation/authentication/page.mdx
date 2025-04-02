@@ -8,14 +8,33 @@ date: 2025-03-07
 isPublished: true
 ---
 
-## Setup
+# Authentication
 
-You can make request to the pipe0 API using API keys.
+All requests to pipe0 require authentication. The following is required:
 
-We expect that you make requests from a secure server that is able to store an API key. For security reasons
-you should never store API keys in your client side code or in public repositories.
+👾 Create an account <br />
+💳 Buy a subscription to make requests in production mode <br />
 
+> [!WARNING]
+> 
+> Don't store API keys in the browser. Connect your browser-based app to pipe0 by 
+> proxying requests through a secrure server or serverless function that can 
+> [store API keys securely](https://cloud.google.com/docs/authentication/api-keys-best-practices).
 
-## API keys
+## Create an API Key
 
-You can create an API key by signing in to your dashboard. Go to settings -> API-Keys -> Create.
+API keys can be created through the dashboard.
+
+1. Login to your account
+2. Navigate to the settings page
+3. Select "API keys" in the sidebar
+4. Click "Create"
+
+## Making authenticated requests
+
+To make authenticated requests send your API key as part of the [`Authorization` header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Authentication#the_general_http_authentication_framework).
+
+```bash filename="Authenticated request"
+curl -X POST "https://pipe0.com/api/v1/run" \
+-H "Authorization: Bearer YOUR_API_TOKEN" # API_KEY in "Authorization" header
+```

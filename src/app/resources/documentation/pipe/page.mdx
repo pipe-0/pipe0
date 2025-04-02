@@ -1,71 +1,109 @@
 ---
 title: Pipe
-category: Concepts
-priority: 1
 description: "Learn about Pipes. The processing blocks of enrichment pipelines."
-icon: component
 date: 2025-03-07
-isPublished: true
 ---
 
-## Introduction
+# Pipes
 
-> pipe0 pipe0 is a unified enrichment API for people and company data. You can leanr more about pipe0 by [visiting our landing page](/)
+Pipes are processing blocks for data enrichment. Each pipe requires <AppLink linkType="inputField">input fields</AppLink> and emits output fields
+to a pipeline.
 
-With pipe0 it becomes easy to add any kind of enrichment flows into your application. Weather you're planning to enrich just a couple of records 
-or millions, pipe0 is designed for you.
+Visit the <AppLink linkType="pipeCatalog"> 📓 pipe catalog</AppLink> to look for pipes. You can [request a new pipe](https://github.com) 
+if your use-case is not covered yet.
 
-Out goal is to build an API that is infinitely powerful but can be understood and implemented in just a couple of minutes. Check out our example of [building Clay.com](https://google.com) in less than 1k lines of code.
+## Configuration
 
-Our API has only two endpoints: `/v1/run` (create a task to enrich data) and `/v1/check`. Check the status of your enrichment task.
+When creating a <AppLink linkType="pipelineRequest">pipeline request</AppLink> you can pass additional configuration to pipes. The configuration
+for a pipe can be found in the <AppLink linkType="pipeCatalog">pipe catalog</AppLink>.
 
-Enriching data works by fist defining a pipeline and adding `pipes` to said pipeline.
+It is almost [always safe](/resources/documentation/pipe#flex-pipes) to assume that you can point the input and output fields of a pipe to an `alias`.
 
-### Pipe Naming Convention
+### Input aliases
 
-Our data enrichment catalog uses a consistent naming schema to make it easy to understand what each enrichment does, how it works, and how it’s versioned. Every enrichment name follows this format:
+Providing an `alias` for an input field points the field to a different input field. 
+
+If your input objects store the email address under the key `special-email-name`, you would need to point the pipe to this field in
+order for it to work.
+
+```json filename="Rename input fields"
+{
+  "name": "PeopleBusinessEmailWaterfallV1",
+  "config": {
+    "inputFields": {
+      "email": {
+        "alias": "special-email-name"
+      }
+    }
+  }
+}
+```
+
+### Output aliases
+
+Providing an `alias` for an output field is useful to avoid conflicts. Every pipe will emit new fields to your pipeline.
+If you want to add to pipes to your pipeline that emit the field `email`, you have to change the name of at least one of 
+these output fields for your pipeline to be valid.
+
+Additionally, this is useful if you add the same pipe more than once to your pipeline.
+
+```json filename="Rename output fields"
+{
+  "name": "PeopleBusinessEmailWaterfallV1",
+  "config": {
+    "outputFields": {
+      "phoneNumber": {
+        "alias": "special-phone-number-field-name"
+      }
+    }
+  }
+}
+```
+
+### Flex pipes
+
+As stated earlier, it is almost always safe to assume that you can point the input and output fields of pipes to aliases. 
+The only pipes where this is not possible are pipes that run generic AI prompts. These pipes receive their input fields 
+from a prompt and have user defined flexible output fields.
+
+Since the user of the pipe is already in control of the field names, there is no need to assign aliases.
+
+### Naming conventions
+
+Pipes are named in a consistent way so you can get a basic understanindg of a pipe by reading its name.
+
+Every pippe name follows the following format:
 
 ```
-{Category}{Action}{Target}{Provider}[:{InputType}]@{Version}
+{Category}{Action}{Source}[:{InputType}]@{Version}
 ```
 
 Here’s what each part means:
 
-#### Components
-1. **Category**  
-   - **What it is**: The broad group or scope this enrichment applies to.
+1. **Category**: Defines the target of a pipe. This mostly defines if you can get company or people data from the pipe.
 
-2. **Action[Target]**  
-   - **What it is**: A fused term combining the *action* (what the enrichment does) and the *target* (what it works on or produces).
+2. **Action[Target]**: Describes what the pipe does. This is usually a construction of an action and an target of this action (ex. GetEmail, ValidatePhoneNumber).
 
-3. **Provider**  
-   - **What it is**: The tool, service, or approach powering the enrichment.
+3. **Source**: Defines who supplies the data to run this pipe. If the data is provided by a single provider 
+it's usually their name (ex. [ZeroBounce](https://zerobounce.com)). If the pipe combines multiple providers this section refers to broader method like `Waterfall`.
 
-4. **InputType (optional)**  
-   - **What it is**: Optional property listing the main input. This is used when there is a name conflict between two pipes from the same category with the same action and target.
+4. **InputType (optional)**: To avoid naming collisions for pipes with the same action and source but incompatible input groups we sometimes 
+add an additional section to specify the main input for this pipe.
 
-5. **Version**  
-   - **What it is**: The version number of the enrichment, showing updates or iterations.
+5. **Version**: Pipes are regularly updated to fix bugs, improve quality, optimize cost, etc. If we introduce a breaking change this version number will be increased
+so you can update at your own pace.
 
-#### Naming target
+#### Naming category
 
 When looking for a specific pipe you may ask yourself if a pipe will be found in the  'people' or 'company' category. While this is clear for 
-most pipes it gets trickier for others. Let's take the pipe `PeopleGetCompanyWebsitePipe0@1`. The pipe uses the email address input of a **person** 
-to generate a the website URL of a **company**.
+most pipes, it is a little trickier for others. Let's take the pipe `PeopleGetCompanyWebsitePipe0@1`. The pipe uses the email address of a person
+to generate a the website URL of a company.
 
-In cases like these you can assume that the input of the pipe conveys intent. The pipes inputs (email address) are people data. We assume users
+In cases like these, you can assume that the input of the pipe conveys intent. The pipes inputs (email address) are people data. We assume users
 are using the pipe to enrich people data since a person is the subject of the action.
 
 In short, the pipe category is determined by its inputs.
 
 
-This naming convention ensures our enrichment catalog is intuitive, consistent, and powerful—making it simple for you to find and use the right tool for your data needs.
 
-## Core Concepts
-
-Before you started we recommend familiarizing yourself with the following core concepts:
-
-- [Pipelines](/docs/pipeline)
-- [Pipes](/docs/pipe-catalog)
-- [Terminology](/docs/terminology).
 

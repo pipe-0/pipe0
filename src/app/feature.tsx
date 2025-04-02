@@ -16,7 +16,7 @@ export const Feature: FC<
   return (
     <div
       className={cn(
-        "relative p-6 md:p-7 bg-white text-black rounded-[1.78em] overflow-hidden",
+        "relative p-6 md:p-7 bg-white text-black rounded-md overflow-hidden",
         "shadow-[0_8px_16px_rgba(0,0,0,0.08),0_1px_2px_rgba(0,0,0,0.04),0_0_0_1px_rgba(0,0,0,0.03)]",
         "dark:bg-[#202020] dark:text-white dark:shadow-[0_0_0_1px_rgba(82,82,82,0.6)]",
         large && "md:col-span-2",

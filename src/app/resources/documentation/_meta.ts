@@ -8,6 +8,9 @@ const meta: MetaRecord = {
   index: {
     title: "Introduction",
   },
+  quickstart: {
+    title: "Quickstart",
+  },
   terminology: {
     title: "Terminology",
   },
@@ -22,7 +25,7 @@ const meta: MetaRecord = {
     title: "Pipes",
   },
   pipeline: {
-    title: "Pipelines",
+    title: "Pipeline",
   },
   "test-mode": {
     title: "Test Mode",
