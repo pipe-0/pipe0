@@ -11,12 +11,12 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '../../../../components
 Before making your first request, the following is required:
 
 👾 Create an account <br />
-🔑 Go to settings -> api keys and create a key <br />
+🔑 Go to "settings" → "api keys" and "create" a key <br />
 💳 Buy a subscription to make requests in production mode <br />
 
 ## Pipeline request
 
-<AppLink linkType="pipelineRequest">Pipeline request</AppLink> are how data is enriched.
+<AppLink linkType="pipelineRequest">Pipeline requests</AppLink> are how data is enriched.
 
 The request below enriches one <AppLink linkType="inputObject">input object</AppLink> with `workEmailAddress` and 
 `companyDescription` fields.
@@ -102,8 +102,8 @@ curl -X POST "https://pipe0.com/api/v1/run" \
     </div>
 </CodeTabs>
 
-First, we find the work email address for `John Doe` and use the email address to infer the company domain (URL).
-This URL is used to query the company description.
+First, we find John Doe's work email address and use it to infer the company domain (URL). 
+We then use this URL to query the company description.
 
 > [!NOTE]
 >
@@ -117,7 +117,7 @@ with a [400 Bad Request](https://developer.mozilla.org/de/docs/Web/HTTP/Referenc
 
 ## Pipeline response
 
-<AppLink linkType="pipelineRequest">Pipeline requests</AppLink> are processed asynconously. The 
+<AppLink linkType="pipelineRequest">Pipeline requests</AppLink> are processed asynchronously. The 
 <AppLink linkType="pipelineResponse">pipeline response</AppLink> contains the current processing state. 
 Most importantly, it contains an `id` and a `status` property.
 

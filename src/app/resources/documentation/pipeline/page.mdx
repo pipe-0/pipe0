@@ -21,7 +21,7 @@ A pipeline is made up of:
 
 ## A big flexible table
 
-When thinking of <AppLink linkType="uiApps">UI based applications</AppLink> it can help to think of the underlying data model 
+When thinking of <AppLink linkType="uiApps">UI-based applications</AppLink> it can help to think of the underlying data model 
 as a table with ordered columns. Each field in your pipeline is a column. So, every property of your input objects is a column
 and every output field of a pipe is a column too.
 
@@ -147,21 +147,21 @@ validate your pipeline before sending a request to our servers.
 
 ### Async processing
 
-When you run a pipeline, the processing happens asynchonously. The pipeline response includes an `id` property which you can 
+When you run a pipeline, the processing happens asynchronously. The pipeline response includes an `id` property which you can 
 use to poll the task until it is complete.
 
 > [!NOTE]
 > 
 > If you're using the <AppLink linkType="sdk">browser SDK</AppLink> to validate pipelines you will receive a pipeline
-> response as a validation result. However, this rsult will neither have an `id` nor `status` property.
+> response as a validation result. However, this result will neither have an `id` nor `status` property.
 
 ## Pipeline Response
 
-Both endpoints:
+Both endpoints
 - `POST https://pipe0.com/api/v1/run` (used to run the pipeline)
 - `GET https://pipe0.com/api/v1/check` (used to check the processing state)
 
-return the exact same response format: A <AppLink linkType="pipelineResponse">pipeline response</AppLink>.
+return the same response format: A <AppLink linkType="pipelineResponse">pipeline response</AppLink>.
 
 ```JSON
 {
@@ -342,7 +342,7 @@ return the exact same response format: A <AppLink linkType="pipelineResponse">pi
 
 ## Failure modes
 
-If your pipeline was run the endpoint will always return a http 200 OK status.
-The result of the processing can be read from global task status as well as the field status'
+If your pipeline was run the endpoint always returns an HTTP 200 OK status.
+The result of the processing can be read from the global task status as well as the field status'
 of each individual record field. Please remember that just because your pipeline has passed validation 
 it does not mean that processing will succeed. 

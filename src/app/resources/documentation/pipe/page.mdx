@@ -10,7 +10,7 @@ Pipes are processing blocks for data enrichment. Each pipe requires <AppLink lin
 to a pipeline.
 
 Visit the <AppLink linkType="pipeCatalog"> 📓 pipe catalog</AppLink> to look for pipes. You can [request a new pipe](https://github.com) 
-if your use-case is not covered yet.
+if your use case is not covered yet.
 
 ## Configuration
 
@@ -42,7 +42,7 @@ order for it to work.
 ### Output aliases
 
 Providing an `alias` for an output field is useful to avoid conflicts. Every pipe will emit new fields to your pipeline.
-If you want to add to pipes to your pipeline that emit the field `email`, you have to change the name of at least one of 
+If you want to add pipes to your pipeline that emit the field `email`, you have to change the name of at least one of 
 these output fields for your pipeline to be valid.
 
 Additionally, this is useful if you add the same pipe more than once to your pipeline.
@@ -64,15 +64,15 @@ Additionally, this is useful if you add the same pipe more than once to your pip
 
 As stated earlier, it is almost always safe to assume that you can point the input and output fields of pipes to aliases. 
 The only pipes where this is not possible are pipes that run generic AI prompts. These pipes receive their input fields 
-from a prompt and have user defined flexible output fields.
+from a prompt and have user-defined flexible output fields.
 
 Since the user of the pipe is already in control of the field names, there is no need to assign aliases.
 
 ### Naming conventions
 
-Pipes are named in a consistent way so you can get a basic understanindg of a pipe by reading its name.
+Pipes are named in a consistent way so you can understand what a pipe does by reading its name.
 
-Every pippe name follows the following format:
+Every pipe name follows the following format:
 
 ```
 {Category}{Action}{Source}[:{InputType}]@{Version}
@@ -82,13 +82,13 @@ Here’s what each part means:
 
 1. **Category**: Defines the target of a pipe. This mostly defines if you can get company or people data from the pipe.
 
-2. **Action[Target]**: Describes what the pipe does. This is usually a construction of an action and an target of this action (ex. GetEmail, ValidatePhoneNumber).
+2. **Action[Target]**: Describes what the pipe does. This is usually a combination of an action (verb) and target (ex. GetEmail, ValidatePhoneNumber).
 
 3. **Source**: Defines who supplies the data to run this pipe. If the data is provided by a single provider 
-it's usually their name (ex. [ZeroBounce](https://zerobounce.com)). If the pipe combines multiple providers this section refers to broader method like `Waterfall`.
+it's usually their name (ex. [ZeroBounce](https://zerobounce.com)). If the pipe combines multiple providers this section refers to a broader method like `Waterfall`.
 
 4. **InputType (optional)**: To avoid naming collisions for pipes with the same action and source but incompatible input groups we sometimes 
-add an additional section to specify the main input for this pipe.
+add a section to specify the main input for this pipe.
 
 5. **Version**: Pipes are regularly updated to fix bugs, improve quality, optimize cost, etc. If we introduce a breaking change this version number will be increased
 so you can update at your own pace.
@@ -97,10 +97,10 @@ so you can update at your own pace.
 
 When looking for a specific pipe you may ask yourself if a pipe will be found in the  'people' or 'company' category. While this is clear for 
 most pipes, it is a little trickier for others. Let's take the pipe `PeopleGetCompanyWebsitePipe0@1`. The pipe uses the email address of a person
-to generate a the website URL of a company.
+to generate the website URL of a company.
 
-In cases like these, you can assume that the input of the pipe conveys intent. The pipes inputs (email address) are people data. We assume users
-are using the pipe to enrich people data since a person is the subject of the action.
+In cases like these, you can assume that the input of the pipe conveys intent. The pipe inputs (email address) are people data. We assume users
+are using the pipe to enrich `people` data since a person is the subject of the action.
 
 In short, the pipe category is determined by its inputs.
 

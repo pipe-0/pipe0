@@ -12,7 +12,7 @@ export const appLinks = {
   pipeCatalog: () => `/resources/pipe-catalog`,
   uiApps: () => `/resources/ui-applications`,
   record: () => `/resources/documentation/terminology`,
-  sdk: () => `/resources/documentation/sdk`,
+  sdk: () => `/resources/documentation/browser-sdk`,
 
   // extnal
   externalSDKNpm: () => `https://npm.org`,

@@ -11,9 +11,6 @@ const meta: MetaRecord = {
   quickstart: {
     title: "Quickstart",
   },
-  terminology: {
-    title: "Terminology",
-  },
   __: {
     type: "separator",
     title: "Concepts",
@@ -32,13 +29,23 @@ const meta: MetaRecord = {
   },
   ___: {
     type: "separator",
-    title: "Integration",
+    title: "Building apps",
   },
   "ui-apps": {
     title: "UI Based Apps",
   },
   "other-apps": {
     title: "Other Apps",
+  },
+  ____: {
+    type: "separator",
+    title: "Other",
+  },
+  "browser-sdk": {
+    title: "Browser SDK",
+  },
+  terminology: {
+    title: "Terminology",
   },
 };
 
