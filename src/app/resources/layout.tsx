@@ -4,6 +4,7 @@ import { getPageMap } from "nextra/page-map";
 import { PropsWithChildren } from "react";
 import "nextra-theme-docs/style.css";
 import { LogoRaw } from "@/components/logo";
+import { appInfo } from "@/lib/const";
 
 export const metadata = {};
 
@@ -11,7 +12,11 @@ const banner = (
   <Banner storageKey="some-key">Pipe0 is close to launch 🎉</Banner>
 );
 const navbar = <Navbar logo={<LogoRaw />} />;
-const footer = <Footer>MIT {new Date().getFullYear()} © Nextra.</Footer>;
+const footer = (
+  <Footer>
+    {new Date().getFullYear()} © {appInfo.productName}
+  </Footer>
+);
 
 export default async function RootLayout({ children }: PropsWithChildren) {
   return (

@@ -5,6 +5,7 @@ import nextra from "nextra";
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [{ hostname: "imagedelivery.net" }],
+    dangerouslyAllowSVG: true,
   },
 };
 

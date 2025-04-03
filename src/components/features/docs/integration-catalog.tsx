@@ -96,6 +96,7 @@ export function IntegrationCatalog({
                   <div className="flex flex-row-reverse">
                     {pipeCatalogEntry.providers.map((p) => {
                       const providerCatalogEntry = providerCatalog[p];
+
                       return (
                         <Avatar key={p} className="shadow-xl -ml-2">
                           <AvatarImage src={providerCatalogEntry.logoUrl} />
