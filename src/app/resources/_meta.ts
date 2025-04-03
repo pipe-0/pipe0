@@ -10,6 +10,7 @@ const meta: MetaRecord = {
   },
   "api-reference": {
     type: "page",
+    display: "hidden",
   },
   blog: {
     type: "page",
