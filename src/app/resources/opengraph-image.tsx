@@ -27,7 +27,7 @@ export default async function Image() {
   const element: OgElement = {
     title: "pipe0 | Documentation",
     description:
-      "A unified API for people and company data enrichment. Powered by AI.",
+      "Enrich people and company data in infinite ways with one mighty API. Powered by AI.",
   };
 
   return new ImageResponse(

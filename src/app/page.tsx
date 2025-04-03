@@ -162,8 +162,11 @@ export default function Home() {
                 <HighlightSection>
                   Clay-like 🌈 data enrichment
                 </HighlightSection>{" "}
-                to your application fast. Powered by l
-                <HighlightSection>ooooo</HighlightSection>ts of AI.
+                to your application fast. Powered by{" "}
+                <span className="whitespace-nowrap">
+                  l<HighlightSection>ooooo</HighlightSection>ts
+                </span>{" "}
+                of AI.
               </h1>
               <p className="text-lg text-muted-foreground">
                 Looking to integrate data enrichment into your app? We&apos;re
@@ -231,9 +234,7 @@ export default function Home() {
               An intuitive API to enrich <b>one</b> or{" "}
               <b>thousands of records</b> with speed and precision. Power
               everything from server-side enrichments to complex UI
-              interactions.{" "}
-              <b>Access a unified API with 50+ enrichment providers </b>
-              <b>or extend with your enrichment server if you need more.</b>
+              interactions. Access a unified API with 50+ enrichment providers.
             </p>
           </div>
           <div>

@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL(getBaseUrl()),
   title:
-    "pipe0 | A unified API for lead and comapny enrichment. Powered by AI.",
+    "pipe0 | Add clay-like 🌈 data enrichment to your application fast. Powered by looots of AI.",
   description:
     "Combine 50+ data providers into custom pipelines for lead and company enrichment. Add search for business emails, company details, and much more. Connect related enrichments with AI and waterfalls. Add Clay-like functionality to your application with ease.",
 };
