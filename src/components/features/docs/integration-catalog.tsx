@@ -1,7 +1,9 @@
 "use client";
 
 import { PipeEntry } from "@/app/resources/pipe-catalog/get-pipes";
+import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardDescription,
@@ -11,6 +13,8 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { getLastPipeVersionEntry } from "@/lib/utils";
+import { pipeMetaCatalog, PipeName, providerCatalog } from "@pipe0/client-sdk";
+import { AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { Search } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
@@ -72,21 +76,43 @@ export function IntegrationCatalog({
       <div className="grid gap-4 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-2">
         {filteredPipes.map((pipe) => {
           const lastChildEntry = getLastPipeVersionEntry(pipe);
-          if (!lastChildEntry) return null;
+
+          const pipeCatalogEntry =
+            pipeMetaCatalog[lastChildEntry?.frontMatter.pipe as PipeName];
+
+          if (!lastChildEntry || !pipeCatalogEntry) return null;
+
           return (
-            <Card key={pipe.route} className="bg-secondary">
+            <Card key={pipe.route} className="">
               <CardHeader>
-                <CardTitle>
-                  {lastChildEntry.frontMatter.root || pipe.name}
-                </CardTitle>
+                <div className="grid grid-cols-[1fr_min-content] items-center">
+                  <CardTitle className="pb-3">
+                    {pipeCatalogEntry.label}
+                    <br />
+                    <small className="text-muted-foreground">
+                      {lastChildEntry.frontMatter.pipe}
+                    </small>
+                  </CardTitle>
+                  <div className="flex flex-row-reverse">
+                    {pipeCatalogEntry.providers.map((p) => {
+                      const providerCatalogEntry = providerCatalog[p];
+                      return (
+                        <Avatar key={p} className="shadow-xl -ml-2">
+                          <AvatarImage src={providerCatalogEntry.logoUrl} />
+                          <AvatarFallback>..</AvatarFallback>
+                        </Avatar>
+                      );
+                    })}
+                  </div>
+                </div>
                 <CardDescription>
-                  {lastChildEntry.frontMatter.description}
+                  {pipeCatalogEntry.description}
                 </CardDescription>
               </CardHeader>
               <CardFooter>
                 {pipe.children.map((version) => (
                   <Link href={version.route} key={version.name}>
-                    <Badge>{version.name}</Badge>
+                    <Button variant="outline">{version.name}</Button>
                   </Link>
                 ))}
               </CardFooter>

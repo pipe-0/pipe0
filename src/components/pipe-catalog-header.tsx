@@ -21,8 +21,8 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { CodeTabs } from "@/components/code-tabs";
-import SyntaxHighlighter from "react-syntax-highlighter";
-import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { vscDarkPlus } from "react-syntax-highlighter/dist/cjs/styles/prism";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 type PipeHeaderProps = {
@@ -152,6 +152,7 @@ export function PipeCatalogHeader({ pipe }: PipeHeaderProps) {
                         className="space-y-2 border rounded-md p-3"
                       >
                         <div className="flex items-center justify-between mb-2">
+                          <h4 className="text-sm font-medium">Field Group</h4>
                           <Badge
                             variant="secondary"
                             className="capitalize text-xs"
@@ -275,32 +276,36 @@ export function PipeCatalogHeader({ pipe }: PipeHeaderProps) {
             <AccordionContent>
               <CodeTabs items={["Typescript", "cURL"]}>
                 <div>
-                  <SyntaxHighlighter language="typescript" style={vscDarkPlus}>
-                    {`
-const result = await fetch("https://pipe0.com/api/v1/run", {
+                  <SyntaxHighlighter
+                    language="typescript"
+                    style={vscDarkPlus}
+                    customStyle={{ borderRadius: "0.375rem" }}
+                  >
+                    {`const result = await fetch("https://pipe0.com/api/v1/run", {
   method: "POST",
   headers: {
     "Authorization": \`Bearer \${YOUR_API_TOKEN}\`,
   },
   body: JSON.stringify({
-      pipes: [{ name: "${pipe}" }],
-      input: []
+    pipes: [{ name: "${pipe}" }],
+    input: []
   })
-});
-                    `.trim()}
+});`}
                   </SyntaxHighlighter>
                 </div>
                 <div>
-                  <SyntaxHighlighter language="bash" style={vscDarkPlus}>
-                    {`
-curl -X POST "https://pipe0.com/api/v1/run" \
--H "Authorization: Bearer YOUR_API_TOKEN" \
--H "X-Test-Mode: true" \
+                  <SyntaxHighlighter
+                    language="bash"
+                    style={vscDarkPlus}
+                    customStyle={{ borderRadius: "0.375rem" }}
+                  >
+                    {`curl -X POST "https://pipe0.com/api/v1/run" \\
+-H "Authorization: Bearer YOUR_API_TOKEN" \\
+-H "X-Test-Mode: true" \\
 -d '{
-        "pipes": [{ "name": ${pipe} }],
-        "input": []
-    }'
-`.trim()}
+    "pipes": [{ "name": "${pipe}" }],
+    "input": []
+}'`}
                   </SyntaxHighlighter>
                 </div>
               </CodeTabs>
