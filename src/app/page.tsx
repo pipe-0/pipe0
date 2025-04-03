@@ -168,12 +168,9 @@ export default function Home() {
               <p className="text-lg text-muted-foreground">
                 Looking to integrate data enrichment into your app? We&apos;re
                 building the fastest and most complete data enrichment framework
-                in the{" "}
-                <span className="inline-block rounded-md border-brand px-2">
-                  🌍&nbsp;
-                  <HighlightSection>world</HighlightSection>
-                </span>
-                . Build 🌈 software with enriched data.
+                in the <HighlightSection>world 🌍</HighlightSection>. Build{" "}
+                <HighlightSection>magic 🌈</HighlightSection> software with
+                enriched data.
               </p>
               <div className="flex">
                 <EmailForm />
