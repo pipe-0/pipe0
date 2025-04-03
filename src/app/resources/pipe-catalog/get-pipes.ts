@@ -1,4 +1,5 @@
 import { getLastPipeVersionEntry } from "@/lib/utils";
+import { pipeMetaCatalog, PipeName } from "@pipe0/client-sdk";
 import { normalizePages } from "nextra/normalize-pages";
 import { getPageMap } from "nextra/page-map";
 
@@ -11,7 +12,7 @@ export type PipeEntry = {
     route: string;
     frontMatter: {
       title: string;
-      pipe: string;
+      pipe: PipeName;
       root: string;
       filePath: string;
       tags?: string[];
@@ -30,10 +31,26 @@ export async function getPipeEntries() {
     .filter(
       (pipeEntry) => pipeEntry.name !== "index" && pipeEntry.type !== "page"
     )
-    .map((p) => ({
-      ...p,
-      children: p.children.filter((e) => e.name !== "index"),
-    }))
+    .map((p) => {
+      return {
+        ...p,
+        children: p.children
+          .filter((e) => e.name !== "index")
+          .map((c) => {
+            const catalogEntry = pipeMetaCatalog[c.frontMatter.pipe];
+
+            if (!catalogEntry)
+              throw new Error(
+                `Pipe "${c.frontMatter.pipe}" not found in pipeMetaCatalog`
+              );
+
+            return {
+              ...c,
+              ...catalogEntry,
+            };
+          }),
+      };
+    })
     .sort((a, b) => +a.name - +b.name);
 }
 

@@ -1,7 +1,12 @@
+import { NextConfig } from "next";
 import nextra from "nextra";
 
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
+const nextConfig: NextConfig = {
+  images: {
+    remotePatterns: [{ hostname: "imagedelivery.net" }],
+  },
+};
 
 const DEFAULT_PROPERTY_PROPS = {
   type: "Property",
