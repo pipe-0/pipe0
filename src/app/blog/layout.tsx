@@ -28,6 +28,8 @@ export default async function RootLayout({ children }: PropsWithChildren) {
       navbar={navbar}
       search={search}
       sidebar={{ defaultOpen: false, toggleButton: false }}
+      editLink={null}
+      feedback={{ content: null }}
     >
       <div className="max-w-screen-xl mx-auto">{children}</div>
       <Footer>
