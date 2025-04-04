@@ -55,8 +55,6 @@ export async function GET(req: Request): Promise<Response> {
               textShadow: "0 2px 30px #000",
               backgroundImage: "linear-gradient(90deg, #fff 40%, #aaa)",
               backgroundClip: "text",
-              // To preserve new line
-              whiteSpace: "pre",
             }}
           >
             {title}

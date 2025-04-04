@@ -83,7 +83,7 @@ export function IntegrationCatalog({
           if (!lastChildEntry || !pipeCatalogEntry) return null;
 
           return (
-            <Card key={pipe.route} className="">
+            <Card key={pipe.route} className="border-input">
               <CardHeader>
                 <div className="grid grid-cols-[1fr_min-content] items-center">
                   <CardTitle className="pb-3">

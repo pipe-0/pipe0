@@ -1,6 +1,11 @@
-import { DynamicMeta } from "nextra";
+import { MetaRecord } from "nextra";
 
-const meta: DynamicMeta = {
+const meta: MetaRecord = {
+  index: {
+    theme: {
+      layout: "full",
+    },
+  },
   website: {
     title: "Website",
     href: "/",

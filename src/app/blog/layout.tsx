@@ -8,7 +8,12 @@ import { PropsWithChildren } from "react";
 
 export const metadata = {};
 
-const navbar = <Navbar logo={<LogoRaw />} />;
+const navbar = (
+  <Navbar
+    className="max-w-[var(--nextra-content-width)] mx-auto"
+    logo={<LogoRaw />}
+  />
+);
 
 const search = (
   <Search
@@ -31,7 +36,9 @@ export default async function RootLayout({ children }: PropsWithChildren) {
       editLink={null}
       feedback={{ content: null }}
     >
-      <div className="max-w-screen-xl mx-auto">{children}</div>
+      <div className="max-w-[var(--nextra-content-width)] mx-auto px-6">
+        {children}
+      </div>
       <Footer>
         {new Date().getFullYear()} © {appInfo.productName} |&nbsp;
         <a href="/feed.xml" style={{ float: "right" }}>
