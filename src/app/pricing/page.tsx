@@ -11,7 +11,7 @@ export default function Home() {
       <Header />
 
       {/* Content */}
-      <main className="max-w-7xl mx-auto lg:pt-32 pb-20 px-6 lg:px-0">
+      <main className="max-w-7xl mx-auto pt-32 pb-20 px-6 lg:px-0">
         <div className="text-center mb-16">
           <h1 className="text-5xl font-serif tracking-tight">
             Simple, transparent <HighlightSection>pricing</HighlightSection>
