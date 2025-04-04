@@ -7,6 +7,9 @@ const meta: MetaRecord = {
   },
   "pipe-catalog": {
     type: "page",
+    theme: {
+      collapsed: true,
+    },
   },
   "api-reference": {
     type: "page",

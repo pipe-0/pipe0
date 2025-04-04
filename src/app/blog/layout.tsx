@@ -30,7 +30,6 @@ export default async function RootLayout({ children }: PropsWithChildren) {
       sidebar={{ defaultOpen: false, toggleButton: false }}
     >
       <div className="max-w-screen-xl mx-auto">{children}</div>
-
       <Footer>
         {new Date().getFullYear()} © {appInfo.productName} |&nbsp;
         <a href="/feed.xml" style={{ float: "right" }}>
