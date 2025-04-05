@@ -15,19 +15,17 @@ authors:
 [Clay](https://clay.com) is a sales technology company that has risen to popularity.
 Its mission is to unlock the creativity of revenue teams. Clay is often used for prospecting and data enrichment.
 
-Its main interface is a large table-like surface where add, remove, and run users enrichments.
+Its main interface is a large table-like surface where users add, remove, and run users enrichments.
 
 As of today, clay **does not** offer a public API you can integrate with.
-
-For programmatic use, clay offers [webhooks](https://www.clay.com/university/guide/webhook-integration-guide).
 
 You can read more about the lack of API support in [clays forum](https://community.clay.com/x/support/zxof33why6ow/how-to-access-clays-get-request-api-documentation).
 
 ## How to interact with clay programmatically
 
-However, there are some ways to interact with [clay programmatically ](https://community.clay.com/x/support/lmkxpekv8cvh/where-can-i-find-the-api-documentation-for-clays-a).
+There are some ways to interact with [clay programmatically ](https://community.clay.com/x/support/lmkxpekv8cvh/where-can-i-find-the-api-documentation-for-clays-a).
 
-1. Sending input data to [webhooks](https://www.clay.com/university/guide/webhook-integration-guide) in Clay
+1. Sending input data to [webhooks](https://www.clay.com/university/guide/webhook-integration-guide)
 2. Using clay's [HTTP API integration](https://docs.clay.com/en/articles/9672489-http-api-with-clay) to pass output data to other services
 
 ## Pipe0 is the API that clay should have built
@@ -35,7 +33,7 @@ However, there are some ways to interact with [clay programmatically ](https:/
 At [pipe0](https://pipe0.com), we build one API that allows anyone to add clay-like data enrichment into their apps. 
 For this, we designed a simple but infinitely flexible data model called [Pipeline](/resources/documentation/pipeline).
 
-## Why a clay-like API would be helpful
+## A clay-like API unlocks new ways of use
 
 There are many reasons why a programmatic way to enrich data accross many providers is helpful:
 
@@ -44,11 +42,11 @@ There are many reasons why a programmatic way to enrich data accross many provid
 - Marketing automation
 - Powering tools for personalized outreach, sales copilots, next-gen CRMs, etc.
 
-## Why clay may never have an API?
+## Clay may never have a public API?
 
-While building [pipe0](https://pipe0.com), we spend a lot of time analyzing how clay works. To power its datamodel clay performs 
-complex processing on a cell-by-cell basis. Furthermore all processing is scoped to specific tables. A typical clay 
-API response may look like this:
+While building [pipe0](https://pipe0.com), we spend a lot of time analyzing how clay works. To power its data model clay performs 
+processing on a cell-by-cell basis. On top, all processing is scoped to specific tables that are created as database records. A typical clay 
+response may look like this:
 
 `PATCH https://api.clay.com/v3/tables/<TABLE_ID>/run`
 
@@ -56,29 +54,28 @@ API response may look like this:
 {
 	"callerName": "ActionCellViewer",
 	"fieldIds": [
-		"f_sDdrC6WJKYwn"
+		"<FIELD_ID>"
 	],
 	"forceRun": true,
 	"runRecords": {
 		"recordIds": [
-			"r_gKQAfAapfzbp"
+			"<RECORD_ID>"
 		]
 	}
 }
 ```
 
-While this mode of processing makes a lot of sense for the unique requirements of clay's user interface, it would not 
-exactly be fun for any person trying to integrate with it programmatically.
+While this mode of processing makes sense for clay's user interface, it is exactly be fun for any person trying to integrate with it programmatically.
 
 To make matters worse, it is uniquely designed to power data as tables and would not be ideal for other forms of data
-visualization.
+visualization and enrichment.
 
-## Marking things easier
+## Marking things easy
 
 At [pipe0](https://pipe0.com), we took a radically different approach to this. Instead of complexity, we designed our 
-API with radical simplicity in mind. Our REST API is able to power every feature in clay using only one operation.
+API with simplicity in mind. Our REST API is able to power every feature in clay using just one operation.
 
-Pipe0 runs on one simple idea:
+All of pipe0 runs one idea:
 
 > Create a pipeline and run it
 
