@@ -1,0 +1,96 @@
+---
+title: Pipe0 | Does clay have a public API?
+date: 2025-04-04
+excerpt: Why the world (might) need pipe0
+authors:
+    - name: Florian
+      title: Founder
+---
+
+
+# Does clay have a public API?
+
+![image](/media/blog/20250405-1.jpg)
+
+[Clay](https://clay.com) is a sales technology company that has risen to popularity.
+Its mission is to unlock the creativity of revenue teams. Clay is often used for prospecting and data enrichment.
+
+Its main interface is a large table-like surface where add, remove, and run users enrichments.
+
+As of today, clay **does not** offer a public API you can integrate with.
+
+For programmatic use, clay offers [webhooks](https://www.clay.com/university/guide/webhook-integration-guide).
+
+You can read more about the lack of API support in [clays forum](https://community.clay.com/x/support/zxof33why6ow/how-to-access-clays-get-request-api-documentation).
+
+## How to interact with clay programmatically
+
+However, there are some ways to interact with [clay programmatically ](https://community.clay.com/x/support/lmkxpekv8cvh/where-can-i-find-the-api-documentation-for-clays-a).
+
+1. Sending input data to [webhooks](https://www.clay.com/university/guide/webhook-integration-guide) in Clay
+2. Using clay's [HTTP API integration](https://docs.clay.com/en/articles/9672489-http-api-with-clay) to pass output data to other services
+
+## Pipe0 is the API that clay should have built
+
+At [pipe0](https://pipe0.com), we build one API that allows anyone to add clay-like data enrichment into their apps. 
+For this, we designed a simple but infinitely flexible data model called [Pipeline](/resources/documentation/pipeline).
+
+## Why a clay-like API would be helpful
+
+There are many reasons why a programmatic way to enrich data accross many providers is helpful:
+
+- Build a tool similar to clay
+- Enrich data before forwarding it to a CRM
+- Marketing automation
+- Powering tools for personalized outreach, sales copilots, next-gen CRMs, etc.
+
+## Why clay may never have an API?
+
+While building [pipe0](https://pipe0.com), we spend a lot of time analyzing how clay works. To power its datamodel clay performs 
+complex processing on a cell-by-cell basis. Furthermore all processing is scoped to specific tables. A typical clay 
+API response may look like this:
+
+`PATCH https://api.clay.com/v3/tables/<TABLE_ID>/run`
+
+```json
+{
+	"callerName": "ActionCellViewer",
+	"fieldIds": [
+		"f_sDdrC6WJKYwn"
+	],
+	"forceRun": true,
+	"runRecords": {
+		"recordIds": [
+			"r_gKQAfAapfzbp"
+		]
+	}
+}
+```
+
+While this mode of processing makes a lot of sense for the unique requirements of clay's user interface, it would not 
+exactly be fun for any person trying to integrate with it programmatically.
+
+To make matters worse, it is uniquely designed to power data as tables and would not be ideal for other forms of data
+visualization.
+
+## Marking things easier
+
+At [pipe0](https://pipe0.com), we took a radically different approach to this. Instead of complexity, we designed our 
+API with radical simplicity in mind. Our REST API is able to power every feature in clay using only one operation.
+
+Pipe0 runs on one simple idea:
+
+> Create a pipeline and run it
+
+What's unique to our approach is that pipelines can be merged, sliced, and diced and many ways.
+
+Working with a big table? Create a pipeline with many pipes and run it.
+
+Want to enrich a single cell of that table? Create a pipeline for a subset, run it, and merge it.
+
+Want to run the first 10 rows? You guessed it! Create a pipeline and run it.
+
+## Are you looking to integrate clay-like data enrichment into your app?
+
+We'd love to talk to you if you're building sales software. Reach out to us by requesting access through our [website](https://pipe0.com).
+
