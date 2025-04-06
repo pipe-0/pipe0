@@ -9,7 +9,7 @@ export async function getBlogPosts() {
   return directories
     .filter((pipeEntry) => pipeEntry.name !== "index" && pipeEntry.frontMatter)
     .sort(
-      (a, b) => +new Date(a.frontMatter.date) - +new Date(b.frontMatter.date)
+      (a, b) => +new Date(b.frontMatter.date) - +new Date(a.frontMatter.date)
     );
 }
 
