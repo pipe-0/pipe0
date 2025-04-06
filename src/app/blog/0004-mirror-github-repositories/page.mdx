@@ -1,0 +1,90 @@
+---
+title: Pipe0 | How to Mirror Two Github Repository Controlled by You
+date: 2025-04-06
+excerpt: Mirroring a Github repository can be a helpful trick.
+authors:
+    - name: Florian
+      title: Founder
+---
+
+# How to Mirror Two Github Repository Controlled by You
+
+Mirroring a GitHub repository can be a helpful trick for:
+
+💾 Backups and redundancy <br />
+🧠 Control without maintenance <br />
+🎉 Getting around the need for pro plans with some providers (e.g. Vercel) <br />
+
+## Github Action
+
+Several solutions exist but they almost always assume that you want to mirror a GitHub repository that you 
+do not control. As such, they often involve running cron jobs to check the source repo for updates.
+
+This is not necessary if you're able to create a GitHub action within the source repository.
+
+Here are the steps you need to perform to mirror two repositories that you control:
+
+In this example, I assume you want to mirror an organization repository (source) to a private 
+repository in your account (target).
+
+#### 1. Create a Personal Access Token (PAT)
+
+- Go to your GitHub account settings
+- Navigate to Developer settings > Personal access tokens
+- Create a fine-grained token
+- Give read and write permission for repository content
+- Give access to the target repository
+- Copy the generated token
+
+
+#### 2. Add the Token as a Secret in Your Organization Repository
+
+- Go to your organization repository settings
+- Click on "Secrets and variables" > "Actions"
+- Click "New repository secret"
+- Name: PERSONAL_ACCESS_TOKEN
+- Value: Paste the token you copied
+- "Add secret"
+
+#### 3. Allow GitHub Actions in the Target Repository
+
+- Go to the target repository
+- Go to "settings" > "Actions" > "General"
+- Scroll to "Workflow permissions"
+- Select "Read and write permissions"
+
+
+In the source repo add the following GitHub action file in `.github/workflows/mirror.yaml`:
+
+Replace yourusername/private-repo.git with your actual private repository path
+
+```yaml
+name: Mirror Repository
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: # Allows manual triggering of the workflow
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Fetch all history for all branches and tags
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+
+      - name: Push to private mirror
+        run: |
+          git remote add private https://github.com/yourusername/private-repo.git
+          git push private --force --all
+          git push private --force --tags
+
+```
+
+Lastly, change to the source repository and watch it being applied to the target as well.
+

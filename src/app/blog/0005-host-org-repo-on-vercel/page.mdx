@@ -1,0 +1,80 @@
+---
+title: Pipe0 | Deploy an Organization Repository for Free on Vercel
+date: 2025-04-06
+excerpt: Vercel doe does not allow hosting organization repositories as part of its free plan. Get around this limitation by mirroring to a private repository.
+authors:
+    - name: Florian
+      title: Founder
+---
+
+# Deploy an organization repository for free on Vercel
+
+Vercel has become a popular place to deploy all sorts of applications. One annoying limitation is the inability to deploy 
+an organization repository as part of the free plan. This limitation seems a bit random since it is not based on any 
+factors that drive cost for Vercel like traffic or bandwidth.
+
+There is a simple way to get around this limitation, though. You can simply work in your organization repository and 
+mirror it to a different repository that lives in your private account.
+
+## Configuring repository mirroring with Github actions
+
+#### 1. Create a Personal Access Token (PAT)
+
+- Go to your GitHub account settings
+- Navigate to Developer settings > Personal access tokens
+- Create a fine-grained token
+- Give read and write permission for repository content
+- Give access to the target repository
+- Copy the generated token
+
+
+#### 2. Add the Token as a Secret in Your Organization Repository
+
+- Go to your organization repository settings
+- Click on "Secrets and variables" > "Actions"
+- Click "New repository secret"
+- Name: PERSONAL_ACCESS_TOKEN
+- Value: Paste the token you copied
+- "Add secret"
+
+#### 3. Allow GitHub Actions in the Target Repository
+
+- Go to the target repository
+- Go to "settings" > "Actions" > "General"
+- Scroll to "Workflow permissions"
+- Select "Read and write permissions"
+
+
+In the source repo add the following GitHub action file in `.github/workflows/mirror.yaml`:
+
+Replace yourusername/private-repo.git with your actual private repository path
+
+```yaml
+name: Mirror Repository
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: # Allows manual triggering of the workflow
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Fetch all history for all branches and tags
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+
+      - name: Push to private mirror
+        run: |
+          git remote add private https://github.com/yourusername/private-repo.git
+          git push private --force --all
+          git push private --force --tags
+
+```
+
+Lastly, change to the source repository and watch it being applied to the target as well.
