@@ -50,6 +50,10 @@ The `never` type is the exact opposite of the `any` type.
 While `any` is the set of **all** values, `never` is so specific that there is no value that can
 be assigned to `never`. Never is the **empty set**. A set with no values.
 
+> [!TIP]
+> 
+> A type that refers to the set of all possible values is called the 'top type'. In version 3.0, TypeScript introduced a [new top type](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-0.html#new-unknown-top-type) called `unknown`. `unknown` is a more type-safe counterpart of `any`. The top type `unknown` is the semantically correct opposite of `never`.
+
 ## Distributive conditional types
 
 > When conditional types action on a generic type, they become distributive ([see TypeScript docs](https://www.typescriptlang.org/docs/handbook/2/conditional-types.html#distributive-conditional-types))
