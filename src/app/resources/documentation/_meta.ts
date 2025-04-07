@@ -11,6 +11,9 @@ const meta: MetaRecord = {
   quickstart: {
     title: "Quickstart",
   },
+  "pipe0-vs-clay": {
+    title: "Pipe0 vs Clay",
+  },
   __: {
     type: "separator",
     title: "Concepts",

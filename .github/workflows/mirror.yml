@@ -1,0 +1,26 @@
+name: Mirror Repository
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: # Allows manual triggering of the workflow
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Fetch all history for all branches and tags
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+
+      - name: Push to private mirror
+        run: |
+          git remote add private https://github.com/florianmartens/pipe0_landing.git
+          # Debug: List remotes to verify
+          git remote -v
+          git push private --force --all
+          git push private --force --tags

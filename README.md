@@ -1,36 +1,36 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Add clay-like data enrichment to any application. Fast.
 
-## Getting Started
+[Pipe0](https://pipe0.com) is a framework for data enrichment. If you have some data about a person or company
+but want more, you can do that in an infinite number of ways with pipe0.
 
-First, run the development server:
+The ability to enrich data is a requirement for many apps. You may dream of a
+CRM that updates itself or a sales copilot helping SDRs prepare for upcoming meetings. Data enrichment
+enables these features but is surprisingly hard to build.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+At pipe0, we're on a mission to build the fastest, most extensible data enrichment framework in the world.
+
+Here are some things pipe0 does for you:
+
+🔌 Connect 50+ data providers <br />
+💨 Analyze enrichment pipelines and parallelize execution (we're fast!)<br />
+💰 Run enrichment, scraping and AI infrastructure at low cost (we take 0% margin on external providers)<br />
+
+## What makes a framework?
+
+The term `framework` may surprise you because pipe0 is an API, dashboard, and SDK.
+
+While you can perform powerful enrichments in just 10 lines of code, you can choose to express logic and direction of data flow
+with it, too. The ability to design custom enrichment flows, add logic, and change them on the fly makes pipe0 a framework.
+
+The following is an example of an enrichment flow that requires logic.
+
+```text filename="Flow that needs logic"
+FIND phone number of person
+IF found
+    FIND website of current employer
+IF NOT found
+    FIND work email address
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Your first instinct might be to implement this with code. However, pipe0 offers a much simpler way to express this
+and removes brittle spaghetti code once and for all.
