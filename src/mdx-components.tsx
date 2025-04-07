@@ -1,4 +1,5 @@
 import AppLink from "@/components/app-link";
+import { BlogBanner } from "@/components/blog-banner";
 import { CodeTabs } from "@/components/code-tabs";
 import type { MDXComponents } from "mdx/types";
 import { useMDXComponents as getDocsThemeComponents } from "nextra-theme-docs";
@@ -10,6 +11,7 @@ export const mdxComponents: MDXComponents = {};
 export const themeMdxComponents = {
   AppLink: AppLink,
   CodeTabs: CodeTabs,
+  BlogBanner: BlogBanner,
   ...mdxComponents,
   ...docsThemeComponents,
 } satisfies MDXComponents;

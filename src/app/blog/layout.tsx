@@ -23,12 +23,12 @@ const search = (
 );
 
 export default async function RootLayout({ children }: PropsWithChildren) {
-  const banner = (
-    <Banner storageKey="4.0-release">🎉 Our new blog is live!</Banner>
-  );
+  // const banner = (
+  //   <Banner storageKey="4.0-release">🎉 Our new blog is live!</Banner>
+  // );
   return (
     <Layout
-      banner={banner}
+      // banner={banner}
       pageMap={await getPageMap("/blog")}
       navbar={navbar}
       search={search}

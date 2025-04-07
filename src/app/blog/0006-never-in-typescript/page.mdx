@@ -1,0 +1,118 @@
+---
+title: Pipe0 | TypeScript's `never` type is a 0-member-union in distributive types
+date: 2025-04-07
+excerpt: Learn about the `never` type in distributive types
+authors:
+    - name: Florian
+      title: Founder
+---
+
+# Distributive Generics and "never" in Typescript
+
+To follow along you need a basic understanding of:
+
+🧙🏻 TypeScript <br />
+🧠 Generics <br />
+
+Learning how to use and create effective types can bend your mind in unexpected ways, especially when 
+you combine advanced types.
+
+In this post, I'm exploring a problem I 
+recently faced involving [distributive generics](https://www.typescriptlang.org/docs/handbook/2/conditional-types.html#distributive-conditional-types)
+and the [never](https://www.typescriptlang.org/docs/handbook/2/functions.html#never) type.
+
+Let's start with a short intro about the `never` type and distributive conditional types.
+
+Skip to the examples if you are familiar with both.
+
+## The `never` type
+
+There are many ways to think about Typescript's type system. One common way to think about types is as mathematical sets.
+While this sounds intimidating, it's not too bad if you know a bit of TypeScript already.
+
+It's important to remember that types can be more or less specific.
+
+If a type is not very specific, many values can be assigned to it.
+
+The type with the lowest specificity is `any`. Any value can be assigned to a variable of type `any`.
+
+```typescript
+let x: any = 9; // I'm a number
+x = "now I'm a string!"
+x = false // now I'm a boolean
+```
+
+If we think about types as sets, `any` is the set of all possible values. It is infinitely large but also the largest of all
+infinite sets (🤯 not all infinities are of the same size).
+
+The `never` type is the exact opposite of the `any` type.
+
+While `any` is the set of **all** values, `never` is so specific that there is no value that can
+be assigned to `never`. Never is the **empty set**. A set with no values.
+
+## Distributive conditional types
+
+> When conditional types action on a generic type, they become distributive ([see TypeScript docs](https://www.typescriptlang.org/docs/handbook/2/conditional-types.html#distributive-conditional-types))
+
+This complicated sentence is best understood with an example. Let's look at the following:
+
+```typescript
+type ToArray<Type> = Type extends any ? Type[] : never;
+
+type StrArrOrNumArr = ToArray<string | number>; // StrArrOrNumArr = string[] | number[]
+
+```
+
+The `StrArrOrNumArr` type is `string[] | number[]`. But why not `(string | number)[]`?
+
+Generics become distributive when used in conditional types. Here `Type` is the generic that is replaced with `string | number`.
+
+`ToArray` maps over each member of the union. This behavior is unique to generics and conditional types.
+
+> [!NOTE]
+>
+> TypeScript will treat every type as a union. Simple types like `string` are treated as a union-of-one.
+
+```typescript
+ToArray<string> | ToArray<number>; // think of it this way
+```
+
+## The never types behaves weirdly
+
+Let's test our new knowledge of distributive conditional types. What do you expect `Result1` and `Result2` to be?
+
+```typescript
+type Test<U> = U extends never ? string : number; // tip: only 'never' extends 'never'
+
+type Result1 = Test<string> // What is the type of Result1?
+type Result2 = Test<never>; // What's the type of Result2?
+```
+
+The answer may surprise you (it surprised me!). 
+
+- `Result1` is of type `number`.
+
+This makes sense. `never` is an empty set so no type can extend it (except for `never`). 
+
+- `Result2` is of type `never`
+
+Yes, the type of `Result2` is `never` and the reason is distribution.
+
+In the context of distributive types (and only there!) `never` is a 0-member-union. You simply cannot distribute/map 
+over `never` (because it has 0 elements). The resulting type is always `never`!
+
+This is a true mind-bender.
+
+We can check that this is the case by disabling distribution. We can force typescript to not distribute 
+and take our generic type parameter as a whole. We can do so by wrapping each side of the `extends` [keyword in square
+brackets](https://www.typescriptlang.org/docs/handbook/2/conditional-types.html#distributive-conditional-types).
+
+
+```typescript
+type Test<U> = [U] extends [never] ? string : number;
+type Result2 = Test<never>; // Result2 is `string`
+```
+
+Proving that never is a 0-member-union only in the context of distributive conditional types.
+
+<BlogBanner />

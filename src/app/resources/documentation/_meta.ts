@@ -12,7 +12,7 @@ const meta: MetaRecord = {
     title: "Quickstart",
   },
   "pipe0-vs-clay": {
-    title: "Pipe0 vs Clay",
+    title: "clay vs pipe0",
   },
   __: {
     type: "separator",
