@@ -34,3 +34,9 @@ IF NOT found
 
 Your first instinct might be to implement this with code. However, pipe0 offers a much simpler way to express this
 and removes brittle spaghetti code once and for all.
+
+## Useful links
+
+- [Website](https://pipe0.com)
+- [Documentation](https://pipe0.com/resources/documentation/introduction)
+- [Clay vs pipe0](https://pipe0.com/resources/documentation/pipe0-vs-clay)
