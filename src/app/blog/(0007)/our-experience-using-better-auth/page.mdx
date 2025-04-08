@@ -1,0 +1,119 @@
+---
+title: Pipe0 | Our Experience Using Better-Auth for Pipe0
+date: 2025-04-08
+excerpt: Better-auth is a new authentication framwork for typescript
+authors:
+    - name: Florian
+      title: Founder
+---
+
+# Our Experience Using Better-Auth for Pipe0
+
+![image](/media/blog/20250408-1.jpg)
+
+Choosing an auth provider is a serious matter. Making a bad choice may compromise the security 
+of your application, your data, and your user's data. Making the right choice seems unfairly complicated 
+within the JavaScript ecosystem where tools are reinvented at record speed.
+
+Historically, choosing tools maintained by large companies provides little safeguarding 
+against this spinning flywheel.
+
+When it comes to auth providers we can choose between three options:
+
+1. Implement your own authentication logic
+2. Choose a third-party auth platform like [auth0](https://auth0.com), or clerk (https://clerk.com)
+3. Use an authentication library like [better-auth](https://better-auth.com) or [passport](https://passportjs.com)
+
+At [pipe0](https://pipe0.com) we believe in owning our own user table. A vision that aligns with 
+authentication libraries like [better-auth](https://better-auth.com) and [auth.js](https://authjs.dev/).
+
+Additionally, we want to develop in a containerless fashion allowing our entire app to spin up
+without the use of docker, or [docker](https://docker.com) compose.
+
+Out authentication is currently powered by better auth. our implementation, we weren't able to 
+find balanced reviews of the library that point out where better-auth shines or falls short.
+
+In this post, we want to walk you through some of the points we found.
+
+## The good parts
+
+Better auth has many strengths:
+
+### Fast set up
+
+Integrating better-auth into your application is fast. On the backend, they have guides to walk you 
+through the setup with [hono](https://hono.dev), [express](https://expressjs.com/), 
+[Elysia](https://elysiajs.com/), and [Nitro](https://nitro.build/). Even if 
+you are using a different backend framework, it is easy to integrate better-auth to it.
+
+The frontend client also supports all common frameworks like [react](https://react.dev/), or [svelte](https://svelte.dev/).
+
+### Vast plugin ecosystem
+
+Better auth comes with many plugins for various auth schemes like username-password, phone-number auth, and
+magic link auth. In fact, it is the most extensive plugin ecosystem we've seen.
+
+### Database Adapters
+
+Better auth manages your database migrations through database adapters. For this better-auth can either 
+directly connect to your database or plug into an ORM-like [drizzle](https://orm.drizzle.team/) or [prisma](https://www.prisma.io/).
+
+### Support for OIDC and SSO
+
+If you're building an app targeted at other organizations this has become a must-have feature.
+
+## The bad parts
+
+While integrating better-auth we also encountered many bad parts.
+
+### Too much, too fast
+
+Better auth is being developed fast. This might be due to the hype around the new library.
+The hasty release cycle leads to bugs being shipped regularly and often. Its system architecture 
+also makes better-auth prone to bugs. Each new feature has to be launched to many
+different subsystems like the client, all database adapters, and the server library.
+
+We've dealt with misnamed tables, the inability to rename tables, missing endpoints, and many more issues.
+Especially new plugins suffer from this. New problems are also not addressed as quickly as you may hope.
+
+### The API reference seems misplaced
+
+Better auth ships its [own API reference](https://www.better-auth.com/docs/plugins/open-api) in the form of 
+an OpenAPI document. The problem with this approach is that it lives completely outside of the rest of your
+system. Most backend systems have API specs of their own. To make it compatible, you have to manually 
+merge the OpenAPI documentation.
+
+### Slow TypeScript Experience
+
+Both the frontend and backend libraries depend on deeply nested generics. Adding better-auth to any app 
+is sure to degrade the TypeScript performance of your app significantly. This problem has been acknowledged
+by the team and is actively worked on.
+
+### Will it grow forever
+
+One of our main concerns with this library is its sheer size and the bugs resulting from that size.
+Projects like the openapi-generator have had promising starts but kept adding plugins until they became unmaintainable.
+
+We're worried that better-auth will suffer a similar fate.
+
+### No information about the author
+
+One of the most magical things about the world of software is that great software can come from 
+everywhere and from everyone. However, you probably want to know who's writing the most sensitive 
+code in your application. In better-auth's case, we weren't able to find much information about its creator,
+[bekacru](https://github.com/Bekacru) - who seems to be an indie software developer from Ethiopia.
+
+We love that he speaks through his work but would love to see him 
+communicate more openly with the community and build trust. He is also the only 
+collaborator on the npm package giving him full control over the release process.
+
+The npm package also does not have any [provanance](https://docs.npmjs.com/viewing-package-provenance) 
+information - which is not uncommon or concerning in itself.
+
+### Slow TypeScript Experience
+
+In our testing integrating better auth
+
+
+
+
