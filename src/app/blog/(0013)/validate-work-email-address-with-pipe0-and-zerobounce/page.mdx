@@ -1,0 +1,81 @@
+---
+title: "Validate Work Email Addresses With Pipe0 and ZeroBounce: Easy Guide"
+date: 2025-04-08
+tags:
+    - data enrichment
+    - pipes
+excerpt: "Learn how to get a work email address using name and company info with pipe0 API"
+authors:
+    - name: Florian
+      title: Founder
+---
+
+# Find a Work Email Address by Name and Company
+
+In this blog post, we explore how you can validate work email addresses via an API endpoint.
+For this, we use [pipe0](https://pipe0.com).
+
+Pipe0 is a framework for data enrichment. To enrich data with pipe0 you use enrichment <AppLink linkType="pipe">pipes</AppLink>.
+There are several pipes available to validate work email addresses via API. For this blog post, we're 
+using the pipe [PeopleValidateEmailZeroBounce@1](https://www.pipe0.com/resources/pipe-catalog/people-validate-email-zerobounce/version-1).
+
+This pipe uses [ZeroBounce](https://www.zerobounce.net/) to validate the existence of the email address to 
+protect your reputation.
+
+The cost per pipe invocation is ~1ct. per record.
+
+## Prerequisites
+
+🙆🏼‍♂️ Go to [pipe0](https://pipe0.com) and create an account <br />
+🔑 Create an API Key
+
+## Request object
+
+<CodeTabs items={["Typescript", "cURL"]}>
+    <div>
+```typescript
+const id = 1;
+const result = await fetch("https://pipe0.com/api/v1/run", {
+  method: "POST",
+  headers: {
+    "Authorization": `Bearer <YOUR_API_TOKEN>`,
+  },
+  body: JSON.stringify({
+    pipes: [{ name: "PeopleValidateEmailZeroBounce@1" }],
+    input: [{id, workEmail: "<EMAIL_ADDRESS>" }]
+  })
+});
+
+const response = await result.json();
+
+// [NOT SHOWN] Poll the "/check" endpoint until the task status is "completed"
+// Learn more: https://www.pipe0.com/resources/documentation/pipeline#async-processing
+
+// Print email
+console.log(response.records[id].fields["isEmailValid"].value);
+```
+    </div>
+    <div>
+```shell
+curl -X POST "https://pipe0.com/api/v1/run" \
+-H "Authorization: Bearer YOUR_API_TOKEN" \
+-H "X-Test-Mode: true" \
+-d '{
+    "pipes": [{ "name": "PeopleValidateEmailZeroBounce@1" }],
+    "input": [{ id: 1, workEmail: "<EMAIL_ADDRESS>" }]
+}'
+```
+    </div>
+</CodeTabs>
+
+## Using pipe0
+
+In this example we used [pipe0](https://pipe0.com) instead of querying providers directly. Using pipe0 
+has many advantages:
+
+- Use 50+ enrichment providers with one subscription
+- Combine multiple enrichments in one API call
+- Up-to-date API documentation and best-in-class DX
+- Combine data enrichment, web scraping, and AI for powerful solutions
+
+<BlogBanner />
