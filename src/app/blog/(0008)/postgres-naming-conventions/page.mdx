@@ -1,0 +1,71 @@
+---
+title: PostgreSQL Naming Conventions for Intermediate Users
+date: 2025-04-08
+excerpt: Learn how to design consistent data models in PosgreSQL by leveraging naming conventions
+tags:
+    - Postgres
+authors:
+    - name: Florian
+      title: Founder
+---
+
+# PostgreSQL Naming Conventions for Intermediate Users
+
+![image](/media/blog/20250408-2.jpg)
+
+When designing database schemas adhering to naming conventions has pactial benefits. It contributes 
+to schema clarity, query efficiency, and better collaboration.
+
+Also, you don't look like you don't know what you are doing 🙆🏼‍♂️.
+
+In this post, I will introduce you to basic naming conventions when using PostgreSQL.
+
+### Avoid uppercase letters
+
+PostgreSQL converts unquoted identifiers to lowercase by default. Queries like: `SELECT * from UserPermissions`
+are converted to `SELECT * from userpermissions`. If your table name is "UserPermissions" you have to add quotes 
+to your query `SELECT * FROM "UserPermissions";`. This is tedious in practice. Stick to lowercase letters for 
+everything to avoid this. Use "user_permissions" instead of "UserPermissions". 
+
+### Stick to snake_case
+
+Name tables, columns, and other objects using the snake_case format. The underscore helps with readability
+in complex schemas and multi-word names. Snake case is a wildly accepted standard in PostgreSQL communities
+and will make your schema intuitive to use.
+
+### Use plural form for table names
+
+Tables that store collections of entities (e.g. a list of users) should be named in the plural form. Instead, 
+of naming your user table `user` use the plural form `users`. This naming convention matches the declarative 
+structure of SQL queries: `SELECT ALL USERS FROM TABLE ...`.
+
+### Use singular form for column names
+
+In contrast to tables, column names should use the singular form. Use `users.email` instead of `users.emails`.
+
+### Avoid any form of prefix
+
+Don't use prefixes like `tbl_` or `col_` for columns and tables. These prefixes do not add information 
+to your schema. The object type is already stored in PostgreSQL.
+
+### Indexes and constraints
+
+PostgeSQL requires you add add names to indexes and constraints. Here, you should use a prefix. Use the prefix `idx_` followed by 
+the table and column e.g. `idx_users_email`. Prefixes are useful for unique constraints, too.
+
+Consider the prefix `uniq_ (e.g. `uniq_users_email`). Adding these prefixes to indexes and constraints helps you to spot them
+in the output of the `\d` command or when debugging queries with `EXPLAIN`. You should also 
+consider a suffix for indexes (e.g., idx_users_email_btree) when using non-default methods like GIN or BRIN.
+
+### Schema Prefixes for Organization
+
+In databases with multiple schemas, prefix table names with the schema’s purpose (e.g., auth_users, billing_invoices).
+This keeps related tables grouped logically and prevents name clashes in large projects. This is especially handy when working
+on multi-tenant or modular systems.
+
+### Avoid Reserved Keywords
+
+Don’t use reserved words like `order`, `group`, or `select` as identifiers.
+
+<BlogBanner />
+
