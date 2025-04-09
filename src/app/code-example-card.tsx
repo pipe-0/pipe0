@@ -13,7 +13,7 @@ export default function CodeExampleCard({}: CodeExampleCardProps) {
         highlightLines={[9, 13, 14, 18]}
         code={`
 // Enrich data with 10 lines of code
-const pipe0 = new Pipe0({ url: "htttps://your-sever.com" });
+const pipe0 = new Pipe0({ url: "https://your-server.com" });
 
 // Combine enrichments (pipes 🚰) into custom pipelines
 const response = await pipe0.request.create({
