@@ -10,7 +10,6 @@ export default function CodeExampleCard({}: CodeExampleCardProps) {
       <CodeBlock
         language="typescript"
         filename="DummyComponent.jsx"
-        highlightLines={[9, 13, 14, 18]}
         code={`
 // Enrich data with 10 lines of code
 const pipe0 = new Pipe0({ url: "https://your-server.com" });
