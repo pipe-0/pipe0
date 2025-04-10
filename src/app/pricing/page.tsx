@@ -22,7 +22,55 @@ export default function Home() {
           {/* Standard Tier */}
           <div className="bg-gray-900 border border-gray-800 rounded-xl p-8 flex flex-col h-full">
             <div className="mb-6">
-              <h2 className="text-2xl font-bold mb-2">Standard</h2>
+              <h2 className="text-2xl font-bold mb-2">Individual</h2>
+              <p className="text-gray-400">
+                Perfect for individuals & freelancers
+              </p>
+            </div>
+
+            <div className="mb-8">
+              <div className="flex items-baseline">
+                <span className="text-4xl font-bold">$19</span>
+                <span className="text-gray-400 ml-2">/month</span>
+              </div>
+              <p className="text-gray-400 mt-2">+ usage-based billing</p>
+            </div>
+
+            <div className="space-y-4 mb-8 flex-grow">
+              <div className="flex items-start">
+                <Check className="h-5 w-5 text-brand mr-3 mt-0.5" />
+                <span>Access to 50+ data providers</span>
+              </div>
+              <div className="flex items-start">
+                <Check className="h-5 w-5 text-brand mr-3 mt-0.5" />
+                <span>Custom enrichment pipelines</span>
+              </div>
+              <div className="flex items-start">
+                <Check className="h-5 w-5 text-brand mr-3 mt-0.5" />
+                <span>AI agent integration</span>
+              </div>
+              <div className="flex items-start">
+                <Check className="h-5 w-5 text-brand mr-3 mt-0.5" />
+                <span>Full control over cost and usage</span>
+              </div>
+              <div className="flex items-start">
+                <Check className="h-5 w-5 text-brand mr-3 mt-0.5" />
+                <span>Standard support</span>
+              </div>
+            </div>
+
+            <Link
+              href="/"
+              className="flex items-center justify-center bg-gradient-to-r from-brand to-green-500 text-black font-medium rounded-full px-6 py-3 hover:opacity-90 transition"
+            >
+              Request Access <ArrowRight className="ml-2 h-4 w-4" />
+            </Link>
+          </div>
+
+          {/* Starter */}
+          <div className="bg-gray-900 border border-gray-800 rounded-xl p-8 flex flex-col h-full">
+            <div className="mb-6">
+              <h2 className="text-2xl font-bold mb-2">Startup</h2>
               <p className="text-gray-400">
                 Perfect for startups and growing businesses
               </p>
@@ -30,12 +78,10 @@ export default function Home() {
 
             <div className="mb-8">
               <div className="flex items-baseline">
-                <span className="text-4xl font-bold">$250</span>
+                <span className="text-4xl font-bold">$99</span>
                 <span className="text-gray-400 ml-2">/month</span>
               </div>
-              <p className="text-gray-400 mt-2">
-                + usage-based billing for pipes
-              </p>
+              <p className="text-gray-400 mt-2">+ usage-based billing</p>
             </div>
 
             <div className="space-y-4 mb-8 flex-grow">
