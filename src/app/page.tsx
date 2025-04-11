@@ -12,7 +12,6 @@ import { Card } from "@/components/ui/card";
 import { appInfo } from "@/lib/const";
 import { ArrowRight } from "lucide-react";
 import { ReactNode } from "react";
-import "./globals.css";
 
 type Integration = {
   name: string;

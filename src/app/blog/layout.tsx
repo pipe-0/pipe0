@@ -1,7 +1,6 @@
 import { LogoRaw } from "@/components/logo";
 import { appInfo } from "@/lib/const";
 import { Footer, Layout, Navbar } from "nextra-theme-docs";
-import "nextra-theme-docs/style.css";
 import { Search } from "nextra/components";
 import { getPageMap } from "nextra/page-map";
 import { PropsWithChildren } from "react";
