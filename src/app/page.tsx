@@ -139,7 +139,7 @@ const integrations: Integration[] = [
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-black text-white dark">
       <div>
         {/* Checkerboard background */}
         {/* <div className="absolute inset-0 w-full h-full z-0">
