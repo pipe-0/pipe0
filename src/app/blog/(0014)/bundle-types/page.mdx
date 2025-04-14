@@ -9,11 +9,12 @@ authors:
       title: Founder
 ---
 
-# To Bundle or Not to Bundle Your TypeScript Types
 
-Even for experienced TypeScript engineers the difference between "bundled" and "unbundled" types 
-can be confusing. Yet, it can help you not only when creating your own libraries, but also when 
-you are consuming 3rd-party code.
+# To Bundle or Not to Bundle Your TypeScript Types
+![image](/media/blog/202504014-1.jpg)
+
+Even for experienced TypeScript engineers, the difference between "bundled" and "unbundled" types 
+can be confusing. Digging into this topic can help you create better libraries and consume 3rd-party libraries better.
 
 ## What is Bundling?
 
@@ -22,7 +23,7 @@ When building a TypeScript library with tools like `tsc`, the module structure i
 For example, if your library has a `src/index.ts` and `src/utils.ts` file, you will see `dist/index.d.ts`
 and `dist/utils.d.ts` in the build output. In this case, your types are **unbundled**.
 
-If you explore types of an unbundled library e.g. by `cmd + click` in vscode - your IDE will take you
+If you explore types of an unbundled library, e.g., by `cmd + click` in VS Code, your IDE will take you
 to the declaration file where that type was defined. The declaration file will only contain the types of that module
 and not the types of the whole library.
 
@@ -30,38 +31,37 @@ In contrast, **bundling** `d.ts` files means combining `d.ts` files into a singl
 Bundling is typically done with tools like [`rollup-plugin-dts`](https://www.npmjs.com/package/rollup-plugin-dts). With bundling, the module 
 structure of your source files is lost.
 
-If you explore the types of of a bundled library you navigate through one large file. Let's explore when it makes
+If you explore the types of a bundled library, you navigate through one large file. Let's explore when it makes
 sense to bundle your TypeScript types.
 
-## Tl;dr
+## TL;DR
 
-The general best practice is: **your type declarations match your JavaScript distribution files**. So, 
+The general best practice is: **type declarations should align with your JavaScript distribution files**. So, 
 if you use a bundler to bundle all your TypeScript files into one large bundled JavaScript file, you should 
 bundle your types into one large file. This ensures that:
 
-- Your JavaScript and `d.ts` files are consistent
-- Your declaration files don't expose files that don't exist in you JavaScript bundle (this happens your your JavaScript is bundled but your declarations are not)
+- Your JavaScript and `d.ts` files are consistent.
+- Your declaration files don't expose files that don't exist in your JavaScript bundle (this happens when your JavaScript is bundled but your declarations are not).
 
-To answer whether you should bundle your declaration files is answering the question of whether you should bundle 
+To answer whether you should bundle your declaration files is to answer the question of whether you should bundle 
 your JavaScript files. **Use this rule of thumb: Don't bundle your types until you have a good reason to bundle them.**
 
-## Good Reasons to Bundle JavaScript files
+## Good Reasons to Bundle JavaScript Files
 
-1. Our library is consumed by an environment that expects a bundled file (browser or cjs)
-2. Consumers of our library do not use a bundler and require a small library footprint
+1. Your library is consumed by an environment that expects a bundled file (e.g., browser or CommonJS).
+2. Consumers of your library do not use a bundler and require a small library footprint.
 
 ## When to Keep Types Unbundled
 
-Not bundling our types is a good default because:
+Not bundling your types is a good default because:
 
-1. Most consumer code usees a bundler before shipping to the browser run running on the server
-2. We can use declaration maps to make navigating types easier
+1. Most consumer code uses a bundler before shipping to the browser or running on the server.
+2. You can use declaration maps to make navigating types easier by linking to source code in editors.
 
 ## A Special Case for the `exports` Property?
 
-The [exports](https://nodejs.org/api/packages.html#package-entry-points) property of the `package.json` file 
-allows defining [entry points] of a package. It's supported in Node.js 12+ and all 
-other modern JavaScript Runtimes. 
+The [`exports` property](https://nodejs.org/api/packages.html#package-entry-points) of the `package.json` file 
+allows defining entry points of a package. It's supported in Node.js 12+ and all other modern JavaScript runtimes. 
 
 ```json
 {
@@ -74,12 +74,15 @@ other modern JavaScript Runtimes.
 ```
 
 One feature of the `exports` property is restricting module imports. It prevents consumers of a library from importing internal files.
-When the `exports` property is specified import like `import { X } from 'lib/internal/foo'` will fail unless `lib/internal/foo` is a 
-valid entrypoint listed in the `exports` property.
+When the `exports` property is specified, imports like `import { X } from 'lib/internal/foo'` will fail unless `lib/internal/foo` is a 
+valid entry point listed in the `exports` property.
 
-In many ways, defining a root entry point with the `exports` property `.` makes your library behave like it is bundled - even if it is not.
+In many ways, defining a root entry point with the `exports` property for `.` makes your library behave like it is bundled - even if it is not.
 This is because the `exports` property hides internal APIs the same way bundling does.
 
-When using the `exports` property, we have a stronger reason to use bundled types, since we're emulating the behavior 
-of a bundled library. However, even when using the `exports` property having **unbundled types should still be your default** since it 
-adds less complexity to your build setup.
+When using the `exports` property, you might think there’s a stronger to use bundled types, since you're emulating the behavior 
+of a bundled library. However, even when using the `exports` property, having **unbundled types should still be your default since it 
+adds less complexity to your build setup. For multi-entry libraries, TypeScript can resolve unbundled types (e.g., dist/utils.d.ts for lib/utils)
+as long as they match your exports paths.
+
+If you bundle types and have multiple entry points, consider bundling per entry point with tools like rollup-plugin-dts to maintain modularity.
