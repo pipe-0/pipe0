@@ -1,0 +1,85 @@
+---
+title: "To Bundle or Not to Bundle Your TypeScript Types"
+date: 2025-04-14
+tags:
+    - TypeScript
+excerpt: "Learn when bundling your TypeScript types makes sense"
+authors:
+    - name: Florian
+      title: Founder
+---
+
+# To Bundle or Not to Bundle Your TypeScript Types
+
+Even for experienced TypeScript engineers the difference between "bundled" and "unbundled" types 
+can be confusing. Yet, it can help you not only when creating your own libraries, but also when 
+you are consuming 3rd-party code.
+
+## What is Bundling?
+
+When building a TypeScript library with tools like `tsc`, the module structure is preserved by default.
+
+For example, if your library has a `src/index.ts` and `src/utils.ts` file, you will see `dist/index.d.ts`
+and `dist/utils.d.ts` in the build output. In this case, your types are **unbundled**.
+
+If you explore types of an unbundled library e.g. by `cmd + click` in vscode - your IDE will take you
+to the declaration file where that type was defined. The declaration file will only contain the types of that module
+and not the types of the whole library.
+
+In contrast, **bundling** `d.ts` files means combining `d.ts` files into a single file that contains all the types for your entire library.
+Bundling is typically done with tools like [`rollup-plugin-dts`](https://www.npmjs.com/package/rollup-plugin-dts). With bundling, the module 
+structure of your source files is lost.
+
+If you explore the types of of a bundled library you navigate through one large file. Let's explore when it makes
+sense to bundle your TypeScript types.
+
+## Tl;dr
+
+The general best practice is: **your type declarations match your JavaScript distribution files**. So, 
+if you use a bundler to bundle all your TypeScript files into one large bundled JavaScript file, you should 
+bundle your types into one large file. This ensures that:
+
+- Your JavaScript and `d.ts` files are consistent
+- Your declaration files don't expose files that don't exist in you JavaScript bundle (this happens your your JavaScript is bundled but your declarations are not)
+
+To answer whether you should bundle your declaration files is answering the question of whether you should bundle 
+your JavaScript files. **Use this rule of thumb: Don't bundle your types until you have a good reason to bundle them.**
+
+## Good Reasons to Bundle JavaScript files
+
+1. Our library is consumed by an environment that expects a bundled file (browser or cjs)
+2. Consumers of our library do not use a bundler and require a small library footprint
+
+## When to Keep Types Unbundled
+
+Not bundling our types is a good default because:
+
+1. Most consumer code usees a bundler before shipping to the browser run running on the server
+2. We can use declaration maps to make navigating types easier
+
+## A Special Case for the `exports` Property?
+
+The [exports](https://nodejs.org/api/packages.html#package-entry-points) property of the `package.json` file 
+allows defining [entry points] of a package. It's supported in Node.js 12+ and all 
+other modern JavaScript Runtimes. 
+
+```json
+{
+  "exports": {
+    ".": "./dist/index.js",
+    "./utils": "./dist/utils.js"
+  },
+  "types": "./dist/index.d.ts"
+}
+```
+
+One feature of the `exports` property is restricting module imports. It prevents consumers of a library from importing internal files.
+When the `exports` property is specified import like `import { X } from 'lib/internal/foo'` will fail unless `lib/internal/foo` is a 
+valid entrypoint listed in the `exports` property.
+
+In many ways, defining a root entry point with the `exports` property `.` makes your library behave like it is bundled - even if it is not.
+This is because the `exports` property hides internal APIs the same way bundling does.
+
+When using the `exports` property, we have a stronger reason to use bundled types, since we're emulating the behavior 
+of a bundled library. However, even when using the `exports` property having **unbundled types should still be your default** since it 
+adds less complexity to your build setup.
