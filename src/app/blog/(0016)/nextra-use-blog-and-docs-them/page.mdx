@@ -1,0 +1,88 @@
+---
+title: "How to Use the Docs and Blog Theme in the Same App with Nextra"
+date: 2025-04-17
+tags:
+    - TypeScript
+    - Node
+excerpt: "Just as you cannot have an app in `light` and `dark` theme at the same time, it is equally impossible to use both the blog theme and the docs theme at the same time"
+authors:
+    - name: Florian
+      title: Founder
+---
+
+# How to Use the Docs and Blog Theme in the Same App with Nextra
+
+[Nextra](https://nextra.site/docs) is a framework on top of Next.js, that lets you build content-focused websites.
+It combines features from Next.js and lets you create markdown-based static sites easily and straightforwardly.
+
+Nextra offers two themes: [Blog theme](https://nextra.site/docs/blog-theme) and [docs theme](https://nextra.site/docs/docs-theme).
+
+Just as you cannot have an app in `light` and `dark` theme at the same time, it is equally impossible to 
+use both the blog theme and the docs theme at the same time.
+
+Both themes define conflicting MDX components that overwrite each other at critical points.
+
+Trying to use both themes at the same time will lead to conflicts with missing Context Providers and missing components.
+
+## How to have a blog and docs in the same app with Nextra
+
+It is still possible to have a blog and an app within the same app. Applications like the [SWR Docs](https://swr.vercel.app/docs/with-nextjs)
+are built in this manner. The application supports both docs and a blog from the same repository. The code is [open source](https://github.com/vercel/swr-site/tree/main/pages).
+
+Another example is the [pipe0 docs](https://github.com/pipe-0/pipe0).
+
+## Setup your project
+
+The best way to setup a blog and a docs page from the same app is to move the nextra `Layout` component out of the root layout 
+component and have a seperate Nextra `Layout` for both your blog and docs. This way you you can load the content seperately 
+but also control the final visual result indipendent of each other.
+
+At [pipe0](https://pipe0.com) we set this up the following way:
+
+```typescript filename="src/app/blog/layout.tsx"
+import { Layout } from "nextra-theme-docs";
+import { appInfo } from "@/lib/const";
+import { getPageMap } from "nextra/page-map";
+import { PropsWithChildren } from "react";
+
+export default async function RootLayout({ children }: PropsWithChildren) {
+  return (
+    <Layout
+      pageMap={await getPageMap("/blog")}
+      sidebar={{ defaultOpen: false, toggleButton: false }}
+      editLink={null}
+      feedback={{ content: null }}
+    >
+      <div>
+        {children}
+      </div>
+    </Layout>
+  );
+}
+```
+
+```typescript filename="src/app/resources/layout.tsx"
+import { Layout } from "nextra-theme-docs";
+import { getPageMap } from "nextra/page-map";
+import { PropsWithChildren } from "react";
+
+export default async function RootLayout({ children }: PropsWithChildren) {
+  return (
+    <Layout
+      pageMap={await getPageMap("/resources")}
+      editLink={null}
+      feedback={{ content: null }}
+    >
+      {children}
+    </Layout>
+  );
+}
+```
+
+With this setup we store our content for `/resources` seperately from the blog posts 
+and end up with a consistent visual experience for both blog and docs.
+
+Read more about this approach in this [GitHub issue](https://github.com/shuding/nextra/issues/4340#issuecomment-2784986277).
+
+<BlogBanner />
+
