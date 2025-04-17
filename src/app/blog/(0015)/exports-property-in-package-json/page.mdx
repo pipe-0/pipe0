@@ -1,0 +1,162 @@
+---
+title: "Understand the `exports` property in package.json: A practical guide."
+date: 2025-04-17
+tags:
+    - TypeScript
+    - Node
+excerpt: "The `exports` field in `package.json` allows you to declare which module should be used when importing a package"
+authors:
+    - name: Florian
+      title: Founder
+---
+
+# The `exports` property in package.json: A guide.
+
+## Prerequisites
+
+🧠 A basic understanding of JavaScript and node (or any runtime) <br />
+📚 General understanding of the differences between library code and application code
+
+## What is the `exports` field in `package.json`
+
+The `exports` field in `package.json` allows you to declare which module should be used when 
+importing a package with a statement like 
+
+```javascript
+import A from "package"
+```
+
+Reminder: A module in JavaScript is usually just a file (assuming ESM). You can use the `exports` property
+to point to any entry module for a package.
+
+```json filename="package.json"
+{
+  "exports": {
+    ".": "./dist/index.js",
+  },
+}
+```
+
+This entry module could have the following content:
+
+```javascript filename="./dist/index.js"
+const a = "hello world"
+export default a
+```
+
+Using the example above the following code prints `hello world`.
+
+```javascript
+import A from "package" // imports from "./dist/index.js"
+
+console.log(A);
+```
+
+The `exports` property is very flexible.
+
+For example, you can specify more than one entry point to a package with the `exports` property.
+
+```json
+{
+  "exports": {
+    ".": "./dist/index.js",
+    "./utils": "./dist/utils.js"
+  },
+}
+```
+
+This way, both of the following imports work.
+
+```javascript
+import A from "package" // imports from "./dist/index.js"
+import B from "package/utils" // imports from "./dist/utils.js"
+```
+
+## What about the `main` field in `package.json`?
+
+The exports property was added to node in version `12.7`. Before the addition of the `exports` field,  you could use a field called [main](https://nodejs.org/api/packages.html#main)
+to specify the default module when loading a package. You can still use `main` today. However, if both `main` and `exports` are specified
+runtimes that support `exports` will use `exports` instead of `main`.
+
+If you are writing or maintaining a new package today, [it is recommended](https://nodejs.org/api/packages.html#main-entry-point-export) to use the `exports` field.
+
+
+## Things you can do with `exports`
+
+The `exports` field supports functionality lacking from the `main` field.
+
+Most importantly, the `main` field can only point to one module. This forced developers to find 
+all sorts of workarounds.
+
+For example, package creators had to package their code into modules compatible with both [commonjs modules and esm](https://auth0.com/blog/javascript-module-systems-showdown/) - into a format called [Universal Module Definition](https://github.com/umdjs/umd).
+
+> UMD is a pattern that works in both CommonJS and AMD environments and was commonly used before ESM support was widespread.
+
+Today, the `exports` property gives us the flexibility to conditionally point to different entry points depending on the module system of the 
+consumer.
+
+```json
+{
+  "exports": {
+    "import": "./index-module.js",
+    "require": "./index-require.cjs"
+  },
+  "type": "module"
+}
+```
+
+What conditional keys are supported is determined by the consuming runtime. Node.js supports the condition keywords:
+"node-addons", "node", "import", "require", "module-sync", "default".
+
+You can read more about conditional entry points in the [official documentation](https://nodejs.org/api/packages.html#conditional-exports).
+
+In addition to defining multiple entry points and conditional entry points you can define 
+different TypeScript types for each entry point with the help of the `exports` keyword.
+
+
+```json
+"exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js" // default is the fallback export used when no other condition (like import or require) matches.
+    },
+    "./utils": {
+      "types": "./dist/utils.d.ts",
+      "default": "./dist/utils.js"
+    },
+    "./types": {
+      "types": "./dist/types.d.ts",
+      "default": "./dist/types.js"
+    }
+  }
+```
+
+> [!NOTE]
+>
+> `types` is not part of node — it's respected by TypeScript tooling like tsc and IDEs, but ignored by the Node runtime. Also: Defining multiple entrypoints for types may affect how and if [you want to bundle](https://pipe0.com/blog/when-to-bundle-typescript-types) (roll up) your types.
+
+## Deep imports
+
+Another feature of the `exports` field is explicity defining the API of your package. While the `main` field
+defined an entry point, it would sill not prevent users from importing internal modules.
+
+```javascript
+import A from "package"
+import Internal from "package/dist/internal/module" // This works if the module exists and you are using `main`
+```
+
+When using exports, consumers only gain access to exports from your entry points. Importing internal modules
+will fail.
+
+
+## Wrapping things up
+
+In short, the `exports` keyword allows you to define what module is used when users import your package.
+It replaces the `main` field in package.json as the recommended way to specify your package API.
+
+It was added in node 12.7 and supports features allowing our packages to react to the needs of the
+consuming runtime and system. Lastly, using the `exports` keyword has implications on how you bundle your types.
+
+
+<BlogBanner />
+
