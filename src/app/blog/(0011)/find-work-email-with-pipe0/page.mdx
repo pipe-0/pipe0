@@ -34,7 +34,7 @@ The cost per invocation is ~13ct. per work email address.
     <div>
 ```typescript
 const id = 1;
-const result = await fetch("https://pipe0.com/api/v1/run", {
+const result = await fetch("https://api.pipe0.com/v1/run", {
   method: "POST",
   headers: {
     "Authorization": `Bearer <YOUR_API_TOKEN>`,
@@ -56,9 +56,8 @@ console.log(response.records[id].fields["workEmail"].value);
     </div>
     <div>
 ```shell
-curl -X POST "https://pipe0.com/api/v1/run" \
+curl -X POST "https://api.pipe0.com/v1/run" \
 -H "Authorization: Bearer YOUR_API_TOKEN" \
--H "X-Test-Mode: true" \
 -d '{
     "pipes": [{ "name": "PeopleGetWorkEmailWaterfall@1",  providers: ["findymail", "dropcontact"] }],
     "input": [{"id": 1, "firstName": "<FIRST_NAME>", "lastName": "<LAST_NAME>", "companyWebsiteURL": "<COMPANY_URL>"}]

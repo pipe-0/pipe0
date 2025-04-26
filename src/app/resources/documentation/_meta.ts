@@ -11,8 +11,8 @@ const meta: MetaRecord = {
   quickstart: {
     title: "Quickstart",
   },
-  "pipe0-vs-clay": {
-    title: "clay vs pipe0",
+  "sync-async": {
+    title: "Sync-vs-Async",
   },
   __: {
     type: "separator",
@@ -28,7 +28,7 @@ const meta: MetaRecord = {
     title: "Pipeline",
   },
   "test-mode": {
-    title: "Test Mode",
+    title: "Sandbox",
   },
   ___: {
     type: "separator",

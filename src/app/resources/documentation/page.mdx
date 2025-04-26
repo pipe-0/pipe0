@@ -6,46 +6,90 @@ date: 2025-04-01
 
 ## Introduction
 
-[Pipe0](https://pipe0.com) is a framework for data enrichment. If you have some data about a person or company 
-but want more, you can do that in an infinite number of ways with pipe0.
+[Pipe0](https://pipe0.com) is a programmatic framework for data enrichment. If you have some data about a person or 
+company but want more, you can do that in an infinite number of ways with pipe0.
 
-The ability to enrich data is a requirement for many apps. You may dream of a 
-CRM that updates itself or a sales copilot helping SDRs prepare for upcoming meetings. Data enrichment 
-enables these features but is surprisingly hard to build.
+### When to use pipe0
 
-At pipe0, we're on a mission to build the fastest, most extensible data enrichment framework in the world.
+If you find yourself using providers like Zoominfo, Findymail, etc, and piping data from 
+one service into another - you can benefit a lot from pipe0. Moving to pipe0 will drastically 
+increase your data quality while making it easy to combine existing data providers with AI and web scraping.
+No more spaghetti code 🍝.
 
 Here are some things pipe0 does for you:
 
 🔌 Connect 50+ data providers <br />
-💨 Analyze enrichment pipelines and parallelize execution (we're fast!)<br />
+💨 Make data enrichment easy and fast at any scale<br />
 💰 Run enrichment, scraping and AI infrastructure at low cost (we take 0% margin on external providers)<br />
 
-## What makes a framework?
+### Use cases
+
+There are many applications where having a unified data enrichment API helps a lot:
+
+🤖 Building sales technology applications like automated outreach, SDR, etc. <br />
+🧙🏻 Keep data in systems like CRMs up-to-date <br />
+🧬 Working with large datasets that need to be enriched <br />
+
+Integrating pipe0 can save months of engineering work, simplify billing, and help you focus 
+on the actual task you're trying to accomplish (data enrichment is mostly just a means to an end).
+
+## What makes pipe0 a framework?
 The term `framework` may surprise you because pipe0 is an API, dashboard, and <AppLink linkType="externalSDKNpm">SDK</AppLink>.
 
-While you can perform powerful enrichments in just 10 lines of code, you can choose to express logic and direction of data flow 
-with it, too.
+Pipe0 is a framework because you can not only enrich data but express logic and direction of data flow too.
 
 The following is an example of an enrichment flow that requires logic.
 
 ```text filename="Flow that needs logic"
 FIND phone number of person
 IF found
-    FIND website of current employer
+    FIND find timezone of that person
 IF NOT found
     FIND work email address
 ```
 
-Your first instinct might be to implement this with code. However, pipe0 offers a much simpler way to express this
-and removes brittle spaghetti code once and for all.
+While you could implement this with code, pipe0 offers a much simpler interface.
 
+The code below performs this flow. It is robust enough to enrich thousands of records in parallel and power 
+any kind of application.
 
-
-## Core Concepts
-
-Before you start we recommend familiarizing yourself with the following core concepts: 
-
-- <AppLink linkType="quickstart">Quickstart</AppLink>
-- <AppLink linkType="terminology">Terminology</AppLink>
+```typescript
+const result = await fetch("https://api.pipe0.com/v1/run/sync", {
+method: "POST",
+headers: {
+    "authorization": `Bearer ${YOUR_API_TOKEN}`,
+},
+body: JSON.stringify({
+    pipes: [
+    {
+        pipeId: "PeopleGetMobileNumberWaterfall@1",
+    },
+    {
+        pipeId: "PeopleGetTimezonePipe0@1",
+        conditions: [
+          {
+            action: "run",
+            condition: { ref: "mobilePhoneNumber", operator: "isResolved", equals: true }
+          }
+        ]
+    },
+    {
+        pipeId: "PeopleGetWorkEmailHunter@1",
+        conditions: [
+          {
+            action: "run",
+            condition: { ref: "mobilePhoneNumber", operator: "isResolved", equals: false }
+          }
+        ]
+    }
+    ],
+    input: [
+        {
+            name: "John Doe",
+            companyWebsiteUrl: "https://pipe0.com"
+        }
+    ]
+})
+});
+```
 

@@ -1,5 +1,5 @@
 import { getLastPipeVersionEntry } from "@/lib/utils";
-import { pipeMetaCatalog, PipeName } from "@pipe0/client-sdk";
+import { PipeId, pipeMetaCatalog } from "@pipe0/client-sdk";
 import { normalizePages } from "nextra/normalize-pages";
 import { getPageMap } from "nextra/page-map";
 
@@ -12,7 +12,7 @@ export type PipeEntry = {
     route: string;
     frontMatter: {
       title: string;
-      pipe: PipeName;
+      pipe: PipeId;
       root: string;
       filePath: string;
       tags?: string[];

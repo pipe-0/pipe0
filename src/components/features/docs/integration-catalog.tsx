@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { getLastPipeVersionEntry } from "@/lib/utils";
-import { pipeMetaCatalog, PipeName, providerCatalog } from "@pipe0/client-sdk";
+import { PipeId, pipeMetaCatalog, providerCatalog } from "@pipe0/client-sdk";
 import { AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { Search } from "lucide-react";
 import Link from "next/link";
@@ -78,7 +78,7 @@ export function IntegrationCatalog({
           const lastChildEntry = getLastPipeVersionEntry(pipe);
 
           const pipeCatalogEntry =
-            pipeMetaCatalog[lastChildEntry?.frontMatter.pipe as PipeName];
+            pipeMetaCatalog[lastChildEntry?.frontMatter.pipe as PipeId];
 
           if (!lastChildEntry || !pipeCatalogEntry) return null;
 

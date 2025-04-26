@@ -14,35 +14,32 @@ Before making your first request, the following is required:
 🔑 Go to "settings" → "api keys" and "create" a key <br />
 💳 Buy a subscription to make requests in production mode <br />
 
-## Pipeline request
+## Enriching data
 
-<AppLink linkType="pipelineRequest">Pipeline requests</AppLink> are how data is enriched.
+Pipe0 is build one idea: You define enrichment <AppLink linkType="pipeline">pipelines</AppLink> and run them. Using a single operation, you can power any kind 
+of enrichment at any granularity - including rich tables where rows or cells and enriched in isolation.
 
-The request below enriches one <AppLink linkType="inputObject">input object</AppLink> with `workEmailAddress` and 
-`companyDescription` fields.
+The following request enriches one <AppLink linkType="inputObject">input object</AppLink> by adding a company description
+and an email field.
 
 <CodeTabs items={["Typescript", "Python", "cURL"]}>
     <div>
 ```typescript
-const result = await fetch("https://pipe0.com/api/v1/run", {
+const result = await fetch("https://api.pipe0.com/v1/run/sync", {
 method: "POST",
 headers: {
-    "Authorization": `Bearer ${YOUR_API_TOKEN}`,
-    "X-Test-Mode": "true" // Remove this header for production requests
+    "Authorization": `Bearer ${TOKEN}`,
 },
 body: JSON.stringify({
     pipes: [
     {
-        name: "PeopleBusinessEmailWaterfallV1"
+        pipeId: "PeopleGetWorkEmailWaterfall@1"
     },
-    {
-        name: "CompanyDescriptionGoogleMapsV1"
-    }
     ],
     input: [
         {
             name: "John Doe",
-            companyName: "Google LLC"
+            companyWebsiteURL: "https://pipe0.com"
         }
     ]
 })
@@ -55,46 +52,38 @@ import requests
 import json
 
 headers = {
-    "Authorization": f"Bearer {YOUR_API_TOKEN}",
-    "X-Test-Mode": "true"  # Remove this header for production requests
+    "Authorization": f"Bearer {TOKEN}",
 }
 payload = {
     "pipes": [
         {
-            "name": "PeopleBusinessEmailWaterfallV1"
+            "pipeId": "PeopleGetWorkEmailWaterfall@1"
         },
-        {
-            "name": "CompanyDescriptionGoogleMapsV1"
-        }
     ],
     "input": [
         {
             "name": "John Doe",
-            "companyName": "Google LLC"
+            "companyWebsiteURL": "https://pipe0.com"
         }
     ]
 }
-response = requests.post("https://pipe0.com/api/v1/run", headers=headers, json=payload)
+response = requests.post("https://api.pipe0.com/v1/run", headers=headers, json=payload)
 ```
     </div>
     <div>
     ```bash
-curl -X POST "https://pipe0.com/api/v1/run" \
--H "Authorization: Bearer YOUR_API_TOKEN" \
--H "X-Test-Mode: true" \
+curl -X POST "https://api.pipe0.com/v1/run" \
+-H "Authorization: Bearer $TOKEN" \
 -d '{
         "pipes": [
             {
-            "name": "PeopleBusinessEmailWaterfallV1"
+            "pipeId": "PeopleGetWorkEmailWaterfall@1"
             },
-            {
-            "name": "CompanyDescriptionGoogleMapsV1"
-            }
         ],
         "input": [
             {
             "name": "John Doe",
-            "companyName": "Google LLC"
+            "companyWebsiteURL": "https://pipe0.com"
             }
         ]
     }'
@@ -102,38 +91,38 @@ curl -X POST "https://pipe0.com/api/v1/run" \
     </div>
 </CodeTabs>
 
-First, we find John Doe's work email address and use it to infer the company domain (URL). 
-We then use this URL to query the company description.
+### Inputs & outputs
+
+Every pipe takes one or more input fields and produces one or more output fields. Pipe inputs 
+can be provided by the input objects or another pipe in the pipeline. Before any pipeline 
+starts processing we validate it as a whole and check if the inputs and output align.
+
+Incomplete data is accepted but at least one of your input objects must have the input for a given pipe.
+
+Input and output fields have default names. You can reassign fields to different names by passing a <AppLink linkType="pipe">config object</AppLink>.
 
 > [!NOTE]
 >
 > Internally, we analyze your <AppLink linkType="pipeline">pipeline</AppLink>
 > and determine the best order of execution. Learn more about how to pass configuration to pipes <AppLink linkType="pipe">here</AppLink>.
 
-## Request validation
+## Sync or Async Processing
 
-When you send a request, it is validated before it is processed. If validation fails the server responds 
-with a [400 Bad Request](https://developer.mozilla.org/de/docs/Web/HTTP/Reference/Status/400) status code.
+You can choose between <AppLink linkType="syncProcessing">synchonous processing</AppLink> 
+(wait for the enrichment to complete) and <AppLink linkType="asyncProcessing">asynchonous processing</AppLink> (polling).
 
 ## Pipeline response
 
-<AppLink linkType="pipelineRequest">Pipeline requests</AppLink> are processed asynchronously. The 
-<AppLink linkType="pipelineResponse">pipeline response</AppLink> contains the current processing state. 
-Most importantly, it contains an `id` and a `status` property.
+Enrichment requests (sync + async) return <AppLink linkType="pipelineResponse">pipeline response</AppLink> objects.
 
-Poll the endpoint `https://pipe0.com/api/v1/check` until the status of the task is set to `completed`.
-
-The response you receive for a valid pipeline request is identical in shape to responses returned from the `/check`
-endpoint.
-
-## Test Mode
+## Sandbox
 
 Running pipelines in production incurs usage costs. This is why all pipes offer a 
-<AppLink linkType="testMode">test mode</AppLink>. **Making requests in test mode is always free.**
+<AppLink linkType="testMode">sandbox environment</AppLink>. **Making requests in within the sandbox environment is always free.**
 
-Do not expect data returned in test mode to make sense. However, expect the data returned in test mode to be structurally 
+Do not expect sandbox data to make sense. However, expect the data to be structurally 
 correct in regards to type, content length, and format.
 
-To send requests in test mode, include the `X-Test-Mode: true` header.
+To send `sandbox` requests, set the header `x-environment` to a value of "sandbox"`.
 
 

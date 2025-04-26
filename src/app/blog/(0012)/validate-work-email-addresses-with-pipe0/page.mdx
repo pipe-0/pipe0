@@ -39,7 +39,7 @@ The pipe "PeopleIsWorkEmailPipe0@1" is free to use on pipe0 (if you have a subsc
     <div>
 ```typescript
 const id = 1;
-const result = await fetch("https://pipe0.com/api/v1/run", {
+const result = await fetch("https://api.pipe0.com/v1/run", {
   method: "POST",
   headers: {
     "Authorization": `Bearer <YOUR_API_TOKEN>`,
@@ -61,9 +61,8 @@ console.log(response.records[id].fields["isWorkEmail"].value);
     </div>
     <div>
 ```shell
-curl -X POST "https://pipe0.com/api/v1/run" \
+curl -X POST "https://api.pipe0.com/v1/run" \
 -H "Authorization: Bearer YOUR_API_TOKEN" \
--H "X-Test-Mode: true" \
 -d '{
     "pipes": [{ "name": "PeopleIsWorkEmailPipe0@1" }],
     "input": [{ id: 1, workEmail: "<EMAIL_ADDRESS>" }]

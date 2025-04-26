@@ -10,8 +10,7 @@ isPublished: true
 
 # Pipeline
 
-<AppLink linkType="pipeline">Pipeline</AppLink> is the data model we use to enrich data. There is no object called "pipeline"
-you can interact with. Instead, "pipeline" is an internal data representation we use for data enrichment.
+<AppLink linkType="pipeline">Pipeline</AppLink> is the data model we use to enrich data. It is extremely powerful.
 
 A pipeline is made up of:
 
@@ -19,24 +18,9 @@ A pipeline is made up of:
 🔢 Fields added by your <AppLink linkType="inputObject">input</AppLink> <br />
 🧮 Logic and conditions
 
-## A big flexible table
-
-When thinking of <AppLink linkType="uiApps">UI-based applications</AppLink> it can help to think of the underlying data model 
-as a table with ordered columns. Each field in your pipeline is a column. So, every property of your input objects is a column
-and every output field of a pipe is a column too.
-
-A lot of thought has gone into the data model to allow complex use cases. Here's what's possible:
-
-- 🧪 Processing individual rows and cells of tables
-- ℁ Add columns with flexibility
-- 😢 Processing with partially incomplete inputs
-
-Check out this <AppLink linkType="externalClayExample">example</AppLink> where we try to build the core functionality of Clay in 
-less than 1000 lines of code (we're still trying to get below 1000).
-
 ## Validation
 
-Before pipelines are used to process data, they are checked for validity.
+Before pipelines are used, they are checked for validity.
 
 In a valid pipeline:
 
@@ -48,26 +32,22 @@ with a [400 Bad Request](https://developer.mozilla.org/de/docs/Web/HTTP/Referenc
 
 ## Pipeline request
 
-You can run a pipeline by sending a pipeline request:
-
+You can run a pipeline by sending a pipeline request. You can choose between <AppLink linkType="syncProcessing">synchonous processing</AppLink> 
+(wait for the enrichment to complete) and <AppLink linkType="asyncProcessing">asynchonous processing</AppLink> (polling).
 
 <CodeTabs items={["Typescript", "Python", "cURL"]}>
     <div>
 ```typescript
-const result = await fetch("https://pipe0.com/api/v1/run", {
+const result = await fetch("https://api.pipe0.com/v1/run", {
 method: "POST",
 headers: {
-    "Authorization": `Bearer ${YOUR_API_TOKEN}`,
-    "X-Test-Mode": "true" // Remove this header for production requests
+    "Authorization": `Bearer ${TOKEN}`,
 },
 body: JSON.stringify({
     pipes: [
     {
-        name: "PeopleBusinessEmailWaterfallV1"
+        pipeId: "PeopleBusinessEmailWaterfallV1"
     },
-    {
-        name: "CompanyDescriptionGoogleMapsV1"
-    }
     ],
     input: [
         {
@@ -85,17 +65,13 @@ import requests
 import json
 
 headers = {
-    "Authorization": f"Bearer {YOUR_API_TOKEN}",
-    "X-Test-Mode": "true"  # Remove this header for production requests
+    "Authorization": f"Bearer {TOKEN}",
 }
 payload = {
     "pipes": [
         {
-            "name": "PeopleBusinessEmailWaterfallV1"
+            "pipeId": "PeopleBusinessEmailWaterfallV1"
         },
-        {
-            "name": "CompanyDescriptionGoogleMapsV1"
-        }
     ],
     "input": [
         {
@@ -104,22 +80,18 @@ payload = {
         }
     ]
 }
-response = requests.post("https://pipe0.com/api/v1/run", headers=headers, json=payload)
+response = requests.post("https://api.pipe0.com/v1/run", headers=headers, json=payload)
 ```
     </div>
     <div>
     ```bash
-curl -X POST "https://pipe0.com/api/v1/run" \
--H "Authorization: Bearer YOUR_API_TOKEN" \
--H "X-Test-Mode: true" \
+curl -X POST "https://api.pipe0.com/v1/run" \
+-H "Authorization: Bearer $TOKEN" \
 -d '{
         "pipes": [
             {
-            "name": "PeopleBusinessEmailWaterfallV1"
+            "pipeId": "PeopleBusinessEmailWaterfallV1"
             },
-            {
-            "name": "CompanyDescriptionGoogleMapsV1"
-            }
         ],
         "input": [
             {
@@ -138,30 +110,21 @@ You can see the shape of output records in the <AppLink linkType="pipelineRespon
 ### Order of pipes
 
 You may spend time reading pipe documentation to make sure pipes are added in the correct order - this is not necessary!
-Internally, we analyze pipelines to find the best pipe order. As a user, the only thing you need to ensure is that the pipeline can be 
+Internally, we analyze pipelines to find the best order of execution. As a user, the only thing you need to ensure is that the pipeline can be 
 processed. For this all pipes must have their input requirements met.
 
 If your application runs in the browser or is based on Javascript you can use the <AppLink linkType="sdk">browser SDK</AppLink> to 
 validate your pipeline before sending a request to our servers.
 
-
-### Async processing
-
-When you run a pipeline, the processing happens asynchronously. The pipeline response includes an `id` property which you can 
-use to poll the task until it is complete.
-
-> [!NOTE]
-> 
-> If you're using the <AppLink linkType="sdk">browser SDK</AppLink> to validate pipelines you will receive a pipeline
-> response as a validation result. However, this result will neither have an `id` nor `status` property.
-
 ## Pipeline Response
 
-Both endpoints
-- `POST https://pipe0.com/api/v1/run` (used to run the pipeline)
-- `GET https://pipe0.com/api/v1/check` (used to check the processing state)
+All enrichment endpoints return the same response format: A <AppLink linkType="pipelineResponse">pipeline response</AppLink>:
 
-return the same response format: A <AppLink linkType="pipelineResponse">pipeline response</AppLink>.
+- `POST https://api.pipe0.com/v1/run` (used to run the pipeline)
+- `GET https://api.pipe0.com/v1/check` (used to check the processing state)
+- `POST https://api.pipe0.com/v1/run/sync` (used to run the pipeline synchonously)
+
+
 
 ```JSON
 {
@@ -312,10 +275,10 @@ return the same response format: A <AppLink linkType="pipelineResponse">pipeline
 				}
 			}
 		},
-		"isTestMode": true,
-		"enrichments": [
+		"environment": "production",
+		"pipes": [
 			{
-				"name": "PeopleBusinessEmailWaterfallV1",
+				"pipeId": "PeopleBusinessEmailWaterfallV1",
 				"config": {
 					"providers": [
 						{
@@ -342,7 +305,8 @@ return the same response format: A <AppLink linkType="pipelineResponse">pipeline
 
 ## Failure modes
 
-If your pipeline was run the endpoint always returns an HTTP 200 OK status.
-The result of the processing can be read from the global task status as well as the field status'
-of each individual record field. Please remember that just because your pipeline has passed validation 
-it does not mean that processing will succeed. 
+If your pipeline is valid the endpoint will always return a HTTP 200 OK status.
+
+The result of the processing can be read from the global task status as well as the field status
+of each record field. Remember, just because your pipeline has passed validation it does not mean 
+that processing will succeed. 

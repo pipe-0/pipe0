@@ -16,10 +16,11 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { formatCredits } from "@/lib/utils";
 import {
   fieldCatalog,
+  PipeId,
   pipeMetaCatalog,
-  type PipeName,
   providerCatalog,
 } from "@pipe0/client-sdk";
 import { AvatarFallback } from "@radix-ui/react-avatar";
@@ -28,7 +29,7 @@ import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/cjs/styles/prism";
 
 type PipeHeaderProps = {
-  pipe: PipeName;
+  pipe: PipeId;
 };
 
 export function PipeCatalogHeader({ pipe }: PipeHeaderProps) {
@@ -81,10 +82,18 @@ export function PipeCatalogHeader({ pipe }: PipeHeaderProps) {
             {pipeCatalogEntry.providers.map((providerName) => {
               const provider = providerCatalog[providerName];
 
-              const cost =
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                (pipeCatalogEntry.costPerProvider as any)?.[providerName]
-                  ?.amount ?? "Unknown";
+              const cost = (() => {
+                if (
+                  pipeCatalogEntry.costPerProvider &&
+                  providerName in pipeCatalogEntry.costPerProvider
+                ) {
+                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                  // @ts-ignore
+                  return pipeCatalogEntry.costPerProvider[providerName]
+                    ?.credits;
+                }
+                return "unknown";
+              })();
 
               if (!provider) return null;
 
@@ -126,7 +135,7 @@ export function PipeCatalogHeader({ pipe }: PipeHeaderProps) {
                         <Tooltip>
                           <TooltipTrigger asChild>
                             <Badge
-                              variant="default"
+                              variant="outline"
                               className="inline-flex gap-1"
                             >
                               <Key className="size-3" /> User
@@ -140,7 +149,16 @@ export function PipeCatalogHeader({ pipe }: PipeHeaderProps) {
                       )}
                     </div>
                   </TableCell>
-                  <TableCell>${Number(cost).toFixed(2)} per request</TableCell>
+                  <TableCell>
+                    <p>
+                      {typeof cost === "number" ? formatCredits(cost) : cost}{" "}
+                      credits{" "}
+                      <Info>
+                        Only records that were successfully processed are
+                        billed.
+                      </Info>
+                    </p>
+                  </TableCell>
                 </TableRow>
               );
             })}
@@ -312,7 +330,7 @@ export function PipeCatalogHeader({ pipe }: PipeHeaderProps) {
                 style={vscDarkPlus}
                 customStyle={{ borderRadius: "0.375rem" }}
               >
-                {`const result = await fetch("https://pipe0.com/api/v1/run", {
+                {`const result = await fetch("https://api.pipe0.com/v1/run/sync", {
   method: "POST",
   headers: {
     "Authorization": \`Bearer \${YOUR_API_TOKEN}\`,
@@ -330,9 +348,8 @@ export function PipeCatalogHeader({ pipe }: PipeHeaderProps) {
                 style={vscDarkPlus}
                 customStyle={{ borderRadius: "0.375rem" }}
               >
-                {`curl -X POST "https://pipe0.com/api/v1/run" \\
--H "Authorization: Bearer YOUR_API_TOKEN" \\
--H "X-Test-Mode: true" \\
+                {`curl -X POST "https://api.pipe0.com/v1/run/sync" \\
+-H "Authorization: Bearer $TOKEN" \\
 -d '{
     "pipes": [{ "name": "${pipe}" }],
     "input": []

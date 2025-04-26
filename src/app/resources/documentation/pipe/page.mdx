@@ -6,54 +6,56 @@ date: 2025-03-07
 
 # Pipes
 
-Pipes are processing blocks for data enrichment. Each pipe requires <AppLink linkType="inputField">input fields</AppLink> and emits output fields
-to a pipeline.
+Pipes are processing blocks for data enrichment. Each of your input objects will be processed by every 
+pipe of your pipeline. 
 
-Visit the <AppLink linkType="pipeCatalog"> 📓 pipe catalog</AppLink> to look for pipes. You can [request a new pipe](https://github.com) 
-if your use case is not covered yet.
+Example: The pipe `PeopleGetCompanyWebsitePipe0:Email@1` processes every input object
+of a request. The pipe requires the input field `email` and produces an output field called `companyWebsiteUrl`.
 
-## Configuration
+If the pipe cannot find its required inputs in the record, it will produce a field error.
+
+```ts
+cosnt obj = {
+  name: "Will Smith",
+  email: "will@hollywood.com"
+  // companyWebsiteUrl: "https://hollywood.com" < will be added
+}
+```
+
+## Inputs and outputs
+
+Each pipe takes one or more input fields and produces one or more output fields. What input fields are 
+requied can be cound in the <AppLink linkType="pipeCatalog"> 📓 pipe catalog</AppLink>.
+
+Pipe inputs can be provided by input objects or the outputs of another pipe in the pipeline.
+
+Desining pipelines in a way that all inputs and outputs line up is probably the hardest part of working 
+with pipe0 (it's not that hard!).
+
+## Pipe Configuration
 
 When creating a <AppLink linkType="pipelineRequest">pipeline request</AppLink> you can pass additional configuration to pipes. The configuration
 for a pipe can be found in the <AppLink linkType="pipeCatalog">pipe catalog</AppLink>.
 
-It is almost [always safe](/resources/documentation/pipe#flex-pipes) to assume that you can point the input and output fields of a pipe to an `alias`.
+It is almost <AppLink linkType="flexPipe">always safe</AppLink> to assume that you can point the input and output fields of a pipe to an `alias`.
 
-### Input aliases
+### Field Aliases
 
-Providing an `alias` for an input field points the field to a different input field. 
-
-If your input objects store the email address under the key `special-email-name`, you would need to point the pipe to this field in
-order for it to work.
+Input and output fields have default names. You can reassign fields to different names by passing 
+a <AppLink linkType="pipe">config object</AppLink>.
 
 ```json filename="Rename input fields"
 {
-  "name": "PeopleBusinessEmailWaterfallV1",
+  "pipeId": "PeopleGetCompanyWebsitePipe0:Email@1",
   "config": {
     "inputFields": {
       "email": {
         "alias": "special-email-name"
       }
-    }
-  }
-}
-```
-
-### Output aliases
-
-Providing an `alias` for an output field is useful to avoid conflicts. Every pipe will emit new fields to your pipeline.
-If you want to add pipes to your pipeline that emit the field `email`, you have to change the name of at least one of 
-these output fields for your pipeline to be valid.
-
-Additionally, this is useful if you add the same pipe more than once to your pipeline.
-
-```json filename="Rename output fields"
-{
-  "name": "PeopleBusinessEmailWaterfallV1",
-  "config": {
+    },
     "outputFields": {
-      "phoneNumber": {
-        "alias": "special-phone-number-field-name"
+      "companyWebsiteUrl": {
+        "alias": "spcial-website-name"
       }
     }
   }
@@ -68,7 +70,7 @@ from a prompt and have user-defined flexible output fields.
 
 Since the user of the pipe is already in control of the field names, there is no need to assign aliases.
 
-### Naming conventions
+### Pipe Names
 
 Pipes are named in a consistent way so you can understand what a pipe does by reading its name.
 
@@ -103,6 +105,11 @@ In cases like these, you can assume that the input of the pipe conveys intent. T
 are using the pipe to enrich `people` data since a person is the subject of the action.
 
 In short, the pipe category is determined by its inputs.
+
+## Request Pipes
+
+Visit the <AppLink linkType="pipeCatalog"> 📓 pipe catalog</AppLink> to look for pipes. You can contact us to request a new pipe 
+if your use case is not covered yet.
 
 
 

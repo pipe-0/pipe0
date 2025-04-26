@@ -1,27 +1,26 @@
 ---
-title: pipe0 Documentation | Test Mode
-description: Learn about Test Mode. A sanbox environment for your requests.
+title: pipe0 Documentation | Sandbox
+description: Learn about the Sandbox environment. A test environment for your requests.
 date: 2025-03-07
 ---
 
-## Test Mode
+## Sandbox Environment
 
 Running pipelines in production incurs usage costs. This is why all pipes offer a 
-<AppLink linkType="testMode">test mode</AppLink>. **Making requests in test mode is always free.**
+<AppLink linkType="testMode">sandbox mode</AppLink>. **Making requests within the sandbox environment is always free.**
 
-Do not expect data returned in test mode to make sense. However, expect the data returned in test mode to be structurally 
-correct in regards to type, content length, and format.
+Do not expect sandbox data to make sense. However, expect the sandbox data to match production data structurally.
 
-To send requests in test mode, include the `"X-Test-Mode": "true"` header.
+To send sandbox requests, include the `"x-environment": "sandbox"` header.
 
 <CodeTabs items={["Typescript", "Python", "cURL"]}>
     <div>
 ```typescript
-const result = await fetch("https://pipe0.com/api/v1/run", {
+const result = await fetch("https://api.pipe0.com/v1/run", {
 method: "POST",
 headers: {
-    "Authorization": `Bearer ${YOUR_API_TOKEN}`,
-    "X-Test-Mode": "true" // Enable test mode
+    "authorization": `Bearer ${YOUR_API_TOKEN}`,
+    "x-environment": "sandbox" // default value is 'production'
 },
 body: JSON.stringify({
     pipes: [
@@ -48,8 +47,8 @@ import requests
 import json
 
 headers = {
-    "Authorization": f"Bearer {YOUR_API_TOKEN}",
-    "X-Test-Mode": "true"  # Enable test mode
+    "authorization": f"Bearer {YOUR_API_TOKEN}",
+    "x-environment": "sandbox"  # Enable test mode
 }
 payload = {
     "pipes": [
@@ -67,14 +66,14 @@ payload = {
         }
     ]
 }
-response = requests.post("https://pipe0.com/api/v1/run", headers=headers, json=payload)
+response = requests.post("https://api.pipe0.com/v1/run", headers=headers, json=payload)
 ```
     </div>
     <div>
     ```bash
-curl -X POST "https://pipe0.com/api/v1/run" \
--H "Authorization: Bearer YOUR_API_TOKEN" \
--H "X-Test-Mode: true" \
+curl -X POST "https://api.pipe0.com/v1/run" \
+-H "authorization: Bearer YOUR_API_TOKEN" \
+-H "x-environment: sandbox" \
 -d '{
         "pipes": [
             {

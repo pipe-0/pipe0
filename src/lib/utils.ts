@@ -18,3 +18,9 @@ export function getLastPipeVersionEntry(
   const lastChild = entry.children[entry.children.length - 1];
   return lastChild;
 }
+
+export function formatCredits(credits: number | string | null) {
+  const c = credits ? Number(credits) : 0;
+  const fixed = c.toFixed(1);
+  return fixed.endsWith(".0") ? fixed.slice(0, -2) : fixed;
+}
