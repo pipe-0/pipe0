@@ -28,7 +28,7 @@ and an email field.
 const result = await fetch("https://api.pipe0.com/v1/run/sync", {
 method: "POST",
 headers: {
-    "Authorization": `Bearer ${TOKEN}`,
+    "Authorization": `Bearer ${API_KEY}`,
 },
 body: JSON.stringify({
     pipes: [
@@ -52,7 +52,7 @@ import requests
 import json
 
 headers = {
-    "Authorization": f"Bearer {TOKEN}",
+    "Authorization": f"Bearer {API_KEY}",
 }
 payload = {
     "pipes": [
@@ -73,7 +73,7 @@ response = requests.post("https://api.pipe0.com/v1/run", headers=headers, json=p
     <div>
     ```bash
 curl -X POST "https://api.pipe0.com/v1/run" \
--H "Authorization: Bearer $TOKEN" \
+-H "Authorization: Bearer $API_KEY" \
 -d '{
         "pipes": [
             {
@@ -120,7 +120,7 @@ Enrichment requests (sync + async) return <AppLink linkType="pipelineResponse">p
 Running pipelines in production incurs usage costs. This is why all pipes offer a 
 <AppLink linkType="testMode">sandbox environment</AppLink>. **Making requests in within the sandbox environment is always free.**
 
-Do not expect sandbox data to make sense. However, expect the data to be structurally 
+Do not expect sandbox data to make sense. Expect the data to be structurally 
 correct in regards to type, content length, and format.
 
 To send `sandbox` requests, set the header `x-environment` to a value of "sandbox"`.

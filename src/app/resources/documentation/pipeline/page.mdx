@@ -41,7 +41,7 @@ You can run a pipeline by sending a pipeline request. You can choose between <Ap
 const result = await fetch("https://api.pipe0.com/v1/run", {
 method: "POST",
 headers: {
-    "Authorization": `Bearer ${TOKEN}`,
+    "Authorization": `Bearer ${API_KEY}`,
 },
 body: JSON.stringify({
     pipes: [
@@ -65,7 +65,7 @@ import requests
 import json
 
 headers = {
-    "Authorization": f"Bearer {TOKEN}",
+    "Authorization": f"Bearer {API_KEY}",
 }
 payload = {
     "pipes": [
@@ -86,7 +86,7 @@ response = requests.post("https://api.pipe0.com/v1/run", headers=headers, json=p
     <div>
     ```bash
 curl -X POST "https://api.pipe0.com/v1/run" \
--H "Authorization: Bearer $TOKEN" \
+-H "Authorization: Bearer $API_KEY" \
 -d '{
         "pipes": [
             {
@@ -109,9 +109,11 @@ You can see the shape of output records in the <AppLink linkType="pipelineRespon
 
 ### Order of pipes
 
-You may spend time reading pipe documentation to make sure pipes are added in the correct order - this is not necessary!
-Internally, we analyze pipelines to find the best order of execution. As a user, the only thing you need to ensure is that the pipeline can be 
-processed. For this all pipes must have their input requirements met.
+You may spend time reading pipe documentation to make sure pipes are added in the correct order. This is not necessary.
+We analyze pipelines and find the best order of execution.
+
+As a user, the only thing you need to ensure is that the pipeline can be 
+processed. For this, all pipes must have their input requirements met.
 
 If your application runs in the browser or is based on Javascript you can use the <AppLink linkType="sdk">browser SDK</AppLink> to 
 validate your pipeline before sending a request to our servers.

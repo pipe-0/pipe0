@@ -22,7 +22,7 @@ To make a synchonous request use the `https://api.pipe0.com/v1/run/sync` endpoin
 
 ```bash filename="sync-request.sh"
 curl -X POST "https://api.pipe0.com/v1/run/sync" \
--H "Authorization: Bearer $TOKEN" \
+-H "Authorization: Bearer $API_KEY" \
 -d '{
         "pipes": [
             {
@@ -47,7 +47,7 @@ endpoint.
 
 ```bash filename="async-request.sh"
 curl -X POST "https://api.pipe0.com/v1/run" \
--H "Authorization: Bearer $TOKEN" \
+-H "Authorization: Bearer $API_KEY" \
 -d '{
         "pipes": [
             {
@@ -68,5 +68,5 @@ The response contains an `id` property. Use the `id` (taskId) to make a `GET` re
 
 ```bash filename="check.sh"
 curl -X GET "https://api.pipe0.com/v1/check/$TASK_ID" \
--H "Authorization: Bearer $TOKEN"
+-H "Authorization: Bearer $API_KEY"
 ```

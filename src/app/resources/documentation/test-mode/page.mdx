@@ -9,7 +9,7 @@ date: 2025-03-07
 Running pipelines in production incurs usage costs. This is why all pipes offer a 
 <AppLink linkType="testMode">sandbox mode</AppLink>. **Making requests within the sandbox environment is always free.**
 
-Do not expect sandbox data to make sense. However, expect the sandbox data to match production data structurally.
+Expect the sandbox data to match production data structurally. Don't expect sandbox data to make sense.
 
 To send sandbox requests, include the `"x-environment": "sandbox"` header.
 
@@ -19,7 +19,7 @@ To send sandbox requests, include the `"x-environment": "sandbox"` header.
 const result = await fetch("https://api.pipe0.com/v1/run", {
 method: "POST",
 headers: {
-    "authorization": `Bearer ${YOUR_API_TOKEN}`,
+    "authorization": `Bearer ${API_KEY}`,
     "x-environment": "sandbox" // default value is 'production'
 },
 body: JSON.stringify({
@@ -47,7 +47,7 @@ import requests
 import json
 
 headers = {
-    "authorization": f"Bearer {YOUR_API_TOKEN}",
+    "authorization": f"Bearer {API_KEY}",
     "x-environment": "sandbox"  # Enable test mode
 }
 payload = {
@@ -72,7 +72,7 @@ response = requests.post("https://api.pipe0.com/v1/run", headers=headers, json=p
     <div>
     ```bash
 curl -X POST "https://api.pipe0.com/v1/run" \
--H "authorization: Bearer YOUR_API_TOKEN" \
+-H "authorization: Bearer API_KEY" \
 -H "x-environment: sandbox" \
 -d '{
         "pipes": [

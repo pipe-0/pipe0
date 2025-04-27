@@ -37,7 +37,7 @@ const id = 1;
 const result = await fetch("https://api.pipe0.com/v1/run", {
   method: "POST",
   headers: {
-    "Authorization": `Bearer <YOUR_API_TOKEN>`,
+    "Authorization": `Bearer <API_KEY>`,
   },
   body: JSON.stringify({
     pipes: [{ name: "CompanyGetDescriptionPipe0:Website@1" }],
@@ -57,7 +57,7 @@ console.log(response.records[id].fields["companyDescription"].value);
     <div>
 ```shell
 curl -X POST "https://api.pipe0.com/v1/run" \
--H "Authorization: Bearer YOUR_API_TOKEN" \
+-H "Authorization: Bearer API_KEY" \
 -d '{
     "pipes": [{ "name": "CompanyGetDescriptionPipe0:Website@1" }],
     "input": [{ "id": 1, "companyWebsiteURL": "<COMAPNY_URL>" }]

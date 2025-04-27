@@ -24,10 +24,11 @@ cosnt obj = {
 
 ## Inputs and outputs
 
-Each pipe takes one or more input fields and produces one or more output fields. What input fields are 
-requied can be cound in the <AppLink linkType="pipeCatalog"> 📓 pipe catalog</AppLink>.
+Each pipe takes one or more input fields and produces one or more output fields. Pipe input and
+output fields can be cound in the <AppLink linkType="pipeCatalog"> 📓 pipe catalog</AppLink>.
 
-Pipe inputs can be provided by input objects or the outputs of another pipe in the pipeline.
+To match the input requirements of a pipe you can provide the input fields via your input objects
+or add a pipe to your pipeline that outputs the input field.
 
 Desining pipelines in a way that all inputs and outputs line up is probably the hardest part of working 
 with pipe0 (it's not that hard!).
@@ -69,6 +70,21 @@ The only pipes where this is not possible are pipes that run generic AI prompts.
 from a prompt and have user-defined flexible output fields.
 
 Since the user of the pipe is already in control of the field names, there is no need to assign aliases.
+
+Flex pipes follow a specific format to declare input and output fields. Here is an example:
+
+
+```json
+{
+  "prompt": "Based on the name of the person {{ input name type=\"string\" required=\"true\" }} assign a character from the TV show \"The Simpsons\" to that person. {{ output value description=\"Name of a character from the TV show 'The Simpsons\'\" }}",
+}
+```
+
+Within the text prompt you can specify any number of input or output fields.
+
+**type**: "string" | "number" | "boolean" <br/>
+**required**: "true" | "false" <br/>
+**description**: string <br/>
 
 ### Pipe Names
 

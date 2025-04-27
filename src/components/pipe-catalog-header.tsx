@@ -1,3 +1,4 @@
+import AppLink from "@/components/app-link";
 import { CodeTabs } from "@/components/code-tabs";
 import { Info } from "@/components/info";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -19,6 +20,7 @@ import {
 import { formatCredits } from "@/lib/utils";
 import {
   fieldCatalog,
+  pipeConfigRegistry,
   PipeId,
   pipeMetaCatalog,
   providerCatalog,
@@ -29,13 +31,15 @@ import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/cjs/styles/prism";
 
 type PipeHeaderProps = {
-  pipe: PipeId;
+  pipeId: PipeId;
 };
 
-export function PipeCatalogHeader({ pipe }: PipeHeaderProps) {
-  const pipeCatalogEntry = pipeMetaCatalog[pipe];
+export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
+  const pipeCatalogEntry = pipeMetaCatalog[pipeId];
 
-  const tags = pipeCatalogEntry.tags || [];
+  const tags = pipeCatalogEntry?.tags || [];
+
+  const defaultPipeConfig = pipeConfigRegistry[pipeId];
 
   return (
     <div className="pipe-header space-y-10">
@@ -43,7 +47,9 @@ export function PipeCatalogHeader({ pipe }: PipeHeaderProps) {
       <div className="space-y-3">
         <div>
           <div className="pt-7 pb-4">
-            <small className="text-sm text-muted-foreground mb-1">{pipe}</small>
+            <small className="text-sm text-muted-foreground mb-1">
+              {pipeId}
+            </small>
             <h2 className="text-4xl font-bold text-left">
               {pipeCatalogEntry.label}
             </h2>
@@ -313,8 +319,13 @@ export function PipeCatalogHeader({ pipe }: PipeHeaderProps) {
           <Terminal className="h-4 w-4" />
           <AlertTitle>Flexible Input/Output Fields</AlertTitle>
           <AlertDescription>
-            This pipe supports flexible input and output fields that can be
-            fully defined by the user.
+            <p>
+              This pipe supports{" "}
+              <AppLink linkType="flexPipe">
+                flexible input and output fields
+              </AppLink>{" "}
+              that can be fully defined by the user.
+            </p>
           </AlertDescription>
         </Alert>
       )}
@@ -333,10 +344,17 @@ export function PipeCatalogHeader({ pipe }: PipeHeaderProps) {
                 {`const result = await fetch("https://api.pipe0.com/v1/run/sync", {
   method: "POST",
   headers: {
-    "Authorization": \`Bearer \${YOUR_API_TOKEN}\`,
+    "Authorization": \`Bearer \${API_KEY}\`,
   },
   body: JSON.stringify({
-    pipes: [{ name: "${pipe}" }],
+    pipes: [{ 
+      name: "${pipeId}", 
+      // passing a config is optional
+      config: ${JSON.stringify(defaultPipeConfig, null, 2).replace(
+        /\n/g,
+        "\n      "
+      )} 
+    }],
     input: []
   })
 });`}
@@ -349,9 +367,9 @@ export function PipeCatalogHeader({ pipe }: PipeHeaderProps) {
                 customStyle={{ borderRadius: "0.375rem" }}
               >
                 {`curl -X POST "https://api.pipe0.com/v1/run/sync" \\
--H "Authorization: Bearer $TOKEN" \\
+-H "Authorization: Bearer $API_KEY" \\
 -d '{
-    "pipes": [{ "name": "${pipe}" }],
+    "pipes": [{ "name": "${pipeId}" }],
     "input": []
 }'`}
               </SyntaxHighlighter>
