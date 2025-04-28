@@ -36,7 +36,7 @@ export default function Home() {
             <div className="space-y-4 mb-8 flex-grow">
               <div className="flex items-start">
                 <Check className="h-5 w-5 text-brand mr-3 mt-0.5" />
-                <span>Access to 50+ mock providers</span>
+                <span>Access all mock providers</span>
               </div>
               <div className="flex items-start">
                 <Check className="h-5 w-5 text-brand mr-3 mt-0.5" />
@@ -44,7 +44,7 @@ export default function Home() {
               </div>
               <div className="flex items-start">
                 <Check className="h-5 w-5 text-brand mr-3 mt-0.5" />
-                <span>Mock AI agent integration</span>
+                <span>Mock AI integration</span>
               </div>
               <div className="flex items-start">
                 <Check className="h-5 w-5 text-brand mr-3 mt-0.5" />
@@ -63,24 +63,24 @@ export default function Home() {
           {/*  */}
           <div className="bg-gray-900 border border-gray-800 rounded-xl p-8 flex flex-col h-full">
             <div className="mb-6">
-              <h2 className="text-2xl font-bold mb-2">Individual</h2>
+              <h2 className="text-2xl font-bold mb-2">Professional 4k</h2>
               <p className="text-gray-400">
-                Perfect for individuals & freelancers
+                Perfect for GTM Teams & samll apps
               </p>
             </div>
 
             <div className="mb-8">
               <div className="flex items-baseline">
-                <span className="text-4xl font-bold">$49</span>
+                <span className="text-4xl font-bold">$149</span>
                 <span className="text-gray-400 ml-2">/month</span>
               </div>
-              <p className="text-gray-400 mt-2">+ usage-based billing</p>
+              <p className="text-gray-400 mt-2">4.000 Credits</p>
             </div>
 
             <div className="space-y-4 mb-8 flex-grow">
               <div className="flex items-start">
                 <Check className="h-5 w-5 text-brand mr-3 mt-0.5" />
-                <span>Access to 50+ data providers</span>
+                <span>Access all data providers</span>
               </div>
               <div className="flex items-start">
                 <Check className="h-5 w-5 text-brand mr-3 mt-0.5" />
@@ -88,7 +88,7 @@ export default function Home() {
               </div>
               <div className="flex items-start">
                 <Check className="h-5 w-5 text-brand mr-3 mt-0.5" />
-                <span>AI agent integration</span>
+                <span>AI integration</span>
               </div>
               <div className="flex items-start">
                 <Check className="h-5 w-5 text-brand mr-3 mt-0.5" />
@@ -111,24 +111,24 @@ export default function Home() {
           {/* Starter */}
           <div className="bg-gray-900 border border-gray-800 rounded-xl p-8 flex flex-col h-full">
             <div className="mb-6">
-              <h2 className="text-2xl font-bold mb-2">Startup</h2>
+              <h2 className="text-2xl font-bold mb-2">Professional 12k</h2>
               <p className="text-gray-400">
-                Perfect for startups and growing businesses
+                Perfect for mid-sized apps or larger organizations
               </p>
             </div>
 
             <div className="mb-8">
               <div className="flex items-baseline">
-                <span className="text-4xl font-bold">$149</span>
+                <span className="text-4xl font-bold">$349</span>
                 <span className="text-gray-400 ml-2">/month</span>
               </div>
-              <p className="text-gray-400 mt-2">+ usage-based billing</p>
+              <p className="text-gray-400 mt-2">12.000 Credits</p>
             </div>
 
             <div className="space-y-4 mb-8 flex-grow">
               <div className="flex items-start">
                 <Check className="h-5 w-5 text-brand mr-3 mt-0.5" />
-                <span>Access to 50+ data providers</span>
+                <span>Access to all data providers</span>
               </div>
               <div className="flex items-start">
                 <Check className="h-5 w-5 text-brand mr-3 mt-0.5" />
@@ -136,7 +136,7 @@ export default function Home() {
               </div>
               <div className="flex items-start">
                 <Check className="h-5 w-5 text-brand mr-3 mt-0.5" />
-                <span>AI agent integration</span>
+                <span>AI integration</span>
               </div>
               <div className="flex items-start">
                 <Check className="h-5 w-5 text-brand mr-3 mt-0.5" />
