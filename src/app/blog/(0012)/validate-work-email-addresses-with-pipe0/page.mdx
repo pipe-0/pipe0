@@ -17,7 +17,7 @@ For this, we use [pipe0](https://pipe0.com).
 
 Pipe0 is a framework for data enrichment. To enrich data with pipe0 you use enrichment pipes.
 There are several pipes available to validate work email addresses via API. For this blog post, we're 
-using the pipe [PeopleIsWorkEmailPipe0@1](https://www.pipe0.com/resources/pipe-catalog/people-is-work-email-pipe0/version-1).
+using the pipe [PeopleIsWorkEmail@1](https://www.pipe0.com/resources/pipe-catalog/people-is-work-email-pipe0/version-1).
 
 This pipe simply checks if a given email address is linked to a publically known free 
 email provider and therefore not a valid work email address.
@@ -26,7 +26,7 @@ If you want to go even further you can use the [PeopleValidateEmailZeroBounce@1 
 This pipe uses [zerobounce](https://www.zerobounce.net/) to validate the existence of the email address to 
 protect your reputation.
 
-The pipe "PeopleIsWorkEmailPipe0@1" is free to use on pipe0 (if you have a subscription).
+The pipe "PeopleIsWorkEmail@1" is free to use on pipe0 (if you have a subscription).
 
 ## Prerequisites
 
@@ -45,7 +45,7 @@ const result = await fetch("https://api.pipe0.com/v1/run", {
     "Authorization": `Bearer <API_KEY>`,
   },
   body: JSON.stringify({
-    pipes: [{ name: "PeopleIsWorkEmailPipe0@1" }],
+    pipes: [{ name: "PeopleIsWorkEmail@1" }],
     input: [{id, workEmail: "<EMAIL_ADDRESS>" }]
   })
 });
@@ -64,7 +64,7 @@ console.log(response.records[id].fields["isWorkEmail"].value);
 curl -X POST "https://api.pipe0.com/v1/run" \
 -H "Authorization: Bearer <API_KEY>" \
 -d '{
-    "pipes": [{ "name": "PeopleIsWorkEmailPipe0@1" }],
+    "pipes": [{ "name": "PeopleIsWorkEmail@1" }],
     "input": [{ id: 1, workEmail: "<EMAIL_ADDRESS>" }]
 }'
 ```

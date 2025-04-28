@@ -9,7 +9,7 @@ date: 2025-03-07
 Pipes are processing blocks for data enrichment. Each of your input objects will be processed by every 
 pipe of your pipeline. 
 
-Example: The pipe `PeopleGetCompanyWebsitePipe0:Email@1` processes every input object
+Example: The pipe `PeopleGetCompanyWebsiteUrl:Email@1` processes every input object
 of a request. The pipe requires the input field `email` and produces an output field called `companyWebsiteUrl`.
 
 If the pipe cannot find its required inputs in the record, it will produce a field error.
@@ -47,7 +47,7 @@ a <AppLink linkType="pipe">config object</AppLink>.
 
 ```json filename="Rename input fields"
 {
-  "pipeId": "PeopleGetCompanyWebsitePipe0:Email@1",
+  "pipeId": "PeopleGetCompanyWebsiteUrl:Email@1",
   "config": {
     "inputFields": {
       "email": {
