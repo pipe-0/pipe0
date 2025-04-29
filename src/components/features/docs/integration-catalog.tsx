@@ -92,6 +92,7 @@ export function IntegrationCatalog({
 
   // Get featured pipes
   const featuredPipes = useMemo(() => {
+    if (selectedCategory !== "All") return [];
     return filteredPipes
       .filter((pipe) => {
         const lastChildEntry = getLastPipeVersionEntry(pipe);
@@ -100,7 +101,7 @@ export function IntegrationCatalog({
         );
       })
       .slice(0, 6);
-  }, [filteredPipes]);
+  }, [filteredPipes, selectedCategory]);
 
   // Pagination
   const totalPages = Math.ceil(filteredPipes.length / itemsPerPage);
