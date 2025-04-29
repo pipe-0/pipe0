@@ -178,7 +178,7 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* Input Groups */}
             <div>
-              <h3 className="font-medium mb-3 pb-2 border-b">Input Groups</h3>
+              <h3 className="font-medium mb-3 pb-2 border-b">Input Fields</h3>
               <div className="space-y-5">
                 {pipeCatalogEntry.inputGroups?.map((group, groupIndex) => {
                   const fieldEntries = Object.entries(group.fields);
