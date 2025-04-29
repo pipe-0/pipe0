@@ -242,8 +242,8 @@ export function IntegrationCatalog({
 
           <div className="pt-4">
             <Link href={appInfo.links.requestPipe}>
-              <Button variant="outline" className="w-full" asChild>
-                <Link href="/request-integration">Request a pipe</Link>
+              <Button variant="outline" className="w-full">
+                Request a pipe
               </Button>
             </Link>
           </div>
