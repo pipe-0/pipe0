@@ -1,6 +1,6 @@
 "use client";
 
-import { Menu } from "lucide-react";
+import { Github, Menu } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -24,7 +24,11 @@ const navigationItems = [
   { href: "/pricing", label: "Pricing" },
 ];
 
-export function Header() {
+export function Header({
+  page,
+}: {
+  page: "product" | "blog" | "documentation" | "pricing";
+}) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -33,27 +37,43 @@ export function Header() {
         <LinkLogo />
 
         {/* Desktop Navigation */}
-        <nav className="hidden space-x-8 md:flex">
+        <nav className="hidden space-x-1 md:flex grow px-12">
           {navigationItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className="text-sm font-semibold text-gray-300 transition-colors hover:text-white"
+              className="text-sm text-gray-300 transition-colors hover:text-white"
             >
-              {item.label}
+              <Button
+                variant={
+                  item.label.toLowerCase() === page ? "secondary" : "ghost"
+                }
+              >
+                {item.label}
+              </Button>
             </Link>
           ))}
         </nav>
 
-        {/* Desktop Sign In */}
-        <Link href={`${appInfo.appUrl}/login`}>
-          <Button
-            variant="outline"
-            className="hidden border-2 border-gray-500 md:inline-flex"
-          >
-            Sign in
+        <div className="gap-3 items-center hidden md:flex">
+          <Button asChild variant="ghost" size="icon" className="h-8 w-8 px-0">
+            <Link href={appInfo.links.github} target="_blank" rel="noreferrer">
+              <Github className="h-4 w-4" />
+              <span className="sr-only">GitHub</span>
+            </Link>
           </Button>
-        </Link>
+          {/* <ModeSwitcher /> */}
+          {/* Desktop Sign In */}
+          <Link href={`${appInfo.links.appUrl}/login`}>
+            <Button
+              size="sm"
+              variant="outline"
+              className="hidden border-gray-500 md:inline-flex"
+            >
+              Sign in
+            </Button>
+          </Link>
+        </div>
 
         {/* Mobile Menu */}
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -85,10 +105,10 @@ export function Header() {
               ))}
               <Separator className="my-2" />
               <div className="mt-4 space-y-4 px-6">
-                <Link href={`${appInfo.appUrl}/login`}>
+                <Link href={`${appInfo.links.appUrl}/login`}>
                   <Button className="w-full">Login</Button>
                 </Link>
-                <Link href={`${appInfo.appUrl}/signup`}>
+                <Link href={`${appInfo.links.appUrl}/signup`}>
                   <Button variant="outline" className="w-full">
                     Sign up
                   </Button>

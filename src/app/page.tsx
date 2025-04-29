@@ -150,7 +150,7 @@ export default function Home() {
           </div>
         </div> */}
         {/* Header */}
-        <Header />
+        <Header page="product" />
 
         {/* Hero Section */}
         <section className="pt-24 lg:pt-32 pb-4 px-6 lg:px-0 relative">

@@ -8,7 +8,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-black text-white">
       {/* Header */}
-      <Header />
+      <Header page="pricing" />
 
       {/* Content */}
       <main className="max-w-7xl mx-auto pt-32 pb-20 px-6 lg:px-0">

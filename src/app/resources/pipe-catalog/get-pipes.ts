@@ -15,7 +15,6 @@ export type PipeEntry = {
       pipe: PipeId;
       root: string;
       filePath: string;
-      tags?: string[];
       description?: string;
       vendor?: string;
     };
@@ -59,7 +58,9 @@ export async function getTags() {
 
   const tags = pipeEntries.flatMap((pipe) => {
     const lastVersion = getLastPipeVersionEntry(pipe);
-    return lastVersion?.frontMatter?.tags || [];
+    const pipeMetaEntry =
+      pipeMetaCatalog[lastVersion?.frontMatter.pipe as PipeId];
+    return pipeMetaEntry.tags || [];
   });
   return tags;
 }
