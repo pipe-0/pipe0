@@ -28,6 +28,7 @@ const response = await pipe0.request.create({
     ],
     input: [
       {
+        id: 1, // assign an id to each input object
         name: "John Doe",
         companyName: "Google LLC"
       }

@@ -38,6 +38,7 @@ body: JSON.stringify({
     ],
     input: [
         {
+            id: 1, // assign an id to each input object
             name: "John Doe",
             companyWebsiteURL: "https://pipe0.com"
         }
@@ -62,6 +63,7 @@ payload = {
     ],
     "input": [
         {
+            "id": 1,
             "name": "John Doe",
             "companyWebsiteURL": "https://pipe0.com"
         }
@@ -82,6 +84,7 @@ curl -X POST "https://api.pipe0.com/v1/run" \
         ],
         "input": [
             {
+            "id": 1,
             "name": "John Doe",
             "companyWebsiteURL": "https://pipe0.com"
             }
