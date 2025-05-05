@@ -26,13 +26,13 @@ curl -X POST "https://api.pipe0.com/v1/run/sync" \
 -d '{
         "pipes": [
             {
-            "pipeId": "PeopleGetWorkEmailWaterfall@1"
+            "pipe_id": "people:workemail:waterfall@1"
             },
         ],
         "input": [
             {
             "name": "John Doe",
-            "companyWebsiteURL": "https://pipe0.com"
+            "company_website_url": "https://pipe0.com"
             }
         ]
     }'
@@ -51,13 +51,13 @@ curl -X POST "https://api.pipe0.com/v1/run" \
 -d '{
         "pipes": [
             {
-            "pipeId": "PeopleGetWorkEmailWaterfall@1"
+            "pipe_id": "people:workemail:waterfall@1"
             },
         ],
         "input": [
             {
             "name": "John Doe",
-            "companyWebsiteURL": "https://pipe0.com"
+            "company_website_url": "https://pipe0.com"
             }
         ]
     }'

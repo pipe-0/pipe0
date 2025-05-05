@@ -369,7 +369,7 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
                 {`curl -X POST "https://api.pipe0.com/v1/run/sync" \\
 -H "Authorization: Bearer $API_KEY" \\
 -d '{
-    "pipes": [{ "name": "${pipeId}" }],
+    "pipes": [{ "pipe_id": "${pipeId}" }],
     "input": []
 }'`}
               </SyntaxHighlighter>

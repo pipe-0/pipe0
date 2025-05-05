@@ -46,14 +46,14 @@ headers: {
 body: JSON.stringify({
     pipes: [
     {
-        pipeId: "PeopleBusinessEmailWaterfallV1"
+        pipe_id: "PeopleBusinessEmailWaterfallV1"
     },
     ],
     input: [
         {
 			id: 1,
             name: "John Doe",
-            companyName: "Google LLC"
+            company_name: "Google LLC"
         }
     ]
 })
@@ -71,11 +71,12 @@ headers = {
 payload = {
     "pipes": [
         {
-            "pipeId": "PeopleBusinessEmailWaterfallV1"
+            "pipe_id": "people:workemail:waterfall@1"
         },
     ],
     "input": [
         {
+			"id": 123,
             "name": "John Doe",
             "companyName": "Google LLC"
         }
@@ -91,13 +92,13 @@ curl -X POST "https://api.pipe0.com/v1/run" \
 -d '{
         "pipes": [
             {
-            "pipeId": "PeopleBusinessEmailWaterfallV1"
+            "pipe_id": "people:workemail:waterfall@1"
             },
         ],
         "input": [
             {
             "name": "John Doe",
-            "companyName": "Google LLC"
+            "company_name": "Google LLC"
             }
         ]
     }'
@@ -131,178 +132,120 @@ All enrichment endpoints return the same response format: A <AppLink linkType="p
 
 ```JSON
 {
-	"success": true,
-	"error": null,
-	"data": {
-		"id": "...",
-		"type": "enrichment",
-		"status": "pending",
-		"order": [
-			"15991b91-4b3c-4907-a7cc-b838e223004d",
-			"b0015d04-f25a-46ed-8131-4af0f9365880"
-		],
-		"errors": [],
-		"fields": {
-			"id": {
-				"name": "id",
-				"type": "string",
-				"addedBy": "input",
-				"required": true
-			},
-			"name": {
-				"name": "name",
-				"type": "string",
-				"addedBy": "input",
-				"required": true
-			},
-			"email": {
-				"name": "email",
-				"type": "string",
-				"addedBy": "input",
-				"required": true
-			},
-			"businessEmail": {
-				"name": "businessEmail",
-				"type": "string",
-				"addedBy": "PeopleBusinessEmailWaterfallV1",
-				"required": true
-			},
-			"linkedInProfileUrl": {
-				"name": "linkedInProfileUrl",
-				"type": "string",
-				"addedBy": "input",
-				"required": true
-			}
-		},
-		"records": {
-			"15991b91-4b3c-4907-a7cc-b838e223004d": {
-				"id": "15991b91-4b3c-4907-a7cc-b838e223004d",
-				"errors": [],
-				"fields": {
-					"id": {
-						"meta": null,
-						"type": "string",
-						"value": "15991b91-4b3c-4907-a7cc-b838e223004d",
-						"errors": [],
-						"status": "completed",
-						"addedBy": "input",
-						"resolvedBy": "input"
-					},
-					"name": {
-						"meta": null,
-						"type": "string",
-						"value": "Jane Smith",
-						"errors": [],
-						"status": "completed",
-						"addedBy": "input",
-						"resolvedBy": "input"
-					},
-					"email": {
-						"meta": null,
-						"type": "string",
-						"value": "jane@me.com",
-						"errors": [],
-						"status": "completed",
-						"addedBy": "input",
-						"resolvedBy": "input"
-					},
-					"businessEmail": {
-						"meta": null,
-						"type": "string",
-						"value": "my@email.com",
-						"errors": [],
-						"status": "completed",
-						"addedBy": "input",
-						"resolvedBy": "input"
-					},
-					"linkedInProfileUrl": {
-						"meta": null,
-						"type": "string",
-						"value": "https://linkedin.com/in/janesmith",
-						"errors": [],
-						"status": "completed",
-						"addedBy": "input",
-						"resolvedBy": "input"
-					}
-				}
-			},
-			"b0015d04-f25a-46ed-8131-4af0f9365880": {
-				"id": "b0015d04-f25a-46ed-8131-4af0f9365880",
-				"errors": [],
-				"fields": {
-					"id": {
-						"meta": null,
-						"type": "string",
-						"value": "b0015d04-f25a-46ed-8131-4af0f9365880",
-						"errors": [],
-						"status": "completed",
-						"addedBy": "input",
-						"resolvedBy": "input"
-					},
-					"name": {
-						"meta": null,
-						"type": "string",
-						"value": "Bob Example",
-						"errors": [],
-						"status": "completed",
-						"addedBy": "input",
-						"resolvedBy": "input"
-					},
-					"email": {
-						"meta": null,
-						"type": "string",
-						"value": "bob@example.com",
-						"errors": [],
-						"status": "completed",
-						"addedBy": "input",
-						"resolvedBy": "input"
-					},
-					"businessEmail": {
-						"meta": null,
-						"type": "string",
-						"value": null,
-						"errors": [],
-						"status": "queued",
-						"addedBy": "PeopleBusinessEmailWaterfallV1",
-						"resolvedBy": null
-					},
-					"linkedInProfileUrl": {
-						"meta": null,
-						"type": "string",
-						"value": "https://linkedin.com/in/bobexample",
-						"errors": [],
-						"status": "completed",
-						"addedBy": "input",
-						"resolvedBy": "input"
-					}
-				}
-			}
-		},
-		"environment": "production",
-		"pipes": [
-			{
-				"pipeId": "PeopleBusinessEmailWaterfallV1",
-				"config": {
-					"providers": [
-						{
-							"name": "clearbit"
-						}
-					],
-					"inputFieldNames": {
-						"name": "",
-						"email": "",
-						"random": ""
-					},
-					"outputFieldNames": {
-						"businessEmail": ""
-					}
-				}
-			}
-		],
-		"organizationId": "di21noyh28g36ie146m5icew",
-		"createdAt": "2025-03-06T23:51:38.256Z",
-		"updatedAt": "2025-03-06T23:51:38.256Z"
-	}
+  "id": "sgrqhch5qqinn58ojs192zne",
+  "order": [
+    "e99e5017-7943-4dc1-91f9-67f70a9fd6dd",
+  ],
+  "field_definitions": {
+    "id": {
+      "type": "string",
+      "required": false,
+      "label": "id",
+      "added_by": {
+        "ref": "input",
+        "hash": null
+      }
+    },
+    "email": {
+      "type": "string",
+      "required": false,
+      "label": "Email",
+      "added_by": {
+        "ref": "input",
+        "hash": null
+      }
+    },
+    "company_website_url": {
+      "type": "string",
+      "required": true,
+      "label": "Company Website URL",
+      "added_by": {
+        "ref": "email:url@1",
+        "hash": "e0b8a4ef"
+      }
+    }
+  },
+  "pipes": [
+    {
+      "pipe_id": "email:url@1",
+      "config": {
+        "input_fields": {
+          "email": {
+            "alias": ""
+          }
+        },
+        "output_fields": {
+          "company_website_url": {
+            "alias": ""
+          }
+        }
+      }
+    }
+  ],
+  "errors": [],
+  "records": {
+    "e99e5017-7943-4dc1-91f9-67f70a9fd6dd": {
+      "id": "e99e5017-7943-4dc1-91f9-67f70a9fd6dd",
+      "errors": [],
+      "fields": {
+        "id": {
+          "value": "e99e5017-7943-4dc1-91f9-67f70a9fd6dd",
+          "status": "completed",
+          "type": "string",
+          "reason": null,
+          "claimed_by": {
+            "ref": "input",
+            "hash": null
+          },
+          "resolved_by": {
+            "ref": "input",
+            "hash": null
+          },
+          "meta": null,
+          "ui": {
+            "severity": "none"
+          }
+        },
+        "email": {
+          "value": "emma@amazon.com",
+          "status": "completed",
+          "type": "string",
+          "reason": null,
+          "claimed_by": {
+            "ref": "input",
+            "hash": null
+          },
+          "resolved_by": {
+            "ref": "input",
+            "hash": null
+          },
+          "meta": null,
+          "ui": {
+            "severity": "none"
+          }
+        },
+        "company_website_url": {
+          "value": "https://amazon.com",
+          "status": "completed",
+          "type": "string",
+          "reason": null,
+          "claimed_by": {
+            "ref": "email:url@1",
+            "hash": "e0b8a4ef"
+          },
+          "resolved_by": {
+            "ref": "email:url@1",
+            "hash": "e0b8a4ef"
+          },
+          "meta": null,
+          "ui": {
+            "severity": "none"
+          }
+        }
+      }
+    },
+  },
+  "status": "completed"
 }
 ```
 
@@ -311,5 +254,5 @@ All enrichment endpoints return the same response format: A <AppLink linkType="p
 If your pipeline is valid the endpoint will always return a HTTP 200 OK status.
 
 The result of the processing can be read from the global task status as well as the field status
-of each record field. Remember, just because your pipeline has passed validation it does not mean 
-that processing will succeed. 
+of each record field. Remember, just because your pipeline has passed validation does not mean 
+that processing succeeded for every record. 

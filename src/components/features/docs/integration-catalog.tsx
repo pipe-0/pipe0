@@ -36,7 +36,7 @@ import { useMemo, useState } from "react";
 // Featured pipes - you can customize this list with your featured pipe IDs
 const FEATURED_PIPE_IDS = [
   "PeopleGetMobileNumberWaterfall@1",
-  "PeopleGetWorkEmailWaterfall@1",
+  "people:workemail:waterfall@1",
   "WebsiteGetTechnologyStackBuiltWith@1",
   "CompanyGetProfileBuiltWith@1",
 ];

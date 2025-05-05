@@ -40,8 +40,8 @@ const result = await fetch("https://api.pipe0.com/v1/run", {
     "Authorization": `Bearer <API_KEY>`,
   },
   body: JSON.stringify({
-    pipes: [{ name: "CompanyGetDescription:Website@1" }],
-    input: [{id, companyWebsiteURL: "<COMAPNY_URL>"}]
+    pipes: [{ pipe_id: "company:description:website@1" }],
+    input: [{id, company_website_url: "<COMAPNY_URL>"}]
   })
 });
 
@@ -59,8 +59,8 @@ console.log(response.records[id].fields["companyDescription"].value);
 curl -X POST "https://api.pipe0.com/v1/run" \
 -H "Authorization: Bearer API_KEY" \
 -d '{
-    "pipes": [{ "name": "CompanyGetDescription:Website@1" }],
-    "input": [{ "id": 1, "companyWebsiteURL": "<COMAPNY_URL>" }]
+    "pipes": [{ "pipe_id": "company:description:website@1" }],
+    "input": [{ "id": 1, "company_website_url": "<COMAPNY_URL>" }]
 }'
 ```
     </div>

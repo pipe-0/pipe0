@@ -25,17 +25,14 @@ headers: {
 body: JSON.stringify({
     pipes: [
     {
-        name: "PeopleBusinessEmailWaterfallV1"
+        pipe_id: "people:workemail:waterfall@1"
     },
-    {
-        name: "CompanyDescriptionGoogleMapsV1"
-    }
     ],
     input: [
         {
             id: 1,
             name: "John Doe",
-            companyName: "Google LLC"
+            company_name: "Google LLC"
         }
     ]
 })
@@ -54,17 +51,14 @@ headers = {
 payload = {
     "pipes": [
         {
-            "name": "PeopleBusinessEmailWaterfallV1"
+            "pipe_id": "people:workemail:waterfall@1"
         },
-        {
-            "name": "CompanyDescriptionGoogleMapsV1"
-        }
     ],
     "input": [
         {
             "id": 1
             "name": "John Doe",
-            "companyName": "Google LLC"
+            "company_name": "Google LLC"
         }
     ]
 }
@@ -79,17 +73,14 @@ curl -X POST "https://api.pipe0.com/v1/run" \
 -d '{
         "pipes": [
             {
-            "name": "PeopleBusinessEmailWaterfallV1"
+            "pipe_id": "people:workemail:waterfall@1"
             },
-            {
-            "name": "CompanyDescriptionGoogleMapsV1"
-            }
         ],
         "input": [
             {
             "id": 1,
             "name": "John Doe",
-            "companyName": "Google LLC"
+            "company_name": "Google LLC"
             }
         ]
     }'

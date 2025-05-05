@@ -17,7 +17,7 @@ For this, we use [pipe0](https://pipe0.com).
 
 Pipe0 is a framework for data enrichment. To enrich data with pipe0 you use enrichment pipes.
 There are several pipes available to find a work email address via API. For this blog post, we're 
-using the pipe [PeopleGetWorkEmailWaterfall@1](https://www.pipe0.com/resources/pipe-catalog/people-get-work-email-waterfall/version-1).
+using the pipe [people:workemail:waterfall@1](https://www.pipe0.com/resources/pipe-catalog/people-get-work-email-waterfall/version-1).
 
 This pipe relies on fetching contact data from multiple sources as a waterfall.
 
@@ -40,8 +40,8 @@ const result = await fetch("https://api.pipe0.com/v1/run", {
     "Authorization": `Bearer <API_KEY>`,
   },
   body: JSON.stringify({
-    pipes: [{ name: "PeopleGetWorkEmailWaterfall@1", providers: ["findymail", "dropcontact"] }],
-    input: [{id, firstName: "<FIRST_NAME>", lastName: "<LAST_NAME>", companyWebsiteURL: "<COMPANY_URL>"}]
+    pipes: [{ pipe_id: "people:workemail:waterfall@1", providers: ["findymail", "dropcontact"] }],
+    input: [{id, first_name: "<FIRST_NAME>", last_name: "<LAST_NAME>", company_website_url: "<COMPANY_URL>"}]
   })
 });
 
@@ -59,8 +59,8 @@ console.log(response.records[id].fields["workEmail"].value);
 curl -X POST "https://api.pipe0.com/v1/run" \
 -H "Authorization: Bearer <API_KEY>" \
 -d '{
-    "pipes": [{ "name": "PeopleGetWorkEmailWaterfall@1",  providers: ["findymail", "dropcontact"] }],
-    "input": [{"id": 1, "firstName": "<FIRST_NAME>", "lastName": "<LAST_NAME>", "companyWebsiteURL": "<COMPANY_URL>"}]
+    "pipes": [{ "pipe_id": "people:workemail:waterfall@1",  providers: ["findymail", "dropcontact"] }],
+    "input": [{"id": 1, "first_name": "<FIRST_NAME>", "last_name": "<LAST_NAME>", "company_website_url": "<COMPANY_URL>"}]
 }'
 ```
     </div>

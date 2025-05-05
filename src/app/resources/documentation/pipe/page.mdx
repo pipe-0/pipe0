@@ -10,7 +10,7 @@ Pipes are processing blocks for data enrichment. Each of your input objects will
 pipe of your pipeline. 
 
 Example: The pipe `PeopleGetCompanyWebsiteUrl:Email@1` processes every input object
-of a request. The pipe requires the input field `email` and produces an output field called `companyWebsiteUrl`.
+of a request. The pipe requires the input field `email` and produces an output field called `company_website_url`.
 
 If the pipe cannot find its required inputs in the record, it will produce a field error.
 
@@ -18,7 +18,7 @@ If the pipe cannot find its required inputs in the record, it will produce a fie
 cosnt obj = {
   name: "Will Smith",
   email: "will@hollywood.com"
-  // companyWebsiteUrl: "https://hollywood.com" < will be added
+  // company_website_url: "https://hollywood.com" < will be added
 }
 ```
 
@@ -47,15 +47,15 @@ a <AppLink linkType="pipe">config object</AppLink>.
 
 ```json filename="Rename input fields"
 {
-  "pipeId": "PeopleGetCompanyWebsiteUrl:Email@1",
+  "pipe_id": "PeopleGetCompanyWebsiteUrl:Email@1",
   "config": {
-    "inputFields": {
+    "input_fields": {
       "email": {
         "alias": "special-email-name"
       }
     },
-    "outputFields": {
-      "companyWebsiteUrl": {
+    "output_fields": {
+      "company_website_url": {
         "alias": "spcial-website-name"
       }
     }
@@ -93,34 +93,25 @@ Pipes are named in a consistent way so you can understand what a pipe does by re
 Every pipe name follows the following format:
 
 ```
-{Category}{Action}{Source}[:{InputType}]@{Version}
+category[:action]:target:source[:input_type]@version
 ```
 
 Here’s what each part means:
 
-1. **Category**: Defines the target of a pipe. This mostly defines if you can get company or people data from the pipe.
+1. **category**: Defines the subject you want to enrich data for. This can be companies, people, websites, email addresses, etc.
 
-2. **Action[Target]**: Describes what the pipe does. This is usually a combination of an action (verb) and target (ex. GetEmail, ValidatePhoneNumber).
+2. **action (optional)**: If the pipe performs another action than getting a value, the action will be set. Actions are versbs and refer to what is done e.g. "validate" or "check".
 
-3. **Source**: Defines who supplies the data to run this pipe. If the data is provided by a single provider 
+3. **target**: Describes the data the pipe fetches or operates on like "email" or "phonenumber".
+
+3. **source**: Defines who supplies the data to run this pipe. If the data is provided by a single provider 
 it's usually their name (ex. [ZeroBounce](https://zerobounce.com)). If the pipe combines multiple providers this section refers to a broader method like `Waterfall`.
 
-4. **InputType (optional)**: To avoid naming collisions for pipes with the same action and source but incompatible input groups we sometimes 
+4. **input_type (optional)**: To avoid naming collisions for pipes with the same action and source but incompatible input groups we sometimes 
 add a section to specify the main input for this pipe.
 
-5. **Version**: Pipes are regularly updated to fix bugs, improve quality, optimize cost, etc. If we introduce a breaking change this version number will be increased
+5. **version**: Pipes are regularly updated to fix bugs, improve quality, optimize cost, etc. If we introduce breaking changes the version number is increased
 so you can update at your own pace.
-
-#### Naming category
-
-When looking for a specific pipe you may ask yourself if a pipe will be found in the  'people' or 'company' category. While this is clear for 
-most pipes, it is a little trickier for others. Let's take the pipe `PeopleGetCompanyWebsitePipe0@1`. The pipe uses the email address of a person
-to generate the website URL of a company.
-
-In cases like these, you can assume that the input of the pipe conveys intent. The pipe inputs (email address) are people data. We assume users
-are using the pipe to enrich `people` data since a person is the subject of the action.
-
-In short, the pipe category is determined by its inputs.
 
 ## Request Pipes
 

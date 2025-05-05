@@ -33,14 +33,14 @@ headers: {
 body: JSON.stringify({
     pipes: [
     {
-        pipeId: "PeopleGetWorkEmailWaterfall@1"
+        pipe_id: "people:workemail:waterfall@1"
     },
     ],
     input: [
         {
             id: 1, // assign an id to each input object
             name: "John Doe",
-            companyWebsiteURL: "https://pipe0.com"
+            company_website_url: "https://pipe0.com"
         }
     ]
 })
@@ -58,14 +58,14 @@ headers = {
 payload = {
     "pipes": [
         {
-            "pipeId": "PeopleGetWorkEmailWaterfall@1"
+            "pipe_id": "people:workemail:waterfall@1"
         },
     ],
     "input": [
         {
             "id": 1,
             "name": "John Doe",
-            "companyWebsiteURL": "https://pipe0.com"
+            "company_website_url": "https://pipe0.com"
         }
     ]
 }
@@ -79,14 +79,14 @@ curl -X POST "https://api.pipe0.com/v1/run" \
 -d '{
         "pipes": [
             {
-            "pipeId": "PeopleGetWorkEmailWaterfall@1"
+            "pipe_id": "people:workemail:waterfall@1"
             },
         ],
         "input": [
             {
             "id": 1,
             "name": "John Doe",
-            "companyWebsiteURL": "https://pipe0.com"
+            "company_website_url": "https://pipe0.com"
             }
         ]
     }'

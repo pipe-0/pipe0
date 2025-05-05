@@ -62,23 +62,23 @@ headers: {
 body: JSON.stringify({
     pipes: [
     {
-        pipeId: "PeopleGetMobileNumberWaterfall@1",
+        pipe_id: "people:mobilenumber:waterfall@1",
     },
     {
-        pipeId: "PeopleGetTimezonePipe0@1",
+        pipe_id: "people:timezone@1",
         conditions: [
           {
             action: "run",
-            condition: { ref: "mobilePhoneNumber", operator: "isResolved", equals: true }
+            condition: { ref: "mobile_phone_number", operator: "is_resolved", equals: true }
           }
         ]
     },
     {
-        pipeId: "PeopleGetWorkEmailHunter@1",
+        pipe_id: "people:workemail:hunter@1",
         conditions: [
           {
             action: "run",
-            condition: { ref: "mobilePhoneNumber", operator: "isResolved", equals: false }
+            condition: { ref: "mobile_phone_number", operator: "is_resolved", equals: false }
           }
         ]
     }
@@ -87,7 +87,7 @@ body: JSON.stringify({
         {
             id: 1, // assign an id to each input object
             name: "John Doe",
-            companyWebsiteUrl: "https://pipe0.com"
+            company_website_url: "https://pipe0.com"
         }
     ]
 })
