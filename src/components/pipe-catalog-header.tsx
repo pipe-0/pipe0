@@ -211,10 +211,9 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
 
                         <div className="space-y-3">
                           {fieldEntries.map(([fieldName]) => {
-                            const fieldEntry =
-                              fieldCatalog[
-                                fieldName as keyof typeof fieldCatalog
-                              ];
+                            const fieldEntry = Object.values(fieldCatalog).find(
+                              (e) => e.name === fieldName
+                            );
                             if (!fieldEntry) return null;
 
                             return (
@@ -239,8 +238,9 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
                   } else if (fieldEntries.length === 1) {
                     // For single field groups, show them individually
                     const [fieldName] = fieldEntries[0];
-                    const fieldEntry =
-                      fieldCatalog[fieldName as keyof typeof fieldCatalog];
+                    const fieldEntry = Object.values(fieldCatalog).find(
+                      (e) => e.name === fieldName
+                    );
                     if (!fieldEntry) return null;
 
                     return (
@@ -287,8 +287,9 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
               <h3 className="font-medium mb-3 pb-2 border-b">Output Fields</h3>
               <div className="space-y-5">
                 {pipeCatalogEntry.outputFields.map((fieldName) => {
-                  const fieldEntry =
-                    fieldCatalog[fieldName as keyof typeof fieldCatalog];
+                  const fieldEntry = Object.values(fieldCatalog).find(
+                    (e) => e.name === fieldName
+                  );
                   if (!fieldEntry) return null;
 
                   return (
