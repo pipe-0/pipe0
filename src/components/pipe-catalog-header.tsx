@@ -349,7 +349,7 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
   },
   body: JSON.stringify({
     pipes: [{ 
-      name: "${pipeId}", 
+      pipe_id: "${pipeId}", 
       // passing a config is optional
       config: ${JSON.stringify(defaultPipeConfig, null, 2).replace(
         /\n/g,
