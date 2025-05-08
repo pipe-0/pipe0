@@ -138,14 +138,14 @@ different TypeScript types for each entry point with the help of the `exports` k
 ## Deep imports
 
 Another feature of the `exports` field is explicity defining the API of your package. While the `main` field
-defined an entry point, it would sill not prevent users from importing internal modules.
+defines what's exported from the package root, it does not prevent users from importing nested modules.
 
 ```javascript
 import A from "package"
 import Internal from "package/dist/internal/module" // This works if the module exists and you are using `main`
 ```
 
-When using exports, consumers only gain access to exports from your entry points. Importing internal modules
+When using `exports`, this does **not** work. Consumers will have access to what's exported explicity. That's it. Importing internal modules
 will fail.
 
 
@@ -154,8 +154,8 @@ will fail.
 In short, the `exports` keyword allows you to define what module is used when users import your package.
 It replaces the `main` field in package.json as the recommended way to specify your package API.
 
-It was added in node 12.7 and supports features allowing our packages to react to the needs of the
-consuming runtime and system. Lastly, using the `exports` keyword has implications on how you bundle your types.
+It was added in node 12.7 and gives the consumer of a library more control over which version of your package should be imported.
+Lastly, using the `exports` keyword has implications on how you bundle your types.
 
 
 <BlogBanner />
