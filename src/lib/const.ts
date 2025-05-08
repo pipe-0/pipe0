@@ -1,5 +1,8 @@
 export const appInfo = {
   productName: "pipe0",
+  emails: {
+    support: "support@pipe0.com",
+  },
   links: {
     appUrl: "https://app.pipe0.com",
     signupUrl: `https://app.pipe0.com/signup`,

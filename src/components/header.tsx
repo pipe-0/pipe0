@@ -64,7 +64,7 @@ export function Header({
           </Button>
           {/* <ModeSwitcher /> */}
           {/* Desktop Sign In */}
-          <Link href={`${appInfo.links.appUrl}/login`}>
+          <Link href={`${appInfo.links.loginUrl}`} rel="nofollow">
             <Button
               variant="secondary"
               className="hidden border-stone-600 border md:inline-flex"
@@ -72,7 +72,7 @@ export function Header({
               Sign in
             </Button>
           </Link>
-          <Link href={`${appInfo.links.signupUrl}`}>
+          <Link href={`${appInfo.links.signupUrl}`} rel="nofollow">
             <Button
               variant="secondary"
               className="hidden border border-stone-600 md:inline-flex"
@@ -113,10 +113,10 @@ export function Header({
               ))}
               <Separator className="my-2" />
               <div className="mt-4 space-y-4 px-6">
-                <Link href={`${appInfo.links.loginUrl}`}>
+                <Link href={`${appInfo.links.loginUrl}`} rel="nofollow">
                   <Button className="w-full">Login</Button>
                 </Link>
-                <Link href={`${appInfo.links.signupUrl}`}>
+                <Link href={`${appInfo.links.signupUrl}`} rel="nofollow">
                   <Button variant="outline" className="w-full">
                     Sign up
                   </Button>

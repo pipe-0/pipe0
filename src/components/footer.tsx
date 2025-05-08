@@ -9,6 +9,11 @@ export function Footer() {
           <div>
             <h4 className="font-semibold mb-4">Company</h4>
             <ul className="space-y-2">
+              <li className="text-sm text-muted-foreground">
+                <a href={`mailto:${appInfo.emails.support}`}>
+                  {appInfo.emails.support}
+                </a>
+              </li>
               <li>
                 <Link
                   href="/blog"
@@ -28,6 +33,32 @@ export function Footer() {
                   className="text-sm text-gray-400 hover:text-white"
                 >
                   Documentation
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/resources/pipe-catalog"
+                  className="text-sm text-gray-400 hover:text-white"
+                >
+                  Pipe Catalog
+                </Link>
+              </li>
+              <li>
+                <Link
+                  rel="nofollow"
+                  href={appInfo.links.signupUrl}
+                  className="text-sm text-gray-400 hover:text-white"
+                >
+                  Sign up
+                </Link>
+              </li>
+              <li>
+                <Link
+                  rel="nofollow"
+                  href={appInfo.links.loginUrl}
+                  className="text-sm text-gray-400 hover:text-white"
+                >
+                  Login
                 </Link>
               </li>
             </ul>

@@ -39,10 +39,10 @@ export default async function RootLayout({ children }: PropsWithChildren) {
         {children}
       </div>
       <Footer>
-        {new Date().getFullYear()} © {appInfo.productName} |&nbsp;
-        <a href="/feed.xml" style={{ float: "right" }}>
+        {new Date().getFullYear()} © {appInfo.productName}
+        {/* <a href="/feed.xml" style={{ float: "right" }}>
           RSS
-        </a>
+        </a> */}
       </Footer>
     </Layout>
   );
