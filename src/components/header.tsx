@@ -72,7 +72,7 @@ export function Header({
               Sign in
             </Button>
           </Link>
-          <Link href={`${appInfo.links.appUrl}/login`}>
+          <Link href={`${appInfo.links.signupUrl}`}>
             <Button
               variant="secondary"
               className="hidden border border-stone-600 md:inline-flex"
@@ -113,10 +113,10 @@ export function Header({
               ))}
               <Separator className="my-2" />
               <div className="mt-4 space-y-4 px-6">
-                <Link href={`${appInfo.links.appUrl}/login`}>
+                <Link href={`${appInfo.links.loginUrl}`}>
                   <Button className="w-full">Login</Button>
                 </Link>
-                <Link href={`${appInfo.links.appUrl}/signup`}>
+                <Link href={`${appInfo.links.signupUrl}`}>
                   <Button variant="outline" className="w-full">
                     Sign up
                   </Button>
