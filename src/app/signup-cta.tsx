@@ -4,7 +4,7 @@ import { ArrowRight, Banknote, CreditCard } from "lucide-react";
 
 export function SignupCta() {
   return (
-    <div className="space-y-4">
+    <div className="space-y-1">
       <a href={appInfo.links.signupUrl} className="inline-block">
         <HoverBorderGradient className="bg-accent">
           <div className="flex items-center gap-2 font-semibold">

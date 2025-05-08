@@ -1,7 +1,6 @@
 import CodeExampleCard from "@/app/code-example-card";
 import LandingPageTable from "@/app/data-model-table";
 import EmailForm from "@/app/email-form";
-import { Feature } from "@/app/feature";
 import { SignupCta } from "@/app/signup-cta";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
@@ -157,7 +156,7 @@ export default function Home() {
         {/* Hero Section */}
         <section className="pt-24 lg:pt-32 pb-4 px-6 lg:px-0 relative">
           <div className="container lg:grid-cols-2 gap-12 items-center mx-auto relative">
-            <div className="space-y-8 max-w-screen-lg">
+            <div className="space-y-6 max-w-screen-lg">
               <h1 className="text-5xl font-serif tracking-tight">
                 Add <HighlightSection>data enrichment</HighlightSection> to your
                 application. Fast. Powered by{" "}
@@ -181,7 +180,7 @@ export default function Home() {
         </section>
 
         {/* Code Example Section */}
-        <section className="container mx-auto grid grid-cols-1 lg:grid-cols-[5fr_2fr] xl:grid-cols-[6fr_2fr] grid-rows-1 gap-8">
+        <section className="container mx-auto gap-8 pt-12">
           <div className=" relative py-4 overflow-hidden">
             <div className="absolute inset-0 w-full h-full z-0">
               <div className="grid grid-cols-8 md:grid-cols-16 lg:grid-cols-24 grid-rows-8 md:grid-rows-16 lg:grid-rows-24 h-full w-full">
@@ -195,7 +194,7 @@ export default function Home() {
             <div className="absolute rounded-lg inset-0 bg-gradient-to-br from-green-400 via-blue-400 to-slate-400 opacity-80" />
             <CodeExampleCard />
           </div>
-          <Feature
+          {/* <Feature
             index={4}
             centered
             className="hidden lg:flex flex-col items-center justify-center bg-cover bg-center text-white"
@@ -214,7 +213,7 @@ export default function Home() {
               </span>{" "}
               over a handful of records.
             </p>
-          </Feature>
+          </Feature> */}
         </section>
       </div>
 
