@@ -1,6 +1,6 @@
 "use client";
 
-import { Github, Menu } from "lucide-react";
+import { ArrowRight, Github, Menu } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -66,11 +66,19 @@ export function Header({
           {/* Desktop Sign In */}
           <Link href={`${appInfo.links.appUrl}/login`}>
             <Button
-              size="sm"
-              variant="outline"
-              className="hidden border-gray-500 md:inline-flex"
+              variant="secondary"
+              className="hidden border-stone-600 border md:inline-flex"
             >
               Sign in
+            </Button>
+          </Link>
+          <Link href={`${appInfo.links.appUrl}/login`}>
+            <Button
+              variant="secondary"
+              className="hidden border border-stone-600 md:inline-flex"
+            >
+              Sign up
+              <ArrowRight />
             </Button>
           </Link>
         </div>

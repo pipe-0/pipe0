@@ -2,6 +2,7 @@ import CodeExampleCard from "@/app/code-example-card";
 import LandingPageTable from "@/app/data-model-table";
 import EmailForm from "@/app/email-form";
 import { Feature } from "@/app/feature";
+import { SignupCta } from "@/app/signup-cta";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
 import { HighlightSection } from "@/components/highlight-section";
@@ -11,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { appInfo } from "@/lib/const";
 import { ArrowRight } from "lucide-react";
+import Link from "next/link";
 import { ReactNode } from "react";
 
 type Integration = {
@@ -157,26 +159,23 @@ export default function Home() {
           <div className="container lg:grid-cols-2 gap-12 items-center mx-auto relative">
             <div className="space-y-8 max-w-screen-lg">
               <h1 className="text-5xl font-serif tracking-tight">
-                Add{" "}
-                <HighlightSection>
-                  Clay-like 🌈 data enrichment
-                </HighlightSection>{" "}
-                to your application fast. Powered by{" "}
+                Add <HighlightSection>data enrichment</HighlightSection> to your
+                application fast. Powered by{" "}
                 <span className="whitespace-nowrap">
                   l<HighlightSection>ooooo</HighlightSection>ts
                 </span>{" "}
                 of AI.
               </h1>
               <p className="text-lg text-muted-foreground">
-                Looking to integrate data enrichment into your app? We&apos;re
-                building the fastest and most complete data enrichment framework
-                in the <HighlightSection>world 🌍</HighlightSection>. Build{" "}
-                <HighlightSection>magic 🌈</HighlightSection> software with
-                enriched data.
+                Add data enrichment at any scale to your application or GTM
+                strategy. We&apos;ve redesigned data enrichment from the ground
+                up: <HighlightSection>Super fast</HighlightSection>, stateless,{" "}
+                <HighlightSection>multi-provider</HighlightSection>,{" "}
+                <HighlightSection>first-class API</HighlightSection> support,
+                and <HighlightSection>up to 6x cheaper</HighlightSection> than
+                conventional tools.
               </p>
-              <div className="flex">
-                <EmailForm />
-              </div>
+              <SignupCta />
             </div>
           </div>
         </section>
@@ -230,10 +229,10 @@ export default function Home() {
               </HighlightSection>
             </h1>
             <p className="text-lg text-gray-400">
-              An intuitive API to enrich <b>one</b> or{" "}
-              <b>thousands of records</b> with speed and precision. Power
-              everything from server-side enrichments to complex UI
-              interactions. Access a unified API with 50+ enrichment providers.
+              Build clay-like data enrichments fast and save years of
+              engineering work. Move fast where it matters most.{" "}
+              <HighlightSection>Power any UI</HighlightSection> or{" "}
+              <HighlightSection>server based data workflow</HighlightSection>.
             </p>
           </div>
           <div>
@@ -365,9 +364,11 @@ export default function Home() {
             ))}
           </div>
           <div className="flex justify-end pt-4">
-            <Button variant="ghost">
-              Explore all integrations <SoonBadge /> <ArrowRight />
-            </Button>
+            <Link href="/resources/pipe-catalog">
+              <Button variant="ghost">
+                Explore all integrations <ArrowRight />
+              </Button>
+            </Link>
           </div>
         </div>
       </section>

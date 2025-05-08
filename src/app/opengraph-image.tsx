@@ -25,7 +25,7 @@ export default async function Image() {
   );
 
   const element: OgElement = {
-    title: "Add clay-like 🌈 data enrichment to your application. Fast.",
+    title: "Add data enrichment to your application. Fast.",
     description:
       "Enrich people and company data in infinite ways with one mighty API. Powered by AI.",
   };

@@ -11,24 +11,19 @@ export default function CodeExampleCard({}: CodeExampleCardProps) {
         language="typescript"
         filename="DummyComponent.jsx"
         code={`
-// Enrich data with 10 lines of code
-const pipe0 = new Pipe0({ url: "https://your-server.com" });
-
-// Combine enrichments (pipes 🚰) into custom pipelines
+// Find a work email and company description
 const response = await pipe0.request.create({
     pipes: [
       {
-        // Find work email for "John Doe" using a waterfall enrichment
-        name: "PeopleBusinessEmailWaterfallV1"
+        name: "people:workemail:waterfall@1"
       },
       {
-        // Find the business description for "Google LLC" on Google Maps
-        name: "CompanyDescriptionGoogleMapsV1"
+        name: "company:description@1"
       }
     ],
     input: [
-      {
-        id: 1, // assign an id to each input object
+      { // this is the data you have
+        id: 1,
         name: "John Doe",
         companyName: "Google LLC"
       }

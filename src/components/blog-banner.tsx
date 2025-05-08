@@ -17,9 +17,7 @@ export function BlogBanner() {
               </div>
               <div className="max-w-[500px]">
                 Add{" "}
-                <HighlightSection>
-                  clay-like 🌈 data enrichment
-                </HighlightSection>{" "}
+                <HighlightSection>clay-like data enrichment</HighlightSection>{" "}
                 to your application. <HighlightSection>Fast.</HighlightSection>
               </div>
             </div>
