@@ -160,16 +160,16 @@ export default function Home() {
             <div className="space-y-8 max-w-screen-lg">
               <h1 className="text-5xl font-serif tracking-tight">
                 Add <HighlightSection>data enrichment</HighlightSection> to your
-                application fast. Powered by{" "}
+                application. Fast. Powered by{" "}
                 <span className="whitespace-nowrap">
                   l<HighlightSection>ooooo</HighlightSection>ts
                 </span>{" "}
                 of AI.
               </h1>
               <p className="text-lg text-muted-foreground">
-                Add data enrichment at any scale to your application or GTM
-                strategy. We&apos;ve redesigned data enrichment from the ground
-                up: <HighlightSection>Super fast</HighlightSection>, stateless,{" "}
+                Unified data enrichment for your application or GTM strategy.
+                Redesigned from the ground up:{" "}
+                <HighlightSection>Super fast</HighlightSection>, stateless,{" "}
                 <HighlightSection>multi-provider</HighlightSection>,{" "}
                 <HighlightSection>first-class API</HighlightSection> support,
                 and <HighlightSection>up to 6x cheaper</HighlightSection> than
