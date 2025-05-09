@@ -12,7 +12,7 @@ export type PipeEntry = {
     route: string;
     frontMatter: {
       title: string;
-      pipe: PipeId;
+      pipeId: PipeId;
       root: string;
       filePath: string;
       description?: string;
@@ -36,11 +36,11 @@ export async function getPipeEntries() {
         children: p.children
           .filter((e) => e.name !== "index")
           .map((c) => {
-            const catalogEntry = pipeMetaCatalog[c.frontMatter.pipe];
+            const catalogEntry = pipeMetaCatalog[c.frontMatter.pipeId];
 
             if (!catalogEntry)
               throw new Error(
-                `Pipe "${c.frontMatter.pipe}" not found in pipeMetaCatalog`
+                `Pipe "${c.frontMatter.pipeId}" not found in pipeMetaCatalog`
               );
 
             return {
@@ -59,7 +59,7 @@ export async function getTags() {
   const tags = pipeEntries.flatMap((pipe) => {
     const lastVersion = getLastPipeVersionEntry(pipe);
     const pipeMetaEntry =
-      pipeMetaCatalog[lastVersion?.frontMatter.pipe as PipeId];
+      pipeMetaCatalog[lastVersion?.frontMatter.pipeId as PipeId];
     return pipeMetaEntry.tags || [];
   });
   return tags;

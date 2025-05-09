@@ -93,7 +93,7 @@ const IntegrationCard = ({
 }) => {
   const lastChildEntry = getLastPipeVersionEntry(pipe);
   const pipeCatalogEntry =
-    pipeMetaCatalog[lastChildEntry?.frontMatter.pipe as PipeId];
+    pipeMetaCatalog[lastChildEntry?.frontMatter.pipeId as PipeId];
 
   if (!lastChildEntry || !pipeCatalogEntry) return null;
 
@@ -137,7 +137,7 @@ const IntegrationCard = ({
         </CardContent>
         <CardFooter className="pt-2 block">
           <div className="flex items-center gap-2 text-muted-foreground text-sm">
-            {lastChildEntry.frontMatter.pipe}{" "}
+            {lastChildEntry.frontMatter.pipeId}{" "}
             <Button
               size="icon"
               className="size-4"
@@ -145,7 +145,7 @@ const IntegrationCard = ({
               onClick={(e) => {
                 e.stopPropagation();
                 e.preventDefault();
-                copyToClipboard(lastChildEntry.frontMatter.pipe);
+                copyToClipboard(lastChildEntry.frontMatter.pipeId);
               }}
             >
               <Copy className="size-3" />
@@ -215,7 +215,7 @@ const IntegrationCard = ({
 // Function to get pipe ID from pipe entry
 const getPipeId = (pipe: PipeEntry): PipeId | null => {
   const lastChildEntry = getLastPipeVersionEntry(pipe);
-  return (lastChildEntry?.frontMatter.pipe as PipeId) || null;
+  return (lastChildEntry?.frontMatter.pipeId as PipeId) || null;
 };
 
 // Create cached maps for faster lookup
@@ -428,7 +428,10 @@ export function IntegrationCatalog({
                 <Badge
                   variant="secondary"
                   className="py-1.5 inline-flex gap-2 items-center text-muted-foreground hover:text-foreground cursor-default transition-colors"
-                  onClick={() => setFilter(null)}
+                  onClick={() => {
+                    setFilter(null);
+                    setSearchQuery("");
+                  }}
                 >
                   <X className="size-4" />
                   {filter.value}
