@@ -19,7 +19,7 @@ const meta: MetaRecord = {
     title: "Concepts",
   },
   authentication: {
-    title: "Authentification",
+    title: "Authentication",
   },
   pipe: {
     title: "Pipes",
