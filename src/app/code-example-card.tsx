@@ -9,7 +9,6 @@ export default function CodeExampleCard({}: CodeExampleCardProps) {
     <div className="w-full max-w-5xl mx-auto px-3 lg:px-8 py-0 lg:py-12 overflow-auto">
       <CodeBlock
         language="typescript"
-        filename="DummyComponent.jsx"
         code={`
 // Find a work email and company description
 const response = await pipe0.request.create({

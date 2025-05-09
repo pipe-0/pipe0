@@ -6,7 +6,7 @@ import { IconCheck, IconCopy } from "@tabler/icons-react";
 
 type CodeBlockProps = {
   language: string;
-  filename: string;
+  filename?: string;
   highlightLines?: number[];
 } & (
   | {

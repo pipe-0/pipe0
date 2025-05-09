@@ -156,8 +156,8 @@ export default function Home() {
         {/* Hero Section */}
         <section className="pt-24 lg:pt-32 pb-4 px-6 lg:px-0 relative">
           <div className="container lg:grid-cols-2 gap-12 items-center mx-auto relative">
-            <div className="space-y-6 max-w-screen-lg">
-              <h1 className="text-5xl font-serif tracking-tight">
+            <div className="space-y-6 max-w-screen-xl mx-auto text-center">
+              <h1 className="text-6xl font-serif tracking-tight">
                 Add <HighlightSection>data enrichment</HighlightSection> to your
                 application. Fast. Powered by{" "}
                 <span className="whitespace-nowrap">
@@ -165,9 +165,8 @@ export default function Home() {
                 </span>{" "}
                 of AI.
               </h1>
-              <p className="text-lg text-muted-foreground">
-                Unified data enrichment for your application or GTM strategy.
-                Redesigned from the ground up:{" "}
+              <p className="text-lg text-muted-foreground max-w-screen-lg mx-auto">
+                Programmatic data enrichment redesigned from the ground up:{" "}
                 <HighlightSection>Super fast</HighlightSection>, stateless,{" "}
                 <HighlightSection>multi-provider</HighlightSection>,{" "}
                 <HighlightSection>first-class API</HighlightSection> support,
@@ -191,7 +190,7 @@ export default function Home() {
                 })}
               </div>
             </div>
-            <div className="absolute rounded-lg inset-0 bg-gradient-to-br from-green-400 via-blue-400 to-slate-400 opacity-80" />
+            <div className="absolute rounded-lg inset-0 bg-gradient-to-br  via-blue-400 to-slate-400 opacity-80" />
             <CodeExampleCard />
           </div>
           {/* <Feature
@@ -378,7 +377,7 @@ export default function Home() {
         <div className="container relative mx-auto">
           <div className="max-w-2xl mx-auto text-center">
             <h2 className="text-3xl md:text-4xl font-serif mb-8">
-              Get in touch with {appInfo.productName}
+              Get a personalized tour of {appInfo.productName}
             </h2>
             <EmailForm />
           </div>

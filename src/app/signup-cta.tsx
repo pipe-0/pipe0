@@ -8,11 +8,11 @@ export function SignupCta() {
       <a rel="nofollow" href={appInfo.links.signupUrl} className="inline-block">
         <HoverBorderGradient className="bg-accent">
           <div className="flex items-center gap-2 font-semibold">
-            Sign up now, it&apos;s free <ArrowRight className="size-6" />
+            Sign up, it&apos;s free <ArrowRight className="size-6" />
           </div>
         </HoverBorderGradient>
       </a>
-      <ul className="text-sm pl-4 pt-2 text-muted-foreground flex gap-4">
+      <ul className="text-sm pt-6 pl-4 md:pt-2  text-muted-foreground flex gap-4 flex-wrap justify-center">
         <li className="flex gap-2 items-center">
           <CreditCard className="size-4" /> No card required
         </li>

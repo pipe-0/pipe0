@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, Github, Menu } from "lucide-react";
+import { Github, Menu } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -32,8 +32,8 @@ export function Header({
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <header className="fixed top-0 z-50 w-full border-b border-white/10 bg-black/50 px-6 backdrop-blur-sm lg:px-0">
-      <div className="container mx-auto flex h-16 items-center justify-between">
+    <header className="fixed top-0 z-50 w-full lg:px-0 pt-2">
+      <div className="container mx-auto flex h-16 items-center justify-between bg- py-6  bg-gradient-to-tl  to-slate-400/40 rounded-2xl px-6 backdrop-blur-sm shadow-2xl ">
         <LinkLogo />
 
         {/* Desktop Navigation */}
@@ -56,7 +56,12 @@ export function Header({
         </nav>
 
         <div className="gap-3 items-center hidden md:flex">
-          <Button asChild variant="ghost" size="icon" className="h-8 w-8 px-0">
+          <Button
+            asChild
+            variant="secondary"
+            size="icon"
+            className="h-8 w-8 px-0 border border-stone-600 md:inline-flex bg-stone-500/50 hover:bg-stone/30"
+          >
             <Link href={appInfo.links.github} target="_blank" rel="noreferrer">
               <Github className="h-4 w-4" />
               <span className="sr-only">GitHub</span>
@@ -67,7 +72,7 @@ export function Header({
           <Link href={`${appInfo.links.loginUrl}`} rel="nofollow">
             <Button
               variant="secondary"
-              className="hidden border-stone-600 border md:inline-flex"
+              className="hidden border-stone-600 border md:inline-flex border border-stone-600 md:inline-flex bg-stone-500/50 hover:bg-stone/30"
             >
               Sign in
             </Button>
@@ -75,10 +80,9 @@ export function Header({
           <Link href={`${appInfo.links.signupUrl}`} rel="nofollow">
             <Button
               variant="secondary"
-              className="hidden border border-stone-600 md:inline-flex"
+              className="hidden border border-stone-600 md:inline-flex bg-stone-500/50 hover:bg-stone/30"
             >
               Sign up
-              <ArrowRight />
             </Button>
           </Link>
         </div>
@@ -112,11 +116,19 @@ export function Header({
                 </Link>
               ))}
               <Separator className="my-2" />
-              <div className="mt-4 space-y-4 px-6">
-                <Link href={`${appInfo.links.loginUrl}`} rel="nofollow">
+              <div className="mt-4 px-6">
+                <Link
+                  href={`${appInfo.links.loginUrl}`}
+                  rel="nofollow"
+                  className="block mb-3"
+                >
                   <Button className="w-full">Login</Button>
                 </Link>
-                <Link href={`${appInfo.links.signupUrl}`} rel="nofollow">
+                <Link
+                  href={`${appInfo.links.signupUrl}`}
+                  rel="nofollow"
+                  className="block"
+                >
                   <Button variant="outline" className="w-full">
                     Sign up
                   </Button>
