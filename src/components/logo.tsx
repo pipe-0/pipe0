@@ -4,13 +4,22 @@ import Link from "next/link";
 
 export function LogoRaw() {
   return (
-    <Image
-      src="/logo-dark.svg"
-      width={208}
-      height={65}
-      alt="logo-dark"
-      className="w-20"
-    />
+    <>
+      <Image
+        src="/logo-dark.svg"
+        width={208}
+        height={65}
+        alt="logo-dark"
+        className="light:hidden w-20"
+      />
+      <Image
+        src="/logo-light.svg"
+        width={208}
+        height={65}
+        alt="logo-dark"
+        className="dark:hidden w-20"
+      />
+    </>
   );
 }
 

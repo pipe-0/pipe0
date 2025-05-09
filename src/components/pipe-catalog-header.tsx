@@ -1,8 +1,14 @@
 import AppLink from "@/components/app-link";
 import { CodeTabs } from "@/components/code-tabs";
 import { Info } from "@/components/info";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import {
   Table,
@@ -25,7 +31,6 @@ import {
   pipeMetaCatalog,
   providerCatalog,
 } from "@pipe0/client-sdk";
-import { AvatarFallback } from "@radix-ui/react-avatar";
 import { Key, Terminal } from "lucide-react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/cjs/styles/prism";
@@ -332,17 +337,72 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
       )}
 
       {/* Code example */}
-      <div>
-        <h3 className="font-medium mb-3 pb-2 border-b">Code Example</h3>
-        <div>
-          <CodeTabs items={["Typescript", "cURL"]}>
+      <Accordion type="multiple" defaultValue={["code"]}>
+        <AccordionItem value="code">
+          <AccordionTrigger className="text-lg">Code example</AccordionTrigger>
+          <AccordionContent>
             <div>
-              <SyntaxHighlighter
-                language="typescript"
-                style={vscDarkPlus}
-                customStyle={{ borderRadius: "0.375rem" }}
-              >
-                {`const result = await fetch("https://api.pipe0.com/v1/run/sync", {
+              <CodeTabs items={["Typescript", "cURL"]}>
+                <div>
+                  <SyntaxHighlighter
+                    language="typescript"
+                    style={vscDarkPlus}
+                    customStyle={{ borderRadius: "0.375rem" }}
+                  >
+                    {`const result = await fetch("https://api.pipe0.com/v1/run/sync", {
+  method: "POST",
+  headers: {
+    "Authorization": \`Bearer \${API_KEY}\`,
+  },
+  body: JSON.stringify({
+    pipes: [{ 
+      pipe_id: "${pipeId}", 
+    }],
+    input: []
+  })
+});`}
+                  </SyntaxHighlighter>
+                </div>
+                <div>
+                  <SyntaxHighlighter
+                    language="bash"
+                    style={vscDarkPlus}
+                    customStyle={{ borderRadius: "0.375rem" }}
+                  >
+                    {`curl -X POST "https://api.pipe0.com/v1/run/sync" \\
+-H "Authorization: Bearer $API_KEY" \\
+-d '{
+    "pipes": [{ "pipe_id": "${pipeId}" }],
+    "input": []
+}'`}
+                  </SyntaxHighlighter>
+                </div>
+              </CodeTabs>
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+        <AccordionItem value="config">
+          <AccordionTrigger className="text-lg">
+            Full Config Example
+          </AccordionTrigger>
+          <AccordionContent>
+            <div>
+              <Alert>
+                <Terminal className="h-4 w-4" />
+                <AlertTitle>Heads up!</AlertTitle>
+                <AlertDescription>
+                  Passing config values is optional. The following example
+                  contains the default pipe config.
+                </AlertDescription>
+              </Alert>
+              <CodeTabs items={["Typescript", "cURL"]}>
+                <div>
+                  <SyntaxHighlighter
+                    language="typescript"
+                    style={vscDarkPlus}
+                    customStyle={{ borderRadius: "0.375rem" }}
+                  >
+                    {`const result = await fetch("https://api.pipe0.com/v1/run/sync", {
   method: "POST",
   headers: {
     "Authorization": \`Bearer \${API_KEY}\`,
@@ -359,25 +419,27 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
     input: []
   })
 });`}
-              </SyntaxHighlighter>
-            </div>
-            <div>
-              <SyntaxHighlighter
-                language="bash"
-                style={vscDarkPlus}
-                customStyle={{ borderRadius: "0.375rem" }}
-              >
-                {`curl -X POST "https://api.pipe0.com/v1/run/sync" \\
+                  </SyntaxHighlighter>
+                </div>
+                <div>
+                  <SyntaxHighlighter
+                    language="bash"
+                    style={vscDarkPlus}
+                    customStyle={{ borderRadius: "0.375rem" }}
+                  >
+                    {`curl -X POST "https://api.pipe0.com/v1/run/sync" \\
 -H "Authorization: Bearer $API_KEY" \\
 -d '{
     "pipes": [{ "pipe_id": "${pipeId}" }],
     "input": []
 }'`}
-              </SyntaxHighlighter>
+                  </SyntaxHighlighter>
+                </div>
+              </CodeTabs>
             </div>
-          </CodeTabs>
-        </div>
-      </div>
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
     </div>
   );
 }

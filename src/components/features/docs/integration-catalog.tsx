@@ -437,7 +437,11 @@ export function IntegrationCatalog({
             </div>
           </div>
 
-          <Accordion type="multiple" className="w-full" defaultValue={["tag"]}>
+          <Accordion
+            type="multiple"
+            className="w-full"
+            defaultValue={filter ? [filter.type, "tag"] : ["tag"]}
+          >
             <AccordionItem value="tag">
               <AccordionTrigger>
                 <h3 className="font-medium">Category</h3>
@@ -480,7 +484,7 @@ export function IntegrationCatalog({
               </AccordionContent>
             </AccordionItem>
 
-            <AccordionItem value="input-fields">
+            <AccordionItem value="input-field">
               <AccordionTrigger>
                 <h3 className="font-medium">Input Fields</h3>
               </AccordionTrigger>
@@ -525,7 +529,7 @@ export function IntegrationCatalog({
               </AccordionContent>
             </AccordionItem>
 
-            <AccordionItem value="output-fields">
+            <AccordionItem value="output-field">
               <AccordionTrigger>
                 <h3 className="font-medium">Output Fields</h3>
               </AccordionTrigger>
