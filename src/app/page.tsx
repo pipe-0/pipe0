@@ -142,14 +142,6 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-black text-white dark">
       <div>
-        {/* Checkerboard background */}
-        {/* <div className="absolute inset-0 w-full h-full z-0">
-          <div className="grid grid-cols-8 md:grid-cols-16 lg:grid-cols-24 grid-rows-8 md:grid-rows-16 lg:grid-rows-24 h-full w-full">
-            {Array.from({ length: 24 * 24 }).map((_, i) => {
-              return <div key={i} className={`border border-slate-700/40`} />;
-            })}
-          </div>
-        </div> */}
         {/* Header */}
         <Header page="product" />
 
@@ -157,7 +149,7 @@ export default function Home() {
         <section className="pt-24 lg:pt-32 pb-4 px-6 lg:px-0 relative">
           <div className="container lg:grid-cols-2 gap-12 items-center mx-auto relative">
             <div className="space-y-6 max-w-screen-xl mx-auto text-center">
-              <h1 className="text-6xl font-serif tracking-tight">
+              <h1 className="text-5xl md:text-6xl font-serif tracking-tight">
                 Add <HighlightSection>data enrichment</HighlightSection> to your
                 application. Fast. Powered by{" "}
                 <span className="whitespace-nowrap">
@@ -193,26 +185,6 @@ export default function Home() {
             <div className="absolute rounded-lg inset-0 bg-gradient-to-br  via-blue-400 to-slate-400 opacity-80" />
             <CodeExampleCard />
           </div>
-          {/* <Feature
-            index={4}
-            centered
-            className="hidden lg:flex flex-col items-center justify-center bg-cover bg-center text-white"
-            href="/resources/documentation"
-          >
-            <p
-              style={{ textShadow: "0 2px 4px rgb(0 0 0 / 20%)" }}
-              className="text-3xl 2xl:text-4xl font-semibold text-muted-foreground"
-            >
-              {" "}
-              Run dozends of enrichments over{" "}
-              <HighlightSection>thousands of records</HighlightSection> in
-              parallel.{" "}
-              <span className="text-secondary-foreground">
-                Or just one or two
-              </span>{" "}
-              over a handful of records.
-            </p>
-          </Feature> */}
         </section>
       </div>
 
