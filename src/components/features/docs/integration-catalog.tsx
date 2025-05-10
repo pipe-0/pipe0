@@ -34,16 +34,13 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { appInfo } from "@/lib/const";
-import {
-  copyToClipboard,
-  getLastPipeVersionEntry,
-  getLowestCreditAmount,
-  sortPipeCatalog,
-} from "@/lib/utils";
+import { copyToClipboard, getLastPipeVersionEntry } from "@/lib/utils";
 import {
   type PipeId,
   pipeMetaCatalog,
   providerCatalog,
+  sortPipeCatalog,
+  getLowestCreditAmount,
 } from "@pipe0/client-sdk";
 import { Separator } from "@radix-ui/react-separator";
 import { ArrowDown, ArrowUp, Coins, Copy, Search, X } from "lucide-react";
@@ -53,7 +50,15 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { z } from "zod";
 
 // Precompute the sorted catalog data - will only run once on module load
-const { byInputField, byOutputField, byTag, byBasePipe } = sortPipeCatalog();
+const {
+  byInputField,
+  byOutputField,
+  byTag,
+  byBasePipe,
+  sortedInputFields,
+  sortedOutputFields,
+  sortedTags,
+} = sortPipeCatalog();
 
 // Featured pipes - you can customize this list with your featured pipe IDs
 const FEATURED_PIPE_IDS = [
@@ -69,19 +74,6 @@ const FilterSchema = z.object({
 });
 
 type Filter = z.infer<typeof FilterSchema>;
-
-// Precompute sorted arrays once
-const sortedTags = Object.entries(byTag).sort(
-  (a, b) => Number(a[0]) - Number(b[0])
-);
-
-const sortedInputFields = Object.entries(byInputField).sort(
-  (a, b) => Number(a[0]) - Number(b[0])
-);
-
-const sortedOutputFields = Object.entries(byOutputField).sort(
-  (a, b) => Number(a[0]) - Number(b[0])
-);
 
 // Integration card component - memoized to prevent unnecessary re-renders
 const IntegrationCard = ({
