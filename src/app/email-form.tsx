@@ -87,7 +87,7 @@ export default function EmailForm() {
           <Button
             type="submit"
             variant="default"
-            className="flex gap-1 pr-0 rounded-full sm:w-auto border-brand border-2 bg-brand text-brand-foreground hover:border-brand/90 hover:bg-brand/90"
+            className="flex gap-1 pr-0 rounded-full sm:w-auto border-2 hover:border-primary/70 border-primary text-primary-foreground dark:bg-brand dark:hover:bg-brand/90"
             disabled={form.formState.isSubmitting}
           >
             <span className="inline-block mr-2">Talk to us</span>

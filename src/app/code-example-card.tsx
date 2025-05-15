@@ -6,7 +6,7 @@ interface CodeExampleCardProps {
 
 export default function CodeExampleCard({}: CodeExampleCardProps) {
   return (
-    <div className="w-full max-w-5xl mx-auto px-3 lg:px-8 py-0 lg:py-12 overflow-auto">
+    <div className="w-full mx-auto px-3 lg:px-8 py-0 lg:py-12 overflow-hidden ">
       <CodeBlock
         language="typescript"
         code={`// Find a work email and company description

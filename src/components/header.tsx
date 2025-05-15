@@ -20,37 +20,29 @@ import { appInfo } from "@/lib/const";
 const navigationItems = [
   { href: "/", label: "Product" },
   { href: "/blog", label: "Blog" },
-  { href: "/resources/documentation", label: "Documentation" },
+  { href: "/resources/documentation", label: "Docs" },
   { href: "/pricing", label: "Pricing" },
 ];
 
-export function Header({
-  page,
-}: {
+export function Header({}: {
   page: "product" | "blog" | "documentation" | "pricing";
 }) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <header className="fixed top-0 z-50 w-full lg:px-0 pt-2">
-      <div className="container mx-auto flex h-16 items-center justify-between bg- py-6  bg-gradient-to-tl  to-slate-400/40 rounded-2xl px-6 backdrop-blur-sm shadow-2xl ">
+    <header className="fixed top-0 z-50 w-full lg:px-0 shadow-sm">
+      <div className="container mx-auto px-4 md:px-0 flex items-center justify-between py-2 backdrop-blur-sm">
         <LinkLogo />
 
         {/* Desktop Navigation */}
-        <nav className="hidden space-x-1 md:flex grow px-12">
+        <nav className="hidden space-x-1 md:flex grow px-6">
           {navigationItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className="text-sm text-gray-300 transition-colors hover:text-white"
+              className="text-sm dark:text-gray-300 transition-colors hover:text-white"
             >
-              <Button
-                variant={
-                  item.label.toLowerCase() === page ? "secondary" : "ghost"
-                }
-              >
-                {item.label}
-              </Button>
+              <Button variant="ghost">{item.label}</Button>
             </Link>
           ))}
         </nav>
@@ -60,7 +52,7 @@ export function Header({
             asChild
             variant="secondary"
             size="icon"
-            className="h-8 w-8 px-0 border border-stone-600 md:inline-flex bg-stone-500/50 hover:bg-stone/30"
+            className="h-8 w-8 px-0 border"
           >
             <Link href={appInfo.links.github} target="_blank" rel="noreferrer">
               <Github className="h-4 w-4" />
@@ -72,15 +64,15 @@ export function Header({
           <Link href={`${appInfo.links.loginUrl}`} rel="nofollow">
             <Button
               variant="secondary"
-              className="hidden border-stone-600 border md:inline-flex border border-stone-600 md:inline-flex bg-stone-500/50 hover:bg-stone/30"
+              className="hidden border md:inline-flex  hover:bg-stone/30"
             >
               Sign in
             </Button>
           </Link>
           <Link href={`${appInfo.links.signupUrl}`} rel="nofollow">
             <Button
-              variant="secondary"
-              className="hidden border border-stone-600 md:inline-flex bg-stone-500/50 hover:bg-stone/30"
+              variant="default"
+              className="hidden border md:inline-flex hover:bg-stone/30"
             >
               Sign up
             </Button>

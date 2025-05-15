@@ -300,7 +300,7 @@ export default function LandingPageTable() {
         {/* Value with fade transition */}
         <div
           className={cn(
-            "absolute text-gray-400 text-[16px] inset-0 transition-opacity duration-300 flex justify-left items-center",
+            "absolute dark:text-muted-foreground text-[16px] inset-0 transition-opacity duration-300 flex justify-left items-center",
             cell.value ? "opacity-100" : "opacity-0"
           )}
         >
@@ -314,7 +314,7 @@ export default function LandingPageTable() {
             cell.isLoading ? "opacity-100" : "opacity-0"
           )}
         >
-          <Skeleton className="h-full w-[80%] bg-gradient-to-r from-green-400/50 via-blue-400/50 to-slate-400/80 px-8 flex items-center space-x-3">
+          <Skeleton className="h-full w-[80%] bg-gradient-to-r text-primary-foreground font-bold from-teal-600 via-blue-600 to-sky-800 dark:from-green-400/50 dark:via-blue-400/50 dark:to-slate-400/80 px-8 flex items-center space-x-3">
             <Loader size={16} className="animate-spin" />{" "}
             <span>Enriching...</span>
           </Skeleton>

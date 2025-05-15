@@ -7,17 +7,17 @@ export function LogoRaw() {
     <>
       <Image
         src="/logo-dark.svg"
-        width={208}
-        height={65}
+        width={114}
+        height={31}
         alt="logo-dark"
-        className="light:hidden w-20"
+        className="hidden dark:block w-22"
       />
       <Image
         src="/logo-light.svg"
-        width={208}
-        height={65}
+        width={114}
+        height={31}
         alt="logo-dark"
-        className="dark:hidden w-20"
+        className="dark:hidden w-22"
       />
     </>
   );
@@ -25,7 +25,7 @@ export function LogoRaw() {
 
 export function LinkLogo() {
   return (
-    <Link href="/" className="text-xl font-bold font-mono">
+    <Link href="/" className="">
       <LogoRaw />
     </Link>
   );

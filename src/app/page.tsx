@@ -21,6 +21,70 @@ type Integration = {
   category: ReactNode;
 };
 
+const toolCards: { title: ReactNode; description: ReactNode }[] = [
+  {
+    title: <>Customer Relationship System</>,
+    description: (
+      <>
+        Effective data enrichment is a requirement for CRMs. New enrichment
+        tools have shifted the perception of what&apos;s possible. Create
+        customizable features based on cutting-edge enrichment flows and
+        striking UIs.
+      </>
+    ),
+  },
+  {
+    title: <>Sales Copilot</>,
+    description: (
+      <>
+        Finding up-to-date information on leads before and during sales calls is
+        critical for sales copilots. Real-time intelligence requires context. We
+        power various use cases for sales copilots.
+      </>
+    ),
+  },
+  {
+    title: <>Applicant Tracking System</>,
+    description: (
+      <>
+        Add candidate enrichment functionalities to your applicant tracking
+        system. Provide information on social media accounts and activity for
+        insight into candidate quality and fit.
+      </>
+    ),
+  },
+  {
+    title: <>Customer Outreach System</>,
+    description: (
+      <>
+        The next generation of outreach tools needs to be hyper-personalized. AI
+        systems and humans alike require deeply enriched data for successful
+        campaigns.
+      </>
+    ),
+  },
+  {
+    title: <>Automating Sales Development Representatives</>,
+    description: (
+      <>
+        Is your tool automating activities performed by human SDRs, such as
+        building lead lists, doing outreach, scheduling follow-ups, and demos?
+        Benefit from custom lead enrichment for all these use cases.
+      </>
+    ),
+  },
+  {
+    title: <>Marketing Audiences</>,
+    description: (
+      <>
+        Is your marketing pushing the boundaries of what&apos;s technologically
+        possible? Deduplicate emails effectively and link them to social media
+        platforms and marketing audiences with precision.
+      </>
+    ),
+  },
+];
+
 const integrations: Integration[] = [
   {
     name: "Google Maps",
@@ -140,26 +204,23 @@ const integrations: Integration[] = [
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-black text-white dark">
+    <div className="min-h-screen" data-theme="light">
       <div>
         {/* Header */}
         <Header page="product" />
 
         {/* Hero Section */}
-        <section className="pt-24 lg:pt-32 pb-4 px-6 lg:px-0 relative">
+        <section className="pt-24 lg:pt-28 pb-4 px-6 lg:px-0 relative">
           <div className="container lg:grid-cols-2 gap-12 items-center mx-auto relative">
-            <div className="space-y-6 max-w-screen-xl mx-auto text-center">
-              <h1 className="text-5xl md:text-6xl font-serif tracking-tight">
-                Add <HighlightSection>data enrichment</HighlightSection> to your
-                application. Fast. Powered by{" "}
-                <span className="whitespace-nowrap">
-                  l<HighlightSection>ooooo</HighlightSection>ts
-                </span>{" "}
-                of AI.
+            <div className="space-y-6 max-w-screen-md">
+              <h1 className="text-4xl md:text-5xl font-serif tracking-tight">
+                Add{" "}
+                <HighlightSection>clay-like data enrichment</HighlightSection>{" "}
+                to your application. Fast.
               </h1>
-              <p className="text-lg text-muted-foreground max-w-screen-lg mx-auto">
+              <p className="text-lg text-muted-foreground">
                 Programmatic data enrichment redesigned from the ground up:{" "}
-                <HighlightSection>Super fast</HighlightSection>, stateless,{" "}
+                <HighlightSection>Super fast</HighlightSection>, AI powered,{" "}
                 <HighlightSection>multi-provider</HighlightSection>,{" "}
                 <HighlightSection>first-class API</HighlightSection> support,
                 and <HighlightSection>up to 6x cheaper</HighlightSection> than
@@ -174,15 +235,15 @@ export default function Home() {
         <section className="container mx-auto gap-8 pt-12">
           <div className=" relative py-4 overflow-hidden">
             <div className="absolute inset-0 w-full h-full z-0">
-              <div className="grid grid-cols-8 md:grid-cols-16 lg:grid-cols-24 grid-rows-8 md:grid-rows-16 lg:grid-rows-24 h-full w-full">
+              {/* <div className="grid grid-cols-8 md:grid-cols-16 lg:grid-cols-24 grid-rows-8 md:grid-rows-16 lg:grid-rows-24 h-full w-full">
                 {Array.from({ length: 24 * 24 }).map((_, i) => {
                   return (
                     <div key={i} className={`border border-slate-700/40`} />
                   );
                 })}
-              </div>
+              </div> */}
             </div>
-            <div className="absolute rounded-lg inset-0 bg-gradient-to-br  via-blue-400 to-slate-400 opacity-80" />
+            <div className="absolute rounded-lg inset-0 bg-accent border" />
             <CodeExampleCard />
           </div>
         </section>
@@ -200,7 +261,7 @@ export default function Home() {
             </h1>
             <p className="text-lg text-gray-400">
               Build clay-like data enrichments fast and save years of
-              engineering work. Move fast where it matters most.{" "}
+              engineering work.{" "}
               <HighlightSection>Power any UI</HighlightSection> or{" "}
               <HighlightSection>server based data workflow</HighlightSection>.
             </p>
@@ -212,7 +273,7 @@ export default function Home() {
       </section>
 
       {/* Features Section */}
-      <section className="py-20 bg-gradient-to-b from-black to-gray-900">
+      <section className="py-20 dark:bg-gradient-to-b bg-accent border-y dark:from-black dark:to-gray-900">
         <div className="container mb-12 mx-auto text-center">
           <div className="space-y-8 pb-12 max-w-screen-lg mx-auto">
             <h1 className="text-5xl font-serif tracking-tight">
@@ -225,65 +286,14 @@ export default function Home() {
         </div>
 
         <div className="container mx-auto grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <Card className="bg-white/5 border-white/10 p-6">
-            <h3 className="text-xl font-semibold mb-4">
-              Customer Relationship System
-            </h3>
-            <p className="text-gray-400">
-              Effective data enrichment is a requirement for CRMs. New
-              enrichment tools have shifted the perception of what&apos;s
-              possible. Create customizable features based on cutting-edge
-              enrichment flows and striking UIs.
-            </p>
-          </Card>
-          <Card className="bg-white/5 border-white/10 p-6">
-            <h3 className="text-xl font-semibold mb-4">Sales Copilot</h3>
-            <p className="text-gray-400">
-              Finding up-to-date information on leads before and during sales
-              calls is critical for sales copilots. Real-time intelligence
-              requires context. We power various use cases for sales copilots.
-            </p>
-          </Card>
-          <Card className="bg-white/5 border-white/10 p-6">
-            <h3 className="text-xl font-semibold mb-4">
-              Applicant Tracking System
-            </h3>
-            <p className="text-gray-400">
-              Add candidate enrichment functionalities to your applicant
-              tracking system. Provide information on social media accounts and
-              activity for insight into candidate quality and fit.
-            </p>
-          </Card>
-          <Card className="bg-white/5 border-white/10 p-6">
-            <h3 className="text-xl font-semibold mb-4">
-              Customer Outreach System
-            </h3>
-            <p className="text-gray-400">
-              The next generation of outreach tools needs to be
-              hyper-personalized. AI systems and humans alike require deeply
-              enriched data for successful campaigns.
-            </p>
-          </Card>
-          <Card className="bg-white/5 border-white/10 p-6">
-            <h3 className="text-xl font-semibold mb-4">
-              Automating Sales Development Representatives
-            </h3>
-            <p className="text-gray-400">
-              Is your tool automating activities performed by human SDRs, such
-              as building lead lists, doing outreach, scheduling follow-ups, and
-              demos? Benefit from custom lead enrichment for all these use
-              cases.
-            </p>
-          </Card>
-          <Card className="bg-white/5 border-white/10 p-6">
-            <h3 className="text-xl font-semibold mb-4">Marketing Audiences</h3>
-            <p className="text-gray-400">
-              Is your marketing pushing the boundaries of what&apos;s
-              technologically possible? Deduplicate emails effectively and link
-              them to social media platforms and marketing audiences with
-              precision.
-            </p>
-          </Card>
+          {toolCards.map((e, i) => {
+            return (
+              <Card className="bg-white/60 border-white/10 p-6" key={i}>
+                <h3 className="text-xl font-semibold mb-4">{e.title}</h3>
+                <p className="text-gray-400">{e.description}</p>
+              </Card>
+            );
+          })}
           <div className="flex justify-end pt-4 col-span-full">
             <Button variant="ghost">
               Explore all case studies <SoonBadge /> <ArrowRight />
@@ -293,7 +303,7 @@ export default function Home() {
       </section>
 
       {/* Integrations Section */}
-      <section className="py-20 bg-black">
+      <section className="py-20 ">
         <div className="container mx-auto border-x px-6 lg:px-0">
           <div className="space-y-8 max-w-screen-lg pb-12">
             <h1 className="text-5xl font-serif tracking-tight">
@@ -308,11 +318,11 @@ export default function Home() {
               additional charge from us or bring your API key.
             </p>
           </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 border-y">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3">
             {integrations.map((integration) => (
               <div
                 key={integration.name}
-                className="bg-black/50 backdrop-blur-sm border border-white/20 p-8 hover:border-white/20 transition-colors"
+                className="dark:bg-black/50 backdrop-blur-sm border dark:border-white/20 p-8 transition-colors"
               >
                 <div className="flex justify-between items-start mb-4">
                   <div className="flex items-center gap-3">
@@ -344,8 +354,8 @@ export default function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className="px-6 lg:px-0 py-32 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-blue-600/20 via-purple-600/20 to-black" />
+      <section className="px-6 lg:px-0 py-32 relative overflow-hidden border-t">
+        <div className="absolute inset-0 bg-accent dark:bg-gradient-to-b from-blue-600/20 via-purple-600/20 to-black" />
         <div className="container relative mx-auto">
           <div className="max-w-2xl mx-auto text-center">
             <h2 className="text-3xl md:text-4xl font-serif mb-8">

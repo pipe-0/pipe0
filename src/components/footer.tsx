@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export function Footer() {
   return (
-    <footer className="px-6 lg:px-0 border-t border-white/10 py-12 bg-black ">
+    <footer className="px-6 lg:px-0 border-t dark:border-white/10 py-12 ">
       <div className="container mx-auto">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           <div>
@@ -17,7 +17,7 @@ export function Footer() {
               <li>
                 <Link
                   href="/blog"
-                  className="text-sm text-gray-400 hover:text-white"
+                  className="text-sm dark:text-muted-foreground dark:hover:text-white"
                 >
                   Blog
                 </Link>
@@ -30,15 +30,23 @@ export function Footer() {
               <li>
                 <Link
                   href="/resources/documentation"
-                  className="text-sm text-gray-400 hover:text-white"
+                  className="text-sm dark:text-muted-foreground dark:hover:text-white"
                 >
                   Documentation
                 </Link>
               </li>
               <li>
                 <Link
+                  href="/pricing"
+                  className="text-sm dark:text-muted-foreground dark:hover:text-white"
+                >
+                  Pricing
+                </Link>
+              </li>
+              <li>
+                <Link
                   href="/resources/pipe-catalog"
-                  className="text-sm text-gray-400 hover:text-white"
+                  className="text-sm dark:text-muted-foreground dark:hover:text-white"
                 >
                   Pipe Catalog
                 </Link>
@@ -47,7 +55,7 @@ export function Footer() {
                 <Link
                   rel="nofollow"
                   href={appInfo.links.signupUrl}
-                  className="text-sm text-gray-400 hover:text-white"
+                  className="text-sm dark:text-muted-foreground dark:hover:text-white"
                 >
                   Sign up
                 </Link>
@@ -56,7 +64,7 @@ export function Footer() {
                 <Link
                   rel="nofollow"
                   href={appInfo.links.loginUrl}
-                  className="text-sm text-gray-400 hover:text-white"
+                  className="text-sm dark:text-muted-foreground dark:hover:text-white"
                 >
                   Login
                 </Link>
@@ -69,7 +77,7 @@ export function Footer() {
               <li>
                 <Link
                   href="/resources/legal/privacy-policy/20250404"
-                  className="text-sm text-gray-400 hover:text-white"
+                  className="text-sm dark:text-muted-foreground dark:hover:text-white"
                 >
                   Privacy
                 </Link>
@@ -77,7 +85,7 @@ export function Footer() {
               <li>
                 <Link
                   href="/resources/legal/terms-of-service/20250404"
-                  className="text-sm text-gray-400 hover:text-white"
+                  className="text-sm dark:text-muted-foreground dark:hover:text-white"
                 >
                   Terms
                 </Link>
