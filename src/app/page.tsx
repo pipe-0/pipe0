@@ -6,6 +6,7 @@ import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
 import { HighlightSection } from "@/components/highlight-section";
 import { SoonBadge } from "@/components/soon-badge";
+import { ThemeSwitcher } from "@/components/theme-switcher";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -205,6 +206,7 @@ const integrations: Integration[] = [
 export default function Home() {
   return (
     <div className="min-h-screen" data-theme="light">
+      <ThemeSwitcher />
       <div>
         {/* Header */}
         <Header page="product" />

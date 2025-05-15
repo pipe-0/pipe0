@@ -34,7 +34,6 @@ export default async function RootLayout({ children }: PropsWithChildren) {
       sidebar={{ defaultOpen: false, toggleButton: false }}
       editLink={null}
       feedback={{ content: null }}
-      darkMode={false}
     >
       <div className="max-w-[var(--nextra-content-width)] mx-auto px-6">
         {children}

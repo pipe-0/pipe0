@@ -25,7 +25,6 @@ export default async function RootLayout({ children }: PropsWithChildren) {
       footer={footer}
       editLink={null}
       feedback={{ content: null }}
-      darkMode={false}
     >
       {children}
     </Layout>
