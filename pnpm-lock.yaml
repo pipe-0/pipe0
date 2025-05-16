@@ -21,8 +21,8 @@ importers:
         specifier: ^15.1.6
         version: 15.1.6(@mdx-js/loader@3.1.0(acorn@8.14.0))(@mdx-js/react@3.1.0(@types/react@19.0.8)(react@19.0.0))
       '@pipe0/client-sdk':
-        specifier: ^0.0.28
-        version: 0.0.28(hono@4.7.5)
+        specifier: ^0.0.29
+        version: 0.0.29(hono@4.7.5)
       '@radix-ui/react-accordion':
         specifier: ^1.2.3
         version: 1.2.3(@types/react-dom@19.0.3(@types/react@19.0.8))(@types/react@19.0.8)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -1047,8 +1047,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@pipe0/client-sdk@0.0.28':
-    resolution: {integrity: sha512-+IhXyW74OMb5fJg48ws+9J8p6xLsRJ8EpwylCnEWfbA6irXgC8jaVwaWIBGvrxAp3036cxMQaHZKf2TV0SZ1Uw==}
+  '@pipe0/client-sdk@0.0.29':
+    resolution: {integrity: sha512-PhN8AzoFQJEsd5gadFDn8UIUyy2NA6S/R7rSMVHFI2mtuTAhmQepuAjcR9w+Las4X+nUqqENphu/sfJApvziNg==}
 
   '@popperjs/core@2.11.8':
     resolution: {integrity: sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==}
@@ -2887,6 +2887,9 @@ packages:
   data-view-byte-offset@1.0.1:
     resolution: {integrity: sha512-BS8PfmtDGnrgYdOonGZQdLZslWIeCGFP9tpan0hi1Co2Zr2NKADsvGYA8XxuG/4UWgJ6Cjtv+YJnB6MM69QGlQ==}
     engines: {node: '>= 0.4'}
+
+  date-fns@4.1.0:
+    resolution: {integrity: sha512-Ukq0owbQXxa/U3EGtsdVBkR1w7KOQ5gIBqdH2hkvknzZPYvBxb/aa6E8L7tmjFtkwZBu3UXBbjIgPo/Ez4xaNg==}
 
   dayjs@1.11.13:
     resolution: {integrity: sha512-oaMBel6gjolK862uaPQOVTA7q3TZhuSvuMQAAglQDOWYO9A91IrAOUJEyKVlqJlHE0vq5p5UXxzdPfMH/x6xNg==}
@@ -6245,10 +6248,11 @@ snapshots:
   '@pagefind/windows-x64@1.3.0':
     optional: true
 
-  '@pipe0/client-sdk@0.0.28(hono@4.7.5)':
+  '@pipe0/client-sdk@0.0.29(hono@4.7.5)':
     dependencies:
       '@asteasolutions/zod-to-openapi': 7.3.0(zod@3.24.1)
       '@hono/zod-openapi': 0.18.4(hono@4.7.5)(zod@3.24.1)
+      date-fns: 4.1.0
       zod: 3.24.1
     transitivePeerDependencies:
       - hono
@@ -8366,6 +8370,8 @@ snapshots:
       call-bound: 1.0.3
       es-errors: 1.3.0
       is-data-view: 1.0.2
+
+  date-fns@4.1.0: {}
 
   dayjs@1.11.13: {}
 
