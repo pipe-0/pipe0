@@ -1,0 +1,69 @@
+---
+title: Force a Tailwind Page To Be Displayed in Light Mode
+description: Learn how to force a page in Tailwind CSS to be displayed in light mode
+date: 2025-05-16
+tags:
+    - Tailwind
+    - Next.js
+excerpt: "Tailwind does not support a class called `.light` out of the box. But you can still force light mode for any page."
+authors:
+    - name: Florian
+      title: Founder
+---
+
+# Force a Tailwind Page To Be Displayed in Light Mode
+
+In [Tailwind CSS](https://tailwindcss.com/) light and dark modes are treated as first-class citizens. Switching between them 
+can conveniently be achieved by setting the class `.dark` on any element in the DOM tree. As a result, 
+all of its children will be displayed in dark mode.
+
+However, the opposite is not true. Tailwind does not support a class called `.light` out of the box.
+
+## Why the lack of light mode is a problem
+
+The problem arises when your application relies on client-side navigation. This is even the case when you 
+use statically generated pages in frameworks like Next.js. While the entry point into your application will use 
+browser navigation, every internal navigation will happen client-side.
+
+If any page in your app attaches the `.dark` class to a global element like the `<html />` tag, it will persist, 
+and there is no way to force a particular page into light mode.
+
+## How to solve this
+
+The only way to solve this is to remove the `.dark` class. You can do so with a small utility component.
+
+If you are using Next.js, this utility component could look as follows:
+
+```typescript
+"use client";
+
+import { useEffect } from "react";
+
+export function ThemeSwitcher() {
+  useEffect(() => {
+    const htmlEl = document.querySelector("html"); // use whatever tag has the .dark class
+    if (htmlEl && htmlEl.classList.contains("dark")) {
+      htmlEl.classList.remove("dark");
+    }
+  }, []);
+
+  return null;
+}
+```
+
+## Will this flicker?
+
+A common browser problem that we want to avoid is a visual flicker. This is where our app is first rendered
+in dark mode and then switches to light mode.
+
+Since React executes hooks during hydration, this flicker is usually to fast to notice. If you see a flicker, 
+there are two options to make this even faster:
+
+1. In react, use `useLayoutEffect` to execute before pait
+2. Inject the script right into the `<head />` tag of your browser
+
+You can check the result on our homepage. We're using this exact component to switch the theme when you're
+navigating from our blog (dark mode) to our [landing page](https://pipe0.com).
+
+<BlogBanner />
+
