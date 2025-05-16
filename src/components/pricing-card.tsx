@@ -24,8 +24,8 @@ export function PricingCard() {
           {plans.map((e) => (
             <Badge
               variant="outline"
-              data-isActive={e.credits === selectedCredits.credits}
-              className="h-8 px-3 cursor-default hover:bg-stone-300/30 data-[isActive=true]:outline-1 data-[isActive=true]:outline-primary"
+              data-is-active={e.credits === selectedCredits.credits}
+              className="h-8 px-3 cursor-default hover:bg-stone-300/30 data-[is-active=true]:outline-1 data-[is-active=true]:outline-primary"
               key={`${e.credits}-${e.price}`}
               onClick={() => setSelectedCredits(e)}
             >

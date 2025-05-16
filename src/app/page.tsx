@@ -68,9 +68,8 @@ const toolCards: { title: ReactNode; description: ReactNode }[] = [
     title: <>Automating Sales Development Representatives</>,
     description: (
       <>
-        Is your tool automating activities performed by human SDRs, such as
-        building lead lists, doing outreach, scheduling follow-ups, and demos?
-        Benefit from custom lead enrichment for all these use cases.
+        Are you automating SDR actvities like prospecting, outreach, or
+        scheduling meetings? Power your automations with best-in-class data.
       </>
     ),
   },
@@ -262,8 +261,6 @@ export default function Home() {
               </HighlightSection>
             </h1>
             <p className="text-lg text-gray-400">
-              Build clay-like data enrichments fast and save years of
-              engineering work.{" "}
               <HighlightSection>Power any UI</HighlightSection> or{" "}
               <HighlightSection>server based data workflow</HighlightSection>.
             </p>
