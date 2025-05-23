@@ -1,7 +1,7 @@
 import CodeExampleCard from "@/app/code-example-card";
 import LandingPageTable from "@/app/data-model-table";
-import EmailForm from "@/app/email-form";
 import { SignupCta } from "@/app/signup-cta";
+import CalButton from "@/components/CalButton";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
 import { HighlightSection } from "@/components/highlight-section";
@@ -360,7 +360,10 @@ export default function Home() {
             <h2 className="text-3xl md:text-4xl font-serif mb-8">
               Get a personalized tour of {appInfo.productName}
             </h2>
-            <EmailForm />
+
+            <CalButton>
+              Book now <ArrowRight />
+            </CalButton>
           </div>
         </div>
       </section>
