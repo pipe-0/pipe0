@@ -50,6 +50,9 @@ const meta: MetaRecord = {
   terminology: {
     title: "Terminology",
   },
+  billing: {
+    title: "Billing",
+  },
 };
 
 export default meta;

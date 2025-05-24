@@ -66,6 +66,7 @@ const FEATURED_PIPE_IDS = [
   "people:workemail:waterfall@1",
   "website:technologystack:builtwith@1",
   "company:identity@1",
+  "company:overview@1",
 ];
 
 const FilterSchema = z.object({
