@@ -1,0 +1,106 @@
+---
+title: Map Over Array Types In TypeScript
+description: Learn how to create mapped types from array types in TypeScript
+date: 2025-05-25
+tags:
+    - TypeScript
+excerpt: "Most TypeScript developers know how to create mapped types from object based types. But you can do the same for array-based types."
+authors:
+    - name: Florian
+      title: Founder
+---
+
+# Map Over Array Types In TypeScript
+
+Most TypeScript developers have heard of [Mapped Types](https://www.typescriptlang.org/docs/handbook/2/mapped-types.html).
+
+A mapped type is a generic type that uses a union of property keys to create a new type:
+
+
+```typescript
+// turn any property into a boolean
+type OptionsFlags<Type> = {
+  [Property in keyof Type]: boolean;
+};
+
+type New = OptionsFlags<{a: string}> // {a: boolean}
+```
+
+This is similar to a [`for-in`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...in) loop in JavaScript but uses types
+instead of values. I recently had to do the same for an array-based type and struggled to find a way.
+
+## Map over an array based type
+
+Let's look at the following example of a tuple type.
+
+> [!TIP]
+> 
+> Quick reminder: A tuple is a typed array with a pre-defined length and types for each index.
+> ```typescript
+> // define our tuple
+> let ourTuple: [number, boolean, string];
+> ```
+
+```typescript
+const ids = ["a", "b"] as const;
+
+// We want to "loop" over each member of the tuple and create a type like this:
+// [{name: "a"}, {name: "b"}] <- This is a type not a value
+```
+
+You can try to come up with a solution yourself if you are curious.
+
+## Mapped types for arrays and toupels
+
+Here is the solution for the previous problem.
+
+```typescript
+// this works
+const ids = ["a", "b"] as const;
+type MappedTuple<T extends readonly string[]> = {
+  [P in keyof T]: T[P] extends string | number | symbol ? { name: T[P] } : never;
+};
+
+type Desired = MappedTuple<typeof ids>; // readonly [{name: "a"}, {name: "b"}]
+```
+
+In this solution, we use the same syntax we previously used for mapped types but apply it to 
+a tuple type.
+
+### Why this works
+
+Figuring out why this works can be confusing. The documentation for mapped types does not 
+mention arrays or tuples. So, why does this work?
+
+### What we would expect
+
+In JavaScript, most things are objects. Arrays are objects, Maps are objects, Functions are objects, and so on.
+
+If we use a mapped type on an array or tuple type we would expect all of the object properties like 
+`.length`, `0`, or `.toString` to be part of the mapping.
+
+As we can see in the example above, this does not happen. We only get the tuple/array members.
+
+### What actually happens
+
+In [version 3.1](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-1.html#mapped-types-on-tuples-and-arrays)
+TypeScript added support for mapped types for arrays and tuples.
+
+Since then, mapped object types over tuples and arrays produce new tuples/arrays, rather than creating a new type where members 
+like `.push()`, `.pop()`, and `.length` are converted.
+
+This applies to mapped types only. Creating a type from the object properties of a tuple or array 
+will still include all object properties like `.length`, `.map()`, etc.
+
+```typescript
+const ids = ["a", "b"] as const;
+
+type Prettify<T> = {
+	[K in keyof T]: T[K];
+} & {};
+
+type IDs = typeof ids;
+```
+
+<BlogBanner />
+

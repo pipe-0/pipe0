@@ -1,0 +1,43 @@
+---
+title: How to find the docker compose file in coolify to read stack logs
+description: Learn how to locate the docker compose file in a coolify stack
+date: 2025-05-24
+tags:
+    - Coolify
+    - Docker
+excerpt: "In certain situations it can be helpful to get access to the docker compose file in Cooilfy"
+authors:
+    - name: Florian
+      title: Founder
+---
+
+# How to find the docker compose file in coolify to read stack logs
+
+In certain situations, it is helpful to have access to the `docker-compose.yaml` file in [Coolify](https://coolify.io).
+
+This allows you to run [docker compose](https://docs.docker.com/compose/) commands for any application stack in coolify.
+
+In my case, I was looking to read application logs. I was trying to catch a log from a `SIGTERM` event and the logs 
+were not showing up in the coolify dashboard because the container exited too fast.
+
+I wanted to run the command:
+
+import { Tabs } from 'nextra/components'
+
+<Tabs items={['sh']}>
+  <Tabs.Tab>docker compose logs</Tabs.Tab>
+</Tabs>
+
+## Locating the `docker-compose` file
+
+Coolify manages the docker compose files in a top-level directory:
+
+`/data/coolify/applications/application_id`
+
+In order to access it, switch into a root shell `sudo su` and navigate to `cd /data/coolify/applications/`.
+
+Find the application id for your project and enter the folder with the corresponding `id`.
+
+Within the folder, you will find the `docker-compose.yaml` file.
+
+<BlogBanner />
