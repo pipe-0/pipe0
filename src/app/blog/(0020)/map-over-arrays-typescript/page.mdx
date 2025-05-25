@@ -93,13 +93,13 @@ This applies to mapped types only. Creating a type from the object properties of
 will still include all object properties like `.length`, `.map()`, etc.
 
 ```typescript
-const ids = ["a", "b"] as const;
-
 type Prettify<T> = {
 	[K in keyof T]: T[K];
 } & {};
 
-type IDs = typeof ids;
+const ids = ["a", "b"] as const;
+
+type AllKeys = Prettify<keyof typeof ids>; // List all keys -> Not just members
 ```
 
 <BlogBanner />
