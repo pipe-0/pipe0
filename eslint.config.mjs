@@ -9,8 +9,18 @@ const compat = new FlatCompat({
   baseDirectory: __dirname,
 });
 
+/**
+ * @typedef {import('@typescript-eslint/utils').TSESLint.FlatConfig} FlatConfig
+ */
+
+/**
+ * @type {Array<FlatConfig>}
+ */
 const eslintConfig = [
-  ...compat.extends("next/core-web-vitals", "next/typescript"),
+  {
+    files: "apps/landing/**/*",
+    extends: [...compat.extends("next/core-web-vitals", "next/typescript")],
+  },
 ];
 
 export default eslintConfig;
