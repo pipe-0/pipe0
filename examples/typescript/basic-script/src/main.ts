@@ -22,7 +22,7 @@ ${JSON.stringify(requestBody, null, 2)}
       <pre id="rawOutput" style="display: none; background: #1a1a1a; padding: 1em; border-radius: 8px; color: white;"></pre>
     </div>
     <div style="margin-top: 2em;">
-      <p>Check out <a href="https://docs.pipe0.com" target="_blank">the repo</a> for this example or explore the <a href="https://docs.pipe0.com" target="_blank">Pipe0 docs</a>.</p>
+      <p>Check out <a href="https://github.com/pipe-0/pipe0/tree/main/examples/typescript/basic-script" target="_blank">the repo</a> for this example or explore the <a href="https://docs.pipe0.com" target="_blank">Pipe0 docs</a>.</p>
     </div>
   </div>
 `;

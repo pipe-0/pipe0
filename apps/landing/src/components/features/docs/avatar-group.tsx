@@ -10,7 +10,7 @@ import {
 import { cn } from "@/lib/utils";
 
 interface AvatarGroupProps {
-  providers: string[];
+  providers: readonly string[];
   providerCatalog: Record<string, { logoUrl: string; name?: string }>;
   size?: "sm" | "md" | "lg";
   className?: string;
