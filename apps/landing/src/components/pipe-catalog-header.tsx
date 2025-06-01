@@ -1,6 +1,7 @@
 import AppLink from "@/components/app-link";
 import { CodeTabs } from "@/components/code-tabs";
 import { Info } from "@/components/info";
+import { InlineDocsBadge } from "@/components/inline-docs-badge";
 import {
   Accordion,
   AccordionContent,
@@ -23,11 +24,14 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { appLinks } from "@/lib/links";
 import { formatCredits } from "@/lib/utils";
 import {
+  CostPerProvider,
   fieldCatalog,
   pipeConfigRegistry,
   PipeId,
+  PipeMetaCatalog,
   pipeMetaCatalog,
   providerCatalog,
 } from "@pipe0/client-sdk";
@@ -85,28 +89,38 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
           <TableHeader>
             <TableRow>
               <TableHead>Provider</TableHead>
-              <TableHead>Credentials</TableHead>
-              <TableHead>Cost per record</TableHead>
+              <TableHead>
+                Billing Mode <InlineDocsBadge href={appLinks.billingMode()} />
+              </TableHead>
+              <TableHead>
+                Credentials{" "}
+                <InlineDocsBadge href={appLinks.pipeCredentials()} />
+              </TableHead>
+              <TableHead>
+                Cost per record <InlineDocsBadge href={appLinks.billing()} />
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {pipeCatalogEntry.providers.map((providerName) => {
               const provider = providerCatalog[providerName];
+              const costPerProvider = pipeCatalogEntry.costPerProvider[
+                providerName as keyof typeof pipeCatalogEntry.costPerProvider
+              ] as {
+                credits: number;
+                billingMode: "always" | "onSuccess" | undefined;
+              };
 
-              const cost = (() => {
-                if (
-                  pipeCatalogEntry.costPerProvider &&
-                  providerName in pipeCatalogEntry.costPerProvider
-                ) {
-                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                  // @ts-ignore
-                  return pipeCatalogEntry.costPerProvider[providerName]
-                    ?.credits;
-                }
-                return "unknown";
-              })();
+              if (!provider)
+                throw new Error(`Provider ${provider} not defined`);
+              if (!costPerProvider)
+                throw new Error(
+                  `CostPerProvider not defined for ${provider}, ${providerName}`
+                );
 
-              if (!provider) return null;
+              let connections = [];
+              if (provider.hasManagedConnections) connections.push("Managed");
+              if (provider.allowsUserConnections) connections.push("User");
 
               return (
                 <TableRow key={providerName}>
@@ -125,49 +139,27 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
                     </div>
                   </TableCell>
                   <TableCell>
-                    <div className="flex items-center gap-2">
-                      {provider.hasManagedConnections && (
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Badge
-                              variant="secondary"
-                              className="inline-flex gap-1"
-                            >
-                              <Key className="size-3" />
-                              Managed
-                            </Badge>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            A managed connection is available for this provider.
-                          </TooltipContent>
-                        </Tooltip>
-                      )}
-                      {provider.allowsUserConnections && (
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Badge
-                              variant="outline"
-                              className="inline-flex gap-1"
-                            >
-                              <Key className="size-3" /> User
-                            </Badge>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            You can provide your own connection for this
-                            provider.
-                          </TooltipContent>
-                        </Tooltip>
+                    <div className="flex gap-2 items-center">
+                      {costPerProvider.billingMode === "onSuccess" ? (
+                        <>On Success </>
+                      ) : costPerProvider.billingMode === "always" ? (
+                        <>Always</>
+                      ) : (
+                        "n/a"
                       )}
                     </div>
                   </TableCell>
                   <TableCell>
+                    <div className="flex items-center gap-2">
+                      {connections.join(", ")}
+                    </div>
+                  </TableCell>
+                  <TableCell>
                     <p>
-                      {typeof cost === "number" ? formatCredits(cost) : cost}{" "}
-                      credits{" "}
-                      <Info>
-                        Only records that were successfully processed are
-                        billed.
-                      </Info>
+                      {typeof costPerProvider.credits === "number"
+                        ? formatCredits(costPerProvider.credits)
+                        : costPerProvider.credits}{" "}
+                      credits
                     </p>
                   </TableCell>
                 </TableRow>

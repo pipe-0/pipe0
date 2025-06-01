@@ -12,7 +12,7 @@ export default async function PipeCatalog() {
   return (
     <div
       data-pagefind-ignore="all"
-      className="mx-auto px-6 mb-12 min-h-screen"
+      className="mx-auto px-6 mb-12 min-h-screen max-w-2xl"
       style={{ maxWidth: "var(--nextra-content-width)" }}
     >
       <Suspense>

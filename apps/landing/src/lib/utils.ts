@@ -1,5 +1,7 @@
 import { PipeEntry } from "@/app/resources/pipe-catalog/get-pipes";
+import { PipeId } from "@pipe0/client-sdk";
 import { clsx, type ClassValue } from "clsx";
+import { Metadata } from "next";
 import { toast } from "sonner";
 import { twMerge } from "tailwind-merge";
 
@@ -30,3 +32,13 @@ export const copyToClipboard = async (text: string) => {
   await navigator.clipboard.writeText(text);
   toast("Copied to clipboard ✅");
 };
+
+export function generatePipeMetadata(pipeId: PipeId): Metadata {
+  return {
+    title: `Pipe0: ${pipeId}`,
+    description: `Documentation for the data enrichment function with the id '${pipeId}'`,
+    other: {
+      pipeId: pipeId,
+    },
+  };
+}

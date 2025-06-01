@@ -160,14 +160,14 @@ All enrichment endpoints return the same response format: A <AppLink linkType="p
       "required": true,
       "label": "Company Website URL",
       "added_by": {
-        "ref": "email:url@1",
+        "ref": "company:websiteurl:email@1",
         "hash": "e0b8a4ef"
       }
     }
   },
   "pipes": [
     {
-      "pipe_id": "email:url@1",
+      "pipe_id": "company:websiteurl:email@1",
       "config": {
         "input_fields": {
           "email": {
@@ -230,11 +230,11 @@ All enrichment endpoints return the same response format: A <AppLink linkType="p
           "type": "string",
           "reason": null,
           "claimed_by": {
-            "ref": "email:url@1",
+            "ref": "company:websiteurl:email@1",
             "hash": "e0b8a4ef"
           },
           "resolved_by": {
-            "ref": "email:url@1",
+            "ref": "company:websiteurl:email@1",
             "hash": "e0b8a4ef"
           },
           "meta": null,

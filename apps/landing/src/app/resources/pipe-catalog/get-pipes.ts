@@ -17,6 +17,9 @@ export type PipeEntry = {
       filePath: string;
       description?: string;
       vendor?: string;
+      other?: {
+        pipeId: PipeId;
+      };
     };
   }[];
 };
@@ -36,12 +39,12 @@ export async function getPipeEntries() {
         children: p.children
           .filter((e) => e.name !== "index")
           .map((c) => {
-            const catalogEntry = pipeMetaCatalog[c.frontMatter.pipeId];
+            const pipeId = c.frontMatter.other?.pipeId || c.frontMatter.pipeId;
+            const catalogEntry = pipeMetaCatalog[pipeId];
 
-            if (!catalogEntry)
-              throw new Error(
-                `Pipe "${c.frontMatter.pipeId}" not found in pipeMetaCatalog`
-              );
+            if (!catalogEntry) {
+              throw new Error(`Pipe "${pipeId}" not found in pipeMetaCatalog`);
+            }
 
             return {
               ...c,
@@ -59,7 +62,10 @@ export async function getTags() {
   const tags = pipeEntries.flatMap((pipe) => {
     const lastVersion = getLastPipeVersionEntry(pipe);
     const pipeMetaEntry =
-      pipeMetaCatalog[lastVersion?.frontMatter.pipeId as PipeId];
+      pipeMetaCatalog[
+        (lastVersion?.frontMatter.pipeId ||
+          lastVersion?.frontMatter.other?.pipeId) as PipeId
+      ];
     return pipeMetaEntry.tags || [];
   });
   return tags;

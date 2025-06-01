@@ -85,8 +85,11 @@ const IntegrationCard = ({
   setFilter: (filter: Filter) => unknown;
 }) => {
   const lastChildEntry = getLastPipeVersionEntry(pipe);
-  const pipeCatalogEntry =
-    pipeMetaCatalog[lastChildEntry?.frontMatter.pipeId as PipeId];
+  const pipeId =
+    lastChildEntry?.frontMatter.pipeId ||
+    lastChildEntry?.frontMatter.other?.pipeId;
+
+  const pipeCatalogEntry = pipeMetaCatalog[pipeId as PipeId];
 
   if (!lastChildEntry || !pipeCatalogEntry) return null;
 
@@ -130,7 +133,7 @@ const IntegrationCard = ({
         </CardContent>
         <CardFooter className="pt-2 block">
           <div className="flex items-center gap-2 text-muted-foreground text-sm">
-            {lastChildEntry.frontMatter.pipeId}{" "}
+            {pipeId}{" "}
             <Button
               size="icon"
               className="size-4"
@@ -138,7 +141,7 @@ const IntegrationCard = ({
               onClick={(e) => {
                 e.stopPropagation();
                 e.preventDefault();
-                copyToClipboard(lastChildEntry.frontMatter.pipeId);
+                copyToClipboard(pipeId || "");
               }}
             >
               <Copy className="size-3" />
@@ -208,7 +211,10 @@ const IntegrationCard = ({
 // Function to get pipe ID from pipe entry
 const getPipeId = (pipe: PipeEntry): PipeId | null => {
   const lastChildEntry = getLastPipeVersionEntry(pipe);
-  return (lastChildEntry?.frontMatter.pipeId as PipeId) || null;
+  return (
+    ((lastChildEntry?.frontMatter.pipeId ||
+      lastChildEntry?.frontMatter.other?.pipeId) as PipeId) || null
+  );
 };
 
 // Create cached maps for faster lookup
