@@ -18,7 +18,6 @@ import { ArrowDown, ArrowUp, Check, Copy } from "lucide-react";
 import Link from "next/link";
 import { useTheme } from "nextra-theme-docs";
 import { useMemo, useState } from "react";
-import "react-json-view-lite/dist/index.css";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { toast } from "sonner";
 

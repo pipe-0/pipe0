@@ -117,8 +117,8 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
                 );
 
               let connections = [];
-              // if (provider.hasManagedConnections) connections.push("Managed");
-              if (provider.allowsUserConnections) connections.push("User");
+              if (provider.hasManagedConnections) connections.push("Managed");
+              // if (provider.allowsUserConnections) connections.push("User");
 
               return (
                 <TableRow key={providerName}>
