@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import { PropsWithChildren } from "react";
+import { ApiReferenceReact } from "@scalar/api-reference-react";
 
 export default function AppLink({
   linkType,
@@ -17,7 +18,7 @@ export default function AppLink({
   return (
     <Link
       href={appLinks[linkType]()}
-      className={cn("underline text-brand", {
+      className={cn("underline text-primary", {
         "inline-flex gap-1": isExternal,
       })}
     >

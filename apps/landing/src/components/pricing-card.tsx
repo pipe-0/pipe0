@@ -45,27 +45,27 @@ export function PricingCard() {
 
       <div className="space-y-4 mb-8 flex-grow">
         <div className="flex items-start">
-          <Check className="h-5 w-5 text-brand mr-3 mt-0.5" />
+          <Check className="h-5 w-5 text-primary mr-3 mt-0.5" />
           <span>Unlimited Users</span>
         </div>
         <div className="flex items-start">
-          <Check className="h-5 w-5 text-brand mr-3 mt-0.5" />
+          <Check className="h-5 w-5 text-primary mr-3 mt-0.5" />
           <span>Access all data providers</span>
         </div>
         <div className="flex items-start">
-          <Check className="h-5 w-5 text-brand mr-3 mt-0.5" />
+          <Check className="h-5 w-5 text-primary mr-3 mt-0.5" />
           <span>Custom enrichment pipelines</span>
         </div>
         <div className="flex items-start">
-          <Check className="h-5 w-5 text-brand mr-3 mt-0.5" />
+          <Check className="h-5 w-5 text-primary mr-3 mt-0.5" />
           <span>AI integration</span>
         </div>
         <div className="flex items-start">
-          <Check className="h-5 w-5 text-brand mr-3 mt-0.5" />
+          <Check className="h-5 w-5 text-primary mr-3 mt-0.5" />
           <span>Full control over cost and usage</span>
         </div>
         <div className="flex items-start">
-          <Check className="h-5 w-5 text-brand mr-3 mt-0.5" />
+          <Check className="h-5 w-5 text-primary mr-3 mt-0.5" />
           <span>Full support</span>
         </div>
       </div>

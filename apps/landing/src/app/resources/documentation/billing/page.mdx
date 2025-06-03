@@ -1,0 +1,89 @@
+---
+title: Pipe0 Docs | Subscriptions
+description: Subscriptions
+date: 2025-04-01
+---
+
+# Billing
+
+Our billing system consists of:
+
+- 🥞 Credits
+- 💳 Subscriptions
+
+## Credits
+
+Enrichment requests in `production` mode are billed. The billing is on a per-record-basis.
+
+If tasks fails, processed records until the point of failure are billed.
+
+Enrichment requests in `sandbox` mode are always free.
+
+You can find the cost per record for each pipe in the <AppLink linkType="pipeCatalog">pipe catalog</AppLink>.
+
+### Insufficient balance
+
+If you're credit balance is insufficient to complete an ongoing enrichment task, the entire task fails and you will be billed
+for the enrichment until failure.
+
+### One-off purchases
+
+You can purchase additional credits at your current subscription price. One-off credits can be purchased by
+users with active subscriptions.
+
+To purchase one-off credits contact [support@pipe0.com](mailto:support@pipe0.com).
+
+### Credit rollover
+
+For your convenience, it's possible to **hold up to 4x the credit amount** of either your monthly or yearly 
+subscription value in your account. Credits balances that exceed this threshold are lost.
+
+During subscription downgrades the credit rollover amount is lowered and the limit of your new subscription applies.
+
+### Negative balances
+
+We do not offer negative balances (line of credit) at this point.
+
+If you're building a system that requies auto-top-ups to remain operational at all times contact [support@pipe0.com](mailto:support@pipe0.com).
+
+### Pipe billing
+
+Pipes are billed when they "run" in accordance with their <AppLink linkType="billingMode">billing mode</AppLink>.
+
+Pipes "run" when at **least one** of their output fields will be generated. In case all output fields are provided 
+by your input data, the pipe does not "run" unless **at least one** provided output value requires regeneration. See 
+<AppLink linkType="inputSanitation">input sanitation</AppLink> for more info.
+
+#### Billing mode
+
+A property of a pipe is its `billing_mode`.
+
+#### billing_mode `always`
+
+Pipes with `billing_mode='always'` are billed on every run. Credits are deducted from your balance regardless of 
+the pipe's result. Even if pipe output fields are marked as `no_result`, credits will be deducted
+from your balance. See <AppLink linkType="fieldStatus">field staus</AppLink> for more info.
+
+Pipe are not be billed if the pipe run fails (error state).
+
+#### billing_mode `on_success`
+
+Pipes with `billing_mode=on_success` are billed when at least one of their output fields was marked 
+as `completed`. This indicates a successful result. If all output fields of a pipe are marked as `no_result`, the pipe is not billed.
+See <AppLink linkType="fieldStatus">field staus</AppLink> for more info.
+
+## Subscriptions
+
+Subscriptions are **managed through [Stripe](https://stripe.com)**. 
+This ensures a reliable and secure environment for your billing information.
+
+You have the ability to **create, update, and cancel your subscription at any time**.
+Navigate to "Dashboard" > "Billing" > "Manage Subscriptions"
+to access the billing portal.
+
+
+
+## Support
+
+Should you encounter any issues or have questions regarding your subscription, please do not hesitate to contact 
+our support team at **`support@pipe0.com`**. We're here to help!

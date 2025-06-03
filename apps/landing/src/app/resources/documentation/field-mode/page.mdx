@@ -1,0 +1,47 @@
+---
+title: Pipe0 Docs | Field Mode
+description: "Learn about Pipes. The processing blocks of enrichment pipelines."
+date: 2025-03-07
+---
+
+# Field Mode
+
+The field mode determines the shape of the <AppLink linkType="pipeConfig">config object</AppLink> a pipe takes.
+
+### Field mode: `static`
+
+Most <AppLink linkType="pipe">pipes</AppLink> have static <AppLink linkType="inputField">input</AppLink> 
+and <AppLink linkType="outputField">output fields</AppLink>. When `field_mode` is set to `static` the 
+pipe's in- and outputs are known in advance.
+
+You can point the input fields to different fields or rename the outputs but the but the pipe's API is clearly 
+defined in advance.
+
+_Example_: 
+
+When using the pipe `people:workemail:waterfall@1`, we use the
+input fields `name` and `company_website_url` to generate the output field `work_email`.
+
+### Field mode: `prompt`
+
+The user is required to specify the inputs and outputs of a pipe via a prompt.
+
+_Example_:
+
+The pipe `run:prompt@1` uses any number of input fields to generate any number of output fields. The
+user may specify any input or output field by using <AppLink linkType="promptTags">prompt tags</AppLink>.
+
+#### Prompt tags
+
+To define fields in `prompt` mode, use the following syntax to define fields.
+
+
+```json
+{
+  "prompt": "Based on the name of the person {{ input name type=\"string\" required=\"true\" }} assign a character from the TV show \"The Simpsons\" to that person. {{ output value description=\"Name of a character from the TV show 'The Simpsons\'\" }}",
+}
+```
+
+**type**: "string" | "number" | "boolean" <br/>
+**required**: "true" | "false" <br/>
+**description**: string <br/>

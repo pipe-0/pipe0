@@ -1,0 +1,272 @@
+---
+title: Pipe0 Docs | Response object
+category: Concepts
+priority: 2
+description: Learn about Pipelines. Customizable enrichment workflows.
+icon: stack
+date: 2025-06-02
+isPublished: true
+---
+
+
+
+# Response Object
+
+The following API operations all return the same response.
+
+- `POST https://api.pipe0.com/v1/run` (used to run the pipeline)
+- `GET https://api.pipe0.com/v1/check` (used to check the processing state)
+- `POST https://api.pipe0.com/v1/run/sync` (used to run the pipeline synchonously)
+
+At first, seeing the full response object can be intimidating. But our response object has been 
+designed to make your life easy. Here are some things our responses are designed for:
+
+💅 Building UIs inspired by tools like [Clay](https://clay.com) or [Airtable](https://airtable.com) <br />
+📀 Enriching server-side to push to a CRM, ATS, or database <br />
+🧙🏻 Perform actions like lead scoring, CRM updates, or outreach without writing code
+
+## The raw response object
+
+import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "../../../../components/ui/accordion"
+ 
+<Accordion
+      type="single"
+      collapsible
+      className="w-full"
+    >
+      <AccordionItem value="item-1">
+        <AccordionTrigger>Toggle full response</AccordionTrigger>
+        <AccordionContent className="flex flex-col gap-4 text-balance">
+          <div>
+
+```JSON
+{
+  "id": "sgrqhch5qqinn58ojs192zne",
+  "status": "completed",
+  "order": [
+    "e99e5017-7943-4dc1-91f9-67f70a9fd6dd",
+  ],
+  "field_definitions": {
+    "id": {
+      "type": "string",
+      "required": false,
+      "label": "id",
+      "added_by": {
+        "ref": "input",
+        "hash": null
+      }
+    },
+    "email": {
+      "type": "string",
+      "required": false,
+      "label": "Email",
+      "added_by": {
+        "ref": "input",
+        "hash": null
+      }
+    },
+    "company_website_url": {
+      "type": "string",
+      "required": true,
+      "label": "Company Website URL",
+      "added_by": {
+        "ref": "company:websiteurl:email@1",
+        "hash": "e0b8a4ef"
+      }
+    }
+  },
+  "pipes": [
+    {
+      "pipe_id": "company:websiteurl:email@1",
+    }
+  ],
+  "errors": [],
+  "records": {
+    "e99e5017-7943-4dc1-91f9-67f70a9fd6dd": {
+      "id": "e99e5017-7943-4dc1-91f9-67f70a9fd6dd",
+      "fields": {
+        "id": {
+          "value": "e99e5017-7943-4dc1-91f9-67f70a9fd6dd",
+          "status": "completed",
+          "type": "string",
+          "reason": null,
+          "claimed_by": {
+            "ref": "input",
+            "hash": null
+          },
+          "resolved_by": {
+            "ref": "input",
+            "hash": null
+          },
+          "meta": null,
+          "ui": {
+            "severity": "none"
+          }
+        },
+        "email": {
+          "value": "emma@amazon.com",
+          "status": "completed",
+          "type": "string",
+          "reason": null,
+          "claimed_by": {
+            "ref": "input",
+            "hash": null
+          },
+          "resolved_by": {
+            "ref": "input",
+            "hash": null
+          },
+          "meta": null,
+          "ui": {
+            "severity": "none"
+          }
+        },
+        "company_website_url": {
+          "value": "https://amazon.com",
+          "status": "completed",
+          "type": "string",
+          "reason": null,
+          "claimed_by": {
+            "ref": "company:websiteurl:email@1",
+            "hash": "e0b8a4ef"
+          },
+          "resolved_by": {
+            "ref": "company:websiteurl:email@1",
+            "hash": "e0b8a4ef"
+          },
+          "meta": null,
+          "ui": {
+            "severity": "none"
+          }
+        }
+      }
+    }
+  }
+}
+```
+          </div>
+        </AccordionContent>
+      </AccordionItem>
+    </Accordion>
+
+
+## Response object properties
+
+### id
+
+This is the task `id`. During and after processing you can use this id to look up 
+your processing result. We store tasks for up to three days after processing completed.
+
+### status
+
+The status of the response object.
+
+#### Status 'pending'
+
+Your request has been validated and an enrichment task has been created. Processing has not yet begun.
+
+#### Status 'processing'
+
+Your request has been validated and processing has begun. During processing that status of your record 
+fields will be continuously updated.
+
+#### Status 'completed'
+
+Processing has finished without global errors. Individual fields still may have failed to process. No 
+global error occured.
+
+#### Status 'failed'
+
+Validation or processing has failed. See the global `errors` property for more information on why the failure occured.
+
+### order
+
+We transform the list of input data into an object called `records`. The `records` object has keys
+that match the `ids` of your input data. However, the order is not preserved. To preserve the order 
+of input data from your original request, we create an ordered list of input data `ids`.
+
+### field_definitions
+
+The input data you provide with your request can be thought of as the rows of a table. If the data 
+are the rows, the `fields` are the columns. The `field_definitions` object contains all fields that 
+exist in your pipeline. These are the output fields of pipes as well as the initial fields created 
+from your input data. The key represents the `field_name` and the `value` represent the field properties.
+
+### pipes
+
+The list of pipes that you sent as part of your request along with the pipe configuration. The pipes
+are reordered according to the processing order.
+
+### errors
+
+Global task errors. If your response contains errors at the top-level, your task failed. Use this 
+error array to understand why your task failed. Aside from the top-level response, individual fields
+can fail too. In that case the field will contain a local error.
+
+### records
+
+Each input object is transformed into a `record` object during processing.
+
+#### record.id
+
+The `id` you provided in your input object
+
+#### record.fields
+
+If your original request contained an `input` array of the shape `[{id: 1, foo: "bar"}, {id: 2, "bar": "baz"}]`,
+all `records` will have the fields `id`, `foo`, and `bar`. Notice, that the fields are normalized accross all your
+`records`. In addition, to fields from `input objects` the fields object has keys for every pipe output field within 
+your pipeline. It is guaranteed `field_definitions` and `fields` have the same keys.
+
+#### record.field.value
+
+The value of the field. If the value was provided as part of your input data it is simply copied over. If the 
+value was generated from an enrichment operation, it is added.
+
+#### record.field.status
+
+The status of the field. Can be `completed`, `failed`, `pending`, `queued`, `processing`, or `no_result`.
+The value will be `no_result` if the enrichment completed without any errors but did not find a meaningful 
+result. In contrast, if the status is `failed` the enrichment failed due to an error.
+
+#### record.field.type
+
+The type of the provided or generated value. Can be `string`, `number`, `boolean`, `json`, or `unkown`.
+The type will be `unknown` if the field was derived from your input data. If all input objects containing 
+the property has a value of 'null' and no pipe outputs the field, we're not able to infer the type and set it to `unknown`.
+
+#### record.field.reason
+
+Is guaranteed to exist if the field status is `failed`. Is of the type `null | {code: string; summary: string; message: string}`.
+Will contain additional information to explain the status/failure of a field.
+
+
+#### record.field.claimed_by
+
+Each field is assined to an entity that is responsible for `resolving` it. This can be your input data or a pipe.
+In cases where some of your input data contain fields that can be generated by pipes the two overlap. A pipe will 
+`claim` each field it is responsible for. But just because it's claimed a field does not mean it will resolve it.
+If your input object already contains a valid value, the field will be claimed by a pipe but resolved by `input`.
+
+This distinction makes it possible to render the columns ordered by pipes.
+
+#### record.field.resolved_by
+
+Is guranteed to exist if the status of the field is `completed`. is guranteed to be `null` if the status is not 
+`completed`. This field will tell you if it was processed by a pipe or simply copied over from your input data.
+
+#### record.field.meta
+
+Contains `metadata` about the field processing. In case of waterfall enrichments you can find information about
+all the providers that were tried in this field.
+
+#### record.field.ui
+
+Additional information for rendering the field value.
+
+
+## OpenAPI 3.1
+
+When working with the <AppLink linkType="pipelineResponse">response object</AppLink> it is helpful
+have access to a type-safe representation. This will give you autocomplete in your IDE. Follow 
+<AppLink linkType="openAPI">this link</AppLink> to learn more about generating api clients.

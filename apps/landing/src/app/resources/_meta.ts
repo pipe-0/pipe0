@@ -13,7 +13,12 @@ const meta: MetaRecord = {
   },
   "api-reference": {
     type: "page",
-    display: "hidden",
+    title: "API Reference",
+    theme: {
+      layout: "full",
+      sidebar: false,
+      toc: false,
+    },
   },
   blog: {
     type: "page",

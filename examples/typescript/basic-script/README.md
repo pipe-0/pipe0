@@ -1,6 +1,6 @@
 # Pipe0 Demo Playground
 
-This is a basic playground to test Pipe0 enrichment requests using fake data.
+This is a basic playground to test [Pipe0](https://pipe0.com) enrichment requests using fake data.
 It provides a minimal UI to submit requests, view the request body, processed values, and raw response.
 
 ## Usage

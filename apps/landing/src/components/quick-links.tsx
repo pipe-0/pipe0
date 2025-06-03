@@ -16,7 +16,7 @@ export function QuickLinks({
             <li key={link.href} className="mt-0 pt-2">
               <Link
                 href={link.href}
-                className={cn("text-md font-semibold text-brand ")}
+                className={cn("text-md font-semibold text-primary ")}
               >
                 {link.label}
                 <Link2 size={14} className="inline-block ml-2" />

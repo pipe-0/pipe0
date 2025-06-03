@@ -21,10 +21,11 @@ export default async function RootLayout({ children }: PropsWithChildren) {
     <Layout
       navbar={navbar}
       pageMap={await getPageMap("/resources")}
-      docsRepositoryBase="https://github.com/shuding/nextra/tree/main/docs"
+      docsRepositoryBase="https://github.com/pipe-0/pipe0/"
       footer={footer}
       editLink={null}
       feedback={{ content: null }}
+      sidebar={{ defaultMenuCollapseLevel: 1 }}
     >
       {children}
     </Layout>

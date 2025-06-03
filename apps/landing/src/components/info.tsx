@@ -11,7 +11,7 @@ export function Info({ children }: PropsWithChildren) {
   return (
     <Tooltip>
       <TooltipTrigger asChild>
-        <Button size="icon" variant="ghost" className="size-5 text-brand">
+        <Button size="icon" variant="ghost" className="size-5 text-primary">
           <Asterisk />
         </Button>
       </TooltipTrigger>

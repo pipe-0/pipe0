@@ -1,98 +1,48 @@
 ---
-title: pipe0 Documentation | Introduction
+title: Pipe0 Docs | Introduction
 description: Introduction to Pipe0
-date: 2025-04-01
+date: 2025-06-01
 ---
 
 ## Introduction
+<br />
 
-[Pipe0](https://pipe0.com) is a programmatic framework for data enrichment. If you have some data about a person or 
-company but want more, you can do that in an infinite number of ways with pipe0.
+<iframe
+width="100%"
+height="530"
+src="https://youtube.com/embed/k9g7Tpcawu0"
+allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+allowFullScreen
+/>
 
-### When to use pipe0
+[Pipe0](https://pipe0.com) is a framework for data enrichment. It replaces providers 
+like Zoominfo, Prospeo, or Findymail with a more flexible API.
 
-If you find yourself using providers like Zoominfo, Findymail, etc, and piping data from 
-one service into another - you can benefit a lot from pipe0. Moving to pipe0 will drastically 
-increase your data quality while making it easy to combine existing data providers with AI and web scraping.
-No more spaghetti code 🍝.
+Aside form finding information like email addresses, phone numbers, and LinkedIn profiles
+(s. <AppLink linkType="pipeCatalog">pipe catalog</AppLink> for a full list),
+you can use Pipe0 to express conditions, actions, and combine data with AI.
 
-Here are some things pipe0 does for you:
+We took a lot of inspiration from [Clay](https://clay.com). We moved many of its features 
+into a stateless, fast, and cost-effective API.
 
-🔌 Connect 50+ data providers<br />
-💾 Caching and processing in parallel<br />
-🧠 Normalize rate limits accross providers and operating at any scale<br />
-💰 Run enrichment, scraping and AI infrastructure at low cost<br />
-🧼 Sanitize your input data<br />
+It's easy to underestimate the engineering challenge of building a robust data enrichment platform in-house.
+Here are some things that you never have to worry about when using Pipe0:
 
-### Use cases
+⚡️ Enriching data in parallel with speed and accuracy<br />
+🛑 Dealing with different provider rate limits<br />
+🧼 Sanitizing & healing input data<br />
+🖥️ Monitoring dozends of 3rd-party API integrations<br />
+🌊 Building custom waterfalls <br />
+💵 Managing credit balances with different providers <br />
+🏗️ Run enrichment, scraping and AI infrastructure at low cost<br />
+🍝 Spahgetti code<br />
+💾 Caching <br />
 
-There are many applications where having a unified data enrichment API helps a lot:
+## Use cases
 
 🤖 Building sales technology applications like automated outreach, SDR, etc. <br />
-🧙🏻 Keep data in systems like CRMs up-to-date <br />
-🧬 Working with large datasets that need to be enriched <br />
+🪄 AI Agents that need a flexible data source <br />
+🧙🏻 Updating CRM or ATS data <br />
+🧬 Enriching large datasets <br />
 
-Integrating pipe0 can save months of engineering work, simplify billing, and help you move fast with your 
-product (data enrichment is mostly just a means to an end).
-
-## What makes pipe0 a framework?
-The term `framework` may surprise you because pipe0 is an API, dashboard, and <AppLink linkType="externalSDKNpm">SDK</AppLink>.
-
-Pipe0 is a framework because you can not only enrich data but express logic and direction of data flow too.
-
-The following is an example of an enrichment flow that requires logic.
-
-```text filename="Flow that needs logic"
-FIND phone number of person
-IF found
-    FIND find timezone of that person
-IF NOT found
-    FIND work email address
-```
-
-While you could implement this with code, pipe0 offers a much simpler interface.
-
-The code below performs this flow. It is robust enough to enrich thousands of records in parallel and power 
-any kind of application.
-
-```typescript
-const result = await fetch("https://api.pipe0.com/v1/run/sync", {
-method: "POST",
-headers: {
-    "authorization": `Bearer ${API_KEY}`,
-},
-body: JSON.stringify({
-    pipes: [
-    {
-        pipe_id: "people:mobilenumber:waterfall@1",
-    },
-    {
-        pipe_id: "people:timezone@1",
-        conditions: [
-          {
-            action: "run",
-            condition: { ref: "mobile_phone_number", operator: "is_resolved", equals: true }
-          }
-        ]
-    },
-    {
-        pipe_id: "people:workemail:hunter@1",
-        conditions: [
-          {
-            action: "run",
-            condition: { ref: "mobile_phone_number", operator: "is_resolved", equals: false }
-          }
-        ]
-    }
-    ],
-    input: [
-        {
-            id: 1, // assign an id to each input object
-            name: "John Doe",
-            company_website_url: "https://pipe0.com"
-        }
-    ]
-})
-});
-```
 

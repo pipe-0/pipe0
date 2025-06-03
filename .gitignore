@@ -87,6 +87,7 @@ pids/
 .dynamodb/
 .tern-port
 .vscode-test/
+.vscode
 next-env.d.ts
 
 # Optional: Uncomment if your project uses Gatsby and not Next.js

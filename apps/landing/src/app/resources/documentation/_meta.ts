@@ -7,51 +7,54 @@ const meta: MetaRecord = {
   },
   index: {
     title: "Introduction",
+    theme: {
+      layout: "full",
+      toc: false,
+    },
   },
   quickstart: {
     title: "Quickstart",
-  },
-  "sync-async": {
-    title: "Sync-vs-Async",
+    theme: {
+      layout: "full",
+      toc: false,
+    },
   },
   __: {
     type: "separator",
     title: "Concepts",
   },
+  "request-payload": {
+    title: "Request Payload",
+  },
+  "response-object": {
+    title: "Response Object",
+  },
   authentication: {
     title: "Authentication",
   },
-  pipe: {
-    title: "Pipes",
-  },
-  pipeline: {
-    title: "Pipeline",
-  },
-  "test-mode": {
-    title: "Sandbox",
-  },
-  ___: {
+  _____: {
     type: "separator",
-    title: "Building apps",
+    title: "Advanced",
   },
-  "ui-apps": {
-    title: "UI Based Apps",
+  "input-sanitation": {
+    title: "Input Sanitation",
   },
-  "other-apps": {
-    title: "Other Apps",
+  "field-mode": {
+    title: "Field Mode",
   },
   ____: {
     type: "separator",
     title: "Other",
   },
-  "browser-sdk": {
-    title: "Browser SDK",
-  },
-  terminology: {
-    title: "Terminology",
-  },
   billing: {
     title: "Billing",
+  },
+  ______: {
+    type: "separator",
+    title: "Examples",
+  },
+  "code-examples": {
+    title: "Code",
   },
 };
 
