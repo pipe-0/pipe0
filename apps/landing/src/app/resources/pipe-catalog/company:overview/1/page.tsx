@@ -9,7 +9,7 @@ export const metadata = generatePipeMetadata(pipeId);
 
 export default async function PipeDocs() {
   return (
-    <PipePage>
+    <PipePage pipeId={pipeId}>
       <PipeCatalogHeader pipeId={pipeId} />
     </PipePage>
   );

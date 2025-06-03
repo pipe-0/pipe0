@@ -1,5 +1,7 @@
 import AppLink from "@/components/app-link";
 import { CodeTabs } from "@/components/code-tabs";
+import CopyToClipboard from "@/components/copy-to-clipboard";
+import { FieldRow } from "@/components/features/pipe-catalog.tsx/field-row";
 import { Info } from "@/components/info";
 import { InlineDocsBadge } from "@/components/inline-docs-badge";
 import {
@@ -10,7 +12,6 @@ import {
 } from "@/components/ui/accordion";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
 import {
   Table,
   TableBody,
@@ -19,25 +20,27 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import { appLinks } from "@/lib/links";
 import { formatCredits } from "@/lib/utils";
 import {
-  CostPerProvider,
   fieldCatalog,
   pipeConfigRegistry,
   PipeId,
-  PipeMetaCatalog,
   pipeMetaCatalog,
   providerCatalog,
 } from "@pipe0/client-sdk";
-import { Key, Terminal } from "lucide-react";
+import { Terminal } from "lucide-react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/cjs/styles/prism";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import Link from "next/link";
 
 type PipeHeaderProps = {
   pipeId: PipeId;
@@ -46,8 +49,6 @@ type PipeHeaderProps = {
 export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
   const pipeCatalogEntry = pipeMetaCatalog[pipeId];
 
-  const tags = pipeCatalogEntry?.tags || [];
-
   const defaultPipeConfig = pipeConfigRegistry[pipeId];
 
   return (
@@ -55,36 +56,36 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
       {/* Header Section */}
       <div className="space-y-3">
         <div>
-          <div className="pt-7 pb-4">
-            <small className="text-sm text-muted-foreground mb-1">
-              {pipeId}
-            </small>
-            <h2 className="text-4xl font-bold text-left">
-              {pipeCatalogEntry.label}
-            </h2>
-          </div>
+          <Breadcrumb>
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink asChild>
+                  <Link href="/resources/pipe-catalog">Pipe catalog</Link>
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage>{pipeId}</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+          <h1 className="text-4xl font-bold text-left pb-4">
+            {pipeCatalogEntry.label}
+          </h1>
+
           <p className="text-lg text-muted-foreground">
             {pipeCatalogEntry.description}
           </p>
         </div>
         {/* Metadata Section */}
-        <div className="flex flex-wrap gap-x-8 gap-y-4">
-          {/* Tags */}
-          {tags && tags.length > 0 && (
-            <div className="flex flex-wrap gap-1">
-              {tags.map((tag) => (
-                <Badge key={tag} variant="secondary" className="text-xs">
-                  {tag}
-                </Badge>
-              ))}
-            </div>
-          )}
+
+        <div>
+          <CopyToClipboard value={pipeId} />
         </div>
       </div>
 
       {/* Providers Section */}
       <div>
-        <h3 className="font-medium mb-3 pb-2 border-b">Provider Options</h3>
         <Table>
           <TableHeader>
             <TableRow>
@@ -92,10 +93,7 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
               <TableHead>
                 Billing Mode <InlineDocsBadge href={appLinks.billingMode()} />
               </TableHead>
-              <TableHead>
-                Credentials{" "}
-                <InlineDocsBadge href={appLinks.pipeCredentials()} />
-              </TableHead>
+              <TableHead>Credentials</TableHead>
               <TableHead>
                 Cost per record <InlineDocsBadge href={appLinks.billing()} />
               </TableHead>
@@ -119,7 +117,7 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
                 );
 
               let connections = [];
-              if (provider.hasManagedConnections) connections.push("Managed");
+              // if (provider.hasManagedConnections) connections.push("Managed");
               if (provider.allowsUserConnections) connections.push("User");
 
               return (
@@ -172,11 +170,11 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
       {/* Input/Output Fields Section - Two Column Layout */}
       {!pipeCatalogEntry.hasFlexInputs ? (
         <div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="space-y-8">
             {/* Input Groups */}
             <div>
               <h3 className="font-medium mb-3 pb-2 border-b">Input Fields</h3>
-              <div className="space-y-5">
+              <div className="space-y-2">
                 {pipeCatalogEntry.inputGroups?.map((group, groupIndex) => {
                   const fieldEntries = Object.entries(group.fields);
 
@@ -185,19 +183,16 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
                     return (
                       <div
                         key={groupIndex}
-                        className="space-y-2 border rounded-md p-3"
+                        className="border-l-3 border-border pl-3"
                       >
-                        <div className="flex items-center justify-between mb-2">
-                          <h4 className="text-sm font-medium">Field Group</h4>
-                          <Badge
-                            variant="secondary"
-                            className="capitalize text-xs"
-                          >
+                        <div className="pb-3">
+                          <h4 className="text-sm">Field group</h4>
+                          <small className="text-muted-foreground">
                             {group.condition === "all" && "All Required"}
                             {group.condition === "atLeastOne" &&
-                              "At Least One Required"}
+                              "At Least one of the following fields is required"}
                             {group.condition === "none" && "None Required"}
-                          </Badge>
+                          </small>
                         </div>
 
                         {group.message && (
@@ -206,7 +201,7 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
                           </p>
                         )}
 
-                        <div className="space-y-3">
+                        <div className="space-y-2">
                           {fieldEntries.map(([fieldName]) => {
                             const fieldEntry = Object.values(fieldCatalog).find(
                               (e) => e.name === fieldName
@@ -214,19 +209,13 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
                             if (!fieldEntry) return null;
 
                             return (
-                              <div key={fieldName} className="space-y-1">
-                                <div className="flex items-center justify-between">
-                                  <h4 className="font-medium">
-                                    {fieldEntry.name}
-                                  </h4>
-                                  <Badge
-                                    variant="outline"
-                                    className="capitalize text-xs"
-                                  >
-                                    {fieldEntry.type}
-                                  </Badge>
-                                </div>
-                              </div>
+                              <FieldRow
+                                type="input"
+                                key={fieldName}
+                                fieldName={fieldEntry.name}
+                                fieldType={fieldEntry.type}
+                                description={fieldEntry.description}
+                              />
                             );
                           })}
                         </div>
@@ -241,36 +230,14 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
                     if (!fieldEntry) return null;
 
                     return (
-                      <div key={fieldName} className="space-y-1">
-                        <div className="flex items-center justify-between">
-                          <h4 className="font-medium">
-                            {fieldEntry.name}{" "}
-                            <Info>{fieldEntry.description}</Info>
-                          </h4>
-                          <div className="inline-flex gap-2">
-                            <Badge
-                              variant="outline"
-                              className="capitalize text-xs"
-                            >
-                              {fieldEntry.type}
-                            </Badge>
-                            <Badge
-                              variant={
-                                group.condition === "all"
-                                  ? "secondary"
-                                  : "outline"
-                              }
-                              className="capitalize text-xs"
-                            >
-                              {group.condition === "all"
-                                ? "Required"
-                                : group.condition === "none"
-                                ? "Optional"
-                                : "Misconfigured"}
-                            </Badge>
-                          </div>
-                        </div>
-                      </div>
+                      <FieldRow
+                        key={fieldName}
+                        description={fieldEntry.description}
+                        groupCondition={group.condition}
+                        type="input"
+                        fieldName={fieldName}
+                        fieldType={fieldEntry.type}
+                      />
                     );
                   }
 
@@ -282,7 +249,7 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
             {/* Output Fields */}
             <div>
               <h3 className="font-medium mb-3 pb-2 border-b">Output Fields</h3>
-              <div className="space-y-5">
+              <div className="space-y-2">
                 {pipeCatalogEntry.outputFields.map((fieldName) => {
                   const fieldEntry = Object.values(fieldCatalog).find(
                     (e) => e.name === fieldName
@@ -290,22 +257,13 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
                   if (!fieldEntry) return null;
 
                   return (
-                    <div key={fieldName} className="space-y-1">
-                      <div className="flex items-center justify-between">
-                        <h4 className="font-medium">
-                          {fieldEntry.name}{" "}
-                          <Info>{fieldEntry.description}</Info>
-                        </h4>
-                        <div className="inline-flex gap-2">
-                          <Badge
-                            variant="outline"
-                            className="capitalize text-xs"
-                          >
-                            {fieldEntry.type}
-                          </Badge>
-                        </div>
-                      </div>
-                    </div>
+                    <FieldRow
+                      type="output"
+                      key={fieldName}
+                      fieldName={fieldEntry.name}
+                      fieldType={fieldEntry.type}
+                      description={fieldEntry.description}
+                    />
                   );
                 })}
               </div>
@@ -315,11 +273,11 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
       ) : (
         <Alert>
           <Terminal className="h-4 w-4" />
-          <AlertTitle>Flexible Input/Output Fields</AlertTitle>
+          <AlertTitle>Field mode: `prompt`</AlertTitle>
           <AlertDescription>
             <p>
               This pipe supports{" "}
-              <AppLink linkType="flexPipe">
+              <AppLink linkType="fieldModePrompt">
                 flexible input and output fields
               </AppLink>{" "}
               that can be fully defined by the user.
@@ -331,7 +289,7 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
       {/* Code example */}
       <Accordion type="multiple" defaultValue={["code"]}>
         <AccordionItem value="code">
-          <AccordionTrigger className="text-lg">Code example</AccordionTrigger>
+          <AccordionTrigger className="text-sm">Code example</AccordionTrigger>
           <AccordionContent>
             <div>
               <CodeTabs items={["Typescript", "cURL"]}>
@@ -374,9 +332,7 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
           </AccordionContent>
         </AccordionItem>
         <AccordionItem value="config">
-          <AccordionTrigger className="text-lg">
-            Full Config Example
-          </AccordionTrigger>
+          <AccordionTrigger className="text-sm">Full config</AccordionTrigger>
           <AccordionContent>
             <div>
               <Alert>
@@ -387,7 +343,7 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
                   contains the default pipe config.
                 </AlertDescription>
               </Alert>
-              <CodeTabs items={["Typescript", "cURL"]}>
+              <CodeTabs items={["Typescript"]}>
                 <div>
                   <SyntaxHighlighter
                     language="typescript"

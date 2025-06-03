@@ -56,17 +56,21 @@ export async function getPipeEntries() {
     .sort((a, b) => +a.name - +b.name);
 }
 
-export async function getTags() {
-  const pipeEntries = await getPipeEntries();
+export async function getPipeEntryMap() {
+  const result = {} as Record<PipeId, PipeEntry["children"][number]>;
 
-  const tags = pipeEntries.flatMap((pipe) => {
-    const lastVersion = getLastPipeVersionEntry(pipe);
-    const pipeMetaEntry =
-      pipeMetaCatalog[
-        (lastVersion?.frontMatter.pipeId ||
-          lastVersion?.frontMatter.other?.pipeId) as PipeId
-      ];
-    return pipeMetaEntry.tags || [];
+  const { directories } = normalizePages({
+    list: await getPageMap("/resources/pipe-catalog"),
+    route: "/resources/pipe-catalog",
+  }) as unknown as { directories: PipeEntry[] };
+
+  directories.forEach((p) => {
+    p.children?.forEach((c) => {
+      if (c.frontMatter.other?.pipeId) {
+        result[c.frontMatter.other.pipeId] = c;
+      }
+    });
   });
-  return tags;
+
+  return result;
 }

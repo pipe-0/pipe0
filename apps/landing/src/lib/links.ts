@@ -4,6 +4,9 @@ export const appLinks = {
   inputSanitation: () => `/resources/documentation/input-sanitation`,
   fieldStatus: () => `/resources/documentation/response-object#status`,
   promptTags: () => `/resources/documentation/field-mode#prompt-tags`,
+  fieldMode: () => `/resources/documentation/field-mode`,
+  fieldModePrompt: () =>
+    `/resources/documentation/field-mode#field-mode-prompt`,
   openAPI: () => `/resources/documentation/request-payload#openapi-31`,
 
   pipe: () => `/resources/documentation/request-payload#pipes`,

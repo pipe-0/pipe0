@@ -5,6 +5,10 @@ import { Metadata } from "next";
 import { toast } from "sonner";
 import { twMerge } from "tailwind-merge";
 
+export function getPipeVersionFromId(pipeId: PipeId) {
+  return Number(pipeId.split("@")[1]);
+}
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
