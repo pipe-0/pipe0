@@ -1,7 +1,7 @@
 import AppLink from "@/components/app-link";
 import { CodeTabs } from "@/components/code-tabs";
 import CopyToClipboard from "@/components/copy-to-clipboard";
-import { FieldRow } from "@/components/features/pipe-catalog.tsx/field-row";
+import { FieldRow } from "@/components/features/pipe-catalog/field-row";
 import { Info } from "@/components/info";
 import { InlineDocsBadge } from "@/components/inline-docs-badge";
 import {

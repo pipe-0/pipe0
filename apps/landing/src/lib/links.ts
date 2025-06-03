@@ -3,10 +3,10 @@ export const appLinks = {
   pipeConfig: () => `/resources/documentation/request-payload#pipeconfig`,
   inputSanitation: () => `/resources/documentation/input-sanitation`,
   fieldStatus: () => `/resources/documentation/response-object#status`,
-  promptTags: () => `/resources/documentation/field-mode#prompt-tags`,
-  fieldMode: () => `/resources/documentation/field-mode`,
+  promptTags: () => `/resources/documentation/pipe-concepts#prompt-tags`,
+  fieldMode: () => `/resources/documentation/pipe-concepts#field-mode`,
   fieldModePrompt: () =>
-    `/resources/documentation/field-mode#field-mode-prompt`,
+    `/resources/documentation/pipe-concepts#field-mode-prompt`,
   openAPI: () => `/resources/documentation/request-payload#openapi-31`,
 
   pipe: () => `/resources/documentation/request-payload#pipes`,

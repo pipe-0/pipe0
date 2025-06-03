@@ -4,7 +4,6 @@ import { cn } from "@/lib/utils";
 import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import { PropsWithChildren } from "react";
-import { ApiReferenceReact } from "@scalar/api-reference-react";
 
 export default function AppLink({
   linkType,

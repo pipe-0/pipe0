@@ -4,7 +4,39 @@ description: "Learn about Pipes. The processing blocks of enrichment pipelines."
 date: 2025-03-07
 ---
 
-# Field Mode
+# Pipe Concepts
+
+This page contains additonal information about pipes.
+
+## Pipe types
+
+### Single provider pipes
+
+Many pipes use a single provider for processing. Providers can be a third-party services like 
+[LeadMagic](https://leadmagic.io) or [ZeroBounce](https://zerobounce.com). Native pipes use Pipe0 as a provider.
+
+### Waterfall pipes
+
+Waterfall pipes use many providers in a cascading sequence. We try provider A. If the data is found, it is returned.
+If the data is not found we try provider B. If the data is not found again, we try provider C and so on.
+
+A billing event occurs for the provider that returns a result. Providers that return `no_result`
+are not billed.
+
+Waterfall enrichments can drastically increase data coverage. But keep in mind that trying many providers 
+can slow down processing speed.
+
+#### Choosing providers
+
+Waterfall pipes have a `config.providers` option. The option is typically of the type `Array<{ provider: <PROVIDER_NAME> }>`.
+If no config is provided the default config is applied. If you remove a provider from the array, this provider is removed
+from your processing squence.
+
+Providers are processed according to their position in the `config.providers` array. The provider with the index 0 is processed first.
+You are encouraged to change the order.
+
+
+## Field mode
 
 The field mode determines the shape of the <AppLink linkType="pipeConfig">config object</AppLink> a pipe takes.
 

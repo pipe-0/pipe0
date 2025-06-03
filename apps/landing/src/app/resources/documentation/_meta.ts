@@ -31,16 +31,20 @@ const meta: MetaRecord = {
   },
   authentication: {
     title: "Authentication",
+    theme: {
+      toc: false,
+      layout: "full",
+    },
   },
   _____: {
     type: "separator",
     title: "Advanced",
   },
+  "pipe-concepts": {
+    title: "Pipe Concepts",
+  },
   "input-sanitation": {
     title: "Input Sanitation",
-  },
-  "field-mode": {
-    title: "Field Mode",
   },
   ____: {
     type: "separator",
