@@ -11,7 +11,7 @@ date: 2025-06-02
 The following API operations require a request payload of type `PipelineRequest`:
 
 - `POST https://api.pipe0.com/v1/run` (create an enrichment task)
-- `POST https://api.pipe0.com/v1/run/sync` (create an enrichment task return the result)
+- `POST https://api.pipe0.com/v1/run/sync` (create an enrichment task and return the result)
 
 Here's a sample payload:
 
@@ -85,7 +85,7 @@ An array of input objects. This is the data you want to enrich.
 
 #### input.id
 
-Each input object must have a unique id. The id can be a `string` or a `number`. Id's can be as simple as `1`, `2`, `3`, ...
+Each input object must have a unique `id` property. The id can be a `string` or a `number`. Id's can be as simple as `1`, `2`, `3`, ...
 
 #### input[number]
 
@@ -115,7 +115,7 @@ API clients wrap the HTTP API with language-native function calls.
 
 ### Generator libraries
 
-There are open source tools that can generate clients in many languages:
+There are open-source tools that can generate clients in many languages:
 
 #### TypeScript
 

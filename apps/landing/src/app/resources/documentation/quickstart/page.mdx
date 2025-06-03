@@ -108,12 +108,12 @@ The result will look something like this:
 ]
 ```
 
-You can try to find information like phone numbers, company info within the same request too. For this you can 
+You can also try to find information like phone numbers and company details within the same request. For this, you can 
 chain multiple enrichment pipes.
 
 > [!NOTE]
 >
-> The actual response will contain much more information. <AppLink linkType="pipelineResponse">Click here</AppLink> to learn how to work with response
+> The response will contain much more information. <AppLink linkType="pipelineResponse">Click here</AppLink> to learn how to work with response
 > objects.
 
 ### Sync or Async
@@ -122,12 +122,12 @@ The request uses the `/v1/run/sync` endpoint. This endpoint returns enriched rec
 This only works for enriching a few records at a time.
 
 To enrich more data, use the `/run` endpoint and poll the `/check` endpoint until your 
-enrichment task is `completed`.
+enrichment task is marked as `completed`.
 
 ### Sandbox
 
 Running pipelines in production incurs usage costs. This is why all pipes offer a 
-<AppLink linkType="testMode">sandbox environment</AppLink>. **Making requests in within the sandbox environment is always free.**
+<AppLink linkType="testMode">sandbox environment</AppLink>. **Making requests in the sandbox environment is always free.**
 
 Do not expect sandbox data to make sense. Expect the data to be structurally 
 correct in regards to type, content length, and format.
