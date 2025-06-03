@@ -26,6 +26,7 @@ export default async function RootLayout({ children }: PropsWithChildren) {
       editLink={null}
       feedback={{ content: null }}
       sidebar={{ defaultMenuCollapseLevel: 1 }}
+      nextThemes={{ defaultTheme: "light" }}
     >
       {children}
     </Layout>

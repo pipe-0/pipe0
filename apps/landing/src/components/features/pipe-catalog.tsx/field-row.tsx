@@ -1,15 +1,36 @@
 "use client";
 
 import { Info } from "@/components/info";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { Tooltip, TooltipContent } from "@/components/ui/tooltip";
 import { cn, copyToClipboard } from "@/lib/utils";
-import { FieldType, InputGroup } from "@pipe0/client-sdk";
+import { fieldCatalog, FieldType, InputGroup } from "@pipe0/client-sdk";
 import { TooltipTrigger } from "@radix-ui/react-tooltip";
 import { ArrowDown, ArrowUp, Check, Copy } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useTheme } from "nextra-theme-docs";
+import { useMemo, useState } from "react";
+import "react-json-view-lite/dist/index.css";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { toast } from "sonner";
+
+import { vscDarkPlus } from "react-syntax-highlighter/dist/cjs/styles/prism";
+
+console.log({ sl: SyntaxHighlighter.supportedLanguages });
+
+export function findFieldByName(fieldName: string) {
+  return (Object.entries(fieldCatalog).find(
+    ([, entry]) => entry.name === fieldName
+  ) || [])[1];
+}
 
 export function FieldRow({
   fieldName,
@@ -24,6 +45,10 @@ export function FieldRow({
   type: "input" | "output";
   groupCondition?: InputGroup["condition"];
 }) {
+  const fieldResult = useMemo(() => findFieldByName(fieldName), []);
+  const jsonExample = fieldResult?.jsonExample;
+  const { theme } = useTheme();
+
   const [showSucces, setShowSuccess] = useState(false);
   const handleCopyToClipboard = () => {
     copyToClipboard(fieldName);
@@ -33,6 +58,7 @@ export function FieldRow({
       setShowSuccess(false);
     }, 1000);
   };
+
   return (
     <div className="space-y-1">
       <div className="flex items-center justify-between">
@@ -99,7 +125,31 @@ export function FieldRow({
           </div>
 
           <div className="text-sm text-muted-foreground italic">
-            <span className="">{fieldType}</span>
+            {fieldType !== "json" || !jsonExample ? (
+              <span className="">{fieldType}</span>
+            ) : (
+              <Sheet>
+                <SheetTrigger asChild>
+                  <Badge
+                    variant="outline"
+                    className="bg-accent hover:text-foreground cursor-default"
+                  >
+                    {fieldType} (show example)
+                  </Badge>
+                </SheetTrigger>
+                <SheetContent className="w-full max-w-none md:max-w-[600px] lg:max-w-[900px] overflow-auto gap-0">
+                  <SheetHeader className="mb-0">
+                    <SheetTitle>Json Example</SheetTitle>
+                  </SheetHeader>
+                  <div className="grow overflow-auto">
+                    <SyntaxHighlighter language="json" style={vscDarkPlus}>
+                      {JSON.stringify(jsonExample, null, 2)}
+                    </SyntaxHighlighter>
+                  </div>
+                </SheetContent>
+              </Sheet>
+            )}
+
             {groupCondition && ", "}
             {groupCondition && (
               <span>
