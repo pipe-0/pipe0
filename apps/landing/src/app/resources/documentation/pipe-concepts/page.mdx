@@ -6,13 +6,13 @@ date: 2025-03-07
 
 # Pipe Concepts
 
-This page contains additonal information about pipes.
+This page contains additional information about pipes.
 
 ## Pipe types
 
 ### Single provider pipes
 
-Many pipes use a single provider for processing. Providers can be a third-party services like 
+Many pipes use a single provider for processing. Providers can be a third-party service like 
 [LeadMagic](https://leadmagic.io) or [ZeroBounce](https://zerobounce.com). Native pipes use Pipe0 as a provider.
 
 ### Waterfall pipes
@@ -30,7 +30,7 @@ can slow down processing speed.
 
 Waterfall pipes have a `config.providers` option. The option is typically of the type `Array<{ provider: <PROVIDER_NAME> }>`.
 If no config is provided the default config is applied. If you remove a provider from the array, this provider is removed
-from your processing squence.
+from your processing sequence.
 
 Providers are processed according to their position in the `config.providers` array. The provider with the index 0 is processed first.
 You are encouraged to change the order.
