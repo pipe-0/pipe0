@@ -120,7 +120,7 @@ chain multiple enrichment pipes.
 The request uses the `/v1/run/sync` endpoint. This endpoint returns enriched records within one roundtrip.
 This only works for enriching a few records at a time.
 
-To enrich more data, use the `/run` endpoint and poll the `/check` endpoint until your 
+To enrich more data, use the `/v1/run` endpoint and poll the `/v1/check` endpoint until your 
 enrichment task is marked as `completed`.
 
 ### Sandbox

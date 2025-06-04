@@ -1,42 +1,35 @@
-# Add clay-like data enrichment to any application. Fast.
+# A Universal Framework for Data Enrichment
 
-[Pipe0](https://pipe0.com) is a framework for data enrichment. If you have some data about a person or company
-but want more, you can do that in an infinite number of ways with pipe0.
+[![Everything Is AWESOME](https://imagedelivery.net/3B3AWuP94-S3Ro5eEac6JA/b63a90b7-6969-45f2-237b-1d9d45673b00/ytthumbnail)](https://youtu.be/k9g7Tpcawu0 "Pipe0 Intro")
 
-The ability to enrich data is a requirement for many apps. You may dream of a
-CRM that updates itself or a sales copilot helping SDRs prepare for upcoming meetings. Data enrichment
-enables these features but is surprisingly hard to build.
+Click the image to watch an intro video.
 
-At pipe0, we're on a mission to build the fastest, most extensible data enrichment framework in the world.
+[Pipe0](https://pipe0.com) is a framework for data enrichment. It replaces providers
+like Zoominfo, Prospeo, or Findymail with a more flexible API.
 
-Here are some things pipe0 does for you:
+Aside from finding information like email addresses, phone numbers, and LinkedIn profiles
+(s. [pipe catalog](https://pipe0.com/resources/pipe-catalog) for a full list),
+you can use Pipe0 to express conditions, perform actions, and generate insights with AI.
 
-🔌 Connect 50+ data providers <br />
-💨 Analyze enrichment pipelines and parallelize execution (we're fast!)<br />
-💰 Run enrichment, scraping and AI infrastructure at low cost (we take 0% margin on external providers)<br />
+We took a lot of inspiration from [Clay](https://clay.com). We moved many of its features
+into a stateless, fast, and cost-effective API.
 
-## What makes a framework?
+It's easy to underestimate the engineering challenge of building a robust data enrichment platform in-house.
+Here are some things that you never have to worry about when using Pipe0:
 
-The term `framework` may surprise you because pipe0 is an API, dashboard, and SDK.
+⚡️ Enriching data in parallel with speed and accuracy  
+🛑 Dealing with different provider rate limits  
+🧼 Sanitizing & healing input  
+🖥️ Monitoring dozens of 3rd-party API integrations  
+🌊 Building custom waterfalls  
+💵 Managing credit balances with different providers  
+🏗️ Run enrichment, scraping and AI infrastructure at low cost  
+🍝 Spaghetti code  
+💾 Caching
 
-While you can perform powerful enrichments in just 10 lines of code, you can choose to express logic and direction of data flow
-with it, too. The ability to design custom enrichment flows, add logic, and change them on the fly makes pipe0 a framework.
+## Use cases
 
-The following is an example of an enrichment flow that requires logic.
-
-```text filename="Flow that needs logic"
-FIND phone number of person
-IF found
-    FIND website of current employer
-IF NOT found
-    FIND work email address
-```
-
-Your first instinct might be to implement this with code. However, pipe0 offers a much simpler way to express this
-and removes brittle spaghetti code once and for all.
-
-## Useful links
-
-- [Website](https://pipe0.com)
-- [Documentation](https://pipe0.com/resources/documentation/introduction)
-- [Clay vs pipe0](https://pipe0.com/resources/documentation/pipe0-vs-clay)
+🤖 Building sales technology applications like automated outreach, SDR, etc.  
+🪄 AI Agents that need a flexible data source  
+🧙🏻 Updating CRM or ATS data  
+🧬 Enriching large datasets
