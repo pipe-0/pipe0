@@ -133,7 +133,7 @@ const IntegrationCard = ({
         </CardContent>
         <CardFooter className="pt-2 block">
           <div className="flex items-center gap-2 text-muted-foreground text-sm">
-            {pipeId}{" "}
+            <span className="break-all">{pipeId}</span>
             <Button
               size="icon"
               className="size-4"

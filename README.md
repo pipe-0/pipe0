@@ -1,4 +1,4 @@
-# A Universal Framework for Data Enrichment
+# An API Based Framework for Data Enrichment
 
 [![Everything Is AWESOME](https://imagedelivery.net/3B3AWuP94-S3Ro5eEac6JA/b63a90b7-6969-45f2-237b-1d9d45673b00/ytthumbnail)](https://youtu.be/k9g7Tpcawu0 "Pipe0 Intro")
 

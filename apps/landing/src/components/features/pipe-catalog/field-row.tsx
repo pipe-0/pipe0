@@ -23,8 +23,6 @@ import { toast } from "sonner";
 
 import { vscDarkPlus } from "react-syntax-highlighter/dist/cjs/styles/prism";
 
-console.log({ sl: SyntaxHighlighter.supportedLanguages });
-
 export function findFieldByName(fieldName: string) {
   return (Object.entries(fieldCatalog).find(
     ([, entry]) => entry.name === fieldName
