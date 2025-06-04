@@ -113,8 +113,7 @@ chain multiple enrichment pipes.
 
 > [!NOTE]
 >
-> The response will contain much more information. <AppLink linkType="pipelineResponse">Click here</AppLink> to learn how to work with response
-> objects.
+> The response will contain more information than displayed here. Learn how to work with <AppLink linkType="pipelineResponse">response objects</AppLink>.
 
 ### Sync or Async
 
@@ -126,12 +125,13 @@ enrichment task is marked as `completed`.
 
 ### Sandbox
 
-Running pipelines in production incurs usage costs. This is why all pipes offer a 
+Running pipelines in `production` mode incurs usage costs. For testing, all pipes offer a 
 <AppLink linkType="testMode">sandbox environment</AppLink>. **Making requests in the sandbox environment is always free.**
 
 Do not expect sandbox data to make sense. Expect the data to be structurally 
 correct in regards to type, content length, and format.
 
-To send `sandbox` requests, set the header `x-environment` to a value of "sandbox"`.
+To send `sandbox` requests, set the header `x-environment` to `sandbox`. If the header is missing or set to any value
+other than `sandbox` the request is considered to be in `production` mode.
 
 

@@ -12,7 +12,7 @@ isPublished: true
 
 # Response Object
 
-The following API operations all return the same response.
+The following API operations all return a response of type `PipelineResponse`.
 
 - `POST https://api.pipe0.com/v1/run` (used to run the pipeline)
 - `GET https://api.pipe0.com/v1/check` (used to check the processing state)
@@ -172,35 +172,36 @@ fields is continuously updated.
 
 #### Status 'completed'
 
-Processing has finished without global errors. Individual fields still may have failed to process. No 
-global error occurred.
+Processing has finished without global errors. Individual fields still may have failed to process.
 
 #### Status 'failed'
 
-Pipeline validation or processing has failed. See the global `errors` property for more information on why 
+<AppLink linkType="pipelineValidation">Pipeline validation</AppLink> or processing has failed. See the global <AppLink linkType="globalErrors">`errors` property</AppLink> for more information on why 
 the failure occurred.
 
 ### order
 
-We transform the list of input data into an object called `records`. The `records` object has keys
-that match the `ids` of your input data. However, the order is not preserved. To preserve the order 
-of input data from your original request, we create an ordered list of input data `ids`.
+We transform the list of input data into an object called <AppLink linkType="records">`records`</AppLink>. The `records` object has keys
+that match the `ids` of your input data. However, the order of your input data is not preserved in the `records` object.
+
+To preserve the original order of your input data we create the `order` property. An ordered list of input data `ids`.
 
 ### field_definitions
+
+Metadata for all fields that exist in your <AppLink linkType="pipeline">pipeline</AppLink>.
 
 Think of each input object as the rows of a table. If input data are the rows, then `fields_definitions`
 are the columns.
 
 The `field_definitions` object contains all fields that 
-exist in your pipeline. These are pipe output fields and fields derived from your input objects.
-`field_definitions` is an object. The keys represent field_names and the values list field properties.
-
-`field_definitions` is a meta-object and contains no processing results.
+exist in your pipeline. This includes pipe output fields and field derived from <AppLink linkType="inputObject">input objects</AppLink>.
+`field_definitions` is an object. The keys contain field names and the values field properties.
 
 ### pipes
 
 The list of pipes that you sent as part of your request along with the pipe configuration. The pipes
-are reordered according to the processing order.
+are reordered according to their valid processing order. If pipeline validation failed, pipes are returned in the 
+original order.
 
 ### errors
 

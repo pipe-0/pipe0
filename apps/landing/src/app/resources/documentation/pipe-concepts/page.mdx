@@ -77,3 +77,25 @@ To define fields in `prompt` mode, use the following syntax to define fields.
 **type**: "string" | "number" | "boolean" <br/>
 **required**: "true" | "false" <br/>
 **description**: string <br/>
+
+## Pipeline
+
+Pipeline is the internal data model we use to enrich data. A pipeline consists of:
+
+(1) Pipes and their order (2) Fields added by your input
+(3) Output fields added by pipes (4) Logic, conditions, and actions.
+
+### Pipeline validation
+
+For a pipeline to be valid the following conditions have to be true:
+
+1. The input requirements of each pipe must be met incl. field format.
+1. Your pipeline cannot contain self-referencing pipes (the input of a pipe points to its output)
+
+### Pipeline requests
+
+Internally, we convert the <AppLink linkType="pipelineRequest">request object</AppLink> into a pipeline.
+
+### Pipeline response
+
+After pipeline validation and processing, we convert a pipelines into the <AppLink linkType="pipelineResponse">response objects</AppLink>.

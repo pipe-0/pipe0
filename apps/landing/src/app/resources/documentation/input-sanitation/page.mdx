@@ -85,7 +85,7 @@ Failing the entire task because one input object cannot be processed is impracti
 
 ### Partially missing input fields
 
-If we find **at least one input object** that can be processed, pipeline validation will pass.
+If we find **at least one input object** that can be processed, <AppLink linkType="pipelineValidation">pipeline validation</AppLink> will pass.
 
 Let's look at the following request payload:
 
@@ -143,7 +143,7 @@ Let's look at another example:
 }
 ```
 
-No input object has the required field `company_websiste_url`. The request will fail during pipeline validation.
+No input object has the required field `company_websiste_url`. The request will fail during <AppLink linkType="pipelineValidation">pipeline validation</AppLink>.
 
 The entire task will fail before processing starts.
 

@@ -13,6 +13,8 @@ The following API operations require a request payload of type `PipelineRequest`
 - `POST https://api.pipe0.com/v1/run` (create an enrichment task)
 - `POST https://api.pipe0.com/v1/run/sync` (create an enrichment task and return the result)
 
+<AppLink linkType="async">Learn more</AppLink> about the difference between the two operations.
+
 Here's a sample payload:
 
 ```json
@@ -54,8 +56,12 @@ The unique identifier of a pipe.
 #### pipe.config
 
 Pipe config object. The full config object can be found in the <AppLink linkType="pipeCatalog">pipe catalog</AppLink>.
-Passing pipe configuration is optional. If no configuration is passed, the default config is used. When a pipe offers
-a `pipe.config.providers` option, the order of providers will be the order of processing.
+Passing pipe configuration is optional. If no configuration is passed, the default config is used.
+
+#### pipe.config.providers
+
+Pipes with multiple providers allow you to choose which providers are processed and their order or processing.
+Learn more about <AppLink linkType="waterfallPipes">waterfall pipes</AppLink>.
 
 #### pipe.config.input_fields
 
@@ -63,11 +69,12 @@ Pipe configuration for the input fields of a pipe.
 
 #### pipe.config.input_field.alias
 
-Defines a pointer for the field value. 
+Point the input field of a pipe to a custom field name.
 
-Example: Your input data contains a property called `custom_company_name`. You want to use the property `custom_company_name`
-for the input field `comapny_name` of the pipe `company:identity@1`. To make this work, point the pipe input field to your
-custom field by providing `"alias": "custom_company_name"` in the pipe config.
+Example: You want to use the property `custom_company_name` for the input field `comapny_name`. Point the pipe input field `comapny_name` to your
+custom field by providing the `"alias": "custom_company_name"` in the pipe config.
+
+The field you point to must have the correct type.
 
 #### pipe.config.output_fields
 
@@ -77,7 +84,7 @@ Pipe configuration for the output fields of a pipe.
 
 Rename the pipe output field to a different `field_name`. This can be useful if you have two pipes that output the same field (error).
 
-To avoid a duplicate output field rename the output field of one pipe to a new `fieldName`.
+To avoid a duplicate output field, rename the output field by using an `alias`.
 
 ### input[]
 

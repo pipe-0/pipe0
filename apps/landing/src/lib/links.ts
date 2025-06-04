@@ -8,6 +8,14 @@ export const appLinks = {
   fieldModePrompt: () =>
     `/resources/documentation/pipe-concepts#field-mode-prompt`,
   openAPI: () => `/resources/documentation/request-payload#openapi-31`,
+  async: () => `/resources/documentation/quickstart#sync-or-async`,
+  sync: () => `/resources/documentation/quickstart#sync-or-async`,
+  waterfallPipes: () =>
+    `/resources/documentation/pipe-concepts#waterfall-pipes`,
+  globalErrors: () => `/resources/documentation/response-object#errors`,
+  records: () => `/resources/documentation/response-object#records`,
+  pipeline: () => `/resources/documentation/pipe-concepts#pipeline`,
+  pipelineValidation: () => `/resources/documentation/pipe-concepts#pipeline`,
 
   pipe: () => `/resources/documentation/request-payload#pipes`,
   testMode: () => `/resources/documentation/quickstart#sandbox`,
