@@ -1,7 +1,7 @@
 import CodeExampleCard from "@/app/code-example-card";
 import LandingPageTable from "@/app/data-model-table";
 import { SignupCta } from "@/app/signup-cta";
-import CalButton from "@/components/CalButton";
+import CalButton from "@/components/cal-button";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
 import { HighlightSection } from "@/components/highlight-section";
