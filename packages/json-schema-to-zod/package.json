@@ -1,0 +1,65 @@
+{
+  "name": "@pipe0/json-schema-to-zod",
+  "version": "0.0.3",
+  "description": "Converts JSON schema objects into Zod schemas",
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "private": false,
+  "module": "./dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "exports": {
+    "import": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "dev": "tsc -w",
+    "lint": "eslint . --quiet",
+    "lintfix": "eslint . --fix",
+    "build": "rimraf ./dist && tsc -p tsconfig.production.json && tsc-alias -p ./tsconfig.production.json",
+    "dry": "pnpm run build && pnpm pub --dry-run"
+  },
+  "keywords": [
+    "zod",
+    "json",
+    "schema",
+    "converter",
+    "cli"
+  ],
+  "author": "pipe0",
+  "contributors": [
+    "Stefan Terdell",
+    "Chen (https://github.com/werifu)",
+    "Nuno Carduso (https://github.com/ncardoso-barracuda)",
+    "Lars Strojny (https://github.com/lstrojny)",
+    "Navtoj Chahal (https://github.com/navtoj)",
+    "Ben McCann (https://github.com/benmccann)",
+    "Dmitry Zakharov (https://github.com/DZakh)",
+    "Michel Turpin (https://github.com/grimly)",
+    "David Barratt (https://github.com/davidbarratt)",
+    "pevisscher (https://github.com/pevisscher)",
+    "Aidin Abedi (https://github.com/aidinabedi)",
+    "Brett Zamir (https://github.com/brettz9)",
+    "n8n (https://github.com/n8n-io)"
+  ],
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pipe-0/pipe0"
+  },
+  "peerDependencies": {
+    "zod": "^3.0.0"
+  },
+  "devDependencies": {
+    "@types/json-schema": "^7.0.15",
+    "zod": "^3.24.1"
+  },
+  "packageManager": "pnpm@9.15.9+sha512.68046141893c66fad01c079231128e9afb89ef87e2691d69e4d40eee228988295fd4682181bae55b58418c3a253bde65a505ec7c5f9403ece5cc3cd37dcf2531"
+}

@@ -7,15 +7,15 @@ export function LogoRaw() {
     <>
       <Image
         src="/logo-dark.svg"
-        width={114}
-        height={31}
+        width={1100}
+        height={400}
         alt="logo-dark"
         className="hidden dark:block w-22"
       />
       <Image
         src="/logo-light.svg"
-        width={114}
-        height={31}
+        width={1100}
+        height={400}
         alt="logo-dark"
         className="dark:hidden w-22"
       />
