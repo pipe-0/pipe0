@@ -41,7 +41,7 @@ const result = await fetch("https://api.pipe0.com/v1/run", {
   },
   body: JSON.stringify({
     pipes: [{ pipe_id: "company:description:website@1" }],
-    input: [{id, company_website_url: "<COMAPNY_URL>"}]
+    input: [{id, company_website_url: "<COMPANY_URL>"}]
   })
 });
 
@@ -60,7 +60,7 @@ curl -X POST "https://api.pipe0.com/v1/run" \
 -H "Authorization: Bearer API_KEY" \
 -d '{
     "pipes": [{ "pipe_id": "company:description:website@1" }],
-    "input": [{ "id": 1, "company_website_url": "<COMAPNY_URL>" }]
+    "input": [{ "id": 1, "company_website_url": "<COMPANY_URL>" }]
 }'
 ```
     </div>
