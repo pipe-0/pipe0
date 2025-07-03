@@ -24,9 +24,8 @@ import { toast } from "sonner";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/cjs/styles/prism";
 
 export function findFieldByName(fieldName: string) {
-  return (Object.entries(fieldCatalog).find(
-    ([, entry]) => entry.name === fieldName
-  ) || [])[1];
+  return (Object.entries(fieldCatalog).find(([name]) => name === fieldName) ||
+    [])[1];
 }
 
 export function FieldRow({
@@ -44,7 +43,6 @@ export function FieldRow({
 }) {
   const fieldResult = useMemo(() => findFieldByName(fieldName), []);
   const jsonExample = fieldResult?.jsonExample;
-  const { theme } = useTheme();
 
   const [showSucces, setShowSuccess] = useState(false);
   const handleCopyToClipboard = () => {

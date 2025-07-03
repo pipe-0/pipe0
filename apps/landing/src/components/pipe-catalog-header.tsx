@@ -24,6 +24,8 @@ import { appLinks } from "@/lib/links";
 import { formatCredits } from "@/lib/utils";
 import {
   fieldCatalog,
+  FieldName,
+  getField,
   pipeConfigRegistry,
   PipeId,
   pipeMetaCatalog,
@@ -168,7 +170,7 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
       </div>
 
       {/* Input/Output Fields Section - Two Column Layout */}
-      {!pipeCatalogEntry.hasFlexInputs ? (
+      {pipeCatalogEntry.fieldMode === "static" ? (
         <div>
           <div className="space-y-8">
             {/* Input Groups */}
@@ -203,18 +205,16 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
 
                         <div className="space-y-2">
                           {fieldEntries.map(([fieldName]) => {
-                            const fieldEntry = Object.values(fieldCatalog).find(
-                              (e) => e.name === fieldName
-                            );
-                            if (!fieldEntry) return null;
+                            const found = getField(fieldName as FieldName);
+                            if (!found) return null;
 
                             return (
                               <FieldRow
                                 type="input"
                                 key={fieldName}
-                                fieldName={fieldEntry.name}
-                                fieldType={fieldEntry.type}
-                                description={fieldEntry.description}
+                                fieldName={fieldName}
+                                fieldType={found.type}
+                                description={found.description}
                               />
                             );
                           })}
@@ -224,19 +224,17 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
                   } else if (fieldEntries.length === 1) {
                     // For single field groups, show them individually
                     const [fieldName] = fieldEntries[0];
-                    const fieldEntry = Object.values(fieldCatalog).find(
-                      (e) => e.name === fieldName
-                    );
-                    if (!fieldEntry) return null;
+                    const found = getField(fieldName as FieldName);
+                    if (!found) return null;
 
                     return (
                       <FieldRow
                         key={fieldName}
-                        description={fieldEntry.description}
+                        description={found.description}
                         groupCondition={group.condition}
                         type="input"
                         fieldName={fieldName}
-                        fieldType={fieldEntry.type}
+                        fieldType={found.type}
                       />
                     );
                   }
@@ -251,18 +249,16 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
               <h3 className="font-medium mb-3 pb-2 border-b">Output Fields</h3>
               <div className="space-y-2">
                 {pipeCatalogEntry.outputFields.map((fieldName) => {
-                  const fieldEntry = Object.values(fieldCatalog).find(
-                    (e) => e.name === fieldName
-                  );
-                  if (!fieldEntry) return null;
+                  const found = getField(fieldName as FieldName);
+                  if (!found) return null;
 
                   return (
                     <FieldRow
                       type="output"
                       key={fieldName}
-                      fieldName={fieldEntry.name}
-                      fieldType={fieldEntry.type}
-                      description={fieldEntry.description}
+                      fieldName={found.name}
+                      fieldType={found.type}
+                      description={found.description}
                     />
                   );
                 })}
