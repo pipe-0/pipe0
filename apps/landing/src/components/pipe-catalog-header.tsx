@@ -13,6 +13,14 @@ import {
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import {
   Table,
   TableBody,
   TableCell,
@@ -23,7 +31,6 @@ import {
 import { appLinks } from "@/lib/links";
 import { formatCredits } from "@/lib/utils";
 import {
-  fieldCatalog,
   FieldName,
   getField,
   pipeConfigRegistry,
@@ -32,17 +39,9 @@ import {
   providerCatalog,
 } from "@pipe0/client-sdk";
 import { Terminal } from "lucide-react";
+import Link from "next/link";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/cjs/styles/prism";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-import Link from "next/link";
 
 type PipeHeaderProps = {
   pipeId: PipeId;
