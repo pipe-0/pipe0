@@ -1,6 +1,10 @@
 "use client";
 
-import type { PipeEntry } from "@/app/resources/pipe-catalog/get-pipes";
+import type {
+  PipeEntry,
+  PipeEntryMap,
+} from "@/app/resources/pipe-catalog/get-pipes";
+import { ConditionalWrapper } from "@/components/conditional-wrapper";
 import { AvatarGroup } from "@/components/features/docs/avatar-group";
 import {
   Accordion,
@@ -19,6 +23,13 @@ import {
 } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
+  DropdownMenu,
+  DropdownMenuItem,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
@@ -27,80 +38,80 @@ import { Input } from "@/components/ui/input";
 import {
   Pagination,
   PaginationContent,
-  PaginationEllipsis,
   PaginationItem,
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { appInfo } from "@/lib/const";
-import { copyToClipboard, getLastPipeVersionEntry } from "@/lib/utils";
 import {
-  type PipeId,
-  pipeMetaCatalog,
-  providerCatalog,
-  sortPipeCatalog,
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { appInfo } from "@/lib/const";
+import { cn, copyToClipboard } from "@/lib/utils";
+import {
   getLowestCreditAmount,
+  getPipeVersion,
+  PipeCatalogTableData,
+  PipeCategory,
+  PipeId,
+  pipeMetaCatalog,
+  PipeMetaCatalogEntry,
+  providerCatalog,
 } from "@pipe0/client-sdk";
+import { usePipeCatalogTable } from "@pipe0/react-sdk";
 import { Separator } from "@radix-ui/react-separator";
-import { ArrowDown, ArrowUp, Coins, Copy, Search, X } from "lucide-react";
+import {
+  ArrowDown,
+  ArrowUp,
+  Binoculars,
+  Building2,
+  Coins,
+  Copy,
+  Database,
+  Hammer,
+  Layers,
+  ScanFace,
+  Search,
+  UserRoundSearch,
+  Zap,
+} from "lucide-react";
 import Link from "next/link";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { z } from "zod";
-
-// Precompute the sorted catalog data - will only run once on module load
-const {
-  byInputField,
-  byOutputField,
-  byTag,
-  byBasePipe,
-  sortedInputFields,
-  sortedOutputFields,
-  sortedTags,
-} = sortPipeCatalog();
+import { ComponentType } from "react";
 
 // Featured pipes - you can customize this list with your featured pipe IDs
 const FEATURED_PIPE_IDS = [
-  "people:mobilenumber:waterfall@1",
+  "people:mobilenumber:professionalprofile:waterfall@1",
   "people:workemail:waterfall@1",
   "website:technologystack:builtwith@1",
   "company:identity@1",
   "company:overview@1",
-];
-
-const FilterSchema = z.object({
-  type: z.enum(["input", "input-field", "output-field", "tag", ""]).default(""),
-  value: z.string().default(""),
-});
-
-type Filter = z.infer<typeof FilterSchema>;
+] satisfies PipeId[];
 
 // Integration card component - memoized to prevent unnecessary re-renders
 const IntegrationCard = ({
-  pipe,
-  setFilter,
+  pipeEntry,
+  tableEntry,
+  filterByField,
 }: {
-  pipe: PipeEntry;
-  setFilter: (filter: Filter) => unknown;
+  pipeEntry: PipeEntry["children"][number];
+  tableEntry: PipeCatalogTableData;
+  filterByField: (
+    id: "inputFields" | "outputFields",
+    fieldName: string
+  ) => void;
 }) => {
-  const lastChildEntry = getLastPipeVersionEntry(pipe);
-  const pipeId =
-    lastChildEntry?.frontMatter.pipeId ||
-    lastChildEntry?.frontMatter.other?.pipeId;
+  const pipeId = tableEntry.pipeId;
 
-  const pipeCatalogEntry = pipeMetaCatalog[pipeId as PipeId];
-
-  if (!lastChildEntry || !pipeCatalogEntry) return null;
-
-  const isNew = (pipeCatalogEntry.tags as string[]).includes("new");
+  const isNew = (tableEntry.tags as string[]).includes("new");
 
   return (
-    <Link href={lastChildEntry.route}>
-      <Card className="h-full border-input hover:border-primary/50 transition-colors relative">
+    <Link href={pipeEntry.route}>
+      <Card className="flex flex-col justify-stretch border-input hover:border-primary/50 transition-colors relative h-[290px]">
         <span className="absolute right-4 top-4 inline-flex gap-1 text-muted-foreground text-sm items-center">
           <Coins className=" size-4" />{" "}
-          {getLowestCreditAmount(pipeCatalogEntry.costPerProvider) || "Free"}
+          {getLowestCreditAmount(tableEntry.costPerProvider) || "Free"}
         </span>
         <CardHeader className="pb-2">
           <div className="flex justify-between items-start">
@@ -108,12 +119,12 @@ const IntegrationCard = ({
               <div className="flex">
                 <AvatarGroup
                   providerCatalog={providerCatalog}
-                  providers={pipeCatalogEntry.providers}
+                  providers={tableEntry.providers}
                 />
               </div>
               <div>
                 <CardTitle className="text-base flex items-center gap-2">
-                  {pipeCatalogEntry.label}
+                  {tableEntry.label}
                   {isNew && (
                     <Badge
                       variant="default"
@@ -128,11 +139,11 @@ const IntegrationCard = ({
             <div className="flex flex-row-reverse"></div>
           </div>
         </CardHeader>
-        <CardContent className="text-sm text-muted-foreground">
-          <p>{pipeCatalogEntry.description}</p>
+        <CardContent className="grow text-sm">
+          <p>{tableEntry.description}</p>
         </CardContent>
-        <CardFooter className="pt-2 block">
-          <div className="flex items-center gap-2 text-muted-foreground text-sm">
+        <CardFooter className="pt-2 block pb-3">
+          <div className="flex items-center justify-end pb-4 gap-2 text-muted-foreground text-sm">
             <span className="break-all">{pipeId}</span>
             <Button
               size="icon"
@@ -147,256 +158,165 @@ const IntegrationCard = ({
               <Copy className="size-3" />
             </Button>
           </div>
-          <Separator className="my-4" />
-          <div className="flex gap-3 items-center justify-end">
-            <HoverCard>
-              <HoverCardTrigger asChild>
-                <div className="flex items-center gap-2 text-muted-foreground text-sm hover:text-foreground">
-                  <ArrowUp className="size-3" /> Inputs
-                </div>
-              </HoverCardTrigger>
-              <HoverCardContent
-                onClick={(e) => {
-                  e.stopPropagation();
-                  e.preventDefault();
-                }}
-              >
-                {pipeCatalogEntry.inputGroups.map((group) =>
-                  Object.values(group.fields).map((field) => (
-                    <button
-                      className="py-1 cursor-pointer block text-muted-foreground hover:text-foreground"
-                      key={field.name}
-                      onClick={() =>
-                        setFilter({ type: "output-field", value: field.name })
-                      }
-                    >
-                      {field.name}
-                    </button>
-                  ))
-                )}
-              </HoverCardContent>
-            </HoverCard>
-            <HoverCard>
-              <HoverCardTrigger asChild>
-                <div className="flex items-center gap-2 text-muted-foreground text-sm hover:text-foreground">
-                  <ArrowDown className="size-3" /> Ouputs
-                </div>
-              </HoverCardTrigger>
-              <HoverCardContent
-                onClick={(e) => {
-                  e.stopPropagation();
-                  e.preventDefault();
-                }}
-              >
-                {pipeCatalogEntry.outputFields.map((field) => (
-                  <button
-                    key={field}
-                    className="py-1 cursor-pointer block text-muted-foreground hover:text-foreground"
-                    onClick={() =>
-                      setFilter({ type: "input-field", value: field })
-                    }
+          {tableEntry.fieldMode === "static" && (
+            <div className="flex gap-1 items-center">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    className="text-muted-foreground text-sm hover:text-foreground"
                   >
-                    {field}
-                  </button>
-                ))}
-              </HoverCardContent>
-            </HoverCard>
-          </div>
+                    <ArrowUp className="size-3" /> Inputs
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  align="start"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                  }}
+                >
+                  <DropdownMenuGroup>
+                    {tableEntry.inputGroups.map((group) =>
+                      Object.values(group.fields).map((field) => (
+                        <DropdownMenuItem
+                          className="py-1 cursor-pointer block text-muted-foreground hover:text-foreground"
+                          key={field.name}
+                          onClick={() =>
+                            filterByField("outputFields", field.name)
+                          }
+                        >
+                          {field.name}
+                        </DropdownMenuItem>
+                      ))
+                    )}
+                  </DropdownMenuGroup>
+                </DropdownMenuContent>
+              </DropdownMenu>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    className="text-muted-foreground text-sm hover:text-foreground"
+                  >
+                    <ArrowDown className="size-3" /> Ouputs
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  align="start"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                  }}
+                >
+                  <DropdownMenuGroup>
+                    {tableEntry.outputFields.map((field) => (
+                      <DropdownMenuItem
+                        key={field}
+                        className="py-1 cursor-pointer block text-muted-foreground hover:text-foreground"
+                        onClick={() => filterByField("inputFields", field)}
+                      >
+                        {field}
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuGroup>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+          )}
         </CardFooter>
       </Card>
     </Link>
   );
 };
 
-// Function to get pipe ID from pipe entry
-const getPipeId = (pipe: PipeEntry): PipeId | null => {
-  const lastChildEntry = getLastPipeVersionEntry(pipe);
-  return (
-    ((lastChildEntry?.frontMatter.pipeId ||
-      lastChildEntry?.frontMatter.other?.pipeId) as PipeId) || null
-  );
-};
-
-// Create cached maps for faster lookup
-const createPipeIdMap = (pipeEntries: PipeEntry[]) => {
-  const map = new Map<string, PipeEntry>();
-  for (const pipe of pipeEntries) {
-    const pipeId = getPipeId(pipe);
-    if (pipeId) map.set(pipeId, pipe);
-  }
-  return map;
-};
+const quickStartOptions = [
+  {
+    id: null,
+    title: "All",
+    icon: Database,
+    disabled: false,
+  },
+  {
+    id: "people_data",
+    title: "People Data",
+    icon: ScanFace,
+    disabled: false,
+  },
+  {
+    id: "company_data",
+    title: "Company Data",
+    icon: Building2,
+    disabled: false,
+  },
+  {
+    id: "tools",
+    title: "Tools",
+    icon: Hammer,
+    disabled: false,
+  },
+  {
+    id: "find_people",
+    title: "Find People",
+    icon: UserRoundSearch,
+    disabled: true,
+  },
+  {
+    id: "find_comapnies",
+    title: "Find Companies",
+    icon: Binoculars,
+    disabled: true,
+  },
+  {
+    id: "actions",
+    title: "Actions",
+    icon: Zap,
+    disabled: true,
+  },
+  {
+    id: "integrations",
+    title: "Integrations",
+    icon: Layers,
+    disabled: true,
+  },
+] satisfies {
+  id: PipeCategory | null;
+  title: string;
+  icon: ComponentType;
+  disabled: boolean;
+}[];
 
 export function IntegrationCatalog({
-  pipeEntries,
+  pipeEntryMap,
 }: {
-  pipeEntries: PipeEntry[];
+  pipeEntryMap: PipeEntryMap;
 }) {
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-
-  const [searchQuery, setSearchQuery] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 24;
-
-  // Cache pipe ID map
-  const pipeIdMapRef = useRef<Map<string, PipeEntry>>(null);
-  if (!pipeIdMapRef.current) {
-    pipeIdMapRef.current = createPipeIdMap(pipeEntries);
-  }
-
-  // Parse filter from URL params
-  const filter: Filter = useMemo(() => {
-    const defaultFilter: Filter = { type: "", value: "" };
-    const type = searchParams.get("type");
-    const value = searchParams.get("value");
-
-    try {
-      const result = FilterSchema.safeParse({ type, value });
-      return result.success ? result.data : defaultFilter;
-    } catch {
-      return defaultFilter;
-    }
-  }, [searchParams]);
-
-  const setFilter = useCallback(
-    (filter: Filter | null) => {
-      // Reset to page 1 when filter changes
-      setCurrentPage(1);
-
-      if (filter) {
-        const query = new URLSearchParams({
-          type: filter.type,
-          value: filter.value,
-        });
-        router.push(pathname + "?" + query);
-      } else {
-        router.push(pathname);
-      }
+  const {
+    category,
+    filterByField,
+    globalFilterInput,
+    isFilterChecked,
+    setCategory,
+    setGlobalFilterInput,
+    table,
+    showFeaturedPipes,
+    sidebar: {
+      addColumnFilter,
+      expandedSidebarSections,
+      removeColumnFilter,
+      setExpandedSidebarSections,
+      sortedInputFieldEntries,
+      sortedOutputFieldEntries,
+      sortedProviderEntries,
+      sortedTagEntries,
     },
-    [router, pathname]
-  );
+  } = usePipeCatalogTable();
 
-  // Efficiently filter pipes based on criteria
-  const filteredPipes = useMemo(() => {
-    // If no filter, return all pipes
-    if (filter.type === "" && filter.value === "") {
-      return pipeEntries;
-    }
-
-    let matchingPipeIds: Set<string> | null = null;
-
-    if (filter.type === "input-field") {
-      const entries = byInputField[filter.value];
-      if (entries) {
-        matchingPipeIds = new Set(entries.map((e) => e.pipeId));
-      }
-    } else if (filter.type === "output-field") {
-      const entries = byOutputField[filter.value];
-      if (entries) {
-        matchingPipeIds = new Set(entries.map((e) => e.pipeId));
-      }
-    } else if (filter.type === "tag") {
-      matchingPipeIds = new Set();
-      const entries = byTag[filter.value];
-      if (entries) {
-        entries.forEach((e) => matchingPipeIds!.add(e.pipeId));
-      }
-    } else if (filter.type === "input") {
-      matchingPipeIds = new Set();
-      const searchLower = filter.value.toLowerCase();
-
-      Object.entries(byBasePipe).forEach(([baseName, entries]) => {
-        const entry = entries[0];
-        if (!entry) return;
-
-        if (
-          baseName.toLowerCase().includes(searchLower) ||
-          entry.description.toLowerCase().includes(searchLower) ||
-          entry.tags.some((t) => t.toLowerCase().includes(searchLower))
-        ) {
-          matchingPipeIds!.add(entry.pipeId);
-        }
-      });
-    }
-
-    // If no matches found or invalid filter
-    if (!matchingPipeIds || matchingPipeIds.size === 0) {
-      return [];
-    }
-
-    // Filter pipeEntries using the Set for O(1) lookups
-    return pipeEntries.filter((pipe) => {
-      const pipeId = getPipeId(pipe);
-      return pipeId && matchingPipeIds!.has(pipeId);
-    });
-  }, [pipeEntries, filter]);
-
-  // Get featured pipes without recalculating on every render
-  const featuredPipes = useMemo(() => {
-    if (filter.value !== "") return [];
-
-    // Use the pipeIdMap for efficient lookup
-    if (!pipeIdMapRef.current) return [];
-
-    return FEATURED_PIPE_IDS.map((id) => pipeIdMapRef.current!.get(id)).filter(
-      Boolean
-    ) as PipeEntry[];
-  }, [filter.value]);
-
-  // Calculate pagination values only when needed
-  const { totalPages, paginatedPipes } = useMemo(() => {
-    const total = Math.max(1, Math.ceil(filteredPipes.length / itemsPerPage));
-    // Ensure current page is valid
-    const validPage = Math.min(Math.max(1, currentPage), total);
-
-    // Only calculate paginated pipes if there are pipes to show
-    const startIndex = (validPage - 1) * itemsPerPage;
-    const paginated = filteredPipes.slice(
-      startIndex,
-      startIndex + itemsPerPage
-    );
-
-    return { totalPages: total, paginatedPipes: paginated };
-  }, [filteredPipes, currentPage, itemsPerPage]);
-
-  // Reset to page 1 when filter changes
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [filter]);
-
-  // Handle search input with debounce
-  const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
-
-  const handleSearchChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const value = e.target.value;
-      setSearchQuery(value);
-
-      if (debounceTimeout.current) {
-        clearTimeout(debounceTimeout.current);
-      }
-
-      debounceTimeout.current = setTimeout(() => {
-        if (value) {
-          setFilter({ type: "input", value });
-        } else {
-          setFilter(null);
-        }
-      }, 300);
-    },
-    [setFilter]
-  );
-
-  // Cleanup timeout on unmount
-  useEffect(() => {
-    return () => {
-      if (debounceTimeout.current) {
-        clearTimeout(debounceTimeout.current);
-      }
-    };
-  }, []);
+  const rows = table.getRowModel().rows;
+  const totalPages = table.getPageCount();
+  const currentPageNumber = table.getState().pagination.pageIndex;
 
   return (
     <div className="space-y-8 mx-auto pt-12">
@@ -404,8 +324,8 @@ export function IntegrationCatalog({
       <div className="space-y-2">
         <h1 className="text-4xl font-bold tracking-tight">Pipe Catalog</h1>
         <p className="text-lg text-muted-foreground">
-          Pipe automate data enrichment via various providers. The Pipe Catalog
-          lists all available pipes for your apps.
+          Pipes are small enrichment functions. They take your input data and
+          expand it.
         </p>
       </div>
 
@@ -419,40 +339,28 @@ export function IntegrationCatalog({
               type="search"
               placeholder="Search pipes..."
               className="w-full pl-8"
-              value={searchQuery}
-              onChange={handleSearchChange}
+              value={globalFilterInput}
+              onChange={(v) => setGlobalFilterInput(v.target.value)}
             />
-            <div className="pt-2 h-6">
-              {filter.value !== "" && (
-                <Badge
-                  variant="secondary"
-                  className="py-1.5 inline-flex gap-2 items-center text-muted-foreground hover:text-foreground cursor-default transition-colors"
-                  onClick={() => {
-                    setFilter(null);
-                    setSearchQuery("");
-                  }}
-                >
-                  <X className="size-4" />
-                  {filter.value}
-                </Badge>
-              )}
-            </div>
           </div>
+
+          <h6 className="text-sm">
+            Filtered by category{" "}
+            <span className="font-semibold text-primary">
+              {category?.replace("_", " ") || "all"}
+            </span>
+          </h6>
 
           <Accordion
             type="multiple"
-            className="w-full"
-            defaultValue={filter ? [filter.type, "tag"] : ["tag"]}
+            value={expandedSidebarSections}
+            onValueChange={setExpandedSidebarSections}
           >
-            <AccordionItem value="tag">
-              <AccordionTrigger>
-                <h3 className="font-medium">Category</h3>
-              </AccordionTrigger>
-              <AccordionContent>
+            <AccordionItem value="tags" className="border-none">
+              <AccordionTrigger className="py-1">Tags</AccordionTrigger>
+              <AccordionContent className="pt-2">
                 <div className="space-y-2">
-                  {sortedTags.map(([tagName, entries]) => {
-                    const isChecked =
-                      filter.type === "tag" && filter.value === tagName;
+                  {sortedTagEntries.map(([tagName, pipeIdList]) => {
                     return (
                       <div
                         key={tagName}
@@ -460,12 +368,12 @@ export function IntegrationCatalog({
                       >
                         <Checkbox
                           id={`tag-${tagName}`}
-                          checked={isChecked}
+                          checked={isFilterChecked("tags", tagName)}
                           onCheckedChange={(v) => {
                             if (v === true) {
-                              setFilter({ type: "tag", value: tagName });
+                              addColumnFilter("tags", tagName);
                             } else {
-                              setFilter(null);
+                              removeColumnFilter("tags");
                             }
                           }}
                         />
@@ -474,9 +382,8 @@ export function IntegrationCatalog({
                           className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                         >
                           {tagName}
-
                           <span className="ml-1 text-muted-foreground">
-                            ({entries.length})
+                            ({pipeIdList.length})
                           </span>
                         </label>
                       </div>
@@ -485,17 +392,60 @@ export function IntegrationCatalog({
                 </div>
               </AccordionContent>
             </AccordionItem>
-
-            <AccordionItem value="input-field">
-              <AccordionTrigger>
+            <AccordionItem value="providers" className="border-none">
+              <AccordionTrigger className="py-1">
+                <h3 className="font-medium">Providers</h3>
+              </AccordionTrigger>
+              <AccordionContent className="pt-2">
+                <div className="space-y-2">
+                  {sortedProviderEntries.map(([providerName, pipeIdList]) => {
+                    const providerEntry =
+                      providerCatalog[
+                        providerName as keyof typeof providerCatalog
+                      ];
+                    return (
+                      <div
+                        key={providerName}
+                        className="flex items-center space-x-2"
+                      >
+                        <Checkbox
+                          id={`providers-${providerName}`}
+                          checked={isFilterChecked("providers", providerName)}
+                          onCheckedChange={(v) => {
+                            if (v === true) {
+                              addColumnFilter("providers", providerName);
+                            } else if (v === false) {
+                              removeColumnFilter("providers");
+                            }
+                          }}
+                        />
+                        <label
+                          htmlFor={`providers-${providerName}`}
+                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                        >
+                          <img
+                            src={providerEntry.logoUrl}
+                            alt={providerEntry.label}
+                            className="inline-block w-4 mr-2"
+                          />
+                          {providerEntry.label}
+                          <span className="ml-1 text-muted-foreground">
+                            ({pipeIdList.length})
+                          </span>
+                        </label>
+                      </div>
+                    );
+                  })}
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="inputFields" className="border-none">
+              <AccordionTrigger className="py-1">
                 <h3 className="font-medium">Input Fields</h3>
               </AccordionTrigger>
-              <AccordionContent>
+              <AccordionContent className="pt-2">
                 <div className="space-y-2">
-                  {sortedInputFields.map(([fieldName, entries]) => {
-                    const isChecked =
-                      filter.type === "input-field" &&
-                      filter.value === fieldName;
+                  {sortedInputFieldEntries.map(([fieldName, pipeIdList]) => {
                     return (
                       <div
                         key={fieldName}
@@ -503,15 +453,12 @@ export function IntegrationCatalog({
                       >
                         <Checkbox
                           id={`input-field-${fieldName}`}
-                          checked={isChecked}
+                          checked={isFilterChecked("inputFields", fieldName)}
                           onCheckedChange={(v) => {
                             if (v === true) {
-                              setFilter({
-                                type: "input-field",
-                                value: fieldName,
-                              });
+                              addColumnFilter("inputFields", fieldName);
                             } else if (v === false) {
-                              setFilter(null);
+                              removeColumnFilter("inputFields");
                             }
                           }}
                         />
@@ -521,7 +468,7 @@ export function IntegrationCatalog({
                         >
                           {fieldName}
                           <span className="ml-1 text-muted-foreground">
-                            ({entries.length})
+                            ({pipeIdList.length})
                           </span>
                         </label>
                       </div>
@@ -531,16 +478,13 @@ export function IntegrationCatalog({
               </AccordionContent>
             </AccordionItem>
 
-            <AccordionItem value="output-field">
-              <AccordionTrigger>
+            <AccordionItem value="outputFields" className="border-none">
+              <AccordionTrigger className="py-1">
                 <h3 className="font-medium">Output Fields</h3>
               </AccordionTrigger>
-              <AccordionContent>
+              <AccordionContent className="pt-2">
                 <div className="space-y-2">
-                  {sortedOutputFields.map(([fieldName, entries]) => {
-                    const isChecked =
-                      filter.type === "output-field" &&
-                      filter.value === fieldName;
+                  {sortedOutputFieldEntries.map(([fieldName, pipeIdList]) => {
                     return (
                       <div
                         key={fieldName}
@@ -548,15 +492,13 @@ export function IntegrationCatalog({
                       >
                         <Checkbox
                           id={`output-field-${fieldName}`}
-                          checked={isChecked}
+                          checked={isFilterChecked("outputFields", fieldName)}
                           onCheckedChange={(v) => {
+                            console.log({ v });
                             if (v === true) {
-                              setFilter({
-                                type: "output-field",
-                                value: fieldName,
-                              });
+                              addColumnFilter("outputFields", fieldName);
                             } else if (v === false) {
-                              setFilter(null);
+                              removeColumnFilter("outputFields");
                             }
                           }}
                         />
@@ -566,7 +508,7 @@ export function IntegrationCatalog({
                         >
                           {fieldName}
                           <span className="ml-1 text-muted-foreground">
-                            ({entries.length})
+                            ({pipeIdList.length})
                           </span>
                         </label>
                       </div>
@@ -588,60 +530,113 @@ export function IntegrationCatalog({
 
         {/* Main content */}
         <div className="space-y-10">
+          <div className="flex gap-3 flex-wrap">
+            {quickStartOptions.map((option) => {
+              const IconComponent = option.icon;
+              return (
+                <ConditionalWrapper
+                  key={option.id}
+                  condition={!!option.disabled}
+                  wrapper={(c) => (
+                    <Tooltip>
+                      <TooltipTrigger>{c}</TooltipTrigger>
+                      <TooltipContent>Coming soon</TooltipContent>
+                    </Tooltip>
+                  )}
+                >
+                  <Card
+                    data-isactive={category === option.id}
+                    data-disabled={option.disabled}
+                    className={cn(
+                      "group cursor-pointer border hover:shadow-sm transition-all duration-200 pr-4",
+                      "data-[isactive=true]:bg-primary data-[isactive=true]:text-primary-foreground data-[isactive=true]:border-primary data-[isactive=true]:font-semibold",
+                      "data-[disabled=true]:bg-muted data-[disabled=true]:text-muted-foreground data-[disabled=true]:opacity-80"
+                    )}
+                    onClick={() => setCategory(option.id)}
+                  >
+                    <CardContent className="p-1">
+                      <div className="flex items-center gap-3">
+                        <div className={`p-2 rounded-lg`}>
+                          <IconComponent
+                            className={`w-5 h-5`}
+                            strokeWidth={1.5}
+                          />
+                        </div>
+                        <div className="flex-1 whitespace-nowrap">
+                          <h3 className="text-sm">{option.title}</h3>{" "}
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </ConditionalWrapper>
+              );
+            })}
+          </div>
+
           {/* Featured section */}
-          {featuredPipes.length > 0 && (
+          {showFeaturedPipes && (
             <div className="space-y-4">
               <h2 className="text-2xl font-bold">Featured</h2>
               <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-                {featuredPipes.map((pipe) => (
-                  <IntegrationCard
-                    key={pipe.route}
-                    pipe={pipe}
-                    setFilter={setFilter}
-                  />
-                ))}
+                {FEATURED_PIPE_IDS.map((pipeId) => {
+                  const pipeEntry = pipeEntryMap[pipeId];
+                  if (!pipeEntry) return null;
+                  return (
+                    <IntegrationCard
+                      key={pipeId}
+                      tableEntry={{
+                        ...(pipeMetaCatalog[pipeId] as PipeMetaCatalogEntry),
+                        pipeId,
+                        latestVersion: getPipeVersion(pipeId),
+                      }}
+                      pipeEntry={pipeEntry}
+                      filterByField={filterByField}
+                    />
+                  );
+                })}
               </div>
             </div>
           )}
 
           {/* All integrations */}
           <div className="space-y-4">
-            <h2 className="text-2xl font-bold">All integrations</h2>
+            {showFeaturedPipes && (
+              <h2 className="text-2xl font-bold">All integrations</h2>
+            )}
             <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-              {paginatedPipes.map((pipe) => (
-                <IntegrationCard
-                  key={pipe.route}
-                  pipe={pipe}
-                  setFilter={setFilter}
-                />
-              ))}
+              {rows.map((row) => {
+                const pipeEntry = pipeEntryMap[row.original.pipeId];
+                if (!pipeEntry) return null;
+                return (
+                  <IntegrationCard
+                    key={row.original.pipeId}
+                    tableEntry={row.original}
+                    filterByField={filterByField}
+                    pipeEntry={pipeEntry}
+                  />
+                );
+              })}
             </div>
 
             {/* Empty state */}
-            {filteredPipes.length === 0 && (
+            {rows.length === 0 && (
               <div className="flex h-[200px] flex-col items-center justify-center rounded-md border border-dashed p-8 text-center">
                 <p className="text-sm text-muted-foreground">
-                  No integrations found. Try adjusting your search or filter.
+                  No integrations found. Try adjusting your filters.
                 </p>
               </div>
             )}
 
             {/* Pagination - optimized to prevent unnecessary calculations */}
-            {filteredPipes.length > 0 && (
-              <Pagination className="mt-8">
+            {rows.length > 0 && (
+              <Pagination>
                 <PaginationContent>
                   <PaginationItem>
                     <PaginationPrevious
+                      size="sm"
                       href="#"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        if (currentPage > 1) setCurrentPage(currentPage - 1);
-                      }}
-                      className={
-                        currentPage === 1
-                          ? "pointer-events-none opacity-50"
-                          : ""
-                      }
+                      onClick={() => table.previousPage()}
+                      disabled={!table.getCanPreviousPage()}
                     />
                   </PaginationItem>
 
@@ -651,74 +646,23 @@ export function IntegrationCatalog({
 
                       if (totalPages <= 5) {
                         pageNumber = i + 1;
-                      } else if (currentPage <= 3) {
+                      } else if (currentPageNumber <= 3) {
                         pageNumber = i + 1;
-                        if (i === 4)
-                          return (
-                            <PaginationItem key={i}>
-                              <PaginationEllipsis />
-                            </PaginationItem>
-                          );
-                      } else if (currentPage >= totalPages - 2) {
+                      } else if (currentPageNumber >= totalPages - 2) {
                         pageNumber = totalPages - 4 + i;
-                        if (i === 0)
-                          return (
-                            <PaginationItem key={i}>
-                              <PaginationEllipsis />
-                            </PaginationItem>
-                          );
                       } else {
-                        if (i === 0)
-                          return (
-                            <PaginationItem key={i}>
-                              <PaginationLink
-                                href="#"
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  setCurrentPage(1);
-                                }}
-                              >
-                                1
-                              </PaginationLink>
-                            </PaginationItem>
-                          );
-                        if (i === 1)
-                          return (
-                            <PaginationItem key={i}>
-                              <PaginationEllipsis />
-                            </PaginationItem>
-                          );
-                        if (i === 3)
-                          return (
-                            <PaginationItem key={i}>
-                              <PaginationEllipsis />
-                            </PaginationItem>
-                          );
-                        if (i === 4)
-                          return (
-                            <PaginationItem key={i}>
-                              <PaginationLink
-                                href="#"
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  setCurrentPage(totalPages);
-                                }}
-                              >
-                                {totalPages}
-                              </PaginationLink>
-                            </PaginationItem>
-                          );
-                        pageNumber = currentPage + i - 2;
+                        pageNumber = currentPageNumber + i - 2;
                       }
 
                       return (
                         <PaginationItem key={i}>
                           <PaginationLink
+                            size="sm"
                             href="#"
-                            isActive={currentPage === pageNumber}
+                            isActive={currentPageNumber === pageNumber - 1}
                             onClick={(e) => {
                               e.preventDefault();
-                              setCurrentPage(pageNumber);
+                              table.setPageIndex(pageNumber - 1);
                             }}
                           >
                             {pageNumber}
@@ -731,13 +675,15 @@ export function IntegrationCatalog({
                   <PaginationItem>
                     <PaginationNext
                       href="#"
+                      size="sm"
+                      disabled={!table.getCanNextPage()}
                       onClick={(e) => {
                         e.preventDefault();
-                        if (currentPage < totalPages)
-                          setCurrentPage(currentPage + 1);
+                        if (currentPageNumber < totalPages)
+                          table.setPageIndex(currentPageNumber + 1);
                       }}
                       className={
-                        currentPage === totalPages
+                        currentPageNumber === totalPages
                           ? "pointer-events-none opacity-50"
                           : ""
                       }

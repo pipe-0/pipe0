@@ -1,4 +1,7 @@
-import { getPipeEntries } from "@/app/resources/pipe-catalog/get-pipes";
+import {
+  getPipeEntries,
+  getPipeEntryMap,
+} from "@/app/resources/pipe-catalog/get-pipes";
 import { IntegrationCatalog } from "@/components/features/docs/integration-catalog";
 import { Suspense } from "react";
 
@@ -7,7 +10,7 @@ export const metadata = {
 };
 
 export default async function PipeCatalog() {
-  const pipeEntries = await getPipeEntries();
+  const pipeEntryMap = await getPipeEntryMap();
 
   return (
     <div
@@ -16,7 +19,7 @@ export default async function PipeCatalog() {
       style={{ maxWidth: "var(--nextra-content-width)" }}
     >
       <Suspense>
-        <IntegrationCatalog pipeEntries={pipeEntries} />
+        <IntegrationCatalog pipeEntryMap={pipeEntryMap} />
       </Suspense>
     </div>
   );

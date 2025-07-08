@@ -56,8 +56,10 @@ export async function getPipeEntries() {
     .sort((a, b) => +a.name - +b.name);
 }
 
+export type PipeEntryMap = Record<PipeId, PipeEntry["children"][number]>;
+
 export async function getPipeEntryMap() {
-  const result = {} as Record<PipeId, PipeEntry["children"][number]>;
+  const result = {} as PipeEntryMap;
 
   const { directories } = normalizePages({
     list: await getPageMap("/resources/pipe-catalog"),
