@@ -7,9 +7,10 @@ export const appLinks = {
   fieldMode: () => `/resources/documentation/pipe-concepts#field-mode`,
   fieldModePrompt: () =>
     `/resources/documentation/pipe-concepts#field-mode-prompt`,
-  openAPI: () => `/resources/documentation/request-payload#openapi-31`,
-  async: () => `/resources/documentation/quickstart#sync-or-async`,
-  sync: () => `/resources/documentation/quickstart#sync-or-async`,
+  openAPI: () => `/resources/documentation/requests#openapi-31`,
+  catalogs: () => `/resources/documentation/catalogs`,
+  async: () => `/resources/documentation/requests#sync-or-async`,
+  sync: () => `/resources/documentation/requests#sync-or-async`,
   waterfallPipes: () =>
     `/resources/documentation/pipe-concepts#waterfall-pipes`,
   globalErrors: () => `/resources/documentation/response-object#errors`,
@@ -17,16 +18,23 @@ export const appLinks = {
   pipeline: () => `/resources/documentation/pipe-concepts#pipeline`,
   pipelineValidation: () => `/resources/documentation/pipe-concepts#pipeline`,
 
+  inputExpansion: () => `/resources/documentation/pipes-inputs#input-expansion`,
+
+  // Searches
+  searchesQuickstart: () => `/resources/documentation/searches-quickstart`,
+  // Pipes
   pipe: () => `/resources/documentation/request-payload#pipes`,
-  testMode: () => `/resources/documentation/quickstart#sandbox`,
-  quickstart: () => `/resources/documentation/quickstart`,
+  testMode: () => `/resources/documentation/requests#sandbox`,
+  pipesQuickstart: () => `/resources/documentation/quickstart`,
   inputObject: () => `/resources/documentation/request-payload#input`,
   pipelineRequest: () => `/resources/documentation/request-payload`,
   pipelineResponse: () => `/resources/documentation/response-object`,
   inputField: () => `/resources/documentation/request-payload#inputfieldname`,
   outputField: () => `/resources/documentation/response-object#recordfields`,
   pipeCatalog: () => `/resources/pipe-catalog`,
+  searchCatalog: () => `/resources/search-catalog`,
   record: () => `/resources/documentation/response-object`,
   billing: () => `/resources/documentation/billing`,
   billingMode: () => `/resources/documentation/billing#billing-mode`,
+  searchBilling: () => `/resources/documentation/billing#search-billing`,
 };

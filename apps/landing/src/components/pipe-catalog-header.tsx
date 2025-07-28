@@ -1,7 +1,7 @@
 import AppLink from "@/components/app-link";
 import { CodeTabs } from "@/components/code-tabs";
 import CopyToClipboard from "@/components/copy-to-clipboard";
-import { FieldRow } from "@/components/features/pipe-catalog/field-row";
+import { PipeFieldRow } from "@/components/features/pipe-catalog/field-row";
 import { Info } from "@/components/info";
 import { InlineDocsBadge } from "@/components/inline-docs-badge";
 import {
@@ -33,10 +33,11 @@ import { formatCredits } from "@/lib/utils";
 import {
   FieldName,
   getField,
-  pipeConfigRegistry,
   PipeId,
-  pipeMetaCatalog,
+  pipeCatalog,
   providerCatalog,
+  pipeModuleCatalog,
+  getPipeDefaultConfig,
 } from "@pipe0/client-sdk";
 import { Terminal } from "lucide-react";
 import Link from "next/link";
@@ -48,9 +49,9 @@ type PipeHeaderProps = {
 };
 
 export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
-  const pipeCatalogEntry = pipeMetaCatalog[pipeId];
+  const pipeCatalogEntry = pipeCatalog[pipeId];
 
-  const defaultPipeConfig = pipeConfigRegistry[pipeId];
+  const defaultPipeConfig = getPipeDefaultConfig(pipeId);
 
   return (
     <div className="pipe-header space-y-10">
@@ -176,70 +177,72 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
             <div>
               <h3 className="font-medium mb-3 pb-2 border-b">Input Fields</h3>
               <div className="space-y-2">
-                {pipeCatalogEntry.inputGroups?.map((group, groupIndex) => {
-                  const fieldEntries = Object.entries(group.fields);
+                {pipeCatalogEntry.defaultInputGroups?.map(
+                  (group, groupIndex) => {
+                    const fieldEntries = Object.entries(group.fields);
 
-                  // For groups with multiple fields, show relationship
-                  if (fieldEntries.length > 1) {
-                    return (
-                      <div
-                        key={groupIndex}
-                        className="border-l-3 border-border pl-3"
-                      >
-                        <div className="pb-3">
-                          <h4 className="text-sm">Field group</h4>
-                          <small className="text-muted-foreground">
-                            {group.condition === "all" && "All Required"}
-                            {group.condition === "atLeastOne" &&
-                              "At Least one of the following fields is required"}
-                            {group.condition === "none" && "None Required"}
-                          </small>
+                    // For groups with multiple fields, show relationship
+                    if (fieldEntries.length > 1) {
+                      return (
+                        <div
+                          key={groupIndex}
+                          className="border-l-3 border-border pl-3"
+                        >
+                          <div className="pb-3">
+                            <h4 className="text-sm">Field group</h4>
+                            <small className="text-muted-foreground">
+                              {group.condition === "all" && "All Required"}
+                              {group.condition === "atLeastOne" &&
+                                "At Least one of the following fields is required"}
+                              {group.condition === "none" && "None Required"}
+                            </small>
+                          </div>
+
+                          {group.message && (
+                            <p className="text-xs text-muted-foreground italic mb-2">
+                              {group.message}
+                            </p>
+                          )}
+
+                          <div className="space-y-2">
+                            {fieldEntries.map(([fieldName]) => {
+                              const found = getField(fieldName as FieldName);
+                              if (!found) return null;
+
+                              return (
+                                <PipeFieldRow
+                                  type="input"
+                                  key={fieldName}
+                                  fieldName={fieldName}
+                                  fieldType={found.type}
+                                  description={found.description}
+                                />
+                              );
+                            })}
+                          </div>
                         </div>
+                      );
+                    } else if (fieldEntries.length === 1) {
+                      // For single field groups, show them individually
+                      const [fieldName] = fieldEntries[0];
+                      const found = getField(fieldName as FieldName);
+                      if (!found) return null;
 
-                        {group.message && (
-                          <p className="text-xs text-muted-foreground italic mb-2">
-                            {group.message}
-                          </p>
-                        )}
+                      return (
+                        <PipeFieldRow
+                          key={fieldName}
+                          description={found.description}
+                          groupCondition={group.condition}
+                          type="input"
+                          fieldName={fieldName}
+                          fieldType={found.type}
+                        />
+                      );
+                    }
 
-                        <div className="space-y-2">
-                          {fieldEntries.map(([fieldName]) => {
-                            const found = getField(fieldName as FieldName);
-                            if (!found) return null;
-
-                            return (
-                              <FieldRow
-                                type="input"
-                                key={fieldName}
-                                fieldName={fieldName}
-                                fieldType={found.type}
-                                description={found.description}
-                              />
-                            );
-                          })}
-                        </div>
-                      </div>
-                    );
-                  } else if (fieldEntries.length === 1) {
-                    // For single field groups, show them individually
-                    const [fieldName] = fieldEntries[0];
-                    const found = getField(fieldName as FieldName);
-                    if (!found) return null;
-
-                    return (
-                      <FieldRow
-                        key={fieldName}
-                        description={found.description}
-                        groupCondition={group.condition}
-                        type="input"
-                        fieldName={fieldName}
-                        fieldType={found.type}
-                      />
-                    );
+                    return null;
                   }
-
-                  return null;
-                })}
+                )}
               </div>
             </div>
 
@@ -247,12 +250,12 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
             <div>
               <h3 className="font-medium mb-3 pb-2 border-b">Output Fields</h3>
               <div className="space-y-2">
-                {pipeCatalogEntry.outputFields.map((fieldName) => {
+                {pipeCatalogEntry.defaultOutputFields.map((fieldName) => {
                   const found = getField(fieldName as FieldName);
                   if (!found) return null;
 
                   return (
-                    <FieldRow
+                    <PipeFieldRow
                       type="output"
                       key={fieldName}
                       fieldName={found.name}
@@ -294,7 +297,7 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
                     style={vscDarkPlus}
                     customStyle={{ borderRadius: "0.375rem" }}
                   >
-                    {`const result = await fetch("https://api.pipe0.com/v1/run/sync", {
+                    {`const result = await fetch("https://api.pipe0.com/v1/pipes/run", {
   method: "POST",
   headers: {
     "Authorization": \`Bearer \${API_KEY}\`,
@@ -314,7 +317,7 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
                     style={vscDarkPlus}
                     customStyle={{ borderRadius: "0.375rem" }}
                   >
-                    {`curl -X POST "https://api.pipe0.com/v1/run/sync" \\
+                    {`curl -X POST "https://api.pipe0.com/v1/pipes/run" \\
 -H "Authorization: Bearer $API_KEY" \\
 -d '{
     "pipes": [{ "pipe_id": "${pipeId}" }],
@@ -345,7 +348,7 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
                     style={vscDarkPlus}
                     customStyle={{ borderRadius: "0.375rem" }}
                   >
-                    {`const result = await fetch("https://api.pipe0.com/v1/run/sync", {
+                    {`const result = await fetch("https://api.pipe0.com/v1/pipes/run", {
   method: "POST",
   headers: {
     "Authorization": \`Bearer \${API_KEY}\`,
@@ -370,7 +373,7 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
                     style={vscDarkPlus}
                     customStyle={{ borderRadius: "0.375rem" }}
                   >
-                    {`curl -X POST "https://api.pipe0.com/v1/run/sync" \\
+                    {`curl -X POST "https://api.pipe0.com/v1/pipes/run" \\
 -H "Authorization: Bearer $API_KEY" \\
 -d '{
     "pipes": [{ "pipe_id": "${pipeId}" }],

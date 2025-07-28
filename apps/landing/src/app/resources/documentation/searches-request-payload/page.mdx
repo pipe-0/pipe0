@@ -1,0 +1,91 @@
+---
+title: Pipe0 Docs | Request object
+category: Concepts
+description: Learn about the Pipe0 request object.
+date: 2025-06-02
+---
+
+
+# Searches Request Payload
+
+The following API operations require a request payload of type `SearchesRequestPayload`:
+
+- `POST https://api.pipe0.com/v1/searches/run` (create a search task)
+- `POST https://api.pipe0.com/v1/searches/run/sync` (create a search task and return the result)
+
+<AppLink linkType="async">Learn more</AppLink> about the difference between sync and async operations.
+
+Here's a sample payload:
+
+```json
+{
+	"config": {
+		"dedup": {
+			"strategy": "default"
+		},
+		"environment": "sandbox"
+	},
+	"searches": [
+		{
+            "search_id": "people:profiles:icypeas@1",
+			"config": {
+                "limit": 100,
+				"filters": {
+					"currentJobTitle": {
+						"exclude": [],
+						"include": [
+							"Software Engineer"
+						]
+					},
+				},
+			},
+		}
+	]
+}
+```
+
+
+## Search request payload properties
+
+### config
+
+General request configuration.
+
+### config.dedup
+
+Deduplication configuration.
+
+### config.dedup.strategy
+
+Deduplication strategy. The default strategy is called `default`. To disable deduplication, set this field to `null`.
+
+##### Deduplication Strategies
+
+- `default`: Each search in `config.searches` declares identity fields. Identity fields can be a `website_url` or
+`company_profile_url`. The entire search result is scanned for duplicates of this field. Duplicates are removed.
+
+### config.environment
+
+Request environment. See <AppLink linkType="testMode">sandbox mode</AppLink> for more info.
+
+### searches[]
+
+An array of searches along with search configuration. A list of available searches can be found in the 
+<AppLink linkType="searchCatalog">search catalog</AppLink>.
+
+#### search.search_id
+
+The unique identifier of a search. Find available `search_id`s in the <AppLink linkType="searchCatalog">search catalog</AppLink>.
+
+#### search.config
+
+Search configuration object. The full config object can be found in the <AppLink linkType="searchCatalog">search catalog</AppLink>.
+All searches require at least one filter in `search.config.filters`. Empty filter objects are invalid.
+
+#### search.config.limit
+
+Limit the number of search results. Find the default `limit` in the <AppLink linkType="searchCatalog">search catalog</AppLink>.
+
+#### search.config.filters
+
+A set of filters that varies by search. Find the available filters per search in the <AppLink linkType="searchCatalog">search catalog</AppLink>.

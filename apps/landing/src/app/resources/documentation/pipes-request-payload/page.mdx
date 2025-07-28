@@ -2,18 +2,18 @@
 title: Pipe0 Docs | Request object
 category: Concepts
 description: Learn about the Pipe0 request object.
-date: 2025-06-02
+date: 2025-07-28
 ---
 
 
-# Request Payload
+# Pipes Request Payload
 
-The following API operations require a request payload of type `PipelineRequest`:
+The following API operations require a request payload of type `PipesRequestPayload`:
 
-- `POST https://api.pipe0.com/v1/run` (create an enrichment task)
-- `POST https://api.pipe0.com/v1/run/sync` (create an enrichment task and return the result)
+- `POST https://api.pipe0.com/v1/pipes/run` (create an enrichment task)
+- `POST https://api.pipe0.com/v1/pipes/run/sync` (create an enrichment task and return the result)
 
-<AppLink linkType="async">Learn more</AppLink> about the difference between the two operations.
+<AppLink linkType="async">Learn more</AppLink> about the difference between sync and async operations.
 
 Here's a sample payload:
 
@@ -103,35 +103,6 @@ Each object in the `input` array represents an input object.
 Each property of an input object represents an input field. Input fields are used as pipe input after 
 <AppLink linkType="inputSanitation">input sanitation</AppLink>.
 
+## Helpful links
 
-
-
-
-## OpenAPI 3.1
-
-When creating request payloads it is helpful to have autocomplete in your IDE. For this, you can generate a client from 
-our open API file hosted at:
-
-import { Tabs } from 'nextra/components'
-
-<Tabs items={['url']}>
-  <Tabs.Tab>https://api.pipe0.com/openapi</Tabs.Tab>
-</Tabs>
-
-API clients wrap the HTTP API with language-native function calls.
-
-### Generator libraries
-
-There are open-source tools that can generate clients in many languages:
-
-#### TypeScript
-
-[`openapi-typescript`](https://github.com/drwpow/openapi-typescript)
-
-#### Python
-
-[openapi-python-client](https://github.com/OpenAPITools/openapi-generator)
-
-#### Java / Kotlin
-
-[openapi-generator](https://github.com/OpenAPITools/openapi-generator)
+- <AppLink linkType="openAPI">Generate OpenAPI client</AppLink>

@@ -1,23 +1,24 @@
-import {
-  getPipeEntries,
-  getPipeEntryMap,
-} from "@/app/resources/pipe-catalog/get-pipes";
+import { getSearchEntryMap } from "@/app/resources/search-catalog/get-searches";
 import { TextLink } from "@/components/text-link";
 import { Button } from "@/components/ui/button";
-import { getPipeVersionFromId } from "@/lib/utils";
-import { getPipeEntry, PipeId, pipeCatalog } from "@pipe0/client-sdk";
+import {
+  getSearchEntry,
+  getSearchVersion,
+  searchCatalog,
+  SearchId,
+} from "@pipe0/client-sdk";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import React, { PropsWithChildren } from "react";
 
-function findAllPipeVersions(pipeId: PipeId) {
-  const pipeMetaEntry = pipeCatalog[pipeId];
-  const res = Object.entries(pipeCatalog)
-    .map(([pipeId, entry]) => ({ pipeId: pipeId as PipeId, ...entry }))
-    .filter((e) => e.basePipe === pipeMetaEntry.basePipe)
+function findAllSearchVersions(searchId: SearchId) {
+  const searchEntry = getSearchEntry(searchId);
+  const res = Object.entries(searchCatalog)
+    .map(([searchId, entry]) => ({ searchId: searchId as SearchId, ...entry }))
+    .filter((e) => e.baseSearch === searchEntry.baseSearch)
     .sort((a, b) => {
-      const versionA = getPipeVersionFromId(a.pipeId);
-      const versionB = getPipeVersionFromId(b.pipeId);
+      const versionA = getSearchVersion(a.searchId);
+      const versionB = getSearchVersion(b.searchId);
 
       return versionB - versionA;
     });
@@ -25,23 +26,23 @@ function findAllPipeVersions(pipeId: PipeId) {
   return res;
 }
 
-export async function PipePage({
+export async function SearchPage({
   children,
-  pipeId,
-}: PropsWithChildren<{ pipeId: PipeId }>) {
-  const pipeCatalogEntry = getPipeEntry(pipeId);
+  searchId,
+}: PropsWithChildren<{ searchId: SearchId }>) {
+  const searchCatalogEntry = getSearchEntry(searchId);
 
-  const pipeEntryMap = await getPipeEntryMap();
+  const searchEntryMap = await getSearchEntryMap();
 
-  const pipeVersions = findAllPipeVersions(pipeId);
+  const searchVersions = findAllSearchVersions(searchId);
 
-  const tags = pipeCatalogEntry?.tags || [];
+  const tags = searchCatalogEntry?.tags || [];
 
   return (
     <div className="max-w-[var(--nextra-content-width)] pt-6 pb-24 grid md:grid-cols-[300px_1fr] gap-3 mx-auto px-7">
       <aside className="space-y-8 hidden md:block">
         <div>
-          <Link href="/resources/pipe-catalog">
+          <Link href="/resources/search-catalog">
             <Button variant="ghost" className="px-0">
               <ArrowLeft /> Return to Catalog
             </Button>
@@ -50,15 +51,15 @@ export async function PipePage({
         <div>
           <h3 className="font-semibold text-sm pb-4">Available versions</h3>
           <div>
-            {pipeVersions.map((e, index) => {
-              const routeEntry = pipeEntryMap[e.pipeId];
+            {searchVersions.map((e, index) => {
+              const routeEntry = searchEntryMap[e.searchId];
               if (!routeEntry) return null;
               return (
-                <React.Fragment key={e.pipeId}>
+                <React.Fragment key={e.searchId}>
                   <TextLink className="text-sm" href={routeEntry.route}>
-                    @{e.pipeId.split("@")[1]}
+                    @{e.searchId.split("@")[1]}
                   </TextLink>
-                  {index < pipeVersions.length - 1 && ", "}
+                  {index < searchVersions.length - 1 && ", "}
                 </React.Fragment>
               );
             })}
@@ -71,7 +72,7 @@ export async function PipePage({
               {tags.map((tag, index) => (
                 <React.Fragment key={tag}>
                   <TextLink
-                    href={`/resources/pipe-catalog?type=tag&value=${encodeURI(
+                    href={`/resources/search-catalog?type=tag&value=${encodeURI(
                       tag
                     )}`}
                   >

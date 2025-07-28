@@ -1,0 +1,94 @@
+---
+title: Pipe0 Docs | Quickstart
+description: Get started with pipe0
+date: 2025-04-01
+---
+
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '../../../../components/ui/tabs'
+import { YoutubeEmbed } from "../../../../components/features/mdx/youtube-embed"
+
+# Searches quickstart
+
+Use `Searches` to find companies and people using `filters`. With searches, you combine and deduplicate datasets from multiple providers.
+The <AppLink linkType="searchCatalog">search catalog</AppLink> 
+lists all available datasets.
+
+## Making requests
+
+This request fetches a list of companies using the [`people:profiles:icypeas@1`](http://localhost:3000/resources/search-catalog/people:profiles:icypeas/1) dataset.
+
+<CodeTabs items={["Typescript"]}>
+    <div>
+```typescript
+const result = await fetch("https://api.pipe0.com/v1/searches/run", {
+    method: "POST",
+    headers: {
+        "Authorization": `Bearer ${API_KEY}`,
+    },
+    body: JSON.stringify({
+        config: {
+            environment: "production",
+            dedup: {
+                strategy: "default"
+            }
+        },
+        searches: [
+            {
+                search_id: "people:profiles:icypeas@1",
+                config: {
+                    limit: 100,
+                    filters: {
+                        industry: {
+                            include: ["Software Development"]
+                        }
+                    }
+                }
+            },
+        ],
+    })
+});
+```
+    </div>
+</CodeTabs>
+
+You can find a list of all available filters in the [search catalog](http://localhost:3000/resources/search-catalog/people:profiles:icypeas/1).
+
+You can combine multiple searches in one request. Append additional searches to the `searches` property.
+
+The result will look something like this:
+
+```json
+
+{
+	"results": [
+		{
+			"name": {
+				"value": "Gayle Pouros",
+                "type": "string",
+				"format": "text",
+				"status": "completed"
+				"ui": {},
+			},
+			"job_title": {
+				"value": "Product Intranet Manager",
+                "type": "string",
+				"format": "text",
+				"status": "completed",
+				"ui": {},
+			},
+            ...
+		},
+		...
+	]
+}
+```
+
+The result of a search can be the input for a <AppLink linkType="pipesQuickstart">pipes request</AppLink> (data enrichment).
+Under the hood, this uses <AppLink linkType="inputExpansion">input expansion</AppLink>.
+
+### Helpful links
+
+- <AppLink linkType="async">Async vs Sync requests</AppLink>
+- <AppLink linkType="testMode">Making sandbox requests</AppLink>
+
+

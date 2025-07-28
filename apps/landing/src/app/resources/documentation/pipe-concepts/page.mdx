@@ -26,10 +26,10 @@ are not billed.
 Waterfall enrichments can drastically increase data coverage. But keep in mind that trying many providers 
 can slow down processing speed.
 
-#### Choosing providers
+#### Choosing waterfall providers
 
 Waterfall pipes have a `config.providers` option. The option is typically of the type `Array<{ provider: <PROVIDER_NAME> }>`.
-If no config is provided the default config is applied. If you remove a provider from the array, this provider is removed
+If no config is provided the default config is applied. If you remove a provider from the array, the provider is removed
 from your processing sequence.
 
 Providers are processed according to their position in the `config.providers` array. The provider with the index 0 is processed first.
@@ -77,25 +77,3 @@ To define fields in `prompt` mode, use the following syntax to define fields.
 **type**: "string" | "number" | "boolean" <br/>
 **required**: "true" | "false" <br/>
 **description**: string <br/>
-
-## Pipeline
-
-Pipeline is the internal data model we use to enrich data. A pipeline consists of:
-
-(1) Pipes and their order (2) Fields added by your input
-(3) Output fields added by pipes (4) Logic, conditions, and actions.
-
-### Pipeline validation
-
-For a pipeline to be valid the following conditions have to be true:
-
-1. The input requirements of each pipe must be met incl. field format.
-1. Your pipeline cannot contain self-referencing pipes (the input of a pipe points to its output)
-
-### Pipeline requests
-
-Internally, we convert the <AppLink linkType="pipelineRequest">request object</AppLink> into a pipeline.
-
-### Pipeline response
-
-After pipeline validation and processing, we convert a pipelines into the <AppLink linkType="pipelineResponse">response objects</AppLink>.

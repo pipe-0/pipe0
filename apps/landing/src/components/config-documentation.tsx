@@ -1,0 +1,479 @@
+"use client";
+
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import {
+  ExternalLink,
+  Hash,
+  Calendar,
+  Type,
+  ToggleLeft,
+  List,
+  FileText,
+} from "lucide-react";
+import {
+  BooleanMetadata,
+  DateRangeMetadata,
+  GeneratedFormField,
+  getSearchFormConfig,
+  IncludeExcludeMetadata,
+  IncludeExcludeSelectMetadata,
+  IntegerMetadata,
+  NumberMetadata,
+  RangeMetadata,
+  SearchId,
+  SelectMetadata,
+  TextareaMetadata,
+  TextMetadata,
+} from "@pipe0/client-sdk";
+import { PropsWithChildren } from "react";
+
+interface FilterDocumentationProps {
+  searchId: SearchId;
+}
+
+const isIncludeExcludeField = (
+  field: GeneratedFormField
+): field is IncludeExcludeMetadata => field.type === "include_exclude_input";
+
+const isIncludeExcludeSelectField = (
+  field: GeneratedFormField
+): field is IncludeExcludeSelectMetadata =>
+  field.type === "include_exclude_select_input";
+
+const isRangeField = (field: GeneratedFormField): field is RangeMetadata =>
+  field.type === "range_input";
+
+const isIntegerField = (field: GeneratedFormField): field is IntegerMetadata =>
+  field.type === "int_input";
+
+const isNumberField = (field: GeneratedFormField): field is NumberMetadata =>
+  field.type === "number_input";
+
+const isNumericField = (
+  field: GeneratedFormField
+): field is RangeMetadata | IntegerMetadata | NumberMetadata =>
+  isRangeField(field) || isIntegerField(field) || isNumberField(field);
+
+const isBooleanField = (field: GeneratedFormField): field is BooleanMetadata =>
+  field.type === "boolean_input";
+
+const isDateRangeField = (
+  field: GeneratedFormField
+): field is DateRangeMetadata => field.type === "date_range_input";
+
+const isTextField = (field: GeneratedFormField): field is TextMetadata =>
+  field.type === "text_input";
+
+const isTextareaField = (
+  field: GeneratedFormField
+): field is TextareaMetadata => field.type === "textarea_input";
+
+const isSelectField = (field: GeneratedFormField): field is SelectMetadata =>
+  field.type === "select_input";
+
+const FIELD_ICONS = {
+  include_exclude_input: List,
+  include_exclude_select_input: List,
+  range_input: Hash,
+  int_input: Hash,
+  number_input: Hash,
+  date_range_input: Calendar,
+  boolean_input: ToggleLeft,
+  text_input: Type,
+  textarea_input: Type,
+  select_input: List,
+} as const;
+
+function getFieldIcon(type: string) {
+  return FIELD_ICONS[type as keyof typeof FIELD_ICONS] || FileText;
+}
+
+// Code example generators - each handles its own type safely
+const generateIncludeExcludeExample = (fieldName: string) => `{
+  "${fieldName}": {
+    "include": ["value1", "value2"],
+    "exclude": ["unwanted1", "unwanted2"]
+  }
+}`;
+
+const generateRangeExample = (fieldName: string, field: RangeMetadata) => `{
+  "${fieldName}": {
+    ">": ${field.min || 0},
+    "<": ${field.max || 100},
+  }
+}`;
+
+const generateDateRangeExample = (fieldName: string) => `{
+  "${fieldName}": {
+    ">": "2024-01-01T00:00:00Z",
+    "<": "2024-12-31T23:59:59Z",
+    ">=": "",
+    "<=": ""
+  }
+}`;
+
+const generateBooleanExample = (fieldName: string) => `{
+  "${fieldName}": true
+}`;
+
+const generateTextExample = (fieldName: string) => `{
+  "${fieldName}": "example text"
+}`;
+
+const generateSelectExample = (fieldName: string, field: SelectMetadata) =>
+  field.multiple
+    ? `{
+  "${fieldName}": ["option1", "option2"]
+}`
+    : `{
+  "${fieldName}": "option1"
+}`;
+
+const generateNumericExample = (
+  fieldName: string,
+  field: IntegerMetadata | NumberMetadata
+) => `{
+  "${fieldName}": ${field.min || 0}
+}`;
+
+function generateCodeExample(field: GeneratedFormField): string {
+  const pathParts = field.path.split(".");
+  const fieldName = pathParts[pathParts.length - 1];
+
+  if (isIncludeExcludeField(field) || isIncludeExcludeSelectField(field)) {
+    return generateIncludeExcludeExample(fieldName);
+  }
+  if (isRangeField(field)) {
+    return generateRangeExample(fieldName, field);
+  }
+  if (isDateRangeField(field)) {
+    return generateDateRangeExample(fieldName);
+  }
+  if (isBooleanField(field)) {
+    return generateBooleanExample(fieldName);
+  }
+  if (isTextField(field) || isTextareaField(field)) {
+    return generateTextExample(fieldName);
+  }
+  if (isSelectField(field)) {
+    return generateSelectExample(fieldName, field);
+  }
+  if (isIntegerField(field) || isNumberField(field)) {
+    return generateNumericExample(fieldName, field);
+  }
+
+  return `{
+  "${fieldName}": "value"
+}`;
+}
+
+function getConstraintInfo(field: GeneratedFormField): string[] {
+  const constraints: string[] = [];
+
+  if (isNumericField(field)) {
+    const unit = isRangeField(field) ? field.unit || "" : "";
+
+    if (field.min !== undefined && field.max !== undefined) {
+      constraints.push(`${field.min}-${field.max}${unit ? ` ${unit}` : ""}`);
+    } else if (field.min !== undefined) {
+      constraints.push(`min: ${field.min}${unit ? ` ${unit}` : ""}`);
+    } else if (field.max !== undefined) {
+      constraints.push(`max: ${field.max}${unit ? ` ${unit}` : ""}`);
+    }
+  }
+
+  if (isIncludeExcludeField(field) || isIncludeExcludeSelectField(field)) {
+    if (field.maxItems) {
+      constraints.push(`max: ${field.maxItems} items`);
+    }
+  }
+
+  if (isSelectField(field) && field.multiple) {
+    constraints.push("multiple");
+  }
+
+  return constraints;
+}
+
+function NumericConfig({
+  field,
+}: {
+  field: NumberMetadata | IntegerMetadata | RangeMetadata;
+}) {
+  return (
+    <ConfigSectionWrapper>
+      {field.min && (
+        <div>
+          <span className="text-gray-500">Min value: </span>
+          <span className="text-gray-900">{field.min}</span>
+        </div>
+      )}
+      {field.max && (
+        <div>
+          <span className="text-gray-500">Max value: </span>
+          <span className="text-gray-900">{field.max}</span>
+        </div>
+      )}
+    </ConfigSectionWrapper>
+  );
+}
+
+function DateRangeConfig({ field }: { field: DateRangeMetadata }) {
+  return (
+    <ConfigSectionWrapper>
+      {field.format && (
+        <div className="flex justify-between">
+          <span className="text-gray-500">Format:</span>
+          <span className="text-gray-900">{field.format}</span>
+        </div>
+      )}
+      {field.minDate && (
+        <div className="flex justify-between">
+          <span className="text-gray-500">Min date:</span>
+          <span className="text-gray-900">{field.minDate}</span>
+        </div>
+      )}
+      {field.maxDate && (
+        <div className="flex justify-between">
+          <span className="text-gray-500">Max date:</span>
+          <span className="text-gray-900">{field.maxDate}</span>
+        </div>
+      )}
+    </ConfigSectionWrapper>
+  );
+}
+
+function TextConfig({ field }: { field: TextMetadata }) {
+  return (
+    <ConfigSectionWrapper>
+      {field.minLength && (
+        <div className="flex justify-between">
+          <span className="text-gray-500">Min length:</span>
+          <span className="text-gray-900">{field.minLength}</span>
+        </div>
+      )}
+      {field.maxLength && (
+        <div className="flex justify-between">
+          <span className="text-gray-500">Max length:</span>
+          <span className="text-gray-900">{field.maxLength}</span>
+        </div>
+      )}
+    </ConfigSectionWrapper>
+  );
+}
+
+function ConfigSectionWrapper({ children }: PropsWithChildren) {
+  return (
+    <div>
+      <h4 className="text-sm font-medium text-gray-900 mb-3">Configuration</h4>
+      <div className="space-y-2 text-sm">{children}</div>
+    </div>
+  );
+}
+
+function ConfigurationSection({ field }: { field: GeneratedFormField }) {
+  return (
+    <>
+      {isNumericField(field) && <NumericConfig field={field} />}
+      {isDateRangeField(field) && <DateRangeConfig field={field} />}
+      {isTextField(field) && (field.minLength || field.maxLength) && (
+        <TextConfig field={field} />
+      )}
+    </>
+  );
+}
+
+function OptionsSection({ field }: { field: GeneratedFormField }) {
+  const getOptions = () => {
+    if (isSelectField(field)) return field.options;
+    if (isIncludeExcludeSelectField(field)) return field.options;
+    if (isIncludeExcludeField(field)) return field.suggestions;
+    return null;
+  };
+
+  const options = getOptions();
+  if (!options) return null;
+
+  return (
+    <div>
+      <h4 className="text-sm font-medium text-gray-900 mb-3">
+        {isIncludeExcludeField(field) && field.suggestions
+          ? "Suggestions"
+          : "Available options"}
+      </h4>
+
+      {isIncludeExcludeField(field) && field.suggestions ? (
+        <div className="max-h-32 overflow-y-auto border border-gray-200 rounded-lg p-3">
+          <div className="flex flex-wrap gap-1.5">
+            {field.suggestions.map((suggestion, idx) => (
+              <Badge
+                key={idx}
+                variant="secondary"
+                className="text-xs font-normal"
+              >
+                {suggestion.label}
+              </Badge>
+            ))}
+          </div>
+        </div>
+      ) : (
+        <div className="max-h-32 overflow-y-auto border border-gray-200 rounded-lg">
+          <div className="divide-y divide-gray-100">
+            {options.map((option, idx) => (
+              <div
+                key={idx}
+                className="px-3 py-2 flex items-center justify-between"
+              >
+                <code className="text-xs bg-gray-100 px-1.5 py-0.5 rounded font-mono">
+                  {option.value}
+                </code>
+                <span className="text-sm text-gray-600">{option.label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+const OPERATOR_INFO = [
+  { symbol: ">", description: "Greater than" },
+  { symbol: "<", description: "Less than" },
+  { symbol: ">=", description: "Greater or equal" },
+  { symbol: "<=", description: "Less or equal" },
+];
+
+const DATE_OPERATOR_INFO = [
+  { symbol: ">", description: "After date" },
+  { symbol: "<", description: "Before date" },
+  { symbol: ">=", description: "On or after" },
+  { symbol: "<=", description: "On or before" },
+];
+
+function OperatorsSection({ field }: { field: GeneratedFormField }) {
+  if (!isRangeField(field) && !isDateRangeField(field)) return null;
+
+  const operators = isDateRangeField(field)
+    ? DATE_OPERATOR_INFO
+    : OPERATOR_INFO;
+
+  return (
+    <div>
+      <h4 className="text-sm font-medium text-gray-900 mb-3">Operators</h4>
+      <div className="space-y-2">
+        <div className="grid grid-cols-2 gap-3 text-sm">
+          {operators.map(({ symbol, description }) => (
+            <div key={symbol} className="flex items-center gap-2">
+              <code className="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono">
+                {symbol}
+              </code>
+              <span className="text-gray-600">{description}</span>
+            </div>
+          ))}
+        </div>
+        {isDateRangeField(field) && (
+          <p className="text-xs text-gray-500 mt-2">
+            Use ISO 8601 format: YYYY-MM-DDTHH:mm:ssZ
+          </p>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function FieldDocumentation({ field }: { field: GeneratedFormField }) {
+  const codeExample = generateCodeExample(field);
+
+  return (
+    <div className="space-y-6">
+      {field.description && (
+        <div>
+          <p className="text-sm text-gray-600 leading-relaxed">
+            {field.description}
+          </p>
+        </div>
+      )}
+
+      <div>
+        <div className="flex items-center justify-between mb-3">
+          <h4 className="text-sm font-medium text-gray-900">Example</h4>
+        </div>
+        <pre className="bg-gray-50 border border-gray-200 rounded-lg p-4 text-sm overflow-x-auto">
+          <code className="text-gray-800">{codeExample}</code>
+        </pre>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <ConfigurationSection field={field} />
+        <div className="space-y-6">
+          <OptionsSection field={field} />
+          <OperatorsSection field={field} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function FilterDocumentation({ searchId }: FilterDocumentationProps) {
+  const formConfig = getSearchFormConfig(searchId);
+  const allFields = formConfig.flatMap((section) =>
+    section.groups.flatMap((group) => group.fields)
+  );
+
+  return (
+    <div className="">
+      <Accordion type="multiple" className="w-full space-y-1">
+        {allFields.map((field, idx) => {
+          const Icon = getFieldIcon(field.type);
+          const constraints = getConstraintInfo(field);
+
+          return (
+            <AccordionItem key={`${field.path}-${idx}`} value={`field-${idx}`}>
+              <AccordionTrigger>
+                <div className="flex items-center justify-between w-full">
+                  <div className="flex items-center gap-3">
+                    <Icon className="h-4 w-4 text-muted-foreground" />
+                    <div className="text-left">
+                      <div className="flex items-center gap-2">
+                        <p className="text-sm  px-1.5 py-0.5 rounded">
+                          {field.path}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    {constraints.length > 0 && (
+                      <span className="text-xs text-gray-500 px-2 py-1 rounded">
+                        {constraints.join(", ")}
+                      </span>
+                    )}
+                    <Badge
+                      variant={field.required ? "default" : "secondary"}
+                      className="text-xs"
+                    >
+                      {field.required ? "required" : "optional"}
+                    </Badge>
+                    <Badge variant="outline" className="text-xs">
+                      {field.type.replace(/_/g, " ")}
+                    </Badge>
+                  </div>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="px-4 pb-4">
+                <FieldDocumentation field={field} />
+              </AccordionContent>
+            </AccordionItem>
+          );
+        })}
+      </Accordion>
+    </div>
+  );
+}

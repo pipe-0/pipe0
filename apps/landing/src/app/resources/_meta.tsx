@@ -7,6 +7,14 @@ const meta: MetaRecord = {
   },
   "pipe-catalog": {
     type: "page",
+    title: "Pipes",
+    theme: {
+      collapsed: true,
+    },
+  },
+  "search-catalog": {
+    type: "page",
+    title: <span className="badge-new">Searches</span>,
     theme: {
       collapsed: true,
     },
@@ -19,11 +27,6 @@ const meta: MetaRecord = {
       sidebar: false,
       toc: false,
     },
-  },
-  blog: {
-    type: "page",
-    title: "Blog",
-    href: "/blog",
   },
   legal: {
     display: "hidden",
