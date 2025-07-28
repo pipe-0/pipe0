@@ -76,14 +76,12 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
             {searchCatalogEntry.description}
           </p>
         </div>
-        {/* Metadata Section */}
 
         <div>
           <CopyToClipboard value={searchId} />
         </div>
       </div>
 
-      {/* Providers Section */}
       <div>
         <Table>
           <TableHeader>
@@ -91,7 +89,8 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
               <TableHead>Provider</TableHead>
               <TableHead>Credentials</TableHead>
               <TableHead>
-                Cost per result <InlineDocsBadge href={appLinks.billing()} />
+                Cost per result{" "}
+                <InlineDocsBadge href={appLinks.searchBilling()} />
               </TableHead>
             </TableRow>
           </TableHeader>
@@ -173,7 +172,6 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
         </div>
       </div>
 
-      {/* Code example */}
       <Accordion type="multiple" defaultValue={["code"]}>
         <AccordionItem value="config-reference">
           <AccordionTrigger className="">Config Reference</AccordionTrigger>

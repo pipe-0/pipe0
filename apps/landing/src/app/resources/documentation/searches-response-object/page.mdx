@@ -14,11 +14,9 @@ The following API operations all return a response of type `SearchesResponse`.
 
 - `POST https://api.pipe0.com/v1/searches/run` (create a search task)
 - `GET https://api.pipe0.com/v1/searches/check` (check the processing state of a search task)
-- `POST https://api.pipe0.com/v1/searches/run/sync` (run a search task synchonously)
+- `POST https://api.pipe0.com/v1/searches/run/sync` (run a search task synchronously)
 
 ## Full response object
-
-
 
 ```JSON
 {
@@ -76,8 +74,8 @@ The following API operations all return a response of type `SearchesResponse`.
 
 ### id
 
-This is the task `id`. During and after processing you can use this id to look up 
-your processing result. We store tasks for up to 15 days after processing is completed.
+This is the task `id`. You can use this id to look up your processing result during and after processing.
+We store tasks for up to 15 days after processing is completed.
 
 ### status
 
@@ -97,7 +95,7 @@ Processing has failed. See the `search_statuses` array for more information on w
 
 ### search_statuses[]
 
-Meta information on the performed searches.
+Metadata for searches.
 
 #### search_status.error
 
@@ -105,7 +103,7 @@ Error information in case your search is marked as `failed`.
 
 #### search_status.search
 
-Information about the search like it's id.
+Information about the search, like its ID.
 
 ##### search_status.search.id
 
@@ -117,7 +115,7 @@ Can be `completed`, `processing`, `failed`.
 
 ### results[]
 
-A list of search results. The fields of each object are normalized accross searches. You can use the results as is 
+A list of search results. The fields of each object are normalized across searches. You can use the results as is 
 or use them as input for a <AppLink linkType="pipelineRequest">pipes request</AppLink>.
 
 > [!NOTE]

@@ -36,4 +36,5 @@ export const appLinks = {
   record: () => `/resources/documentation/response-object`,
   billing: () => `/resources/documentation/billing`,
   billingMode: () => `/resources/documentation/billing#billing-mode`,
+  searchBilling: () => `/resources/documentation/billing#search-billing`,
 };

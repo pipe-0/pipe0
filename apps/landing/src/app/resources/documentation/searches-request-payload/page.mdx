@@ -66,7 +66,7 @@ Deduplication strategy. The default strategy is called `default`. To disable ded
 
 ### config.environment
 
-Request environemnt. See <AppLink linkType="testMode">sandbox mode</AppLink> for more info.
+Request environment. See <AppLink linkType="testMode">sandbox mode</AppLink> for more info.
 
 ### searches[]
 
@@ -75,12 +75,12 @@ An array of searches along with search configuration. A full list of available s
 
 #### search.search_id
 
-The unique identifier of a search. Find available search ids in the <AppLink linkType="searchCatalog">search catalog</AppLink>.
+The unique identifier of a search. Find available `search_id`s in the <AppLink linkType="searchCatalog">search catalog</AppLink>.
 
 #### search.config
 
 Search configuration object. The full config object can be found in the <AppLink linkType="searchCatalog">search catalog</AppLink>.
-All searches require least one filter in `search.config.filters`. An empty filter objects are invalid.
+All searches require at least one filter in `search.config.filters`. Empty filter objects are invalid.
 
 #### pipe.config.limit
 

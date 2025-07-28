@@ -16,19 +16,19 @@ To send `sandbox` requests, set `config.environment` to `sandbox`.
 
 ## Sync or Async
 
-All endpoints offer the choice between enriching and searching synchonously or asynchonously.
+All endpoints offer the choice between enriching and searching synchronously or asynchronously.
 
-- Synchonously: The endpoint returns a result within one roundtrip.
-- Asynchonously: You send a request to create a task. You then poll the `/check` endpoint until the task is marked as `completed`.
+- Synchronously: The endpoint returns a result within one round-trip.
+- Asynchronously: You send a request to create a task. You then poll the `/check` endpoint until the task is marked as `completed`.
 
-Choosing between the two is up to you. All endpoints may timeout when used synchonously. Reasons for timeouts are often beyound 
-our control (provider latency). We recommend to run all your production requests asynchonously and use the `/sync` endpoints for testing only. 
+Choosing between the two is up to you. All endpoints may timeout when used synchronously. Reasons for timeouts are mostly beyond 
+our control (provider latency). We recommend running your production requests asynchronously. Synchronous requests are recommended for testing. 
 
 ## Create an OpenAPI client
 
 ### OpenAPI 3.1
 
-When creating request payloads it is helpful to have autocomplete in your IDE. For this, you can generate a client from 
+When creating request payloads, it is helpful to have autocomplete in your IDE. For this, you can generate a client from 
 our open API file hosted at:
 
 import { Tabs } from 'nextra/components'

@@ -7,22 +7,21 @@ date: 2025-04-01
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '../../../../components/ui/tabs'
 import { YoutubeEmbed } from "../../../../components/features/mdx/youtube-embed"
 
-# Searches Quickstart
+# Searches quickstart
 
-`Searches` is our endpoint for finding companies and people.
-With searches, you can combine and deduplicate datasets from multiple providers.
+Use `Searches` to find companies and people using `filters`. With searches, you can combine and deduplicate datasets from multiple providers.
 
-If you already have a list of people or companies that you want to enrich, skip to <AppLink linkType="pipesQuickstart">pipes</AppLink>.
+If you already have a list of people or companies to enrich, skip to <AppLink linkType="pipesQuickstart">pipes</AppLink>.
 
 
-## Search Catalog
+## Search catalog
 
-With searches, you gain access to multiple datasets via a single API endpoint. The <AppLink linkType="searchCatalog">search catalog</AppLink> 
+With searches, you can access to multiple datasets via a single API endpoint. The <AppLink linkType="searchCatalog">search catalog</AppLink> 
 lists all available datasets.
 
-## Making Requests
+## Making requests
 
-Here's a request to fetch a list of companys using the search [`people:profiles:icypeas@1`]() dataset.
+Here's a request to fetch a list of companies using the search [`people:profiles:icypeas@1`]() dataset.
 
 <CodeTabs items={["Typescript"]}>
     <div>
@@ -58,9 +57,9 @@ const result = await fetch("https://api.pipe0.com/v1/searches/run", {
     </div>
 </CodeTabs>
 
-Passing a top-level `config` object is optional. The default environemnt is `production` and the default deduplication strategy is `default`.
+Passing a top-level `config` object is optional. The default environment is `production`, and the default deduplication strategy is `default`.
 
-The example uses one search but you are free to append multiple searches to the array of `searches`.
+The example uses one search, but you can combine multiple searches in one request. Append any number of searches to the `searches` property.
 
 The result will look something like this:
 
@@ -94,11 +93,11 @@ The result will look something like this:
 >
 > The response will contain more information than displayed here. Learn how to work with <AppLink linkType="pipelineResponse">response objects</AppLink>.
 
-The result of a search can be the input for a <AppLink linkType="pipesQuickstart">pipes request</AppLink>. Under the hood this uses <AppLink linkType="inputExpansion">input expansion</AppLink>.
+The result of a search can be the input for a <AppLink linkType="pipesQuickstart">pipes request</AppLink>. Under the hood, this uses <AppLink linkType="inputExpansion">input expansion</AppLink>.
 
-### Helpful Links
+### Helpful links
 
-- <AppLink linkType="async">Async vs Sync requsts</AppLink>
+- <AppLink linkType="async">Async vs Sync requests</AppLink>
 - <AppLink linkType="testMode">Making sandbox requests</AppLink>
 
 

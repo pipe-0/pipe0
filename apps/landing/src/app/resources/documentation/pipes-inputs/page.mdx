@@ -152,7 +152,7 @@ The entire task will fail before processing starts.
 #### Never fail a task
 
 In practice, dealing with failing tasks can be annoying. If you don't want to deal 
-with failing task, there's an escape hatch: If you define the expected input fields and set them to `null`, pipeline validation will
+with failing tasks, there's an escape hatch: If you define the expected input fields and set them to `null`, pipeline validation will
 pass. The task will not fail. Instead, only individual fields fail.
 
 ## Input expansion
@@ -169,13 +169,15 @@ When you enrich data with pipe0 you transform your "input objects" into output r
     "name": "Tom Schmidt",
 }
 ```
-Some interactions require you reprocess previously processed fields. For this it is common to transform your output records
-back to `input objects`. However, by doing so a lot of the previous processing information is lost. This includes metadata like 
+Some interactions require you to reprocess previously processed fields. For this, it is common to transform your output records
+back to `input objects`. By doing so, previous processing information is lost. This includes metadata like 
 the result of a waterfall, UI widgets, etc.
 
-If you pass a plain value to the API it will always be marked as `resolved_by:input`.
+If you pass a plain value to the API, it will always be marked as `resolved_by:input`.
 
-Instead of passing your input as a plain value there is another way. You may pass your inputs fully or partially expanded (as the field value of the response object).
+Instead of passing your input as a plain value, there is another way: Input expansion.
+
+You can pass your inputs fully or partially expanded (as the field value of the response object).
 
 ```json
 {
@@ -193,5 +195,5 @@ Instead of passing your input as a plain value there is another way. You may pas
 }
 ```
 
-Expanding inputs gives you a great deal of control but shifts the responsibility of providing valid input states to you.
+Expanding inputs gives control but shifts the responsibility of providing valid input states to you.
 

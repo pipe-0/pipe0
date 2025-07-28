@@ -74,6 +74,14 @@ Pipes with `billing_mode=on_success` are billed when at least one of their outpu
 as `completed`. This indicates a successful result. If all output fields of a pipe are marked as `no_result`, the pipe is not billed.
 See <AppLink linkType="fieldStatus">field status</AppLink> for more info.
 
+### Search billing
+
+Searches are billed per successful result. This includes results that are removed due to deduplication.
+
+To receive the full result set (without deduplication), you may disable deduplication.
+
+If a search fails, it is not billed. If a search partially completes, all found records are billed.
+
 ## Subscriptions
 
 Subscriptions are managed through [Stripe](https://stripe.com). 

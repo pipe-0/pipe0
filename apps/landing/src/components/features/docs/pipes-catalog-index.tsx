@@ -252,18 +252,6 @@ const quickStartOptions = [
     disabled: false,
   },
   {
-    id: "find_people",
-    title: "Find People",
-    icon: UserRoundSearch,
-    disabled: true,
-  },
-  {
-    id: "find_comapnies",
-    title: "Find Companies",
-    icon: Binoculars,
-    disabled: true,
-  },
-  {
     id: "actions",
     title: "Actions",
     icon: Zap,
