@@ -30,6 +30,12 @@ const meta: MetaRecord = {
       toc: false,
     },
   },
+  "searches-request-payload": {
+    title: "Request Payload",
+  },
+  "searches-response-object": {
+    title: "Response Object",
+  },
   ___: {
     type: "separator",
     title: "Pipes",
@@ -51,11 +57,18 @@ const meta: MetaRecord = {
     title: "Concepts",
   },
   "input-sanitation": {
-    title: "Input Sanitation",
+    title: "Inputs",
   },
   ____: {
     type: "separator",
     title: "Concepts",
+  },
+  requests: {
+    title: "Requests",
+    theme: {
+      toc: false,
+      layout: "full",
+    },
   },
   authentication: {
     title: "Authentication",

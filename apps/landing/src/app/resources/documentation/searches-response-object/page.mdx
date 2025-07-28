@@ -1,0 +1,130 @@
+---
+title: Pipe0 Docs | Response object
+category: Concepts
+priority: 2
+description: Learn about Pipelines. Customizable enrichment workflows.
+icon: stack
+date: 2025-07-28
+isPublished: true
+---
+
+# Searches Response Object
+
+The following API operations all return a response of type `SearchesResponsePayload`.
+
+- `POST https://api.pipe0.com/v1/searches/run` (create a search task)
+- `GET https://api.pipe0.com/v1/searches/check` (check the processing state of a search task)
+- `POST https://api.pipe0.com/v1/searches/run/sync` (run a search task synchonously)
+
+## Full response object
+
+
+
+```JSON
+{
+	"id": "s3selpx8807hsvi3blsk9niv",
+    "organization_id": "sacm3f1fw772kk6uywhi7x1v",
+	"status": "completed",
+	"search_statuses": [
+		{
+			"errors": [],
+			"search": {
+				"ref": "people:profiles:icypeas@1"
+			},
+			"status": "completed"
+		}
+	],
+	"results": [
+		{
+			"name": {
+				"ui": {},
+				"type": "string",
+				"value": "Gayle Pouros",
+				"format": "text",
+				"status": "completed"
+			},
+			"job_title": {
+				"ui": {},
+				"type": "string",
+				"value": "Product Intranet Manager",
+				"format": "text",
+				"status": "completed"
+			},
+		},
+		{
+			"name": {
+				"ui": {},
+				"type": "string",
+				"value": "Mae Feest",
+				"format": "text",
+				"status": "completed"
+			},
+			"job_title": {
+				"ui": {},
+				"type": "string",
+				"value": "Dynamic Data Liaison",
+				"format": "text",
+				"status": "completed"
+			},
+		}
+	]
+}
+```
+
+
+## Response Properties
+
+### id
+
+This is the task `id`. During and after processing you can use this id to look up 
+your processing result. We store tasks for up to 15 days after processing is completed.
+
+### status
+
+The status of the response object.
+
+#### Status 'processing'
+
+Your search request is being processed. 
+
+#### Status 'completed'
+
+Processing has finished without errors.
+
+#### Status 'failed'
+
+Processing has failed. See the `search_statuses` array for more information on why the failure occurred.
+
+### search_statuses[]
+
+Meta information on the performed searches.
+
+#### search_status.error
+
+Error information in case your search is marked as `failed`.
+
+#### search_status.search
+
+Information about the search like it's id.
+
+##### search_status.search.id
+
+The search id.
+
+#### search_status.status
+
+Can be `completed`, `processing`, `failed`.
+
+### results[]
+
+A list of search results. The fields of each object are normalized accross searches. You can use the results as is 
+or use them as input for a <AppLink linkType="pipelineRequest">pipes request</AppLink>.
+
+> [!NOTE]
+> 
+> Using the search result format as the input for a pipes request is supported via <AppLink linkType="inputExpansion">input expansion</AppLink>.
+
+
+## Helpful links
+
+- <AppLink linkType="openAPI">Create an OpenAPI client</AppLink>

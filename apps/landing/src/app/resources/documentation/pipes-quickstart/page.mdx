@@ -115,23 +115,9 @@ chain multiple enrichment pipes.
 >
 > The response will contain more information than displayed here. Learn how to work with <AppLink linkType="pipelineResponse">response objects</AppLink>.
 
-### Sync or Async
+### Helpful Links
 
-The request uses the `/v1/run/sync` endpoint. This endpoint returns enriched records within one roundtrip.
-This only works for enriching a few records at a time.
-
-To enrich more data, use the `/v1/run` endpoint and poll the `/v1/check` endpoint until your 
-enrichment task is marked as `completed`.
-
-### Sandbox
-
-Running pipelines in `production` mode incurs usage costs. For testing, all pipes offer a 
-<AppLink linkType="testMode">sandbox environment</AppLink>. **Making requests in the sandbox environment is always free.**
-
-Do not expect sandbox data to make sense. Expect the data to be structurally 
-correct in regards to type, content length, and format.
-
-To send `sandbox` requests, set the header `x-environment` to `sandbox`. If the header is missing or set to any value
-other than `sandbox` the request is considered to be in `production` mode.
+- <AppLink linkType="async">Async vs Sync requsts</AppLink>
+- <AppLink linkType="testMode">Making sandbox requests</AppLink>
 
 

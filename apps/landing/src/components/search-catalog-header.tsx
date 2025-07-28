@@ -1,5 +1,6 @@
 import AppLink from "@/components/app-link";
 import { CodeTabs } from "@/components/code-tabs";
+import { FilterDocumentation } from "@/components/config-documentation";
 import CopyToClipboard from "@/components/copy-to-clipboard";
 import { FieldRow } from "@/components/features/pipe-catalog/field-row";
 import { Info } from "@/components/info";
@@ -156,10 +157,42 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
         </Table>
       </div>
 
+      <div>
+        <div className="space-y-8">
+          <div>
+            <h3 className="font-medium mb-3 pb-2 border-b">Output Fields</h3>
+            <div className="space-y-2">
+              {searchCatalogEntry.defaultOutputFields.map((fieldName) => {
+                const found = getField(fieldName as FieldName);
+                if (!found) return null;
+
+                return (
+                  <FieldRow
+                    type="output"
+                    key={fieldName}
+                    fieldName={found.name}
+                    fieldType={found.type}
+                    description={found.description}
+                  />
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Code example */}
       <Accordion type="multiple" defaultValue={["code"]}>
+        <AccordionItem value="config-reference">
+          <AccordionTrigger className="">Config Reference</AccordionTrigger>
+          <AccordionContent>
+            <FilterDocumentation searchId={searchId} />
+          </AccordionContent>
+        </AccordionItem>
         <AccordionItem value="code">
-          <AccordionTrigger className="text-sm">Code example</AccordionTrigger>
+          <AccordionTrigger className="">
+            Request example + default config
+          </AccordionTrigger>
           <AccordionContent>
             <div>
               <CodeTabs items={["Typescript", "cURL"]}>
