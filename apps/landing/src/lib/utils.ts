@@ -1,5 +1,5 @@
 import { PipeEntry } from "@/app/resources/pipe-catalog/get-pipes";
-import { PipeId } from "@pipe0/client-sdk";
+import { PipeId, SearchId } from "@pipe0/client-sdk";
 import { clsx, type ClassValue } from "clsx";
 import { Metadata } from "next";
 import { toast } from "sonner";
@@ -43,6 +43,16 @@ export function generatePipeMetadata(pipeId: PipeId): Metadata {
     description: `Documentation for the data enrichment function with the id '${pipeId}'`,
     other: {
       pipeId: pipeId,
+    },
+  };
+}
+
+export function generateSearchMetadata(searchId: SearchId): Metadata {
+  return {
+    title: `Pipe0: ${searchId}`,
+    description: `Documentation for the search function with the id '${searchId}'`,
+    other: {
+      searchId: searchId,
     },
   };
 }

@@ -17,15 +17,22 @@ export const appLinks = {
   pipeline: () => `/resources/documentation/pipe-concepts#pipeline`,
   pipelineValidation: () => `/resources/documentation/pipe-concepts#pipeline`,
 
+  primitives: () => `/resources/documentation/pipe-concepts`,
+  inputExpansion: () => `/resources/documentation/.......`,
+
+  // Searches
+  searchesQuickstart: () => `/resources/documentation/searches-quickstart`,
+  // Pipes
   pipe: () => `/resources/documentation/request-payload#pipes`,
   testMode: () => `/resources/documentation/quickstart#sandbox`,
-  quickstart: () => `/resources/documentation/quickstart`,
+  pipesQuickstart: () => `/resources/documentation/quickstart`,
   inputObject: () => `/resources/documentation/request-payload#input`,
   pipelineRequest: () => `/resources/documentation/request-payload`,
   pipelineResponse: () => `/resources/documentation/response-object`,
   inputField: () => `/resources/documentation/request-payload#inputfieldname`,
   outputField: () => `/resources/documentation/response-object#recordfields`,
   pipeCatalog: () => `/resources/pipe-catalog`,
+  searchCatalog: () => `/resources/search-catalog`,
   record: () => `/resources/documentation/response-object`,
   billing: () => `/resources/documentation/billing`,
   billingMode: () => `/resources/documentation/billing#billing-mode`,

@@ -12,8 +12,8 @@ const meta: MetaRecord = {
       toc: false,
     },
   },
-  quickstart: {
-    title: "Quickstart",
+  catalogs: {
+    title: "Catalogs",
     theme: {
       layout: "full",
       toc: false,
@@ -21,7 +21,25 @@ const meta: MetaRecord = {
   },
   __: {
     type: "separator",
-    title: "Concepts",
+    title: <span className="badge-new">Searches</span>,
+  },
+  "searches-quickstart": {
+    title: "Quickstart",
+    theme: {
+      layout: "full",
+      toc: false,
+    },
+  },
+  ___: {
+    type: "separator",
+    title: "Pipes",
+  },
+  "pipes-quickstart": {
+    title: "Quickstart",
+    theme: {
+      layout: "full",
+      toc: false,
+    },
   },
   "request-payload": {
     title: "Request Payload",
@@ -29,26 +47,22 @@ const meta: MetaRecord = {
   "response-object": {
     title: "Response Object",
   },
-  authentication: {
-    title: "Authentication",
-    theme: {
-      toc: false,
-      layout: "full",
-    },
-  },
-  _____: {
-    type: "separator",
-    title: "Advanced",
-  },
   "pipe-concepts": {
-    title: "Pipe Concepts",
+    title: "Concepts",
   },
   "input-sanitation": {
     title: "Input Sanitation",
   },
   ____: {
     type: "separator",
-    title: "Other",
+    title: "Concepts",
+  },
+  authentication: {
+    title: "Authentication",
+    theme: {
+      toc: false,
+      layout: "full",
+    },
   },
   billing: {
     title: "Billing",

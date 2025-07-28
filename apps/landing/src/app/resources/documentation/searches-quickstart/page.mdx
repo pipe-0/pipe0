@@ -1,0 +1,104 @@
+---
+title: Pipe0 Docs | Quickstart
+description: Get started with pipe0
+date: 2025-04-01
+---
+
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '../../../../components/ui/tabs'
+import { YoutubeEmbed } from "../../../../components/features/mdx/youtube-embed"
+
+# Quickstart
+
+`Searches` is our <AppLink linkType="primitives">primitive</AppLink> (endpoint) for finding companies and people.
+If you already have a list of people or companies that you want to enrich, skip to <AppLink linkType="pipesQuickstart">pipes</AppLink>.
+
+## Prerequisites
+
+The following is required:
+
+👾 Create an account <br />
+🔑 Go to "settings" → "api keys" and "create" a key <br />
+💳 Buy a subscription to make requests in production mode <br />
+
+## Making requests
+
+Building lists of companies and people is a major pain point. Many providers claim to have the best dataset. Most 
+companies purchase access to multiple datasets that need to be deduplicated and/or combined.
+
+With searches, we give you access to multiple datasets via a single API. You can find the list of available datasets 
+in the <AppLink linkType="searchCatalog">Search Catalog</AppLink>.
+
+Let's start with a simple request to fetch company data using the [Icypeas](https://icypeas.com) dataset.
+
+<CodeTabs items={["Typescript"]}>
+    <div>
+```typescript
+const result = await fetch("https://api.pipe0.com/v1/searches/run", {
+    method: "POST",
+    headers: {
+        "Authorization": `Bearer ${API_KEY}`,
+    },
+    body: JSON.stringify({
+        config: {
+            environment: "production",
+            dedup: {
+                strategy: "default"
+            }
+        },
+        searches: [
+            {
+                search_id: "people:profiles:icypeas@1",
+                config: {
+                    limit: 100,
+                    filters: {
+                        industry: {
+                            include: ["Software Development"]
+                        }
+                    }
+                }
+            },
+        ],
+    })
+});
+```
+    </div>
+</CodeTabs>
+
+Passing a top-level `config` object is optional. The default environemnt is `production` and the default deduplication strategy is `default`.
+
+`searches` is an array. You can pass as many searches as you want. We will query every dataset you specify and return the results to you. Of course,
+not all searches will return the same fields. A company search may return an object that contains `company_profile_url` where as a search
+for people may return fields like `personal_email`.
+
+We will return the fields in a normalized way setting misssing fields to `null`. You can pipe the output of a search 
+straight into the input array of a `Pipes` request. Under the hood this uses <AppLink linkType="inputExpansion">input expansion</AppLink>.
+
+The result will look something like this:
+
+```json
+[
+    {
+        "id": 1,
+        "name": "John Doe",
+        "company_website_url": "https://pipe0.com",
+        "work_email": "john@pipe0.com"
+    }
+]
+```
+
+> [!NOTE]
+>
+> The response will contain more information than displayed here. Learn how to work with <AppLink linkType="pipelineResponse">response objects</AppLink>.
+
+### Sandbox
+
+Running pipelines in `production` mode incurs usage costs. For testing, all pipes offer a 
+<AppLink linkType="testMode">sandbox environment</AppLink>. **Making requests in the sandbox environment is always free.**
+
+Do not expect sandbox data to make sense. Expect the data to be structurally 
+correct in regards to type, content length, and format.
+
+To send `sandbox` requests, set the header `x-environment` to `sandbox`. If the header is missing or set to any value
+other than `sandbox` the request is considered to be in `production` mode.
+
+

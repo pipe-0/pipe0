@@ -1,5 +1,5 @@
-import { getPipeEntryMap } from "@/app/resources/pipe-catalog/get-pipes";
-import { PipeCatalogIndex } from "@/components/features/docs/pipes-catalog-index";
+import { getSearchEntryMap } from "@/app/resources/search-catalog/get-searches";
+import { SearchCatalogIndex } from "@/components/features/docs/searches-catalog-index";
 import { Suspense } from "react";
 
 export const metadata = {
@@ -7,7 +7,7 @@ export const metadata = {
 };
 
 export default async function PipeCatalog() {
-  const pipeEntryMap = await getPipeEntryMap();
+  const searchEntryMap = await getSearchEntryMap();
 
   return (
     <div
@@ -16,7 +16,7 @@ export default async function PipeCatalog() {
       style={{ maxWidth: "var(--nextra-content-width)" }}
     >
       <Suspense>
-        <PipeCatalogIndex pipeEntryMap={pipeEntryMap} />
+        <SearchCatalogIndex searchEntryMap={searchEntryMap} />
       </Suspense>
     </div>
   );

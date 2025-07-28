@@ -24,16 +24,11 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
-  DropdownMenuItem,
   DropdownMenuContent,
   DropdownMenuGroup,
+  DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card";
 import { Input } from "@/components/ui/input";
 import {
   Pagination,
@@ -56,12 +51,11 @@ import {
   PipeCatalogTableData,
   PipeCategory,
   PipeId,
-  pipeMetaCatalog,
-  PipeMetaCatalogEntry,
+  pipeCatalog,
+  PipeCatalogEntry,
   providerCatalog,
 } from "@pipe0/client-sdk";
 import { usePipeCatalogTable } from "@pipe0/react-sdk";
-import { Separator } from "@radix-ui/react-separator";
 import {
   ArrowDown,
   ArrowUp,
@@ -178,7 +172,7 @@ const IntegrationCard = ({
                   }}
                 >
                   <DropdownMenuGroup>
-                    {tableEntry.inputGroups.map((group) =>
+                    {tableEntry.defaultInputGroups.map((group) =>
                       Object.values(group.fields).map((field) => (
                         <DropdownMenuItem
                           className="py-1 cursor-pointer block text-muted-foreground hover:text-foreground"
@@ -212,7 +206,7 @@ const IntegrationCard = ({
                   }}
                 >
                   <DropdownMenuGroup>
-                    {tableEntry.outputFields.map((field) => (
+                    {tableEntry.defaultOutputFields.map((field) => (
                       <DropdownMenuItem
                         key={field}
                         className="py-1 cursor-pointer block text-muted-foreground hover:text-foreground"
@@ -288,7 +282,7 @@ const quickStartOptions = [
   disabled: boolean;
 }[];
 
-export function IntegrationCatalog({
+export function PipeCatalogIndex({
   pipeEntryMap,
 }: {
   pipeEntryMap: PipeEntryMap;
@@ -585,7 +579,7 @@ export function IntegrationCatalog({
                     <IntegrationCard
                       key={pipeId}
                       tableEntry={{
-                        ...(pipeMetaCatalog[pipeId] as PipeMetaCatalogEntry),
+                        ...(pipeCatalog[pipeId] as PipeCatalogEntry),
                         pipeId,
                         latestVersion: getPipeVersion(pipeId),
                       }}

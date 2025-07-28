@@ -1,5 +1,4 @@
-import { getLastPipeVersionEntry } from "@/lib/utils";
-import { PipeId, pipeMetaCatalog } from "@pipe0/client-sdk";
+import { PipeId, pipeCatalog } from "@pipe0/client-sdk";
 import { normalizePages } from "nextra/normalize-pages";
 import { getPageMap } from "nextra/page-map";
 
@@ -40,7 +39,7 @@ export async function getPipeEntries() {
           .filter((e) => e.name !== "index")
           .map((c) => {
             const pipeId = c.frontMatter.other?.pipeId || c.frontMatter.pipeId;
-            const catalogEntry = pipeMetaCatalog[pipeId];
+            const catalogEntry = pipeCatalog[pipeId];
 
             if (!catalogEntry) {
               throw new Error(`Pipe "${pipeId}" not found in pipeMetaCatalog`);

@@ -7,6 +7,13 @@ Click the image to watch an intro video.
 [Pipe0](https://pipe0.com) is a framework for data enrichment. It replaces providers
 like Zoominfo, Prospeo, or Findymail with a more flexible API.
 
+Our API is built around three endpoints allow you to design features similar to tools like [n8n](https://n8n.io) (node-based automation)
+or [clay](https://clay.com) (table-based automation). Three three endpoints (pimitives) are:
+
+**Pipes:** A composable endpoint to enrich data & perform actions in 3rd party systems
+**Searches:**: A composable endpoint to search for companies and leads using filters
+**Comming soon:** A data transforamtion endpoint
+
 Aside from finding information like email addresses, phone numbers, and LinkedIn profiles
 (s. [pipe catalog](https://pipe0.com/resources/pipe-catalog) for a full list),
 you can use Pipe0 to express conditions, perform actions, and generate insights with AI.

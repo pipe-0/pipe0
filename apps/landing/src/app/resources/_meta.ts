@@ -11,6 +11,12 @@ const meta: MetaRecord = {
       collapsed: true,
     },
   },
+  "search-catalog": {
+    type: "page",
+    theme: {
+      collapsed: true,
+    },
+  },
   "api-reference": {
     type: "page",
     title: "API Reference",
@@ -19,14 +25,6 @@ const meta: MetaRecord = {
       sidebar: false,
       toc: false,
     },
-  },
-  blog: {
-    type: "page",
-    title: "Blog",
-    href: "/blog",
-  },
-  legal: {
-    display: "hidden",
   },
 };
 
