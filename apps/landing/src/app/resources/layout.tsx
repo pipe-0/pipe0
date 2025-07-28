@@ -28,7 +28,7 @@ export default async function RootLayout({ children }: PropsWithChildren) {
       sidebar={{ defaultMenuCollapseLevel: 1 }}
       nextThemes={{ defaultTheme: "light" }}
     >
-      {children}
+      <div className="min-h-screen">{children}</div>
     </Layout>
   );
 }

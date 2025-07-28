@@ -12,11 +12,11 @@ isPublished: true
 
 # Response Object
 
-The following API operations all return a response of type `PipelineResponse`.
+The following API operations all return a response of type `PipesResponse`.
 
-- `POST https://api.pipe0.com/v1/run` (used to run the pipeline)
-- `GET https://api.pipe0.com/v1/check` (used to check the processing state)
-- `POST https://api.pipe0.com/v1/run/sync` (used to run the pipeline synchronously)
+- `POST https://api.pipe0.com/v1/pipes/run` (used to run the pipeline)
+- `GET https://api.pipe0.com/v1/pipes/check` (used to check the processing state)
+- `POST https://api.pipe0.com/v1/pipes/run/sync` (used to run the pipeline synchronously)
 
 At first, seeing the full response object can be intimidating. But our response object has been 
 designed to make your life easy. Here are some things our responses are designed for:
@@ -271,10 +271,3 @@ all the providers that were tried in this field.
 #### record.field.ui
 
 Additional information for rendering the field value.
-
-
-## OpenAPI 3.1
-
-When working with the <AppLink linkType="pipelineResponse">response object</AppLink> it is helpful
-to have access to a type-safe representation. This will give you autocomplete in your IDE. Follow 
-<AppLink linkType="openAPI">this link</AppLink> to learn more about generating API clients.

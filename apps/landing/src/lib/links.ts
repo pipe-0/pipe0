@@ -8,6 +8,7 @@ export const appLinks = {
   fieldModePrompt: () =>
     `/resources/documentation/pipe-concepts#field-mode-prompt`,
   openAPI: () => `/resources/documentation/requests#openapi-31`,
+  catalogs: () => `/resources/documentation/catalogs`,
   async: () => `/resources/documentation/requests#sync-or-async`,
   sync: () => `/resources/documentation/requests#sync-or-async`,
   waterfallPipes: () =>
@@ -17,8 +18,7 @@ export const appLinks = {
   pipeline: () => `/resources/documentation/pipe-concepts#pipeline`,
   pipelineValidation: () => `/resources/documentation/pipe-concepts#pipeline`,
 
-  primitives: () => `/resources/documentation/pipe-concepts`,
-  inputExpansion: () => `/resources/documentation/.......`,
+  inputExpansion: () => `/resources/documentation/pipes-inputs#input-expansion`,
 
   // Searches
   searchesQuickstart: () => `/resources/documentation/searches-quickstart`,

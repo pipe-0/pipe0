@@ -1,17 +1,15 @@
-import AppLink from "@/components/app-link";
 import { CodeTabs } from "@/components/code-tabs";
 import { FilterDocumentation } from "@/components/config-documentation";
 import CopyToClipboard from "@/components/copy-to-clipboard";
-import { FieldRow } from "@/components/features/pipe-catalog/field-row";
 import { Info } from "@/components/info";
 import { InlineDocsBadge } from "@/components/inline-docs-badge";
+import { SearchFieldRow } from "@/components/search-field-row";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Breadcrumb,
@@ -34,16 +32,11 @@ import { formatCredits } from "@/lib/utils";
 import {
   FieldName,
   getField,
-  PipeId,
-  pipeCatalog,
-  providerCatalog,
-  pipeModuleCatalog,
-  getPipeDefaultConfig,
-  SearchId,
-  getSearchEntry,
   getSearchDefaultConfig,
+  getSearchEntry,
+  providerCatalog,
+  SearchId,
 } from "@pipe0/client-sdk";
-import { Terminal } from "lucide-react";
 import Link from "next/link";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/cjs/styles/prism";
@@ -167,8 +160,7 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
                 if (!found) return null;
 
                 return (
-                  <FieldRow
-                    type="output"
+                  <SearchFieldRow
                     key={fieldName}
                     fieldName={found.name}
                     fieldType={found.type}

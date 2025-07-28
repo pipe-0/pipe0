@@ -6,24 +6,27 @@ date: 2025-07-28
 
 # Request Concepts
 
-### Sandbox
+## Sandbox
 
-Running searches in `production` mode incurs usage costs. For testing, all pipes offer a 
-sandbox environment. Making requests in the sandbox environment is free. Sandbox data is structurally correct but fake.
+All endpoints offer the ability to run in `sandbox mode`. Making requests in sandbox mode is free.
+
+Sandbox data is structurally correct but fake.
 
 To send `sandbox` requests, set `config.environment` to `sandbox`.
 
-### Sync or Async
+## Sync or Async
 
-The request uses the `/v1/run/sync` endpoint. This endpoint returns enriched records within one roundtrip.
-This only works for enriching a few records at a time.
+All endpoints offer the choice between enriching and searching synchonously or asynchonously.
 
-To enrich more data, use the `/v1/run` endpoint and poll the `/v1/check` endpoint until your 
-enrichment task is marked as `completed`.
+- Synchonously: The endpoint returns a result within one roundtrip.
+- Asynchonously: You send a request to create a task. You then poll the `/check` endpoint until the task is marked as `completed`.
 
-### Create an OpenAPI client
+Choosing between the two is up to you. All endpoints may timeout when used synchonously. Reasons for timeouts are often beyound 
+our control (provider latency). We recommend to run all your production requests asynchonously and use the `/sync` endpoints for testing only. 
 
-## OpenAPI 3.1
+## Create an OpenAPI client
+
+### OpenAPI 3.1
 
 When creating request payloads it is helpful to have autocomplete in your IDE. For this, you can generate a client from 
 our open API file hosted at:

@@ -4,7 +4,9 @@ description: "Pipe0 takes care of cleaning up your input data by default"
 date: 2025-03-07
 ---
 
-# Input Sanitation
+# Pipes Input
+
+## Input sanitation
 
 Data enrichment systems ingest user-provided data from sources like:
 
@@ -15,7 +17,7 @@ Data enrichment systems ingest user-provided data from sources like:
 User-provided data can contain mistakes or be invalid. Pipe0 has a robust sanitation layer to clean
 and regenerate data.
 
-## Cleanup
+### Cleanup
 
 The following <AppLink linkType='pipelineRequest'>request payload</AppLink> contains
 common errors but will be processed successfully.
@@ -52,7 +54,7 @@ Here's how we clean this request:
 1. Fix obvious typos and remove invalid characters
 1. Parse data formats on demand (int > float, float > int, int > string)
 
-## Regeneration
+### Regeneration
 
 In our example, `"company_websiste_url": "not today"` is not a valid URL.
 
@@ -77,13 +79,13 @@ The result may look like this:
 > 
 > Valid input values are not regenerated. Instead, they are copied from the `input` to the <AppLink linkType="record">record</AppLink>.
 
-## Incomplete data
+### Incomplete data
 
 It is common for input data to be incomplete.
 
 Failing the entire task because one input object cannot be processed is impractical and annoying.
 
-### Partially missing input fields
+#### Partially missing input fields
 
 If we find **at least one input object** that can be processed, <AppLink linkType="pipelineValidation">pipeline validation</AppLink> will pass.
 
@@ -118,7 +120,7 @@ in record `id=2`. In this case:
 - Record `id=1` is processed in full.
 - Record `id=2` has failed fields
 
-### No input object has required input fields
+#### No input object has required input fields
 
 Let's look at another example:
 
@@ -147,9 +149,49 @@ No input object has the required field `company_websiste_url`. The request will 
 
 The entire task will fail before processing starts.
 
-### Never fail a task
+#### Never fail a task
 
 In practice, dealing with failing tasks can be annoying. If you don't want to deal 
 with failing task, there's an escape hatch: If you define the expected input fields and set them to `null`, pipeline validation will
 pass. The task will not fail. Instead, only individual fields fail.
+
+## Input expansion
+
+> [!NOTE]
+>
+> Input expansion is an advanced concept that you can safely ignore if you don't plan to use pipe0 for complex UIs.
+
+When you enrich data with pipe0 you transform your "input objects" into output records. An input object may look like this:
+
+```json
+{
+    "id": 2,
+    "name": "Tom Schmidt",
+}
+```
+Some interactions require you reprocess previously processed fields. For this it is common to transform your output records
+back to `input objects`. However, by doing so a lot of the previous processing information is lost. This includes metadata like 
+the result of a waterfall, UI widgets, etc.
+
+If you pass a plain value to the API it will always be marked as `resolved_by:input`.
+
+Instead of passing your input as a plain value there is another way. You may pass your inputs fully or partially expanded (as the field value of the response object).
+
+```json
+{
+  "id": 2,
+  "name": {
+      "value": "emma@amazon.com",
+      "status": "completed",
+      "type": "string",
+      "reason": null,
+      "meta": null,
+      "ui": {
+        "severity": "none"
+      }
+  },
+}
+```
+
+Expanding inputs gives you a great deal of control but shifts the responsibility of providing valid input states to you.
 

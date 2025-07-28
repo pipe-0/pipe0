@@ -35,7 +35,7 @@ The cost per pipe invocation is ~1ct. per record.
     <div>
 ```typescript
 const id = 1;
-const result = await fetch("https://api.pipe0.com/v1/run", {
+const result = await fetch("https://api.pipe0.com/v1/pipes/run", {
   method: "POST",
   headers: {
     "Authorization": `Bearer <API_KEY>`,
@@ -57,7 +57,7 @@ console.log(response.records[id].fields["isEmailValid"].value);
     </div>
     <div>
 ```shell
-curl -X POST "https://api.pipe0.com/v1/run" \
+curl -X POST "https://api.pipe0.com/v1/pipes/run" \
 -H "Authorization: Bearer <API_KEY>" \
 -d '{
     "pipes": [{ "name": "PeopleValidateEmailZeroBounce@1" }],

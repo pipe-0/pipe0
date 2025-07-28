@@ -154,7 +154,7 @@ const SearchIntegrationCard = ({
                 }}
               >
                 <DropdownMenuGroup>
-                  {tableEntry.outputFields.map((field) => (
+                  {tableEntry.defaultOutputFields.map((field) => (
                     <DropdownMenuItem
                       key={field}
                       className="py-1 cursor-pointer block text-muted-foreground hover:text-foreground"
@@ -210,7 +210,7 @@ export function SearchCatalogIndex({
     setCategory,
     setGlobalFilterInput,
     table,
-    showFeaturedPipes,
+    showFeaturedSearches,
     sidebar: {
       addColumnFilter,
       expandedSidebarSections,
@@ -445,7 +445,7 @@ export function SearchCatalogIndex({
           </div>
 
           {/* Featured section */}
-          {showFeaturedPipes && FEATURED_SEARCHES_IDS.length ? (
+          {showFeaturedSearches && FEATURED_SEARCHES_IDS.length ? (
             <div className="space-y-4">
               <h2 className="text-2xl font-bold">Featured</h2>
               <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
@@ -470,7 +470,7 @@ export function SearchCatalogIndex({
 
           {/* All integrations */}
           <div className="space-y-4">
-            {showFeaturedPipes && (
+            {showFeaturedSearches && (
               <h2 className="text-2xl font-bold">All integrations</h2>
             )}
             <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">

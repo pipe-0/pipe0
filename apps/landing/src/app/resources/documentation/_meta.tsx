@@ -47,16 +47,16 @@ const meta: MetaRecord = {
       toc: false,
     },
   },
-  "request-payload": {
+  "pipes-request-payload": {
     title: "Request Payload",
   },
-  "response-object": {
+  "pipes-response-object": {
     title: "Response Object",
   },
   "pipe-concepts": {
     title: "Concepts",
   },
-  "input-sanitation": {
+  "pipes-inputs": {
     title: "Inputs",
   },
   ____: {

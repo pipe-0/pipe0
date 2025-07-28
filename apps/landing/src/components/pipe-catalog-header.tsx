@@ -1,7 +1,7 @@
 import AppLink from "@/components/app-link";
 import { CodeTabs } from "@/components/code-tabs";
 import CopyToClipboard from "@/components/copy-to-clipboard";
-import { FieldRow } from "@/components/features/pipe-catalog/field-row";
+import { PipeFieldRow } from "@/components/features/pipe-catalog/field-row";
 import { Info } from "@/components/info";
 import { InlineDocsBadge } from "@/components/inline-docs-badge";
 import {
@@ -210,7 +210,7 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
                               if (!found) return null;
 
                               return (
-                                <FieldRow
+                                <PipeFieldRow
                                   type="input"
                                   key={fieldName}
                                   fieldName={fieldName}
@@ -229,7 +229,7 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
                       if (!found) return null;
 
                       return (
-                        <FieldRow
+                        <PipeFieldRow
                           key={fieldName}
                           description={found.description}
                           groupCondition={group.condition}
@@ -255,7 +255,7 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
                   if (!found) return null;
 
                   return (
-                    <FieldRow
+                    <PipeFieldRow
                       type="output"
                       key={fieldName}
                       fieldName={found.name}
@@ -297,7 +297,7 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
                     style={vscDarkPlus}
                     customStyle={{ borderRadius: "0.375rem" }}
                   >
-                    {`const result = await fetch("https://api.pipe0.com/v1/run/sync", {
+                    {`const result = await fetch("https://api.pipe0.com/v1/pipes/run", {
   method: "POST",
   headers: {
     "Authorization": \`Bearer \${API_KEY}\`,
@@ -317,7 +317,7 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
                     style={vscDarkPlus}
                     customStyle={{ borderRadius: "0.375rem" }}
                   >
-                    {`curl -X POST "https://api.pipe0.com/v1/run/sync" \\
+                    {`curl -X POST "https://api.pipe0.com/v1/pipes/run" \\
 -H "Authorization: Bearer $API_KEY" \\
 -d '{
     "pipes": [{ "pipe_id": "${pipeId}" }],
@@ -348,7 +348,7 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
                     style={vscDarkPlus}
                     customStyle={{ borderRadius: "0.375rem" }}
                   >
-                    {`const result = await fetch("https://api.pipe0.com/v1/run/sync", {
+                    {`const result = await fetch("https://api.pipe0.com/v1/pipes/run", {
   method: "POST",
   headers: {
     "Authorization": \`Bearer \${API_KEY}\`,
@@ -373,7 +373,7 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
                     style={vscDarkPlus}
                     customStyle={{ borderRadius: "0.375rem" }}
                   >
-                    {`curl -X POST "https://api.pipe0.com/v1/run/sync" \\
+                    {`curl -X POST "https://api.pipe0.com/v1/pipes/run" \\
 -H "Authorization: Bearer $API_KEY" \\
 -d '{
     "pipes": [{ "pipe_id": "${pipeId}" }],

@@ -107,8 +107,6 @@ const generateRangeExample = (fieldName: string, field: RangeMetadata) => `{
   "${fieldName}": {
     ">": ${field.min || 0},
     "<": ${field.max || 100},
-    ">=": null,
-    "<=": null
   }
 }`;
 

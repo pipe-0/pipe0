@@ -26,25 +26,28 @@ adds a field called `work_email` to your input objects.
 <CodeTabs items={["Typescript", "Python", "cURL"]}>
     <div>
 ```typescript
-const result = await fetch("https://api.pipe0.com/v1/run/sync", {
-method: "POST",
-headers: {
-    "Authorization": `Bearer ${API_KEY}`,
-},
-body: JSON.stringify({
-    pipes: [
-    {
-        pipe_id: "people:workemail:waterfall@1"
+const result = await fetch("https://api.pipe0.com/v1/pipes/run/sync", {
+    method: "POST",
+    headers: {
+        "Authorization": `Bearer ${API_KEY}`,
     },
-    ],
-    input: [
+    body: JSON.stringify({
+        config: {
+            environemnt: "production",
+        },
+        pipes: [
         {
-            id: 1, // assign an id to each input object
-            name: "John Doe",
-            company_website_url: "https://pipe0.com"
-        }
-    ]
-})
+            pipe_id: "people:workemail:waterfall@1"
+        },
+        ],
+        input: [
+            {
+                id: 1,
+                name: "John Doe",
+                company_website_url: "https://pipe0.com"
+            }
+        ]
+    })
 });
 ```
     </div>
@@ -70,12 +73,12 @@ payload = {
         }
     ]
 }
-response = requests.post("https://api.pipe0.com/v1/run", headers=headers, json=payload)
+response = requests.post("https://api.pipe0.com/v1/pipes/run", headers=headers, json=payload)
 ```
     </div>
     <div>
     ```bash
-curl -X POST "https://api.pipe0.com/v1/run" \
+curl -X POST "https://api.pipe0.com/v1/pipes/run" \
 -H "Authorization: Bearer $API_KEY" \
 -d '{
         "pipes": [

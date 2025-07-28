@@ -16,7 +16,6 @@ import { fieldCatalog, FieldType, InputGroup } from "@pipe0/client-sdk";
 import { TooltipTrigger } from "@radix-ui/react-tooltip";
 import { ArrowDown, ArrowUp, Check, Copy } from "lucide-react";
 import Link from "next/link";
-import { useTheme } from "nextra-theme-docs";
 import { useMemo, useState } from "react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { toast } from "sonner";
@@ -28,7 +27,7 @@ export function findFieldByName(fieldName: string) {
     [])[1];
 }
 
-export function FieldRow({
+export function PipeFieldRow({
   fieldName,
   fieldType,
   description,
