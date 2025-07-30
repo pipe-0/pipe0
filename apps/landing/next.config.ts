@@ -67,13 +67,15 @@ const rehypeOpenGraphImage = () => (ast: any) => {
   properties.push(prop);
 };
 
+const plugins = [];
+if (process.env.NODE_ENV === "production") {
+  plugins.push(rehypeOpenGraphImage);
+}
+
 const withNextra = nextra({
   defaultShowCopyCode: true,
   mdxOptions: {
-    rehypePlugins: [
-      // Provide only on `build` since turbopack on `dev` supports only serializable values
-      process.env.NODE_ENV !== "development" ? rehypeOpenGraphImage : undefined,
-    ],
+    rehypePlugins: plugins,
   },
 });
 

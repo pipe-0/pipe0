@@ -44,7 +44,9 @@ export default async function Page() {
 
       <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
         {blogPosts.map((post) => {
-          const searchParam = new URLSearchParams({ title: post.title });
+          const searchParam = new URLSearchParams({
+            title: String(post.title),
+          });
 
           return (
             <Link key={post.route} href={post.route}>
