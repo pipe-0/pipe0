@@ -9,8 +9,9 @@ import { YoutubeEmbed } from "../../../../components/features/mdx/youtube-embed"
 
 # Searches quickstart
 
-Use `Searches` to find companies and people using `filters`. With searches, you combine and deduplicate datasets from multiple providers.
-The <AppLink linkType="searchCatalog">search catalog</AppLink> 
+Use `Searches` to find companies and people using `filters`. Searching for companies & people is often called "prospecting", "list building" or "sourcing".
+
+With searches, you combine and deduplicate datasets from multiple providers. The <AppLink linkType="searchCatalog">search catalog</AppLink> 
 lists all available datasets.
 
 ## Making requests
@@ -51,9 +52,9 @@ const result = await fetch("https://api.pipe0.com/v1/searches/run", {
     </div>
 </CodeTabs>
 
-You can find a list of all available filters in the [search catalog](http://localhost:3000/resources/search-catalog/people:profiles:icypeas/1).
+You can find the list of available filters per dataset in the [search catalog](http://localhost:3000/resources/search-catalog/people:profiles:icypeas/1).
 
-You can combine multiple searches in one request. Append additional searches to the `searches` property.
+Append additional searches to the `searches` property to combine multiple searches in one request. 
 
 The result will look something like this:
 
@@ -83,7 +84,7 @@ The result will look something like this:
 }
 ```
 
-The result of a search can be the input for a <AppLink linkType="pipesQuickstart">pipes request</AppLink> (data enrichment).
+The result of a search can be the input for a <AppLink linkType="pipesQuickstart">pipes request</AppLink> (enrichment).
 Under the hood, this uses <AppLink linkType="inputExpansion">input expansion</AppLink>.
 
 ### Helpful links
