@@ -18,39 +18,42 @@ allowFullScreen
 [Pipe0](https://pipe0.com) is a framework for data enrichment. It replaces providers 
 like Zoominfo, Prospeo, or Findymail with a more flexible API.
 
-We're developing three endpoints that you can use for simple and complex data enrichment.
+You can use Pipe0 to: <br />
+🧭 Find lists of leads and companies (prospecting) <br />
+📱 Find data like phone numbers, LinkedIn profiles, email addresses, and more (enrichment). <br />
+🧮 Express conditions, perform actions and generate insights with AI. <br />
 
-You can use our endpoints to find phone numbers and email addresses or add complex features similar to [n8n](https://n8n.io) (node-based automation)
-or [clay](https://clay.com) (table-based automation) to your application without much hassle.
+Pipe0 took inspiration from tools like [n8n](https://n8n.io)
+(node-based automation) and [clay](https://clay.com) (table-based automation). You can use Pipe0 to add similar
+experiences to your applications at a fair price.
 
-Our three endpoints are:
-
-**Pipes:** A composable endpoint to enrich data & perform actions in 3rd party systems <br />
-**Searches:** A composable endpoint to search for companies and leads using filters <br />
-**Effects (coming soon):** A data transformation endpoint <br />
-
-Aside from finding people, companies, email addresses, and phone numbers — 
-see <AppLink linkType="catalogs">catalogs</AppLink> for a full list —
-you can use Pipe0 to express conditions, perform actions, and generate insights with AI.
-
-It's easy to underestimate the engineering challenge of building a robust data enrichment platform in-house.
-Here are some things that you never have to worry about when using Pipe0:
+It's easy to underestimate the engineering challenge of building a robust data enrichment platform yourself.
+Here are some things you never have to worry about when using Pipe0:
 
 ⚡️ Enriching data in parallel with speed and accuracy<br />
+📊 Building analytics and monitoring <br />
 🛑 Dealing with different provider rate limits<br />
 🧼 Sanitizing & healing input data<br />
-🖥️ Monitoring dozens of 3rd-party API integrations<br />
-🌊 Building custom waterfalls <br />
+🖥️ Managing dozens of 3rd-party integrations<br />
+🌊 Building custom waterfall enrichments <br />
 💵 Managing credit balances with different providers <br />
-🏗️ Run enrichment, scraping, and AI infrastructure at low cost<br />
-🍝 Spaghetti code<br />
 💾 Caching <br />
+
+Let's look at the following sequence. It's a combination of **search**, **data enrichment**, **conditions**, and **actions**:
+
+> Find 1k software engineers in San Francisco with more than 3 years of experience (**search**).
+> Find each candidate's LinkedIn profile (**enrichment**).
+> IF the candidate has experience with Python, find their personal email address (**condition**).
+> IF the email was found, compose a sales email and send it (**action**).
+> IF the email address was NOT found, send a LinkedIn contact request (**action**).
+
+In Pipe0, this sequence can be expressed with two API calls (1 call to <AppLink linkType="searchCatalog">Searches</AppLink>, 
+1 call to <AppLink linkType="pipeCatalog">Pipes</AppLink>) and you can perform it on millions of input objects.
 
 ## Use cases
 
-🤖 Building sales technology applications like automated outreach, SDR, etc. <br />
-🪄 AI Agents that need a flexible data source <br />
-🧙🏻 Updating CRM or ATS data <br />
-🧬 Enriching large datasets <br />
+🧭 Finding lead & company lists (prospecting, sourcing, contact stocking) <br />
+🤖 Add data enrichment into sales & HR applications <br />
+🪄 Give AI agents access to enriched data <br />
 
 
