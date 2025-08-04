@@ -1,4 +1,4 @@
-import { pipe0Client, toValueArr, type PipelineRequest } from "./utils";
+import { zero, toValueArr, type PipelineRequest } from "./utils";
 
 export const requestBody: PipelineRequest = {
   pipes: [
@@ -25,7 +25,7 @@ export const requestBody: PipelineRequest = {
 };
 
 export async function fetcher() {
-  const { data } = await pipe0Client.POST("/v1/run/sync", {
+  const { data } = await zero.POST("/v1/pipes/run/sync", {
     headers: {}, // Add your API key here AND change the url in './utils'
     body: requestBody,
   });

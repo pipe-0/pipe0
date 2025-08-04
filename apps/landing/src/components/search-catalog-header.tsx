@@ -198,6 +198,7 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
   method: "POST",
   headers: {
     "Authorization": \`Bearer \${API_KEY}\`,
+    "Content-Type": "application/json",
   },
   body: JSON.stringify({
     searches: [{ 

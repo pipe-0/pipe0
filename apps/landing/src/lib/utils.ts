@@ -28,7 +28,7 @@ export function getLastPipeVersionEntry(
 
 export function formatCredits(credits: number | string | null) {
   const c = credits ? Number(credits) : 0;
-  const fixed = c.toFixed(1);
+  const fixed = c.toFixed(2);
   return fixed.endsWith(".0") ? fixed.slice(0, -2) : fixed;
 }
 

@@ -38,6 +38,7 @@ const result = await fetch("https://api.pipe0.com/v1/pipes/run", {
   method: "POST",
   headers: {
     "Authorization": `Bearer <API_KEY>`,
+    "Content-Type": "application/json",
   },
   body: JSON.stringify({
     pipes: [{ pipe_id: "people:workemail:waterfall@1", providers: ["findymail", "dropcontact"] }],
@@ -58,6 +59,7 @@ console.log(response.records[id].fields["workEmail"].value);
 ```shell
 curl -X POST "https://api.pipe0.com/v1/pipes/run" \
 -H "Authorization: Bearer <API_KEY>" \
+-H "Content-Type: application/json" \
 -d '{
     "pipes": [{ "pipe_id": "people:workemail:waterfall@1",  providers: ["findymail", "dropcontact"] }],
     "input": [{"id": 1, "first_name": "<FIRST_NAME>", "last_name": "<LAST_NAME>", "company_website_url": "<COMPANY_URL>"}]

@@ -1,7 +1,7 @@
 import { type paths } from "./schema.ts";
 import createClient from "openapi-fetch";
 
-export const pipe0Client = createClient<paths>({
+export const zero = createClient<paths>({
   // Requests use a test endpoint that only returns fake data
   // set to "https://api.pipe0.com" to use production data
   // baseUrl: "https://api.pipe0.com"

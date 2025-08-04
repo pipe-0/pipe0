@@ -33,5 +33,6 @@ To make authenticated requests send your API key as part of the
 
 ```bash filename="Authenticated request"
 curl -X POST "https://api.pipe0.com/v1/pipes/run" \
--H "Authorization: Bearer <API_KEY>
+-H "Authorization: Bearer <API_KEY>" \
+-H "Content-Type: application/json" 
 ```

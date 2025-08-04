@@ -7,7 +7,16 @@ export default {
 		const url = new URL(request.url);
 
 		// Only allow /run and /run/sync paths
-		if (!(url.pathname === '/v1/run' || url.pathname === '/v1/run/sync')) {
+		if (
+			!(
+				url.pathname === '/v1/pipes/run' ||
+				url.pathname === '/v1/pipes/run/sync' ||
+				url.pathname === '/v1/pipes/check' ||
+				url.pathname === '/v1/searches/run/sync' ||
+				url.pathname === '/v1/searches/run' ||
+				url.pathname === '/v1/searches/check'
+			)
+		) {
 			return new Response('Not Found', { status: 404 });
 		}
 
