@@ -40,11 +40,24 @@ export default {
 		newHeaders.set('x-environment', 'sandbox');
 		newHeaders.set('Authorization', `Bearer ${env.PIPE0_API_KEY}`);
 
+		console.log({ method: request.method });
+
+		let body;
+		if (url.pathname.includes('run') && ['POST', 'PUT', 'PATCH'].includes(request.method)) {
+			const res = (await request.json()) as any;
+			body = {
+				...res,
+				config: {
+					...res?.config,
+					environment: 'sandbox',
+				},
+			};
+		}
 		// Forward the request
 		const proxyRequest = new Request(destinationUrl, {
 			method: request.method,
 			headers: newHeaders,
-			body: request.body,
+			body: JSON.stringify(body),
 			redirect: 'manual',
 		});
 
