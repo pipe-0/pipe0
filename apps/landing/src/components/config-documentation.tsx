@@ -1,82 +1,48 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Badge } from "@/components/ui/badge";
 import {
-  ExternalLink,
-  Hash,
-  Calendar,
-  Type,
-  ToggleLeft,
-  List,
-  FileText,
-} from "lucide-react";
-import {
-  BooleanMetadata,
   DateRangeMetadata,
   GeneratedFormField,
-  getSearchFormConfig,
-  IncludeExcludeMetadata,
-  IncludeExcludeSelectMetadata,
+  getFormConfig,
+  getFormConfigMetadata,
+  getPipeConfigSchema,
+  getSearchConfigSchema,
   IntegerMetadata,
+  isBooleanField,
+  isDateRangeField,
+  isIncludeExcludeField,
+  isIncludeExcludeSelectField,
+  isIntegerField,
+  isJSONExtractionField,
+  isNumberField,
+  isRangeField,
+  isSelectField,
+  isTextareaField,
+  isTextField,
   NumberMetadata,
+  PipeId,
   RangeMetadata,
+  RECORD_FIELD_FORMATS,
+  RECORD_FIELD_TYPES,
   SearchId,
   SelectMetadata,
-  TextareaMetadata,
   TextMetadata,
 } from "@pipe0/client-sdk";
-import { PropsWithChildren } from "react";
-
-interface FilterDocumentationProps {
-  searchId: SearchId;
-}
-
-const isIncludeExcludeField = (
-  field: GeneratedFormField
-): field is IncludeExcludeMetadata => field.type === "include_exclude_input";
-
-const isIncludeExcludeSelectField = (
-  field: GeneratedFormField
-): field is IncludeExcludeSelectMetadata =>
-  field.type === "include_exclude_select_input";
-
-const isRangeField = (field: GeneratedFormField): field is RangeMetadata =>
-  field.type === "range_input";
-
-const isIntegerField = (field: GeneratedFormField): field is IntegerMetadata =>
-  field.type === "int_input";
-
-const isNumberField = (field: GeneratedFormField): field is NumberMetadata =>
-  field.type === "number_input";
+import { Calendar, FileText, Hash, List, ToggleLeft, Type } from "lucide-react";
+import { PropsWithChildren, useMemo } from "react";
+import { ZodType } from "zod";
 
 const isNumericField = (
   field: GeneratedFormField
 ): field is RangeMetadata | IntegerMetadata | NumberMetadata =>
   isRangeField(field) || isIntegerField(field) || isNumberField(field);
-
-const isBooleanField = (field: GeneratedFormField): field is BooleanMetadata =>
-  field.type === "boolean_input";
-
-const isDateRangeField = (
-  field: GeneratedFormField
-): field is DateRangeMetadata => field.type === "date_range_input";
-
-const isTextField = (field: GeneratedFormField): field is TextMetadata =>
-  field.type === "text_input";
-
-const isTextareaField = (
-  field: GeneratedFormField
-): field is TextareaMetadata => field.type === "textarea_input";
-
-const isSelectField = (field: GeneratedFormField): field is SelectMetadata =>
-  field.type === "select_input";
 
 const FIELD_ICONS = {
   include_exclude_input: List,
@@ -100,6 +66,20 @@ const generateIncludeExcludeExample = (fieldName: string) => `{
   "${fieldName}": {
     "include": ["value1", "value2"],
     "exclude": ["unwanted1", "unwanted2"]
+  }
+}`;
+
+const generateJsonExtractionExample = (fieldName: string) => `{
+  "${fieldName}": {
+    "extractions": [
+      "path": "foo.bar",
+      "output_field": {
+        "name": "extracted_name",
+        "format": "text",
+        "label": "Extracted name",
+        "type": "string",
+      }
+    ]
   }
 }`;
 
@@ -167,6 +147,9 @@ function generateCodeExample(field: GeneratedFormField): string {
   }
   if (isIntegerField(field) || isNumberField(field)) {
     return generateNumericExample(fieldName, field);
+  }
+  if (isJSONExtractionField(field)) {
+    return generateJsonExtractionExample(fieldName);
   }
 
   return `{
@@ -344,6 +327,61 @@ function OptionsSection({ field }: { field: GeneratedFormField }) {
   );
 }
 
+function ReferencesSection({ field }: { field: GeneratedFormField }) {
+  const showFieldFormatOptions = useMemo(() => {
+    return isJSONExtractionField(field);
+  }, []);
+
+  const showTypeOptions = useMemo(() => {
+    return isJSONExtractionField(field);
+  }, []);
+
+  return (
+    <div className="flex gap-3 flex-wrap">
+      {showFieldFormatOptions && (
+        <div className="flex-1">
+          <h4 className="text-sm font-medium text-gray-900 mb-3">
+            Field Format options
+          </h4>
+          <div className="max-h-32 overflow-y-auto border border-gray-200 rounded-lg p-3">
+            <div className="flex flex-wrap gap-1.5">
+              {RECORD_FIELD_FORMATS.map((format, idx) => (
+                <Badge
+                  key={idx}
+                  variant="secondary"
+                  className="text-xs font-normal"
+                >
+                  {format}
+                </Badge>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+      {showTypeOptions && (
+        <div className="flex-1">
+          <h4 className="text-sm font-medium text-gray-900 mb-3">
+            Field type options
+          </h4>
+          <div className="max-h-32 overflow-y-auto border border-gray-200 rounded-lg p-3">
+            <div className="flex flex-wrap gap-1.5">
+              {RECORD_FIELD_TYPES.map((type, idx) => (
+                <Badge
+                  key={idx}
+                  variant="secondary"
+                  className="text-xs font-normal"
+                >
+                  {type}
+                </Badge>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 const OPERATOR_INFO = [
   { symbol: ">", description: "Greater than" },
   { symbol: "<", description: "Less than" },
@@ -418,12 +456,38 @@ function FieldDocumentation({ field }: { field: GeneratedFormField }) {
           <OperatorsSection field={field} />
         </div>
       </div>
+      <ReferencesSection field={field} />
     </div>
   );
 }
 
-export function FilterDocumentation({ searchId }: FilterDocumentationProps) {
-  const formConfig = getSearchFormConfig(searchId);
+interface FilterDocumentationProps {
+  searchId?: SearchId;
+  pipeId?: PipeId;
+}
+
+export function ConfigDocumenation({
+  searchId,
+  pipeId,
+}: FilterDocumentationProps) {
+  const formConfig = useMemo(() => {
+    let ConfigSchema: ZodType;
+    if (searchId) {
+      ConfigSchema = getSearchConfigSchema(searchId);
+    } else if (pipeId) {
+      ConfigSchema = getPipeConfigSchema(pipeId);
+    } else {
+      throw new Error("Must define either pipeId or searchId");
+    }
+    const config = getFormConfig({
+      schema: ConfigSchema,
+      staticOnly: false,
+    });
+
+    console.log({ config });
+    return config;
+  }, [searchId, pipeId]);
+
   const allFields = formConfig.flatMap((section) =>
     section.groups.flatMap((group) => group.fields)
   );

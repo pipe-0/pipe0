@@ -1,5 +1,5 @@
 import { CodeTabs } from "@/components/code-tabs";
-import { FilterDocumentation } from "@/components/config-documentation";
+import { ConfigDocumenation } from "@/components/config-documentation";
 import CopyToClipboard from "@/components/copy-to-clipboard";
 import { Info } from "@/components/info";
 import { InlineDocsBadge } from "@/components/inline-docs-badge";
@@ -178,7 +178,7 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
         <AccordionItem value="config-reference">
           <AccordionTrigger className="">Config Reference</AccordionTrigger>
           <AccordionContent>
-            <FilterDocumentation searchId={searchId} />
+            <ConfigDocumenation searchId={searchId} />
           </AccordionContent>
         </AccordionItem>
         <AccordionItem value="code">

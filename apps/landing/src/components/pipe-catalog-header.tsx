@@ -1,5 +1,6 @@
 import AppLink from "@/components/app-link";
 import { CodeTabs } from "@/components/code-tabs";
+import { ConfigDocumenation } from "@/components/config-documentation";
 import CopyToClipboard from "@/components/copy-to-clipboard";
 import { PipeFieldRow } from "@/components/features/pipe-catalog/field-row";
 import { Info } from "@/components/info";
@@ -271,14 +272,14 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
       ) : (
         <Alert>
           <Terminal className="h-4 w-4" />
-          <AlertTitle>Field mode: `prompt`</AlertTitle>
+          <AlertTitle>Field mode: `config`</AlertTitle>
           <AlertDescription>
             <p>
-              This pipe supports{" "}
+              This pipe's input and output fields{" "}
               <AppLink linkType="fieldModePrompt">
-                flexible input and output fields
-              </AppLink>{" "}
-              that can be fully defined by the user.
+                can be configured by you
+              </AppLink>
+              .
             </p>
           </AlertDescription>
         </Alert>
@@ -329,6 +330,12 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
                 </div>
               </CodeTabs>
             </div>
+          </AccordionContent>
+        </AccordionItem>
+        <AccordionItem value="config-reference">
+          <AccordionTrigger className="">Config Reference</AccordionTrigger>
+          <AccordionContent>
+            <ConfigDocumenation pipeId={pipeId} />
           </AccordionContent>
         </AccordionItem>
         <AccordionItem value="config">
