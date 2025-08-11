@@ -471,7 +471,7 @@ export function ConfigDocumenation({
   pipeId,
 }: FilterDocumentationProps) {
   const formConfig = useMemo(() => {
-    let ConfigSchema: ZodType;
+    let ConfigSchema: any;
     if (searchId) {
       ConfigSchema = getSearchConfigSchema(searchId);
     } else if (pipeId) {
@@ -484,7 +484,6 @@ export function ConfigDocumenation({
       staticOnly: false,
     });
 
-    console.log({ config });
     return config;
   }, [searchId, pipeId]);
 
