@@ -54,7 +54,11 @@ const meta: MetaRecord = {
     title: "Response Object",
   },
   "pipe-concepts": {
-    title: "Concepts",
+    title: (
+      <>
+        Concepts <span className="badge-new" />
+      </>
+    ),
   },
   "pipes-inputs": {
     title: "Inputs",

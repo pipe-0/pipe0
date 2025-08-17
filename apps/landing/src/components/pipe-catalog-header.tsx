@@ -366,13 +366,12 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
   body: JSON.stringify({
     pipes: [{ 
       pipe_id: "${pipeId}", 
-      // passing a config is optional
       config: ${JSON.stringify(defaultPipeConfig, null, 2).replace(
         /\n/g,
         "\n      "
       )} 
     }],
-    input: []
+    input: [] // <- your inputs go here
   })
 });`}
                   </SyntaxHighlighter>

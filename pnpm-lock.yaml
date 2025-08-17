@@ -24,11 +24,11 @@ importers:
         specifier: ^15.1.6
         version: 15.1.6(@mdx-js/loader@3.1.0(acorn@8.14.0))(@mdx-js/react@3.1.0(@types/react@19.0.8)(react@19.0.0))
       '@pipe0/client-sdk':
-        specifier: 0.0.62
-        version: 0.0.62
+        specifier: 0.0.63
+        version: 0.0.63
       '@pipe0/react-sdk':
-        specifier: 0.0.15
-        version: 0.0.15
+        specifier: 0.0.21
+        version: 0.0.21
       '@radix-ui/react-accordion':
         specifier: ^1.2.3
         version: 1.2.3(@types/react-dom@19.0.3(@types/react@19.0.8))(@types/react@19.0.8)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -1667,17 +1667,14 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@pipe0/client-sdk@0.0.57':
-    resolution: {integrity: sha512-cWGmGwNEi+TvoO7XEZ/Q7No7UxRUDsHox1T01lNnQwGUjhYJwjow9Ga+vxTURZwmiSEoOl7E6r7wbfhnaX/bAw==}
-
   '@pipe0/client-sdk@0.0.59':
     resolution: {integrity: sha512-am7C3aZBXYt4+/P4vAZFZXVQwynhqEE85qz9UOzmWwWbBYZuEJoATESJhFRGrAHfL7UhAXWp3l4WBm+ohRzizg==}
 
-  '@pipe0/client-sdk@0.0.62':
-    resolution: {integrity: sha512-CU6DX1JEVbOznWbdUo5QgXlyqiZMmYkgbeTvn+Xv+3DbVvJhMrunBMxalDcBYWi2VBkpGiaMceePB5EDESQiQA==}
+  '@pipe0/client-sdk@0.0.63':
+    resolution: {integrity: sha512-odFeDHLqXWPzVl7Jda74YY3q7XfFFRYhxpxdkdOvlvt4Pukv8qKfWiajSpwdAMVlVXDmkP2mnYLOjrKbybwdVA==}
 
-  '@pipe0/react-sdk@0.0.15':
-    resolution: {integrity: sha512-4VlTQSIfRkJ1guba2qkCbLGGxwiddWuny8g00Zv2CcWMTYm2w9Dj++CY1gviOrLTvNMlSWUXjhMm24tIqF7XbA==}
+  '@pipe0/react-sdk@0.0.21':
+    resolution: {integrity: sha512-wLQnDvgOuP0qwpxnkzhd9/lBZTqdiXnPm7vMLq1WmfmrtWkCs/pTR0wN7Do0/7lHNQQPBZOZKzbLyn4LqAIQEg==}
 
   '@popperjs/core@2.11.8':
     resolution: {integrity: sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==}
@@ -8314,17 +8311,6 @@ snapshots:
   '@pagefind/windows-x64@1.3.0':
     optional: true
 
-  '@pipe0/client-sdk@0.0.57':
-    dependencies:
-      '@asteasolutions/zod-to-openapi': 8.0.0(zod@4.0.5)
-      '@types/lodash.defaultsdeep': 4.6.9
-      ajv: 8.17.1
-      date-fns: 4.1.0
-      immer: 10.1.1
-      json-schema-typed: 8.0.1
-      lodash.defaultsdeep: 4.6.1
-      zod: 4.0.5
-
   '@pipe0/client-sdk@0.0.59':
     dependencies:
       '@asteasolutions/zod-to-openapi': 8.0.0(zod@4.0.5)
@@ -8336,20 +8322,18 @@ snapshots:
       lodash.defaultsdeep: 4.6.1
       zod: 4.0.5
 
-  '@pipe0/client-sdk@0.0.62':
+  '@pipe0/client-sdk@0.0.63':
     dependencies:
       '@asteasolutions/zod-to-openapi': 8.0.0(zod@4.0.5)
-      '@types/lodash.defaultsdeep': 4.6.9
       ajv: 8.17.1
       date-fns: 4.1.0
       immer: 10.1.1
       json-schema-typed: 8.0.1
-      lodash.defaultsdeep: 4.6.1
       zod: 4.0.5
 
-  '@pipe0/react-sdk@0.0.15':
+  '@pipe0/react-sdk@0.0.21':
     dependencies:
-      '@pipe0/client-sdk': 0.0.57
+      '@pipe0/client-sdk': 0.0.63
       '@tanstack/react-table': 8.21.3(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       lucide-react: 0.475.0(react@19.1.1)
       react: 19.1.1
@@ -11201,7 +11185,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-module-utils@2.12.0(@typescript-eslint/parser@8.23.0(eslint@9.19.0(jiti@2.4.2))(typescript@5.7.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.7.0(eslint-plugin-import@2.31.0)(eslint@9.19.0(jiti@2.4.2)))(eslint@9.19.0(jiti@2.4.2)):
+  eslint-module-utils@2.12.0(@typescript-eslint/parser@8.23.0(eslint@9.19.0(jiti@2.4.2))(typescript@5.7.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.7.0)(eslint@9.19.0(jiti@2.4.2)):
     dependencies:
       debug: 3.2.7
     optionalDependencies:
@@ -11223,7 +11207,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 9.19.0(jiti@2.4.2)
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.12.0(@typescript-eslint/parser@8.23.0(eslint@9.19.0(jiti@2.4.2))(typescript@5.7.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.7.0(eslint-plugin-import@2.31.0)(eslint@9.19.0(jiti@2.4.2)))(eslint@9.19.0(jiti@2.4.2))
+      eslint-module-utils: 2.12.0(@typescript-eslint/parser@8.23.0(eslint@9.19.0(jiti@2.4.2))(typescript@5.7.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.7.0)(eslint@9.19.0(jiti@2.4.2))
       hasown: 2.0.2
       is-core-module: 2.16.1
       is-glob: 4.0.3

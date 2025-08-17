@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { cn, copyToClipboard } from "@/lib/utils";
-import { FieldType } from "@pipe0/client-sdk";
+import { RecordFieldType } from "@pipe0/client-sdk";
 import { Check, Copy } from "lucide-react";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
@@ -18,7 +18,7 @@ export function SearchFieldRow({
   description,
 }: {
   fieldName: string;
-  fieldType: FieldType;
+  fieldType: RecordFieldType;
   description: string;
 }) {
   const fieldResult = useMemo(() => findFieldByName(fieldName), []);

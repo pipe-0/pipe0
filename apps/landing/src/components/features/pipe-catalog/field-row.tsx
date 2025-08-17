@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/sheet";
 import { Tooltip, TooltipContent } from "@/components/ui/tooltip";
 import { cn, copyToClipboard } from "@/lib/utils";
-import { fieldCatalog, FieldType, InputGroup } from "@pipe0/client-sdk";
+import { fieldCatalog, InputGroup, RecordFieldType } from "@pipe0/client-sdk";
 import { TooltipTrigger } from "@radix-ui/react-tooltip";
 import { ArrowDown, ArrowUp, Check, Copy } from "lucide-react";
 import Link from "next/link";
@@ -35,7 +35,7 @@ export function PipeFieldRow({
   groupCondition,
 }: {
   fieldName: string;
-  fieldType: FieldType;
+  fieldType: RecordFieldType;
   description: string;
   type: "input" | "output";
   groupCondition?: InputGroup["condition"];

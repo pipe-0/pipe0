@@ -10,8 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import {
   DateRangeMetadata,
   GeneratedFormField,
-  getFormConfig,
-  getFormConfigMetadata,
+  getConfigFormConfig,
   getPipeConfigSchema,
   getSearchConfigSchema,
   IntegerMetadata,
@@ -479,7 +478,7 @@ export function ConfigDocumenation({
     } else {
       throw new Error("Must define either pipeId or searchId");
     }
-    const config = getFormConfig({
+    const config = getConfigFormConfig({
       schema: ConfigSchema,
       staticOnly: false,
     });

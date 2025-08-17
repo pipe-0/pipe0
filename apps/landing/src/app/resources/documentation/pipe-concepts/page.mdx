@@ -29,7 +29,7 @@ can slow down processing speed.
 #### Choosing waterfall providers
 
 Waterfall pipes have a `config.providers` option. The option is typically of the type `Array<{ provider: <PROVIDER_NAME> }>`.
-If no config is provided the default config is applied. If you remove a provider from the array, the provider is removed
+If no config is provided, the default config is applied. If you remove a provider from the array, the provider is removed
 from your processing sequence.
 
 Providers are processed according to their position in the `config.providers` array. The provider with the index 0 is processed first.
@@ -43,10 +43,10 @@ The field mode determines the shape of the <AppLink linkType="pipeConfig">config
 ### Field mode: `static`
 
 Most <AppLink linkType="pipe">pipes</AppLink> have static <AppLink linkType="inputField">input</AppLink> 
-and <AppLink linkType="outputField">output fields</AppLink>. When `field_mode` is set to `static` the 
+and <AppLink linkType="outputField">output fields</AppLink>. When `field_mode` is set to `static`, the 
 pipe's in- and outputs are known in advance.
 
-You can point the input fields to different fields or rename the outputs but the pipe's API is clearly 
+You can point the input fields to different fields or rename the outputs, but the pipe's API is clearly 
 defined in advance.
 
 _Example_: 
@@ -54,26 +54,136 @@ _Example_:
 When using the pipe `people:workemail:waterfall@1`, we use the
 input fields `name` and `company_website_url` to generate the output field `work_email`.
 
-### Field mode: `prompt`
+### Field mode: `config`
 
-The user is required to specify the inputs and outputs of a pipe via a prompt.
+The inputs and outputs of this pipe are not known beforehand. This is the case when the user can define 
+input and output fields as part of the pipe configuration.
 
-_Example_:
+#### Prompt inputs
 
-The pipe `run:prompt@1` uses any number of input fields to generate any number of output fields. The
-user may specify any input or output field by using <AppLink linkType="promptTags">prompt tags</AppLink>.
+A common pattern that uses user-defined in- and outputs is `prompts`. Prompts let the user specify input 
+and output fields for a pipe with a special syntax.
 
-#### Prompt tags
+##### Prompt example
 
-To define fields in `prompt` mode, use the following syntax to define fields.
-
+Prompts have the following structure:
 
 ```json
 {
-  "prompt": "Based on the name of the person {{ input name type=\"string\" required=\"true\" }} assign a character from the TV show \"The Simpsons\" to that person. {{ output value description=\"Name of a character from the TV show 'The Simpsons\'\" }}",
+  "prompt": {
+    "text": "Determine if company {{ input company_name }} is a good customer for my magic wand 🪄 business. {{ output reason type=\"json\" schema=\"reason\" description=\"Explain why the customer is a good prospect\" }} {{ output is_good_customer type=\"boolean\" format=\"int\" description=\"a flag that summarized the overall assessment of the customers fit\" }}",
+    "json_schemas": {
+      "reason": {
+        "type": "object",
+        "properties": {
+          "reason": {
+            "type": "string",
+            "description": "A summary of why the customer is or isn't a good prospect for my business."
+          },
+        }
+      }
+    }
+  }
 }
 ```
 
-**type**: "string" | "number" | "boolean" <br/>
-**required**: "true" | "false" <br/>
-**description**: string <br/>
+##### Prompt tags 
+
+Input field tags support the following properties:
+
+| Property      | Example |
+| :---        |    :---   | 
+| required      | `{{ input company_name required=\"true\" }}`| 
+
+Input field tags support the following properties:
+
+| Property      | Example |
+| :---        |    :---   | 
+| type      | `{{ output company_name type=\"string\" }}`| 
+| description   | `{{ output company_name description=\"Lorem ipsum\" }}`|
+
+
+## Triggers <span className="badge-new" />
+
+Triggers allow you to run pipes conditionally. You can specify conditions like:
+
+> Run pipe `people:split:name@1` if the field `name` is `completed` and the resolved value `contains` the value `Tom`.
+
+The request for the example above would look like this.
+```json
+{
+	"pipes": [
+		{
+			"pipe_id": "people:split:name@1",
+			"trigger": {
+				"action": "run",
+				"when": {
+					"logic": "and",
+					"conditions": [
+						{
+							"field_name": "name",
+							"property": "value",
+							"operator": "contains",
+							"value": "Tom"
+						}
+					]
+				}
+			}
+		}
+	],
+  "input": [...]
+}
+```
+
+### Trigger Structure
+
+#### action
+The action that will be performed if all conditions are evaluated to true.
+
+**Supported values**: `run`.
+
+> Triggers don't bypass other mechanisms of pipe evaluation. Example: If your trigger conditions are met, but required input 
+> fields are missing pipe execution will still be `skipped`.
+
+
+#### when.logic
+A logic operator that connects all conditions. <br />
+**Supported values**: `and`, `or`.
+
+#### when.conditions[]
+
+A list of conditions. If all conditions evaluate to true, the action will be performed.
+
+#### condition.field_name
+
+A field in your pipeline that will be used for evaluation. This field can be provided by your input values or another pipe as an `output_field`.
+
+> Conditions targeting JSON fields are not supported. To act conditionally on JSON properties, expand them
+> into their own fields.
+
+#### condition.property
+
+The property of the target field (`field_name`) that will be evaluated by the `operator` and `value`.
+
+**Supported values**: `value`, `status`.
+
+#### condition.operator
+
+The operator used for comparison. Allowed operators are determined by `property` and the `field.type`.
+
+##### Operators by type
+
+| Property      | Type | Supported operators    |
+| :---        |    :---   |         :--- |
+| value      | string       | `eq`, `neq`, `contains`   |
+| value   | string, date        | `eq`, `neq`, `lt`, `lte`, `gt`, `gte`, `contains`      |
+| value   | number        | `eq`, `neq`, `lt`, `lte`, `gt`, `gte`, `contains`      |
+| value   | boolean        | `eq`, `neq`, `contains`      |
+| status   | /        | `eq`, `neq`, `contains`      |
+
+**Supported values**: `value`, `status`.
+
+#### condition.value
+
+The value to compare against. 
+
