@@ -203,11 +203,11 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
   body: JSON.stringify({
     searches: [{ 
       search_id: "${searchId}", 
+      config: ${JSON.stringify(defaultSearchConfig, null, 2).replace(
+        /\n/g,
+        "\n      "
+      )} 
     }],
-    config: ${JSON.stringify(defaultSearchConfig, null, 2).replace(
-      /\n/g,
-      "\n      "
-    )} 
   })
 });`}
                   </SyntaxHighlighter>

@@ -55,9 +55,22 @@ const result = await fetch("https://api.pipe0.com/v1/searches/run", {
 
 You can find the list of available filters per dataset in the [search catalog](http://localhost:3000/resources/search-catalog/people:profiles:icypeas/1).
 
-Append additional searches to the `searches` property to combine multiple searches in one request. 
+Append additional searches to the `searches` property to combine multiple searches in one request.
+
+### Poll the result
+
+
+The request to `https://api.pipe0.com/v1/searches/run` creates a search task. Poll the task until its status
+is marked as `completed`. Use the following endpoint for polling (recommended intervall: 1s):
+
+```sh
+GET https://api.pipe0.com/v1/searches/run
+```
+
+### Work with the response
 
 The result will look something like this:
+
 
 ```json
 
