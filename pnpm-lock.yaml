@@ -24,11 +24,11 @@ importers:
         specifier: ^15.1.6
         version: 15.1.6(@mdx-js/loader@3.1.0(acorn@8.14.0))(@mdx-js/react@3.1.0(@types/react@19.0.8)(react@19.0.0))
       '@pipe0/client-sdk':
-        specifier: 0.0.69
-        version: 0.0.69
+        specifier: 0.0.70
+        version: 0.0.70
       '@pipe0/react-sdk':
-        specifier: 0.0.27
-        version: 0.0.27
+        specifier: 0.0.28
+        version: 0.0.28
       '@radix-ui/react-accordion':
         specifier: ^1.2.3
         version: 1.2.3(@types/react-dom@19.0.3(@types/react@19.0.8))(@types/react@19.0.8)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -1670,11 +1670,11 @@ packages:
   '@pipe0/client-sdk@0.0.59':
     resolution: {integrity: sha512-am7C3aZBXYt4+/P4vAZFZXVQwynhqEE85qz9UOzmWwWbBYZuEJoATESJhFRGrAHfL7UhAXWp3l4WBm+ohRzizg==}
 
-  '@pipe0/client-sdk@0.0.69':
-    resolution: {integrity: sha512-X1RtaVk8aMnGWUa4leU6P/c3xQKyX+1NE2m01q7EUqIRB6xo3gS+9jt6m32HVH3YwL7uNAMMWJWP/McXFpE8Ig==}
+  '@pipe0/client-sdk@0.0.70':
+    resolution: {integrity: sha512-2dOXF6V4esPXp+a9FopAo7eNq6RXvtjAN4jI+X0ubIPCbRKpKA0fazpC04kRREi6C2nFUMj4n/sMxgujSQLm8A==}
 
-  '@pipe0/react-sdk@0.0.27':
-    resolution: {integrity: sha512-jZjcy9uEtu9RMMNfadM9+bN1S20eiBY8GbbML7kQcZwwC9KgsXvfXSuGq8CWokERKyk21GXoquEwx7yWkEyNDA==}
+  '@pipe0/react-sdk@0.0.28':
+    resolution: {integrity: sha512-l61ljRWTZZ+dgHqihYB4Ym+1nll8t4Hz3g7PWabOvYz1XchtJJOpbqIasseerXAWGJI6eP5gBGrhvLEQWxFDog==}
 
   '@popperjs/core@2.11.8':
     resolution: {integrity: sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==}
@@ -5596,6 +5596,9 @@ packages:
   oniguruma-to-es@3.1.1:
     resolution: {integrity: sha512-bUH8SDvPkH3ho3dvwJwfonjlQ4R80vjyvrU8YpxuROddv55vAEJrTuCuCVUhhsHbtlD9tGGbaNApGQckXhS8iQ==}
 
+  openapi-fetch@0.13.8:
+    resolution: {integrity: sha512-yJ4QKRyNxE44baQ9mY5+r/kAzZ8yXMemtNAOFwOzRXJscdjSxxzWSNlyBAr+o5JjkUw9Lc3W7OIoca0cY3PYnQ==}
+
   openapi-fetch@0.14.0:
     resolution: {integrity: sha512-PshIdm1NgdLvb05zp8LqRQMNSKzIlPkyMxYFxwyHR+UlKD4t2nUjkDhNxeRbhRSEd3x5EUNh2w5sJYwkhOH4fg==}
 
@@ -8325,19 +8328,20 @@ snapshots:
       lodash.defaultsdeep: 4.6.1
       zod: 4.0.5
 
-  '@pipe0/client-sdk@0.0.69':
+  '@pipe0/client-sdk@0.0.70':
     dependencies:
       '@asteasolutions/zod-to-openapi': 8.0.0(zod@4.0.5)
       ajv: 8.17.1
       date-fns: 4.1.0
       immer: 10.1.1
       json-schema-typed: 8.0.1
+      openapi-fetch: 0.13.8
       xxhash-wasm: 1.1.0
       zod: 4.0.5
 
-  '@pipe0/react-sdk@0.0.27':
+  '@pipe0/react-sdk@0.0.28':
     dependencies:
-      '@pipe0/client-sdk': 0.0.69
+      '@pipe0/client-sdk': 0.0.70
       '@tanstack/react-table': 8.21.3(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       lucide-react: 0.475.0(react@19.1.1)
       react: 19.1.1
@@ -11189,7 +11193,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-module-utils@2.12.0(@typescript-eslint/parser@8.23.0(eslint@9.19.0(jiti@2.4.2))(typescript@5.7.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.7.0)(eslint@9.19.0(jiti@2.4.2)):
+  eslint-module-utils@2.12.0(@typescript-eslint/parser@8.23.0(eslint@9.19.0(jiti@2.4.2))(typescript@5.7.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.7.0(eslint-plugin-import@2.31.0)(eslint@9.19.0(jiti@2.4.2)))(eslint@9.19.0(jiti@2.4.2)):
     dependencies:
       debug: 3.2.7
     optionalDependencies:
@@ -11211,7 +11215,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 9.19.0(jiti@2.4.2)
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.12.0(@typescript-eslint/parser@8.23.0(eslint@9.19.0(jiti@2.4.2))(typescript@5.7.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.7.0)(eslint@9.19.0(jiti@2.4.2))
+      eslint-module-utils: 2.12.0(@typescript-eslint/parser@8.23.0(eslint@9.19.0(jiti@2.4.2))(typescript@5.7.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.7.0(eslint-plugin-import@2.31.0)(eslint@9.19.0(jiti@2.4.2)))(eslint@9.19.0(jiti@2.4.2))
       hasown: 2.0.2
       is-core-module: 2.16.1
       is-glob: 4.0.3
@@ -13169,6 +13173,10 @@ snapshots:
       emoji-regex-xs: 1.0.0
       regex: 6.0.1
       regex-recursion: 6.0.2
+
+  openapi-fetch@0.13.8:
+    dependencies:
+      openapi-typescript-helpers: 0.0.15
 
   openapi-fetch@0.14.0:
     dependencies:
