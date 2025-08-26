@@ -24,11 +24,11 @@ importers:
         specifier: ^15.1.6
         version: 15.1.6(@mdx-js/loader@3.1.0(acorn@8.14.0))(@mdx-js/react@3.1.0(@types/react@19.0.8)(react@19.0.0))
       '@pipe0/client-sdk':
-        specifier: 0.0.63
-        version: 0.0.63
+        specifier: 0.0.69
+        version: 0.0.69
       '@pipe0/react-sdk':
-        specifier: 0.0.21
-        version: 0.0.21
+        specifier: 0.0.27
+        version: 0.0.27
       '@radix-ui/react-accordion':
         specifier: ^1.2.3
         version: 1.2.3(@types/react-dom@19.0.3(@types/react@19.0.8))(@types/react@19.0.8)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -1670,11 +1670,11 @@ packages:
   '@pipe0/client-sdk@0.0.59':
     resolution: {integrity: sha512-am7C3aZBXYt4+/P4vAZFZXVQwynhqEE85qz9UOzmWwWbBYZuEJoATESJhFRGrAHfL7UhAXWp3l4WBm+ohRzizg==}
 
-  '@pipe0/client-sdk@0.0.63':
-    resolution: {integrity: sha512-odFeDHLqXWPzVl7Jda74YY3q7XfFFRYhxpxdkdOvlvt4Pukv8qKfWiajSpwdAMVlVXDmkP2mnYLOjrKbybwdVA==}
+  '@pipe0/client-sdk@0.0.69':
+    resolution: {integrity: sha512-X1RtaVk8aMnGWUa4leU6P/c3xQKyX+1NE2m01q7EUqIRB6xo3gS+9jt6m32HVH3YwL7uNAMMWJWP/McXFpE8Ig==}
 
-  '@pipe0/react-sdk@0.0.21':
-    resolution: {integrity: sha512-wLQnDvgOuP0qwpxnkzhd9/lBZTqdiXnPm7vMLq1WmfmrtWkCs/pTR0wN7Do0/7lHNQQPBZOZKzbLyn4LqAIQEg==}
+  '@pipe0/react-sdk@0.0.27':
+    resolution: {integrity: sha512-jZjcy9uEtu9RMMNfadM9+bN1S20eiBY8GbbML7kQcZwwC9KgsXvfXSuGq8CWokERKyk21GXoquEwx7yWkEyNDA==}
 
   '@popperjs/core@2.11.8':
     resolution: {integrity: sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==}
@@ -6969,6 +6969,9 @@ packages:
     resolution: {integrity: sha512-LKYU1iAXJXUgAXn9URjiu+MWhyUXHsvfp7mcuYm9dSUKK0/CjtrUwFAxD82/mCWbtLsGjFIad0wIsod4zrTAEQ==}
     engines: {node: '>=0.4'}
 
+  xxhash-wasm@1.1.0:
+    resolution: {integrity: sha512-147y/6YNh+tlp6nd/2pWq38i9h6mz/EuQ6njIrmW8D1BS5nCqs0P6DG+m6zTGnNz5I+uhZ0SHxBs9BsPrwcKDA==}
+
   yallist@3.1.1:
     resolution: {integrity: sha512-a4UGQaWPH59mOXUYnAG2ewncQS4i4F43Tv3JoAM+s2VDAmS9NsK8GpDMLrCHPksFT7h3K6TOoUNn2pb7RoXx4g==}
 
@@ -8322,18 +8325,19 @@ snapshots:
       lodash.defaultsdeep: 4.6.1
       zod: 4.0.5
 
-  '@pipe0/client-sdk@0.0.63':
+  '@pipe0/client-sdk@0.0.69':
     dependencies:
       '@asteasolutions/zod-to-openapi': 8.0.0(zod@4.0.5)
       ajv: 8.17.1
       date-fns: 4.1.0
       immer: 10.1.1
       json-schema-typed: 8.0.1
+      xxhash-wasm: 1.1.0
       zod: 4.0.5
 
-  '@pipe0/react-sdk@0.0.21':
+  '@pipe0/react-sdk@0.0.27':
     dependencies:
-      '@pipe0/client-sdk': 0.0.63
+      '@pipe0/client-sdk': 0.0.69
       '@tanstack/react-table': 8.21.3(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       lucide-react: 0.475.0(react@19.1.1)
       react: 19.1.1
@@ -14830,6 +14834,8 @@ snapshots:
   xmldom-sre@0.1.31: {}
 
   xtend@4.0.2: {}
+
+  xxhash-wasm@1.1.0: {}
 
   yallist@3.1.1: {}
 

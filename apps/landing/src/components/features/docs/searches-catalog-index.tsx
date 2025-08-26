@@ -46,7 +46,6 @@ import {
 import { appInfo } from "@/lib/const";
 import { cn, copyToClipboard } from "@/lib/utils";
 import {
-  getLowestCreditAmount,
   getSearchEntry,
   getSearchVersion,
   providerCatalog,
@@ -65,7 +64,7 @@ import {
   User,
 } from "lucide-react";
 import Link from "next/link";
-import { ComponentType } from "react";
+import { ComponentType, useMemo } from "react";
 
 // Featured searches - you can customize this list with your featured searches IDs
 const FEATURED_SEARCHES_IDS = [] satisfies SearchId[];
@@ -87,7 +86,9 @@ const SearchIntegrationCard = ({
       <Card className="flex flex-col justify-stretch border-input hover:border-primary/50 transition-colors relative h-[290px]">
         <span className="absolute right-4 top-4 inline-flex gap-1 text-muted-foreground text-sm items-center">
           <Coins className=" size-4" />{" "}
-          {getLowestCreditAmount(tableEntry.costPerResult) || "Free"}
+          {tableEntry.cost.mode === "per_result"
+            ? tableEntry.cost.creditsPerResult
+            : tableEntry.cost.creditsPerSearch || "Free"}
         </span>
         <CardHeader className="pb-2">
           <div className="flex justify-between items-start">
@@ -95,7 +96,7 @@ const SearchIntegrationCard = ({
               <div className="flex">
                 <AvatarGroup
                   providerCatalog={providerCatalog}
-                  providers={tableEntry.providers}
+                  providers={[tableEntry.provider]}
                 />
               </div>
               <div>

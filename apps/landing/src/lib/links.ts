@@ -16,9 +16,10 @@ export const appLinks = {
   globalErrors: () => `/resources/documentation/response-object#errors`,
   records: () => `/resources/documentation/response-object#records`,
   pipeline: () => `/resources/documentation/pipe-concepts#pipeline`,
-  pipelineValidation: () => `/resources/documentation/pipe-concepts#pipeline`,
 
   inputExpansion: () => `/resources/documentation/pipes-inputs#input-expansion`,
+  connections: () => `/resources/documentation/connections`,
+  authentication: () => `/resources/documentation/authentication`,
 
   // Searches
   searchesQuickstart: () => `/resources/documentation/searches-quickstart`,
@@ -33,7 +34,8 @@ export const appLinks = {
   outputField: () => `/resources/documentation/response-object#recordfields`,
   pipeCatalog: () => `/resources/pipe-catalog`,
   searchCatalog: () => `/resources/search-catalog`,
-  record: () => `/resources/documentation/response-object`,
+  record: () =>
+    `/resources/documentation/response-object#bing-your-own-connections`,
   billing: () => `/resources/documentation/billing`,
   billingMode: () => `/resources/documentation/billing#billing-mode`,
   searchBilling: () => `/resources/documentation/billing#search-billing`,

@@ -1,5 +1,5 @@
 import { CodeTabs } from "@/components/code-tabs";
-import { ConfigDocumenation } from "@/components/config-documentation";
+import { PayloadDocumenation } from "@/components/config-documentation";
 import CopyToClipboard from "@/components/copy-to-clipboard";
 import { Info } from "@/components/info";
 import { InlineDocsBadge } from "@/components/inline-docs-badge";
@@ -32,7 +32,7 @@ import { formatCredits } from "@/lib/utils";
 import {
   FieldName,
   getField,
-  getSearchDefaultConfig,
+  getSearchDefaultPayload,
   getSearchEntry,
   providerCatalog,
   SearchId,
@@ -46,9 +46,14 @@ type PipeHeaderProps = {
 };
 
 export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
-  const searchCatalogEntry = getSearchEntry(searchId);
+  const searchEntry = getSearchEntry(searchId);
 
-  const defaultSearchConfig = getSearchDefaultConfig(searchId);
+  const defaultSearchPayload = getSearchDefaultPayload(searchId);
+  const providerEntry = providerCatalog[searchEntry.provider];
+
+  let connections = [];
+  if (searchEntry.hasManagedConnection) connections.push("Managed");
+  if (searchEntry.allowsUserConnection) connections.push("User");
 
   return (
     <div className="pipe-header space-y-10">
@@ -69,11 +74,11 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
             </BreadcrumbList>
           </Breadcrumb>
           <h1 className="text-4xl font-bold text-left pb-4">
-            {searchCatalogEntry.label}
+            {searchEntry.label}
           </h1>
 
           <p className="text-lg text-muted-foreground">
-            {searchCatalogEntry.description}
+            {searchEntry.description}
           </p>
         </div>
 
@@ -87,6 +92,7 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
           <TableHeader>
             <TableRow>
               <TableHead>Provider</TableHead>
+              <TableHead>Billing Mode</TableHead>
               <TableHead>Credentials</TableHead>
               <TableHead>
                 Cost per result{" "}
@@ -95,58 +101,43 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {searchCatalogEntry.providers.map((providerName) => {
-              const provider = providerCatalog[providerName];
-              const costPerProvider = (
-                searchCatalogEntry.costPerResult as Record<
-                  string,
-                  { credits: number }
-                >
-              )[providerName];
-
-              if (!provider)
-                throw new Error(`Provider ${provider} not defined`);
-              if (!costPerProvider)
-                throw new Error(
-                  `CostPerProvider not defined for ${provider}, ${providerName}`
-                );
-
-              let connections = [];
-              if (provider.hasManagedConnections) connections.push("Managed");
-              // if (provider.allowsUserConnections) connections.push("User");
-
-              return (
-                <TableRow key={providerName}>
-                  <TableCell className="">
-                    <div className="flex gap-2">
-                      <Avatar>
-                        <AvatarImage
-                          src={provider.logoUrl}
-                          alt={`${provider.label} logo`}
-                        />
-                        <AvatarFallback>P</AvatarFallback>
-                      </Avatar>
-                      <div className="font-medium">
-                        {provider.label} <Info>{provider.description}</Info>
-                      </div>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-2">
-                      {connections.join(", ")}
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <p>
-                      {typeof costPerProvider.credits === "number"
-                        ? formatCredits(costPerProvider.credits)
-                        : costPerProvider.credits}{" "}
-                      credits
-                    </p>
-                  </TableCell>
-                </TableRow>
-              );
-            })}
+            <TableRow>
+              <TableCell className="">
+                <div className="flex gap-2">
+                  <Avatar>
+                    <AvatarImage
+                      src={providerEntry.logoUrl}
+                      alt={`${providerEntry.label} logo`}
+                    />
+                    <AvatarFallback>P</AvatarFallback>
+                  </Avatar>
+                  <div className="font-medium">
+                    {providerEntry.label}{" "}
+                    <Info>{providerEntry.description}</Info>
+                  </div>
+                </div>
+              </TableCell>
+              <TableCell>
+                {searchEntry.cost.mode === "per_result"
+                  ? "Per Result"
+                  : "Per Search"}
+              </TableCell>
+              <TableCell>
+                <div className="flex items-center gap-2">
+                  {connections.join(", ")}
+                </div>
+              </TableCell>
+              <TableCell>
+                <p>
+                  {formatCredits(
+                    searchEntry.cost.mode === "per_result"
+                      ? searchEntry.cost.creditsPerResult
+                      : searchEntry.cost.creditsPerSearch
+                  )}
+                  credits
+                </p>
+              </TableCell>
+            </TableRow>
           </TableBody>
         </Table>
       </div>
@@ -156,7 +147,7 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
           <div>
             <h3 className="font-medium mb-3 pb-2 border-b">Output Fields</h3>
             <div className="space-y-2">
-              {searchCatalogEntry.defaultOutputFields.map((fieldName) => {
+              {searchEntry.defaultOutputFields.map((fieldName) => {
                 const found = getField(fieldName as FieldName);
                 if (!found) return null;
 
@@ -178,7 +169,7 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
         <AccordionItem value="config-reference">
           <AccordionTrigger className="">Config Reference</AccordionTrigger>
           <AccordionContent>
-            <ConfigDocumenation searchId={searchId} />
+            <PayloadDocumenation searchId={searchId} />
           </AccordionContent>
         </AccordionItem>
         <AccordionItem value="code">
@@ -203,7 +194,7 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
   body: JSON.stringify({
     searches: [{ 
       search_id: "${searchId}", 
-      config: ${JSON.stringify(defaultSearchConfig, null, 2).replace(
+      config: ${JSON.stringify(defaultSearchPayload, null, 2).replace(
         /\n/g,
         "\n      "
       )} 
@@ -222,7 +213,7 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
 -H "Authorization: Bearer $API_KEY" \\
 -d '{
     "pipes": [{ "search_id": "${searchId}" }],
-    "config": ${JSON.stringify(defaultSearchConfig, null, 2).replace(
+    "config": ${JSON.stringify(defaultSearchPayload, null, 2).replace(
       /\n/g,
       "\n      "
     )} 

@@ -12,8 +12,7 @@ import React, { PropsWithChildren } from "react";
 
 function findAllPipeVersions(pipeId: PipeId) {
   const pipeMetaEntry = pipeCatalog[pipeId];
-  const res = Object.entries(pipeCatalog)
-    .map(([pipeId, entry]) => ({ pipeId: pipeId as PipeId, ...entry }))
+  const res = Object.values(pipeCatalog)
     .filter((e) => e.basePipe === pipeMetaEntry.basePipe)
     .sort((a, b) => {
       const versionA = getPipeVersionFromId(a.pipeId);

@@ -6,6 +6,8 @@ date: 2025-03-07
 
 # Authentication
 
+## Making Authenticated Requests
+
 All requests to pipe0 require authentication. The following is required:
 
 👾 Create an account <br />
@@ -17,18 +19,18 @@ All requests to pipe0 require authentication. The following is required:
 > proxying requests through a secure server or serverless function that can 
 > [store API keys securely](https://cloud.google.com/docs/authentication/api-keys-best-practices).
 
-## Create an API Key
+### Create an API Key
 
 API keys can be created through the dashboard.
 
-1. Login to your account
+1. Log in to your account
 2. Navigate to the settings page
 3. Select "API keys" in the sidebar
 4. Click "Create"
 
-## Making authenticated requests
+### Making authenticated requests
 
-To make authenticated requests send your API key as part of the 
+To make authenticated requests, send your API key as part of the 
 [`Authorization` header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Authentication#the_general_http_authentication_framework).
 
 ```bash filename="Authenticated request"

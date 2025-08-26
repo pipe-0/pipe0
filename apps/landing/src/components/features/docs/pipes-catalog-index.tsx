@@ -46,20 +46,22 @@ import {
 import { appInfo } from "@/lib/const";
 import { cn, copyToClipboard } from "@/lib/utils";
 import {
-  getLowestCreditAmount,
+  getDefaultOutputFields,
+  getDefaultPipeProviders,
   getPipeVersion,
+  getStartingCostPerPipesProvider,
+  pipeCatalog,
+  PipeCatalogEntry,
   PipeCatalogTableData,
   PipeCategory,
   PipeId,
-  pipeCatalog,
-  PipeCatalogEntry,
   providerCatalog,
+  ProviderName,
 } from "@pipe0/client-sdk";
 import { usePipeCatalogTable } from "@pipe0/react-sdk";
 import {
   ArrowDown,
   ArrowUp,
-  Binoculars,
   Building2,
   Coins,
   Copy,
@@ -68,11 +70,10 @@ import {
   Layers,
   ScanFace,
   Search,
-  UserRoundSearch,
   Zap,
 } from "lucide-react";
 import Link from "next/link";
-import { ComponentType } from "react";
+import { ComponentType, useMemo } from "react";
 
 // Featured pipes - you can customize this list with your featured pipe IDs
 const FEATURED_PIPE_IDS = [
@@ -98,14 +99,23 @@ const IntegrationCard = ({
 }) => {
   const pipeId = tableEntry.pipeId;
 
+  const pipeStartingPrice = useMemo(() => {
+    const starting = getStartingCostPerPipesProvider(pipeId) as Record<
+      ProviderName,
+      number
+    >;
+    return Math.min(...Object.values(starting));
+  }, []);
+
   const isNew = (tableEntry.tags as string[]).includes("new");
+
+  const providers = getDefaultPipeProviders(pipeId);
 
   return (
     <Link href={pipeEntry.route}>
       <Card className="flex flex-col justify-stretch border-input hover:border-primary/50 transition-colors relative h-[290px]">
         <span className="absolute right-4 top-4 inline-flex gap-1 text-muted-foreground text-sm items-center">
-          <Coins className=" size-4" />{" "}
-          {getLowestCreditAmount(tableEntry.costPerProvider) || "Free"}
+          <Coins className=" size-4" /> {pipeStartingPrice || "Free"}
         </span>
         <CardHeader className="pb-2">
           <div className="flex justify-between items-start">
@@ -113,7 +123,7 @@ const IntegrationCard = ({
               <div className="flex">
                 <AvatarGroup
                   providerCatalog={providerCatalog}
-                  providers={tableEntry.providers}
+                  providers={providers}
                 />
               </div>
               <div>
@@ -152,7 +162,7 @@ const IntegrationCard = ({
               <Copy className="size-3" />
             </Button>
           </div>
-          {tableEntry.fieldMode === "static" && (
+          {tableEntry.inputFieldMode === "static" && (
             <div className="flex gap-1 items-center">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -206,7 +216,7 @@ const IntegrationCard = ({
                   }}
                 >
                   <DropdownMenuGroup>
-                    {tableEntry.defaultOutputFields.map((field) => (
+                    {getDefaultOutputFields(tableEntry).map((field) => (
                       <DropdownMenuItem
                         key={field}
                         className="py-1 cursor-pointer block text-muted-foreground hover:text-foreground"
@@ -255,13 +265,7 @@ const quickStartOptions = [
     id: "actions",
     title: "Actions",
     icon: Zap,
-    disabled: true,
-  },
-  {
-    id: "integrations",
-    title: "Integrations",
-    icon: Layers,
-    disabled: true,
+    disabled: false,
   },
 ] satisfies {
   id: PipeCategory | null;
@@ -568,7 +572,6 @@ export function PipeCatalogIndex({
                       key={pipeId}
                       tableEntry={{
                         ...(pipeCatalog[pipeId] as PipeCatalogEntry),
-                        pipeId,
                         latestVersion: getPipeVersion(pipeId),
                       }}
                       pipeEntry={pipeEntry}

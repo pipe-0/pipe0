@@ -10,9 +10,11 @@ import { Badge } from "@/components/ui/badge";
 import {
   DateRangeMetadata,
   GeneratedFormField,
-  getConfigFormConfig,
-  getPipeConfigSchema,
-  getSearchConfigSchema,
+  getPayloadFormConfig,
+  getPipePayloadFormConfig,
+  getPipePayloadSchema,
+  getSearchesPayloadFormConfig,
+  getSearchPayloadSchema,
   IntegerMetadata,
   isBooleanField,
   isDateRangeField,
@@ -465,21 +467,21 @@ interface FilterDocumentationProps {
   pipeId?: PipeId;
 }
 
-export function ConfigDocumenation({
+export function PayloadDocumenation({
   searchId,
   pipeId,
 }: FilterDocumentationProps) {
   const formConfig = useMemo(() => {
-    let ConfigSchema: any;
+    let PayloadSchema: any;
     if (searchId) {
-      ConfigSchema = getSearchConfigSchema(searchId);
+      PayloadSchema = getSearchPayloadSchema(searchId);
     } else if (pipeId) {
-      ConfigSchema = getPipeConfigSchema(pipeId);
+      PayloadSchema = getPipePayloadSchema(pipeId);
     } else {
       throw new Error("Must define either pipeId or searchId");
     }
-    const config = getConfigFormConfig({
-      schema: ConfigSchema,
+    const config = getPayloadFormConfig({
+      schema: PayloadSchema,
       staticOnly: false,
     });
 

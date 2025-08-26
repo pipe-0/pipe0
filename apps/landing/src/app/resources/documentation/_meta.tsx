@@ -77,7 +77,18 @@ const meta: MetaRecord = {
   authentication: {
     title: "Authentication",
     theme: {
-      toc: false,
+      toc: true,
+      layout: "full",
+    },
+  },
+  connections: {
+    title: (
+      <>
+        Connections <span className="badge-new" />
+      </>
+    ),
+    theme: {
+      toc: true,
       layout: "full",
     },
   },

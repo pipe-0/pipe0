@@ -13,27 +13,73 @@ Our billing system consists of:
 
 ## Credits
 
-Enrichment requests in `production` mode are billed. The billing is on a per-record basis.
+Credits are the universal currency of pipe0. Requests in `production` mode are billed in credits.
+You are never billed if an operation returns an error.
 
-If tasks fail, processed records are billed until the point of failure.
+You can make request to third-party services without purchasing subscriptions to these services using credits.
 
-Enrichment requests in <AppLink linkType="testMode">sandbox</AppLink> mode are free.
+You can find the credit costs per operation in the <AppLink linkType="pipeCatalog">pipe catalog</AppLink> and/or 
+<AppLink linkType="searchCatalog">search catalog</AppLink>.
 
-You can find the cost per record for each pipe in the <AppLink linkType="pipeCatalog">pipe catalog</AppLink>.
 
-### Insufficient balance
+## Pipe billing
+
+Pipes are billed when they "run".
+
+Pipes "run" when at **least one** of their output fields will be generated. In case all output fields are provided 
+by your input data, the pipe does not "run" unless **at least one** provided output value requires regeneration. See 
+<AppLink linkType="inputSanitation">input sanitation</AppLink> for more info.
+
+Pipes can "run" without consuming credits. This is determined by their <AppLink linkType="billingMode">billing mode</AppLink>.
+
+### Billing mode
+
+A property of a pipe is its `billing_mode`.
+
+### billing_mode `always`
+
+Pipes with `billing_mode='always'` are billed on every run. Credits are deducted from your balance regardless of 
+the pipe's result. Even if pipe output fields are marked as `no_result`, credits will be deducted
+from your balance. See <AppLink linkType="fieldStatus">field status</AppLink> for more info.
+
+Pipes are not billed if the pipe run fails (error state).
+
+### billing_mode `on_success`
+
+Pipes with `billing_mode=on_success` are billed when at least one of their output fields is marked 
+as `completed`. This indicates a successful result. If all output fields of a pipe are marked as `no_result`, the pipe is not billed.
+See <AppLink linkType="fieldStatus">field status</AppLink> for more info.
+
+## Search billing
+
+Searches are billed per successful result or per search.
+
+### billing_mode `per_result` 
+
+You are billed per search result. If a search request returned 500 entries you are billed 500 times 
+the `cost per result`.
+
+The cost per result can be found in the <AppLink linkType="searchCatalog">search catalog</AppLink>.
+
+### billing_mode `per_search` 
+
+You are billed per search. If a search request returned 500 entries you are billed only once.
+
+The cost per search can be found in the <AppLink linkType="searchCatalog">search catalog</AppLink>.
+
+## Insufficient balance
 
 If your credit balance is insufficient to complete an ongoing enrichment task, the entire task fails and you will be billed
 for the enrichment until failure.
 
-### One-off purchases
+## One-off purchases
 
 You can purchase additional credits at your current subscription price. One-off credits can be purchased by
 users with active subscriptions.
 
 To purchase one-off credits contact [support@pipe0.com](mailto:support@pipe0.com).
 
-### Credit rollover
+## Credit rollover
 
 For your convenience, you can **hold up to 4x the credit amount** of either your monthly or yearly 
 subscription value in your account. Credit balances that exceed this threshold are lost.
@@ -46,42 +92,6 @@ We do not offer negative balances (line of credit).
 
 If you're building a system that requires auto-top-ups to remain operational at all times contact [support@pipe0.com](mailto:support@pipe0.com).
 
-### Pipe billing
-
-Pipes are billed when they "run".
-
-Pipes "run" when at **least one** of their output fields will be generated. In case all output fields are provided 
-by your input data, the pipe does not "run" unless **at least one** provided output value requires regeneration. See 
-<AppLink linkType="inputSanitation">input sanitation</AppLink> for more info.
-
-Pipes can "run" without consuming credits. This is determined by their <AppLink linkType="billingMode">billing mode</AppLink>.
-
-#### Billing mode
-
-A property of a pipe is its `billing_mode`.
-
-#### billing_mode `always`
-
-Pipes with `billing_mode='always'` are billed on every run. Credits are deducted from your balance regardless of 
-the pipe's result. Even if pipe output fields are marked as `no_result`, credits will be deducted
-from your balance. See <AppLink linkType="fieldStatus">field status</AppLink> for more info.
-
-Pipes are not billed if the pipe run fails (error state).
-
-#### billing_mode `on_success`
-
-Pipes with `billing_mode=on_success` are billed when at least one of their output fields is marked 
-as `completed`. This indicates a successful result. If all output fields of a pipe are marked as `no_result`, the pipe is not billed.
-See <AppLink linkType="fieldStatus">field status</AppLink> for more info.
-
-### Search billing
-
-Searches are billed per successful result. This includes results that are removed due to deduplication.
-
-To receive the full result set (without deduplication), you may disable deduplication.
-
-If a search fails, it is not billed. If a search partially completes, all found records are billed.
-
 ## Subscriptions
 
 Subscriptions are managed through [Stripe](https://stripe.com). 
@@ -90,8 +100,6 @@ This ensures a reliable and secure environment for your billing information.
 You can create, update, and cancel your subscription at any time.
 Navigate to "Dashboard" > "Billing" > "Manage Subscriptions"
 to access the billing portal.
-
-
 
 ## Support
 

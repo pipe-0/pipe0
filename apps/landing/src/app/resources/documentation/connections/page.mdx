@@ -1,0 +1,134 @@
+---
+title: Pipe0 Docs | Connections
+description: Learn how to use connections in pipe0
+date: 2025-08-25
+---
+
+# Connections
+
+Connections determine how your request authenticates with external services. Connections often 
+point to credentials used during a request (ex., an API key).
+
+## Managed connections
+
+When making <AppLink linkType="authentication">authenticated requests</AppLink>, you're using managed connections by default. You can make 
+requests to providers like Leadmagic, Zerobounce, or Clado without having to buy additional subscriptions. Everything is managed 
+through pipe0.
+
+Using pipe0 this way is faster, safer, and less error-prone than using your credentials.
+
+Here are a few reasons why we recommend using managed connections when possible.
+
+- 😵‍💫 We don't know what rate limits to use with your credentials (conservative defaults)
+- 💶 You have to manage your own credit balances with 3rd party providers
+- 🐸 You don't have to share sensitive credentials with us
+
+Some pipes and searches require you to bring connections - like the [actions:sendmail:resend@1](/resources/pipe-catalog/action:sendmail:resend/1) pipe.
+This pipe sends an email [Resend](https://resend.com). To use this pipe, reference a Resend API key in your request.
+
+## Custom connections
+
+Custom connections are credentials that you create and manage with external providers. To use custom connections, share 
+your credentials (ex., an API key) with pipe0.
+
+### Custom connection billing
+
+We charge a small platform fee for running pipes & searches via custom connections. This is to prevent abuse.
+
+**0.05 credits** per successful pipe execution <br />
+**0.08 credits** per successful search (no matter the # of search results)
+
+### Vault
+
+Vault is pipe0's secure storage layer. It is the only supported access mechanism for connections at this point.
+
+> [!WARNING]
+> 
+> Are you looking to store connections **for your users**?
+> Reach out to us to learn how to isolate user secrets effectively and securely.
+
+#### Add connections to vault
+
+To add your own connections:
+
+1. Log in to your account
+2. Navigate to settings/connections
+3. Select the provider
+4. Add your key
+5. Copy the connection ID (ex, "resend_abcd123")
+6. Use the ID in your requests
+
+#### Reference vault connections
+
+```bash filename="Request with custom connection"
+curl -X POST "https://api.pipe0.com/v1/pipes/run" \
+  -H "Authorization: Bearer <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "pipes": [
+      {
+        "pipe_id": "action:sendmail:resend@1",
+        "connector": {
+          "strategy": "first",
+          "connections": [
+            {
+              "type": "vault",
+              "connection": "resend_abcd123"
+            }
+          ]
+        }
+      }
+    ],
+    "input": [{
+        "id": "1",
+        "email_subject": "Test email",
+        "email_markdown": "Test email content.",
+        "email": "receiver@pipe0.com",
+    }]
+  }'
+```
+
+The connector object can be used in the same manner for Searches requests.
+
+#### Connectors and waterfalls
+
+When pipes use multiple providers, you may want to provide a custom connection for just one provider.
+
+Custom connections can safely target a subset of the available providers. Pipes will correctly use custom connections 
+when present, and fall back to managed connections otherwise.
+
+### The connector object
+
+The connector object defines what credentials a pipe should use. It has the following shape:
+
+```json
+"connector": {
+    "strategy": "first",
+    "connections": [
+        {
+            "type": "vault",
+            "connection": "resend_abcd123"
+        }
+    ]
+}
+```
+
+#### connector.strategy
+
+A strategy that is applied when multiple connections target the same provider. Currently, the only supported option is `first`.
+
+**strategy.first**: Use the first referenced connection fond in vault.
+
+#### connector.connections
+
+A list of referenced connections. Your request will return an error if you reference non-existent connections.
+
+#### connections.type
+
+The access mechanism of your connection. 
+
+**type.vault**: Uses pipe0's vault for storage.
+
+#### connections.connection
+
+The connection ID as found in the connections section of the pipe0 dashboard.
