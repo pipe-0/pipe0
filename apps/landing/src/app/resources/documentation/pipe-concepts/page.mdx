@@ -107,14 +107,14 @@ Input field tags support the following properties:
 
 Triggers allow you to run pipes conditionally. You can specify conditions like:
 
-> Run pipe `people:split:name@1` if the field `name` is `completed` and the resolved value `contains` the value `Tom`.
+> Run pipe `people:name:split@1` if the field `name` is `completed` and the resolved value `contains` the value `Tom`.
 
 The request for the example above would look like this.
 ```json
 {
 	"pipes": [
 		{
-			"pipe_id": "people:split:name@1",
+			"pipe_id": "people:name:split@1",
 			"trigger": {
 				"action": "run",
 				"when": {

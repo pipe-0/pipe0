@@ -3,7 +3,7 @@ import { PipeCatalogHeader } from "@/components/pipe-catalog-header";
 import { generatePipeMetadata } from "@/lib/utils";
 import { PipeId } from "@pipe0/client-sdk";
 
-const pipeId: PipeId = "people:is:workemail@1";
+const pipeId: PipeId = "prompt:run@1";
 
 export const metadata = generatePipeMetadata(pipeId);
 

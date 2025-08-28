@@ -3,7 +3,7 @@ import { PipeCatalogHeader } from "@/components/pipe-catalog-header";
 import { generatePipeMetadata } from "@/lib/utils";
 import { PipeId } from "@pipe0/client-sdk";
 
-const pipeId: PipeId = "action:sendmail:resend@1";
+const pipeId: PipeId = "people:email:validate:zerobounce@1";
 
 export const metadata = generatePipeMetadata(pipeId);
 

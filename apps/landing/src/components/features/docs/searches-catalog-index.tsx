@@ -62,6 +62,7 @@ import {
   Database,
   Search,
   User,
+  X,
 } from "lucide-react";
 import Link from "next/link";
 import { ComponentType, useMemo } from "react";
@@ -191,6 +192,12 @@ const quickStartOptions = [
     disabled: false,
     icon: User,
     title: "Find People",
+  },
+  {
+    id: "deprecated",
+    disabled: false,
+    icon: X,
+    title: "Deprecated",
   },
 ] satisfies {
   id: SearchCategory | null;
@@ -366,7 +373,6 @@ export function SearchCatalogIndex({
                           id={`output-field-${fieldName}`}
                           checked={isFilterChecked("outputFields", fieldName)}
                           onCheckedChange={(v) => {
-                            console.log({ v });
                             if (v === true) {
                               addColumnFilter("outputFields", fieldName);
                             } else if (v === false) {
@@ -420,6 +426,7 @@ export function SearchCatalogIndex({
                     data-isactive={category === option.id}
                     data-disabled={option.disabled}
                     className={cn(
+                      option.id === "deprecated" && "opacity-60",
                       "group cursor-pointer border hover:shadow-sm transition-all duration-200 pr-4",
                       "data-[isactive=true]:bg-primary data-[isactive=true]:text-primary-foreground data-[isactive=true]:border-primary data-[isactive=true]:font-semibold",
                       "data-[disabled=true]:bg-muted data-[disabled=true]:text-muted-foreground data-[disabled=true]:opacity-80"
@@ -435,7 +442,13 @@ export function SearchCatalogIndex({
                           />
                         </div>
                         <div className="flex-1 whitespace-nowrap">
-                          <h3 className="text-sm">{option.title}</h3>{" "}
+                          <h3 className="text-sm">
+                            {option.id === "deprecated" ? (
+                              <s>{option.title}</s>
+                            ) : (
+                              option.title
+                            )}
+                          </h3>
                         </div>
                       </div>
                     </CardContent>

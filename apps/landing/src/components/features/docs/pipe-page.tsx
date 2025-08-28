@@ -4,7 +4,7 @@ import {
 } from "@/app/resources/pipe-catalog/get-pipes";
 import { TextLink } from "@/components/text-link";
 import { Button } from "@/components/ui/button";
-import { getPipeVersionFromId } from "@/lib/utils";
+import { cn, getPipeVersionFromId } from "@/lib/utils";
 import { getPipeEntry, PipeId, pipeCatalog } from "@pipe0/client-sdk";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
@@ -51,10 +51,17 @@ export async function PipePage({
           <div>
             {pipeVersions.map((e, index) => {
               const routeEntry = pipeEntryMap[e.pipeId];
+              const pipeEntry = getPipeEntry(e.pipeId);
               if (!routeEntry) return null;
               return (
                 <React.Fragment key={e.pipeId}>
-                  <TextLink className="text-sm" href={routeEntry.route}>
+                  <TextLink
+                    className={cn(
+                      "text-sm",
+                      pipeEntry.lifecycle?.deprecatedOn && "line-through"
+                    )}
+                    href={routeEntry.route}
+                  >
                     @{e.pipeId.split("@")[1]}
                   </TextLink>
                   {index < pipeVersions.length - 1 && ", "}

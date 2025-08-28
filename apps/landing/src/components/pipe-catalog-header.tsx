@@ -46,6 +46,11 @@ import Link from "next/link";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/cjs/styles/prism";
 
+const dateFormatter = new Intl.DateTimeFormat("en-US", {
+  month: "short",
+  day: "2-digit",
+});
+
 type PipeHeaderProps = {
   pipeId: PipeId;
 };
@@ -78,6 +83,20 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
           <h1 className="text-4xl font-bold text-left pb-4">
             {pipeEntry.label}
           </h1>
+
+          {pipeEntry.lifecycle?.replacedBy && (
+            <Alert variant="destructive" className="mb-2">
+              <AlertTitle>
+                Deprecated by{" "}
+                {dateFormatter.format(
+                  new Date(pipeEntry.lifecycle.deprecatedOn)
+                )}
+              </AlertTitle>
+              <AlertDescription>
+                Use instead: {pipeEntry.lifecycle.replacedBy}
+              </AlertDescription>
+            </Alert>
+          )}
 
           <p className="text-lg text-muted-foreground">
             {pipeEntry.description}
@@ -273,7 +292,6 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
                 </Alert>
               )}
               {defaultOutputFields.map((fieldName) => {
-                console.log({ fieldName });
                 const found = getField(fieldName as FieldName);
                 if (!found) return null;
 

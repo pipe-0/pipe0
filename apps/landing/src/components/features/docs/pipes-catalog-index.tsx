@@ -12,6 +12,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -52,7 +53,7 @@ import {
   getStartingCostPerPipesProvider,
   pipeCatalog,
   PipeCatalogEntry,
-  PipeCatalogTableData,
+  PipeEntryWithLatestVersion,
   PipeCategory,
   PipeId,
   providerCatalog,
@@ -70,17 +71,23 @@ import {
   Layers,
   ScanFace,
   Search,
+  X,
   Zap,
 } from "lucide-react";
 import Link from "next/link";
 import { ComponentType, useMemo } from "react";
 
+const dateFormatter = new Intl.DateTimeFormat("en-US", {
+  month: "short",
+  day: "2-digit",
+});
+
 // Featured pipes - you can customize this list with your featured pipe IDs
 const FEATURED_PIPE_IDS = [
-  "people:mobilenumber:professionalprofile:waterfall@1",
+  "people:phone:profile:waterfall@1",
   "people:workemail:waterfall@1",
-  "website:technologystack:builtwith@1",
-  "company:identity@1",
+  "company:techstack:builtwith@1",
+  "company:identity@2",
   "company:overview@1",
 ] satisfies PipeId[];
 
@@ -91,7 +98,7 @@ const IntegrationCard = ({
   filterByField,
 }: {
   pipeEntry: PipeEntry["children"][number];
-  tableEntry: PipeCatalogTableData;
+  tableEntry: PipeEntryWithLatestVersion;
   filterByField: (
     id: "inputFields" | "outputFields",
     fieldName: string
@@ -127,7 +134,12 @@ const IntegrationCard = ({
                 />
               </div>
               <div>
-                <CardTitle className="text-base flex items-center gap-2">
+                <CardTitle
+                  className={cn(
+                    "text-base flex items-center gap-2",
+                    tableEntry.lifecycle?.deprecatedOn && "line-through"
+                  )}
+                >
                   {tableEntry.label}
                   {isNew && (
                     <Badge
@@ -144,6 +156,19 @@ const IntegrationCard = ({
           </div>
         </CardHeader>
         <CardContent className="grow text-sm">
+          {tableEntry.lifecycle?.replacedBy && (
+            <Alert variant="destructive" className="py-1 px-2 mb-2">
+              <AlertTitle>
+                Deprecated by{" "}
+                {dateFormatter.format(
+                  new Date(tableEntry.lifecycle.deprecatedOn)
+                )}
+              </AlertTitle>
+              <AlertDescription>
+                Use: {tableEntry.lifecycle.replacedBy}
+              </AlertDescription>
+            </Alert>
+          )}
           <p>{tableEntry.description}</p>
         </CardContent>
         <CardFooter className="pt-2 block pb-3">
@@ -265,6 +290,12 @@ const quickStartOptions = [
     id: "actions",
     title: "Actions",
     icon: Zap,
+    disabled: false,
+  },
+  {
+    id: "deprecated",
+    title: "Deprecated",
+    icon: X,
     disabled: false,
   },
 ] satisfies {
@@ -480,7 +511,6 @@ export function PipeCatalogIndex({
                           id={`output-field-${fieldName}`}
                           checked={isFilterChecked("outputFields", fieldName)}
                           onCheckedChange={(v) => {
-                            console.log({ v });
                             if (v === true) {
                               addColumnFilter("outputFields", fieldName);
                             } else if (v === false) {
@@ -534,6 +564,7 @@ export function PipeCatalogIndex({
                     data-isactive={category === option.id}
                     data-disabled={option.disabled}
                     className={cn(
+                      option.id === "deprecated" && "opacity-60",
                       "group cursor-pointer border hover:shadow-sm transition-all duration-200 pr-4",
                       "data-[isactive=true]:bg-primary data-[isactive=true]:text-primary-foreground data-[isactive=true]:border-primary data-[isactive=true]:font-semibold",
                       "data-[disabled=true]:bg-muted data-[disabled=true]:text-muted-foreground data-[disabled=true]:opacity-80"
@@ -549,7 +580,13 @@ export function PipeCatalogIndex({
                           />
                         </div>
                         <div className="flex-1 whitespace-nowrap">
-                          <h3 className="text-sm">{option.title}</h3>{" "}
+                          <h3 className="text-sm">
+                            {option.id === "deprecated" ? (
+                              <s>{option.title}</s>
+                            ) : (
+                              option.title
+                            )}
+                          </h3>
                         </div>
                       </div>
                     </CardContent>

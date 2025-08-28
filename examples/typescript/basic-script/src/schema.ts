@@ -4,9654 +4,11212 @@
  */
 
 export interface paths {
-    "/v1/run/sync": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
+  "/v1/run/sync": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** @description Enrich data synchronously. This endpoint waits for the enrichment to complete before returning a result. With with fewer than 10 records. To enrich more data at once use the '/run' endpoint. */
+    post: {
+      parameters: {
+        query?: never;
+        header?: {
+          "x-environment"?: "production" | "sandbox";
         };
-        get?: never;
-        put?: never;
-        /** @description Enrich data synchronously. This endpoint waits for the enrichment to complete before returning a result. With with fewer than 10 records. To enrich more data at once use the '/run' endpoint. */
-        post: {
-            parameters: {
-                query?: never;
-                header?: {
-                    "x-environment"?: "production" | "sandbox";
-                };
-                path?: never;
-                cookie?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody: {
+        content: {
+          "application/json": {
+            /** @default {
+             *       "environment": "production"
+             *     } */
+            config?: {
+              /**
+               * @default production
+               * @enum {string}
+               */
+              environment?: "production" | "sandbox";
             };
-            requestBody: {
-                content: {
-                    "application/json": {
+            input_field_definitions?: {
+              [key: string]: {
+                label?: string;
+                /**
+                 * @default null
+                 * @enum {string|null}
+                 */
+                format?:
+                  | "url"
+                  | "website_url"
+                  | "professional_profile_url"
+                  | "email"
+                  | "datetime"
+                  | "date"
+                  | "phone"
+                  | "markdown"
+                  | "text"
+                  | "int"
+                  | "decimal"
+                  | "address_line_1"
+                  | "zip_code"
+                  | null;
+              };
+            };
+            pipes: (
+              | {
+                  /** @enum {string} */
+                  pipe_id: "prompt:run@1";
+                  config: {
+                    prompt: {
+                      text: string;
+                      json_schemas: {
+                        [key: string]: {
+                          [key: string]: unknown;
+                        };
+                      };
+                    };
+                  };
+                }
+              | {
+                  /** @enum {string} */
+                  pipe_id: "company:newssummary:website@1";
+                  config?: {
+                    input_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_website_url?: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                    };
+                    output_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_news_summary?: {
+                        alias: string;
+                      };
+                    };
+                  } | null;
+                }
+              | {
+                  /** @enum {string} */
+                  pipe_id: "company:profile:builtwith@1";
+                  config?: {
+                    input_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_website_url?: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                    };
+                    output_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_name?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      headcount?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      number_of_social_followers?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      monthly_tech_spend_in_usd?: {
+                        alias: string;
+                      };
+                    };
+                  } | null;
+                }
+              | {
+                  /** @enum {string} */
+                  pipe_id: "company:techstack:builtwith@1";
+                  config?: {
+                    input_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_website_url?: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                    };
+                    output_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      technology_stack?: {
+                        alias: string;
+                      };
+                    };
+                  } | null;
+                }
+              | {
+                  /** @enum {string} */
+                  pipe_id: "company:websiteurl:email@1";
+                  config?: {
+                    input_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      email?: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                    };
+                    output_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_website_url?: {
+                        alias: string;
+                      };
+                    };
+                  } | null;
+                }
+              | {
+                  /** @enum {string} */
+                  pipe_id: "people:workemail:waterfall@1";
+                  config?: {
+                    /** @default [
+                     *       {
+                     *         "provider": "leadmagic"
+                     *       },
+                     *       {
+                     *         "provider": "prospeo"
+                     *       },
+                     *       {
+                     *         "provider": "icypeas"
+                     *       }
+                     *     ] */
+                    providers?: {
+                      /** @enum {string} */
+                      provider: "leadmagic" | "prospeo" | "icypeas";
+                    }[];
+                    input_fields?: {
+                      name: {
+                        alias: string;
+                      };
+                      company_website_url: {
+                        alias: string;
+                      };
+                      company_name: {
+                        alias: string;
+                      };
+                    };
+                    output_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      work_email?: {
+                        alias: string;
+                      };
+                    };
+                  } | null;
+                }
+              | {
+                  /** @enum {string} */
+                  pipe_id: "people:email:iswork@1";
+                  config?: {
+                    input_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      email?: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                    };
+                    output_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      is_work_email?: {
+                        alias: string;
+                      };
+                    };
+                  } | null;
+                }
+              | {
+                  /** @enum {string} */
+                  pipe_id: "people:name:split@1";
+                  config?: {
+                    input_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      name?: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                    };
+                    output_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      first_name?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      last_name?: {
+                        alias: string;
+                      };
+                    };
+                  } | null;
+                }
+              | {
+                  /** @enum {string} */
+                  pipe_id: "people:validate:email:zerobounce@1";
+                  config?: {
+                    input_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      work_email?: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      ip_address?: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                    };
+                    output_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      is_email_valid?: {
+                        alias: string;
+                      };
+                    };
+                  } | null;
+                }
+              | {
+                  /** @enum {string} */
+                  pipe_id: "people:professionalprofile:waterfall@1";
+                  config?: {
+                    /** @default [
+                     *       {
+                     *         "provider": "prospeo"
+                     *       },
+                     *       {
+                     *         "provider": "icypeas"
+                     *       }
+                     *     ] */
+                    providers?: {
+                      /** @enum {string} */
+                      provider: "prospeo" | "icypeas";
+                    }[];
+                    input_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      professional_profile_url?: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                    };
+                    output_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      professional_profile?: {
+                        alias: string;
+                      };
+                    };
+                  } | null;
+                }
+              | {
+                  /** @enum {string} */
+                  pipe_id: "people:professionalprofileurl:name@1";
+                  config?: {
+                    input_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      name?: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_name?: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      location_hint?: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                    };
+                    output_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      professional_profile_url?: {
+                        alias: string;
+                      };
+                    };
+                  } | null;
+                }
+              | {
+                  /** @enum {string} */
+                  pipe_id: "people:professionalprofileurl:email:waterfall@1";
+                  config?: {
+                    /** @default [
+                     *       {
+                     *         "provider": "leadmagic"
+                     *       }
+                     *     ] */
+                    providers?: {
+                      /** @enum {string} */
+                      provider: "leadmagic";
+                    }[];
+                    input_fields: {
+                      email: {
+                        alias: string;
+                      };
+                      work_email: {
+                        alias: string;
+                      };
+                    };
+                    output_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      professional_profile_url?: {
+                        alias: string;
+                      };
+                    };
+                  } | null;
+                }
+              | {
+                  /** @enum {string} */
+                  pipe_id: "people:personalemail:profile:waterfall@1";
+                  config?: {
+                    /** @default [
+                     *       {
+                     *         "provider": "leadmagic"
+                     *       },
+                     *       {
+                     *         "provider": "clado"
+                     *       }
+                     *     ] */
+                    providers?: {
+                      /** @enum {string} */
+                      provider: "clado" | "leadmagic";
+                    }[];
+                    input_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      professional_profile_url?: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                    };
+                    output_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      personal_email?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      alternate_personal_emails?: {
+                        alias: string;
+                      };
+                    };
+                  } | null;
+                }
+              | {
+                  /** @enum {string} */
+                  pipe_id: "people:mobilenumber:professionalprofile:waterfall@1";
+                  config?: {
+                    /** @default [
+                     *       {
+                     *         "provider": "leadmagic"
+                     *       },
+                     *       {
+                     *         "provider": "prospeo"
+                     *       }
+                     *     ] */
+                    providers?: {
+                      /** @enum {string} */
+                      provider: "leadmagic" | "prospeo";
+                    }[];
+                    input_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      professional_profile_url?: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                    };
+                    output_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      mobile_number?: {
+                        alias: string;
+                      };
+                    };
+                  } | null;
+                }
+              | {
+                  /** @enum {string} */
+                  pipe_id: "people:mobilenumber:workemail:waterfall@1";
+                  config?: {
+                    /** @default [
+                     *       {
+                     *         "provider": "leadmagic"
+                     *       }
+                     *     ] */
+                    providers?: {
+                      /** @enum {string} */
+                      provider: "leadmagic";
+                    }[];
+                    input_fields?: {
+                      work_email: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                    };
+                    output_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      mobile_number?: {
+                        alias: string;
+                      };
+                    };
+                  } | null;
+                }
+              | {
+                  /** @enum {string} */
+                  pipe_id: "people:name:join@1";
+                  config?: {
+                    input_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      first_name?: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      last_name?: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                    };
+                    output_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      name?: {
+                        alias: string;
+                      };
+                    };
+                  } | null;
+                }
+              | {
+                  /** @enum {string} */
+                  pipe_id: "company:identity@1";
+                  config?: {
+                    input_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_name?: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                    };
+                    output_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_social_url?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      cleaned_company_name?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_website_url?: {
+                        alias: string;
+                      };
+                    };
+                  } | null;
+                }
+              | {
+                  /** @enum {string} */
+                  pipe_id: "company:overview@1";
+                  config?: {
+                    input_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_website_url?: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_social_url?: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                    };
+                    output_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_description?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_industry?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_region?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      headcount?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      estimated_revenue?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      founded_year?: {
+                        alias: string;
+                      };
+                    };
+                  } | null;
+                }
+            )[];
+            input: {
+              [key: string]:
+                | string
+                | number
+                | boolean
+                | null
+                | {
+                    [key: string]: unknown;
+                  }
+                | unknown[]
+                | {
+                    value:
+                      | string
+                      | number
+                      | boolean
+                      | null
+                      | {
+                          [key: string]: unknown;
+                        }
+                      | unknown[];
+                    status:
+                      | "completed"
+                      | "failed"
+                      | "pending"
+                      | "queued"
+                      | "processing"
+                      | "no_result"
+                      | "skipped";
+                    reason?: {
+                      code: string;
+                      summary: string;
+                      message: string;
+                    } | null;
+                    /** @enum {string} */
+                    type?: "string" | "number" | "boolean" | "json" | "unknown";
+                    /** @enum {string|null} */
+                    format?:
+                      | "url"
+                      | "website_url"
+                      | "professional_profile_url"
+                      | "email"
+                      | "datetime"
+                      | "date"
+                      | "phone"
+                      | "markdown"
+                      | "text"
+                      | "int"
+                      | "decimal"
+                      | "address_line_1"
+                      | "zip_code"
+                      | null;
+                    claimed_by?: {
+                      /** @enum {string|null} */
+                      ref:
+                        | "prompt:run@1"
+                        | "company:newssummary:website@1"
+                        | "company:techstack:builtwith@1"
+                        | "company:websiteurl:email@1"
+                        | "people:workemail:waterfall@1"
+                        | "people:email:iswork@1"
+                        | "people:name:split@1"
+                        | "people:name:join@1"
+                        | "people:professionalprofile:waterfall@1"
+                        | "people:professionalprofileurl:name@1"
+                        | "people:professionalprofileurl:email:waterfall@1"
+                        | "people:personalemail:profile:waterfall@1"
+                        | "people:validate:email:zerobounce@1"
+                        | "people:mobilenumber:professionalprofile:waterfall@1"
+                        | "people:mobilenumber:workemail:waterfall@1"
+                        | "company:profile:builtwith@1"
+                        | "company:identity@1"
+                        | "company:overview@1"
+                        | "input"
+                        | null;
+                      pipe_hash: string | null;
+                    };
+                    resolved_by?: {
+                      /** @enum {string|null} */
+                      ref:
+                        | "prompt:run@1"
+                        | "company:newssummary:website@1"
+                        | "company:techstack:builtwith@1"
+                        | "company:websiteurl:email@1"
+                        | "people:workemail:waterfall@1"
+                        | "people:email:iswork@1"
+                        | "people:name:split@1"
+                        | "people:name:join@1"
+                        | "people:professionalprofile:waterfall@1"
+                        | "people:professionalprofileurl:name@1"
+                        | "people:professionalprofileurl:email:waterfall@1"
+                        | "people:personalemail:profile:waterfall@1"
+                        | "people:validate:email:zerobounce@1"
+                        | "people:mobilenumber:professionalprofile:waterfall@1"
+                        | "people:mobilenumber:workemail:waterfall@1"
+                        | "company:profile:builtwith@1"
+                        | "company:identity@1"
+                        | "company:overview@1"
+                        | "input"
+                        | null;
+                      pipe_hash: string | null;
+                      input_hash: string | null;
+                    } | null;
+                    meta?: {
+                      [key: string]: unknown;
+                    } | null;
+                    ui?: {
+                      displayValue?: string | null;
+                      /** @description A map of widgets associated with this field for UI display, keyed by widget type. */
+                      widgets?: {
+                        entity_logo?: {
+                          /**
+                           * Format: uri
+                           * @description URL to the provider's logo image.
+                           */
+                          image_url: string;
+                          /** @description The name of the entity. */
+                          entity: string;
+                        };
+                        location_indicator?: {
+                          /** @description Country flag emoji. */
+                          emoji: string;
+                        };
+                        avatar?: {
+                          /**
+                           * Format: uri
+                           * @description URL to the provider's logo image.
+                           */
+                          image_url: string;
+                          /** @description The name of the avatar owner. */
+                          name: string;
+                        };
+                      };
+                    };
+                  };
+            }[];
+          };
+        };
+      };
+      responses: {
+        /** @description Run pipeline request */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              id: string;
+              /** @enum {string} */
+              status: "completed" | "failed" | "pending" | "processing";
+              organization_id: string;
+              order: (number | string)[];
+              field_definitions: {
+                [key: string]: {
+                  /** @enum {string} */
+                  type: "string" | "number" | "boolean" | "json" | "unknown";
+                  label: string;
+                  added_by: {
+                    ref:
+                      | (
+                          | "prompt:run@1"
+                          | "company:newssummary:website@1"
+                          | "company:techstack:builtwith@1"
+                          | "company:websiteurl:email@1"
+                          | "people:workemail:waterfall@1"
+                          | "people:email:iswork@1"
+                          | "people:name:split@1"
+                          | "people:name:join@1"
+                          | "people:professionalprofile:waterfall@1"
+                          | "people:professionalprofileurl:name@1"
+                          | "people:professionalprofileurl:email:waterfall@1"
+                          | "people:personalemail:profile:waterfall@1"
+                          | "people:validate:email:zerobounce@1"
+                          | "people:mobilenumber:professionalprofile:waterfall@1"
+                          | "people:mobilenumber:workemail:waterfall@1"
+                          | "company:profile:builtwith@1"
+                          | "company:identity@1"
+                          | "company:overview@1"
+                        )
+                      | "input";
+                    pipe_hash: string | null;
+                    pipeIndex: number | null;
+                  };
+                  /** @enum {string|null} */
+                  format:
+                    | "url"
+                    | "website_url"
+                    | "professional_profile_url"
+                    | "email"
+                    | "datetime"
+                    | "date"
+                    | "phone"
+                    | "markdown"
+                    | "text"
+                    | "int"
+                    | "decimal"
+                    | "address_line_1"
+                    | "zip_code"
+                    | null;
+                };
+              };
+              pipes: (
+                | {
+                    /** @enum {string} */
+                    pipe_id: "prompt:run@1";
+                    config: {
+                      prompt: {
+                        text: string;
+                        json_schemas: {
+                          [key: string]: {
+                            [key: string]: unknown;
+                          };
+                        };
+                      };
+                    };
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "company:newssummary:website@1";
+                    config?: {
+                      input_fields?: {
                         /** @default {
-                         *       "environment": "production"
+                         *       "alias": ""
                          *     } */
-                        config?: {
-                            /**
-                             * @default production
-                             * @enum {string}
-                             */
-                            environment?: "production" | "sandbox";
+                        company_website_url: {
+                          /** @default  */
+                          alias: string;
                         };
-                        input_field_definitions?: {
-                            [key: string]: {
-                                label?: string;
-                                /**
-                                 * @default null
-                                 * @enum {string|null}
-                                 */
-                                format?: "url" | "website_url" | "professional_profile_url" | "email" | "datetime" | "date" | "phone" | "markdown" | "text" | "int" | "decimal" | "address_line_1" | "zip_code" | null;
-                            };
-                        };
-                        pipes: ({
-                            /** @enum {string} */
-                            pipe_id: "run:prompt@1";
-                            config: {
-                                prompt: {
-                                    text: string;
-                                    json_schemas: {
-                                        [key: string]: {
-                                            [key: string]: unknown;
-                                        };
-                                    };
-                                };
-                            };
-                        } | {
-                            /** @enum {string} */
-                            pipe_id: "company:newssummary:website@1";
-                            config?: {
-                                input_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_website_url?: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                };
-                                output_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_news_summary?: {
-                                        alias: string;
-                                    };
-                                };
-                            } | null;
-                        } | {
-                            /** @enum {string} */
-                            pipe_id: "company:profile:builtwith@1";
-                            config?: {
-                                input_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_website_url?: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                };
-                                output_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_name?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    headcount?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    number_of_social_followers?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    monthly_tech_spend_in_usd?: {
-                                        alias: string;
-                                    };
-                                };
-                            } | null;
-                        } | {
-                            /** @enum {string} */
-                            pipe_id: "website:technologystack:builtwith@1";
-                            config?: {
-                                input_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_website_url?: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                };
-                                output_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    technology_stack?: {
-                                        alias: string;
-                                    };
-                                };
-                            } | null;
-                        } | {
-                            /** @enum {string} */
-                            pipe_id: "company:websiteurl:email@1";
-                            config?: {
-                                input_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    email?: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                };
-                                output_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_website_url?: {
-                                        alias: string;
-                                    };
-                                };
-                            } | null;
-                        } | {
-                            /** @enum {string} */
-                            pipe_id: "people:workemail:waterfall@1";
-                            config?: {
-                                /** @default [
-                                 *       {
-                                 *         "provider": "leadmagic"
-                                 *       },
-                                 *       {
-                                 *         "provider": "prospeo"
-                                 *       },
-                                 *       {
-                                 *         "provider": "icypeas"
-                                 *       }
-                                 *     ] */
-                                providers?: {
-                                    /** @enum {string} */
-                                    provider: "leadmagic" | "prospeo" | "icypeas";
-                                }[];
-                                input_fields?: {
-                                    name: {
-                                        alias: string;
-                                    };
-                                    company_website_url: {
-                                        alias: string;
-                                    };
-                                    company_name: {
-                                        alias: string;
-                                    };
-                                };
-                                output_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    work_email?: {
-                                        alias: string;
-                                    };
-                                };
-                            } | null;
-                        } | {
-                            /** @enum {string} */
-                            pipe_id: "people:is:workemail@1";
-                            config?: {
-                                input_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    email?: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                };
-                                output_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    is_work_email?: {
-                                        alias: string;
-                                    };
-                                };
-                            } | null;
-                        } | {
-                            /** @enum {string} */
-                            pipe_id: "people:split:name@1";
-                            config?: {
-                                input_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    name?: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                };
-                                output_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    first_name?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    last_name?: {
-                                        alias: string;
-                                    };
-                                };
-                            } | null;
-                        } | {
-                            /** @enum {string} */
-                            pipe_id: "people:validate:email:zerobounce@1";
-                            config?: {
-                                input_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    work_email?: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    ip_address?: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                };
-                                output_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    is_email_valid?: {
-                                        alias: string;
-                                    };
-                                };
-                            } | null;
-                        } | {
-                            /** @enum {string} */
-                            pipe_id: "people:professionalprofile:waterfall@1";
-                            config?: {
-                                /** @default [
-                                 *       {
-                                 *         "provider": "prospeo"
-                                 *       },
-                                 *       {
-                                 *         "provider": "icypeas"
-                                 *       }
-                                 *     ] */
-                                providers?: {
-                                    /** @enum {string} */
-                                    provider: "prospeo" | "icypeas";
-                                }[];
-                                input_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    professional_profile_url?: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                };
-                                output_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    professional_profile?: {
-                                        alias: string;
-                                    };
-                                };
-                            } | null;
-                        } | {
-                            /** @enum {string} */
-                            pipe_id: "people:professionalprofileurl:name@1";
-                            config?: {
-                                input_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    name?: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_name?: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    location_hint?: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                };
-                                output_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    professional_profile_url?: {
-                                        alias: string;
-                                    };
-                                };
-                            } | null;
-                        } | {
-                            /** @enum {string} */
-                            pipe_id: "people:professionalprofileurl:email:waterfall@1";
-                            config?: {
-                                /** @default [
-                                 *       {
-                                 *         "provider": "leadmagic"
-                                 *       }
-                                 *     ] */
-                                providers?: {
-                                    /** @enum {string} */
-                                    provider: "leadmagic";
-                                }[];
-                                input_fields: {
-                                    email: {
-                                        alias: string;
-                                    };
-                                    work_email: {
-                                        alias: string;
-                                    };
-                                };
-                                output_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    professional_profile_url?: {
-                                        alias: string;
-                                    };
-                                };
-                            } | null;
-                        } | {
-                            /** @enum {string} */
-                            pipe_id: "people:personalemail:professionalprofile:waterfall@1";
-                            config?: {
-                                /** @default [
-                                 *       {
-                                 *         "provider": "leadmagic"
-                                 *       },
-                                 *       {
-                                 *         "provider": "clado"
-                                 *       }
-                                 *     ] */
-                                providers?: {
-                                    /** @enum {string} */
-                                    provider: "clado" | "leadmagic";
-                                }[];
-                                input_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    professional_profile_url?: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                };
-                                output_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    personal_email?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    alternate_personal_emails?: {
-                                        alias: string;
-                                    };
-                                };
-                            } | null;
-                        } | {
-                            /** @enum {string} */
-                            pipe_id: "people:mobilenumber:professionalprofile:waterfall@1";
-                            config?: {
-                                /** @default [
-                                 *       {
-                                 *         "provider": "leadmagic"
-                                 *       },
-                                 *       {
-                                 *         "provider": "prospeo"
-                                 *       }
-                                 *     ] */
-                                providers?: {
-                                    /** @enum {string} */
-                                    provider: "leadmagic" | "prospeo";
-                                }[];
-                                input_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    professional_profile_url?: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                };
-                                output_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    mobile_number?: {
-                                        alias: string;
-                                    };
-                                };
-                            } | null;
-                        } | {
-                            /** @enum {string} */
-                            pipe_id: "people:mobilenumber:workemail:waterfall@1";
-                            config?: {
-                                /** @default [
-                                 *       {
-                                 *         "provider": "leadmagic"
-                                 *       }
-                                 *     ] */
-                                providers?: {
-                                    /** @enum {string} */
-                                    provider: "leadmagic";
-                                }[];
-                                input_fields?: {
-                                    work_email: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                };
-                                output_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    mobile_number?: {
-                                        alias: string;
-                                    };
-                                };
-                            } | null;
-                        } | {
-                            /** @enum {string} */
-                            pipe_id: "people:join:name@1";
-                            config?: {
-                                input_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    first_name?: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    last_name?: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                };
-                                output_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    name?: {
-                                        alias: string;
-                                    };
-                                };
-                            } | null;
-                        } | {
-                            /** @enum {string} */
-                            pipe_id: "company:identity@1";
-                            config?: {
-                                input_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_name?: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                };
-                                output_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_social_url?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    cleaned_company_name?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_website_url?: {
-                                        alias: string;
-                                    };
-                                };
-                            } | null;
-                        } | {
-                            /** @enum {string} */
-                            pipe_id: "company:overview@1";
-                            config?: {
-                                input_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_website_url?: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_social_url?: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                };
-                                output_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_description?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_industry?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_region?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    headcount?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    estimated_revenue?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    founded_year?: {
-                                        alias: string;
-                                    };
-                                };
-                            } | null;
-                        })[];
-                        input: {
-                            [key: string]: string | number | boolean | null | {
-                                [key: string]: unknown;
-                            } | unknown[] | {
-                                value: string | number | boolean | null | {
-                                    [key: string]: unknown;
-                                } | unknown[];
-                                status: "completed" | "failed" | "pending" | "queued" | "processing" | "no_result" | "skipped";
-                                reason?: {
-                                    code: string;
-                                    summary: string;
-                                    message: string;
-                                } | null;
-                                /** @enum {string} */
-                                type?: "string" | "number" | "boolean" | "json" | "unknown";
-                                /** @enum {string|null} */
-                                format?: "url" | "website_url" | "professional_profile_url" | "email" | "datetime" | "date" | "phone" | "markdown" | "text" | "int" | "decimal" | "address_line_1" | "zip_code" | null;
-                                claimed_by?: {
-                                    /** @enum {string|null} */
-                                    ref: "run:prompt@1" | "company:newssummary:website@1" | "website:technologystack:builtwith@1" | "company:websiteurl:email@1" | "people:workemail:waterfall@1" | "people:is:workemail@1" | "people:split:name@1" | "people:join:name@1" | "people:professionalprofile:waterfall@1" | "people:professionalprofileurl:name@1" | "people:professionalprofileurl:email:waterfall@1" | "people:personalemail:professionalprofile:waterfall@1" | "people:validate:email:zerobounce@1" | "people:mobilenumber:professionalprofile:waterfall@1" | "people:mobilenumber:workemail:waterfall@1" | "company:profile:builtwith@1" | "company:identity@1" | "company:overview@1" | "input" | null;
-                                    pipe_hash: string | null;
-                                };
-                                resolved_by?: {
-                                    /** @enum {string|null} */
-                                    ref: "run:prompt@1" | "company:newssummary:website@1" | "website:technologystack:builtwith@1" | "company:websiteurl:email@1" | "people:workemail:waterfall@1" | "people:is:workemail@1" | "people:split:name@1" | "people:join:name@1" | "people:professionalprofile:waterfall@1" | "people:professionalprofileurl:name@1" | "people:professionalprofileurl:email:waterfall@1" | "people:personalemail:professionalprofile:waterfall@1" | "people:validate:email:zerobounce@1" | "people:mobilenumber:professionalprofile:waterfall@1" | "people:mobilenumber:workemail:waterfall@1" | "company:profile:builtwith@1" | "company:identity@1" | "company:overview@1" | "input" | null;
-                                    pipe_hash: string | null;
-                                    input_hash: string | null;
-                                } | null;
-                                meta?: {
-                                    [key: string]: unknown;
-                                } | null;
-                                ui?: {
-                                    displayValue?: string | null;
-                                    /** @description A map of widgets associated with this field for UI display, keyed by widget type. */
-                                    widgets?: {
-                                        entity_logo?: {
-                                            /**
-                                             * Format: uri
-                                             * @description URL to the provider's logo image.
-                                             */
-                                            image_url: string;
-                                            /** @description The name of the entity. */
-                                            entity: string;
-                                        };
-                                        location_indicator?: {
-                                            /** @description Country flag emoji. */
-                                            emoji: string;
-                                        };
-                                        avatar?: {
-                                            /**
-                                             * Format: uri
-                                             * @description URL to the provider's logo image.
-                                             */
-                                            image_url: string;
-                                            /** @description The name of the avatar owner. */
-                                            name: string;
-                                        };
-                                    };
-                                };
-                            };
-                        }[];
-                    };
-                };
-            };
-            responses: {
-                /** @description Run pipeline request */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            id: string;
-                            /** @enum {string} */
-                            status: "completed" | "failed" | "pending" | "processing";
-                            organization_id: string;
-                            order: (number | string)[];
-                            field_definitions: {
-                                [key: string]: {
-                                    /** @enum {string} */
-                                    type: "string" | "number" | "boolean" | "json" | "unknown";
-                                    label: string;
-                                    added_by: {
-                                        ref: ("run:prompt@1" | "company:newssummary:website@1" | "website:technologystack:builtwith@1" | "company:websiteurl:email@1" | "people:workemail:waterfall@1" | "people:is:workemail@1" | "people:split:name@1" | "people:join:name@1" | "people:professionalprofile:waterfall@1" | "people:professionalprofileurl:name@1" | "people:professionalprofileurl:email:waterfall@1" | "people:personalemail:professionalprofile:waterfall@1" | "people:validate:email:zerobounce@1" | "people:mobilenumber:professionalprofile:waterfall@1" | "people:mobilenumber:workemail:waterfall@1" | "company:profile:builtwith@1" | "company:identity@1" | "company:overview@1") | "input";
-                                        pipe_hash: string | null;
-                                        pipeIndex: number | null;
-                                    };
-                                    /** @enum {string|null} */
-                                    format: "url" | "website_url" | "professional_profile_url" | "email" | "datetime" | "date" | "phone" | "markdown" | "text" | "int" | "decimal" | "address_line_1" | "zip_code" | null;
-                                };
-                            };
-                            pipes: ({
-                                /** @enum {string} */
-                                pipe_id: "run:prompt@1";
-                                config: {
-                                    prompt: {
-                                        text: string;
-                                        json_schemas: {
-                                            [key: string]: {
-                                                [key: string]: unknown;
-                                            };
-                                        };
-                                    };
-                                };
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "company:newssummary:website@1";
-                                config?: {
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_website_url: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_news_summary: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "company:profile:builtwith@1";
-                                config?: {
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_website_url: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_name: {
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        headcount: {
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        number_of_social_followers: {
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        monthly_tech_spend_in_usd: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "website:technologystack:builtwith@1";
-                                config?: {
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_website_url: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        technology_stack: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "company:websiteurl:email@1";
-                                config?: {
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        email: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_website_url: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "people:workemail:waterfall@1";
-                                config?: {
-                                    /** @default [
-                                     *       {
-                                     *         "provider": "leadmagic"
-                                     *       },
-                                     *       {
-                                     *         "provider": "prospeo"
-                                     *       },
-                                     *       {
-                                     *         "provider": "icypeas"
-                                     *       }
-                                     *     ] */
-                                    providers: {
-                                        /** @enum {string} */
-                                        provider: "leadmagic" | "prospeo" | "icypeas";
-                                    }[];
-                                    input_fields?: {
-                                        name: {
-                                            alias: string;
-                                        };
-                                        company_website_url: {
-                                            alias: string;
-                                        };
-                                        company_name: {
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        work_email: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "people:is:workemail@1";
-                                config?: {
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        email: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        is_work_email: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "people:split:name@1";
-                                config?: {
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        name: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        first_name: {
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        last_name: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "people:validate:email:zerobounce@1";
-                                config?: {
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        work_email: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        ip_address: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        is_email_valid: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "people:professionalprofile:waterfall@1";
-                                config?: {
-                                    /** @default [
-                                     *       {
-                                     *         "provider": "prospeo"
-                                     *       },
-                                     *       {
-                                     *         "provider": "icypeas"
-                                     *       }
-                                     *     ] */
-                                    providers: {
-                                        /** @enum {string} */
-                                        provider: "prospeo" | "icypeas";
-                                    }[];
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        professional_profile_url: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        professional_profile: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "people:professionalprofileurl:name@1";
-                                config?: {
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        name: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_name: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        location_hint: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        professional_profile_url: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "people:professionalprofileurl:email:waterfall@1";
-                                config?: {
-                                    /** @default [
-                                     *       {
-                                     *         "provider": "leadmagic"
-                                     *       }
-                                     *     ] */
-                                    providers: {
-                                        /** @enum {string} */
-                                        provider: "leadmagic";
-                                    }[];
-                                    input_fields: {
-                                        email: {
-                                            alias: string;
-                                        };
-                                        work_email: {
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        professional_profile_url: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "people:personalemail:professionalprofile:waterfall@1";
-                                config?: {
-                                    /** @default [
-                                     *       {
-                                     *         "provider": "leadmagic"
-                                     *       },
-                                     *       {
-                                     *         "provider": "clado"
-                                     *       }
-                                     *     ] */
-                                    providers: {
-                                        /** @enum {string} */
-                                        provider: "clado" | "leadmagic";
-                                    }[];
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        professional_profile_url: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        personal_email: {
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        alternate_personal_emails: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "people:mobilenumber:professionalprofile:waterfall@1";
-                                config?: {
-                                    /** @default [
-                                     *       {
-                                     *         "provider": "leadmagic"
-                                     *       },
-                                     *       {
-                                     *         "provider": "prospeo"
-                                     *       }
-                                     *     ] */
-                                    providers: {
-                                        /** @enum {string} */
-                                        provider: "leadmagic" | "prospeo";
-                                    }[];
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        professional_profile_url: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        mobile_number: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "people:mobilenumber:workemail:waterfall@1";
-                                config?: {
-                                    /** @default [
-                                     *       {
-                                     *         "provider": "leadmagic"
-                                     *       }
-                                     *     ] */
-                                    providers: {
-                                        /** @enum {string} */
-                                        provider: "leadmagic";
-                                    }[];
-                                    input_fields?: {
-                                        work_email: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        mobile_number: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "people:join:name@1";
-                                config?: {
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        first_name: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        last_name: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        name: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "company:identity@1";
-                                config?: {
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_name: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_social_url: {
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        cleaned_company_name: {
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_website_url: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "company:overview@1";
-                                config?: {
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_website_url: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_social_url: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_description: {
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_industry: {
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_region: {
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        headcount: {
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        estimated_revenue: {
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        founded_year: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            })[];
-                            errors: {
-                                code: string;
-                                message: string;
-                                path?: string;
-                            }[];
-                            records: {
-                                [key: string]: {
-                                    id: number | string;
-                                    fields: {
-                                        [key: string]: {
-                                            value: string | number | boolean | null | {
-                                                [key: string]: unknown;
-                                            } | unknown[];
-                                            status: "completed" | "failed" | "pending" | "queued" | "processing" | "no_result" | "skipped";
-                                            /** @enum {string} */
-                                            type: "string" | "number" | "boolean" | "json" | "unknown";
-                                            reason: {
-                                                code: string;
-                                                summary: string;
-                                                message: string;
-                                            } | null;
-                                            claimed_by: {
-                                                /** @enum {string|null} */
-                                                ref: "run:prompt@1" | "company:newssummary:website@1" | "website:technologystack:builtwith@1" | "company:websiteurl:email@1" | "people:workemail:waterfall@1" | "people:is:workemail@1" | "people:split:name@1" | "people:join:name@1" | "people:professionalprofile:waterfall@1" | "people:professionalprofileurl:name@1" | "people:professionalprofileurl:email:waterfall@1" | "people:personalemail:professionalprofile:waterfall@1" | "people:validate:email:zerobounce@1" | "people:mobilenumber:professionalprofile:waterfall@1" | "people:mobilenumber:workemail:waterfall@1" | "company:profile:builtwith@1" | "company:identity@1" | "company:overview@1" | "input" | null;
-                                                pipe_hash: string | null;
-                                            };
-                                            resolved_by: {
-                                                /** @enum {string|null} */
-                                                ref: "run:prompt@1" | "company:newssummary:website@1" | "website:technologystack:builtwith@1" | "company:websiteurl:email@1" | "people:workemail:waterfall@1" | "people:is:workemail@1" | "people:split:name@1" | "people:join:name@1" | "people:professionalprofile:waterfall@1" | "people:professionalprofileurl:name@1" | "people:professionalprofileurl:email:waterfall@1" | "people:personalemail:professionalprofile:waterfall@1" | "people:validate:email:zerobounce@1" | "people:mobilenumber:professionalprofile:waterfall@1" | "people:mobilenumber:workemail:waterfall@1" | "company:profile:builtwith@1" | "company:identity@1" | "company:overview@1" | "input" | null;
-                                                pipe_hash: string | null;
-                                                input_hash: string | null;
-                                            } | null;
-                                            meta: {
-                                                waterfall?: {
-                                                    attempted_providers: {
-                                                        /** @enum {string} */
-                                                        provider: "pipe0" | "findymail" | "dropcontact" | "hunter" | "zerobounce" | "googlemaps" | "gemini" | "leadmagic" | "contactout" | "builtwith" | "perplexity" | "serper" | "icypeas" | "prospeo" | "clado";
-                                                    }[];
-                                                    available_providers: ("pipe0" | "findymail" | "dropcontact" | "hunter" | "zerobounce" | "googlemaps" | "gemini" | "leadmagic" | "contactout" | "builtwith" | "perplexity" | "serper" | "icypeas" | "prospeo" | "clado")[];
-                                                    /** @enum {string} */
-                                                    successful_provider?: "pipe0" | "findymail" | "dropcontact" | "hunter" | "zerobounce" | "googlemaps" | "gemini" | "leadmagic" | "contactout" | "builtwith" | "perplexity" | "serper" | "icypeas" | "prospeo" | "clado";
-                                                };
-                                                mix?: {
-                                                    performed_steps: string[];
-                                                };
-                                            } | null;
-                                            /** @enum {string|null} */
-                                            format: "url" | "website_url" | "professional_profile_url" | "email" | "datetime" | "date" | "phone" | "markdown" | "text" | "int" | "decimal" | "address_line_1" | "zip_code" | null;
-                                            ui: {
-                                                displayValue?: string | null;
-                                                /** @description A map of widgets associated with this field for UI display, keyed by widget type. */
-                                                widgets?: {
-                                                    entity_logo?: {
-                                                        /**
-                                                         * Format: uri
-                                                         * @description URL to the provider's logo image.
-                                                         */
-                                                        image_url: string;
-                                                        /** @description The name of the entity. */
-                                                        entity: string;
-                                                    };
-                                                    location_indicator?: {
-                                                        /** @description Country flag emoji. */
-                                                        emoji: string;
-                                                    };
-                                                    avatar?: {
-                                                        /**
-                                                         * Format: uri
-                                                         * @description URL to the provider's logo image.
-                                                         */
-                                                        image_url: string;
-                                                        /** @description The name of the avatar owner. */
-                                                        name: string;
-                                                    };
-                                                };
-                                            };
-                                        };
-                                    };
-                                };
-                            };
-                        };
-                    };
-                };
-                /** @description Bad request */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
-                        };
-                    };
-                };
-                /** @description Unauthorized */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
-                        };
-                    };
-                };
-                /** @description Forbidden */
-                403: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
-                        };
-                    };
-                };
-                /** @description Required resource not found */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
-                        };
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/run": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** @description Enrich data asynchronously. Create an enrichment task. Check this task by polling the '/check' endpoint until the status becomes 'completed'. */
-        post: {
-            parameters: {
-                query?: never;
-                header?: {
-                    "x-environment"?: "production" | "sandbox";
-                };
-                path?: never;
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": {
+                      };
+                      output_fields?: {
                         /** @default {
-                         *       "environment": "production"
+                         *       "alias": ""
                          *     } */
-                        config?: {
-                            /**
-                             * @default production
-                             * @enum {string}
-                             */
-                            environment?: "production" | "sandbox";
+                        company_news_summary: {
+                          alias: string;
                         };
-                        input_field_definitions?: {
-                            [key: string]: {
-                                label?: string;
-                                /**
-                                 * @default null
-                                 * @enum {string|null}
-                                 */
-                                format?: "url" | "website_url" | "professional_profile_url" | "email" | "datetime" | "date" | "phone" | "markdown" | "text" | "int" | "decimal" | "address_line_1" | "zip_code" | null;
-                            };
-                        };
-                        pipes: ({
-                            /** @enum {string} */
-                            pipe_id: "run:prompt@1";
-                            config: {
-                                prompt: {
-                                    text: string;
-                                    json_schemas: {
-                                        [key: string]: {
-                                            [key: string]: unknown;
-                                        };
-                                    };
-                                };
-                            };
-                        } | {
-                            /** @enum {string} */
-                            pipe_id: "company:newssummary:website@1";
-                            config?: {
-                                input_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_website_url?: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                };
-                                output_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_news_summary?: {
-                                        alias: string;
-                                    };
-                                };
-                            } | null;
-                        } | {
-                            /** @enum {string} */
-                            pipe_id: "company:profile:builtwith@1";
-                            config?: {
-                                input_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_website_url?: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                };
-                                output_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_name?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    headcount?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    number_of_social_followers?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    monthly_tech_spend_in_usd?: {
-                                        alias: string;
-                                    };
-                                };
-                            } | null;
-                        } | {
-                            /** @enum {string} */
-                            pipe_id: "website:technologystack:builtwith@1";
-                            config?: {
-                                input_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_website_url?: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                };
-                                output_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    technology_stack?: {
-                                        alias: string;
-                                    };
-                                };
-                            } | null;
-                        } | {
-                            /** @enum {string} */
-                            pipe_id: "company:websiteurl:email@1";
-                            config?: {
-                                input_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    email?: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                };
-                                output_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_website_url?: {
-                                        alias: string;
-                                    };
-                                };
-                            } | null;
-                        } | {
-                            /** @enum {string} */
-                            pipe_id: "people:workemail:waterfall@1";
-                            config?: {
-                                /** @default [
-                                 *       {
-                                 *         "provider": "leadmagic"
-                                 *       },
-                                 *       {
-                                 *         "provider": "prospeo"
-                                 *       },
-                                 *       {
-                                 *         "provider": "icypeas"
-                                 *       }
-                                 *     ] */
-                                providers?: {
-                                    /** @enum {string} */
-                                    provider: "leadmagic" | "prospeo" | "icypeas";
-                                }[];
-                                input_fields?: {
-                                    name: {
-                                        alias: string;
-                                    };
-                                    company_website_url: {
-                                        alias: string;
-                                    };
-                                    company_name: {
-                                        alias: string;
-                                    };
-                                };
-                                output_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    work_email?: {
-                                        alias: string;
-                                    };
-                                };
-                            } | null;
-                        } | {
-                            /** @enum {string} */
-                            pipe_id: "people:is:workemail@1";
-                            config?: {
-                                input_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    email?: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                };
-                                output_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    is_work_email?: {
-                                        alias: string;
-                                    };
-                                };
-                            } | null;
-                        } | {
-                            /** @enum {string} */
-                            pipe_id: "people:split:name@1";
-                            config?: {
-                                input_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    name?: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                };
-                                output_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    first_name?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    last_name?: {
-                                        alias: string;
-                                    };
-                                };
-                            } | null;
-                        } | {
-                            /** @enum {string} */
-                            pipe_id: "people:validate:email:zerobounce@1";
-                            config?: {
-                                input_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    work_email?: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    ip_address?: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                };
-                                output_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    is_email_valid?: {
-                                        alias: string;
-                                    };
-                                };
-                            } | null;
-                        } | {
-                            /** @enum {string} */
-                            pipe_id: "people:professionalprofile:waterfall@1";
-                            config?: {
-                                /** @default [
-                                 *       {
-                                 *         "provider": "prospeo"
-                                 *       },
-                                 *       {
-                                 *         "provider": "icypeas"
-                                 *       }
-                                 *     ] */
-                                providers?: {
-                                    /** @enum {string} */
-                                    provider: "prospeo" | "icypeas";
-                                }[];
-                                input_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    professional_profile_url?: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                };
-                                output_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    professional_profile?: {
-                                        alias: string;
-                                    };
-                                };
-                            } | null;
-                        } | {
-                            /** @enum {string} */
-                            pipe_id: "people:professionalprofileurl:name@1";
-                            config?: {
-                                input_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    name?: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_name?: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    location_hint?: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                };
-                                output_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    professional_profile_url?: {
-                                        alias: string;
-                                    };
-                                };
-                            } | null;
-                        } | {
-                            /** @enum {string} */
-                            pipe_id: "people:professionalprofileurl:email:waterfall@1";
-                            config?: {
-                                /** @default [
-                                 *       {
-                                 *         "provider": "leadmagic"
-                                 *       }
-                                 *     ] */
-                                providers?: {
-                                    /** @enum {string} */
-                                    provider: "leadmagic";
-                                }[];
-                                input_fields: {
-                                    email: {
-                                        alias: string;
-                                    };
-                                    work_email: {
-                                        alias: string;
-                                    };
-                                };
-                                output_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    professional_profile_url?: {
-                                        alias: string;
-                                    };
-                                };
-                            } | null;
-                        } | {
-                            /** @enum {string} */
-                            pipe_id: "people:personalemail:professionalprofile:waterfall@1";
-                            config?: {
-                                /** @default [
-                                 *       {
-                                 *         "provider": "leadmagic"
-                                 *       },
-                                 *       {
-                                 *         "provider": "clado"
-                                 *       }
-                                 *     ] */
-                                providers?: {
-                                    /** @enum {string} */
-                                    provider: "clado" | "leadmagic";
-                                }[];
-                                input_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    professional_profile_url?: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                };
-                                output_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    personal_email?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    alternate_personal_emails?: {
-                                        alias: string;
-                                    };
-                                };
-                            } | null;
-                        } | {
-                            /** @enum {string} */
-                            pipe_id: "people:mobilenumber:professionalprofile:waterfall@1";
-                            config?: {
-                                /** @default [
-                                 *       {
-                                 *         "provider": "leadmagic"
-                                 *       },
-                                 *       {
-                                 *         "provider": "prospeo"
-                                 *       }
-                                 *     ] */
-                                providers?: {
-                                    /** @enum {string} */
-                                    provider: "leadmagic" | "prospeo";
-                                }[];
-                                input_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    professional_profile_url?: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                };
-                                output_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    mobile_number?: {
-                                        alias: string;
-                                    };
-                                };
-                            } | null;
-                        } | {
-                            /** @enum {string} */
-                            pipe_id: "people:mobilenumber:workemail:waterfall@1";
-                            config?: {
-                                /** @default [
-                                 *       {
-                                 *         "provider": "leadmagic"
-                                 *       }
-                                 *     ] */
-                                providers?: {
-                                    /** @enum {string} */
-                                    provider: "leadmagic";
-                                }[];
-                                input_fields?: {
-                                    work_email: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                };
-                                output_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    mobile_number?: {
-                                        alias: string;
-                                    };
-                                };
-                            } | null;
-                        } | {
-                            /** @enum {string} */
-                            pipe_id: "people:join:name@1";
-                            config?: {
-                                input_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    first_name?: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    last_name?: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                };
-                                output_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    name?: {
-                                        alias: string;
-                                    };
-                                };
-                            } | null;
-                        } | {
-                            /** @enum {string} */
-                            pipe_id: "company:identity@1";
-                            config?: {
-                                input_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_name?: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                };
-                                output_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_social_url?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    cleaned_company_name?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_website_url?: {
-                                        alias: string;
-                                    };
-                                };
-                            } | null;
-                        } | {
-                            /** @enum {string} */
-                            pipe_id: "company:overview@1";
-                            config?: {
-                                input_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_website_url?: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_social_url?: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                };
-                                output_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_description?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_industry?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_region?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    headcount?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    estimated_revenue?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    founded_year?: {
-                                        alias: string;
-                                    };
-                                };
-                            } | null;
-                        })[];
-                        input: {
-                            [key: string]: string | number | boolean | null | {
-                                [key: string]: unknown;
-                            } | unknown[] | {
-                                value: string | number | boolean | null | {
-                                    [key: string]: unknown;
-                                } | unknown[];
-                                status: "completed" | "failed" | "pending" | "queued" | "processing" | "no_result" | "skipped";
-                                reason?: {
-                                    code: string;
-                                    summary: string;
-                                    message: string;
-                                } | null;
-                                /** @enum {string} */
-                                type?: "string" | "number" | "boolean" | "json" | "unknown";
-                                /** @enum {string|null} */
-                                format?: "url" | "website_url" | "professional_profile_url" | "email" | "datetime" | "date" | "phone" | "markdown" | "text" | "int" | "decimal" | "address_line_1" | "zip_code" | null;
-                                claimed_by?: {
-                                    /** @enum {string|null} */
-                                    ref: "run:prompt@1" | "company:newssummary:website@1" | "website:technologystack:builtwith@1" | "company:websiteurl:email@1" | "people:workemail:waterfall@1" | "people:is:workemail@1" | "people:split:name@1" | "people:join:name@1" | "people:professionalprofile:waterfall@1" | "people:professionalprofileurl:name@1" | "people:professionalprofileurl:email:waterfall@1" | "people:personalemail:professionalprofile:waterfall@1" | "people:validate:email:zerobounce@1" | "people:mobilenumber:professionalprofile:waterfall@1" | "people:mobilenumber:workemail:waterfall@1" | "company:profile:builtwith@1" | "company:identity@1" | "company:overview@1" | "input" | null;
-                                    pipe_hash: string | null;
-                                };
-                                resolved_by?: {
-                                    /** @enum {string|null} */
-                                    ref: "run:prompt@1" | "company:newssummary:website@1" | "website:technologystack:builtwith@1" | "company:websiteurl:email@1" | "people:workemail:waterfall@1" | "people:is:workemail@1" | "people:split:name@1" | "people:join:name@1" | "people:professionalprofile:waterfall@1" | "people:professionalprofileurl:name@1" | "people:professionalprofileurl:email:waterfall@1" | "people:personalemail:professionalprofile:waterfall@1" | "people:validate:email:zerobounce@1" | "people:mobilenumber:professionalprofile:waterfall@1" | "people:mobilenumber:workemail:waterfall@1" | "company:profile:builtwith@1" | "company:identity@1" | "company:overview@1" | "input" | null;
-                                    pipe_hash: string | null;
-                                    input_hash: string | null;
-                                } | null;
-                                meta?: {
-                                    [key: string]: unknown;
-                                } | null;
-                                ui?: {
-                                    displayValue?: string | null;
-                                    /** @description A map of widgets associated with this field for UI display, keyed by widget type. */
-                                    widgets?: {
-                                        entity_logo?: {
-                                            /**
-                                             * Format: uri
-                                             * @description URL to the provider's logo image.
-                                             */
-                                            image_url: string;
-                                            /** @description The name of the entity. */
-                                            entity: string;
-                                        };
-                                        location_indicator?: {
-                                            /** @description Country flag emoji. */
-                                            emoji: string;
-                                        };
-                                        avatar?: {
-                                            /**
-                                             * Format: uri
-                                             * @description URL to the provider's logo image.
-                                             */
-                                            image_url: string;
-                                            /** @description The name of the avatar owner. */
-                                            name: string;
-                                        };
-                                    };
-                                };
-                            };
-                        }[];
-                    };
-                };
-            };
-            responses: {
-                /** @description Run pipeline request */
-                201: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            id: string;
-                            /** @enum {string} */
-                            status: "completed" | "failed" | "pending" | "processing";
-                            organization_id: string;
-                            order: (number | string)[];
-                            field_definitions: {
-                                [key: string]: {
-                                    /** @enum {string} */
-                                    type: "string" | "number" | "boolean" | "json" | "unknown";
-                                    label: string;
-                                    added_by: {
-                                        ref: ("run:prompt@1" | "company:newssummary:website@1" | "website:technologystack:builtwith@1" | "company:websiteurl:email@1" | "people:workemail:waterfall@1" | "people:is:workemail@1" | "people:split:name@1" | "people:join:name@1" | "people:professionalprofile:waterfall@1" | "people:professionalprofileurl:name@1" | "people:professionalprofileurl:email:waterfall@1" | "people:personalemail:professionalprofile:waterfall@1" | "people:validate:email:zerobounce@1" | "people:mobilenumber:professionalprofile:waterfall@1" | "people:mobilenumber:workemail:waterfall@1" | "company:profile:builtwith@1" | "company:identity@1" | "company:overview@1") | "input";
-                                        pipe_hash: string | null;
-                                        pipeIndex: number | null;
-                                    };
-                                    /** @enum {string|null} */
-                                    format: "url" | "website_url" | "professional_profile_url" | "email" | "datetime" | "date" | "phone" | "markdown" | "text" | "int" | "decimal" | "address_line_1" | "zip_code" | null;
-                                };
-                            };
-                            pipes: ({
-                                /** @enum {string} */
-                                pipe_id: "run:prompt@1";
-                                config: {
-                                    prompt: {
-                                        text: string;
-                                        json_schemas: {
-                                            [key: string]: {
-                                                [key: string]: unknown;
-                                            };
-                                        };
-                                    };
-                                };
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "company:newssummary:website@1";
-                                config?: {
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_website_url: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_news_summary: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "company:profile:builtwith@1";
-                                config?: {
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_website_url: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_name: {
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        headcount: {
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        number_of_social_followers: {
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        monthly_tech_spend_in_usd: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "website:technologystack:builtwith@1";
-                                config?: {
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_website_url: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        technology_stack: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "company:websiteurl:email@1";
-                                config?: {
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        email: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_website_url: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "people:workemail:waterfall@1";
-                                config?: {
-                                    /** @default [
-                                     *       {
-                                     *         "provider": "leadmagic"
-                                     *       },
-                                     *       {
-                                     *         "provider": "prospeo"
-                                     *       },
-                                     *       {
-                                     *         "provider": "icypeas"
-                                     *       }
-                                     *     ] */
-                                    providers: {
-                                        /** @enum {string} */
-                                        provider: "leadmagic" | "prospeo" | "icypeas";
-                                    }[];
-                                    input_fields?: {
-                                        name: {
-                                            alias: string;
-                                        };
-                                        company_website_url: {
-                                            alias: string;
-                                        };
-                                        company_name: {
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        work_email: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "people:is:workemail@1";
-                                config?: {
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        email: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        is_work_email: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "people:split:name@1";
-                                config?: {
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        name: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        first_name: {
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        last_name: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "people:validate:email:zerobounce@1";
-                                config?: {
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        work_email: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        ip_address: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        is_email_valid: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "people:professionalprofile:waterfall@1";
-                                config?: {
-                                    /** @default [
-                                     *       {
-                                     *         "provider": "prospeo"
-                                     *       },
-                                     *       {
-                                     *         "provider": "icypeas"
-                                     *       }
-                                     *     ] */
-                                    providers: {
-                                        /** @enum {string} */
-                                        provider: "prospeo" | "icypeas";
-                                    }[];
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        professional_profile_url: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        professional_profile: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "people:professionalprofileurl:name@1";
-                                config?: {
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        name: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_name: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        location_hint: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        professional_profile_url: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "people:professionalprofileurl:email:waterfall@1";
-                                config?: {
-                                    /** @default [
-                                     *       {
-                                     *         "provider": "leadmagic"
-                                     *       }
-                                     *     ] */
-                                    providers: {
-                                        /** @enum {string} */
-                                        provider: "leadmagic";
-                                    }[];
-                                    input_fields: {
-                                        email: {
-                                            alias: string;
-                                        };
-                                        work_email: {
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        professional_profile_url: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "people:personalemail:professionalprofile:waterfall@1";
-                                config?: {
-                                    /** @default [
-                                     *       {
-                                     *         "provider": "leadmagic"
-                                     *       },
-                                     *       {
-                                     *         "provider": "clado"
-                                     *       }
-                                     *     ] */
-                                    providers: {
-                                        /** @enum {string} */
-                                        provider: "clado" | "leadmagic";
-                                    }[];
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        professional_profile_url: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        personal_email: {
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        alternate_personal_emails: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "people:mobilenumber:professionalprofile:waterfall@1";
-                                config?: {
-                                    /** @default [
-                                     *       {
-                                     *         "provider": "leadmagic"
-                                     *       },
-                                     *       {
-                                     *         "provider": "prospeo"
-                                     *       }
-                                     *     ] */
-                                    providers: {
-                                        /** @enum {string} */
-                                        provider: "leadmagic" | "prospeo";
-                                    }[];
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        professional_profile_url: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        mobile_number: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "people:mobilenumber:workemail:waterfall@1";
-                                config?: {
-                                    /** @default [
-                                     *       {
-                                     *         "provider": "leadmagic"
-                                     *       }
-                                     *     ] */
-                                    providers: {
-                                        /** @enum {string} */
-                                        provider: "leadmagic";
-                                    }[];
-                                    input_fields?: {
-                                        work_email: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        mobile_number: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "people:join:name@1";
-                                config?: {
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        first_name: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        last_name: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        name: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "company:identity@1";
-                                config?: {
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_name: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_social_url: {
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        cleaned_company_name: {
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_website_url: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "company:overview@1";
-                                config?: {
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_website_url: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_social_url: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_description: {
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_industry: {
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_region: {
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        headcount: {
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        estimated_revenue: {
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        founded_year: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            })[];
-                            errors: {
-                                code: string;
-                                message: string;
-                                path?: string;
-                            }[];
-                            records: {
-                                [key: string]: {
-                                    id: number | string;
-                                    fields: {
-                                        [key: string]: {
-                                            value: string | number | boolean | null | {
-                                                [key: string]: unknown;
-                                            } | unknown[];
-                                            status: "completed" | "failed" | "pending" | "queued" | "processing" | "no_result" | "skipped";
-                                            /** @enum {string} */
-                                            type: "string" | "number" | "boolean" | "json" | "unknown";
-                                            reason: {
-                                                code: string;
-                                                summary: string;
-                                                message: string;
-                                            } | null;
-                                            claimed_by: {
-                                                /** @enum {string|null} */
-                                                ref: "run:prompt@1" | "company:newssummary:website@1" | "website:technologystack:builtwith@1" | "company:websiteurl:email@1" | "people:workemail:waterfall@1" | "people:is:workemail@1" | "people:split:name@1" | "people:join:name@1" | "people:professionalprofile:waterfall@1" | "people:professionalprofileurl:name@1" | "people:professionalprofileurl:email:waterfall@1" | "people:personalemail:professionalprofile:waterfall@1" | "people:validate:email:zerobounce@1" | "people:mobilenumber:professionalprofile:waterfall@1" | "people:mobilenumber:workemail:waterfall@1" | "company:profile:builtwith@1" | "company:identity@1" | "company:overview@1" | "input" | null;
-                                                pipe_hash: string | null;
-                                            };
-                                            resolved_by: {
-                                                /** @enum {string|null} */
-                                                ref: "run:prompt@1" | "company:newssummary:website@1" | "website:technologystack:builtwith@1" | "company:websiteurl:email@1" | "people:workemail:waterfall@1" | "people:is:workemail@1" | "people:split:name@1" | "people:join:name@1" | "people:professionalprofile:waterfall@1" | "people:professionalprofileurl:name@1" | "people:professionalprofileurl:email:waterfall@1" | "people:personalemail:professionalprofile:waterfall@1" | "people:validate:email:zerobounce@1" | "people:mobilenumber:professionalprofile:waterfall@1" | "people:mobilenumber:workemail:waterfall@1" | "company:profile:builtwith@1" | "company:identity@1" | "company:overview@1" | "input" | null;
-                                                pipe_hash: string | null;
-                                                input_hash: string | null;
-                                            } | null;
-                                            meta: {
-                                                waterfall?: {
-                                                    attempted_providers: {
-                                                        /** @enum {string} */
-                                                        provider: "pipe0" | "findymail" | "dropcontact" | "hunter" | "zerobounce" | "googlemaps" | "gemini" | "leadmagic" | "contactout" | "builtwith" | "perplexity" | "serper" | "icypeas" | "prospeo" | "clado";
-                                                    }[];
-                                                    available_providers: ("pipe0" | "findymail" | "dropcontact" | "hunter" | "zerobounce" | "googlemaps" | "gemini" | "leadmagic" | "contactout" | "builtwith" | "perplexity" | "serper" | "icypeas" | "prospeo" | "clado")[];
-                                                    /** @enum {string} */
-                                                    successful_provider?: "pipe0" | "findymail" | "dropcontact" | "hunter" | "zerobounce" | "googlemaps" | "gemini" | "leadmagic" | "contactout" | "builtwith" | "perplexity" | "serper" | "icypeas" | "prospeo" | "clado";
-                                                };
-                                                mix?: {
-                                                    performed_steps: string[];
-                                                };
-                                            } | null;
-                                            /** @enum {string|null} */
-                                            format: "url" | "website_url" | "professional_profile_url" | "email" | "datetime" | "date" | "phone" | "markdown" | "text" | "int" | "decimal" | "address_line_1" | "zip_code" | null;
-                                            ui: {
-                                                displayValue?: string | null;
-                                                /** @description A map of widgets associated with this field for UI display, keyed by widget type. */
-                                                widgets?: {
-                                                    entity_logo?: {
-                                                        /**
-                                                         * Format: uri
-                                                         * @description URL to the provider's logo image.
-                                                         */
-                                                        image_url: string;
-                                                        /** @description The name of the entity. */
-                                                        entity: string;
-                                                    };
-                                                    location_indicator?: {
-                                                        /** @description Country flag emoji. */
-                                                        emoji: string;
-                                                    };
-                                                    avatar?: {
-                                                        /**
-                                                         * Format: uri
-                                                         * @description URL to the provider's logo image.
-                                                         */
-                                                        image_url: string;
-                                                        /** @description The name of the avatar owner. */
-                                                        name: string;
-                                                    };
-                                                };
-                                            };
-                                        };
-                                    };
-                                };
-                            };
-                        };
-                    };
-                };
-                /** @description Bad request */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
-                        };
-                    };
-                };
-                /** @description Unauthorized */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
-                        };
-                    };
-                };
-                /** @description Forbidden */
-                403: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
-                        };
-                    };
-                };
-                /** @description Required resource not found */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
-                        };
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/check/{run_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Check status of enrichment task. Poll this endpoint to until the status becomes 'completed'. Recommended polling intervals are between 1-3s. */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    run_id: string | null;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Return current processing state */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            id: string;
-                            /** @enum {string} */
-                            status: "completed" | "failed" | "pending" | "processing";
-                            organization_id: string;
-                            order: (number | string)[];
-                            field_definitions: {
-                                [key: string]: {
-                                    /** @enum {string} */
-                                    type: "string" | "number" | "boolean" | "json" | "unknown";
-                                    label: string;
-                                    added_by: {
-                                        ref: ("run:prompt@1" | "company:newssummary:website@1" | "website:technologystack:builtwith@1" | "company:websiteurl:email@1" | "people:workemail:waterfall@1" | "people:is:workemail@1" | "people:split:name@1" | "people:join:name@1" | "people:professionalprofile:waterfall@1" | "people:professionalprofileurl:name@1" | "people:professionalprofileurl:email:waterfall@1" | "people:personalemail:professionalprofile:waterfall@1" | "people:validate:email:zerobounce@1" | "people:mobilenumber:professionalprofile:waterfall@1" | "people:mobilenumber:workemail:waterfall@1" | "company:profile:builtwith@1" | "company:identity@1" | "company:overview@1") | "input";
-                                        pipe_hash: string | null;
-                                        pipeIndex: number | null;
-                                    };
-                                    /** @enum {string|null} */
-                                    format: "url" | "website_url" | "professional_profile_url" | "email" | "datetime" | "date" | "phone" | "markdown" | "text" | "int" | "decimal" | "address_line_1" | "zip_code" | null;
-                                };
-                            };
-                            pipes: ({
-                                /** @enum {string} */
-                                pipe_id: "run:prompt@1";
-                                config: {
-                                    prompt: {
-                                        text: string;
-                                        json_schemas: {
-                                            [key: string]: {
-                                                [key: string]: unknown;
-                                            };
-                                        };
-                                    };
-                                };
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "company:newssummary:website@1";
-                                config?: {
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_website_url: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_news_summary: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "company:profile:builtwith@1";
-                                config?: {
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_website_url: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_name: {
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        headcount: {
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        number_of_social_followers: {
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        monthly_tech_spend_in_usd: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "website:technologystack:builtwith@1";
-                                config?: {
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_website_url: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        technology_stack: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "company:websiteurl:email@1";
-                                config?: {
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        email: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_website_url: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "people:workemail:waterfall@1";
-                                config?: {
-                                    /** @default [
-                                     *       {
-                                     *         "provider": "leadmagic"
-                                     *       },
-                                     *       {
-                                     *         "provider": "prospeo"
-                                     *       },
-                                     *       {
-                                     *         "provider": "icypeas"
-                                     *       }
-                                     *     ] */
-                                    providers: {
-                                        /** @enum {string} */
-                                        provider: "leadmagic" | "prospeo" | "icypeas";
-                                    }[];
-                                    input_fields?: {
-                                        name: {
-                                            alias: string;
-                                        };
-                                        company_website_url: {
-                                            alias: string;
-                                        };
-                                        company_name: {
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        work_email: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "people:is:workemail@1";
-                                config?: {
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        email: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        is_work_email: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "people:split:name@1";
-                                config?: {
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        name: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        first_name: {
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        last_name: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "people:validate:email:zerobounce@1";
-                                config?: {
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        work_email: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        ip_address: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        is_email_valid: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "people:professionalprofile:waterfall@1";
-                                config?: {
-                                    /** @default [
-                                     *       {
-                                     *         "provider": "prospeo"
-                                     *       },
-                                     *       {
-                                     *         "provider": "icypeas"
-                                     *       }
-                                     *     ] */
-                                    providers: {
-                                        /** @enum {string} */
-                                        provider: "prospeo" | "icypeas";
-                                    }[];
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        professional_profile_url: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        professional_profile: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "people:professionalprofileurl:name@1";
-                                config?: {
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        name: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_name: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        location_hint: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        professional_profile_url: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "people:professionalprofileurl:email:waterfall@1";
-                                config?: {
-                                    /** @default [
-                                     *       {
-                                     *         "provider": "leadmagic"
-                                     *       }
-                                     *     ] */
-                                    providers: {
-                                        /** @enum {string} */
-                                        provider: "leadmagic";
-                                    }[];
-                                    input_fields: {
-                                        email: {
-                                            alias: string;
-                                        };
-                                        work_email: {
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        professional_profile_url: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "people:personalemail:professionalprofile:waterfall@1";
-                                config?: {
-                                    /** @default [
-                                     *       {
-                                     *         "provider": "leadmagic"
-                                     *       },
-                                     *       {
-                                     *         "provider": "clado"
-                                     *       }
-                                     *     ] */
-                                    providers: {
-                                        /** @enum {string} */
-                                        provider: "clado" | "leadmagic";
-                                    }[];
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        professional_profile_url: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        personal_email: {
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        alternate_personal_emails: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "people:mobilenumber:professionalprofile:waterfall@1";
-                                config?: {
-                                    /** @default [
-                                     *       {
-                                     *         "provider": "leadmagic"
-                                     *       },
-                                     *       {
-                                     *         "provider": "prospeo"
-                                     *       }
-                                     *     ] */
-                                    providers: {
-                                        /** @enum {string} */
-                                        provider: "leadmagic" | "prospeo";
-                                    }[];
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        professional_profile_url: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        mobile_number: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "people:mobilenumber:workemail:waterfall@1";
-                                config?: {
-                                    /** @default [
-                                     *       {
-                                     *         "provider": "leadmagic"
-                                     *       }
-                                     *     ] */
-                                    providers: {
-                                        /** @enum {string} */
-                                        provider: "leadmagic";
-                                    }[];
-                                    input_fields?: {
-                                        work_email: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        mobile_number: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "people:join:name@1";
-                                config?: {
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        first_name: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        last_name: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        name: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "company:identity@1";
-                                config?: {
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_name: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_social_url: {
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        cleaned_company_name: {
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_website_url: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "company:overview@1";
-                                config?: {
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_website_url: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_social_url: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_description: {
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_industry: {
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_region: {
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        headcount: {
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        estimated_revenue: {
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        founded_year: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            })[];
-                            errors: {
-                                code: string;
-                                message: string;
-                                path?: string;
-                            }[];
-                            records: {
-                                [key: string]: {
-                                    id: number | string;
-                                    fields: {
-                                        [key: string]: {
-                                            value: string | number | boolean | null | {
-                                                [key: string]: unknown;
-                                            } | unknown[];
-                                            status: "completed" | "failed" | "pending" | "queued" | "processing" | "no_result" | "skipped";
-                                            /** @enum {string} */
-                                            type: "string" | "number" | "boolean" | "json" | "unknown";
-                                            reason: {
-                                                code: string;
-                                                summary: string;
-                                                message: string;
-                                            } | null;
-                                            claimed_by: {
-                                                /** @enum {string|null} */
-                                                ref: "run:prompt@1" | "company:newssummary:website@1" | "website:technologystack:builtwith@1" | "company:websiteurl:email@1" | "people:workemail:waterfall@1" | "people:is:workemail@1" | "people:split:name@1" | "people:join:name@1" | "people:professionalprofile:waterfall@1" | "people:professionalprofileurl:name@1" | "people:professionalprofileurl:email:waterfall@1" | "people:personalemail:professionalprofile:waterfall@1" | "people:validate:email:zerobounce@1" | "people:mobilenumber:professionalprofile:waterfall@1" | "people:mobilenumber:workemail:waterfall@1" | "company:profile:builtwith@1" | "company:identity@1" | "company:overview@1" | "input" | null;
-                                                pipe_hash: string | null;
-                                            };
-                                            resolved_by: {
-                                                /** @enum {string|null} */
-                                                ref: "run:prompt@1" | "company:newssummary:website@1" | "website:technologystack:builtwith@1" | "company:websiteurl:email@1" | "people:workemail:waterfall@1" | "people:is:workemail@1" | "people:split:name@1" | "people:join:name@1" | "people:professionalprofile:waterfall@1" | "people:professionalprofileurl:name@1" | "people:professionalprofileurl:email:waterfall@1" | "people:personalemail:professionalprofile:waterfall@1" | "people:validate:email:zerobounce@1" | "people:mobilenumber:professionalprofile:waterfall@1" | "people:mobilenumber:workemail:waterfall@1" | "company:profile:builtwith@1" | "company:identity@1" | "company:overview@1" | "input" | null;
-                                                pipe_hash: string | null;
-                                                input_hash: string | null;
-                                            } | null;
-                                            meta: {
-                                                waterfall?: {
-                                                    attempted_providers: {
-                                                        /** @enum {string} */
-                                                        provider: "pipe0" | "findymail" | "dropcontact" | "hunter" | "zerobounce" | "googlemaps" | "gemini" | "leadmagic" | "contactout" | "builtwith" | "perplexity" | "serper" | "icypeas" | "prospeo" | "clado";
-                                                    }[];
-                                                    available_providers: ("pipe0" | "findymail" | "dropcontact" | "hunter" | "zerobounce" | "googlemaps" | "gemini" | "leadmagic" | "contactout" | "builtwith" | "perplexity" | "serper" | "icypeas" | "prospeo" | "clado")[];
-                                                    /** @enum {string} */
-                                                    successful_provider?: "pipe0" | "findymail" | "dropcontact" | "hunter" | "zerobounce" | "googlemaps" | "gemini" | "leadmagic" | "contactout" | "builtwith" | "perplexity" | "serper" | "icypeas" | "prospeo" | "clado";
-                                                };
-                                                mix?: {
-                                                    performed_steps: string[];
-                                                };
-                                            } | null;
-                                            /** @enum {string|null} */
-                                            format: "url" | "website_url" | "professional_profile_url" | "email" | "datetime" | "date" | "phone" | "markdown" | "text" | "int" | "decimal" | "address_line_1" | "zip_code" | null;
-                                            ui: {
-                                                displayValue?: string | null;
-                                                /** @description A map of widgets associated with this field for UI display, keyed by widget type. */
-                                                widgets?: {
-                                                    entity_logo?: {
-                                                        /**
-                                                         * Format: uri
-                                                         * @description URL to the provider's logo image.
-                                                         */
-                                                        image_url: string;
-                                                        /** @description The name of the entity. */
-                                                        entity: string;
-                                                    };
-                                                    location_indicator?: {
-                                                        /** @description Country flag emoji. */
-                                                        emoji: string;
-                                                    };
-                                                    avatar?: {
-                                                        /**
-                                                         * Format: uri
-                                                         * @description URL to the provider's logo image.
-                                                         */
-                                                        image_url: string;
-                                                        /** @description The name of the avatar owner. */
-                                                        name: string;
-                                                    };
-                                                };
-                                            };
-                                        };
-                                    };
-                                };
-                            };
-                        };
-                    };
-                };
-                /** @description Bad request */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
-                        };
-                    };
-                };
-                /** @description Unauthorized */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
-                        };
-                    };
-                };
-                /** @description Forbidden */
-                403: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
-                        };
-                    };
-                };
-                /** @description Not found */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
-                        };
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/pipes/run/sync": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** @description Enrich data synchronously. This endpoint waits for the enrichment to complete before returning a result. With with fewer than 10 records. To enrich more data at once use the '/run' endpoint. */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": {
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "company:profile:builtwith@1";
+                    config?: {
+                      input_fields?: {
                         /** @default {
-                         *       "environment": "production"
+                         *       "alias": ""
                          *     } */
-                        config?: {
-                            /**
-                             * @default production
-                             * @enum {string}
-                             */
-                            environment?: "production" | "sandbox";
+                        company_website_url: {
+                          /** @default  */
+                          alias: string;
                         };
-                        input_field_definitions?: {
-                            [key: string]: {
-                                label?: string;
-                                /**
-                                 * @default null
-                                 * @enum {string|null}
-                                 */
-                                format?: "url" | "website_url" | "professional_profile_url" | "email" | "datetime" | "date" | "phone" | "markdown" | "text" | "int" | "decimal" | "address_line_1" | "zip_code" | null;
-                            };
-                        };
-                        pipes: ({
-                            /** @enum {string} */
-                            pipe_id: "run:prompt@1";
-                            config: {
-                                prompt: {
-                                    text: string;
-                                    json_schemas: {
-                                        [key: string]: {
-                                            [key: string]: unknown;
-                                        };
-                                    };
-                                };
-                            };
-                        } | {
-                            /** @enum {string} */
-                            pipe_id: "company:newssummary:website@1";
-                            config?: {
-                                input_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_website_url?: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                };
-                                output_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_news_summary?: {
-                                        alias: string;
-                                    };
-                                };
-                            } | null;
-                        } | {
-                            /** @enum {string} */
-                            pipe_id: "company:profile:builtwith@1";
-                            config?: {
-                                input_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_website_url?: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                };
-                                output_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_name?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    headcount?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    number_of_social_followers?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    monthly_tech_spend_in_usd?: {
-                                        alias: string;
-                                    };
-                                };
-                            } | null;
-                        } | {
-                            /** @enum {string} */
-                            pipe_id: "website:technologystack:builtwith@1";
-                            config?: {
-                                input_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_website_url?: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                };
-                                output_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    technology_stack?: {
-                                        alias: string;
-                                    };
-                                };
-                            } | null;
-                        } | {
-                            /** @enum {string} */
-                            pipe_id: "company:websiteurl:email@1";
-                            config?: {
-                                input_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    email?: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                };
-                                output_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_website_url?: {
-                                        alias: string;
-                                    };
-                                };
-                            } | null;
-                        } | {
-                            /** @enum {string} */
-                            pipe_id: "people:workemail:waterfall@1";
-                            config?: {
-                                /** @default [
-                                 *       {
-                                 *         "provider": "leadmagic"
-                                 *       },
-                                 *       {
-                                 *         "provider": "prospeo"
-                                 *       },
-                                 *       {
-                                 *         "provider": "icypeas"
-                                 *       }
-                                 *     ] */
-                                providers?: {
-                                    /** @enum {string} */
-                                    provider: "leadmagic" | "prospeo" | "icypeas";
-                                }[];
-                                input_fields?: {
-                                    name: {
-                                        alias: string;
-                                    };
-                                    company_website_url: {
-                                        alias: string;
-                                    };
-                                    company_name: {
-                                        alias: string;
-                                    };
-                                };
-                                output_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    work_email?: {
-                                        alias: string;
-                                    };
-                                };
-                            } | null;
-                        } | {
-                            /** @enum {string} */
-                            pipe_id: "people:is:workemail@1";
-                            config?: {
-                                input_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    email?: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                };
-                                output_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    is_work_email?: {
-                                        alias: string;
-                                    };
-                                };
-                            } | null;
-                        } | {
-                            /** @enum {string} */
-                            pipe_id: "people:split:name@1";
-                            config?: {
-                                input_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    name?: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                };
-                                output_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    first_name?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    last_name?: {
-                                        alias: string;
-                                    };
-                                };
-                            } | null;
-                        } | {
-                            /** @enum {string} */
-                            pipe_id: "people:validate:email:zerobounce@1";
-                            config?: {
-                                input_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    work_email?: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    ip_address?: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                };
-                                output_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    is_email_valid?: {
-                                        alias: string;
-                                    };
-                                };
-                            } | null;
-                        } | {
-                            /** @enum {string} */
-                            pipe_id: "people:professionalprofile:waterfall@1";
-                            config?: {
-                                /** @default [
-                                 *       {
-                                 *         "provider": "prospeo"
-                                 *       },
-                                 *       {
-                                 *         "provider": "icypeas"
-                                 *       }
-                                 *     ] */
-                                providers?: {
-                                    /** @enum {string} */
-                                    provider: "prospeo" | "icypeas";
-                                }[];
-                                input_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    professional_profile_url?: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                };
-                                output_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    professional_profile?: {
-                                        alias: string;
-                                    };
-                                };
-                            } | null;
-                        } | {
-                            /** @enum {string} */
-                            pipe_id: "people:professionalprofileurl:name@1";
-                            config?: {
-                                input_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    name?: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_name?: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    location_hint?: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                };
-                                output_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    professional_profile_url?: {
-                                        alias: string;
-                                    };
-                                };
-                            } | null;
-                        } | {
-                            /** @enum {string} */
-                            pipe_id: "people:professionalprofileurl:email:waterfall@1";
-                            config?: {
-                                /** @default [
-                                 *       {
-                                 *         "provider": "leadmagic"
-                                 *       }
-                                 *     ] */
-                                providers?: {
-                                    /** @enum {string} */
-                                    provider: "leadmagic";
-                                }[];
-                                input_fields: {
-                                    email: {
-                                        alias: string;
-                                    };
-                                    work_email: {
-                                        alias: string;
-                                    };
-                                };
-                                output_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    professional_profile_url?: {
-                                        alias: string;
-                                    };
-                                };
-                            } | null;
-                        } | {
-                            /** @enum {string} */
-                            pipe_id: "people:personalemail:professionalprofile:waterfall@1";
-                            config?: {
-                                /** @default [
-                                 *       {
-                                 *         "provider": "leadmagic"
-                                 *       },
-                                 *       {
-                                 *         "provider": "clado"
-                                 *       }
-                                 *     ] */
-                                providers?: {
-                                    /** @enum {string} */
-                                    provider: "clado" | "leadmagic";
-                                }[];
-                                input_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    professional_profile_url?: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                };
-                                output_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    personal_email?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    alternate_personal_emails?: {
-                                        alias: string;
-                                    };
-                                };
-                            } | null;
-                        } | {
-                            /** @enum {string} */
-                            pipe_id: "people:mobilenumber:professionalprofile:waterfall@1";
-                            config?: {
-                                /** @default [
-                                 *       {
-                                 *         "provider": "leadmagic"
-                                 *       },
-                                 *       {
-                                 *         "provider": "prospeo"
-                                 *       }
-                                 *     ] */
-                                providers?: {
-                                    /** @enum {string} */
-                                    provider: "leadmagic" | "prospeo";
-                                }[];
-                                input_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    professional_profile_url?: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                };
-                                output_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    mobile_number?: {
-                                        alias: string;
-                                    };
-                                };
-                            } | null;
-                        } | {
-                            /** @enum {string} */
-                            pipe_id: "people:mobilenumber:workemail:waterfall@1";
-                            config?: {
-                                /** @default [
-                                 *       {
-                                 *         "provider": "leadmagic"
-                                 *       }
-                                 *     ] */
-                                providers?: {
-                                    /** @enum {string} */
-                                    provider: "leadmagic";
-                                }[];
-                                input_fields?: {
-                                    work_email: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                };
-                                output_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    mobile_number?: {
-                                        alias: string;
-                                    };
-                                };
-                            } | null;
-                        } | {
-                            /** @enum {string} */
-                            pipe_id: "people:join:name@1";
-                            config?: {
-                                input_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    first_name?: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    last_name?: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                };
-                                output_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    name?: {
-                                        alias: string;
-                                    };
-                                };
-                            } | null;
-                        } | {
-                            /** @enum {string} */
-                            pipe_id: "company:identity@1";
-                            config?: {
-                                input_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_name?: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                };
-                                output_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_social_url?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    cleaned_company_name?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_website_url?: {
-                                        alias: string;
-                                    };
-                                };
-                            } | null;
-                        } | {
-                            /** @enum {string} */
-                            pipe_id: "company:overview@1";
-                            config?: {
-                                input_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_website_url?: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_social_url?: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                };
-                                output_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_description?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_industry?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_region?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    headcount?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    estimated_revenue?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    founded_year?: {
-                                        alias: string;
-                                    };
-                                };
-                            } | null;
-                        })[];
-                        input: {
-                            [key: string]: string | number | boolean | null | {
-                                [key: string]: unknown;
-                            } | unknown[] | {
-                                value: string | number | boolean | null | {
-                                    [key: string]: unknown;
-                                } | unknown[];
-                                status: "completed" | "failed" | "pending" | "queued" | "processing" | "no_result" | "skipped";
-                                reason?: {
-                                    code: string;
-                                    summary: string;
-                                    message: string;
-                                } | null;
-                                /** @enum {string} */
-                                type?: "string" | "number" | "boolean" | "json" | "unknown";
-                                /** @enum {string|null} */
-                                format?: "url" | "website_url" | "professional_profile_url" | "email" | "datetime" | "date" | "phone" | "markdown" | "text" | "int" | "decimal" | "address_line_1" | "zip_code" | null;
-                                claimed_by?: {
-                                    /** @enum {string|null} */
-                                    ref: "run:prompt@1" | "company:newssummary:website@1" | "website:technologystack:builtwith@1" | "company:websiteurl:email@1" | "people:workemail:waterfall@1" | "people:is:workemail@1" | "people:split:name@1" | "people:join:name@1" | "people:professionalprofile:waterfall@1" | "people:professionalprofileurl:name@1" | "people:professionalprofileurl:email:waterfall@1" | "people:personalemail:professionalprofile:waterfall@1" | "people:validate:email:zerobounce@1" | "people:mobilenumber:professionalprofile:waterfall@1" | "people:mobilenumber:workemail:waterfall@1" | "company:profile:builtwith@1" | "company:identity@1" | "company:overview@1" | "input" | null;
-                                    pipe_hash: string | null;
-                                };
-                                resolved_by?: {
-                                    /** @enum {string|null} */
-                                    ref: "run:prompt@1" | "company:newssummary:website@1" | "website:technologystack:builtwith@1" | "company:websiteurl:email@1" | "people:workemail:waterfall@1" | "people:is:workemail@1" | "people:split:name@1" | "people:join:name@1" | "people:professionalprofile:waterfall@1" | "people:professionalprofileurl:name@1" | "people:professionalprofileurl:email:waterfall@1" | "people:personalemail:professionalprofile:waterfall@1" | "people:validate:email:zerobounce@1" | "people:mobilenumber:professionalprofile:waterfall@1" | "people:mobilenumber:workemail:waterfall@1" | "company:profile:builtwith@1" | "company:identity@1" | "company:overview@1" | "input" | null;
-                                    pipe_hash: string | null;
-                                    input_hash: string | null;
-                                } | null;
-                                meta?: {
-                                    [key: string]: unknown;
-                                } | null;
-                                ui?: {
-                                    displayValue?: string | null;
-                                    /** @description A map of widgets associated with this field for UI display, keyed by widget type. */
-                                    widgets?: {
-                                        entity_logo?: {
-                                            /**
-                                             * Format: uri
-                                             * @description URL to the provider's logo image.
-                                             */
-                                            image_url: string;
-                                            /** @description The name of the entity. */
-                                            entity: string;
-                                        };
-                                        location_indicator?: {
-                                            /** @description Country flag emoji. */
-                                            emoji: string;
-                                        };
-                                        avatar?: {
-                                            /**
-                                             * Format: uri
-                                             * @description URL to the provider's logo image.
-                                             */
-                                            image_url: string;
-                                            /** @description The name of the avatar owner. */
-                                            name: string;
-                                        };
-                                    };
-                                };
-                            };
-                        }[];
-                    };
-                };
-            };
-            responses: {
-                /** @description Run pipeline request */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            id: string;
-                            /** @enum {string} */
-                            status: "completed" | "failed" | "pending" | "processing";
-                            organization_id: string;
-                            order: (number | string)[];
-                            field_definitions: {
-                                [key: string]: {
-                                    /** @enum {string} */
-                                    type: "string" | "number" | "boolean" | "json" | "unknown";
-                                    label: string;
-                                    added_by: {
-                                        ref: ("run:prompt@1" | "company:newssummary:website@1" | "website:technologystack:builtwith@1" | "company:websiteurl:email@1" | "people:workemail:waterfall@1" | "people:is:workemail@1" | "people:split:name@1" | "people:join:name@1" | "people:professionalprofile:waterfall@1" | "people:professionalprofileurl:name@1" | "people:professionalprofileurl:email:waterfall@1" | "people:personalemail:professionalprofile:waterfall@1" | "people:validate:email:zerobounce@1" | "people:mobilenumber:professionalprofile:waterfall@1" | "people:mobilenumber:workemail:waterfall@1" | "company:profile:builtwith@1" | "company:identity@1" | "company:overview@1") | "input";
-                                        pipe_hash: string | null;
-                                        pipeIndex: number | null;
-                                    };
-                                    /** @enum {string|null} */
-                                    format: "url" | "website_url" | "professional_profile_url" | "email" | "datetime" | "date" | "phone" | "markdown" | "text" | "int" | "decimal" | "address_line_1" | "zip_code" | null;
-                                };
-                            };
-                            pipes: ({
-                                /** @enum {string} */
-                                pipe_id: "run:prompt@1";
-                                config: {
-                                    prompt: {
-                                        text: string;
-                                        json_schemas: {
-                                            [key: string]: {
-                                                [key: string]: unknown;
-                                            };
-                                        };
-                                    };
-                                };
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "company:newssummary:website@1";
-                                config?: {
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_website_url: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_news_summary: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "company:profile:builtwith@1";
-                                config?: {
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_website_url: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_name: {
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        headcount: {
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        number_of_social_followers: {
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        monthly_tech_spend_in_usd: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "website:technologystack:builtwith@1";
-                                config?: {
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_website_url: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        technology_stack: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "company:websiteurl:email@1";
-                                config?: {
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        email: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_website_url: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "people:workemail:waterfall@1";
-                                config?: {
-                                    /** @default [
-                                     *       {
-                                     *         "provider": "leadmagic"
-                                     *       },
-                                     *       {
-                                     *         "provider": "prospeo"
-                                     *       },
-                                     *       {
-                                     *         "provider": "icypeas"
-                                     *       }
-                                     *     ] */
-                                    providers: {
-                                        /** @enum {string} */
-                                        provider: "leadmagic" | "prospeo" | "icypeas";
-                                    }[];
-                                    input_fields?: {
-                                        name: {
-                                            alias: string;
-                                        };
-                                        company_website_url: {
-                                            alias: string;
-                                        };
-                                        company_name: {
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        work_email: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "people:is:workemail@1";
-                                config?: {
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        email: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        is_work_email: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "people:split:name@1";
-                                config?: {
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        name: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        first_name: {
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        last_name: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "people:validate:email:zerobounce@1";
-                                config?: {
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        work_email: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        ip_address: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        is_email_valid: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "people:professionalprofile:waterfall@1";
-                                config?: {
-                                    /** @default [
-                                     *       {
-                                     *         "provider": "prospeo"
-                                     *       },
-                                     *       {
-                                     *         "provider": "icypeas"
-                                     *       }
-                                     *     ] */
-                                    providers: {
-                                        /** @enum {string} */
-                                        provider: "prospeo" | "icypeas";
-                                    }[];
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        professional_profile_url: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        professional_profile: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "people:professionalprofileurl:name@1";
-                                config?: {
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        name: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_name: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        location_hint: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        professional_profile_url: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "people:professionalprofileurl:email:waterfall@1";
-                                config?: {
-                                    /** @default [
-                                     *       {
-                                     *         "provider": "leadmagic"
-                                     *       }
-                                     *     ] */
-                                    providers: {
-                                        /** @enum {string} */
-                                        provider: "leadmagic";
-                                    }[];
-                                    input_fields: {
-                                        email: {
-                                            alias: string;
-                                        };
-                                        work_email: {
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        professional_profile_url: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "people:personalemail:professionalprofile:waterfall@1";
-                                config?: {
-                                    /** @default [
-                                     *       {
-                                     *         "provider": "leadmagic"
-                                     *       },
-                                     *       {
-                                     *         "provider": "clado"
-                                     *       }
-                                     *     ] */
-                                    providers: {
-                                        /** @enum {string} */
-                                        provider: "clado" | "leadmagic";
-                                    }[];
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        professional_profile_url: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        personal_email: {
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        alternate_personal_emails: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "people:mobilenumber:professionalprofile:waterfall@1";
-                                config?: {
-                                    /** @default [
-                                     *       {
-                                     *         "provider": "leadmagic"
-                                     *       },
-                                     *       {
-                                     *         "provider": "prospeo"
-                                     *       }
-                                     *     ] */
-                                    providers: {
-                                        /** @enum {string} */
-                                        provider: "leadmagic" | "prospeo";
-                                    }[];
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        professional_profile_url: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        mobile_number: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "people:mobilenumber:workemail:waterfall@1";
-                                config?: {
-                                    /** @default [
-                                     *       {
-                                     *         "provider": "leadmagic"
-                                     *       }
-                                     *     ] */
-                                    providers: {
-                                        /** @enum {string} */
-                                        provider: "leadmagic";
-                                    }[];
-                                    input_fields?: {
-                                        work_email: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        mobile_number: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "people:join:name@1";
-                                config?: {
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        first_name: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        last_name: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        name: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "company:identity@1";
-                                config?: {
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_name: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_social_url: {
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        cleaned_company_name: {
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_website_url: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "company:overview@1";
-                                config?: {
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_website_url: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_social_url: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_description: {
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_industry: {
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_region: {
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        headcount: {
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        estimated_revenue: {
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        founded_year: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            })[];
-                            errors: {
-                                code: string;
-                                message: string;
-                                path?: string;
-                            }[];
-                            records: {
-                                [key: string]: {
-                                    id: number | string;
-                                    fields: {
-                                        [key: string]: {
-                                            value: string | number | boolean | null | {
-                                                [key: string]: unknown;
-                                            } | unknown[];
-                                            status: "completed" | "failed" | "pending" | "queued" | "processing" | "no_result" | "skipped";
-                                            /** @enum {string} */
-                                            type: "string" | "number" | "boolean" | "json" | "unknown";
-                                            reason: {
-                                                code: string;
-                                                summary: string;
-                                                message: string;
-                                            } | null;
-                                            claimed_by: {
-                                                /** @enum {string|null} */
-                                                ref: "run:prompt@1" | "company:newssummary:website@1" | "website:technologystack:builtwith@1" | "company:websiteurl:email@1" | "people:workemail:waterfall@1" | "people:is:workemail@1" | "people:split:name@1" | "people:join:name@1" | "people:professionalprofile:waterfall@1" | "people:professionalprofileurl:name@1" | "people:professionalprofileurl:email:waterfall@1" | "people:personalemail:professionalprofile:waterfall@1" | "people:validate:email:zerobounce@1" | "people:mobilenumber:professionalprofile:waterfall@1" | "people:mobilenumber:workemail:waterfall@1" | "company:profile:builtwith@1" | "company:identity@1" | "company:overview@1" | "input" | null;
-                                                pipe_hash: string | null;
-                                            };
-                                            resolved_by: {
-                                                /** @enum {string|null} */
-                                                ref: "run:prompt@1" | "company:newssummary:website@1" | "website:technologystack:builtwith@1" | "company:websiteurl:email@1" | "people:workemail:waterfall@1" | "people:is:workemail@1" | "people:split:name@1" | "people:join:name@1" | "people:professionalprofile:waterfall@1" | "people:professionalprofileurl:name@1" | "people:professionalprofileurl:email:waterfall@1" | "people:personalemail:professionalprofile:waterfall@1" | "people:validate:email:zerobounce@1" | "people:mobilenumber:professionalprofile:waterfall@1" | "people:mobilenumber:workemail:waterfall@1" | "company:profile:builtwith@1" | "company:identity@1" | "company:overview@1" | "input" | null;
-                                                pipe_hash: string | null;
-                                                input_hash: string | null;
-                                            } | null;
-                                            meta: {
-                                                waterfall?: {
-                                                    attempted_providers: {
-                                                        /** @enum {string} */
-                                                        provider: "pipe0" | "findymail" | "dropcontact" | "hunter" | "zerobounce" | "googlemaps" | "gemini" | "leadmagic" | "contactout" | "builtwith" | "perplexity" | "serper" | "icypeas" | "prospeo" | "clado";
-                                                    }[];
-                                                    available_providers: ("pipe0" | "findymail" | "dropcontact" | "hunter" | "zerobounce" | "googlemaps" | "gemini" | "leadmagic" | "contactout" | "builtwith" | "perplexity" | "serper" | "icypeas" | "prospeo" | "clado")[];
-                                                    /** @enum {string} */
-                                                    successful_provider?: "pipe0" | "findymail" | "dropcontact" | "hunter" | "zerobounce" | "googlemaps" | "gemini" | "leadmagic" | "contactout" | "builtwith" | "perplexity" | "serper" | "icypeas" | "prospeo" | "clado";
-                                                };
-                                                mix?: {
-                                                    performed_steps: string[];
-                                                };
-                                            } | null;
-                                            /** @enum {string|null} */
-                                            format: "url" | "website_url" | "professional_profile_url" | "email" | "datetime" | "date" | "phone" | "markdown" | "text" | "int" | "decimal" | "address_line_1" | "zip_code" | null;
-                                            ui: {
-                                                displayValue?: string | null;
-                                                /** @description A map of widgets associated with this field for UI display, keyed by widget type. */
-                                                widgets?: {
-                                                    entity_logo?: {
-                                                        /**
-                                                         * Format: uri
-                                                         * @description URL to the provider's logo image.
-                                                         */
-                                                        image_url: string;
-                                                        /** @description The name of the entity. */
-                                                        entity: string;
-                                                    };
-                                                    location_indicator?: {
-                                                        /** @description Country flag emoji. */
-                                                        emoji: string;
-                                                    };
-                                                    avatar?: {
-                                                        /**
-                                                         * Format: uri
-                                                         * @description URL to the provider's logo image.
-                                                         */
-                                                        image_url: string;
-                                                        /** @description The name of the avatar owner. */
-                                                        name: string;
-                                                    };
-                                                };
-                                            };
-                                        };
-                                    };
-                                };
-                            };
-                        };
-                    };
-                };
-                /** @description Bad request */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
-                        };
-                    };
-                };
-                /** @description Unauthorized */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
-                        };
-                    };
-                };
-                /** @description Forbidden */
-                403: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
-                        };
-                    };
-                };
-                /** @description Required resource not found */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
-                        };
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/pipes/run": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** @description Enrich data asynchronously. Create an enrichment task. Check this task by polling the '/check' endpoint until the status becomes 'completed'. */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": {
+                      };
+                      output_fields?: {
                         /** @default {
-                         *       "environment": "production"
+                         *       "alias": ""
                          *     } */
-                        config?: {
-                            /**
-                             * @default production
-                             * @enum {string}
-                             */
-                            environment?: "production" | "sandbox";
+                        company_name: {
+                          alias: string;
                         };
-                        input_field_definitions?: {
-                            [key: string]: {
-                                label?: string;
-                                /**
-                                 * @default null
-                                 * @enum {string|null}
-                                 */
-                                format?: "url" | "website_url" | "professional_profile_url" | "email" | "datetime" | "date" | "phone" | "markdown" | "text" | "int" | "decimal" | "address_line_1" | "zip_code" | null;
-                            };
-                        };
-                        pipes: ({
-                            /** @enum {string} */
-                            pipe_id: "run:prompt@1";
-                            config: {
-                                prompt: {
-                                    text: string;
-                                    json_schemas: {
-                                        [key: string]: {
-                                            [key: string]: unknown;
-                                        };
-                                    };
-                                };
-                            };
-                        } | {
-                            /** @enum {string} */
-                            pipe_id: "company:newssummary:website@1";
-                            config?: {
-                                input_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_website_url?: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                };
-                                output_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_news_summary?: {
-                                        alias: string;
-                                    };
-                                };
-                            } | null;
-                        } | {
-                            /** @enum {string} */
-                            pipe_id: "company:profile:builtwith@1";
-                            config?: {
-                                input_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_website_url?: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                };
-                                output_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_name?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    headcount?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    number_of_social_followers?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    monthly_tech_spend_in_usd?: {
-                                        alias: string;
-                                    };
-                                };
-                            } | null;
-                        } | {
-                            /** @enum {string} */
-                            pipe_id: "website:technologystack:builtwith@1";
-                            config?: {
-                                input_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_website_url?: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                };
-                                output_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    technology_stack?: {
-                                        alias: string;
-                                    };
-                                };
-                            } | null;
-                        } | {
-                            /** @enum {string} */
-                            pipe_id: "company:websiteurl:email@1";
-                            config?: {
-                                input_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    email?: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                };
-                                output_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_website_url?: {
-                                        alias: string;
-                                    };
-                                };
-                            } | null;
-                        } | {
-                            /** @enum {string} */
-                            pipe_id: "people:workemail:waterfall@1";
-                            config?: {
-                                /** @default [
-                                 *       {
-                                 *         "provider": "leadmagic"
-                                 *       },
-                                 *       {
-                                 *         "provider": "prospeo"
-                                 *       },
-                                 *       {
-                                 *         "provider": "icypeas"
-                                 *       }
-                                 *     ] */
-                                providers?: {
-                                    /** @enum {string} */
-                                    provider: "leadmagic" | "prospeo" | "icypeas";
-                                }[];
-                                input_fields?: {
-                                    name: {
-                                        alias: string;
-                                    };
-                                    company_website_url: {
-                                        alias: string;
-                                    };
-                                    company_name: {
-                                        alias: string;
-                                    };
-                                };
-                                output_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    work_email?: {
-                                        alias: string;
-                                    };
-                                };
-                            } | null;
-                        } | {
-                            /** @enum {string} */
-                            pipe_id: "people:is:workemail@1";
-                            config?: {
-                                input_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    email?: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                };
-                                output_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    is_work_email?: {
-                                        alias: string;
-                                    };
-                                };
-                            } | null;
-                        } | {
-                            /** @enum {string} */
-                            pipe_id: "people:split:name@1";
-                            config?: {
-                                input_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    name?: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                };
-                                output_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    first_name?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    last_name?: {
-                                        alias: string;
-                                    };
-                                };
-                            } | null;
-                        } | {
-                            /** @enum {string} */
-                            pipe_id: "people:validate:email:zerobounce@1";
-                            config?: {
-                                input_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    work_email?: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    ip_address?: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                };
-                                output_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    is_email_valid?: {
-                                        alias: string;
-                                    };
-                                };
-                            } | null;
-                        } | {
-                            /** @enum {string} */
-                            pipe_id: "people:professionalprofile:waterfall@1";
-                            config?: {
-                                /** @default [
-                                 *       {
-                                 *         "provider": "prospeo"
-                                 *       },
-                                 *       {
-                                 *         "provider": "icypeas"
-                                 *       }
-                                 *     ] */
-                                providers?: {
-                                    /** @enum {string} */
-                                    provider: "prospeo" | "icypeas";
-                                }[];
-                                input_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    professional_profile_url?: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                };
-                                output_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    professional_profile?: {
-                                        alias: string;
-                                    };
-                                };
-                            } | null;
-                        } | {
-                            /** @enum {string} */
-                            pipe_id: "people:professionalprofileurl:name@1";
-                            config?: {
-                                input_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    name?: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_name?: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    location_hint?: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                };
-                                output_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    professional_profile_url?: {
-                                        alias: string;
-                                    };
-                                };
-                            } | null;
-                        } | {
-                            /** @enum {string} */
-                            pipe_id: "people:professionalprofileurl:email:waterfall@1";
-                            config?: {
-                                /** @default [
-                                 *       {
-                                 *         "provider": "leadmagic"
-                                 *       }
-                                 *     ] */
-                                providers?: {
-                                    /** @enum {string} */
-                                    provider: "leadmagic";
-                                }[];
-                                input_fields: {
-                                    email: {
-                                        alias: string;
-                                    };
-                                    work_email: {
-                                        alias: string;
-                                    };
-                                };
-                                output_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    professional_profile_url?: {
-                                        alias: string;
-                                    };
-                                };
-                            } | null;
-                        } | {
-                            /** @enum {string} */
-                            pipe_id: "people:personalemail:professionalprofile:waterfall@1";
-                            config?: {
-                                /** @default [
-                                 *       {
-                                 *         "provider": "leadmagic"
-                                 *       },
-                                 *       {
-                                 *         "provider": "clado"
-                                 *       }
-                                 *     ] */
-                                providers?: {
-                                    /** @enum {string} */
-                                    provider: "clado" | "leadmagic";
-                                }[];
-                                input_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    professional_profile_url?: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                };
-                                output_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    personal_email?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    alternate_personal_emails?: {
-                                        alias: string;
-                                    };
-                                };
-                            } | null;
-                        } | {
-                            /** @enum {string} */
-                            pipe_id: "people:mobilenumber:professionalprofile:waterfall@1";
-                            config?: {
-                                /** @default [
-                                 *       {
-                                 *         "provider": "leadmagic"
-                                 *       },
-                                 *       {
-                                 *         "provider": "prospeo"
-                                 *       }
-                                 *     ] */
-                                providers?: {
-                                    /** @enum {string} */
-                                    provider: "leadmagic" | "prospeo";
-                                }[];
-                                input_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    professional_profile_url?: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                };
-                                output_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    mobile_number?: {
-                                        alias: string;
-                                    };
-                                };
-                            } | null;
-                        } | {
-                            /** @enum {string} */
-                            pipe_id: "people:mobilenumber:workemail:waterfall@1";
-                            config?: {
-                                /** @default [
-                                 *       {
-                                 *         "provider": "leadmagic"
-                                 *       }
-                                 *     ] */
-                                providers?: {
-                                    /** @enum {string} */
-                                    provider: "leadmagic";
-                                }[];
-                                input_fields?: {
-                                    work_email: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                };
-                                output_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    mobile_number?: {
-                                        alias: string;
-                                    };
-                                };
-                            } | null;
-                        } | {
-                            /** @enum {string} */
-                            pipe_id: "people:join:name@1";
-                            config?: {
-                                input_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    first_name?: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    last_name?: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                };
-                                output_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    name?: {
-                                        alias: string;
-                                    };
-                                };
-                            } | null;
-                        } | {
-                            /** @enum {string} */
-                            pipe_id: "company:identity@1";
-                            config?: {
-                                input_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_name?: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                };
-                                output_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_social_url?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    cleaned_company_name?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_website_url?: {
-                                        alias: string;
-                                    };
-                                };
-                            } | null;
-                        } | {
-                            /** @enum {string} */
-                            pipe_id: "company:overview@1";
-                            config?: {
-                                input_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_website_url?: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_social_url?: {
-                                        /** @default  */
-                                        alias?: string;
-                                    };
-                                };
-                                output_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_description?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_industry?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_region?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    headcount?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    estimated_revenue?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    founded_year?: {
-                                        alias: string;
-                                    };
-                                };
-                            } | null;
-                        })[];
-                        input: {
-                            [key: string]: string | number | boolean | null | {
-                                [key: string]: unknown;
-                            } | unknown[] | {
-                                value: string | number | boolean | null | {
-                                    [key: string]: unknown;
-                                } | unknown[];
-                                status: "completed" | "failed" | "pending" | "queued" | "processing" | "no_result" | "skipped";
-                                reason?: {
-                                    code: string;
-                                    summary: string;
-                                    message: string;
-                                } | null;
-                                /** @enum {string} */
-                                type?: "string" | "number" | "boolean" | "json" | "unknown";
-                                /** @enum {string|null} */
-                                format?: "url" | "website_url" | "professional_profile_url" | "email" | "datetime" | "date" | "phone" | "markdown" | "text" | "int" | "decimal" | "address_line_1" | "zip_code" | null;
-                                claimed_by?: {
-                                    /** @enum {string|null} */
-                                    ref: "run:prompt@1" | "company:newssummary:website@1" | "website:technologystack:builtwith@1" | "company:websiteurl:email@1" | "people:workemail:waterfall@1" | "people:is:workemail@1" | "people:split:name@1" | "people:join:name@1" | "people:professionalprofile:waterfall@1" | "people:professionalprofileurl:name@1" | "people:professionalprofileurl:email:waterfall@1" | "people:personalemail:professionalprofile:waterfall@1" | "people:validate:email:zerobounce@1" | "people:mobilenumber:professionalprofile:waterfall@1" | "people:mobilenumber:workemail:waterfall@1" | "company:profile:builtwith@1" | "company:identity@1" | "company:overview@1" | "input" | null;
-                                    pipe_hash: string | null;
-                                };
-                                resolved_by?: {
-                                    /** @enum {string|null} */
-                                    ref: "run:prompt@1" | "company:newssummary:website@1" | "website:technologystack:builtwith@1" | "company:websiteurl:email@1" | "people:workemail:waterfall@1" | "people:is:workemail@1" | "people:split:name@1" | "people:join:name@1" | "people:professionalprofile:waterfall@1" | "people:professionalprofileurl:name@1" | "people:professionalprofileurl:email:waterfall@1" | "people:personalemail:professionalprofile:waterfall@1" | "people:validate:email:zerobounce@1" | "people:mobilenumber:professionalprofile:waterfall@1" | "people:mobilenumber:workemail:waterfall@1" | "company:profile:builtwith@1" | "company:identity@1" | "company:overview@1" | "input" | null;
-                                    pipe_hash: string | null;
-                                    input_hash: string | null;
-                                } | null;
-                                meta?: {
-                                    [key: string]: unknown;
-                                } | null;
-                                ui?: {
-                                    displayValue?: string | null;
-                                    /** @description A map of widgets associated with this field for UI display, keyed by widget type. */
-                                    widgets?: {
-                                        entity_logo?: {
-                                            /**
-                                             * Format: uri
-                                             * @description URL to the provider's logo image.
-                                             */
-                                            image_url: string;
-                                            /** @description The name of the entity. */
-                                            entity: string;
-                                        };
-                                        location_indicator?: {
-                                            /** @description Country flag emoji. */
-                                            emoji: string;
-                                        };
-                                        avatar?: {
-                                            /**
-                                             * Format: uri
-                                             * @description URL to the provider's logo image.
-                                             */
-                                            image_url: string;
-                                            /** @description The name of the avatar owner. */
-                                            name: string;
-                                        };
-                                    };
-                                };
-                            };
-                        }[];
-                    };
-                };
-            };
-            responses: {
-                /** @description Run pipeline request */
-                201: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            id: string;
-                            /** @enum {string} */
-                            status: "completed" | "failed" | "pending" | "processing";
-                            organization_id: string;
-                            order: (number | string)[];
-                            field_definitions: {
-                                [key: string]: {
-                                    /** @enum {string} */
-                                    type: "string" | "number" | "boolean" | "json" | "unknown";
-                                    label: string;
-                                    added_by: {
-                                        ref: ("run:prompt@1" | "company:newssummary:website@1" | "website:technologystack:builtwith@1" | "company:websiteurl:email@1" | "people:workemail:waterfall@1" | "people:is:workemail@1" | "people:split:name@1" | "people:join:name@1" | "people:professionalprofile:waterfall@1" | "people:professionalprofileurl:name@1" | "people:professionalprofileurl:email:waterfall@1" | "people:personalemail:professionalprofile:waterfall@1" | "people:validate:email:zerobounce@1" | "people:mobilenumber:professionalprofile:waterfall@1" | "people:mobilenumber:workemail:waterfall@1" | "company:profile:builtwith@1" | "company:identity@1" | "company:overview@1") | "input";
-                                        pipe_hash: string | null;
-                                        pipeIndex: number | null;
-                                    };
-                                    /** @enum {string|null} */
-                                    format: "url" | "website_url" | "professional_profile_url" | "email" | "datetime" | "date" | "phone" | "markdown" | "text" | "int" | "decimal" | "address_line_1" | "zip_code" | null;
-                                };
-                            };
-                            pipes: ({
-                                /** @enum {string} */
-                                pipe_id: "run:prompt@1";
-                                config: {
-                                    prompt: {
-                                        text: string;
-                                        json_schemas: {
-                                            [key: string]: {
-                                                [key: string]: unknown;
-                                            };
-                                        };
-                                    };
-                                };
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "company:newssummary:website@1";
-                                config?: {
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_website_url: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_news_summary: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "company:profile:builtwith@1";
-                                config?: {
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_website_url: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_name: {
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        headcount: {
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        number_of_social_followers: {
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        monthly_tech_spend_in_usd: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "website:technologystack:builtwith@1";
-                                config?: {
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_website_url: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        technology_stack: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "company:websiteurl:email@1";
-                                config?: {
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        email: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_website_url: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "people:workemail:waterfall@1";
-                                config?: {
-                                    /** @default [
-                                     *       {
-                                     *         "provider": "leadmagic"
-                                     *       },
-                                     *       {
-                                     *         "provider": "prospeo"
-                                     *       },
-                                     *       {
-                                     *         "provider": "icypeas"
-                                     *       }
-                                     *     ] */
-                                    providers: {
-                                        /** @enum {string} */
-                                        provider: "leadmagic" | "prospeo" | "icypeas";
-                                    }[];
-                                    input_fields?: {
-                                        name: {
-                                            alias: string;
-                                        };
-                                        company_website_url: {
-                                            alias: string;
-                                        };
-                                        company_name: {
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        work_email: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "people:is:workemail@1";
-                                config?: {
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        email: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        is_work_email: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "people:split:name@1";
-                                config?: {
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        name: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        first_name: {
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        last_name: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "people:validate:email:zerobounce@1";
-                                config?: {
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        work_email: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        ip_address: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        is_email_valid: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "people:professionalprofile:waterfall@1";
-                                config?: {
-                                    /** @default [
-                                     *       {
-                                     *         "provider": "prospeo"
-                                     *       },
-                                     *       {
-                                     *         "provider": "icypeas"
-                                     *       }
-                                     *     ] */
-                                    providers: {
-                                        /** @enum {string} */
-                                        provider: "prospeo" | "icypeas";
-                                    }[];
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        professional_profile_url: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        professional_profile: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "people:professionalprofileurl:name@1";
-                                config?: {
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        name: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_name: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        location_hint: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        professional_profile_url: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "people:professionalprofileurl:email:waterfall@1";
-                                config?: {
-                                    /** @default [
-                                     *       {
-                                     *         "provider": "leadmagic"
-                                     *       }
-                                     *     ] */
-                                    providers: {
-                                        /** @enum {string} */
-                                        provider: "leadmagic";
-                                    }[];
-                                    input_fields: {
-                                        email: {
-                                            alias: string;
-                                        };
-                                        work_email: {
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        professional_profile_url: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "people:personalemail:professionalprofile:waterfall@1";
-                                config?: {
-                                    /** @default [
-                                     *       {
-                                     *         "provider": "leadmagic"
-                                     *       },
-                                     *       {
-                                     *         "provider": "clado"
-                                     *       }
-                                     *     ] */
-                                    providers: {
-                                        /** @enum {string} */
-                                        provider: "clado" | "leadmagic";
-                                    }[];
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        professional_profile_url: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        personal_email: {
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        alternate_personal_emails: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "people:mobilenumber:professionalprofile:waterfall@1";
-                                config?: {
-                                    /** @default [
-                                     *       {
-                                     *         "provider": "leadmagic"
-                                     *       },
-                                     *       {
-                                     *         "provider": "prospeo"
-                                     *       }
-                                     *     ] */
-                                    providers: {
-                                        /** @enum {string} */
-                                        provider: "leadmagic" | "prospeo";
-                                    }[];
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        professional_profile_url: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        mobile_number: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "people:mobilenumber:workemail:waterfall@1";
-                                config?: {
-                                    /** @default [
-                                     *       {
-                                     *         "provider": "leadmagic"
-                                     *       }
-                                     *     ] */
-                                    providers: {
-                                        /** @enum {string} */
-                                        provider: "leadmagic";
-                                    }[];
-                                    input_fields?: {
-                                        work_email: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        mobile_number: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "people:join:name@1";
-                                config?: {
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        first_name: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        last_name: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        name: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "company:identity@1";
-                                config?: {
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_name: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_social_url: {
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        cleaned_company_name: {
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_website_url: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "company:overview@1";
-                                config?: {
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_website_url: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_social_url: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_description: {
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_industry: {
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_region: {
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        headcount: {
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        estimated_revenue: {
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        founded_year: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            })[];
-                            errors: {
-                                code: string;
-                                message: string;
-                                path?: string;
-                            }[];
-                            records: {
-                                [key: string]: {
-                                    id: number | string;
-                                    fields: {
-                                        [key: string]: {
-                                            value: string | number | boolean | null | {
-                                                [key: string]: unknown;
-                                            } | unknown[];
-                                            status: "completed" | "failed" | "pending" | "queued" | "processing" | "no_result" | "skipped";
-                                            /** @enum {string} */
-                                            type: "string" | "number" | "boolean" | "json" | "unknown";
-                                            reason: {
-                                                code: string;
-                                                summary: string;
-                                                message: string;
-                                            } | null;
-                                            claimed_by: {
-                                                /** @enum {string|null} */
-                                                ref: "run:prompt@1" | "company:newssummary:website@1" | "website:technologystack:builtwith@1" | "company:websiteurl:email@1" | "people:workemail:waterfall@1" | "people:is:workemail@1" | "people:split:name@1" | "people:join:name@1" | "people:professionalprofile:waterfall@1" | "people:professionalprofileurl:name@1" | "people:professionalprofileurl:email:waterfall@1" | "people:personalemail:professionalprofile:waterfall@1" | "people:validate:email:zerobounce@1" | "people:mobilenumber:professionalprofile:waterfall@1" | "people:mobilenumber:workemail:waterfall@1" | "company:profile:builtwith@1" | "company:identity@1" | "company:overview@1" | "input" | null;
-                                                pipe_hash: string | null;
-                                            };
-                                            resolved_by: {
-                                                /** @enum {string|null} */
-                                                ref: "run:prompt@1" | "company:newssummary:website@1" | "website:technologystack:builtwith@1" | "company:websiteurl:email@1" | "people:workemail:waterfall@1" | "people:is:workemail@1" | "people:split:name@1" | "people:join:name@1" | "people:professionalprofile:waterfall@1" | "people:professionalprofileurl:name@1" | "people:professionalprofileurl:email:waterfall@1" | "people:personalemail:professionalprofile:waterfall@1" | "people:validate:email:zerobounce@1" | "people:mobilenumber:professionalprofile:waterfall@1" | "people:mobilenumber:workemail:waterfall@1" | "company:profile:builtwith@1" | "company:identity@1" | "company:overview@1" | "input" | null;
-                                                pipe_hash: string | null;
-                                                input_hash: string | null;
-                                            } | null;
-                                            meta: {
-                                                waterfall?: {
-                                                    attempted_providers: {
-                                                        /** @enum {string} */
-                                                        provider: "pipe0" | "findymail" | "dropcontact" | "hunter" | "zerobounce" | "googlemaps" | "gemini" | "leadmagic" | "contactout" | "builtwith" | "perplexity" | "serper" | "icypeas" | "prospeo" | "clado";
-                                                    }[];
-                                                    available_providers: ("pipe0" | "findymail" | "dropcontact" | "hunter" | "zerobounce" | "googlemaps" | "gemini" | "leadmagic" | "contactout" | "builtwith" | "perplexity" | "serper" | "icypeas" | "prospeo" | "clado")[];
-                                                    /** @enum {string} */
-                                                    successful_provider?: "pipe0" | "findymail" | "dropcontact" | "hunter" | "zerobounce" | "googlemaps" | "gemini" | "leadmagic" | "contactout" | "builtwith" | "perplexity" | "serper" | "icypeas" | "prospeo" | "clado";
-                                                };
-                                                mix?: {
-                                                    performed_steps: string[];
-                                                };
-                                            } | null;
-                                            /** @enum {string|null} */
-                                            format: "url" | "website_url" | "professional_profile_url" | "email" | "datetime" | "date" | "phone" | "markdown" | "text" | "int" | "decimal" | "address_line_1" | "zip_code" | null;
-                                            ui: {
-                                                displayValue?: string | null;
-                                                /** @description A map of widgets associated with this field for UI display, keyed by widget type. */
-                                                widgets?: {
-                                                    entity_logo?: {
-                                                        /**
-                                                         * Format: uri
-                                                         * @description URL to the provider's logo image.
-                                                         */
-                                                        image_url: string;
-                                                        /** @description The name of the entity. */
-                                                        entity: string;
-                                                    };
-                                                    location_indicator?: {
-                                                        /** @description Country flag emoji. */
-                                                        emoji: string;
-                                                    };
-                                                    avatar?: {
-                                                        /**
-                                                         * Format: uri
-                                                         * @description URL to the provider's logo image.
-                                                         */
-                                                        image_url: string;
-                                                        /** @description The name of the avatar owner. */
-                                                        name: string;
-                                                    };
-                                                };
-                                            };
-                                        };
-                                    };
-                                };
-                            };
-                        };
-                    };
-                };
-                /** @description Bad request */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
-                        };
-                    };
-                };
-                /** @description Unauthorized */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
-                        };
-                    };
-                };
-                /** @description Forbidden */
-                403: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
-                        };
-                    };
-                };
-                /** @description Required resource not found */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
-                        };
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/pipes/check/{run_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Check status of enrichment task. Poll this endpoint to until the status becomes 'completed'. Recommended polling intervals are between 1-3s. */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    run_id: string | null;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Return current processing state */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            id: string;
-                            /** @enum {string} */
-                            status: "completed" | "failed" | "pending" | "processing";
-                            organization_id: string;
-                            order: (number | string)[];
-                            field_definitions: {
-                                [key: string]: {
-                                    /** @enum {string} */
-                                    type: "string" | "number" | "boolean" | "json" | "unknown";
-                                    label: string;
-                                    added_by: {
-                                        ref: ("run:prompt@1" | "company:newssummary:website@1" | "website:technologystack:builtwith@1" | "company:websiteurl:email@1" | "people:workemail:waterfall@1" | "people:is:workemail@1" | "people:split:name@1" | "people:join:name@1" | "people:professionalprofile:waterfall@1" | "people:professionalprofileurl:name@1" | "people:professionalprofileurl:email:waterfall@1" | "people:personalemail:professionalprofile:waterfall@1" | "people:validate:email:zerobounce@1" | "people:mobilenumber:professionalprofile:waterfall@1" | "people:mobilenumber:workemail:waterfall@1" | "company:profile:builtwith@1" | "company:identity@1" | "company:overview@1") | "input";
-                                        pipe_hash: string | null;
-                                        pipeIndex: number | null;
-                                    };
-                                    /** @enum {string|null} */
-                                    format: "url" | "website_url" | "professional_profile_url" | "email" | "datetime" | "date" | "phone" | "markdown" | "text" | "int" | "decimal" | "address_line_1" | "zip_code" | null;
-                                };
-                            };
-                            pipes: ({
-                                /** @enum {string} */
-                                pipe_id: "run:prompt@1";
-                                config: {
-                                    prompt: {
-                                        text: string;
-                                        json_schemas: {
-                                            [key: string]: {
-                                                [key: string]: unknown;
-                                            };
-                                        };
-                                    };
-                                };
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "company:newssummary:website@1";
-                                config?: {
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_website_url: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_news_summary: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "company:profile:builtwith@1";
-                                config?: {
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_website_url: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_name: {
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        headcount: {
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        number_of_social_followers: {
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        monthly_tech_spend_in_usd: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "website:technologystack:builtwith@1";
-                                config?: {
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_website_url: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        technology_stack: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "company:websiteurl:email@1";
-                                config?: {
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        email: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_website_url: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "people:workemail:waterfall@1";
-                                config?: {
-                                    /** @default [
-                                     *       {
-                                     *         "provider": "leadmagic"
-                                     *       },
-                                     *       {
-                                     *         "provider": "prospeo"
-                                     *       },
-                                     *       {
-                                     *         "provider": "icypeas"
-                                     *       }
-                                     *     ] */
-                                    providers: {
-                                        /** @enum {string} */
-                                        provider: "leadmagic" | "prospeo" | "icypeas";
-                                    }[];
-                                    input_fields?: {
-                                        name: {
-                                            alias: string;
-                                        };
-                                        company_website_url: {
-                                            alias: string;
-                                        };
-                                        company_name: {
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        work_email: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "people:is:workemail@1";
-                                config?: {
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        email: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        is_work_email: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "people:split:name@1";
-                                config?: {
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        name: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        first_name: {
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        last_name: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "people:validate:email:zerobounce@1";
-                                config?: {
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        work_email: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        ip_address: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        is_email_valid: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "people:professionalprofile:waterfall@1";
-                                config?: {
-                                    /** @default [
-                                     *       {
-                                     *         "provider": "prospeo"
-                                     *       },
-                                     *       {
-                                     *         "provider": "icypeas"
-                                     *       }
-                                     *     ] */
-                                    providers: {
-                                        /** @enum {string} */
-                                        provider: "prospeo" | "icypeas";
-                                    }[];
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        professional_profile_url: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        professional_profile: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "people:professionalprofileurl:name@1";
-                                config?: {
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        name: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_name: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        location_hint: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        professional_profile_url: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "people:professionalprofileurl:email:waterfall@1";
-                                config?: {
-                                    /** @default [
-                                     *       {
-                                     *         "provider": "leadmagic"
-                                     *       }
-                                     *     ] */
-                                    providers: {
-                                        /** @enum {string} */
-                                        provider: "leadmagic";
-                                    }[];
-                                    input_fields: {
-                                        email: {
-                                            alias: string;
-                                        };
-                                        work_email: {
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        professional_profile_url: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "people:personalemail:professionalprofile:waterfall@1";
-                                config?: {
-                                    /** @default [
-                                     *       {
-                                     *         "provider": "leadmagic"
-                                     *       },
-                                     *       {
-                                     *         "provider": "clado"
-                                     *       }
-                                     *     ] */
-                                    providers: {
-                                        /** @enum {string} */
-                                        provider: "clado" | "leadmagic";
-                                    }[];
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        professional_profile_url: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        personal_email: {
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        alternate_personal_emails: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "people:mobilenumber:professionalprofile:waterfall@1";
-                                config?: {
-                                    /** @default [
-                                     *       {
-                                     *         "provider": "leadmagic"
-                                     *       },
-                                     *       {
-                                     *         "provider": "prospeo"
-                                     *       }
-                                     *     ] */
-                                    providers: {
-                                        /** @enum {string} */
-                                        provider: "leadmagic" | "prospeo";
-                                    }[];
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        professional_profile_url: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        mobile_number: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "people:mobilenumber:workemail:waterfall@1";
-                                config?: {
-                                    /** @default [
-                                     *       {
-                                     *         "provider": "leadmagic"
-                                     *       }
-                                     *     ] */
-                                    providers: {
-                                        /** @enum {string} */
-                                        provider: "leadmagic";
-                                    }[];
-                                    input_fields?: {
-                                        work_email: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        mobile_number: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "people:join:name@1";
-                                config?: {
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        first_name: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        last_name: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        name: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "company:identity@1";
-                                config?: {
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_name: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_social_url: {
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        cleaned_company_name: {
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_website_url: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            } | {
-                                /** @enum {string} */
-                                pipe_id: "company:overview@1";
-                                config?: {
-                                    input_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_website_url: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_social_url: {
-                                            /** @default  */
-                                            alias: string;
-                                        };
-                                    };
-                                    output_fields?: {
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_description: {
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_industry: {
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        company_region: {
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        headcount: {
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        estimated_revenue: {
-                                            alias: string;
-                                        };
-                                        /** @default {
-                                         *       "alias": ""
-                                         *     } */
-                                        founded_year: {
-                                            alias: string;
-                                        };
-                                    };
-                                } | null;
-                            })[];
-                            errors: {
-                                code: string;
-                                message: string;
-                                path?: string;
-                            }[];
-                            records: {
-                                [key: string]: {
-                                    id: number | string;
-                                    fields: {
-                                        [key: string]: {
-                                            value: string | number | boolean | null | {
-                                                [key: string]: unknown;
-                                            } | unknown[];
-                                            status: "completed" | "failed" | "pending" | "queued" | "processing" | "no_result" | "skipped";
-                                            /** @enum {string} */
-                                            type: "string" | "number" | "boolean" | "json" | "unknown";
-                                            reason: {
-                                                code: string;
-                                                summary: string;
-                                                message: string;
-                                            } | null;
-                                            claimed_by: {
-                                                /** @enum {string|null} */
-                                                ref: "run:prompt@1" | "company:newssummary:website@1" | "website:technologystack:builtwith@1" | "company:websiteurl:email@1" | "people:workemail:waterfall@1" | "people:is:workemail@1" | "people:split:name@1" | "people:join:name@1" | "people:professionalprofile:waterfall@1" | "people:professionalprofileurl:name@1" | "people:professionalprofileurl:email:waterfall@1" | "people:personalemail:professionalprofile:waterfall@1" | "people:validate:email:zerobounce@1" | "people:mobilenumber:professionalprofile:waterfall@1" | "people:mobilenumber:workemail:waterfall@1" | "company:profile:builtwith@1" | "company:identity@1" | "company:overview@1" | "input" | null;
-                                                pipe_hash: string | null;
-                                            };
-                                            resolved_by: {
-                                                /** @enum {string|null} */
-                                                ref: "run:prompt@1" | "company:newssummary:website@1" | "website:technologystack:builtwith@1" | "company:websiteurl:email@1" | "people:workemail:waterfall@1" | "people:is:workemail@1" | "people:split:name@1" | "people:join:name@1" | "people:professionalprofile:waterfall@1" | "people:professionalprofileurl:name@1" | "people:professionalprofileurl:email:waterfall@1" | "people:personalemail:professionalprofile:waterfall@1" | "people:validate:email:zerobounce@1" | "people:mobilenumber:professionalprofile:waterfall@1" | "people:mobilenumber:workemail:waterfall@1" | "company:profile:builtwith@1" | "company:identity@1" | "company:overview@1" | "input" | null;
-                                                pipe_hash: string | null;
-                                                input_hash: string | null;
-                                            } | null;
-                                            meta: {
-                                                waterfall?: {
-                                                    attempted_providers: {
-                                                        /** @enum {string} */
-                                                        provider: "pipe0" | "findymail" | "dropcontact" | "hunter" | "zerobounce" | "googlemaps" | "gemini" | "leadmagic" | "contactout" | "builtwith" | "perplexity" | "serper" | "icypeas" | "prospeo" | "clado";
-                                                    }[];
-                                                    available_providers: ("pipe0" | "findymail" | "dropcontact" | "hunter" | "zerobounce" | "googlemaps" | "gemini" | "leadmagic" | "contactout" | "builtwith" | "perplexity" | "serper" | "icypeas" | "prospeo" | "clado")[];
-                                                    /** @enum {string} */
-                                                    successful_provider?: "pipe0" | "findymail" | "dropcontact" | "hunter" | "zerobounce" | "googlemaps" | "gemini" | "leadmagic" | "contactout" | "builtwith" | "perplexity" | "serper" | "icypeas" | "prospeo" | "clado";
-                                                };
-                                                mix?: {
-                                                    performed_steps: string[];
-                                                };
-                                            } | null;
-                                            /** @enum {string|null} */
-                                            format: "url" | "website_url" | "professional_profile_url" | "email" | "datetime" | "date" | "phone" | "markdown" | "text" | "int" | "decimal" | "address_line_1" | "zip_code" | null;
-                                            ui: {
-                                                displayValue?: string | null;
-                                                /** @description A map of widgets associated with this field for UI display, keyed by widget type. */
-                                                widgets?: {
-                                                    entity_logo?: {
-                                                        /**
-                                                         * Format: uri
-                                                         * @description URL to the provider's logo image.
-                                                         */
-                                                        image_url: string;
-                                                        /** @description The name of the entity. */
-                                                        entity: string;
-                                                    };
-                                                    location_indicator?: {
-                                                        /** @description Country flag emoji. */
-                                                        emoji: string;
-                                                    };
-                                                    avatar?: {
-                                                        /**
-                                                         * Format: uri
-                                                         * @description URL to the provider's logo image.
-                                                         */
-                                                        image_url: string;
-                                                        /** @description The name of the avatar owner. */
-                                                        name: string;
-                                                    };
-                                                };
-                                            };
-                                        };
-                                    };
-                                };
-                            };
-                        };
-                    };
-                };
-                /** @description Bad request */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
-                        };
-                    };
-                };
-                /** @description Unauthorized */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
-                        };
-                    };
-                };
-                /** @description Forbidden */
-                403: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
-                        };
-                    };
-                };
-                /** @description Not found */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
-                        };
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/searches/check/{run_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Check status of search task. Poll this endpoint to until the status becomes 'completed'. Recommended polling intervals are between 1-3s. */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    run_id: string | null;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Return current processing state */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            id: string;
-                            /** @enum {string} */
-                            status: "completed" | "failed" | "pending" | "processing";
-                            organization_id: string;
-                            results: {
-                                [key: string]: {
-                                    value: string | number | boolean | null | {
-                                        [key: string]: unknown;
-                                    } | unknown[];
-                                    status: "completed" | "failed" | "pending" | "queued" | "processing" | "no_result" | "skipped";
-                                    /** @enum {string} */
-                                    type?: "string" | "number" | "boolean" | "json" | "unknown";
-                                    /** @enum {string|null} */
-                                    format?: "url" | "website_url" | "professional_profile_url" | "email" | "datetime" | "date" | "phone" | "markdown" | "text" | "int" | "decimal" | "address_line_1" | "zip_code" | null;
-                                    ui?: {
-                                        displayValue?: string | null;
-                                        /** @description A map of widgets associated with this field for UI display, keyed by widget type. */
-                                        widgets?: {
-                                            entity_logo?: {
-                                                /**
-                                                 * Format: uri
-                                                 * @description URL to the provider's logo image.
-                                                 */
-                                                image_url: string;
-                                                /** @description The name of the entity. */
-                                                entity: string;
-                                            };
-                                            location_indicator?: {
-                                                /** @description Country flag emoji. */
-                                                emoji: string;
-                                            };
-                                            avatar?: {
-                                                /**
-                                                 * Format: uri
-                                                 * @description URL to the provider's logo image.
-                                                 */
-                                                image_url: string;
-                                                /** @description The name of the avatar owner. */
-                                                name: string;
-                                            };
-                                        };
-                                    };
-                                } | null;
-                            }[];
-                            search_statuses: {
-                                search: {
-                                    /** @enum {string} */
-                                    ref: "people:profiles:icypeas@1" | "companies:profiles:icypeas@1" | "people:profiles:clado@1";
-                                };
-                                /** @enum {string} */
-                                status: "pending" | "processing" | "failed" | "completed";
-                                errors: {
-                                    code: string;
-                                    message: string;
-                                    path?: string;
-                                }[];
-                            }[];
-                        };
-                    };
-                };
-                /** @description Bad request */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
-                        };
-                    };
-                };
-                /** @description Unauthorized */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
-                        };
-                    };
-                };
-                /** @description Forbidden */
-                403: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
-                        };
-                    };
-                };
-                /** @description Not found */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
-                        };
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/searches/run/sync": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** @description Search for companies and leads synchronously. This endpoint waits for the search to complete before returning a result. For large search requests this endpoint will time out. */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": {
                         /** @default {
-                         *       "dedup": {
-                         *         "strategy": "default"
-                         *       },
-                         *       "environment": "production"
+                         *       "alias": ""
                          *     } */
-                        config?: {
-                            /** @default {
-                             *       "strategy": null
-                             *     } */
-                            dedup?: {
-                                /** @enum {string|null} */
-                                strategy: "default" | null;
-                            };
-                            /**
-                             * @default production
-                             * @enum {string}
-                             */
-                            environment?: "production" | "sandbox";
+                        headcount: {
+                          alias: string;
                         };
-                        searches: ({
-                            /** @enum {string} */
-                            search_id: "people:profiles:icypeas@1";
-                            config: {
-                                /** @default 100 */
-                                limit?: number;
-                                output_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    name?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    job_title?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    profile_headline?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_website_url?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_profile_url?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    profile_url?: {
-                                        alias: string;
-                                    };
-                                };
-                                filters: {
-                                    firstname?: {
-                                        /** @default [] */
-                                        include?: string[];
-                                        /** @default [] */
-                                        exclude?: string[];
-                                    };
-                                    lastname?: {
-                                        /** @default [] */
-                                        include?: string[];
-                                        /** @default [] */
-                                        exclude?: string[];
-                                    };
-                                    currentJobTitle?: {
-                                        /** @default [] */
-                                        include?: string[];
-                                        /** @default [] */
-                                        exclude?: string[];
-                                    };
-                                    pastJobTitle?: {
-                                        /** @default [] */
-                                        include?: string[];
-                                        /** @default [] */
-                                        exclude?: string[];
-                                    };
-                                    currentCompanyName?: {
-                                        /** @default [] */
-                                        include?: string[];
-                                        /** @default [] */
-                                        exclude?: string[];
-                                    };
-                                    pastCompanyName?: {
-                                        /** @default [] */
-                                        include?: string[];
-                                        /** @default [] */
-                                        exclude?: string[];
-                                    };
-                                    school?: {
-                                        /** @default [] */
-                                        include?: string[];
-                                        /** @default [] */
-                                        exclude?: string[];
-                                    };
-                                    location?: {
-                                        /** @default [] */
-                                        include?: string[];
-                                        /** @default [] */
-                                        exclude?: string[];
-                                    };
-                                    languages?: {
-                                        /** @default [] */
-                                        include?: string[];
-                                        /** @default [] */
-                                        exclude?: string[];
-                                    };
-                                    skills?: {
-                                        /** @default [] */
-                                        include?: string[];
-                                        /** @default [] */
-                                        exclude?: string[];
-                                    };
-                                    keyword?: {
-                                        /** @default [] */
-                                        include?: string[];
-                                        /** @default [] */
-                                        exclude?: string[];
-                                    };
-                                };
-                            };
-                        } | {
-                            /** @enum {string} */
-                            search_id: "companies:profiles:icypeas@1";
-                            config: {
-                                /** @default 100 */
-                                limit?: number;
-                                output_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_name?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_industry?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_description?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_website_url?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    headcount?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_region?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_profile_url?: {
-                                        alias: string;
-                                    };
-                                };
-                                filters: {
-                                    name?: {
-                                        /** @default [] */
-                                        include?: string[];
-                                        /** @default [] */
-                                        exclude?: string[];
-                                    };
-                                    type?: {
-                                        include: string[];
-                                        exclude: string[];
-                                    };
-                                    industry?: {
-                                        /** @default [] */
-                                        include?: string[];
-                                        /** @default [] */
-                                        exclude?: string[];
-                                    };
-                                    location?: {
-                                        /** @default [] */
-                                        include?: string[];
-                                        /** @default [] */
-                                        exclude?: string[];
-                                    };
-                                    headcount?: {
-                                        ">"?: number;
-                                        "<"?: number;
-                                        ">="?: number;
-                                        "<="?: number;
-                                    };
-                                    urn?: {
-                                        /** @default [] */
-                                        include?: string[];
-                                        /** @default [] */
-                                        exclude?: string[];
-                                    };
-                                    lid?: {
-                                        /** @default [] */
-                                        include?: string[];
-                                        /** @default [] */
-                                        exclude?: string[];
-                                    };
-                                };
-                            };
-                        } | {
-                            /** @enum {string} */
-                            search_id: "people:profiles:clado@1";
-                            config: {
-                                /** @default 20 */
-                                limit?: number;
-                                output_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    name?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    job_title?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    profile_headline?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_profile_url?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_industry?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_name?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    profile_url?: {
-                                        alias: string;
-                                    };
-                                };
-                                filters: {
-                                    query: string;
-                                };
-                            };
-                        })[];
-                    };
-                };
-            };
-            responses: {
-                /** @description Run searches request */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            id: string;
-                            /** @enum {string} */
-                            status: "completed" | "failed" | "pending" | "processing";
-                            organization_id: string;
-                            results: {
-                                [key: string]: {
-                                    value: string | number | boolean | null | {
-                                        [key: string]: unknown;
-                                    } | unknown[];
-                                    status: "completed" | "failed" | "pending" | "queued" | "processing" | "no_result" | "skipped";
-                                    /** @enum {string} */
-                                    type?: "string" | "number" | "boolean" | "json" | "unknown";
-                                    /** @enum {string|null} */
-                                    format?: "url" | "website_url" | "professional_profile_url" | "email" | "datetime" | "date" | "phone" | "markdown" | "text" | "int" | "decimal" | "address_line_1" | "zip_code" | null;
-                                    ui?: {
-                                        displayValue?: string | null;
-                                        /** @description A map of widgets associated with this field for UI display, keyed by widget type. */
-                                        widgets?: {
-                                            entity_logo?: {
-                                                /**
-                                                 * Format: uri
-                                                 * @description URL to the provider's logo image.
-                                                 */
-                                                image_url: string;
-                                                /** @description The name of the entity. */
-                                                entity: string;
-                                            };
-                                            location_indicator?: {
-                                                /** @description Country flag emoji. */
-                                                emoji: string;
-                                            };
-                                            avatar?: {
-                                                /**
-                                                 * Format: uri
-                                                 * @description URL to the provider's logo image.
-                                                 */
-                                                image_url: string;
-                                                /** @description The name of the avatar owner. */
-                                                name: string;
-                                            };
-                                        };
-                                    };
-                                } | null;
-                            }[];
-                            search_statuses: {
-                                search: {
-                                    /** @enum {string} */
-                                    ref: "people:profiles:icypeas@1" | "companies:profiles:icypeas@1" | "people:profiles:clado@1";
-                                };
-                                /** @enum {string} */
-                                status: "pending" | "processing" | "failed" | "completed";
-                                errors: {
-                                    code: string;
-                                    message: string;
-                                    path?: string;
-                                }[];
-                            }[];
-                        };
-                    };
-                };
-                /** @description Bad request */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
-                        };
-                    };
-                };
-                /** @description Unauthorized */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
-                        };
-                    };
-                };
-                /** @description Forbidden */
-                403: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
-                        };
-                    };
-                };
-                /** @description Required resource not found */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
-                        };
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/searches/run": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** @description Use multiple data sources to search for people and company data. */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": {
                         /** @default {
-                         *       "dedup": {
-                         *         "strategy": "default"
-                         *       },
-                         *       "environment": "production"
+                         *       "alias": ""
                          *     } */
-                        config?: {
-                            /** @default {
-                             *       "strategy": null
-                             *     } */
-                            dedup?: {
-                                /** @enum {string|null} */
-                                strategy: "default" | null;
-                            };
-                            /**
-                             * @default production
-                             * @enum {string}
-                             */
-                            environment?: "production" | "sandbox";
+                        number_of_social_followers: {
+                          alias: string;
                         };
-                        searches: ({
-                            /** @enum {string} */
-                            search_id: "people:profiles:icypeas@1";
-                            config: {
-                                /** @default 100 */
-                                limit?: number;
-                                output_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    name?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    job_title?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    profile_headline?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_website_url?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_profile_url?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    profile_url?: {
-                                        alias: string;
-                                    };
-                                };
-                                filters: {
-                                    firstname?: {
-                                        /** @default [] */
-                                        include?: string[];
-                                        /** @default [] */
-                                        exclude?: string[];
-                                    };
-                                    lastname?: {
-                                        /** @default [] */
-                                        include?: string[];
-                                        /** @default [] */
-                                        exclude?: string[];
-                                    };
-                                    currentJobTitle?: {
-                                        /** @default [] */
-                                        include?: string[];
-                                        /** @default [] */
-                                        exclude?: string[];
-                                    };
-                                    pastJobTitle?: {
-                                        /** @default [] */
-                                        include?: string[];
-                                        /** @default [] */
-                                        exclude?: string[];
-                                    };
-                                    currentCompanyName?: {
-                                        /** @default [] */
-                                        include?: string[];
-                                        /** @default [] */
-                                        exclude?: string[];
-                                    };
-                                    pastCompanyName?: {
-                                        /** @default [] */
-                                        include?: string[];
-                                        /** @default [] */
-                                        exclude?: string[];
-                                    };
-                                    school?: {
-                                        /** @default [] */
-                                        include?: string[];
-                                        /** @default [] */
-                                        exclude?: string[];
-                                    };
-                                    location?: {
-                                        /** @default [] */
-                                        include?: string[];
-                                        /** @default [] */
-                                        exclude?: string[];
-                                    };
-                                    languages?: {
-                                        /** @default [] */
-                                        include?: string[];
-                                        /** @default [] */
-                                        exclude?: string[];
-                                    };
-                                    skills?: {
-                                        /** @default [] */
-                                        include?: string[];
-                                        /** @default [] */
-                                        exclude?: string[];
-                                    };
-                                    keyword?: {
-                                        /** @default [] */
-                                        include?: string[];
-                                        /** @default [] */
-                                        exclude?: string[];
-                                    };
-                                };
-                            };
-                        } | {
-                            /** @enum {string} */
-                            search_id: "companies:profiles:icypeas@1";
-                            config: {
-                                /** @default 100 */
-                                limit?: number;
-                                output_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_name?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_industry?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_description?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_website_url?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    headcount?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_region?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_profile_url?: {
-                                        alias: string;
-                                    };
-                                };
-                                filters: {
-                                    name?: {
-                                        /** @default [] */
-                                        include?: string[];
-                                        /** @default [] */
-                                        exclude?: string[];
-                                    };
-                                    type?: {
-                                        include: string[];
-                                        exclude: string[];
-                                    };
-                                    industry?: {
-                                        /** @default [] */
-                                        include?: string[];
-                                        /** @default [] */
-                                        exclude?: string[];
-                                    };
-                                    location?: {
-                                        /** @default [] */
-                                        include?: string[];
-                                        /** @default [] */
-                                        exclude?: string[];
-                                    };
-                                    headcount?: {
-                                        ">"?: number;
-                                        "<"?: number;
-                                        ">="?: number;
-                                        "<="?: number;
-                                    };
-                                    urn?: {
-                                        /** @default [] */
-                                        include?: string[];
-                                        /** @default [] */
-                                        exclude?: string[];
-                                    };
-                                    lid?: {
-                                        /** @default [] */
-                                        include?: string[];
-                                        /** @default [] */
-                                        exclude?: string[];
-                                    };
-                                };
-                            };
-                        } | {
-                            /** @enum {string} */
-                            search_id: "people:profiles:clado@1";
-                            config: {
-                                /** @default 20 */
-                                limit?: number;
-                                output_fields?: {
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    name?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    job_title?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    profile_headline?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_profile_url?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_industry?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    company_name?: {
-                                        alias: string;
-                                    };
-                                    /** @default {
-                                     *       "alias": ""
-                                     *     } */
-                                    profile_url?: {
-                                        alias: string;
-                                    };
-                                };
-                                filters: {
-                                    query: string;
-                                };
-                            };
-                        })[];
-                    };
-                };
-            };
-            responses: {
-                /** @description Run pipeline request */
-                201: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            id: string;
-                            /** @enum {string} */
-                            status: "completed" | "failed" | "pending" | "processing";
-                            organization_id: string;
-                            results: {
-                                [key: string]: {
-                                    value: string | number | boolean | null | {
-                                        [key: string]: unknown;
-                                    } | unknown[];
-                                    status: "completed" | "failed" | "pending" | "queued" | "processing" | "no_result" | "skipped";
-                                    /** @enum {string} */
-                                    type?: "string" | "number" | "boolean" | "json" | "unknown";
-                                    /** @enum {string|null} */
-                                    format?: "url" | "website_url" | "professional_profile_url" | "email" | "datetime" | "date" | "phone" | "markdown" | "text" | "int" | "decimal" | "address_line_1" | "zip_code" | null;
-                                    ui?: {
-                                        displayValue?: string | null;
-                                        /** @description A map of widgets associated with this field for UI display, keyed by widget type. */
-                                        widgets?: {
-                                            entity_logo?: {
-                                                /**
-                                                 * Format: uri
-                                                 * @description URL to the provider's logo image.
-                                                 */
-                                                image_url: string;
-                                                /** @description The name of the entity. */
-                                                entity: string;
-                                            };
-                                            location_indicator?: {
-                                                /** @description Country flag emoji. */
-                                                emoji: string;
-                                            };
-                                            avatar?: {
-                                                /**
-                                                 * Format: uri
-                                                 * @description URL to the provider's logo image.
-                                                 */
-                                                image_url: string;
-                                                /** @description The name of the avatar owner. */
-                                                name: string;
-                                            };
-                                        };
-                                    };
-                                } | null;
-                            }[];
-                            search_statuses: {
-                                search: {
-                                    /** @enum {string} */
-                                    ref: "people:profiles:icypeas@1" | "companies:profiles:icypeas@1" | "people:profiles:clado@1";
-                                };
-                                /** @enum {string} */
-                                status: "pending" | "processing" | "failed" | "completed";
-                                errors: {
-                                    code: string;
-                                    message: string;
-                                    path?: string;
-                                }[];
-                            }[];
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        monthly_tech_spend_in_usd: {
+                          alias: string;
                         };
-                    };
-                };
-                /** @description Bad request */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "company:techstack:builtwith@1";
+                    config?: {
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_website_url: {
+                          /** @default  */
+                          alias: string;
                         };
-                    };
-                };
-                /** @description Unauthorized */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        technology_stack: {
+                          alias: string;
                         };
-                    };
-                };
-                /** @description Forbidden */
-                403: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "company:websiteurl:email@1";
+                    config?: {
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        email: {
+                          /** @default  */
+                          alias: string;
                         };
-                    };
-                };
-                /** @description Required resource not found */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_website_url: {
+                          alias: string;
                         };
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/{organization_id}/run-events/daily-summary": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: {
-            parameters: {
-                query?: {
-                    /** @description The environment of the analytics data (sandbox or production) */
-                    environment?: "sandbox" | "production";
-                    from?: number | null;
-                    to?: number | null;
-                };
-                header?: never;
-                path: {
-                    organization_id: string | null;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Get dashboard analytics */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            /** @enum {string} */
-                            mode: "day" | "hour";
-                            items: {
-                                tick: string;
-                                eventCount: number;
-                                completedCount: number;
-                                failedCount: number;
-                            }[];
-                        };
-                    };
-                };
-                /** @description Unauthorized */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
-                        };
-                    };
-                };
-                /** @description Forbidden */
-                403: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
-                        };
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/{organization_id}/run-events": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: {
-            parameters: {
-                query?: {
-                    /** @description The environment of the analytics data (sandbox or production) */
-                    environment?: "sandbox" | "production";
-                    from?: number | null;
-                    to?: number | null;
-                    cursor?: number | null;
-                    limit?: number;
-                    status?: "completed" | "failed" | null;
-                };
-                header?: never;
-                path: {
-                    organization_id: string | null;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Analytics events */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            items: {
-                                id: string;
-                                taskId: string;
-                                duration: number;
-                                errors?: unknown;
-                                organizationId: string;
-                                status: string;
-                                environment: string;
-                                /** Format: date */
-                                timestamp: string;
-                            }[];
-                            nextCursor: number | null;
-                        };
-                    };
-                };
-                /** @description Unauthorized */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
-                        };
-                    };
-                };
-                /** @description Forbidden */
-                403: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
-                        };
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/{organization_id}/pipe-events/summary": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Summary of all pipe invocations in the time between 'from' and 'to'. */
-        get: {
-            parameters: {
-                query?: {
-                    from?: number | null;
-                    to?: number | null;
-                    /** @description The environment of the analytics data (sandbox or production) */
-                    environment?: "sandbox" | "production";
-                };
-                header?: never;
-                path: {
-                    organization_id: string | null;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Pipe analytics per organization id */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: {
-                                /** @default 0 */
-                                completed: number;
-                                /** @default 0 */
-                                failed: number;
-                                /** @default 0 */
-                                no_result: number;
-                            };
-                        };
-                    };
-                };
-                /** @description Unauthorized */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
-                        };
-                    };
-                };
-                /** @description Forbidden */
-                403: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
-                        };
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/{organization_id}/waterfall-events/{pipe_id}/summary": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: {
-            parameters: {
-                query?: {
-                    from?: number | null;
-                    to?: number | null;
-                    /** @description The environment of the analytics data (sandbox or production) */
-                    environment?: "sandbox" | "production";
-                };
-                header?: never;
-                path: {
-                    organization_id: string | null;
-                    /** @example people:workemail:waterfall@1 */
-                    pipe_id: string | null;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Pipe analytics per organization id */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            [key: string]: {
-                                /** @default 0 */
-                                usageCount: number;
-                                /** @default 0 */
-                                completed: number;
-                                /** @default 0 */
-                                failed: number;
-                                /** @default 0 */
-                                no_result: number;
-                            };
-                        };
-                    };
-                };
-                /** @description Unauthorized */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
-                        };
-                    };
-                };
-                /** @description Forbidden */
-                403: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
-                        };
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/{organization_id}/pipe-events": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: {
-            parameters: {
-                query?: {
-                    from?: number | null;
-                    to?: number | null;
-                    /** @description The environment of the analytics data (sandbox or production) */
-                    environment?: "sandbox" | "production";
-                    status?: "completed" | "failed" | "no_result" | null;
-                    cursor?: number | null;
-                    limit?: number;
-                };
-                header?: never;
-                path: {
-                    organization_id: string | null;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Pipe events */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            items: {
-                                id: string;
-                                organizationId: string;
-                                environment: string;
-                                pipeId: string;
-                                taskId: string | null;
-                                /** Format: date */
-                                timestamp: string;
-                                executionType: string;
-                                status: string;
-                                duration: number;
-                                pipeConfig?: unknown;
-                                input?: unknown;
-                                outputs?: unknown;
-                                providerResults?: unknown;
-                                reason?: unknown;
-                            }[];
-                            nextCursor: number | null;
-                        };
-                    };
-                };
-                /** @description Unauthorized */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
-                        };
-                    };
-                };
-                /** @description Forbidden */
-                403: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
-                        };
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/{organization_id}/pipe-events/runs/{run_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Get pipe events for a pipeline run */
-        get: {
-            parameters: {
-                query?: {
-                    from?: number | null;
-                    to?: number | null;
-                    /** @description The environment of the analytics data (sandbox or production) */
-                    environment?: "sandbox" | "production";
-                    status?: "completed" | "failed" | "no_result" | null;
-                    cursor?: number | null;
-                    limit?: number;
-                };
-                header?: never;
-                path: {
-                    organization_id: string | null;
-                    run_id: string | null;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Up to 200 pipe run events scroped to a 'run_id' */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            items: {
-                                id: string;
-                                organizationId: string;
-                                environment: string;
-                                pipeId: string;
-                                taskId: string | null;
-                                /** Format: date */
-                                timestamp: string;
-                                executionType: string;
-                                status: string;
-                                duration: number;
-                                pipeConfig?: unknown;
-                                input?: unknown;
-                                outputs?: unknown;
-                                providerResults?: unknown;
-                                reason?: unknown;
-                            }[];
-                            nextCursor: number | null;
-                        };
-                    };
-                };
-                /** @description Unauthorized */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
-                        };
-                    };
-                };
-                /** @description Forbidden */
-                403: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
-                        };
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/{organizationId}/user-connections": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Get a list of user connections for the provider :providerName */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    organizationId: string | null;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description List of user connections */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            items: {
-                                id: string;
-                                provider: string;
-                                /** @enum {string} */
-                                method: "api_key";
-                                organizationId: string;
-                                isActive: boolean;
-                                /** Format: date */
-                                createdAt: string;
-                                /** Format: date */
-                                updatedAt: string;
-                            }[];
-                        };
-                    };
-                };
-                /** @description Bad request */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
-                        };
-                    };
-                };
-                /** @description Unauthorized */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
-                        };
-                    };
-                };
-                /** @description Forbidden */
-                403: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
-                        };
-                    };
-                };
-            };
-        };
-        put?: never;
-        /** @description Create user connection */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    organizationId: string | null;
-                };
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": {
-                        provider: string;
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "people:workemail:waterfall@1";
+                    config?: {
+                      /** @default [
+                       *       {
+                       *         "provider": "leadmagic"
+                       *       },
+                       *       {
+                       *         "provider": "prospeo"
+                       *       },
+                       *       {
+                       *         "provider": "icypeas"
+                       *       }
+                       *     ] */
+                      providers: {
                         /** @enum {string} */
-                        method: "api_key";
-                        secret: string;
-                        organizationId: string;
-                        isActive?: boolean;
-                    };
-                };
-            };
-            responses: {
-                /** @description Create credentials */
-                201: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            id: string;
-                            provider: string;
-                            /** @enum {string} */
-                            method: "api_key";
-                            organizationId: string;
-                            isActive: boolean;
-                            /** Format: date */
-                            createdAt: string;
-                            /** Format: date */
-                            updatedAt: string;
+                        provider: "leadmagic" | "prospeo" | "icypeas";
+                      }[];
+                      input_fields?: {
+                        name: {
+                          alias: string;
                         };
-                    };
-                };
-                /** @description Bad request */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
+                        company_website_url: {
+                          alias: string;
                         };
-                    };
-                };
-                /** @description Unauthorized */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
+                        company_name: {
+                          alias: string;
                         };
-                    };
-                };
-                /** @description Forbidden */
-                403: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        work_email: {
+                          alias: string;
                         };
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/{organizationId}/user-connections/{connectionId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        /** @description Delete user connection */
-        delete: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    organizationId: string | null;
-                    connectionId: string | null;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Task deleted */
-                204: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-                /** @description Bad request */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "people:email:iswork@1";
+                    config?: {
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        email: {
+                          /** @default  */
+                          alias: string;
                         };
-                    };
-                };
-                /** @description Unauthorized */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        is_work_email: {
+                          alias: string;
                         };
-                    };
-                };
-                /** @description Forbidden */
-                403: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "people:name:split@1";
+                    config?: {
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        name: {
+                          /** @default  */
+                          alias: string;
                         };
-                    };
-                };
-            };
-        };
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/{organizationId}/checkout": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    organization_id: string | null;
-                };
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": {
-                        priceId: string;
-                        /** Format: uri */
-                        successUrl: string;
-                        /** Format: uri */
-                        cancelUrl: string;
-                    };
-                };
-            };
-            responses: {
-                /** @description Checkout session URL */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            /** Format: uri */
-                            checkoutUrl: string;
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        first_name: {
+                          alias: string;
                         };
-                    };
-                };
-                /** @description Bad Request */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        last_name: {
+                          alias: string;
                         };
-                    };
-                };
-                /** @description Unauthorized */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "people:validate:email:zerobounce@1";
+                    config?: {
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        work_email: {
+                          /** @default  */
+                          alias: string;
                         };
-                    };
-                };
-                /** @description Forbidden */
-                403: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        ip_address: {
+                          /** @default  */
+                          alias: string;
                         };
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/{organizationId}/customer-portal": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    organization_id: string | null;
-                };
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": {
-                        /** Format: uri */
-                        returnUrl: string;
-                    };
-                };
-            };
-            responses: {
-                /** @description Customer portal URL */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            /** Format: uri */
-                            portalUrl: string;
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        is_email_valid: {
+                          alias: string;
                         };
-                    };
-                };
-                /** @description Bad Request */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "people:professionalprofile:waterfall@1";
+                    config?: {
+                      /** @default [
+                       *       {
+                       *         "provider": "prospeo"
+                       *       },
+                       *       {
+                       *         "provider": "icypeas"
+                       *       }
+                       *     ] */
+                      providers: {
+                        /** @enum {string} */
+                        provider: "prospeo" | "icypeas";
+                      }[];
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        professional_profile_url: {
+                          /** @default  */
+                          alias: string;
                         };
-                    };
-                };
-                /** @description Unauthorized */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        professional_profile: {
+                          alias: string;
                         };
-                    };
-                };
-                /** @description Forbidden */
-                403: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "people:professionalprofileurl:name@1";
+                    config?: {
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        name: {
+                          /** @default  */
+                          alias: string;
                         };
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/{organization_id}/credit-balance": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    organization_id: string | null;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Current credit balance information */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            id: string;
-                            organizationId: string;
-                            balance: string;
-                            /** Format: date */
-                            lastRefillAt: string | null;
-                            /** Format: date */
-                            nextRefillAt: string | null;
-                            /** Format: date */
-                            createdAt: string;
-                            /** Format: date */
-                            updatedAt: string;
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_name: {
+                          /** @default  */
+                          alias: string;
                         };
-                    };
-                };
-                /** @description Unauthorized */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        location_hint: {
+                          /** @default  */
+                          alias: string;
                         };
-                    };
-                };
-                /** @description Forbidden */
-                403: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        professional_profile_url: {
+                          alias: string;
                         };
-                    };
-                };
-                /** @description Internal Server Error */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "people:professionalprofileurl:email:waterfall@1";
+                    config?: {
+                      /** @default [
+                       *       {
+                       *         "provider": "leadmagic"
+                       *       }
+                       *     ] */
+                      providers: {
+                        /** @enum {string} */
+                        provider: "leadmagic";
+                      }[];
+                      input_fields: {
+                        email: {
+                          alias: string;
                         };
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/{organizationId}/credit-transactions": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: {
-            parameters: {
-                query?: {
-                    limit?: number | null;
-                    offset?: number | null;
-                };
-                header?: never;
-                path: {
-                    organization_id: string | null;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Credit transaction history */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            items: {
-                                id: string;
-                                organizationId: string;
-                                amount: string;
-                                type: string;
-                                description: string | null;
-                                balanceAfter: string;
-                                /** Format: date */
-                                timestamp: string;
-                                metadata: {
-                                    invoiceId?: string;
-                                    attemptCount?: number;
-                                    nextPaymentAttempt?: string | null;
-                                };
-                            }[];
+                        work_email: {
+                          alias: string;
                         };
-                    };
-                };
-                /** @description Unauthorized */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        professional_profile_url: {
+                          alias: string;
                         };
-                    };
-                };
-                /** @description Forbidden */
-                403: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "people:personalemail:profile:waterfall@1";
+                    config?: {
+                      /** @default [
+                       *       {
+                       *         "provider": "leadmagic"
+                       *       },
+                       *       {
+                       *         "provider": "clado"
+                       *       }
+                       *     ] */
+                      providers: {
+                        /** @enum {string} */
+                        provider: "clado" | "leadmagic";
+                      }[];
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        professional_profile_url: {
+                          /** @default  */
+                          alias: string;
                         };
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/{organizationId}/subscription": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    organization_id: string | null;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Current subscription information */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            items: {
-                                id: string;
-                                status: string;
-                                plan: {
-                                    name: string;
-                                    description?: string;
-                                    credits: number;
-                                    interval: string;
-                                    price: number;
-                                };
-                                currentPeriodStart: string | null;
-                                currentPeriodEnd: string | null;
-                                cancelAtPeriodEnd: boolean;
-                            }[];
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        personal_email: {
+                          alias: string;
                         };
-                    };
-                };
-                /** @description Unauthorized */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        alternate_personal_emails: {
+                          alias: string;
                         };
-                    };
-                };
-                /** @description Forbidden */
-                403: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "people:mobilenumber:professionalprofile:waterfall@1";
+                    config?: {
+                      /** @default [
+                       *       {
+                       *         "provider": "leadmagic"
+                       *       },
+                       *       {
+                       *         "provider": "prospeo"
+                       *       }
+                       *     ] */
+                      providers: {
+                        /** @enum {string} */
+                        provider: "leadmagic" | "prospeo";
+                      }[];
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        professional_profile_url: {
+                          /** @default  */
+                          alias: string;
                         };
-                    };
-                };
-                /** @description Internal Server Error */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        mobile_number: {
+                          alias: string;
                         };
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/credit-rewards/{code}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    code: string | null;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Credit reward */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            id: string;
-                            amount: string | null;
-                            /** Format: date */
-                            createdAt: string;
-                            /** Format: date */
-                            updatedAt: string;
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "people:mobilenumber:workemail:waterfall@1";
+                    config?: {
+                      /** @default [
+                       *       {
+                       *         "provider": "leadmagic"
+                       *       }
+                       *     ] */
+                      providers: {
+                        /** @enum {string} */
+                        provider: "leadmagic";
+                      }[];
+                      input_fields?: {
+                        work_email: {
+                          /** @default  */
+                          alias: string;
                         };
-                    };
-                };
-                /** @description Credit rewards not found */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        mobile_number: {
+                          alias: string;
                         };
-                    };
-                };
-                /** @description Internal Server Error */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "people:name:join@1";
+                    config?: {
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        first_name: {
+                          /** @default  */
+                          alias: string;
                         };
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/{organizationId}/credit-rewards/redeem": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    organization_id: string | null;
-                };
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        last_name: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        name: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "company:identity@1";
+                    config?: {
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_name: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_social_url: {
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        cleaned_company_name: {
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_website_url: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "company:overview@1";
+                    config?: {
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_website_url: {
+                          /** @default  */
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_social_url: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_description: {
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_industry: {
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_region: {
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        headcount: {
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        estimated_revenue: {
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        founded_year: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+              )[];
+              errors: {
+                code: string;
+                message: string;
+                path?: string;
+              }[];
+              records: {
+                [key: string]: {
+                  id: number | string;
+                  fields: {
+                    [key: string]: {
+                      value:
+                        | string
+                        | number
+                        | boolean
+                        | null
+                        | {
+                            [key: string]: unknown;
+                          }
+                        | unknown[];
+                      status:
+                        | "completed"
+                        | "failed"
+                        | "pending"
+                        | "queued"
+                        | "processing"
+                        | "no_result"
+                        | "skipped";
+                      /** @enum {string} */
+                      type:
+                        | "string"
+                        | "number"
+                        | "boolean"
+                        | "json"
+                        | "unknown";
+                      reason: {
                         code: string;
-                    };
-                };
-            };
-            responses: {
-                /** @description Remdeemed */
-                201: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            id: string;
-                            organizationId: string;
-                            balance: string;
-                            /** Format: date */
-                            lastRefillAt: string | null;
-                            /** Format: date */
-                            nextRefillAt: string | null;
-                            /** Format: date */
-                            createdAt: string;
-                            /** Format: date */
-                            updatedAt: string;
-                        };
-                    };
-                };
-                /** @description Bad Request */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
-                        };
-                    };
-                };
-                /** @description Unauthorized */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
-                        };
-                    };
-                };
-                /** @description Forbidden */
-                403: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
-                        };
-                    };
-                };
-                /** @description Credit reward not found */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
-                        };
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/support/{organization_id}/messages": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    organization_id: string | null;
-                };
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": {
-                        category: string;
+                        summary: string;
                         message: string;
-                        subject: string;
+                      } | null;
+                      claimed_by: {
+                        /** @enum {string|null} */
+                        ref:
+                          | "prompt:run@1"
+                          | "company:newssummary:website@1"
+                          | "company:techstack:builtwith@1"
+                          | "company:websiteurl:email@1"
+                          | "people:workemail:waterfall@1"
+                          | "people:email:iswork@1"
+                          | "people:name:split@1"
+                          | "people:name:join@1"
+                          | "people:professionalprofile:waterfall@1"
+                          | "people:professionalprofileurl:name@1"
+                          | "people:professionalprofileurl:email:waterfall@1"
+                          | "people:personalemail:profile:waterfall@1"
+                          | "people:validate:email:zerobounce@1"
+                          | "people:mobilenumber:professionalprofile:waterfall@1"
+                          | "people:mobilenumber:workemail:waterfall@1"
+                          | "company:profile:builtwith@1"
+                          | "company:identity@1"
+                          | "company:overview@1"
+                          | "input"
+                          | null;
+                        pipe_hash: string | null;
+                      };
+                      resolved_by: {
+                        /** @enum {string|null} */
+                        ref:
+                          | "prompt:run@1"
+                          | "company:newssummary:website@1"
+                          | "company:techstack:builtwith@1"
+                          | "company:websiteurl:email@1"
+                          | "people:workemail:waterfall@1"
+                          | "people:email:iswork@1"
+                          | "people:name:split@1"
+                          | "people:name:join@1"
+                          | "people:professionalprofile:waterfall@1"
+                          | "people:professionalprofileurl:name@1"
+                          | "people:professionalprofileurl:email:waterfall@1"
+                          | "people:personalemail:profile:waterfall@1"
+                          | "people:validate:email:zerobounce@1"
+                          | "people:mobilenumber:professionalprofile:waterfall@1"
+                          | "people:mobilenumber:workemail:waterfall@1"
+                          | "company:profile:builtwith@1"
+                          | "company:identity@1"
+                          | "company:overview@1"
+                          | "input"
+                          | null;
+                        pipe_hash: string | null;
+                        input_hash: string | null;
+                      } | null;
+                      meta: {
+                        waterfall?: {
+                          attempted_providers: {
+                            /** @enum {string} */
+                            provider:
+                              | "pipe0"
+                              | "findymail"
+                              | "dropcontact"
+                              | "hunter"
+                              | "zerobounce"
+                              | "googlemaps"
+                              | "gemini"
+                              | "leadmagic"
+                              | "contactout"
+                              | "builtwith"
+                              | "perplexity"
+                              | "serper"
+                              | "icypeas"
+                              | "prospeo"
+                              | "clado";
+                          }[];
+                          available_providers: (
+                            | "pipe0"
+                            | "findymail"
+                            | "dropcontact"
+                            | "hunter"
+                            | "zerobounce"
+                            | "googlemaps"
+                            | "gemini"
+                            | "leadmagic"
+                            | "contactout"
+                            | "builtwith"
+                            | "perplexity"
+                            | "serper"
+                            | "icypeas"
+                            | "prospeo"
+                            | "clado"
+                          )[];
+                          /** @enum {string} */
+                          successful_provider?:
+                            | "pipe0"
+                            | "findymail"
+                            | "dropcontact"
+                            | "hunter"
+                            | "zerobounce"
+                            | "googlemaps"
+                            | "gemini"
+                            | "leadmagic"
+                            | "contactout"
+                            | "builtwith"
+                            | "perplexity"
+                            | "serper"
+                            | "icypeas"
+                            | "prospeo"
+                            | "clado";
+                        };
+                        mix?: {
+                          performed_steps: string[];
+                        };
+                      } | null;
+                      /** @enum {string|null} */
+                      format:
+                        | "url"
+                        | "website_url"
+                        | "professional_profile_url"
+                        | "email"
+                        | "datetime"
+                        | "date"
+                        | "phone"
+                        | "markdown"
+                        | "text"
+                        | "int"
+                        | "decimal"
+                        | "address_line_1"
+                        | "zip_code"
+                        | null;
+                      ui: {
+                        displayValue?: string | null;
+                        /** @description A map of widgets associated with this field for UI display, keyed by widget type. */
+                        widgets?: {
+                          entity_logo?: {
+                            /**
+                             * Format: uri
+                             * @description URL to the provider's logo image.
+                             */
+                            image_url: string;
+                            /** @description The name of the entity. */
+                            entity: string;
+                          };
+                          location_indicator?: {
+                            /** @description Country flag emoji. */
+                            emoji: string;
+                          };
+                          avatar?: {
+                            /**
+                             * Format: uri
+                             * @description URL to the provider's logo image.
+                             */
+                            image_url: string;
+                            /** @description The name of the avatar owner. */
+                            name: string;
+                          };
+                        };
+                      };
                     };
+                  };
                 };
+              };
             };
-            responses: {
-                201: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": Record<string, never>;
-                    };
-                };
-                /** @description Bad Request */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
-                        };
-                    };
-                };
-                /** @description Unauthorized */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
-                        };
-                    };
-                };
-                /** @description Forbidden */
-                403: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            type: string;
-                            title: string;
-                            status: number;
-                            detail: string;
-                        };
-                    };
-                };
-            };
+          };
         };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+        /** @description Bad request */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+        /** @description Required resource not found */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+      };
     };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/v1/run": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** @description Enrich data asynchronously. Create an enrichment task. Check this task by polling the '/check' endpoint until the status becomes 'completed'. */
+    post: {
+      parameters: {
+        query?: never;
+        header?: {
+          "x-environment"?: "production" | "sandbox";
+        };
+        path?: never;
+        cookie?: never;
+      };
+      requestBody: {
+        content: {
+          "application/json": {
+            /** @default {
+             *       "environment": "production"
+             *     } */
+            config?: {
+              /**
+               * @default production
+               * @enum {string}
+               */
+              environment?: "production" | "sandbox";
+            };
+            input_field_definitions?: {
+              [key: string]: {
+                label?: string;
+                /**
+                 * @default null
+                 * @enum {string|null}
+                 */
+                format?:
+                  | "url"
+                  | "website_url"
+                  | "professional_profile_url"
+                  | "email"
+                  | "datetime"
+                  | "date"
+                  | "phone"
+                  | "markdown"
+                  | "text"
+                  | "int"
+                  | "decimal"
+                  | "address_line_1"
+                  | "zip_code"
+                  | null;
+              };
+            };
+            pipes: (
+              | {
+                  /** @enum {string} */
+                  pipe_id: "prompt:run@1";
+                  config: {
+                    prompt: {
+                      text: string;
+                      json_schemas: {
+                        [key: string]: {
+                          [key: string]: unknown;
+                        };
+                      };
+                    };
+                  };
+                }
+              | {
+                  /** @enum {string} */
+                  pipe_id: "company:newssummary:website@1";
+                  config?: {
+                    input_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_website_url?: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                    };
+                    output_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_news_summary?: {
+                        alias: string;
+                      };
+                    };
+                  } | null;
+                }
+              | {
+                  /** @enum {string} */
+                  pipe_id: "company:profile:builtwith@1";
+                  config?: {
+                    input_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_website_url?: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                    };
+                    output_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_name?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      headcount?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      number_of_social_followers?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      monthly_tech_spend_in_usd?: {
+                        alias: string;
+                      };
+                    };
+                  } | null;
+                }
+              | {
+                  /** @enum {string} */
+                  pipe_id: "company:techstack:builtwith@1";
+                  config?: {
+                    input_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_website_url?: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                    };
+                    output_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      technology_stack?: {
+                        alias: string;
+                      };
+                    };
+                  } | null;
+                }
+              | {
+                  /** @enum {string} */
+                  pipe_id: "company:websiteurl:email@1";
+                  config?: {
+                    input_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      email?: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                    };
+                    output_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_website_url?: {
+                        alias: string;
+                      };
+                    };
+                  } | null;
+                }
+              | {
+                  /** @enum {string} */
+                  pipe_id: "people:workemail:waterfall@1";
+                  config?: {
+                    /** @default [
+                     *       {
+                     *         "provider": "leadmagic"
+                     *       },
+                     *       {
+                     *         "provider": "prospeo"
+                     *       },
+                     *       {
+                     *         "provider": "icypeas"
+                     *       }
+                     *     ] */
+                    providers?: {
+                      /** @enum {string} */
+                      provider: "leadmagic" | "prospeo" | "icypeas";
+                    }[];
+                    input_fields?: {
+                      name: {
+                        alias: string;
+                      };
+                      company_website_url: {
+                        alias: string;
+                      };
+                      company_name: {
+                        alias: string;
+                      };
+                    };
+                    output_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      work_email?: {
+                        alias: string;
+                      };
+                    };
+                  } | null;
+                }
+              | {
+                  /** @enum {string} */
+                  pipe_id: "people:email:iswork@1";
+                  config?: {
+                    input_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      email?: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                    };
+                    output_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      is_work_email?: {
+                        alias: string;
+                      };
+                    };
+                  } | null;
+                }
+              | {
+                  /** @enum {string} */
+                  pipe_id: "people:name:split@1";
+                  config?: {
+                    input_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      name?: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                    };
+                    output_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      first_name?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      last_name?: {
+                        alias: string;
+                      };
+                    };
+                  } | null;
+                }
+              | {
+                  /** @enum {string} */
+                  pipe_id: "people:validate:email:zerobounce@1";
+                  config?: {
+                    input_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      work_email?: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      ip_address?: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                    };
+                    output_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      is_email_valid?: {
+                        alias: string;
+                      };
+                    };
+                  } | null;
+                }
+              | {
+                  /** @enum {string} */
+                  pipe_id: "people:professionalprofile:waterfall@1";
+                  config?: {
+                    /** @default [
+                     *       {
+                     *         "provider": "prospeo"
+                     *       },
+                     *       {
+                     *         "provider": "icypeas"
+                     *       }
+                     *     ] */
+                    providers?: {
+                      /** @enum {string} */
+                      provider: "prospeo" | "icypeas";
+                    }[];
+                    input_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      professional_profile_url?: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                    };
+                    output_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      professional_profile?: {
+                        alias: string;
+                      };
+                    };
+                  } | null;
+                }
+              | {
+                  /** @enum {string} */
+                  pipe_id: "people:professionalprofileurl:name@1";
+                  config?: {
+                    input_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      name?: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_name?: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      location_hint?: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                    };
+                    output_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      professional_profile_url?: {
+                        alias: string;
+                      };
+                    };
+                  } | null;
+                }
+              | {
+                  /** @enum {string} */
+                  pipe_id: "people:professionalprofileurl:email:waterfall@1";
+                  config?: {
+                    /** @default [
+                     *       {
+                     *         "provider": "leadmagic"
+                     *       }
+                     *     ] */
+                    providers?: {
+                      /** @enum {string} */
+                      provider: "leadmagic";
+                    }[];
+                    input_fields: {
+                      email: {
+                        alias: string;
+                      };
+                      work_email: {
+                        alias: string;
+                      };
+                    };
+                    output_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      professional_profile_url?: {
+                        alias: string;
+                      };
+                    };
+                  } | null;
+                }
+              | {
+                  /** @enum {string} */
+                  pipe_id: "people:personalemail:profile:waterfall@1";
+                  config?: {
+                    /** @default [
+                     *       {
+                     *         "provider": "leadmagic"
+                     *       },
+                     *       {
+                     *         "provider": "clado"
+                     *       }
+                     *     ] */
+                    providers?: {
+                      /** @enum {string} */
+                      provider: "clado" | "leadmagic";
+                    }[];
+                    input_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      professional_profile_url?: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                    };
+                    output_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      personal_email?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      alternate_personal_emails?: {
+                        alias: string;
+                      };
+                    };
+                  } | null;
+                }
+              | {
+                  /** @enum {string} */
+                  pipe_id: "people:mobilenumber:professionalprofile:waterfall@1";
+                  config?: {
+                    /** @default [
+                     *       {
+                     *         "provider": "leadmagic"
+                     *       },
+                     *       {
+                     *         "provider": "prospeo"
+                     *       }
+                     *     ] */
+                    providers?: {
+                      /** @enum {string} */
+                      provider: "leadmagic" | "prospeo";
+                    }[];
+                    input_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      professional_profile_url?: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                    };
+                    output_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      mobile_number?: {
+                        alias: string;
+                      };
+                    };
+                  } | null;
+                }
+              | {
+                  /** @enum {string} */
+                  pipe_id: "people:mobilenumber:workemail:waterfall@1";
+                  config?: {
+                    /** @default [
+                     *       {
+                     *         "provider": "leadmagic"
+                     *       }
+                     *     ] */
+                    providers?: {
+                      /** @enum {string} */
+                      provider: "leadmagic";
+                    }[];
+                    input_fields?: {
+                      work_email: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                    };
+                    output_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      mobile_number?: {
+                        alias: string;
+                      };
+                    };
+                  } | null;
+                }
+              | {
+                  /** @enum {string} */
+                  pipe_id: "people:name:join@1";
+                  config?: {
+                    input_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      first_name?: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      last_name?: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                    };
+                    output_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      name?: {
+                        alias: string;
+                      };
+                    };
+                  } | null;
+                }
+              | {
+                  /** @enum {string} */
+                  pipe_id: "company:identity@1";
+                  config?: {
+                    input_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_name?: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                    };
+                    output_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_social_url?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      cleaned_company_name?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_website_url?: {
+                        alias: string;
+                      };
+                    };
+                  } | null;
+                }
+              | {
+                  /** @enum {string} */
+                  pipe_id: "company:overview@1";
+                  config?: {
+                    input_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_website_url?: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_social_url?: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                    };
+                    output_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_description?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_industry?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_region?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      headcount?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      estimated_revenue?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      founded_year?: {
+                        alias: string;
+                      };
+                    };
+                  } | null;
+                }
+            )[];
+            input: {
+              [key: string]:
+                | string
+                | number
+                | boolean
+                | null
+                | {
+                    [key: string]: unknown;
+                  }
+                | unknown[]
+                | {
+                    value:
+                      | string
+                      | number
+                      | boolean
+                      | null
+                      | {
+                          [key: string]: unknown;
+                        }
+                      | unknown[];
+                    status:
+                      | "completed"
+                      | "failed"
+                      | "pending"
+                      | "queued"
+                      | "processing"
+                      | "no_result"
+                      | "skipped";
+                    reason?: {
+                      code: string;
+                      summary: string;
+                      message: string;
+                    } | null;
+                    /** @enum {string} */
+                    type?: "string" | "number" | "boolean" | "json" | "unknown";
+                    /** @enum {string|null} */
+                    format?:
+                      | "url"
+                      | "website_url"
+                      | "professional_profile_url"
+                      | "email"
+                      | "datetime"
+                      | "date"
+                      | "phone"
+                      | "markdown"
+                      | "text"
+                      | "int"
+                      | "decimal"
+                      | "address_line_1"
+                      | "zip_code"
+                      | null;
+                    claimed_by?: {
+                      /** @enum {string|null} */
+                      ref:
+                        | "prompt:run@1"
+                        | "company:newssummary:website@1"
+                        | "company:techstack:builtwith@1"
+                        | "company:websiteurl:email@1"
+                        | "people:workemail:waterfall@1"
+                        | "people:email:iswork@1"
+                        | "people:name:split@1"
+                        | "people:name:join@1"
+                        | "people:professionalprofile:waterfall@1"
+                        | "people:professionalprofileurl:name@1"
+                        | "people:professionalprofileurl:email:waterfall@1"
+                        | "people:personalemail:profile:waterfall@1"
+                        | "people:validate:email:zerobounce@1"
+                        | "people:mobilenumber:professionalprofile:waterfall@1"
+                        | "people:mobilenumber:workemail:waterfall@1"
+                        | "company:profile:builtwith@1"
+                        | "company:identity@1"
+                        | "company:overview@1"
+                        | "input"
+                        | null;
+                      pipe_hash: string | null;
+                    };
+                    resolved_by?: {
+                      /** @enum {string|null} */
+                      ref:
+                        | "prompt:run@1"
+                        | "company:newssummary:website@1"
+                        | "company:techstack:builtwith@1"
+                        | "company:websiteurl:email@1"
+                        | "people:workemail:waterfall@1"
+                        | "people:email:iswork@1"
+                        | "people:name:split@1"
+                        | "people:name:join@1"
+                        | "people:professionalprofile:waterfall@1"
+                        | "people:professionalprofileurl:name@1"
+                        | "people:professionalprofileurl:email:waterfall@1"
+                        | "people:personalemail:profile:waterfall@1"
+                        | "people:validate:email:zerobounce@1"
+                        | "people:mobilenumber:professionalprofile:waterfall@1"
+                        | "people:mobilenumber:workemail:waterfall@1"
+                        | "company:profile:builtwith@1"
+                        | "company:identity@1"
+                        | "company:overview@1"
+                        | "input"
+                        | null;
+                      pipe_hash: string | null;
+                      input_hash: string | null;
+                    } | null;
+                    meta?: {
+                      [key: string]: unknown;
+                    } | null;
+                    ui?: {
+                      displayValue?: string | null;
+                      /** @description A map of widgets associated with this field for UI display, keyed by widget type. */
+                      widgets?: {
+                        entity_logo?: {
+                          /**
+                           * Format: uri
+                           * @description URL to the provider's logo image.
+                           */
+                          image_url: string;
+                          /** @description The name of the entity. */
+                          entity: string;
+                        };
+                        location_indicator?: {
+                          /** @description Country flag emoji. */
+                          emoji: string;
+                        };
+                        avatar?: {
+                          /**
+                           * Format: uri
+                           * @description URL to the provider's logo image.
+                           */
+                          image_url: string;
+                          /** @description The name of the avatar owner. */
+                          name: string;
+                        };
+                      };
+                    };
+                  };
+            }[];
+          };
+        };
+      };
+      responses: {
+        /** @description Run pipeline request */
+        201: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              id: string;
+              /** @enum {string} */
+              status: "completed" | "failed" | "pending" | "processing";
+              organization_id: string;
+              order: (number | string)[];
+              field_definitions: {
+                [key: string]: {
+                  /** @enum {string} */
+                  type: "string" | "number" | "boolean" | "json" | "unknown";
+                  label: string;
+                  added_by: {
+                    ref:
+                      | (
+                          | "prompt:run@1"
+                          | "company:newssummary:website@1"
+                          | "company:techstack:builtwith@1"
+                          | "company:websiteurl:email@1"
+                          | "people:workemail:waterfall@1"
+                          | "people:email:iswork@1"
+                          | "people:name:split@1"
+                          | "people:name:join@1"
+                          | "people:professionalprofile:waterfall@1"
+                          | "people:professionalprofileurl:name@1"
+                          | "people:professionalprofileurl:email:waterfall@1"
+                          | "people:personalemail:profile:waterfall@1"
+                          | "people:validate:email:zerobounce@1"
+                          | "people:mobilenumber:professionalprofile:waterfall@1"
+                          | "people:mobilenumber:workemail:waterfall@1"
+                          | "company:profile:builtwith@1"
+                          | "company:identity@1"
+                          | "company:overview@1"
+                        )
+                      | "input";
+                    pipe_hash: string | null;
+                    pipeIndex: number | null;
+                  };
+                  /** @enum {string|null} */
+                  format:
+                    | "url"
+                    | "website_url"
+                    | "professional_profile_url"
+                    | "email"
+                    | "datetime"
+                    | "date"
+                    | "phone"
+                    | "markdown"
+                    | "text"
+                    | "int"
+                    | "decimal"
+                    | "address_line_1"
+                    | "zip_code"
+                    | null;
+                };
+              };
+              pipes: (
+                | {
+                    /** @enum {string} */
+                    pipe_id: "prompt:run@1";
+                    config: {
+                      prompt: {
+                        text: string;
+                        json_schemas: {
+                          [key: string]: {
+                            [key: string]: unknown;
+                          };
+                        };
+                      };
+                    };
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "company:newssummary:website@1";
+                    config?: {
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_website_url: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_news_summary: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "company:profile:builtwith@1";
+                    config?: {
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_website_url: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_name: {
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        headcount: {
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        number_of_social_followers: {
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        monthly_tech_spend_in_usd: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "company:techstack:builtwith@1";
+                    config?: {
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_website_url: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        technology_stack: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "company:websiteurl:email@1";
+                    config?: {
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        email: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_website_url: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "people:workemail:waterfall@1";
+                    config?: {
+                      /** @default [
+                       *       {
+                       *         "provider": "leadmagic"
+                       *       },
+                       *       {
+                       *         "provider": "prospeo"
+                       *       },
+                       *       {
+                       *         "provider": "icypeas"
+                       *       }
+                       *     ] */
+                      providers: {
+                        /** @enum {string} */
+                        provider: "leadmagic" | "prospeo" | "icypeas";
+                      }[];
+                      input_fields?: {
+                        name: {
+                          alias: string;
+                        };
+                        company_website_url: {
+                          alias: string;
+                        };
+                        company_name: {
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        work_email: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "people:email:iswork@1";
+                    config?: {
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        email: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        is_work_email: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "people:name:split@1";
+                    config?: {
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        name: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        first_name: {
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        last_name: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "people:validate:email:zerobounce@1";
+                    config?: {
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        work_email: {
+                          /** @default  */
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        ip_address: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        is_email_valid: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "people:professionalprofile:waterfall@1";
+                    config?: {
+                      /** @default [
+                       *       {
+                       *         "provider": "prospeo"
+                       *       },
+                       *       {
+                       *         "provider": "icypeas"
+                       *       }
+                       *     ] */
+                      providers: {
+                        /** @enum {string} */
+                        provider: "prospeo" | "icypeas";
+                      }[];
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        professional_profile_url: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        professional_profile: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "people:professionalprofileurl:name@1";
+                    config?: {
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        name: {
+                          /** @default  */
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_name: {
+                          /** @default  */
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        location_hint: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        professional_profile_url: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "people:professionalprofileurl:email:waterfall@1";
+                    config?: {
+                      /** @default [
+                       *       {
+                       *         "provider": "leadmagic"
+                       *       }
+                       *     ] */
+                      providers: {
+                        /** @enum {string} */
+                        provider: "leadmagic";
+                      }[];
+                      input_fields: {
+                        email: {
+                          alias: string;
+                        };
+                        work_email: {
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        professional_profile_url: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "people:personalemail:profile:waterfall@1";
+                    config?: {
+                      /** @default [
+                       *       {
+                       *         "provider": "leadmagic"
+                       *       },
+                       *       {
+                       *         "provider": "clado"
+                       *       }
+                       *     ] */
+                      providers: {
+                        /** @enum {string} */
+                        provider: "clado" | "leadmagic";
+                      }[];
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        professional_profile_url: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        personal_email: {
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        alternate_personal_emails: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "people:mobilenumber:professionalprofile:waterfall@1";
+                    config?: {
+                      /** @default [
+                       *       {
+                       *         "provider": "leadmagic"
+                       *       },
+                       *       {
+                       *         "provider": "prospeo"
+                       *       }
+                       *     ] */
+                      providers: {
+                        /** @enum {string} */
+                        provider: "leadmagic" | "prospeo";
+                      }[];
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        professional_profile_url: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        mobile_number: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "people:mobilenumber:workemail:waterfall@1";
+                    config?: {
+                      /** @default [
+                       *       {
+                       *         "provider": "leadmagic"
+                       *       }
+                       *     ] */
+                      providers: {
+                        /** @enum {string} */
+                        provider: "leadmagic";
+                      }[];
+                      input_fields?: {
+                        work_email: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        mobile_number: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "people:name:join@1";
+                    config?: {
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        first_name: {
+                          /** @default  */
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        last_name: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        name: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "company:identity@1";
+                    config?: {
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_name: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_social_url: {
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        cleaned_company_name: {
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_website_url: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "company:overview@1";
+                    config?: {
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_website_url: {
+                          /** @default  */
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_social_url: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_description: {
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_industry: {
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_region: {
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        headcount: {
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        estimated_revenue: {
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        founded_year: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+              )[];
+              errors: {
+                code: string;
+                message: string;
+                path?: string;
+              }[];
+              records: {
+                [key: string]: {
+                  id: number | string;
+                  fields: {
+                    [key: string]: {
+                      value:
+                        | string
+                        | number
+                        | boolean
+                        | null
+                        | {
+                            [key: string]: unknown;
+                          }
+                        | unknown[];
+                      status:
+                        | "completed"
+                        | "failed"
+                        | "pending"
+                        | "queued"
+                        | "processing"
+                        | "no_result"
+                        | "skipped";
+                      /** @enum {string} */
+                      type:
+                        | "string"
+                        | "number"
+                        | "boolean"
+                        | "json"
+                        | "unknown";
+                      reason: {
+                        code: string;
+                        summary: string;
+                        message: string;
+                      } | null;
+                      claimed_by: {
+                        /** @enum {string|null} */
+                        ref:
+                          | "prompt:run@1"
+                          | "company:newssummary:website@1"
+                          | "company:techstack:builtwith@1"
+                          | "company:websiteurl:email@1"
+                          | "people:workemail:waterfall@1"
+                          | "people:email:iswork@1"
+                          | "people:name:split@1"
+                          | "people:name:join@1"
+                          | "people:professionalprofile:waterfall@1"
+                          | "people:professionalprofileurl:name@1"
+                          | "people:professionalprofileurl:email:waterfall@1"
+                          | "people:personalemail:profile:waterfall@1"
+                          | "people:validate:email:zerobounce@1"
+                          | "people:mobilenumber:professionalprofile:waterfall@1"
+                          | "people:mobilenumber:workemail:waterfall@1"
+                          | "company:profile:builtwith@1"
+                          | "company:identity@1"
+                          | "company:overview@1"
+                          | "input"
+                          | null;
+                        pipe_hash: string | null;
+                      };
+                      resolved_by: {
+                        /** @enum {string|null} */
+                        ref:
+                          | "prompt:run@1"
+                          | "company:newssummary:website@1"
+                          | "company:techstack:builtwith@1"
+                          | "company:websiteurl:email@1"
+                          | "people:workemail:waterfall@1"
+                          | "people:email:iswork@1"
+                          | "people:name:split@1"
+                          | "people:name:join@1"
+                          | "people:professionalprofile:waterfall@1"
+                          | "people:professionalprofileurl:name@1"
+                          | "people:professionalprofileurl:email:waterfall@1"
+                          | "people:personalemail:profile:waterfall@1"
+                          | "people:validate:email:zerobounce@1"
+                          | "people:mobilenumber:professionalprofile:waterfall@1"
+                          | "people:mobilenumber:workemail:waterfall@1"
+                          | "company:profile:builtwith@1"
+                          | "company:identity@1"
+                          | "company:overview@1"
+                          | "input"
+                          | null;
+                        pipe_hash: string | null;
+                        input_hash: string | null;
+                      } | null;
+                      meta: {
+                        waterfall?: {
+                          attempted_providers: {
+                            /** @enum {string} */
+                            provider:
+                              | "pipe0"
+                              | "findymail"
+                              | "dropcontact"
+                              | "hunter"
+                              | "zerobounce"
+                              | "googlemaps"
+                              | "gemini"
+                              | "leadmagic"
+                              | "contactout"
+                              | "builtwith"
+                              | "perplexity"
+                              | "serper"
+                              | "icypeas"
+                              | "prospeo"
+                              | "clado";
+                          }[];
+                          available_providers: (
+                            | "pipe0"
+                            | "findymail"
+                            | "dropcontact"
+                            | "hunter"
+                            | "zerobounce"
+                            | "googlemaps"
+                            | "gemini"
+                            | "leadmagic"
+                            | "contactout"
+                            | "builtwith"
+                            | "perplexity"
+                            | "serper"
+                            | "icypeas"
+                            | "prospeo"
+                            | "clado"
+                          )[];
+                          /** @enum {string} */
+                          successful_provider?:
+                            | "pipe0"
+                            | "findymail"
+                            | "dropcontact"
+                            | "hunter"
+                            | "zerobounce"
+                            | "googlemaps"
+                            | "gemini"
+                            | "leadmagic"
+                            | "contactout"
+                            | "builtwith"
+                            | "perplexity"
+                            | "serper"
+                            | "icypeas"
+                            | "prospeo"
+                            | "clado";
+                        };
+                        mix?: {
+                          performed_steps: string[];
+                        };
+                      } | null;
+                      /** @enum {string|null} */
+                      format:
+                        | "url"
+                        | "website_url"
+                        | "professional_profile_url"
+                        | "email"
+                        | "datetime"
+                        | "date"
+                        | "phone"
+                        | "markdown"
+                        | "text"
+                        | "int"
+                        | "decimal"
+                        | "address_line_1"
+                        | "zip_code"
+                        | null;
+                      ui: {
+                        displayValue?: string | null;
+                        /** @description A map of widgets associated with this field for UI display, keyed by widget type. */
+                        widgets?: {
+                          entity_logo?: {
+                            /**
+                             * Format: uri
+                             * @description URL to the provider's logo image.
+                             */
+                            image_url: string;
+                            /** @description The name of the entity. */
+                            entity: string;
+                          };
+                          location_indicator?: {
+                            /** @description Country flag emoji. */
+                            emoji: string;
+                          };
+                          avatar?: {
+                            /**
+                             * Format: uri
+                             * @description URL to the provider's logo image.
+                             */
+                            image_url: string;
+                            /** @description The name of the avatar owner. */
+                            name: string;
+                          };
+                        };
+                      };
+                    };
+                  };
+                };
+              };
+            };
+          };
+        };
+        /** @description Bad request */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+        /** @description Required resource not found */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/v1/check/{run_id}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description Check status of enrichment task. Poll this endpoint to until the status becomes 'completed'. Recommended polling intervals are between 1-3s. */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          run_id: string | null;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Return current processing state */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              id: string;
+              /** @enum {string} */
+              status: "completed" | "failed" | "pending" | "processing";
+              organization_id: string;
+              order: (number | string)[];
+              field_definitions: {
+                [key: string]: {
+                  /** @enum {string} */
+                  type: "string" | "number" | "boolean" | "json" | "unknown";
+                  label: string;
+                  added_by: {
+                    ref:
+                      | (
+                          | "prompt:run@1"
+                          | "company:newssummary:website@1"
+                          | "company:techstack:builtwith@1"
+                          | "company:websiteurl:email@1"
+                          | "people:workemail:waterfall@1"
+                          | "people:email:iswork@1"
+                          | "people:name:split@1"
+                          | "people:name:join@1"
+                          | "people:professionalprofile:waterfall@1"
+                          | "people:professionalprofileurl:name@1"
+                          | "people:professionalprofileurl:email:waterfall@1"
+                          | "people:personalemail:profile:waterfall@1"
+                          | "people:validate:email:zerobounce@1"
+                          | "people:mobilenumber:professionalprofile:waterfall@1"
+                          | "people:mobilenumber:workemail:waterfall@1"
+                          | "company:profile:builtwith@1"
+                          | "company:identity@1"
+                          | "company:overview@1"
+                        )
+                      | "input";
+                    pipe_hash: string | null;
+                    pipeIndex: number | null;
+                  };
+                  /** @enum {string|null} */
+                  format:
+                    | "url"
+                    | "website_url"
+                    | "professional_profile_url"
+                    | "email"
+                    | "datetime"
+                    | "date"
+                    | "phone"
+                    | "markdown"
+                    | "text"
+                    | "int"
+                    | "decimal"
+                    | "address_line_1"
+                    | "zip_code"
+                    | null;
+                };
+              };
+              pipes: (
+                | {
+                    /** @enum {string} */
+                    pipe_id: "prompt:run@1";
+                    config: {
+                      prompt: {
+                        text: string;
+                        json_schemas: {
+                          [key: string]: {
+                            [key: string]: unknown;
+                          };
+                        };
+                      };
+                    };
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "company:newssummary:website@1";
+                    config?: {
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_website_url: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_news_summary: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "company:profile:builtwith@1";
+                    config?: {
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_website_url: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_name: {
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        headcount: {
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        number_of_social_followers: {
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        monthly_tech_spend_in_usd: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "company:techstack:builtwith@1";
+                    config?: {
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_website_url: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        technology_stack: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "company:websiteurl:email@1";
+                    config?: {
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        email: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_website_url: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "people:workemail:waterfall@1";
+                    config?: {
+                      /** @default [
+                       *       {
+                       *         "provider": "leadmagic"
+                       *       },
+                       *       {
+                       *         "provider": "prospeo"
+                       *       },
+                       *       {
+                       *         "provider": "icypeas"
+                       *       }
+                       *     ] */
+                      providers: {
+                        /** @enum {string} */
+                        provider: "leadmagic" | "prospeo" | "icypeas";
+                      }[];
+                      input_fields?: {
+                        name: {
+                          alias: string;
+                        };
+                        company_website_url: {
+                          alias: string;
+                        };
+                        company_name: {
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        work_email: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "people:email:iswork@1";
+                    config?: {
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        email: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        is_work_email: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "people:name:split@1";
+                    config?: {
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        name: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        first_name: {
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        last_name: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "people:validate:email:zerobounce@1";
+                    config?: {
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        work_email: {
+                          /** @default  */
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        ip_address: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        is_email_valid: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "people:professionalprofile:waterfall@1";
+                    config?: {
+                      /** @default [
+                       *       {
+                       *         "provider": "prospeo"
+                       *       },
+                       *       {
+                       *         "provider": "icypeas"
+                       *       }
+                       *     ] */
+                      providers: {
+                        /** @enum {string} */
+                        provider: "prospeo" | "icypeas";
+                      }[];
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        professional_profile_url: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        professional_profile: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "people:professionalprofileurl:name@1";
+                    config?: {
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        name: {
+                          /** @default  */
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_name: {
+                          /** @default  */
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        location_hint: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        professional_profile_url: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "people:professionalprofileurl:email:waterfall@1";
+                    config?: {
+                      /** @default [
+                       *       {
+                       *         "provider": "leadmagic"
+                       *       }
+                       *     ] */
+                      providers: {
+                        /** @enum {string} */
+                        provider: "leadmagic";
+                      }[];
+                      input_fields: {
+                        email: {
+                          alias: string;
+                        };
+                        work_email: {
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        professional_profile_url: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "people:personalemail:profile:waterfall@1";
+                    config?: {
+                      /** @default [
+                       *       {
+                       *         "provider": "leadmagic"
+                       *       },
+                       *       {
+                       *         "provider": "clado"
+                       *       }
+                       *     ] */
+                      providers: {
+                        /** @enum {string} */
+                        provider: "clado" | "leadmagic";
+                      }[];
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        professional_profile_url: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        personal_email: {
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        alternate_personal_emails: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "people:mobilenumber:professionalprofile:waterfall@1";
+                    config?: {
+                      /** @default [
+                       *       {
+                       *         "provider": "leadmagic"
+                       *       },
+                       *       {
+                       *         "provider": "prospeo"
+                       *       }
+                       *     ] */
+                      providers: {
+                        /** @enum {string} */
+                        provider: "leadmagic" | "prospeo";
+                      }[];
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        professional_profile_url: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        mobile_number: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "people:mobilenumber:workemail:waterfall@1";
+                    config?: {
+                      /** @default [
+                       *       {
+                       *         "provider": "leadmagic"
+                       *       }
+                       *     ] */
+                      providers: {
+                        /** @enum {string} */
+                        provider: "leadmagic";
+                      }[];
+                      input_fields?: {
+                        work_email: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        mobile_number: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "people:name:join@1";
+                    config?: {
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        first_name: {
+                          /** @default  */
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        last_name: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        name: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "company:identity@1";
+                    config?: {
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_name: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_social_url: {
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        cleaned_company_name: {
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_website_url: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "company:overview@1";
+                    config?: {
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_website_url: {
+                          /** @default  */
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_social_url: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_description: {
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_industry: {
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_region: {
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        headcount: {
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        estimated_revenue: {
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        founded_year: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+              )[];
+              errors: {
+                code: string;
+                message: string;
+                path?: string;
+              }[];
+              records: {
+                [key: string]: {
+                  id: number | string;
+                  fields: {
+                    [key: string]: {
+                      value:
+                        | string
+                        | number
+                        | boolean
+                        | null
+                        | {
+                            [key: string]: unknown;
+                          }
+                        | unknown[];
+                      status:
+                        | "completed"
+                        | "failed"
+                        | "pending"
+                        | "queued"
+                        | "processing"
+                        | "no_result"
+                        | "skipped";
+                      /** @enum {string} */
+                      type:
+                        | "string"
+                        | "number"
+                        | "boolean"
+                        | "json"
+                        | "unknown";
+                      reason: {
+                        code: string;
+                        summary: string;
+                        message: string;
+                      } | null;
+                      claimed_by: {
+                        /** @enum {string|null} */
+                        ref:
+                          | "prompt:run@1"
+                          | "company:newssummary:website@1"
+                          | "company:techstack:builtwith@1"
+                          | "company:websiteurl:email@1"
+                          | "people:workemail:waterfall@1"
+                          | "people:email:iswork@1"
+                          | "people:name:split@1"
+                          | "people:name:join@1"
+                          | "people:professionalprofile:waterfall@1"
+                          | "people:professionalprofileurl:name@1"
+                          | "people:professionalprofileurl:email:waterfall@1"
+                          | "people:personalemail:profile:waterfall@1"
+                          | "people:validate:email:zerobounce@1"
+                          | "people:mobilenumber:professionalprofile:waterfall@1"
+                          | "people:mobilenumber:workemail:waterfall@1"
+                          | "company:profile:builtwith@1"
+                          | "company:identity@1"
+                          | "company:overview@1"
+                          | "input"
+                          | null;
+                        pipe_hash: string | null;
+                      };
+                      resolved_by: {
+                        /** @enum {string|null} */
+                        ref:
+                          | "prompt:run@1"
+                          | "company:newssummary:website@1"
+                          | "company:techstack:builtwith@1"
+                          | "company:websiteurl:email@1"
+                          | "people:workemail:waterfall@1"
+                          | "people:email:iswork@1"
+                          | "people:name:split@1"
+                          | "people:name:join@1"
+                          | "people:professionalprofile:waterfall@1"
+                          | "people:professionalprofileurl:name@1"
+                          | "people:professionalprofileurl:email:waterfall@1"
+                          | "people:personalemail:profile:waterfall@1"
+                          | "people:validate:email:zerobounce@1"
+                          | "people:mobilenumber:professionalprofile:waterfall@1"
+                          | "people:mobilenumber:workemail:waterfall@1"
+                          | "company:profile:builtwith@1"
+                          | "company:identity@1"
+                          | "company:overview@1"
+                          | "input"
+                          | null;
+                        pipe_hash: string | null;
+                        input_hash: string | null;
+                      } | null;
+                      meta: {
+                        waterfall?: {
+                          attempted_providers: {
+                            /** @enum {string} */
+                            provider:
+                              | "pipe0"
+                              | "findymail"
+                              | "dropcontact"
+                              | "hunter"
+                              | "zerobounce"
+                              | "googlemaps"
+                              | "gemini"
+                              | "leadmagic"
+                              | "contactout"
+                              | "builtwith"
+                              | "perplexity"
+                              | "serper"
+                              | "icypeas"
+                              | "prospeo"
+                              | "clado";
+                          }[];
+                          available_providers: (
+                            | "pipe0"
+                            | "findymail"
+                            | "dropcontact"
+                            | "hunter"
+                            | "zerobounce"
+                            | "googlemaps"
+                            | "gemini"
+                            | "leadmagic"
+                            | "contactout"
+                            | "builtwith"
+                            | "perplexity"
+                            | "serper"
+                            | "icypeas"
+                            | "prospeo"
+                            | "clado"
+                          )[];
+                          /** @enum {string} */
+                          successful_provider?:
+                            | "pipe0"
+                            | "findymail"
+                            | "dropcontact"
+                            | "hunter"
+                            | "zerobounce"
+                            | "googlemaps"
+                            | "gemini"
+                            | "leadmagic"
+                            | "contactout"
+                            | "builtwith"
+                            | "perplexity"
+                            | "serper"
+                            | "icypeas"
+                            | "prospeo"
+                            | "clado";
+                        };
+                        mix?: {
+                          performed_steps: string[];
+                        };
+                      } | null;
+                      /** @enum {string|null} */
+                      format:
+                        | "url"
+                        | "website_url"
+                        | "professional_profile_url"
+                        | "email"
+                        | "datetime"
+                        | "date"
+                        | "phone"
+                        | "markdown"
+                        | "text"
+                        | "int"
+                        | "decimal"
+                        | "address_line_1"
+                        | "zip_code"
+                        | null;
+                      ui: {
+                        displayValue?: string | null;
+                        /** @description A map of widgets associated with this field for UI display, keyed by widget type. */
+                        widgets?: {
+                          entity_logo?: {
+                            /**
+                             * Format: uri
+                             * @description URL to the provider's logo image.
+                             */
+                            image_url: string;
+                            /** @description The name of the entity. */
+                            entity: string;
+                          };
+                          location_indicator?: {
+                            /** @description Country flag emoji. */
+                            emoji: string;
+                          };
+                          avatar?: {
+                            /**
+                             * Format: uri
+                             * @description URL to the provider's logo image.
+                             */
+                            image_url: string;
+                            /** @description The name of the avatar owner. */
+                            name: string;
+                          };
+                        };
+                      };
+                    };
+                  };
+                };
+              };
+            };
+          };
+        };
+        /** @description Bad request */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+        /** @description Not found */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/v1/pipes/run/sync": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** @description Enrich data synchronously. This endpoint waits for the enrichment to complete before returning a result. With with fewer than 10 records. To enrich more data at once use the '/run' endpoint. */
+    post: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody: {
+        content: {
+          "application/json": {
+            /** @default {
+             *       "environment": "production"
+             *     } */
+            config?: {
+              /**
+               * @default production
+               * @enum {string}
+               */
+              environment?: "production" | "sandbox";
+            };
+            input_field_definitions?: {
+              [key: string]: {
+                label?: string;
+                /**
+                 * @default null
+                 * @enum {string|null}
+                 */
+                format?:
+                  | "url"
+                  | "website_url"
+                  | "professional_profile_url"
+                  | "email"
+                  | "datetime"
+                  | "date"
+                  | "phone"
+                  | "markdown"
+                  | "text"
+                  | "int"
+                  | "decimal"
+                  | "address_line_1"
+                  | "zip_code"
+                  | null;
+              };
+            };
+            pipes: (
+              | {
+                  /** @enum {string} */
+                  pipe_id: "prompt:run@1";
+                  config: {
+                    prompt: {
+                      text: string;
+                      json_schemas: {
+                        [key: string]: {
+                          [key: string]: unknown;
+                        };
+                      };
+                    };
+                  };
+                }
+              | {
+                  /** @enum {string} */
+                  pipe_id: "company:newssummary:website@1";
+                  config?: {
+                    input_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_website_url?: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                    };
+                    output_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_news_summary?: {
+                        alias: string;
+                      };
+                    };
+                  } | null;
+                }
+              | {
+                  /** @enum {string} */
+                  pipe_id: "company:profile:builtwith@1";
+                  config?: {
+                    input_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_website_url?: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                    };
+                    output_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_name?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      headcount?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      number_of_social_followers?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      monthly_tech_spend_in_usd?: {
+                        alias: string;
+                      };
+                    };
+                  } | null;
+                }
+              | {
+                  /** @enum {string} */
+                  pipe_id: "company:techstack:builtwith@1";
+                  config?: {
+                    input_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_website_url?: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                    };
+                    output_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      technology_stack?: {
+                        alias: string;
+                      };
+                    };
+                  } | null;
+                }
+              | {
+                  /** @enum {string} */
+                  pipe_id: "company:websiteurl:email@1";
+                  config?: {
+                    input_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      email?: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                    };
+                    output_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_website_url?: {
+                        alias: string;
+                      };
+                    };
+                  } | null;
+                }
+              | {
+                  /** @enum {string} */
+                  pipe_id: "people:workemail:waterfall@1";
+                  config?: {
+                    /** @default [
+                     *       {
+                     *         "provider": "leadmagic"
+                     *       },
+                     *       {
+                     *         "provider": "prospeo"
+                     *       },
+                     *       {
+                     *         "provider": "icypeas"
+                     *       }
+                     *     ] */
+                    providers?: {
+                      /** @enum {string} */
+                      provider: "leadmagic" | "prospeo" | "icypeas";
+                    }[];
+                    input_fields?: {
+                      name: {
+                        alias: string;
+                      };
+                      company_website_url: {
+                        alias: string;
+                      };
+                      company_name: {
+                        alias: string;
+                      };
+                    };
+                    output_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      work_email?: {
+                        alias: string;
+                      };
+                    };
+                  } | null;
+                }
+              | {
+                  /** @enum {string} */
+                  pipe_id: "people:email:iswork@1";
+                  config?: {
+                    input_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      email?: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                    };
+                    output_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      is_work_email?: {
+                        alias: string;
+                      };
+                    };
+                  } | null;
+                }
+              | {
+                  /** @enum {string} */
+                  pipe_id: "people:name:split@1";
+                  config?: {
+                    input_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      name?: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                    };
+                    output_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      first_name?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      last_name?: {
+                        alias: string;
+                      };
+                    };
+                  } | null;
+                }
+              | {
+                  /** @enum {string} */
+                  pipe_id: "people:validate:email:zerobounce@1";
+                  config?: {
+                    input_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      work_email?: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      ip_address?: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                    };
+                    output_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      is_email_valid?: {
+                        alias: string;
+                      };
+                    };
+                  } | null;
+                }
+              | {
+                  /** @enum {string} */
+                  pipe_id: "people:professionalprofile:waterfall@1";
+                  config?: {
+                    /** @default [
+                     *       {
+                     *         "provider": "prospeo"
+                     *       },
+                     *       {
+                     *         "provider": "icypeas"
+                     *       }
+                     *     ] */
+                    providers?: {
+                      /** @enum {string} */
+                      provider: "prospeo" | "icypeas";
+                    }[];
+                    input_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      professional_profile_url?: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                    };
+                    output_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      professional_profile?: {
+                        alias: string;
+                      };
+                    };
+                  } | null;
+                }
+              | {
+                  /** @enum {string} */
+                  pipe_id: "people:professionalprofileurl:name@1";
+                  config?: {
+                    input_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      name?: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_name?: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      location_hint?: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                    };
+                    output_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      professional_profile_url?: {
+                        alias: string;
+                      };
+                    };
+                  } | null;
+                }
+              | {
+                  /** @enum {string} */
+                  pipe_id: "people:professionalprofileurl:email:waterfall@1";
+                  config?: {
+                    /** @default [
+                     *       {
+                     *         "provider": "leadmagic"
+                     *       }
+                     *     ] */
+                    providers?: {
+                      /** @enum {string} */
+                      provider: "leadmagic";
+                    }[];
+                    input_fields: {
+                      email: {
+                        alias: string;
+                      };
+                      work_email: {
+                        alias: string;
+                      };
+                    };
+                    output_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      professional_profile_url?: {
+                        alias: string;
+                      };
+                    };
+                  } | null;
+                }
+              | {
+                  /** @enum {string} */
+                  pipe_id: "people:personalemail:profile:waterfall@1";
+                  config?: {
+                    /** @default [
+                     *       {
+                     *         "provider": "leadmagic"
+                     *       },
+                     *       {
+                     *         "provider": "clado"
+                     *       }
+                     *     ] */
+                    providers?: {
+                      /** @enum {string} */
+                      provider: "clado" | "leadmagic";
+                    }[];
+                    input_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      professional_profile_url?: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                    };
+                    output_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      personal_email?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      alternate_personal_emails?: {
+                        alias: string;
+                      };
+                    };
+                  } | null;
+                }
+              | {
+                  /** @enum {string} */
+                  pipe_id: "people:mobilenumber:professionalprofile:waterfall@1";
+                  config?: {
+                    /** @default [
+                     *       {
+                     *         "provider": "leadmagic"
+                     *       },
+                     *       {
+                     *         "provider": "prospeo"
+                     *       }
+                     *     ] */
+                    providers?: {
+                      /** @enum {string} */
+                      provider: "leadmagic" | "prospeo";
+                    }[];
+                    input_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      professional_profile_url?: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                    };
+                    output_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      mobile_number?: {
+                        alias: string;
+                      };
+                    };
+                  } | null;
+                }
+              | {
+                  /** @enum {string} */
+                  pipe_id: "people:mobilenumber:workemail:waterfall@1";
+                  config?: {
+                    /** @default [
+                     *       {
+                     *         "provider": "leadmagic"
+                     *       }
+                     *     ] */
+                    providers?: {
+                      /** @enum {string} */
+                      provider: "leadmagic";
+                    }[];
+                    input_fields?: {
+                      work_email: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                    };
+                    output_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      mobile_number?: {
+                        alias: string;
+                      };
+                    };
+                  } | null;
+                }
+              | {
+                  /** @enum {string} */
+                  pipe_id: "people:name:join@1";
+                  config?: {
+                    input_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      first_name?: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      last_name?: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                    };
+                    output_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      name?: {
+                        alias: string;
+                      };
+                    };
+                  } | null;
+                }
+              | {
+                  /** @enum {string} */
+                  pipe_id: "company:identity@1";
+                  config?: {
+                    input_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_name?: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                    };
+                    output_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_social_url?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      cleaned_company_name?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_website_url?: {
+                        alias: string;
+                      };
+                    };
+                  } | null;
+                }
+              | {
+                  /** @enum {string} */
+                  pipe_id: "company:overview@1";
+                  config?: {
+                    input_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_website_url?: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_social_url?: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                    };
+                    output_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_description?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_industry?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_region?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      headcount?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      estimated_revenue?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      founded_year?: {
+                        alias: string;
+                      };
+                    };
+                  } | null;
+                }
+            )[];
+            input: {
+              [key: string]:
+                | string
+                | number
+                | boolean
+                | null
+                | {
+                    [key: string]: unknown;
+                  }
+                | unknown[]
+                | {
+                    value:
+                      | string
+                      | number
+                      | boolean
+                      | null
+                      | {
+                          [key: string]: unknown;
+                        }
+                      | unknown[];
+                    status:
+                      | "completed"
+                      | "failed"
+                      | "pending"
+                      | "queued"
+                      | "processing"
+                      | "no_result"
+                      | "skipped";
+                    reason?: {
+                      code: string;
+                      summary: string;
+                      message: string;
+                    } | null;
+                    /** @enum {string} */
+                    type?: "string" | "number" | "boolean" | "json" | "unknown";
+                    /** @enum {string|null} */
+                    format?:
+                      | "url"
+                      | "website_url"
+                      | "professional_profile_url"
+                      | "email"
+                      | "datetime"
+                      | "date"
+                      | "phone"
+                      | "markdown"
+                      | "text"
+                      | "int"
+                      | "decimal"
+                      | "address_line_1"
+                      | "zip_code"
+                      | null;
+                    claimed_by?: {
+                      /** @enum {string|null} */
+                      ref:
+                        | "prompt:run@1"
+                        | "company:newssummary:website@1"
+                        | "company:techstack:builtwith@1"
+                        | "company:websiteurl:email@1"
+                        | "people:workemail:waterfall@1"
+                        | "people:email:iswork@1"
+                        | "people:name:split@1"
+                        | "people:name:join@1"
+                        | "people:professionalprofile:waterfall@1"
+                        | "people:professionalprofileurl:name@1"
+                        | "people:professionalprofileurl:email:waterfall@1"
+                        | "people:personalemail:profile:waterfall@1"
+                        | "people:validate:email:zerobounce@1"
+                        | "people:mobilenumber:professionalprofile:waterfall@1"
+                        | "people:mobilenumber:workemail:waterfall@1"
+                        | "company:profile:builtwith@1"
+                        | "company:identity@1"
+                        | "company:overview@1"
+                        | "input"
+                        | null;
+                      pipe_hash: string | null;
+                    };
+                    resolved_by?: {
+                      /** @enum {string|null} */
+                      ref:
+                        | "prompt:run@1"
+                        | "company:newssummary:website@1"
+                        | "company:techstack:builtwith@1"
+                        | "company:websiteurl:email@1"
+                        | "people:workemail:waterfall@1"
+                        | "people:email:iswork@1"
+                        | "people:name:split@1"
+                        | "people:name:join@1"
+                        | "people:professionalprofile:waterfall@1"
+                        | "people:professionalprofileurl:name@1"
+                        | "people:professionalprofileurl:email:waterfall@1"
+                        | "people:personalemail:profile:waterfall@1"
+                        | "people:validate:email:zerobounce@1"
+                        | "people:mobilenumber:professionalprofile:waterfall@1"
+                        | "people:mobilenumber:workemail:waterfall@1"
+                        | "company:profile:builtwith@1"
+                        | "company:identity@1"
+                        | "company:overview@1"
+                        | "input"
+                        | null;
+                      pipe_hash: string | null;
+                      input_hash: string | null;
+                    } | null;
+                    meta?: {
+                      [key: string]: unknown;
+                    } | null;
+                    ui?: {
+                      displayValue?: string | null;
+                      /** @description A map of widgets associated with this field for UI display, keyed by widget type. */
+                      widgets?: {
+                        entity_logo?: {
+                          /**
+                           * Format: uri
+                           * @description URL to the provider's logo image.
+                           */
+                          image_url: string;
+                          /** @description The name of the entity. */
+                          entity: string;
+                        };
+                        location_indicator?: {
+                          /** @description Country flag emoji. */
+                          emoji: string;
+                        };
+                        avatar?: {
+                          /**
+                           * Format: uri
+                           * @description URL to the provider's logo image.
+                           */
+                          image_url: string;
+                          /** @description The name of the avatar owner. */
+                          name: string;
+                        };
+                      };
+                    };
+                  };
+            }[];
+          };
+        };
+      };
+      responses: {
+        /** @description Run pipeline request */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              id: string;
+              /** @enum {string} */
+              status: "completed" | "failed" | "pending" | "processing";
+              organization_id: string;
+              order: (number | string)[];
+              field_definitions: {
+                [key: string]: {
+                  /** @enum {string} */
+                  type: "string" | "number" | "boolean" | "json" | "unknown";
+                  label: string;
+                  added_by: {
+                    ref:
+                      | (
+                          | "prompt:run@1"
+                          | "company:newssummary:website@1"
+                          | "company:techstack:builtwith@1"
+                          | "company:websiteurl:email@1"
+                          | "people:workemail:waterfall@1"
+                          | "people:email:iswork@1"
+                          | "people:name:split@1"
+                          | "people:name:join@1"
+                          | "people:professionalprofile:waterfall@1"
+                          | "people:professionalprofileurl:name@1"
+                          | "people:professionalprofileurl:email:waterfall@1"
+                          | "people:personalemail:profile:waterfall@1"
+                          | "people:validate:email:zerobounce@1"
+                          | "people:mobilenumber:professionalprofile:waterfall@1"
+                          | "people:mobilenumber:workemail:waterfall@1"
+                          | "company:profile:builtwith@1"
+                          | "company:identity@1"
+                          | "company:overview@1"
+                        )
+                      | "input";
+                    pipe_hash: string | null;
+                    pipeIndex: number | null;
+                  };
+                  /** @enum {string|null} */
+                  format:
+                    | "url"
+                    | "website_url"
+                    | "professional_profile_url"
+                    | "email"
+                    | "datetime"
+                    | "date"
+                    | "phone"
+                    | "markdown"
+                    | "text"
+                    | "int"
+                    | "decimal"
+                    | "address_line_1"
+                    | "zip_code"
+                    | null;
+                };
+              };
+              pipes: (
+                | {
+                    /** @enum {string} */
+                    pipe_id: "prompt:run@1";
+                    config: {
+                      prompt: {
+                        text: string;
+                        json_schemas: {
+                          [key: string]: {
+                            [key: string]: unknown;
+                          };
+                        };
+                      };
+                    };
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "company:newssummary:website@1";
+                    config?: {
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_website_url: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_news_summary: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "company:profile:builtwith@1";
+                    config?: {
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_website_url: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_name: {
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        headcount: {
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        number_of_social_followers: {
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        monthly_tech_spend_in_usd: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "company:techstack:builtwith@1";
+                    config?: {
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_website_url: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        technology_stack: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "company:websiteurl:email@1";
+                    config?: {
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        email: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_website_url: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "people:workemail:waterfall@1";
+                    config?: {
+                      /** @default [
+                       *       {
+                       *         "provider": "leadmagic"
+                       *       },
+                       *       {
+                       *         "provider": "prospeo"
+                       *       },
+                       *       {
+                       *         "provider": "icypeas"
+                       *       }
+                       *     ] */
+                      providers: {
+                        /** @enum {string} */
+                        provider: "leadmagic" | "prospeo" | "icypeas";
+                      }[];
+                      input_fields?: {
+                        name: {
+                          alias: string;
+                        };
+                        company_website_url: {
+                          alias: string;
+                        };
+                        company_name: {
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        work_email: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "people:email:iswork@1";
+                    config?: {
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        email: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        is_work_email: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "people:name:split@1";
+                    config?: {
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        name: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        first_name: {
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        last_name: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "people:validate:email:zerobounce@1";
+                    config?: {
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        work_email: {
+                          /** @default  */
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        ip_address: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        is_email_valid: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "people:professionalprofile:waterfall@1";
+                    config?: {
+                      /** @default [
+                       *       {
+                       *         "provider": "prospeo"
+                       *       },
+                       *       {
+                       *         "provider": "icypeas"
+                       *       }
+                       *     ] */
+                      providers: {
+                        /** @enum {string} */
+                        provider: "prospeo" | "icypeas";
+                      }[];
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        professional_profile_url: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        professional_profile: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "people:professionalprofileurl:name@1";
+                    config?: {
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        name: {
+                          /** @default  */
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_name: {
+                          /** @default  */
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        location_hint: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        professional_profile_url: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "people:professionalprofileurl:email:waterfall@1";
+                    config?: {
+                      /** @default [
+                       *       {
+                       *         "provider": "leadmagic"
+                       *       }
+                       *     ] */
+                      providers: {
+                        /** @enum {string} */
+                        provider: "leadmagic";
+                      }[];
+                      input_fields: {
+                        email: {
+                          alias: string;
+                        };
+                        work_email: {
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        professional_profile_url: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "people:personalemail:profile:waterfall@1";
+                    config?: {
+                      /** @default [
+                       *       {
+                       *         "provider": "leadmagic"
+                       *       },
+                       *       {
+                       *         "provider": "clado"
+                       *       }
+                       *     ] */
+                      providers: {
+                        /** @enum {string} */
+                        provider: "clado" | "leadmagic";
+                      }[];
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        professional_profile_url: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        personal_email: {
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        alternate_personal_emails: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "people:mobilenumber:professionalprofile:waterfall@1";
+                    config?: {
+                      /** @default [
+                       *       {
+                       *         "provider": "leadmagic"
+                       *       },
+                       *       {
+                       *         "provider": "prospeo"
+                       *       }
+                       *     ] */
+                      providers: {
+                        /** @enum {string} */
+                        provider: "leadmagic" | "prospeo";
+                      }[];
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        professional_profile_url: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        mobile_number: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "people:mobilenumber:workemail:waterfall@1";
+                    config?: {
+                      /** @default [
+                       *       {
+                       *         "provider": "leadmagic"
+                       *       }
+                       *     ] */
+                      providers: {
+                        /** @enum {string} */
+                        provider: "leadmagic";
+                      }[];
+                      input_fields?: {
+                        work_email: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        mobile_number: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "people:name:join@1";
+                    config?: {
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        first_name: {
+                          /** @default  */
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        last_name: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        name: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "company:identity@1";
+                    config?: {
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_name: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_social_url: {
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        cleaned_company_name: {
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_website_url: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "company:overview@1";
+                    config?: {
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_website_url: {
+                          /** @default  */
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_social_url: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_description: {
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_industry: {
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_region: {
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        headcount: {
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        estimated_revenue: {
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        founded_year: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+              )[];
+              errors: {
+                code: string;
+                message: string;
+                path?: string;
+              }[];
+              records: {
+                [key: string]: {
+                  id: number | string;
+                  fields: {
+                    [key: string]: {
+                      value:
+                        | string
+                        | number
+                        | boolean
+                        | null
+                        | {
+                            [key: string]: unknown;
+                          }
+                        | unknown[];
+                      status:
+                        | "completed"
+                        | "failed"
+                        | "pending"
+                        | "queued"
+                        | "processing"
+                        | "no_result"
+                        | "skipped";
+                      /** @enum {string} */
+                      type:
+                        | "string"
+                        | "number"
+                        | "boolean"
+                        | "json"
+                        | "unknown";
+                      reason: {
+                        code: string;
+                        summary: string;
+                        message: string;
+                      } | null;
+                      claimed_by: {
+                        /** @enum {string|null} */
+                        ref:
+                          | "prompt:run@1"
+                          | "company:newssummary:website@1"
+                          | "company:techstack:builtwith@1"
+                          | "company:websiteurl:email@1"
+                          | "people:workemail:waterfall@1"
+                          | "people:email:iswork@1"
+                          | "people:name:split@1"
+                          | "people:name:join@1"
+                          | "people:professionalprofile:waterfall@1"
+                          | "people:professionalprofileurl:name@1"
+                          | "people:professionalprofileurl:email:waterfall@1"
+                          | "people:personalemail:profile:waterfall@1"
+                          | "people:validate:email:zerobounce@1"
+                          | "people:mobilenumber:professionalprofile:waterfall@1"
+                          | "people:mobilenumber:workemail:waterfall@1"
+                          | "company:profile:builtwith@1"
+                          | "company:identity@1"
+                          | "company:overview@1"
+                          | "input"
+                          | null;
+                        pipe_hash: string | null;
+                      };
+                      resolved_by: {
+                        /** @enum {string|null} */
+                        ref:
+                          | "prompt:run@1"
+                          | "company:newssummary:website@1"
+                          | "company:techstack:builtwith@1"
+                          | "company:websiteurl:email@1"
+                          | "people:workemail:waterfall@1"
+                          | "people:email:iswork@1"
+                          | "people:name:split@1"
+                          | "people:name:join@1"
+                          | "people:professionalprofile:waterfall@1"
+                          | "people:professionalprofileurl:name@1"
+                          | "people:professionalprofileurl:email:waterfall@1"
+                          | "people:personalemail:profile:waterfall@1"
+                          | "people:validate:email:zerobounce@1"
+                          | "people:mobilenumber:professionalprofile:waterfall@1"
+                          | "people:mobilenumber:workemail:waterfall@1"
+                          | "company:profile:builtwith@1"
+                          | "company:identity@1"
+                          | "company:overview@1"
+                          | "input"
+                          | null;
+                        pipe_hash: string | null;
+                        input_hash: string | null;
+                      } | null;
+                      meta: {
+                        waterfall?: {
+                          attempted_providers: {
+                            /** @enum {string} */
+                            provider:
+                              | "pipe0"
+                              | "findymail"
+                              | "dropcontact"
+                              | "hunter"
+                              | "zerobounce"
+                              | "googlemaps"
+                              | "gemini"
+                              | "leadmagic"
+                              | "contactout"
+                              | "builtwith"
+                              | "perplexity"
+                              | "serper"
+                              | "icypeas"
+                              | "prospeo"
+                              | "clado";
+                          }[];
+                          available_providers: (
+                            | "pipe0"
+                            | "findymail"
+                            | "dropcontact"
+                            | "hunter"
+                            | "zerobounce"
+                            | "googlemaps"
+                            | "gemini"
+                            | "leadmagic"
+                            | "contactout"
+                            | "builtwith"
+                            | "perplexity"
+                            | "serper"
+                            | "icypeas"
+                            | "prospeo"
+                            | "clado"
+                          )[];
+                          /** @enum {string} */
+                          successful_provider?:
+                            | "pipe0"
+                            | "findymail"
+                            | "dropcontact"
+                            | "hunter"
+                            | "zerobounce"
+                            | "googlemaps"
+                            | "gemini"
+                            | "leadmagic"
+                            | "contactout"
+                            | "builtwith"
+                            | "perplexity"
+                            | "serper"
+                            | "icypeas"
+                            | "prospeo"
+                            | "clado";
+                        };
+                        mix?: {
+                          performed_steps: string[];
+                        };
+                      } | null;
+                      /** @enum {string|null} */
+                      format:
+                        | "url"
+                        | "website_url"
+                        | "professional_profile_url"
+                        | "email"
+                        | "datetime"
+                        | "date"
+                        | "phone"
+                        | "markdown"
+                        | "text"
+                        | "int"
+                        | "decimal"
+                        | "address_line_1"
+                        | "zip_code"
+                        | null;
+                      ui: {
+                        displayValue?: string | null;
+                        /** @description A map of widgets associated with this field for UI display, keyed by widget type. */
+                        widgets?: {
+                          entity_logo?: {
+                            /**
+                             * Format: uri
+                             * @description URL to the provider's logo image.
+                             */
+                            image_url: string;
+                            /** @description The name of the entity. */
+                            entity: string;
+                          };
+                          location_indicator?: {
+                            /** @description Country flag emoji. */
+                            emoji: string;
+                          };
+                          avatar?: {
+                            /**
+                             * Format: uri
+                             * @description URL to the provider's logo image.
+                             */
+                            image_url: string;
+                            /** @description The name of the avatar owner. */
+                            name: string;
+                          };
+                        };
+                      };
+                    };
+                  };
+                };
+              };
+            };
+          };
+        };
+        /** @description Bad request */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+        /** @description Required resource not found */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/v1/pipes/run": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** @description Enrich data asynchronously. Create an enrichment task. Check this task by polling the '/check' endpoint until the status becomes 'completed'. */
+    post: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody: {
+        content: {
+          "application/json": {
+            /** @default {
+             *       "environment": "production"
+             *     } */
+            config?: {
+              /**
+               * @default production
+               * @enum {string}
+               */
+              environment?: "production" | "sandbox";
+            };
+            input_field_definitions?: {
+              [key: string]: {
+                label?: string;
+                /**
+                 * @default null
+                 * @enum {string|null}
+                 */
+                format?:
+                  | "url"
+                  | "website_url"
+                  | "professional_profile_url"
+                  | "email"
+                  | "datetime"
+                  | "date"
+                  | "phone"
+                  | "markdown"
+                  | "text"
+                  | "int"
+                  | "decimal"
+                  | "address_line_1"
+                  | "zip_code"
+                  | null;
+              };
+            };
+            pipes: (
+              | {
+                  /** @enum {string} */
+                  pipe_id: "prompt:run@1";
+                  config: {
+                    prompt: {
+                      text: string;
+                      json_schemas: {
+                        [key: string]: {
+                          [key: string]: unknown;
+                        };
+                      };
+                    };
+                  };
+                }
+              | {
+                  /** @enum {string} */
+                  pipe_id: "company:newssummary:website@1";
+                  config?: {
+                    input_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_website_url?: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                    };
+                    output_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_news_summary?: {
+                        alias: string;
+                      };
+                    };
+                  } | null;
+                }
+              | {
+                  /** @enum {string} */
+                  pipe_id: "company:profile:builtwith@1";
+                  config?: {
+                    input_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_website_url?: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                    };
+                    output_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_name?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      headcount?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      number_of_social_followers?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      monthly_tech_spend_in_usd?: {
+                        alias: string;
+                      };
+                    };
+                  } | null;
+                }
+              | {
+                  /** @enum {string} */
+                  pipe_id: "company:techstack:builtwith@1";
+                  config?: {
+                    input_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_website_url?: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                    };
+                    output_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      technology_stack?: {
+                        alias: string;
+                      };
+                    };
+                  } | null;
+                }
+              | {
+                  /** @enum {string} */
+                  pipe_id: "company:websiteurl:email@1";
+                  config?: {
+                    input_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      email?: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                    };
+                    output_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_website_url?: {
+                        alias: string;
+                      };
+                    };
+                  } | null;
+                }
+              | {
+                  /** @enum {string} */
+                  pipe_id: "people:workemail:waterfall@1";
+                  config?: {
+                    /** @default [
+                     *       {
+                     *         "provider": "leadmagic"
+                     *       },
+                     *       {
+                     *         "provider": "prospeo"
+                     *       },
+                     *       {
+                     *         "provider": "icypeas"
+                     *       }
+                     *     ] */
+                    providers?: {
+                      /** @enum {string} */
+                      provider: "leadmagic" | "prospeo" | "icypeas";
+                    }[];
+                    input_fields?: {
+                      name: {
+                        alias: string;
+                      };
+                      company_website_url: {
+                        alias: string;
+                      };
+                      company_name: {
+                        alias: string;
+                      };
+                    };
+                    output_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      work_email?: {
+                        alias: string;
+                      };
+                    };
+                  } | null;
+                }
+              | {
+                  /** @enum {string} */
+                  pipe_id: "people:email:iswork@1";
+                  config?: {
+                    input_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      email?: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                    };
+                    output_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      is_work_email?: {
+                        alias: string;
+                      };
+                    };
+                  } | null;
+                }
+              | {
+                  /** @enum {string} */
+                  pipe_id: "people:name:split@1";
+                  config?: {
+                    input_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      name?: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                    };
+                    output_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      first_name?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      last_name?: {
+                        alias: string;
+                      };
+                    };
+                  } | null;
+                }
+              | {
+                  /** @enum {string} */
+                  pipe_id: "people:validate:email:zerobounce@1";
+                  config?: {
+                    input_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      work_email?: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      ip_address?: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                    };
+                    output_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      is_email_valid?: {
+                        alias: string;
+                      };
+                    };
+                  } | null;
+                }
+              | {
+                  /** @enum {string} */
+                  pipe_id: "people:professionalprofile:waterfall@1";
+                  config?: {
+                    /** @default [
+                     *       {
+                     *         "provider": "prospeo"
+                     *       },
+                     *       {
+                     *         "provider": "icypeas"
+                     *       }
+                     *     ] */
+                    providers?: {
+                      /** @enum {string} */
+                      provider: "prospeo" | "icypeas";
+                    }[];
+                    input_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      professional_profile_url?: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                    };
+                    output_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      professional_profile?: {
+                        alias: string;
+                      };
+                    };
+                  } | null;
+                }
+              | {
+                  /** @enum {string} */
+                  pipe_id: "people:professionalprofileurl:name@1";
+                  config?: {
+                    input_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      name?: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_name?: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      location_hint?: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                    };
+                    output_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      professional_profile_url?: {
+                        alias: string;
+                      };
+                    };
+                  } | null;
+                }
+              | {
+                  /** @enum {string} */
+                  pipe_id: "people:professionalprofileurl:email:waterfall@1";
+                  config?: {
+                    /** @default [
+                     *       {
+                     *         "provider": "leadmagic"
+                     *       }
+                     *     ] */
+                    providers?: {
+                      /** @enum {string} */
+                      provider: "leadmagic";
+                    }[];
+                    input_fields: {
+                      email: {
+                        alias: string;
+                      };
+                      work_email: {
+                        alias: string;
+                      };
+                    };
+                    output_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      professional_profile_url?: {
+                        alias: string;
+                      };
+                    };
+                  } | null;
+                }
+              | {
+                  /** @enum {string} */
+                  pipe_id: "people:personalemail:profile:waterfall@1";
+                  config?: {
+                    /** @default [
+                     *       {
+                     *         "provider": "leadmagic"
+                     *       },
+                     *       {
+                     *         "provider": "clado"
+                     *       }
+                     *     ] */
+                    providers?: {
+                      /** @enum {string} */
+                      provider: "clado" | "leadmagic";
+                    }[];
+                    input_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      professional_profile_url?: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                    };
+                    output_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      personal_email?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      alternate_personal_emails?: {
+                        alias: string;
+                      };
+                    };
+                  } | null;
+                }
+              | {
+                  /** @enum {string} */
+                  pipe_id: "people:mobilenumber:professionalprofile:waterfall@1";
+                  config?: {
+                    /** @default [
+                     *       {
+                     *         "provider": "leadmagic"
+                     *       },
+                     *       {
+                     *         "provider": "prospeo"
+                     *       }
+                     *     ] */
+                    providers?: {
+                      /** @enum {string} */
+                      provider: "leadmagic" | "prospeo";
+                    }[];
+                    input_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      professional_profile_url?: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                    };
+                    output_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      mobile_number?: {
+                        alias: string;
+                      };
+                    };
+                  } | null;
+                }
+              | {
+                  /** @enum {string} */
+                  pipe_id: "people:mobilenumber:workemail:waterfall@1";
+                  config?: {
+                    /** @default [
+                     *       {
+                     *         "provider": "leadmagic"
+                     *       }
+                     *     ] */
+                    providers?: {
+                      /** @enum {string} */
+                      provider: "leadmagic";
+                    }[];
+                    input_fields?: {
+                      work_email: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                    };
+                    output_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      mobile_number?: {
+                        alias: string;
+                      };
+                    };
+                  } | null;
+                }
+              | {
+                  /** @enum {string} */
+                  pipe_id: "people:name:join@1";
+                  config?: {
+                    input_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      first_name?: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      last_name?: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                    };
+                    output_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      name?: {
+                        alias: string;
+                      };
+                    };
+                  } | null;
+                }
+              | {
+                  /** @enum {string} */
+                  pipe_id: "company:identity@1";
+                  config?: {
+                    input_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_name?: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                    };
+                    output_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_social_url?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      cleaned_company_name?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_website_url?: {
+                        alias: string;
+                      };
+                    };
+                  } | null;
+                }
+              | {
+                  /** @enum {string} */
+                  pipe_id: "company:overview@1";
+                  config?: {
+                    input_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_website_url?: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_social_url?: {
+                        /** @default  */
+                        alias?: string;
+                      };
+                    };
+                    output_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_description?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_industry?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_region?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      headcount?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      estimated_revenue?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      founded_year?: {
+                        alias: string;
+                      };
+                    };
+                  } | null;
+                }
+            )[];
+            input: {
+              [key: string]:
+                | string
+                | number
+                | boolean
+                | null
+                | {
+                    [key: string]: unknown;
+                  }
+                | unknown[]
+                | {
+                    value:
+                      | string
+                      | number
+                      | boolean
+                      | null
+                      | {
+                          [key: string]: unknown;
+                        }
+                      | unknown[];
+                    status:
+                      | "completed"
+                      | "failed"
+                      | "pending"
+                      | "queued"
+                      | "processing"
+                      | "no_result"
+                      | "skipped";
+                    reason?: {
+                      code: string;
+                      summary: string;
+                      message: string;
+                    } | null;
+                    /** @enum {string} */
+                    type?: "string" | "number" | "boolean" | "json" | "unknown";
+                    /** @enum {string|null} */
+                    format?:
+                      | "url"
+                      | "website_url"
+                      | "professional_profile_url"
+                      | "email"
+                      | "datetime"
+                      | "date"
+                      | "phone"
+                      | "markdown"
+                      | "text"
+                      | "int"
+                      | "decimal"
+                      | "address_line_1"
+                      | "zip_code"
+                      | null;
+                    claimed_by?: {
+                      /** @enum {string|null} */
+                      ref:
+                        | "prompt:run@1"
+                        | "company:newssummary:website@1"
+                        | "company:techstack:builtwith@1"
+                        | "company:websiteurl:email@1"
+                        | "people:workemail:waterfall@1"
+                        | "people:email:iswork@1"
+                        | "people:name:split@1"
+                        | "people:name:join@1"
+                        | "people:professionalprofile:waterfall@1"
+                        | "people:professionalprofileurl:name@1"
+                        | "people:professionalprofileurl:email:waterfall@1"
+                        | "people:personalemail:profile:waterfall@1"
+                        | "people:validate:email:zerobounce@1"
+                        | "people:mobilenumber:professionalprofile:waterfall@1"
+                        | "people:mobilenumber:workemail:waterfall@1"
+                        | "company:profile:builtwith@1"
+                        | "company:identity@1"
+                        | "company:overview@1"
+                        | "input"
+                        | null;
+                      pipe_hash: string | null;
+                    };
+                    resolved_by?: {
+                      /** @enum {string|null} */
+                      ref:
+                        | "prompt:run@1"
+                        | "company:newssummary:website@1"
+                        | "company:techstack:builtwith@1"
+                        | "company:websiteurl:email@1"
+                        | "people:workemail:waterfall@1"
+                        | "people:email:iswork@1"
+                        | "people:name:split@1"
+                        | "people:name:join@1"
+                        | "people:professionalprofile:waterfall@1"
+                        | "people:professionalprofileurl:name@1"
+                        | "people:professionalprofileurl:email:waterfall@1"
+                        | "people:personalemail:profile:waterfall@1"
+                        | "people:validate:email:zerobounce@1"
+                        | "people:mobilenumber:professionalprofile:waterfall@1"
+                        | "people:mobilenumber:workemail:waterfall@1"
+                        | "company:profile:builtwith@1"
+                        | "company:identity@1"
+                        | "company:overview@1"
+                        | "input"
+                        | null;
+                      pipe_hash: string | null;
+                      input_hash: string | null;
+                    } | null;
+                    meta?: {
+                      [key: string]: unknown;
+                    } | null;
+                    ui?: {
+                      displayValue?: string | null;
+                      /** @description A map of widgets associated with this field for UI display, keyed by widget type. */
+                      widgets?: {
+                        entity_logo?: {
+                          /**
+                           * Format: uri
+                           * @description URL to the provider's logo image.
+                           */
+                          image_url: string;
+                          /** @description The name of the entity. */
+                          entity: string;
+                        };
+                        location_indicator?: {
+                          /** @description Country flag emoji. */
+                          emoji: string;
+                        };
+                        avatar?: {
+                          /**
+                           * Format: uri
+                           * @description URL to the provider's logo image.
+                           */
+                          image_url: string;
+                          /** @description The name of the avatar owner. */
+                          name: string;
+                        };
+                      };
+                    };
+                  };
+            }[];
+          };
+        };
+      };
+      responses: {
+        /** @description Run pipeline request */
+        201: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              id: string;
+              /** @enum {string} */
+              status: "completed" | "failed" | "pending" | "processing";
+              organization_id: string;
+              order: (number | string)[];
+              field_definitions: {
+                [key: string]: {
+                  /** @enum {string} */
+                  type: "string" | "number" | "boolean" | "json" | "unknown";
+                  label: string;
+                  added_by: {
+                    ref:
+                      | (
+                          | "prompt:run@1"
+                          | "company:newssummary:website@1"
+                          | "company:techstack:builtwith@1"
+                          | "company:websiteurl:email@1"
+                          | "people:workemail:waterfall@1"
+                          | "people:email:iswork@1"
+                          | "people:name:split@1"
+                          | "people:name:join@1"
+                          | "people:professionalprofile:waterfall@1"
+                          | "people:professionalprofileurl:name@1"
+                          | "people:professionalprofileurl:email:waterfall@1"
+                          | "people:personalemail:profile:waterfall@1"
+                          | "people:validate:email:zerobounce@1"
+                          | "people:mobilenumber:professionalprofile:waterfall@1"
+                          | "people:mobilenumber:workemail:waterfall@1"
+                          | "company:profile:builtwith@1"
+                          | "company:identity@1"
+                          | "company:overview@1"
+                        )
+                      | "input";
+                    pipe_hash: string | null;
+                    pipeIndex: number | null;
+                  };
+                  /** @enum {string|null} */
+                  format:
+                    | "url"
+                    | "website_url"
+                    | "professional_profile_url"
+                    | "email"
+                    | "datetime"
+                    | "date"
+                    | "phone"
+                    | "markdown"
+                    | "text"
+                    | "int"
+                    | "decimal"
+                    | "address_line_1"
+                    | "zip_code"
+                    | null;
+                };
+              };
+              pipes: (
+                | {
+                    /** @enum {string} */
+                    pipe_id: "prompt:run@1";
+                    config: {
+                      prompt: {
+                        text: string;
+                        json_schemas: {
+                          [key: string]: {
+                            [key: string]: unknown;
+                          };
+                        };
+                      };
+                    };
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "company:newssummary:website@1";
+                    config?: {
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_website_url: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_news_summary: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "company:profile:builtwith@1";
+                    config?: {
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_website_url: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_name: {
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        headcount: {
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        number_of_social_followers: {
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        monthly_tech_spend_in_usd: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "company:techstack:builtwith@1";
+                    config?: {
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_website_url: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        technology_stack: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "company:websiteurl:email@1";
+                    config?: {
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        email: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_website_url: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "people:workemail:waterfall@1";
+                    config?: {
+                      /** @default [
+                       *       {
+                       *         "provider": "leadmagic"
+                       *       },
+                       *       {
+                       *         "provider": "prospeo"
+                       *       },
+                       *       {
+                       *         "provider": "icypeas"
+                       *       }
+                       *     ] */
+                      providers: {
+                        /** @enum {string} */
+                        provider: "leadmagic" | "prospeo" | "icypeas";
+                      }[];
+                      input_fields?: {
+                        name: {
+                          alias: string;
+                        };
+                        company_website_url: {
+                          alias: string;
+                        };
+                        company_name: {
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        work_email: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "people:email:iswork@1";
+                    config?: {
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        email: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        is_work_email: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "people:name:split@1";
+                    config?: {
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        name: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        first_name: {
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        last_name: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "people:validate:email:zerobounce@1";
+                    config?: {
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        work_email: {
+                          /** @default  */
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        ip_address: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        is_email_valid: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "people:professionalprofile:waterfall@1";
+                    config?: {
+                      /** @default [
+                       *       {
+                       *         "provider": "prospeo"
+                       *       },
+                       *       {
+                       *         "provider": "icypeas"
+                       *       }
+                       *     ] */
+                      providers: {
+                        /** @enum {string} */
+                        provider: "prospeo" | "icypeas";
+                      }[];
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        professional_profile_url: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        professional_profile: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "people:professionalprofileurl:name@1";
+                    config?: {
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        name: {
+                          /** @default  */
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_name: {
+                          /** @default  */
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        location_hint: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        professional_profile_url: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "people:professionalprofileurl:email:waterfall@1";
+                    config?: {
+                      /** @default [
+                       *       {
+                       *         "provider": "leadmagic"
+                       *       }
+                       *     ] */
+                      providers: {
+                        /** @enum {string} */
+                        provider: "leadmagic";
+                      }[];
+                      input_fields: {
+                        email: {
+                          alias: string;
+                        };
+                        work_email: {
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        professional_profile_url: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "people:personalemail:profile:waterfall@1";
+                    config?: {
+                      /** @default [
+                       *       {
+                       *         "provider": "leadmagic"
+                       *       },
+                       *       {
+                       *         "provider": "clado"
+                       *       }
+                       *     ] */
+                      providers: {
+                        /** @enum {string} */
+                        provider: "clado" | "leadmagic";
+                      }[];
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        professional_profile_url: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        personal_email: {
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        alternate_personal_emails: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "people:mobilenumber:professionalprofile:waterfall@1";
+                    config?: {
+                      /** @default [
+                       *       {
+                       *         "provider": "leadmagic"
+                       *       },
+                       *       {
+                       *         "provider": "prospeo"
+                       *       }
+                       *     ] */
+                      providers: {
+                        /** @enum {string} */
+                        provider: "leadmagic" | "prospeo";
+                      }[];
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        professional_profile_url: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        mobile_number: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "people:mobilenumber:workemail:waterfall@1";
+                    config?: {
+                      /** @default [
+                       *       {
+                       *         "provider": "leadmagic"
+                       *       }
+                       *     ] */
+                      providers: {
+                        /** @enum {string} */
+                        provider: "leadmagic";
+                      }[];
+                      input_fields?: {
+                        work_email: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        mobile_number: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "people:name:join@1";
+                    config?: {
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        first_name: {
+                          /** @default  */
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        last_name: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        name: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "company:identity@1";
+                    config?: {
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_name: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_social_url: {
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        cleaned_company_name: {
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_website_url: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "company:overview@1";
+                    config?: {
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_website_url: {
+                          /** @default  */
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_social_url: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_description: {
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_industry: {
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_region: {
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        headcount: {
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        estimated_revenue: {
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        founded_year: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+              )[];
+              errors: {
+                code: string;
+                message: string;
+                path?: string;
+              }[];
+              records: {
+                [key: string]: {
+                  id: number | string;
+                  fields: {
+                    [key: string]: {
+                      value:
+                        | string
+                        | number
+                        | boolean
+                        | null
+                        | {
+                            [key: string]: unknown;
+                          }
+                        | unknown[];
+                      status:
+                        | "completed"
+                        | "failed"
+                        | "pending"
+                        | "queued"
+                        | "processing"
+                        | "no_result"
+                        | "skipped";
+                      /** @enum {string} */
+                      type:
+                        | "string"
+                        | "number"
+                        | "boolean"
+                        | "json"
+                        | "unknown";
+                      reason: {
+                        code: string;
+                        summary: string;
+                        message: string;
+                      } | null;
+                      claimed_by: {
+                        /** @enum {string|null} */
+                        ref:
+                          | "prompt:run@1"
+                          | "company:newssummary:website@1"
+                          | "company:techstack:builtwith@1"
+                          | "company:websiteurl:email@1"
+                          | "people:workemail:waterfall@1"
+                          | "people:email:iswork@1"
+                          | "people:name:split@1"
+                          | "people:name:join@1"
+                          | "people:professionalprofile:waterfall@1"
+                          | "people:professionalprofileurl:name@1"
+                          | "people:professionalprofileurl:email:waterfall@1"
+                          | "people:personalemail:profile:waterfall@1"
+                          | "people:validate:email:zerobounce@1"
+                          | "people:mobilenumber:professionalprofile:waterfall@1"
+                          | "people:mobilenumber:workemail:waterfall@1"
+                          | "company:profile:builtwith@1"
+                          | "company:identity@1"
+                          | "company:overview@1"
+                          | "input"
+                          | null;
+                        pipe_hash: string | null;
+                      };
+                      resolved_by: {
+                        /** @enum {string|null} */
+                        ref:
+                          | "prompt:run@1"
+                          | "company:newssummary:website@1"
+                          | "company:techstack:builtwith@1"
+                          | "company:websiteurl:email@1"
+                          | "people:workemail:waterfall@1"
+                          | "people:email:iswork@1"
+                          | "people:name:split@1"
+                          | "people:name:join@1"
+                          | "people:professionalprofile:waterfall@1"
+                          | "people:professionalprofileurl:name@1"
+                          | "people:professionalprofileurl:email:waterfall@1"
+                          | "people:personalemail:profile:waterfall@1"
+                          | "people:validate:email:zerobounce@1"
+                          | "people:mobilenumber:professionalprofile:waterfall@1"
+                          | "people:mobilenumber:workemail:waterfall@1"
+                          | "company:profile:builtwith@1"
+                          | "company:identity@1"
+                          | "company:overview@1"
+                          | "input"
+                          | null;
+                        pipe_hash: string | null;
+                        input_hash: string | null;
+                      } | null;
+                      meta: {
+                        waterfall?: {
+                          attempted_providers: {
+                            /** @enum {string} */
+                            provider:
+                              | "pipe0"
+                              | "findymail"
+                              | "dropcontact"
+                              | "hunter"
+                              | "zerobounce"
+                              | "googlemaps"
+                              | "gemini"
+                              | "leadmagic"
+                              | "contactout"
+                              | "builtwith"
+                              | "perplexity"
+                              | "serper"
+                              | "icypeas"
+                              | "prospeo"
+                              | "clado";
+                          }[];
+                          available_providers: (
+                            | "pipe0"
+                            | "findymail"
+                            | "dropcontact"
+                            | "hunter"
+                            | "zerobounce"
+                            | "googlemaps"
+                            | "gemini"
+                            | "leadmagic"
+                            | "contactout"
+                            | "builtwith"
+                            | "perplexity"
+                            | "serper"
+                            | "icypeas"
+                            | "prospeo"
+                            | "clado"
+                          )[];
+                          /** @enum {string} */
+                          successful_provider?:
+                            | "pipe0"
+                            | "findymail"
+                            | "dropcontact"
+                            | "hunter"
+                            | "zerobounce"
+                            | "googlemaps"
+                            | "gemini"
+                            | "leadmagic"
+                            | "contactout"
+                            | "builtwith"
+                            | "perplexity"
+                            | "serper"
+                            | "icypeas"
+                            | "prospeo"
+                            | "clado";
+                        };
+                        mix?: {
+                          performed_steps: string[];
+                        };
+                      } | null;
+                      /** @enum {string|null} */
+                      format:
+                        | "url"
+                        | "website_url"
+                        | "professional_profile_url"
+                        | "email"
+                        | "datetime"
+                        | "date"
+                        | "phone"
+                        | "markdown"
+                        | "text"
+                        | "int"
+                        | "decimal"
+                        | "address_line_1"
+                        | "zip_code"
+                        | null;
+                      ui: {
+                        displayValue?: string | null;
+                        /** @description A map of widgets associated with this field for UI display, keyed by widget type. */
+                        widgets?: {
+                          entity_logo?: {
+                            /**
+                             * Format: uri
+                             * @description URL to the provider's logo image.
+                             */
+                            image_url: string;
+                            /** @description The name of the entity. */
+                            entity: string;
+                          };
+                          location_indicator?: {
+                            /** @description Country flag emoji. */
+                            emoji: string;
+                          };
+                          avatar?: {
+                            /**
+                             * Format: uri
+                             * @description URL to the provider's logo image.
+                             */
+                            image_url: string;
+                            /** @description The name of the avatar owner. */
+                            name: string;
+                          };
+                        };
+                      };
+                    };
+                  };
+                };
+              };
+            };
+          };
+        };
+        /** @description Bad request */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+        /** @description Required resource not found */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/v1/pipes/check/{run_id}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description Check status of enrichment task. Poll this endpoint to until the status becomes 'completed'. Recommended polling intervals are between 1-3s. */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          run_id: string | null;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Return current processing state */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              id: string;
+              /** @enum {string} */
+              status: "completed" | "failed" | "pending" | "processing";
+              organization_id: string;
+              order: (number | string)[];
+              field_definitions: {
+                [key: string]: {
+                  /** @enum {string} */
+                  type: "string" | "number" | "boolean" | "json" | "unknown";
+                  label: string;
+                  added_by: {
+                    ref:
+                      | (
+                          | "prompt:run@1"
+                          | "company:newssummary:website@1"
+                          | "company:techstack:builtwith@1"
+                          | "company:websiteurl:email@1"
+                          | "people:workemail:waterfall@1"
+                          | "people:email:iswork@1"
+                          | "people:name:split@1"
+                          | "people:name:join@1"
+                          | "people:professionalprofile:waterfall@1"
+                          | "people:professionalprofileurl:name@1"
+                          | "people:professionalprofileurl:email:waterfall@1"
+                          | "people:personalemail:profile:waterfall@1"
+                          | "people:validate:email:zerobounce@1"
+                          | "people:mobilenumber:professionalprofile:waterfall@1"
+                          | "people:mobilenumber:workemail:waterfall@1"
+                          | "company:profile:builtwith@1"
+                          | "company:identity@1"
+                          | "company:overview@1"
+                        )
+                      | "input";
+                    pipe_hash: string | null;
+                    pipeIndex: number | null;
+                  };
+                  /** @enum {string|null} */
+                  format:
+                    | "url"
+                    | "website_url"
+                    | "professional_profile_url"
+                    | "email"
+                    | "datetime"
+                    | "date"
+                    | "phone"
+                    | "markdown"
+                    | "text"
+                    | "int"
+                    | "decimal"
+                    | "address_line_1"
+                    | "zip_code"
+                    | null;
+                };
+              };
+              pipes: (
+                | {
+                    /** @enum {string} */
+                    pipe_id: "prompt:run@1";
+                    config: {
+                      prompt: {
+                        text: string;
+                        json_schemas: {
+                          [key: string]: {
+                            [key: string]: unknown;
+                          };
+                        };
+                      };
+                    };
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "company:newssummary:website@1";
+                    config?: {
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_website_url: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_news_summary: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "company:profile:builtwith@1";
+                    config?: {
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_website_url: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_name: {
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        headcount: {
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        number_of_social_followers: {
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        monthly_tech_spend_in_usd: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "company:techstack:builtwith@1";
+                    config?: {
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_website_url: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        technology_stack: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "company:websiteurl:email@1";
+                    config?: {
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        email: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_website_url: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "people:workemail:waterfall@1";
+                    config?: {
+                      /** @default [
+                       *       {
+                       *         "provider": "leadmagic"
+                       *       },
+                       *       {
+                       *         "provider": "prospeo"
+                       *       },
+                       *       {
+                       *         "provider": "icypeas"
+                       *       }
+                       *     ] */
+                      providers: {
+                        /** @enum {string} */
+                        provider: "leadmagic" | "prospeo" | "icypeas";
+                      }[];
+                      input_fields?: {
+                        name: {
+                          alias: string;
+                        };
+                        company_website_url: {
+                          alias: string;
+                        };
+                        company_name: {
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        work_email: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "people:email:iswork@1";
+                    config?: {
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        email: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        is_work_email: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "people:name:split@1";
+                    config?: {
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        name: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        first_name: {
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        last_name: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "people:validate:email:zerobounce@1";
+                    config?: {
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        work_email: {
+                          /** @default  */
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        ip_address: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        is_email_valid: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "people:professionalprofile:waterfall@1";
+                    config?: {
+                      /** @default [
+                       *       {
+                       *         "provider": "prospeo"
+                       *       },
+                       *       {
+                       *         "provider": "icypeas"
+                       *       }
+                       *     ] */
+                      providers: {
+                        /** @enum {string} */
+                        provider: "prospeo" | "icypeas";
+                      }[];
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        professional_profile_url: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        professional_profile: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "people:professionalprofileurl:name@1";
+                    config?: {
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        name: {
+                          /** @default  */
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_name: {
+                          /** @default  */
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        location_hint: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        professional_profile_url: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "people:professionalprofileurl:email:waterfall@1";
+                    config?: {
+                      /** @default [
+                       *       {
+                       *         "provider": "leadmagic"
+                       *       }
+                       *     ] */
+                      providers: {
+                        /** @enum {string} */
+                        provider: "leadmagic";
+                      }[];
+                      input_fields: {
+                        email: {
+                          alias: string;
+                        };
+                        work_email: {
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        professional_profile_url: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "people:personalemail:profile:waterfall@1";
+                    config?: {
+                      /** @default [
+                       *       {
+                       *         "provider": "leadmagic"
+                       *       },
+                       *       {
+                       *         "provider": "clado"
+                       *       }
+                       *     ] */
+                      providers: {
+                        /** @enum {string} */
+                        provider: "clado" | "leadmagic";
+                      }[];
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        professional_profile_url: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        personal_email: {
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        alternate_personal_emails: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "people:mobilenumber:professionalprofile:waterfall@1";
+                    config?: {
+                      /** @default [
+                       *       {
+                       *         "provider": "leadmagic"
+                       *       },
+                       *       {
+                       *         "provider": "prospeo"
+                       *       }
+                       *     ] */
+                      providers: {
+                        /** @enum {string} */
+                        provider: "leadmagic" | "prospeo";
+                      }[];
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        professional_profile_url: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        mobile_number: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "people:mobilenumber:workemail:waterfall@1";
+                    config?: {
+                      /** @default [
+                       *       {
+                       *         "provider": "leadmagic"
+                       *       }
+                       *     ] */
+                      providers: {
+                        /** @enum {string} */
+                        provider: "leadmagic";
+                      }[];
+                      input_fields?: {
+                        work_email: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        mobile_number: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "people:name:join@1";
+                    config?: {
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        first_name: {
+                          /** @default  */
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        last_name: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        name: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "company:identity@1";
+                    config?: {
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_name: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_social_url: {
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        cleaned_company_name: {
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_website_url: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+                | {
+                    /** @enum {string} */
+                    pipe_id: "company:overview@1";
+                    config?: {
+                      input_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_website_url: {
+                          /** @default  */
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_social_url: {
+                          /** @default  */
+                          alias: string;
+                        };
+                      };
+                      output_fields?: {
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_description: {
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_industry: {
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        company_region: {
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        headcount: {
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        estimated_revenue: {
+                          alias: string;
+                        };
+                        /** @default {
+                         *       "alias": ""
+                         *     } */
+                        founded_year: {
+                          alias: string;
+                        };
+                      };
+                    } | null;
+                  }
+              )[];
+              errors: {
+                code: string;
+                message: string;
+                path?: string;
+              }[];
+              records: {
+                [key: string]: {
+                  id: number | string;
+                  fields: {
+                    [key: string]: {
+                      value:
+                        | string
+                        | number
+                        | boolean
+                        | null
+                        | {
+                            [key: string]: unknown;
+                          }
+                        | unknown[];
+                      status:
+                        | "completed"
+                        | "failed"
+                        | "pending"
+                        | "queued"
+                        | "processing"
+                        | "no_result"
+                        | "skipped";
+                      /** @enum {string} */
+                      type:
+                        | "string"
+                        | "number"
+                        | "boolean"
+                        | "json"
+                        | "unknown";
+                      reason: {
+                        code: string;
+                        summary: string;
+                        message: string;
+                      } | null;
+                      claimed_by: {
+                        /** @enum {string|null} */
+                        ref:
+                          | "prompt:run@1"
+                          | "company:newssummary:website@1"
+                          | "company:techstack:builtwith@1"
+                          | "company:websiteurl:email@1"
+                          | "people:workemail:waterfall@1"
+                          | "people:email:iswork@1"
+                          | "people:name:split@1"
+                          | "people:name:join@1"
+                          | "people:professionalprofile:waterfall@1"
+                          | "people:professionalprofileurl:name@1"
+                          | "people:professionalprofileurl:email:waterfall@1"
+                          | "people:personalemail:profile:waterfall@1"
+                          | "people:validate:email:zerobounce@1"
+                          | "people:mobilenumber:professionalprofile:waterfall@1"
+                          | "people:mobilenumber:workemail:waterfall@1"
+                          | "company:profile:builtwith@1"
+                          | "company:identity@1"
+                          | "company:overview@1"
+                          | "input"
+                          | null;
+                        pipe_hash: string | null;
+                      };
+                      resolved_by: {
+                        /** @enum {string|null} */
+                        ref:
+                          | "prompt:run@1"
+                          | "company:newssummary:website@1"
+                          | "company:techstack:builtwith@1"
+                          | "company:websiteurl:email@1"
+                          | "people:workemail:waterfall@1"
+                          | "people:email:iswork@1"
+                          | "people:name:split@1"
+                          | "people:name:join@1"
+                          | "people:professionalprofile:waterfall@1"
+                          | "people:professionalprofileurl:name@1"
+                          | "people:professionalprofileurl:email:waterfall@1"
+                          | "people:personalemail:profile:waterfall@1"
+                          | "people:validate:email:zerobounce@1"
+                          | "people:mobilenumber:professionalprofile:waterfall@1"
+                          | "people:mobilenumber:workemail:waterfall@1"
+                          | "company:profile:builtwith@1"
+                          | "company:identity@1"
+                          | "company:overview@1"
+                          | "input"
+                          | null;
+                        pipe_hash: string | null;
+                        input_hash: string | null;
+                      } | null;
+                      meta: {
+                        waterfall?: {
+                          attempted_providers: {
+                            /** @enum {string} */
+                            provider:
+                              | "pipe0"
+                              | "findymail"
+                              | "dropcontact"
+                              | "hunter"
+                              | "zerobounce"
+                              | "googlemaps"
+                              | "gemini"
+                              | "leadmagic"
+                              | "contactout"
+                              | "builtwith"
+                              | "perplexity"
+                              | "serper"
+                              | "icypeas"
+                              | "prospeo"
+                              | "clado";
+                          }[];
+                          available_providers: (
+                            | "pipe0"
+                            | "findymail"
+                            | "dropcontact"
+                            | "hunter"
+                            | "zerobounce"
+                            | "googlemaps"
+                            | "gemini"
+                            | "leadmagic"
+                            | "contactout"
+                            | "builtwith"
+                            | "perplexity"
+                            | "serper"
+                            | "icypeas"
+                            | "prospeo"
+                            | "clado"
+                          )[];
+                          /** @enum {string} */
+                          successful_provider?:
+                            | "pipe0"
+                            | "findymail"
+                            | "dropcontact"
+                            | "hunter"
+                            | "zerobounce"
+                            | "googlemaps"
+                            | "gemini"
+                            | "leadmagic"
+                            | "contactout"
+                            | "builtwith"
+                            | "perplexity"
+                            | "serper"
+                            | "icypeas"
+                            | "prospeo"
+                            | "clado";
+                        };
+                        mix?: {
+                          performed_steps: string[];
+                        };
+                      } | null;
+                      /** @enum {string|null} */
+                      format:
+                        | "url"
+                        | "website_url"
+                        | "professional_profile_url"
+                        | "email"
+                        | "datetime"
+                        | "date"
+                        | "phone"
+                        | "markdown"
+                        | "text"
+                        | "int"
+                        | "decimal"
+                        | "address_line_1"
+                        | "zip_code"
+                        | null;
+                      ui: {
+                        displayValue?: string | null;
+                        /** @description A map of widgets associated with this field for UI display, keyed by widget type. */
+                        widgets?: {
+                          entity_logo?: {
+                            /**
+                             * Format: uri
+                             * @description URL to the provider's logo image.
+                             */
+                            image_url: string;
+                            /** @description The name of the entity. */
+                            entity: string;
+                          };
+                          location_indicator?: {
+                            /** @description Country flag emoji. */
+                            emoji: string;
+                          };
+                          avatar?: {
+                            /**
+                             * Format: uri
+                             * @description URL to the provider's logo image.
+                             */
+                            image_url: string;
+                            /** @description The name of the avatar owner. */
+                            name: string;
+                          };
+                        };
+                      };
+                    };
+                  };
+                };
+              };
+            };
+          };
+        };
+        /** @description Bad request */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+        /** @description Not found */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/v1/searches/check/{run_id}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description Check status of search task. Poll this endpoint to until the status becomes 'completed'. Recommended polling intervals are between 1-3s. */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          run_id: string | null;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Return current processing state */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              id: string;
+              /** @enum {string} */
+              status: "completed" | "failed" | "pending" | "processing";
+              organization_id: string;
+              results: {
+                [key: string]: {
+                  value:
+                    | string
+                    | number
+                    | boolean
+                    | null
+                    | {
+                        [key: string]: unknown;
+                      }
+                    | unknown[];
+                  status:
+                    | "completed"
+                    | "failed"
+                    | "pending"
+                    | "queued"
+                    | "processing"
+                    | "no_result"
+                    | "skipped";
+                  /** @enum {string} */
+                  type?: "string" | "number" | "boolean" | "json" | "unknown";
+                  /** @enum {string|null} */
+                  format?:
+                    | "url"
+                    | "website_url"
+                    | "professional_profile_url"
+                    | "email"
+                    | "datetime"
+                    | "date"
+                    | "phone"
+                    | "markdown"
+                    | "text"
+                    | "int"
+                    | "decimal"
+                    | "address_line_1"
+                    | "zip_code"
+                    | null;
+                  ui?: {
+                    displayValue?: string | null;
+                    /** @description A map of widgets associated with this field for UI display, keyed by widget type. */
+                    widgets?: {
+                      entity_logo?: {
+                        /**
+                         * Format: uri
+                         * @description URL to the provider's logo image.
+                         */
+                        image_url: string;
+                        /** @description The name of the entity. */
+                        entity: string;
+                      };
+                      location_indicator?: {
+                        /** @description Country flag emoji. */
+                        emoji: string;
+                      };
+                      avatar?: {
+                        /**
+                         * Format: uri
+                         * @description URL to the provider's logo image.
+                         */
+                        image_url: string;
+                        /** @description The name of the avatar owner. */
+                        name: string;
+                      };
+                    };
+                  };
+                } | null;
+              }[];
+              search_statuses: {
+                search: {
+                  /** @enum {string} */
+                  ref:
+                    | "people:profiles:icypeas@1"
+                    | "companies:profiles:icypeas@1"
+                    | "people:profiles:clado@1";
+                };
+                /** @enum {string} */
+                status: "pending" | "processing" | "failed" | "completed";
+                errors: {
+                  code: string;
+                  message: string;
+                  path?: string;
+                }[];
+              }[];
+            };
+          };
+        };
+        /** @description Bad request */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+        /** @description Not found */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/v1/searches/run/sync": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** @description Search for companies and leads synchronously. This endpoint waits for the search to complete before returning a result. For large search requests this endpoint will time out. */
+    post: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody: {
+        content: {
+          "application/json": {
+            /** @default {
+             *       "dedup": {
+             *         "strategy": "default"
+             *       },
+             *       "environment": "production"
+             *     } */
+            config?: {
+              /** @default {
+               *       "strategy": null
+               *     } */
+              dedup?: {
+                /** @enum {string|null} */
+                strategy: "default" | null;
+              };
+              /**
+               * @default production
+               * @enum {string}
+               */
+              environment?: "production" | "sandbox";
+            };
+            searches: (
+              | {
+                  /** @enum {string} */
+                  search_id: "people:profiles:icypeas@1";
+                  config: {
+                    /** @default 100 */
+                    limit?: number;
+                    output_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      name?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      job_title?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      profile_headline?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_website_url?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_profile_url?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      profile_url?: {
+                        alias: string;
+                      };
+                    };
+                    filters: {
+                      firstname?: {
+                        /** @default [] */
+                        include?: string[];
+                        /** @default [] */
+                        exclude?: string[];
+                      };
+                      lastname?: {
+                        /** @default [] */
+                        include?: string[];
+                        /** @default [] */
+                        exclude?: string[];
+                      };
+                      currentJobTitle?: {
+                        /** @default [] */
+                        include?: string[];
+                        /** @default [] */
+                        exclude?: string[];
+                      };
+                      pastJobTitle?: {
+                        /** @default [] */
+                        include?: string[];
+                        /** @default [] */
+                        exclude?: string[];
+                      };
+                      currentCompanyName?: {
+                        /** @default [] */
+                        include?: string[];
+                        /** @default [] */
+                        exclude?: string[];
+                      };
+                      pastCompanyName?: {
+                        /** @default [] */
+                        include?: string[];
+                        /** @default [] */
+                        exclude?: string[];
+                      };
+                      school?: {
+                        /** @default [] */
+                        include?: string[];
+                        /** @default [] */
+                        exclude?: string[];
+                      };
+                      location?: {
+                        /** @default [] */
+                        include?: string[];
+                        /** @default [] */
+                        exclude?: string[];
+                      };
+                      languages?: {
+                        /** @default [] */
+                        include?: string[];
+                        /** @default [] */
+                        exclude?: string[];
+                      };
+                      skills?: {
+                        /** @default [] */
+                        include?: string[];
+                        /** @default [] */
+                        exclude?: string[];
+                      };
+                      keyword?: {
+                        /** @default [] */
+                        include?: string[];
+                        /** @default [] */
+                        exclude?: string[];
+                      };
+                    };
+                  };
+                }
+              | {
+                  /** @enum {string} */
+                  search_id: "companies:profiles:icypeas@1";
+                  config: {
+                    /** @default 100 */
+                    limit?: number;
+                    output_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_name?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_industry?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_description?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_website_url?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      headcount?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_region?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_profile_url?: {
+                        alias: string;
+                      };
+                    };
+                    filters: {
+                      name?: {
+                        /** @default [] */
+                        include?: string[];
+                        /** @default [] */
+                        exclude?: string[];
+                      };
+                      type?: {
+                        include: string[];
+                        exclude: string[];
+                      };
+                      industry?: {
+                        /** @default [] */
+                        include?: string[];
+                        /** @default [] */
+                        exclude?: string[];
+                      };
+                      location?: {
+                        /** @default [] */
+                        include?: string[];
+                        /** @default [] */
+                        exclude?: string[];
+                      };
+                      headcount?: {
+                        ">"?: number;
+                        "<"?: number;
+                        ">="?: number;
+                        "<="?: number;
+                      };
+                      urn?: {
+                        /** @default [] */
+                        include?: string[];
+                        /** @default [] */
+                        exclude?: string[];
+                      };
+                      lid?: {
+                        /** @default [] */
+                        include?: string[];
+                        /** @default [] */
+                        exclude?: string[];
+                      };
+                    };
+                  };
+                }
+              | {
+                  /** @enum {string} */
+                  search_id: "people:profiles:clado@1";
+                  config: {
+                    /** @default 20 */
+                    limit?: number;
+                    output_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      name?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      job_title?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      profile_headline?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_profile_url?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_industry?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_name?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      profile_url?: {
+                        alias: string;
+                      };
+                    };
+                    filters: {
+                      query: string;
+                    };
+                  };
+                }
+            )[];
+          };
+        };
+      };
+      responses: {
+        /** @description Run searches request */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              id: string;
+              /** @enum {string} */
+              status: "completed" | "failed" | "pending" | "processing";
+              organization_id: string;
+              results: {
+                [key: string]: {
+                  value:
+                    | string
+                    | number
+                    | boolean
+                    | null
+                    | {
+                        [key: string]: unknown;
+                      }
+                    | unknown[];
+                  status:
+                    | "completed"
+                    | "failed"
+                    | "pending"
+                    | "queued"
+                    | "processing"
+                    | "no_result"
+                    | "skipped";
+                  /** @enum {string} */
+                  type?: "string" | "number" | "boolean" | "json" | "unknown";
+                  /** @enum {string|null} */
+                  format?:
+                    | "url"
+                    | "website_url"
+                    | "professional_profile_url"
+                    | "email"
+                    | "datetime"
+                    | "date"
+                    | "phone"
+                    | "markdown"
+                    | "text"
+                    | "int"
+                    | "decimal"
+                    | "address_line_1"
+                    | "zip_code"
+                    | null;
+                  ui?: {
+                    displayValue?: string | null;
+                    /** @description A map of widgets associated with this field for UI display, keyed by widget type. */
+                    widgets?: {
+                      entity_logo?: {
+                        /**
+                         * Format: uri
+                         * @description URL to the provider's logo image.
+                         */
+                        image_url: string;
+                        /** @description The name of the entity. */
+                        entity: string;
+                      };
+                      location_indicator?: {
+                        /** @description Country flag emoji. */
+                        emoji: string;
+                      };
+                      avatar?: {
+                        /**
+                         * Format: uri
+                         * @description URL to the provider's logo image.
+                         */
+                        image_url: string;
+                        /** @description The name of the avatar owner. */
+                        name: string;
+                      };
+                    };
+                  };
+                } | null;
+              }[];
+              search_statuses: {
+                search: {
+                  /** @enum {string} */
+                  ref:
+                    | "people:profiles:icypeas@1"
+                    | "companies:profiles:icypeas@1"
+                    | "people:profiles:clado@1";
+                };
+                /** @enum {string} */
+                status: "pending" | "processing" | "failed" | "completed";
+                errors: {
+                  code: string;
+                  message: string;
+                  path?: string;
+                }[];
+              }[];
+            };
+          };
+        };
+        /** @description Bad request */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+        /** @description Required resource not found */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/v1/searches/run": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** @description Use multiple data sources to search for people and company data. */
+    post: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody: {
+        content: {
+          "application/json": {
+            /** @default {
+             *       "dedup": {
+             *         "strategy": "default"
+             *       },
+             *       "environment": "production"
+             *     } */
+            config?: {
+              /** @default {
+               *       "strategy": null
+               *     } */
+              dedup?: {
+                /** @enum {string|null} */
+                strategy: "default" | null;
+              };
+              /**
+               * @default production
+               * @enum {string}
+               */
+              environment?: "production" | "sandbox";
+            };
+            searches: (
+              | {
+                  /** @enum {string} */
+                  search_id: "people:profiles:icypeas@1";
+                  config: {
+                    /** @default 100 */
+                    limit?: number;
+                    output_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      name?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      job_title?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      profile_headline?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_website_url?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_profile_url?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      profile_url?: {
+                        alias: string;
+                      };
+                    };
+                    filters: {
+                      firstname?: {
+                        /** @default [] */
+                        include?: string[];
+                        /** @default [] */
+                        exclude?: string[];
+                      };
+                      lastname?: {
+                        /** @default [] */
+                        include?: string[];
+                        /** @default [] */
+                        exclude?: string[];
+                      };
+                      currentJobTitle?: {
+                        /** @default [] */
+                        include?: string[];
+                        /** @default [] */
+                        exclude?: string[];
+                      };
+                      pastJobTitle?: {
+                        /** @default [] */
+                        include?: string[];
+                        /** @default [] */
+                        exclude?: string[];
+                      };
+                      currentCompanyName?: {
+                        /** @default [] */
+                        include?: string[];
+                        /** @default [] */
+                        exclude?: string[];
+                      };
+                      pastCompanyName?: {
+                        /** @default [] */
+                        include?: string[];
+                        /** @default [] */
+                        exclude?: string[];
+                      };
+                      school?: {
+                        /** @default [] */
+                        include?: string[];
+                        /** @default [] */
+                        exclude?: string[];
+                      };
+                      location?: {
+                        /** @default [] */
+                        include?: string[];
+                        /** @default [] */
+                        exclude?: string[];
+                      };
+                      languages?: {
+                        /** @default [] */
+                        include?: string[];
+                        /** @default [] */
+                        exclude?: string[];
+                      };
+                      skills?: {
+                        /** @default [] */
+                        include?: string[];
+                        /** @default [] */
+                        exclude?: string[];
+                      };
+                      keyword?: {
+                        /** @default [] */
+                        include?: string[];
+                        /** @default [] */
+                        exclude?: string[];
+                      };
+                    };
+                  };
+                }
+              | {
+                  /** @enum {string} */
+                  search_id: "companies:profiles:icypeas@1";
+                  config: {
+                    /** @default 100 */
+                    limit?: number;
+                    output_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_name?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_industry?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_description?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_website_url?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      headcount?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_region?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_profile_url?: {
+                        alias: string;
+                      };
+                    };
+                    filters: {
+                      name?: {
+                        /** @default [] */
+                        include?: string[];
+                        /** @default [] */
+                        exclude?: string[];
+                      };
+                      type?: {
+                        include: string[];
+                        exclude: string[];
+                      };
+                      industry?: {
+                        /** @default [] */
+                        include?: string[];
+                        /** @default [] */
+                        exclude?: string[];
+                      };
+                      location?: {
+                        /** @default [] */
+                        include?: string[];
+                        /** @default [] */
+                        exclude?: string[];
+                      };
+                      headcount?: {
+                        ">"?: number;
+                        "<"?: number;
+                        ">="?: number;
+                        "<="?: number;
+                      };
+                      urn?: {
+                        /** @default [] */
+                        include?: string[];
+                        /** @default [] */
+                        exclude?: string[];
+                      };
+                      lid?: {
+                        /** @default [] */
+                        include?: string[];
+                        /** @default [] */
+                        exclude?: string[];
+                      };
+                    };
+                  };
+                }
+              | {
+                  /** @enum {string} */
+                  search_id: "people:profiles:clado@1";
+                  config: {
+                    /** @default 20 */
+                    limit?: number;
+                    output_fields?: {
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      name?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      job_title?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      profile_headline?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_profile_url?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_industry?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      company_name?: {
+                        alias: string;
+                      };
+                      /** @default {
+                       *       "alias": ""
+                       *     } */
+                      profile_url?: {
+                        alias: string;
+                      };
+                    };
+                    filters: {
+                      query: string;
+                    };
+                  };
+                }
+            )[];
+          };
+        };
+      };
+      responses: {
+        /** @description Run pipeline request */
+        201: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              id: string;
+              /** @enum {string} */
+              status: "completed" | "failed" | "pending" | "processing";
+              organization_id: string;
+              results: {
+                [key: string]: {
+                  value:
+                    | string
+                    | number
+                    | boolean
+                    | null
+                    | {
+                        [key: string]: unknown;
+                      }
+                    | unknown[];
+                  status:
+                    | "completed"
+                    | "failed"
+                    | "pending"
+                    | "queued"
+                    | "processing"
+                    | "no_result"
+                    | "skipped";
+                  /** @enum {string} */
+                  type?: "string" | "number" | "boolean" | "json" | "unknown";
+                  /** @enum {string|null} */
+                  format?:
+                    | "url"
+                    | "website_url"
+                    | "professional_profile_url"
+                    | "email"
+                    | "datetime"
+                    | "date"
+                    | "phone"
+                    | "markdown"
+                    | "text"
+                    | "int"
+                    | "decimal"
+                    | "address_line_1"
+                    | "zip_code"
+                    | null;
+                  ui?: {
+                    displayValue?: string | null;
+                    /** @description A map of widgets associated with this field for UI display, keyed by widget type. */
+                    widgets?: {
+                      entity_logo?: {
+                        /**
+                         * Format: uri
+                         * @description URL to the provider's logo image.
+                         */
+                        image_url: string;
+                        /** @description The name of the entity. */
+                        entity: string;
+                      };
+                      location_indicator?: {
+                        /** @description Country flag emoji. */
+                        emoji: string;
+                      };
+                      avatar?: {
+                        /**
+                         * Format: uri
+                         * @description URL to the provider's logo image.
+                         */
+                        image_url: string;
+                        /** @description The name of the avatar owner. */
+                        name: string;
+                      };
+                    };
+                  };
+                } | null;
+              }[];
+              search_statuses: {
+                search: {
+                  /** @enum {string} */
+                  ref:
+                    | "people:profiles:icypeas@1"
+                    | "companies:profiles:icypeas@1"
+                    | "people:profiles:clado@1";
+                };
+                /** @enum {string} */
+                status: "pending" | "processing" | "failed" | "completed";
+                errors: {
+                  code: string;
+                  message: string;
+                  path?: string;
+                }[];
+              }[];
+            };
+          };
+        };
+        /** @description Bad request */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+        /** @description Required resource not found */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/v1/{organization_id}/run-events/daily-summary": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: {
+      parameters: {
+        query?: {
+          /** @description The environment of the analytics data (sandbox or production) */
+          environment?: "sandbox" | "production";
+          from?: number | null;
+          to?: number | null;
+        };
+        header?: never;
+        path: {
+          organization_id: string | null;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Get dashboard analytics */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              /** @enum {string} */
+              mode: "day" | "hour";
+              items: {
+                tick: string;
+                eventCount: number;
+                completedCount: number;
+                failedCount: number;
+              }[];
+            };
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/v1/{organization_id}/run-events": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: {
+      parameters: {
+        query?: {
+          /** @description The environment of the analytics data (sandbox or production) */
+          environment?: "sandbox" | "production";
+          from?: number | null;
+          to?: number | null;
+          cursor?: number | null;
+          limit?: number;
+          status?: "completed" | "failed" | null;
+        };
+        header?: never;
+        path: {
+          organization_id: string | null;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Analytics events */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              items: {
+                id: string;
+                taskId: string;
+                duration: number;
+                errors?: unknown;
+                organizationId: string;
+                status: string;
+                environment: string;
+                /** Format: date */
+                timestamp: string;
+              }[];
+              nextCursor: number | null;
+            };
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/v1/{organization_id}/pipe-events/summary": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description Summary of all pipe invocations in the time between 'from' and 'to'. */
+    get: {
+      parameters: {
+        query?: {
+          from?: number | null;
+          to?: number | null;
+          /** @description The environment of the analytics data (sandbox or production) */
+          environment?: "sandbox" | "production";
+        };
+        header?: never;
+        path: {
+          organization_id: string | null;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Pipe analytics per organization id */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              [key: string]: {
+                /** @default 0 */
+                completed: number;
+                /** @default 0 */
+                failed: number;
+                /** @default 0 */
+                no_result: number;
+              };
+            };
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/v1/{organization_id}/waterfall-events/{pipe_id}/summary": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: {
+      parameters: {
+        query?: {
+          from?: number | null;
+          to?: number | null;
+          /** @description The environment of the analytics data (sandbox or production) */
+          environment?: "sandbox" | "production";
+        };
+        header?: never;
+        path: {
+          organization_id: string | null;
+          /** @example people:workemail:waterfall@1 */
+          pipe_id: string | null;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Pipe analytics per organization id */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              [key: string]: {
+                /** @default 0 */
+                usageCount: number;
+                /** @default 0 */
+                completed: number;
+                /** @default 0 */
+                failed: number;
+                /** @default 0 */
+                no_result: number;
+              };
+            };
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/v1/{organization_id}/pipe-events": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: {
+      parameters: {
+        query?: {
+          from?: number | null;
+          to?: number | null;
+          /** @description The environment of the analytics data (sandbox or production) */
+          environment?: "sandbox" | "production";
+          status?: "completed" | "failed" | "no_result" | null;
+          cursor?: number | null;
+          limit?: number;
+        };
+        header?: never;
+        path: {
+          organization_id: string | null;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Pipe events */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              items: {
+                id: string;
+                organizationId: string;
+                environment: string;
+                pipeId: string;
+                taskId: string | null;
+                /** Format: date */
+                timestamp: string;
+                executionType: string;
+                status: string;
+                duration: number;
+                pipeConfig?: unknown;
+                input?: unknown;
+                outputs?: unknown;
+                providerResults?: unknown;
+                reason?: unknown;
+              }[];
+              nextCursor: number | null;
+            };
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/v1/{organization_id}/pipe-events/runs/{run_id}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description Get pipe events for a pipeline run */
+    get: {
+      parameters: {
+        query?: {
+          from?: number | null;
+          to?: number | null;
+          /** @description The environment of the analytics data (sandbox or production) */
+          environment?: "sandbox" | "production";
+          status?: "completed" | "failed" | "no_result" | null;
+          cursor?: number | null;
+          limit?: number;
+        };
+        header?: never;
+        path: {
+          organization_id: string | null;
+          run_id: string | null;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Up to 200 pipe run events scroped to a 'run_id' */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              items: {
+                id: string;
+                organizationId: string;
+                environment: string;
+                pipeId: string;
+                taskId: string | null;
+                /** Format: date */
+                timestamp: string;
+                executionType: string;
+                status: string;
+                duration: number;
+                pipeConfig?: unknown;
+                input?: unknown;
+                outputs?: unknown;
+                providerResults?: unknown;
+                reason?: unknown;
+              }[];
+              nextCursor: number | null;
+            };
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/v1/{organizationId}/user-connections": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description Get a list of user connections for the provider :providerName */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          organizationId: string | null;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description List of user connections */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              items: {
+                id: string;
+                provider: string;
+                /** @enum {string} */
+                method: "api_key";
+                organizationId: string;
+                isActive: boolean;
+                /** Format: date */
+                createdAt: string;
+                /** Format: date */
+                updatedAt: string;
+              }[];
+            };
+          };
+        };
+        /** @description Bad request */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    /** @description Create user connection */
+    post: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          organizationId: string | null;
+        };
+        cookie?: never;
+      };
+      requestBody: {
+        content: {
+          "application/json": {
+            provider: string;
+            /** @enum {string} */
+            method: "api_key";
+            secret: string;
+            organizationId: string;
+            isActive?: boolean;
+          };
+        };
+      };
+      responses: {
+        /** @description Create credentials */
+        201: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              id: string;
+              provider: string;
+              /** @enum {string} */
+              method: "api_key";
+              organizationId: string;
+              isActive: boolean;
+              /** Format: date */
+              createdAt: string;
+              /** Format: date */
+              updatedAt: string;
+            };
+          };
+        };
+        /** @description Bad request */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/v1/{organizationId}/user-connections/{connectionId}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    /** @description Delete user connection */
+    delete: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          organizationId: string | null;
+          connectionId: string | null;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Task deleted */
+        204: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content?: never;
+        };
+        /** @description Bad request */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+      };
+    };
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/v1/{organizationId}/checkout": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          organization_id: string | null;
+        };
+        cookie?: never;
+      };
+      requestBody: {
+        content: {
+          "application/json": {
+            priceId: string;
+            /** Format: uri */
+            successUrl: string;
+            /** Format: uri */
+            cancelUrl: string;
+          };
+        };
+      };
+      responses: {
+        /** @description Checkout session URL */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              /** Format: uri */
+              checkoutUrl: string;
+            };
+          };
+        };
+        /** @description Bad Request */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/v1/{organizationId}/customer-portal": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          organization_id: string | null;
+        };
+        cookie?: never;
+      };
+      requestBody: {
+        content: {
+          "application/json": {
+            /** Format: uri */
+            returnUrl: string;
+          };
+        };
+      };
+      responses: {
+        /** @description Customer portal URL */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              /** Format: uri */
+              portalUrl: string;
+            };
+          };
+        };
+        /** @description Bad Request */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/v1/{organization_id}/credit-balance": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          organization_id: string | null;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Current credit balance information */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              id: string;
+              organizationId: string;
+              balance: string;
+              /** Format: date */
+              lastRefillAt: string | null;
+              /** Format: date */
+              nextRefillAt: string | null;
+              /** Format: date */
+              createdAt: string;
+              /** Format: date */
+              updatedAt: string;
+            };
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+        /** @description Internal Server Error */
+        500: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/v1/{organizationId}/credit-transactions": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: {
+      parameters: {
+        query?: {
+          limit?: number | null;
+          offset?: number | null;
+        };
+        header?: never;
+        path: {
+          organization_id: string | null;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Credit transaction history */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              items: {
+                id: string;
+                organizationId: string;
+                amount: string;
+                type: string;
+                description: string | null;
+                balanceAfter: string;
+                /** Format: date */
+                timestamp: string;
+                metadata: {
+                  invoiceId?: string;
+                  attemptCount?: number;
+                  nextPaymentAttempt?: string | null;
+                };
+              }[];
+            };
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/v1/{organizationId}/subscription": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          organization_id: string | null;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Current subscription information */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              items: {
+                id: string;
+                status: string;
+                plan: {
+                  name: string;
+                  description?: string;
+                  credits: number;
+                  interval: string;
+                  price: number;
+                };
+                currentPeriodStart: string | null;
+                currentPeriodEnd: string | null;
+                cancelAtPeriodEnd: boolean;
+              }[];
+            };
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+        /** @description Internal Server Error */
+        500: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/v1/credit-rewards/{code}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          code: string | null;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Credit reward */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              id: string;
+              amount: string | null;
+              /** Format: date */
+              createdAt: string;
+              /** Format: date */
+              updatedAt: string;
+            };
+          };
+        };
+        /** @description Credit rewards not found */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+        /** @description Internal Server Error */
+        500: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/v1/{organizationId}/credit-rewards/redeem": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          organization_id: string | null;
+        };
+        cookie?: never;
+      };
+      requestBody: {
+        content: {
+          "application/json": {
+            code: string;
+          };
+        };
+      };
+      responses: {
+        /** @description Remdeemed */
+        201: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              id: string;
+              organizationId: string;
+              balance: string;
+              /** Format: date */
+              lastRefillAt: string | null;
+              /** Format: date */
+              nextRefillAt: string | null;
+              /** Format: date */
+              createdAt: string;
+              /** Format: date */
+              updatedAt: string;
+            };
+          };
+        };
+        /** @description Bad Request */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+        /** @description Credit reward not found */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/v1/support/{organization_id}/messages": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          organization_id: string | null;
+        };
+        cookie?: never;
+      };
+      requestBody: {
+        content: {
+          "application/json": {
+            category: string;
+            message: string;
+            subject: string;
+          };
+        };
+      };
+      responses: {
+        201: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": Record<string, never>;
+          };
+        };
+        /** @description Bad Request */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+        /** @description Unauthorized */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+        /** @description Forbidden */
+        403: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              type: string;
+              title: string;
+              status: number;
+              detail: string;
+            };
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
 }
 export type webhooks = Record<string, never>;
 export interface components {
-    schemas: never;
-    responses: never;
-    parameters: never;
-    requestBodies: never;
-    headers: never;
-    pathItems: never;
+  schemas: never;
+  responses: never;
+  parameters: never;
+  requestBodies: never;
+  headers: never;
+  pathItems: never;
 }
 export type $defs = Record<string, never>;
 export type operations = Record<string, never>;
