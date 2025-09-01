@@ -86,17 +86,17 @@ const generateJsonExtractionExample = (fieldName: string) => `{
 
 const generateRangeExample = (fieldName: string, field: RangeMetadata) => `{
   "${fieldName}": {
-    ">": ${field.min || 0},
-    "<": ${field.max || 100},
+    "gt": ${field.min || 0},
+    "lt": ${field.max || 100},
   }
 }`;
 
 const generateDateRangeExample = (fieldName: string) => `{
   "${fieldName}": {
-    ">": "2024-01-01T00:00:00Z",
-    "<": "2024-12-31T23:59:59Z",
-    ">=": "",
-    "<=": ""
+    "gt": "2024-01-01T00:00:00Z",
+    "lt": "2024-12-31T23:59:59Z",
+    "gte": "",
+    "lte": ""
   }
 }`;
 
@@ -384,17 +384,17 @@ function ReferencesSection({ field }: { field: GeneratedFormField }) {
 }
 
 const OPERATOR_INFO = [
-  { symbol: ">", description: "Greater than" },
-  { symbol: "<", description: "Less than" },
-  { symbol: ">=", description: "Greater or equal" },
-  { symbol: "<=", description: "Less or equal" },
+  { symbol: "gt", description: "Greater than" },
+  { symbol: "lt", description: "Less than" },
+  { symbol: "gte", description: "Greater or equal" },
+  { symbol: "lte", description: "Less or equal" },
 ];
 
 const DATE_OPERATOR_INFO = [
-  { symbol: ">", description: "After date" },
-  { symbol: "<", description: "Before date" },
-  { symbol: ">=", description: "On or after" },
-  { symbol: "<=", description: "On or before" },
+  { symbol: "gt", description: "After date" },
+  { symbol: "lt", description: "Before date" },
+  { symbol: "gte", description: "On or after" },
+  { symbol: "lte", description: "On or before" },
 ];
 
 function OperatorsSection({ field }: { field: GeneratedFormField }) {

@@ -1,6 +1,7 @@
 import CodeExampleCard from "@/app/code-example-card";
 import LandingPageTable from "@/app/data-model-table";
 import { SignupCta } from "@/app/signup-cta";
+import { AnnouncementBanner } from "@/components/features/announcements/announcement-banner";
 import CalButton from "@/components/cal-button";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
@@ -14,6 +15,7 @@ import { appInfo } from "@/lib/const";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { ReactNode } from "react";
+import { BetaAnnouncementBanner } from "@/components/features/announcements/banners/beta-announcement-banner";
 
 type Integration = {
   name: string;
@@ -209,9 +211,8 @@ export default function Home() {
       <div>
         {/* Header */}
         <Header page="product" />
-
         {/* Hero Section */}
-        <section className="pt-24 lg:pt-28 pb-4 px-6 lg:px-0 relative">
+        <section className="pt-24 lg:pt-18 pb-4 px-6 lg:px-0 relative">
           <div className="container lg:grid-cols-2 gap-12 items-center mx-auto relative">
             <div className="space-y-6 max-w-screen-md">
               <h1 className="text-4xl md:text-5xl font-serif tracking-tight">
@@ -235,15 +236,7 @@ export default function Home() {
         {/* Code Example Section */}
         <section className="container mx-auto gap-8 pt-12">
           <div className=" relative py-4 overflow-hidden">
-            <div className="absolute inset-0 w-full h-full z-0">
-              {/* <div className="grid grid-cols-8 md:grid-cols-16 lg:grid-cols-24 grid-rows-8 md:grid-rows-16 lg:grid-rows-24 h-full w-full">
-                {Array.from({ length: 24 * 24 }).map((_, i) => {
-                  return (
-                    <div key={i} className={`border border-slate-700/40`} />
-                  );
-                })}
-              </div> */}
-            </div>
+            <div className="absolute inset-0 w-full h-full z-0"></div>
             <div className="absolute rounded-lg inset-0 bg-accent border" />
             <CodeExampleCard />
           </div>

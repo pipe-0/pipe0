@@ -233,9 +233,10 @@ value was generated from an enrichment operation, it is added.
 
 #### record.field.status
 
-The status of the field. Possible values are `completed`, `failed`, `pending`, `queued`, `processing`, or `no_result`.
+The status of the field. Possible values are `completed`, `failed`, `pending`, `queued`, `processing`, `skipped`, or `no_result`.
 The `status` is `no_result` if processing is completed without yielding a meaningful 
-result. The status is `failed` if the pipe failed due to errors.
+result. The status is `failed` if the pipe failed due to errors. The status is `skipped` if processing was skipped do to an unmet condition
+or missing input.
 
 #### record.field.type
 

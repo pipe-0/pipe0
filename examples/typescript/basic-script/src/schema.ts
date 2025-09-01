@@ -36,7 +36,7 @@ export interface paths {
                */
               environment?: "production" | "sandbox";
             };
-            input_field_definitions?: {
+            field_annotations?: {
               [key: string]: {
                 label?: string;
                 /**
@@ -1719,7 +1719,7 @@ export interface paths {
                */
               environment?: "production" | "sandbox";
             };
-            input_field_definitions?: {
+            field_annotations?: {
               [key: string]: {
                 label?: string;
                 /**
@@ -4328,7 +4328,7 @@ export interface paths {
                */
               environment?: "production" | "sandbox";
             };
-            input_field_definitions?: {
+            field_annotations?: {
               [key: string]: {
                 label?: string;
                 /**
@@ -6009,7 +6009,7 @@ export interface paths {
                */
               environment?: "production" | "sandbox";
             };
-            input_field_definitions?: {
+            field_annotations?: {
               [key: string]: {
                 label?: string;
                 /**

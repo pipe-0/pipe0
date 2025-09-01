@@ -24,11 +24,11 @@ importers:
         specifier: ^15.1.6
         version: 15.1.6(@mdx-js/loader@3.1.0(acorn@8.14.0))(@mdx-js/react@3.1.0(@types/react@19.0.8)(react@19.0.0))
       '@pipe0/client-sdk':
-        specifier: 0.0.73
-        version: 0.0.73
+        specifier: 0.0.74
+        version: 0.0.74
       '@pipe0/react-sdk':
-        specifier: 0.0.31
-        version: 0.0.31
+        specifier: 0.0.32
+        version: 0.0.32
       '@radix-ui/react-accordion':
         specifier: ^1.2.3
         version: 1.2.3(@types/react-dom@19.0.3(@types/react@19.0.8))(@types/react@19.0.8)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -134,6 +134,9 @@ importers:
       react-syntax-highlighter:
         specifier: ^15.6.1
         version: 15.6.1(react@19.0.0)
+      simplex-noise:
+        specifier: ^4.0.3
+        version: 4.0.3
       sonner:
         specifier: ^2.0.1
         version: 2.0.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -1670,11 +1673,11 @@ packages:
   '@pipe0/client-sdk@0.0.59':
     resolution: {integrity: sha512-am7C3aZBXYt4+/P4vAZFZXVQwynhqEE85qz9UOzmWwWbBYZuEJoATESJhFRGrAHfL7UhAXWp3l4WBm+ohRzizg==}
 
-  '@pipe0/client-sdk@0.0.73':
-    resolution: {integrity: sha512-4HQ1h8hNT3OZNE53yL3aCowjeHFfUHmTXytd9u822tgJduTwv9PxE9/imTwirHOngaSZXCKXPWg2A7DHOZYqcQ==}
+  '@pipe0/client-sdk@0.0.74':
+    resolution: {integrity: sha512-klbeKhzimsKLLZQHLgEZizJskr8QdWhh/aQVToJlyubIEdE2ywAppC489XDnOgd8V0EBcjn8TT6dZmZI9QztLQ==}
 
-  '@pipe0/react-sdk@0.0.31':
-    resolution: {integrity: sha512-n6TNteBsoj9Me+8FzB0C8Rz8WHyXzRm+rk/z0XoLLCUJ5Q6JNhSyQf8QusMdebdGYu4qzEsUki4PsrJPkSuMkg==}
+  '@pipe0/react-sdk@0.0.32':
+    resolution: {integrity: sha512-cCSwDagLTT+q+4cNFw1k4vAJ7SAeQKzMQL41HVoOfOkYk7oFPPfYNTz6JEYEREPBicMyqpfyjjC/lARLrTlaKQ==}
 
   '@popperjs/core@2.11.8':
     resolution: {integrity: sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==}
@@ -6300,6 +6303,9 @@ packages:
   simple-swizzle@0.2.2:
     resolution: {integrity: sha512-JA//kQgZtbuY83m+xT+tXJkmJncGMTFT+C+g2h2R9uxkYIrE2yy9sgmcLhCnw57/WSD+Eh3J97FPEDFnbXnDUg==}
 
+  simplex-noise@4.0.3:
+    resolution: {integrity: sha512-qSE2I4AngLQG7BXqoZj51jokT4WUXe8mOBrvfOXpci8+6Yu44+/dD5zqDpOx3Ux792eamTd2lLcI8jqFntk/lg==}
+
   slash@3.0.0:
     resolution: {integrity: sha512-g9Q1haeby36OSStwb4ntCGGGaKsaVSjQ68fBxoQcutl5fS1vuY18H3wSt3jFyFtrkx+Kz0V1G85A4MyAdDMi2Q==}
     engines: {node: '>=8'}
@@ -7019,6 +7025,9 @@ packages:
   zod@4.0.5:
     resolution: {integrity: sha512-/5UuuRPStvHXu7RS+gmvRf4NXrNxpSllGwDnCBcJZtQsKrviYXm54yDGV2KYNLT5kq0lHGcl7lqWJLgSaG+tgA==}
 
+  zod@4.1.5:
+    resolution: {integrity: sha512-rcUUZqlLJgBC33IT3PNMgsCq6TzLQEG/Ei/KTCU0PedSWRMAXoOUN+4t/0H+Q8bdnLPdqUYnvboJT0bn/229qg==}
+
   zustand@5.0.3:
     resolution: {integrity: sha512-14fwWQtU3pH4dE0dOpdMiWjddcH+QzKIgk1cl8epwSE7yag43k/AD/m4L6+K7DytAOr9gGBe3/EXj9g7cdostg==}
     engines: {node: '>=12.20.0'}
@@ -7060,6 +7069,11 @@ snapshots:
     dependencies:
       openapi3-ts: 4.4.0
       zod: 4.0.5
+
+  '@asteasolutions/zod-to-openapi@8.0.0(zod@4.1.5)':
+    dependencies:
+      openapi3-ts: 4.4.0
+      zod: 4.1.5
 
   '@babel/code-frame@7.26.2':
     dependencies:
@@ -8328,20 +8342,20 @@ snapshots:
       lodash.defaultsdeep: 4.6.1
       zod: 4.0.5
 
-  '@pipe0/client-sdk@0.0.73':
+  '@pipe0/client-sdk@0.0.74':
     dependencies:
-      '@asteasolutions/zod-to-openapi': 8.0.0(zod@4.0.5)
+      '@asteasolutions/zod-to-openapi': 8.0.0(zod@4.1.5)
       ajv: 8.17.1
       date-fns: 4.1.0
       immer: 10.1.1
       json-schema-typed: 8.0.1
       openapi-fetch: 0.13.8
       xxhash-wasm: 1.1.0
-      zod: 4.0.5
+      zod: 4.1.5
 
-  '@pipe0/react-sdk@0.0.31':
+  '@pipe0/react-sdk@0.0.32':
     dependencies:
-      '@pipe0/client-sdk': 0.0.73
+      '@pipe0/client-sdk': 0.0.74
       '@tanstack/react-table': 8.21.3(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       lucide-react: 0.475.0(react@19.1.1)
       react: 19.1.1
@@ -14143,6 +14157,8 @@ snapshots:
     dependencies:
       is-arrayish: 0.3.2
 
+  simplex-noise@4.0.3: {}
+
   slash@3.0.0: {}
 
   slash@5.1.0: {}
@@ -14874,6 +14890,8 @@ snapshots:
   zod@3.24.1: {}
 
   zod@4.0.5: {}
+
+  zod@4.1.5: {}
 
   zustand@5.0.3(@types/react@19.0.8)(immer@10.1.1)(react@19.0.0)(use-sync-external-store@1.5.0(react@19.0.0)):
     optionalDependencies:
