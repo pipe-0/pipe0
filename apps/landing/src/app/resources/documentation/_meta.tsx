@@ -99,8 +99,11 @@ const meta: MetaRecord = {
     type: "separator",
     title: "Examples",
   },
-  "code-examples": {
+  "examples-code": {
     title: "Code",
+  },
+  "examples-workflows": {
+    title: "Workflows",
   },
 };
 
