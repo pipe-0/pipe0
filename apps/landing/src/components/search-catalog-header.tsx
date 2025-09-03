@@ -1,6 +1,14 @@
+import {
+  searchesMiniSpec,
+  snippetCatalog,
+} from "@/app/resources/search-catalog/snippet-catalot";
+import { videoCatalog } from "@/app/resources/search-catalog/video-catalog";
 import { CodeTabs } from "@/components/code-tabs";
 import { PayloadDocumenation } from "@/components/config-documentation";
 import CopyToClipboard from "@/components/copy-to-clipboard";
+import { ApiRequestCodeExample } from "@/components/features/docs/api-request-code-example";
+import { CatalogHeader } from "@/components/features/docs/docs-layout";
+import { FieldRow } from "@/components/features/pipe-catalog/field-row";
 import { Info } from "@/components/info";
 import { InlineDocsBadge } from "@/components/inline-docs-badge";
 import { SearchFieldRow } from "@/components/search-field-row";
@@ -55,39 +63,19 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
   if (searchEntry.hasManagedConnection) connections.push("Managed");
   if (searchEntry.allowsUserConnection) connections.push("User");
 
+  const video = videoCatalog[searchId as keyof typeof videoCatalog] as
+    | string
+    | undefined;
+
   return (
     <div className="pipe-header space-y-10">
-      {/* Header Section */}
-      <div className="space-y-3">
-        <div>
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem>
-                <BreadcrumbLink asChild>
-                  <Link href="/resources/pipe-catalog">Search catalog</Link>
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                <BreadcrumbPage>{searchId}</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
-          <h1 className="text-4xl font-bold text-left pb-4">
-            {searchEntry.label}
-          </h1>
-
-          <p className="text-lg text-muted-foreground">
-            {searchEntry.description}
-          </p>
-        </div>
-
-        <div>
-          <CopyToClipboard value={searchId} />
-        </div>
-      </div>
-
-      <div>
+      <CatalogHeader
+        label={searchEntry.label}
+        description={searchEntry.description}
+        defaultProviders={[searchEntry.provider]}
+        id={searchId}
+        video={video}
+      >
         <Table>
           <TableHeader>
             <TableRow>
@@ -133,59 +121,70 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
                     searchEntry.cost.mode === "per_result"
                       ? searchEntry.cost.creditsPerResult
                       : searchEntry.cost.creditsPerSearch
-                  )}
+                  ) || "Free"}{" "}
                   credits
                 </p>
               </TableCell>
             </TableRow>
           </TableBody>
         </Table>
-      </div>
+        <div>
+          <h3 className="font-medium mb-3 pb-2 border-b">Output Fields</h3>
+          <div className="space-y-2">
+            {searchEntry.defaultOutputFields.map((fieldName) => {
+              const found = getField(fieldName as FieldName);
+              if (!found) return null;
 
-      <div>
-        <div className="space-y-8">
-          <div>
-            <h3 className="font-medium mb-3 pb-2 border-b">Output Fields</h3>
-            <div className="space-y-2">
-              {searchEntry.defaultOutputFields.map((fieldName) => {
-                const found = getField(fieldName as FieldName);
-                if (!found) return null;
-
-                return (
-                  <SearchFieldRow
-                    key={fieldName}
-                    fieldName={found.name}
-                    fieldType={found.type}
-                    description={found.description}
-                  />
-                );
-              })}
-            </div>
+              return (
+                <FieldRow
+                  key={fieldName}
+                  fieldName={found.name}
+                  fieldType={found.type}
+                  description={found.description}
+                />
+              );
+            })}
           </div>
         </div>
-      </div>
+      </CatalogHeader>
 
-      <Accordion type="multiple" defaultValue={["code"]}>
-        <AccordionItem value="config-reference">
-          <AccordionTrigger className="">Config Reference</AccordionTrigger>
-          <AccordionContent>
-            <PayloadDocumenation searchId={searchId} />
-          </AccordionContent>
-        </AccordionItem>
-        <AccordionItem value="code">
-          <AccordionTrigger className="">
-            Request example with full config
-          </AccordionTrigger>
-          <AccordionContent>
-            <div>
-              <CodeTabs items={["Typescript", "cURL"]}>
-                <div>
-                  <SyntaxHighlighter
-                    language="typescript"
-                    style={vscDarkPlus}
-                    customStyle={{ borderRadius: "0.375rem" }}
-                  >
-                    {`const result = await fetch("https://api.pipe0.com/v1/searches/run", {
+      <div className="px-4">
+        <Accordion type="multiple" defaultValue={["code"]}>
+          <AccordionItem value="code">
+            <AccordionTrigger className="text-sm">
+              Code example
+            </AccordionTrigger>
+            <AccordionContent>
+              <ApiRequestCodeExample
+                oas={searchesMiniSpec}
+                operation={searchesMiniSpec.operation(
+                  "/v1/searches/run",
+                  "post"
+                )}
+                harData={{ body: snippetCatalog[searchId] }}
+              />
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="config-reference">
+            <AccordionTrigger className="">Config reference</AccordionTrigger>
+            <AccordionContent>
+              <PayloadDocumenation searchId={searchId} />
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="full-config">
+            <AccordionTrigger className="">
+              Full config example
+            </AccordionTrigger>
+            <AccordionContent>
+              <div>
+                <CodeTabs items={["Typescript", "cURL"]}>
+                  <div>
+                    <SyntaxHighlighter
+                      language="typescript"
+                      style={vscDarkPlus}
+                      customStyle={{ borderRadius: "0.375rem" }}
+                    >
+                      {`const result = await fetch("https://api.pipe0.com/v1/searches/run", {
   method: "POST",
   headers: {
     "Authorization": \`Bearer \${API_KEY}\`,
@@ -201,15 +200,15 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
     }],
   })
 });`}
-                  </SyntaxHighlighter>
-                </div>
-                <div>
-                  <SyntaxHighlighter
-                    language="bash"
-                    style={vscDarkPlus}
-                    customStyle={{ borderRadius: "0.375rem" }}
-                  >
-                    {`curl -X POST "https://api.pipe0.com/v1/searches/run" \\
+                    </SyntaxHighlighter>
+                  </div>
+                  <div>
+                    <SyntaxHighlighter
+                      language="bash"
+                      style={vscDarkPlus}
+                      customStyle={{ borderRadius: "0.375rem" }}
+                    >
+                      {`curl -X POST "https://api.pipe0.com/v1/searches/run" \\
 -H "Authorization: Bearer $API_KEY" \\
 -d '{
     "pipes": [{ "search_id": "${searchId}" }],
@@ -218,13 +217,14 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
       "\n      "
     )} 
 }'`}
-                  </SyntaxHighlighter>
-                </div>
-              </CodeTabs>
-            </div>
-          </AccordionContent>
-        </AccordionItem>
-      </Accordion>
+                    </SyntaxHighlighter>
+                  </div>
+                </CodeTabs>
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      </div>
     </div>
   );
 }

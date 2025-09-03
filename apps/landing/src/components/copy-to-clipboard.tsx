@@ -39,22 +39,17 @@ export default function CopyToClipboard({
         <Input
           value={value}
           readOnly
-          className="pr-10 font-mono text-sm bg-accent border-muted-foreground/20 focus-visible:ring-0 focus-visible:ring-offset-0"
+          className="pr-10 font-mono bg-background text-sm border-muted-foreground/20 focus-visible:ring-0 focus-visible:ring-offset-0"
           onClick={(e) => e.currentTarget.select()}
         />
-
         <Button
           size="sm"
-          variant="ghost"
-          className="absolute right-0 top-0 h-full px-3 py-2 text-muted-foreground hover:text-foreground border-transparent hover:bg-transparent"
+          variant={isCopied ? "outline" : "default"}
+          className="absolute right-1 top-1/2 w-15 -translate-y-1/2 px-3 py-2 h-7 text-xs font-bold"
           onClick={copyToClipboard}
           aria-label="Copy to clipboard"
         >
-          {isCopied ? (
-            <Check className="h-4 w-4 text-green-500" />
-          ) : (
-            <Copy className="h-4 w-4" />
-          )}
+          {isCopied ? <Check className="size-5" /> : "copy"}
         </Button>
       </div>
     </div>
