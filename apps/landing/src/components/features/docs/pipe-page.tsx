@@ -1,4 +1,12 @@
 import { TextLink } from "@/components/text-link";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import {
@@ -22,7 +30,7 @@ export async function PipePage({
   const pipeVersions = pipesByBasePipes[pipeEntry.basePipe];
 
   return (
-    <div className="max-w-[var(--nextra-content-width)] pt-6 pb-24 grid md:grid-cols-[300px_1fr] gap-3 mx-auto px-7">
+    <div className="max-w-[var(--nextra-content-width)] pt-6 pb-24 grid md:grid-cols-[200px_1fr] gap-3 mx-auto px-7">
       <aside className="space-y-8 hidden md:block">
         <div>
           <Link href="/resources/pipe-catalog">
@@ -74,7 +82,22 @@ export async function PipePage({
           )}
         </div>
       </aside>
-      <section className="">{children}</section>
+      <section className="">
+        <Breadcrumb className="pb-3">
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink asChild>
+                <Link href="/resources/pipe-catalog">Pipe catalog</Link>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage>{pipeId}</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+        <div>{children}</div>
+      </section>
     </div>
   );
 }

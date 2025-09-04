@@ -14,13 +14,21 @@ import { Tooltip, TooltipContent } from "@/components/ui/tooltip";
 import { cn, copyToClipboard } from "@/lib/utils";
 import { fieldCatalog, InputGroup, RecordFieldType } from "@pipe0/client-sdk";
 import { TooltipTrigger } from "@radix-ui/react-tooltip";
-import { ArrowDown, ArrowUp, Check, Copy } from "lucide-react";
+import {
+  ArrowDown,
+  ArrowUp,
+  Check,
+  Copy,
+  Download,
+  Upload,
+} from "lucide-react";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { toast } from "sonner";
 
 import { vscDarkPlus } from "react-syntax-highlighter/dist/cjs/styles/prism";
+import { RequiredAsterisk } from "@/components/required-asterisk";
 
 export function findFieldByName(fieldName: string) {
   return (Object.entries(fieldCatalog).find(([name]) => name === fieldName) ||
@@ -56,23 +64,36 @@ export function PipeFieldRow({
   return (
     <div className="space-y-1">
       <div className="flex items-center justify-between">
-        <span className="text-sm text-muted-foreground">
-          {fieldName} <Info>{description}</Info>{" "}
-        </span>
+        <div className="flex items-center gap-1">
+          <Badge variant="outline">{fieldType}</Badge>
+
+          <span className="text-sm text-muted-foreground">{fieldName}</span>
+          <Button
+            onClick={handleCopyToClipboard}
+            variant="ghost"
+            size="sm"
+            className={cn("size-5", showSucces && "border")}
+          >
+            {showSucces ? (
+              <Check className="size-3 text-green-500" />
+            ) : (
+              <Copy className="size-3" />
+            )}
+          </Button>
+          {groupCondition && (
+            <span>
+              {groupCondition === "all" ? (
+                <RequiredAsterisk>This field is required</RequiredAsterisk>
+              ) : groupCondition === "none" ? (
+                <span>(optional)</span>
+              ) : (
+                "misconfigured"
+              )}
+            </span>
+          )}
+        </div>
         <div className="flex items-center gap-4">
           <div className="space-x-1">
-            <Button
-              onClick={handleCopyToClipboard}
-              variant="ghost"
-              size="sm"
-              className={cn("size-5", showSucces && "border")}
-            >
-              {showSucces ? (
-                <Check className="size-3 text-green-500" />
-              ) : (
-                <Copy className="size-3" />
-              )}
-            </Button>
             {type === "input" ? (
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -86,7 +107,7 @@ export function PipeFieldRow({
                       size="sm"
                       className={cn("size-5", showSucces && "border")}
                     >
-                      <ArrowDown className="size-3" />
+                      <Download className="size-3" />
                     </Button>
                   </Link>
                 </TooltipTrigger>
@@ -107,7 +128,7 @@ export function PipeFieldRow({
                       size="sm"
                       className={cn("size-5", showSucces && "border")}
                     >
-                      <ArrowUp className="size-3" />
+                      <Upload className="size-3" />
                     </Button>
                   </Link>
                 </TooltipTrigger>
@@ -119,9 +140,8 @@ export function PipeFieldRow({
           </div>
 
           <div className="text-sm text-muted-foreground italic">
-            {fieldType !== "json" || !jsonExample ? (
-              <span className="">{fieldType}</span>
-            ) : (
+            <Info>{description}</Info>
+            {jsonExample && (
               <Sheet>
                 <SheetTrigger asChild>
                   <Badge
@@ -142,17 +162,6 @@ export function PipeFieldRow({
                   </div>
                 </SheetContent>
               </Sheet>
-            )}
-
-            {groupCondition && ", "}
-            {groupCondition && (
-              <span>
-                {groupCondition === "all"
-                  ? "required"
-                  : groupCondition === "none"
-                  ? "optional"
-                  : "misconfigured"}
-              </span>
             )}
           </div>
         </div>

@@ -1,7 +1,10 @@
+import { snippetCatalog } from "@/app/resources/pipe-catalog/snippet-catalog";
 import AppLink from "@/components/app-link";
 import { CodeTabs } from "@/components/code-tabs";
 import { PayloadDocumenation } from "@/components/config-documentation";
 import CopyToClipboard from "@/components/copy-to-clipboard";
+import { ApiRequestCodeExample } from "@/components/features/docs/api-request-code-example";
+import { AvatarGroup } from "@/components/features/docs/avatar-group";
 import { PipeFieldRow } from "@/components/features/pipe-catalog/field-row";
 import { Info } from "@/components/info";
 import { InlineDocsBadge } from "@/components/inline-docs-badge";
@@ -13,14 +16,6 @@ import {
 } from "@/components/ui/accordion";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
 import {
   Table,
   TableBody,
@@ -35,6 +30,7 @@ import {
   BillableOperationDef,
   FieldName,
   getDefaultOutputFields,
+  getDefaultPipeProviders,
   getField,
   getPipeDefaultPayload,
   getPipeEntry,
@@ -42,9 +38,63 @@ import {
   providerCatalog,
 } from "@pipe0/client-sdk";
 import { Download, Terminal, Upload } from "lucide-react";
-import Link from "next/link";
+import Oas from "oas";
+import { OASDocument } from "oas/types";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/cjs/styles/prism";
+
+export const miniSpec: OASDocument = {
+  openapi: "3.1.0",
+  info: { title: "Pipe0 API", version: "0.5.0" },
+  servers: [
+    {
+      url: "https://api.pipe0.com",
+    },
+  ],
+  security: [{ bearerAuth: [] }],
+  components: {
+    securitySchemes: {
+      bearerAuth: {
+        type: "http",
+        scheme: "bearer",
+      },
+    },
+  },
+  paths: {
+    "/v1/pipes/run": {
+      post: {
+        summary: "Create a user",
+        operationId: "createUser",
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  name: { type: "string" },
+                  email: { type: "string" },
+                },
+                required: ["name", "email"],
+              },
+              example: {
+                name: "Alice",
+                email: "alice@example.com",
+              },
+            },
+          },
+        },
+        responses: {
+          201: {
+            description: "User created",
+          },
+        },
+      },
+    },
+  },
+};
+
+const apiDefinition = new Oas(miniSpec);
 
 const dateFormatter = new Intl.DateTimeFormat("en-US", {
   month: "short",
@@ -57,60 +107,40 @@ type PipeHeaderProps = {
 
 export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
   const pipeEntry = getPipeEntry(pipeId);
-
   const defaultPayload = getPipeDefaultPayload(pipeId);
-
   const defaultOutputFields = getDefaultOutputFields(pipeEntry);
 
   return (
-    <div className="pipe-header space-y-10">
-      {/* Header Section */}
-      <div className="space-y-3">
+    <div className="pipe-header space-y-3">
+      <div className="space-y-8 px-4 py-5 bg-accent border">
         <div>
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem>
-                <BreadcrumbLink asChild>
-                  <Link href="/resources/pipe-catalog">Pipe catalog</Link>
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                <BreadcrumbPage>{pipeId}</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
-          <h1 className="text-4xl font-bold text-left pb-4">
-            {pipeEntry.label}
-          </h1>
-
-          {pipeEntry.lifecycle?.replacedBy && (
-            <Alert variant="destructive" className="mb-2">
-              <AlertTitle>
-                Deprecated by{" "}
-                {dateFormatter.format(
-                  new Date(pipeEntry.lifecycle.deprecatedOn)
-                )}
-              </AlertTitle>
-              <AlertDescription>
-                Use instead: {pipeEntry.lifecycle.replacedBy}
-              </AlertDescription>
-            </Alert>
-          )}
-
+          <div className="flex items-end gap-2">
+            <AvatarGroup
+              providers={getDefaultPipeProviders(pipeId)}
+              providerCatalog={providerCatalog}
+            />
+            <h1 className="text-3xl font-bold text-left pb-4 leading-3">
+              {pipeEntry.label}
+            </h1>
+          </div>
           <p className="text-lg text-muted-foreground">
             {pipeEntry.description}
           </p>
+          <CopyToClipboard value={pipeId} className="mt-3" />
         </div>
-        {/* Metadata Section */}
 
-        <div>
-          <CopyToClipboard value={pipeId} />
-        </div>
-      </div>
+        {pipeEntry.lifecycle?.replacedBy && (
+          <Alert variant="destructive" className="mb-2">
+            <AlertTitle>
+              Deprecated by{" "}
+              {dateFormatter.format(new Date(pipeEntry.lifecycle.deprecatedOn))}
+            </AlertTitle>
+            <AlertDescription>
+              Use instead: {pipeEntry.lifecycle.replacedBy}
+            </AlertDescription>
+          </Alert>
+        )}
 
-      {/* Providers Section */}
-      <div>
         <Table>
           <TableHeader>
             <TableRow>
@@ -184,218 +214,190 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
             )}
           </TableBody>
         </Table>
-      </div>
+        <div className="space-y-4">
+          {pipeEntry.inputFieldMode === "static" ? (
+            <div>
+              <h3 className="font-bold text-sm mb-3 pb-2 border-b">
+                Input Fields
+              </h3>
+              <div className="space-y-2">
+                {pipeEntry.defaultInputGroups.length === 0 && (
+                  <Alert>
+                    <Upload className="h-4 w-4" />
+                    <AlertTitle>No input fields</AlertTitle>
+                    <AlertDescription>
+                      <p>This pipe's has no input fields.</p>
+                    </AlertDescription>
+                  </Alert>
+                )}
+                {pipeEntry.defaultInputGroups?.map((group, groupIndex) => {
+                  const fieldEntries = Object.entries(group.fields);
 
-      {/* Input Groups */}
-      <div className="space-y-8">
-        {pipeEntry.inputFieldMode === "static" ? (
-          <div>
-            <h3 className="font-medium mb-3 pb-2 border-b">Input Fields</h3>
-            <div className="space-y-2">
-              {pipeEntry.defaultInputGroups.length === 0 && (
-                <Alert>
-                  <Upload className="h-4 w-4" />
-                  <AlertTitle>No input fields</AlertTitle>
-                  <AlertDescription>
-                    <p>This pipe's has no input fields.</p>
-                  </AlertDescription>
-                </Alert>
-              )}
-              {pipeEntry.defaultInputGroups?.map((group, groupIndex) => {
-                const fieldEntries = Object.entries(group.fields);
+                  // For groups with multiple fields, show relationship
+                  if (fieldEntries.length > 1) {
+                    return (
+                      <div
+                        key={groupIndex}
+                        className="border-l-3 border-border pl-3"
+                      >
+                        <div className="pb-3">
+                          <h4 className="text-sm">Field group</h4>
+                          <small className="text-muted-foreground">
+                            {group.condition === "all" && "All Required"}
+                            {group.condition === "atLeastOne" &&
+                              "At Least one of the following fields is required"}
+                            {group.condition === "none" && "None Required"}
+                          </small>
+                        </div>
 
-                // For groups with multiple fields, show relationship
-                if (fieldEntries.length > 1) {
-                  return (
-                    <div
-                      key={groupIndex}
-                      className="border-l-3 border-border pl-3"
-                    >
-                      <div className="pb-3">
-                        <h4 className="text-sm">Field group</h4>
-                        <small className="text-muted-foreground">
-                          {group.condition === "all" && "All Required"}
-                          {group.condition === "atLeastOne" &&
-                            "At Least one of the following fields is required"}
-                          {group.condition === "none" && "None Required"}
-                        </small>
+                        <div className="space-y-2">
+                          {fieldEntries.map(([fieldName]) => {
+                            const found = getField(fieldName as FieldName);
+                            if (!found) return null;
+
+                            return (
+                              <PipeFieldRow
+                                type="input"
+                                key={fieldName}
+                                fieldName={fieldName}
+                                fieldType={found.type}
+                                description={found.description}
+                              />
+                            );
+                          })}
+                        </div>
                       </div>
+                    );
+                  } else if (fieldEntries.length === 1) {
+                    // For single field groups, show them individually
+                    const [fieldName] = fieldEntries[0];
+                    const found = getField(fieldName as FieldName);
+                    if (!found) return null;
 
-                      <div className="space-y-2">
-                        {fieldEntries.map(([fieldName]) => {
-                          const found = getField(fieldName as FieldName);
-                          if (!found) return null;
+                    return (
+                      <PipeFieldRow
+                        key={fieldName}
+                        description={found.description}
+                        groupCondition={group.condition}
+                        type="input"
+                        fieldName={fieldName}
+                        fieldType={found.type}
+                      />
+                    );
+                  }
 
-                          return (
-                            <PipeFieldRow
-                              type="input"
-                              key={fieldName}
-                              fieldName={fieldName}
-                              fieldType={found.type}
-                              description={found.description}
-                            />
-                          );
-                        })}
-                      </div>
-                    </div>
-                  );
-                } else if (fieldEntries.length === 1) {
-                  // For single field groups, show them individually
-                  const [fieldName] = fieldEntries[0];
+                  return null;
+                })}
+              </div>
+            </div>
+          ) : (
+            <Alert>
+              <Download className="h-4 w-4" />
+              <AlertTitle>Input field mode: `config`</AlertTitle>
+              <AlertDescription>
+                <p>
+                  This pipe's input fields{" "}
+                  <AppLink linkType="fieldModePrompt">
+                    can be configured by you
+                  </AppLink>
+                  .
+                </p>
+              </AlertDescription>
+            </Alert>
+          )}
+
+          {/* Output Fields */}
+          {pipeEntry.outputFieldMode === "static" ? (
+            <div>
+              <h3 className="font-bold text-sm text-sm mb-3 pb-2 border-b">
+                Output Fields
+              </h3>
+              <div className="space-y-2">
+                {defaultOutputFields.length === 0 && (
+                  <Alert>
+                    <Upload className="h-4 w-4" />
+                    <AlertTitle>No output fields</AlertTitle>
+                    <AlertDescription>
+                      <p>This pipe's has no output fields.</p>
+                    </AlertDescription>
+                  </Alert>
+                )}
+                {defaultOutputFields.map((fieldName) => {
                   const found = getField(fieldName as FieldName);
                   if (!found) return null;
 
                   return (
                     <PipeFieldRow
+                      type="output"
                       key={fieldName}
-                      description={found.description}
-                      groupCondition={group.condition}
-                      type="input"
-                      fieldName={fieldName}
+                      fieldName={found.name}
                       fieldType={found.type}
+                      description={found.description}
                     />
                   );
-                }
-
-                return null;
-              })}
+                })}
+              </div>
             </div>
-          </div>
-        ) : (
-          <Alert>
-            <Download className="h-4 w-4" />
-            <AlertTitle>Input field mode: `config`</AlertTitle>
-            <AlertDescription>
-              <p>
-                This pipe's input fields{" "}
-                <AppLink linkType="fieldModePrompt">
-                  can be configured by you
-                </AppLink>
-                .
-              </p>
-            </AlertDescription>
-          </Alert>
-        )}
+          ) : (
+            <Alert>
+              <Upload className="h-4 w-4" />
+              <AlertTitle>Output field mode: `config`</AlertTitle>
+              <AlertDescription>
+                <p>
+                  This pipe's output fields{" "}
+                  <AppLink linkType="fieldModePrompt">
+                    can be configured by you
+                  </AppLink>
+                  .
+                </p>
+              </AlertDescription>
+            </Alert>
+          )}
+        </div>
+      </div>
 
-        {/* Output Fields */}
-        {pipeEntry.outputFieldMode === "static" ? (
-          <div>
-            <h3 className="font-medium mb-3 pb-2 border-b">Output Fields</h3>
-            <div className="space-y-2">
-              {defaultOutputFields.length === 0 && (
+      <div className="px-4">
+        <Accordion type="multiple" defaultValue={["code"]}>
+          <AccordionItem value="code">
+            <AccordionTrigger className="text-sm">
+              Code example
+            </AccordionTrigger>
+            <AccordionContent>
+              <ApiRequestCodeExample
+                oas={apiDefinition}
+                operation={apiDefinition.operation("/v1/pipes/run", "post")}
+                harData={{ body: snippetCatalog[pipeId] }}
+              />
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="config-reference">
+            <AccordionTrigger className="">Config Reference</AccordionTrigger>
+            <AccordionContent>
+              <PayloadDocumenation pipeId={pipeId} />
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="config">
+            <AccordionTrigger className="text-sm">
+              Default config
+            </AccordionTrigger>
+            <AccordionContent>
+              <div>
                 <Alert>
-                  <Upload className="h-4 w-4" />
-                  <AlertTitle>No output fields</AlertTitle>
+                  <Terminal className="h-4 w-4" />
+                  <AlertTitle>Heads up!</AlertTitle>
                   <AlertDescription>
-                    <p>This pipe's has no output fields.</p>
+                    Passing config values is optional. The following example
+                    contains the default pipe config.
                   </AlertDescription>
                 </Alert>
-              )}
-              {defaultOutputFields.map((fieldName) => {
-                const found = getField(fieldName as FieldName);
-                if (!found) return null;
-
-                return (
-                  <PipeFieldRow
-                    type="output"
-                    key={fieldName}
-                    fieldName={found.name}
-                    fieldType={found.type}
-                    description={found.description}
-                  />
-                );
-              })}
-            </div>
-          </div>
-        ) : (
-          <Alert>
-            <Upload className="h-4 w-4" />
-            <AlertTitle>Output field mode: `config`</AlertTitle>
-            <AlertDescription>
-              <p>
-                This pipe's output fields{" "}
-                <AppLink linkType="fieldModePrompt">
-                  can be configured by you
-                </AppLink>
-                .
-              </p>
-            </AlertDescription>
-          </Alert>
-        )}
-      </div>
-      {/* Code example */}
-      <Accordion type="multiple" defaultValue={["code"]}>
-        <AccordionItem value="code">
-          <AccordionTrigger className="text-sm">Code example</AccordionTrigger>
-          <AccordionContent>
-            <div>
-              <CodeTabs items={["Typescript", "cURL"]}>
-                <div>
-                  <SyntaxHighlighter
-                    language="typescript"
-                    style={vscDarkPlus}
-                    customStyle={{ borderRadius: "0.375rem" }}
-                  >
-                    {`const result = await fetch("https://api.pipe0.com/v1/pipes/run", {
-  method: "POST",
-  headers: {
-    "Authorization": \`Bearer \${API_KEY}\`,
-    "Content-Type": "application/json",
-  },
-  body: JSON.stringify({
-    pipes: [{ 
-      pipe_id: "${pipeId}", 
-    }],
-    input: []
-  })
-});`}
-                  </SyntaxHighlighter>
-                </div>
-                <div>
-                  <SyntaxHighlighter
-                    language="bash"
-                    style={vscDarkPlus}
-                    customStyle={{ borderRadius: "0.375rem" }}
-                  >
-                    {`curl -X POST "https://api.pipe0.com/v1/pipes/run" \\
--H "Authorization: Bearer $API_KEY" \\
--H "Content-Type: application/json" \\
--d '{
-    "pipes": [{ "pipe_id": "${pipeId}" }],
-    "input": []
-}'`}
-                  </SyntaxHighlighter>
-                </div>
-              </CodeTabs>
-            </div>
-          </AccordionContent>
-        </AccordionItem>
-        <AccordionItem value="config-reference">
-          <AccordionTrigger className="">Config Reference</AccordionTrigger>
-          <AccordionContent>
-            <PayloadDocumenation pipeId={pipeId} />
-          </AccordionContent>
-        </AccordionItem>
-        <AccordionItem value="config">
-          <AccordionTrigger className="text-sm">Full config</AccordionTrigger>
-          <AccordionContent>
-            <div>
-              <Alert>
-                <Terminal className="h-4 w-4" />
-                <AlertTitle>Heads up!</AlertTitle>
-                <AlertDescription>
-                  Passing config values is optional. The following example
-                  contains the default pipe config.
-                </AlertDescription>
-              </Alert>
-              <CodeTabs items={["Typescript"]}>
-                <div>
-                  <SyntaxHighlighter
-                    language="typescript"
-                    style={vscDarkPlus}
-                    customStyle={{ borderRadius: "0.375rem" }}
-                  >
-                    {`const result = await fetch("https://api.pipe0.com/v1/pipes/run", {
+                <CodeTabs items={["Typescript"]}>
+                  <div>
+                    <SyntaxHighlighter
+                      language="typescript"
+                      style={vscDarkPlus}
+                      customStyle={{ borderRadius: "0.375rem" }}
+                    >
+                      {`const result = await fetch("https://api.pipe0.com/v1/pipes/run", {
   method: "POST",
   headers: {
     "Authorization": \`Bearer \${API_KEY}\`,
@@ -412,28 +414,29 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
     input: [] // <- your inputs go here
   })
 });`}
-                  </SyntaxHighlighter>
-                </div>
-                <div>
-                  <SyntaxHighlighter
-                    language="bash"
-                    style={vscDarkPlus}
-                    customStyle={{ borderRadius: "0.375rem" }}
-                  >
-                    {`curl -X POST "https://api.pipe0.com/v1/pipes/run" \\
+                    </SyntaxHighlighter>
+                  </div>
+                  <div>
+                    <SyntaxHighlighter
+                      language="bash"
+                      style={vscDarkPlus}
+                      customStyle={{ borderRadius: "0.375rem" }}
+                    >
+                      {`curl -X POST "https://api.pipe0.com/v1/pipes/run" \\
 -H "Authorization: Bearer $API_KEY" \\
 -H "Content-Type: application/json" \\
 -d '{
     "pipes": [{ "pipe_id": "${pipeId}" }],
     "input": []
 }'`}
-                  </SyntaxHighlighter>
-                </div>
-              </CodeTabs>
-            </div>
-          </AccordionContent>
-        </AccordionItem>
-      </Accordion>
+                    </SyntaxHighlighter>
+                  </div>
+                </CodeTabs>
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      </div>
     </div>
   );
 }

@@ -45,12 +45,12 @@ export function CodeTabs({
               ))}
             </TabsList>
           </div>
-          <div className="bg-accent px-4 py-5 border rounded-md">
+          <div className="bg-accent px-4 py-5 border rounded-md flex overflow-auto">
             {React.Children.map(children, (child, index) => (
               <TabsContent
                 key={items[index]}
                 value={items[index]}
-                className="p-0 m-0"
+                className="p-0 m-0 w-1 grow"
               >
                 <div className="font-mono text-sm">{child}</div>
               </TabsContent>
