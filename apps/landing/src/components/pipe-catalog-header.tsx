@@ -1,10 +1,12 @@
 import { snippetCatalog } from "@/app/resources/pipe-catalog/snippet-catalog";
+import { videoCatalog } from "@/app/resources/pipe-catalog/video-catalog";
 import AppLink from "@/components/app-link";
 import { CodeTabs } from "@/components/code-tabs";
 import { PayloadDocumenation } from "@/components/config-documentation";
 import CopyToClipboard from "@/components/copy-to-clipboard";
 import { ApiRequestCodeExample } from "@/components/features/docs/api-request-code-example";
 import { AvatarGroup } from "@/components/features/docs/avatar-group";
+import { HeaderVideoSection } from "@/components/features/docs/header-video-section";
 import { PipeFieldRow } from "@/components/features/pipe-catalog/field-row";
 import { Info } from "@/components/info";
 import { InlineDocsBadge } from "@/components/inline-docs-badge";
@@ -109,6 +111,12 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
   const pipeEntry = getPipeEntry(pipeId);
   const defaultPayload = getPipeDefaultPayload(pipeId);
   const defaultOutputFields = getDefaultOutputFields(pipeEntry);
+
+  let video = videoCatalog[pipeId as keyof typeof videoCatalog] as
+    | string
+    | undefined;
+
+  video = "ljsdfklsj";
 
   return (
     <div className="pipe-header space-y-3">
@@ -309,7 +317,7 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
           {/* Output Fields */}
           {pipeEntry.outputFieldMode === "static" ? (
             <div>
-              <h3 className="font-bold text-sm text-sm mb-3 pb-2 border-b">
+              <h3 className="font-bold text-sm mb-3 pb-2 border-b">
                 Output Fields
               </h3>
               <div className="space-y-2">
@@ -354,6 +362,13 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
             </Alert>
           )}
         </div>
+
+        {video && (
+          <HeaderVideoSection
+            videoUrl={video}
+            placeholder={`Explain ${pipeId}`}
+          />
+        )}
       </div>
 
       <div className="px-4">
