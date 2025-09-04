@@ -23,7 +23,7 @@ import {
   Upload,
 } from "lucide-react";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { ReactNode, useMemo, useState } from "react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { toast } from "sonner";
 
@@ -35,18 +35,18 @@ export function findFieldByName(fieldName: string) {
     [])[1];
 }
 
-export function PipeFieldRow({
+export function FieldRow({
   fieldName,
   fieldType,
   description,
-  type,
   groupCondition,
+  rightAction,
 }: {
   fieldName: string;
   fieldType: RecordFieldType;
   description: string;
-  type: "input" | "output";
   groupCondition?: InputGroup["condition"];
+  rightAction?: ReactNode;
 }) {
   const fieldResult = useMemo(() => findFieldByName(fieldName), []);
   const jsonExample = fieldResult?.jsonExample;
@@ -93,51 +93,7 @@ export function PipeFieldRow({
           )}
         </div>
         <div className="flex items-center gap-4">
-          <div className="space-x-1">
-            {type === "input" ? (
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Link
-                    href={`/resources/pipe-catalog?type=output-field&value=${encodeURI(
-                      fieldName
-                    )}`}
-                  >
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className={cn("size-5", showSucces && "border")}
-                    >
-                      <Download className="size-3" />
-                    </Button>
-                  </Link>
-                </TooltipTrigger>
-                <TooltipContent>
-                  Find pipes that output this field
-                </TooltipContent>
-              </Tooltip>
-            ) : (
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Link
-                    href={`/resources/pipe-catalog?type=input-field&value=${encodeURI(
-                      fieldName
-                    )}`}
-                  >
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className={cn("size-5", showSucces && "border")}
-                    >
-                      <Upload className="size-3" />
-                    </Button>
-                  </Link>
-                </TooltipTrigger>
-                <TooltipContent>
-                  Find pipes that input this field
-                </TooltipContent>
-              </Tooltip>
-            )}
-          </div>
+          {rightAction}
 
           <div className="text-sm text-muted-foreground italic">
             <Info>{description}</Info>

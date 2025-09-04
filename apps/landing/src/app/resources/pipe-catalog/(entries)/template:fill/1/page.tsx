@@ -12,7 +12,6 @@ export default async function PipeDocs() {
   return (
     <PipePage pipeId={pipeId}>
       <PipeCatalogHeader pipeId={pipeId} />
-      <Content />
     </PipePage>
   );
 }
