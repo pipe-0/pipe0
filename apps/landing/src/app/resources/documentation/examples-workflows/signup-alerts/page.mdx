@@ -44,7 +44,7 @@ zero.POST("/v1/pipes/run/sync", {
         pipe_id: "prompt:run@1",
         config: {
           prompt: {
-            text: `
+            template: `
 Your task is to determine if the user's current employer aligns with the ideal customer profile for our business, pipe0.
 
 [Business Description]
@@ -94,7 +94,7 @@ Estimated revenue: {{ input estimated_revenue type="string" }}
         },
         config: {
           prompt: {
-            text: `
+            template: `
 Notify the pipe0 team that a high value customer signed up to the platform.
 
 Give the team the following information:

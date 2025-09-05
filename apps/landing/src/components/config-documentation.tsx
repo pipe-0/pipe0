@@ -11,9 +11,7 @@ import {
   DateRangeMetadata,
   GeneratedFormField,
   getPayloadFormConfig,
-  getPipePayloadFormConfig,
   getPipePayloadSchema,
-  getSearchesPayloadFormConfig,
   getSearchPayloadSchema,
   IntegerMetadata,
   isBooleanField,
@@ -38,7 +36,6 @@ import {
 } from "@pipe0/client-sdk";
 import { Calendar, FileText, Hash, List, ToggleLeft, Type } from "lucide-react";
 import { PropsWithChildren, useMemo } from "react";
-import { ZodType } from "zod";
 
 const isNumericField = (
   field: GeneratedFormField

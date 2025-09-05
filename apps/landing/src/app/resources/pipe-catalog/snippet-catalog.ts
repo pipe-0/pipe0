@@ -115,13 +115,13 @@ export const snippetCatalog = {
       },
     ],
   },
-  "people:phone:email:waterfall@1": {
+  "people:phone:workemail:waterfall@1": {
     config: {
       environment: "production",
     },
     pipes: [
       {
-        pipe_id: "people:phone:email:waterfall@1",
+        pipe_id: "people:phone:workemail:waterfall@1",
       },
     ],
     input: [
@@ -173,7 +173,7 @@ export const snippetCatalog = {
         pipe_id: "prompt:run@1",
         config: {
           prompt: {
-            text: `
+            template: `
     Tell me if {{ input name required="true" type="string" }} fits the ICP criteria for my company <YOUR_COMPANY_NAME>.
 
     My company, <YOUR_COMPANY_NAME>, can be described as follows: <ADD_COMPANY_DESCRIPTION>.
@@ -426,7 +426,7 @@ export const snippetCatalog = {
         config: {
           model: "gemini-flash-latest",
           prompt: {
-            text: `
+            template: `
 Write an internal slack message that notifies the team about a high value signup 
 that customer success should reach out to personally.
 
@@ -466,7 +466,7 @@ Head of Customer Success
 [LinkedIn](https://https://linkedin.com/li/john-doe)
           `,
           prompt: {
-            text: `
+            template: `
 Write a welcome message for new users of my app Pipe0.
 
 Pipe0 is a data enrichment framework that serves both software engineers working on products that 
