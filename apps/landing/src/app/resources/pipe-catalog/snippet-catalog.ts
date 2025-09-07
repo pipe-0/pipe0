@@ -308,6 +308,22 @@ export const snippetCatalog = {
       },
     ],
   },
+  "people:email:validate:zerobounce@2": {
+    config: {
+      environment: "production",
+    },
+    pipes: [
+      {
+        pipe_id: "people:email:validate:zerobounce@2",
+      },
+    ],
+    input: [
+      {
+        id: "1",
+        email: "jane@pipe0.com",
+      },
+    ],
+  },
   "people:phone:profile:waterfall@1": {
     config: {
       environment: "production",
@@ -547,6 +563,36 @@ Customize the message using the name of the user: {{ input name type="string" re
         config: {
           reply_to: "<REPLY_TO_EMAIL_ADDRESS>",
           from: "<FROM_EMAIL_ADDRESS>",
+        },
+      },
+    ],
+    input: [
+      {
+        id: "1",
+        email: "<EMAIL_ADDRESS>",
+        email_body: "<EMAIL_TEXT>",
+        email_subject: "<EMAIL_SUBJECT_LINE>",
+      },
+    ],
+  },
+  "email:send:gmail@1": {
+    config: {
+      environment: "production",
+    },
+    pipes: [
+      {
+        connector: {
+          strategy: "first",
+          connections: [
+            {
+              connection: "<PROVIDE_YOUR_OWN_CONNECTION_VIA_DASHBOARD>",
+              type: "vault",
+            },
+          ],
+        },
+        pipe_id: "email:send:gmail@1",
+        config: {
+          reply_to: "<REPLY_TO_EMAIL_ADDRESS>",
         },
       },
     ],
