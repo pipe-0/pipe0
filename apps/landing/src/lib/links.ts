@@ -3,12 +3,12 @@ export const appLinks = {
   pipeConfig: () => `/resources/documentation/request-payload#pipeconfig`,
   inputSanitation: () => `/resources/documentation/input-sanitation`,
   fieldStatus: () => `/resources/documentation/response-object#status`,
-  promptTags: () => `/resources/documentation/pipe-concepts#prompt-tags`,
+  templateTags: () => `/resources/documentation/pipe-concepts#template-tags`,
   fieldMode: () => `/resources/documentation/pipe-concepts#field-mode`,
   outputFieldToggle: () =>
-    `/resources/documentation/pipe-concepts#disabletoggle-pipe-output`,
-  fieldModePrompt: () =>
-    `/resources/documentation/pipe-concepts#field-mode-prompt`,
+    `/resources/documentation/pipe-concepts#disable-static-pipe-outputs`,
+  fieldModeConfig: () =>
+    `/resources/documentation/pipe-concepts#field-mode-config`,
   openAPI: () => `/resources/documentation/requests#openapi-31`,
   catalogs: () => `/resources/documentation/catalogs`,
   async: () => `/resources/documentation/requests#sync-or-async`,

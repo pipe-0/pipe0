@@ -54,18 +54,10 @@ _Example_:
 When using the pipe `people:workemail:waterfall@1`, we use the
 input fields `name` and `company_website_url` to generate the output field `work_email`.
 
-#### Toggle output fields
+#### Rename static pipe outputs
 
-At times, you may run into situations where some of your input fields conflict with pipe output fields.
-Every field must have a clear owner. In cases like these, you have three options:
-1. Rename our input field
-2. Rename the pipe output field
-3. Disable the pipe output field
-
-##### Rename pipe output
-
-All pipes who's output fields are known (`field mode = static`) before you add them allow you to rename or disable 
-output fields. To rename output fields use the `config.output_fields[<FIELD_NAME>].alias` configuration.
+All pipes with static outputs allow renaming of output fields.
+To rename output fields, use the `config.output_fields[<FIELD_NAME>].alias` configuration.
 
 ```javascript
 fetch('https://api.pipe0.com/v1/pipes/run', {
@@ -80,7 +72,7 @@ fetch('https://api.pipe0.com/v1/pipes/run', {
                 config: {
                     output_fields: {
                         first_name: {
-                            alias: 'special_first_name'
+                            alias: 'special_first_name' // <- RENAME FIELD
                         }
                     }
                 }
@@ -96,9 +88,10 @@ fetch('https://api.pipe0.com/v1/pipes/run', {
 })
 ```
 
-##### Disable/toggle pipe output
+#### Disable static pipe outputs
 
-To disable/enable a pipe field, use the `config.output_fields[<FIELD_NAME>].enabled` option.
+All pipes with static outputs allow the enabling/disabling of output fields.
+To enable/disable output fields, use the `config.output_fields[<FIELD_NAME>].enabled` option.
 
 ```javascript
 fetch('https://api.pipe0.com/v1/pipes/run', {
@@ -113,7 +106,7 @@ fetch('https://api.pipe0.com/v1/pipes/run', {
                 config: {
                     output_fields: {
                         first_name: {
-                            enabled: false
+                            enabled: false // <- THIS OPTION
                         }
                     }
                 }
@@ -134,19 +127,24 @@ fetch('https://api.pipe0.com/v1/pipes/run', {
 The inputs and outputs of this pipe are not known beforehand. This is the case when the user can define 
 input and output fields as part of the pipe configuration.
 
-#### Prompt inputs
+#### Templates
 
-A common pattern that uses user-defined in- and outputs is `prompts`. Prompts let the user specify input 
-and output fields for a pipe with a special syntax.
+A common pattern that uses user-defined in- and outputs is `templates`. With templates you spcify 
+in- and outputs as text. This is useful when working with large language models (LLM).
 
-##### Prompt example
+Not all teamplates support the definition of output tags.
 
-Prompts have the following structure:
+**Example:** The template for the [prompt:run@1](/resources/pipe-catalog/prompt:run/1) pipe requires you to specify **in- and output fields** as template tags.
+In contrast, the [email:write@1](/resources/pipe-catalog/email:write/1) pipe only supports the definition of **input fields** via template tags.
+
+##### Template example
+
+Templates have the following structure:
 
 ```json
 {
   "prompt": {
-    "text": "Determine if company {{ input company_name type=\"string\" }} is a good customer for my magic wand 🪄 business. {{ output reason type=\"json\" schema=\"reason\" description=\"Explain why the customer is a good prospect\" }} {{ output is_good_customer type=\"boolean\" format=\"int\" description=\"a flag that summarized the overall assessment of the customers fit\" }}",
+    "template": "Determine if company {{ input company_name type=\"string\" }} is a good customer for my magic wand 🪄 business. {{ output reason type=\"json\" schema=\"reason\" description=\"Explain why the customer is a good prospect\" }} {{ output is_good_customer type=\"boolean\" format=\"int\" description=\"a flag that summarized the overall assessment of the customers fit\" }}",
     "json_schemas": {
       "reason": {
         "type": "object",
@@ -162,15 +160,16 @@ Prompts have the following structure:
 }
 ```
 
-##### Prompt tags 
+##### Template tags 
 
 Input field tags support the following properties:
 
 | Property      | Example |
 | :---        |    :---   | 
+| type      | `{{ input company_name type=\"string\" }}`| 
 | required      | `{{ input company_name type="string" required=\"true\" }}`| 
 
-Input field tags support the following properties:
+Output field tags support the following properties:
 
 | Property      | Example |
 | :---        |    :---   | 

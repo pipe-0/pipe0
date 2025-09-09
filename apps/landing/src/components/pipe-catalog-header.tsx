@@ -295,7 +295,7 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
               <AlertDescription>
                 <p>
                   This pipe's input fields{" "}
-                  <AppLink linkType="fieldModePrompt">
+                  <AppLink linkType="fieldModeConfig">
                     can be configured by you
                   </AppLink>
                   .
@@ -379,7 +379,7 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
               <AlertDescription>
                 <p>
                   This pipe's output fields{" "}
-                  <AppLink linkType="fieldModePrompt">
+                  <AppLink linkType="fieldModeConfig">
                     can be configured by you
                   </AppLink>
                   .
