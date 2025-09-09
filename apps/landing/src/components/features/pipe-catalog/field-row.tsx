@@ -10,25 +10,47 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Tooltip, TooltipContent } from "@/components/ui/tooltip";
 import { cn, copyToClipboard } from "@/lib/utils";
 import { fieldCatalog, InputGroup, RecordFieldType } from "@pipe0/client-sdk";
-import { TooltipTrigger } from "@radix-ui/react-tooltip";
-import {
-  ArrowDown,
-  ArrowUp,
-  Check,
-  Copy,
-  Download,
-  Upload,
-} from "lucide-react";
-import Link from "next/link";
+import { Check, Copy, X } from "lucide-react";
 import { ReactNode, useMemo, useState } from "react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { toast } from "sonner";
 
-import { vscDarkPlus } from "react-syntax-highlighter/dist/cjs/styles/prism";
 import { RequiredAsterisk } from "@/components/required-asterisk";
+import { appLinks } from "@/lib/links";
+import Link from "next/link";
+import { vscDarkPlus } from "react-syntax-highlighter/dist/cjs/styles/prism";
+
+export function OutputFieldEnabledBadge({
+  isEnabledByDefault,
+}: {
+  isEnabledByDefault: boolean;
+}) {
+  return (
+    <Link href={appLinks.outputFieldToggle()} target="_blank">
+      <>
+        {isEnabledByDefault ? (
+          <Badge
+            variant="outline"
+            className="border-none text-muted-foreground hover:underline font-normal"
+          >
+            <Check className="size-4" />
+            &nbsp; Enabled by default
+          </Badge>
+        ) : (
+          <Badge
+            variant="outline"
+            className="border-none text-muted-foreground hover:underline font-normal"
+          >
+            <X className="size-4" />
+            &nbsp; Disabled by default
+          </Badge>
+        )}
+      </>
+    </Link>
+  );
+}
 
 export function findFieldByName(fieldName: string) {
   return (Object.entries(fieldCatalog).find(([name]) => name === fieldName) ||

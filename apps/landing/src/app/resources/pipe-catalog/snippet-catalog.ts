@@ -750,4 +750,20 @@ Customize the message using the name of the user: {{ input name type="string" re
       },
     ],
   },
+  "company:overview@2": {
+    config: {
+      environment: "production",
+    },
+    pipes: [
+      {
+        pipe_id: "company:overview@2",
+      },
+    ],
+    input: [
+      {
+        id: "1",
+        company_website_url: "Pipe0",
+      },
+    ],
+  },
 } satisfies { [K in PipeId]: PipesRequest & { pipes: PipePayloadMap[K][] } };

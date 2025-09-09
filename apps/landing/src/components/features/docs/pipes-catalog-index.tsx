@@ -88,7 +88,7 @@ const FEATURED_PIPE_IDS = [
   "people:workemail:waterfall@1",
   "company:techstack:builtwith@1",
   "company:identity@2",
-  "company:overview@1",
+  "company:overview@2",
 ] satisfies PipeId[];
 
 // Integration card component - memoized to prevent unnecessary re-renders

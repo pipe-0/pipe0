@@ -8,7 +8,10 @@ import { CodeTabs } from "@/components/code-tabs";
 import { PayloadDocumenation } from "@/components/config-documentation";
 import { ApiRequestCodeExample } from "@/components/features/docs/api-request-code-example";
 import { CatalogHeader } from "@/components/features/docs/docs-layout";
-import { FieldRow } from "@/components/features/pipe-catalog/field-row";
+import {
+  FieldRow,
+  OutputFieldEnabledBadge,
+} from "@/components/features/pipe-catalog/field-row";
 import { Info } from "@/components/info";
 import { InlineDocsBadge } from "@/components/inline-docs-badge";
 import {
@@ -19,6 +22,7 @@ import {
 } from "@/components/ui/accordion";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -46,7 +50,7 @@ import {
   PipeId,
   providerCatalog,
 } from "@pipe0/client-sdk";
-import { Download, Terminal, Upload } from "lucide-react";
+import { Check, Download, Terminal, Upload } from "lucide-react";
 import Link from "next/link";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/cjs/styles/prism";
@@ -317,6 +321,16 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
                   </Alert>
                 )}
                 {defaultOutputFields.map((fieldName) => {
+                  const isEnabledByDefault = !!(
+                    pipeEntry?.defaultPayload.config?.output_fields as Record<
+                      string,
+                      any
+                    >
+                  )?.[fieldName]?.enabled;
+
+                  if (fieldName === "leadmagic_company_news_list") {
+                    console.log({ payload: pipeEntry.defaultPayload });
+                  }
                   const found = getField(fieldName as FieldName);
                   if (!found) return null;
 
@@ -327,26 +341,31 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
                       fieldType={found.type}
                       description={found.description}
                       rightAction={
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Link
-                              href={`/resources/pipe-catalog?type=input-field&value=${encodeURI(
-                                fieldName
-                              )}`}
-                            >
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                className="size-5"
+                        <div className="flex gap-2">
+                          <OutputFieldEnabledBadge
+                            isEnabledByDefault={isEnabledByDefault}
+                          />
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Link
+                                href={`/resources/pipe-catalog?type=input-field&value=${encodeURI(
+                                  fieldName
+                                )}`}
                               >
-                                <Upload className="size-3" />
-                              </Button>
-                            </Link>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            Find pipes that input this field
-                          </TooltipContent>
-                        </Tooltip>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  className="size-5"
+                                >
+                                  <Upload className="size-3" />
+                                </Button>
+                              </Link>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              Find pipes that input this field
+                            </TooltipContent>
+                          </Tooltip>
+                        </div>
                       }
                     />
                   );

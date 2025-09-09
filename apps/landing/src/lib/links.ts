@@ -5,6 +5,8 @@ export const appLinks = {
   fieldStatus: () => `/resources/documentation/response-object#status`,
   promptTags: () => `/resources/documentation/pipe-concepts#prompt-tags`,
   fieldMode: () => `/resources/documentation/pipe-concepts#field-mode`,
+  outputFieldToggle: () =>
+    `/resources/documentation/pipe-concepts#disabletoggle-pipe-output`,
   fieldModePrompt: () =>
     `/resources/documentation/pipe-concepts#field-mode-prompt`,
   openAPI: () => `/resources/documentation/requests#openapi-31`,

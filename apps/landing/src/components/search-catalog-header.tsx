@@ -5,13 +5,14 @@ import {
 import { videoCatalog } from "@/app/resources/search-catalog/video-catalog";
 import { CodeTabs } from "@/components/code-tabs";
 import { PayloadDocumenation } from "@/components/config-documentation";
-import CopyToClipboard from "@/components/copy-to-clipboard";
 import { ApiRequestCodeExample } from "@/components/features/docs/api-request-code-example";
 import { CatalogHeader } from "@/components/features/docs/docs-layout";
-import { FieldRow } from "@/components/features/pipe-catalog/field-row";
+import {
+  FieldRow,
+  OutputFieldEnabledBadge,
+} from "@/components/features/pipe-catalog/field-row";
 import { Info } from "@/components/info";
 import { InlineDocsBadge } from "@/components/inline-docs-badge";
-import { SearchFieldRow } from "@/components/search-field-row";
 import {
   Accordion,
   AccordionContent,
@@ -19,14 +20,6 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
 import {
   Table,
   TableBody,
@@ -45,7 +38,6 @@ import {
   providerCatalog,
   SearchId,
 } from "@pipe0/client-sdk";
-import Link from "next/link";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/cjs/styles/prism";
 
@@ -133,6 +125,12 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
           <div className="space-y-2">
             {searchEntry.defaultOutputFields.map((fieldName) => {
               const found = getField(fieldName as FieldName);
+              const isEnabledByDefault = !!(
+                defaultSearchPayload?.config?.output_fields as Record<
+                  string,
+                  any
+                >
+              )?.[fieldName]?.enabled;
               if (!found) return null;
 
               return (
@@ -141,6 +139,11 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
                   fieldName={found.name}
                   fieldType={found.type}
                   description={found.description}
+                  rightAction={
+                    <OutputFieldEnabledBadge
+                      isEnabledByDefault={isEnabledByDefault}
+                    />
+                  }
                 />
               );
             })}

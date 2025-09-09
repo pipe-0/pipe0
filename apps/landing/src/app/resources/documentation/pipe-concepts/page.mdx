@@ -54,6 +54,81 @@ _Example_:
 When using the pipe `people:workemail:waterfall@1`, we use the
 input fields `name` and `company_website_url` to generate the output field `work_email`.
 
+#### Toggle output fields
+
+At times, you may run into situations where some of your input fields conflict with pipe output fields.
+Every field must have a clear owner. In cases like these, you have three options:
+1. Rename our input field
+2. Rename the pipe output field
+3. Disable the pipe output field
+
+##### Rename pipe output
+
+All pipes who's output fields are known (`field mode = static`) before you add them allow you to rename or disable 
+output fields. To rename output fields use the `config.output_fields[<FIELD_NAME>].alias` configuration.
+
+```javascript
+fetch('https://api.pipe0.com/v1/pipes/run', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+        pipes: [
+            {
+                pipe_id: 'people:name:split@1',
+                config: {
+                    output_fields: {
+                        first_name: {
+                            alias: 'special_first_name'
+                        }
+                    }
+                }
+            }
+        ],
+        input: [
+            {
+                id: '1',
+                name: 'John Doe'
+            }
+        ]
+    })
+})
+```
+
+##### Disable/toggle pipe output
+
+To disable/enable a pipe field, use the `config.output_fields[<FIELD_NAME>].enabled` option.
+
+```javascript
+fetch('https://api.pipe0.com/v1/pipes/run', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+        pipes: [
+            {
+                pipe_id: 'people:name:split@1',
+                config: {
+                    output_fields: {
+                        first_name: {
+                            enabled: false
+                        }
+                    }
+                }
+            }
+        ],
+        input: [
+            {
+                id: '1',
+                name: 'John Doe'
+            }
+        ]
+    })
+})
+```
+
 ### Field mode: `config`
 
 The inputs and outputs of this pipe are not known beforehand. This is the case when the user can define 
@@ -71,7 +146,7 @@ Prompts have the following structure:
 ```json
 {
   "prompt": {
-    "text": "Determine if company {{ input company_name }} is a good customer for my magic wand 🪄 business. {{ output reason type=\"json\" schema=\"reason\" description=\"Explain why the customer is a good prospect\" }} {{ output is_good_customer type=\"boolean\" format=\"int\" description=\"a flag that summarized the overall assessment of the customers fit\" }}",
+    "text": "Determine if company {{ input company_name type=\"string\" }} is a good customer for my magic wand 🪄 business. {{ output reason type=\"json\" schema=\"reason\" description=\"Explain why the customer is a good prospect\" }} {{ output is_good_customer type=\"boolean\" format=\"int\" description=\"a flag that summarized the overall assessment of the customers fit\" }}",
     "json_schemas": {
       "reason": {
         "type": "object",
@@ -93,14 +168,14 @@ Input field tags support the following properties:
 
 | Property      | Example |
 | :---        |    :---   | 
-| required      | `{{ input company_name required=\"true\" }}`| 
+| required      | `{{ input company_name type="string" required=\"true\" }}`| 
 
 Input field tags support the following properties:
 
 | Property      | Example |
 | :---        |    :---   | 
 | type      | `{{ output company_name type=\"string\" }}`| 
-| description   | `{{ output company_name description=\"Lorem ipsum\" }}`|
+| description   | `{{ output company_name type="string" description=\"Lorem ipsum\" }}`|
 
 
 ## Triggers <span className="badge-new" />
