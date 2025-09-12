@@ -141,6 +141,25 @@ export const snippetCatalog = {
       },
     ],
   },
+  "people:employees:leadmagic@1": {
+    config: {
+      environment: "production",
+      dedup: {
+        strategy: "default",
+      },
+    },
+    searches: [
+      {
+        search_id: "people:employees:leadmagic@1",
+        config: {
+          limit: 20,
+          filters: {
+            company_website_url: "https://pipe0.com",
+          },
+        },
+      },
+    ],
+  },
 } satisfies {
   [K in SearchId]: SearchesRequest & { searches: SearchesPayloadMap[K][] };
 };

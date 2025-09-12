@@ -766,4 +766,28 @@ Customize the message using the name of the user: {{ input name type="string" re
       },
     ],
   },
+  "fields:merge@1": {
+    config: {
+      environment: "production",
+    },
+    pipes: [
+      {
+        pipe_id: "fields:merge@1",
+        config: {
+          sources: [
+            {
+              field_name: "field_1",
+            },
+            { field_name: "field_2" },
+          ],
+        },
+      },
+    ],
+    input: [
+      {
+        id: "1",
+        company_website_url: "Pipe0",
+      },
+    ],
+  },
 } satisfies { [K in PipeId]: PipesRequest & { pipes: PipePayloadMap[K][] } };

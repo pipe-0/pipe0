@@ -3,7 +3,7 @@ import { SearchCatalogHeader } from "@/components/search-catalog-header";
 import { generateSearchMetadata } from "@/lib/utils";
 import { SearchId } from "@pipe0/client-sdk";
 
-const searchId: SearchId = "companies:profiles:icypeas@1";
+const searchId: SearchId = "people:employees:leadmagic@1";
 
 export const metadata = generateSearchMetadata(searchId);
 
