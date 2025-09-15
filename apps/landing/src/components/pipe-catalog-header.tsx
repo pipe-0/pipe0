@@ -328,9 +328,6 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
                     >
                   )?.[fieldName]?.enabled;
 
-                  if (fieldName === "leadmagic_company_news_list") {
-                    console.log({ payload: pipeEntry.defaultPayload });
-                  }
                   const found = getField(fieldName as FieldName);
                   if (!found) return null;
 

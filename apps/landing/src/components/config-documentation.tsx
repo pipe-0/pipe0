@@ -7,6 +7,8 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { copyToClipboard } from "@/lib/utils";
 import {
   DateRangeMetadata,
   GeneratedFormField,
@@ -34,8 +36,17 @@ import {
   SelectMetadata,
   TextMetadata,
 } from "@pipe0/client-sdk";
-import { Calendar, FileText, Hash, List, ToggleLeft, Type } from "lucide-react";
+import {
+  Calendar,
+  Copy,
+  FileText,
+  Hash,
+  List,
+  ToggleLeft,
+  Type,
+} from "lucide-react";
 import { PropsWithChildren, useMemo } from "react";
+import { toast } from "sonner";
 
 const isNumericField = (
   field: GeneratedFormField
@@ -282,13 +293,29 @@ function OptionsSection({ field }: { field: GeneratedFormField }) {
   const options = getOptions();
   if (!options) return null;
 
+  const handleCopyOptions = () => {
+    const value = field.suggestions || field.options;
+    copyToClipboard(JSON.stringify(value, null, 2));
+  };
+
   return (
     <div>
-      <h4 className="text-sm font-medium text-gray-900 mb-3">
-        {isIncludeExcludeField(field) && field.suggestions
-          ? "Suggestions"
-          : "Available options"}
-      </h4>
+      <div className="flex justify-between">
+        <h4 className="text-sm font-medium text-gray-900 mb-3">
+          {isIncludeExcludeField(field) && field.suggestions
+            ? "Suggestions"
+            : "Available options"}
+        </h4>
+
+        <Button
+          size={"icon"}
+          variant="ghost"
+          className="size-7"
+          onClick={handleCopyOptions}
+        >
+          <Copy className="size-4" />
+        </Button>
+      </div>
 
       {isIncludeExcludeField(field) && field.suggestions ? (
         <div className="max-h-32 overflow-y-auto border border-gray-200 rounded-lg p-3">
