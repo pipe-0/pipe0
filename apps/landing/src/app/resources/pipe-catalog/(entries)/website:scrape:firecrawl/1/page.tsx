@@ -3,7 +3,7 @@ import { PipeCatalogHeader } from "@/components/pipe-catalog-header";
 import { generatePipeMetadata } from "@/lib/utils";
 import { PipeId } from "@pipe0/client-sdk";
 
-const pipeId: PipeId = "template:fill@1";
+const pipeId: PipeId = "website:scrape:firecrawl@1";
 
 export const metadata = generatePipeMetadata(pipeId);
 

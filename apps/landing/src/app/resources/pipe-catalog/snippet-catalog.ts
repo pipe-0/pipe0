@@ -790,4 +790,27 @@ Customize the message using the name of the user: {{ input name type="string" re
       },
     ],
   },
+  "website:scrape:firecrawl@1": {
+    config: {
+      environment: "production",
+    },
+    pipes: [
+      {
+        pipe_id: "website:scrape:firecrawl@1",
+        config: {
+          input_fields: {
+            website_url: {
+              alias: "<POINT_TO_ANY_URL_FIELD>",
+            },
+          },
+        },
+      },
+    ],
+    input: [
+      {
+        id: "1",
+        company_website_url: "Pipe0",
+      },
+    ],
+  },
 } satisfies { [K in PipeId]: PipesRequest & { pipes: PipePayloadMap[K][] } };

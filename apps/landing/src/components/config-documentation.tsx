@@ -27,6 +27,7 @@ import {
   isSelectField,
   isTextareaField,
   isTextField,
+  isOutputField,
   NumberMetadata,
   PipeId,
   RangeMetadata,
@@ -35,6 +36,7 @@ import {
   SearchId,
   SelectMetadata,
   TextMetadata,
+  OutputFieldMetadata,
 } from "@pipe0/client-sdk";
 import {
   Calendar,
@@ -132,6 +134,13 @@ const generateNumericExample = (
   "${fieldName}": ${field.min || 0}
 }`;
 
+const generateOutputFieldExmple = (fieldName: string) => `{
+  "${fieldName}": {
+    "enabled": true,
+    "alias": ""
+  }
+}`;
+
 function generateCodeExample(field: GeneratedFormField): string {
   const pathParts = field.path.split(".");
   const fieldName = pathParts[pathParts.length - 1];
@@ -159,6 +168,9 @@ function generateCodeExample(field: GeneratedFormField): string {
   }
   if (isJSONExtractionField(field)) {
     return generateJsonExtractionExample(fieldName);
+  }
+  if (isOutputField(field)) {
+    return generateOutputFieldExmple(fieldName);
   }
 
   return `{
