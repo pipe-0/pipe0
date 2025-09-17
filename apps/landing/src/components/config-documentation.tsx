@@ -22,12 +22,13 @@ import {
   isIncludeExcludeSelectField,
   isIntegerField,
   isJSONExtractionField,
+  isJsonSchemaInput,
   isNumberField,
+  isOutputField,
   isRangeField,
   isSelectField,
   isTextareaField,
   isTextField,
-  isOutputField,
   NumberMetadata,
   PipeId,
   RangeMetadata,
@@ -36,7 +37,6 @@ import {
   SearchId,
   SelectMetadata,
   TextMetadata,
-  OutputFieldMetadata,
 } from "@pipe0/client-sdk";
 import {
   Calendar,
@@ -48,7 +48,6 @@ import {
   Type,
 } from "lucide-react";
 import { PropsWithChildren, useMemo } from "react";
-import { toast } from "sonner";
 
 const isNumericField = (
   field: GeneratedFormField
@@ -91,6 +90,18 @@ const generateJsonExtractionExample = (fieldName: string) => `{
         "type": "string",
       }
     ]
+  }
+}`;
+
+const generateJsonSchemaExample = (fieldName: string) => `{
+  "${fieldName}": {
+    "type": "object",
+    "properties": {
+      "foo": {
+        "type": "string"
+      }
+    },
+    "required": ["foo"]
   }
 }`;
 
@@ -168,6 +179,9 @@ function generateCodeExample(field: GeneratedFormField): string {
   }
   if (isJSONExtractionField(field)) {
     return generateJsonExtractionExample(fieldName);
+  }
+  if (isJsonSchemaInput(field)) {
+    return generateJsonSchemaExample(fieldName);
   }
   if (isOutputField(field)) {
     return generateOutputFieldExmple(fieldName);

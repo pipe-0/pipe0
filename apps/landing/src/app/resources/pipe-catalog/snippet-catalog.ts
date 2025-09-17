@@ -813,4 +813,38 @@ Customize the message using the name of the user: {{ input name type="string" re
       },
     ],
   },
+  "website:extract:firecrawl@1": {
+    config: {
+      environment: "production",
+    },
+    pipes: [
+      {
+        pipe_id: "website:extract:firecrawl@1",
+        config: {
+          extraction_prompt:
+            "Extract the company mission as well as the latest news.",
+          enable_full_domain_crawl: true,
+          enable_web_search: true,
+          json_schema: {
+            type: "object",
+            required: ["company_mission", "latest_news"],
+            properties: {
+              company_mission: {
+                type: "string",
+              },
+              latest_news: {
+                type: "string",
+              },
+            },
+          },
+        },
+      },
+    ],
+    input: [
+      {
+        id: "1",
+        company_website_url: "Pipe0",
+      },
+    ],
+  },
 } satisfies { [K in PipeId]: PipesRequest & { pipes: PipePayloadMap[K][] } };
