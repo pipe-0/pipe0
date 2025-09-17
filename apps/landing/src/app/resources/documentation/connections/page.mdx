@@ -24,12 +24,15 @@ Here are a few reasons why we recommend using managed connections when possible.
 - 🐸 You don't have to share sensitive credentials with us
 
 Some pipes and searches require you to bring connections - like the [actions:sendmail:resend@1](/resources/pipe-catalog/action:sendmail:resend/1) pipe.
-This pipe sends an email [Resend](https://resend.com). To use this pipe, reference a Resend API key in your request.
+This pipe requies you to bring your own API key. You can do so by storing your API key with us and referencing it in your request.
 
 ## Custom connections
 
-Custom connections are credentials that you create and manage with external providers. To use custom connections, share 
-your credentials (ex., an API key) with pipe0.
+Custom connections are API keys/credentials that you own. To use custom connections, share 
+your credentials with pipe0.
+
+We plan to offer different ways in which you can share your API keys with us securely
+but as of today the only available option is [vault](#vault).
 
 ### Custom connection billing
 
@@ -55,7 +58,7 @@ To add your own connections:
 2. Navigate to settings/connections
 3. Select the provider
 4. Add your key
-5. Copy the connection ID (ex, "resend_abcd123")
+5. Copy the connection ID (ex., "resend_abcd123")
 6. Use the ID in your requests
 
 #### Reference vault connections
