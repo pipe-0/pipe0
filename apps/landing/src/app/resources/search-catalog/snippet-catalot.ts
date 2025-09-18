@@ -160,6 +160,44 @@ export const snippetCatalog = {
       },
     ],
   },
+  "companies:profiles:exa@1": {
+    config: {
+      environment: "production",
+      dedup: {
+        strategy: "default",
+      },
+    },
+    searches: [
+      {
+        search_id: "companies:profiles:exa@1",
+        config: {
+          limit: 10,
+          filters: {
+            query: "Top AI labs in the United States.",
+          },
+        },
+      },
+    ],
+  },
+  "people:profiles:exa@1": {
+    config: {
+      environment: "production",
+      dedup: {
+        strategy: "default",
+      },
+    },
+    searches: [
+      {
+        search_id: "people:profiles:exa@1",
+        config: {
+          limit: 10,
+          filters: {
+            query: "Ruby on Rails experts in Berlin, Germany.",
+          },
+        },
+      },
+    ],
+  },
 } satisfies {
   [K in SearchId]: SearchesRequest & { searches: SearchesPayloadMap[K][] };
 };
