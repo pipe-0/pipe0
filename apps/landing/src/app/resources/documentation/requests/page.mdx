@@ -19,7 +19,7 @@ To send `sandbox` requests, set `config.environment` to `sandbox`.
 All endpoints offer the choice between enriching and searching synchronously or asynchronously.
 
 - Synchronously: The endpoint returns a result within one round-trip.
-- Asynchronously: You send a request to create a task and poll the `/check` endpoint until the task is marked as `completed`.
+- Asynchronously: You send a request to create a task and poll the `/check/{task_id}` endpoint until the task is marked as `completed`.
 
 Choosing between the two is up to you. All endpoints may timeout when used synchronously. Reasons for timeouts are often beyond 
 our control (provider latency). We recommend running your production requests asynchronously. Synchronous requests are recommended for testing. 

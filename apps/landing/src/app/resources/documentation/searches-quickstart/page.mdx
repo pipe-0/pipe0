@@ -11,7 +11,7 @@ import { YoutubeEmbed } from "../../../../components/features/mdx/youtube-embed"
 
 Use `Searches` to find companies and people using `filters`. Searching for companies & people is often called "prospecting", "list building" or "sourcing".
 
-With searches, you combine and deduplicate datasets from multiple providers. The <AppLink linkType="searchCatalog">search catalog</AppLink> 
+With searches, you combine datasets from multiple providers. The <AppLink linkType="searchCatalog">search catalog</AppLink> 
 lists all available datasets.
 
 ## Making requests
@@ -57,17 +57,42 @@ You can find the list of available filters per dataset in the [search catalog](h
 
 Append additional searches to the `searches` property to combine multiple searches in one request.
 
-### Poll the result
+## Getting the task result
 
+The request to `POST https://api.pipe0.com/v1/searches/run` will create a search task. 
+To get the result of the task, poll the `GET https://api.pipe0.com/v1/searches/check/{task_id}` endpoint until the task status is 
+`completed`.
 
-The request to `https://api.pipe0.com/v1/searches/run` creates a search task. Poll the task until its status
-is marked as `completed`. Use the following endpoint for polling (recommended intervall: 1s):
-
-```sh
-GET https://api.pipe0.com/v1/searches/run
+<CodeTabs items={["Typescript", "Python", "cURL"]}>
+    <div>
+```typescript
+const result = await fetch("https://api.pipe0.com/v1/searches/check/${taskId}", {
+    method: "POST",
+    headers: {
+        "Authorization": `Bearer ${API_KEY}`
+    }
+});
 ```
+    </div>
+    <div>
+     ```python
+import requests
+import json
 
-### Work with the response
+headers = {
+    "Authorization": f"Bearer {API_KEY}",
+}
+response = requests.get(f"https://api.pipe0.com/v1/searches/check/{task_id}", headers=headers)
+```
+    </div>
+    <div>
+    ```bash
+curl -X GET "https://api.pipe0.com/v1/searches/check/$TASK_ID" \
+-H "Authorization: Bearer $API_KEY"
+```
+    </div>
+</CodeTabs>
+
 
 The result will look something like this:
 
@@ -100,6 +125,14 @@ The result will look something like this:
 
 The result of a search can be the input for a <AppLink linkType="pipesQuickstart">pipes request</AppLink> (enrichment).
 Under the hood, this uses <AppLink linkType="inputExpansion">input expansion</AppLink>.
+
+## Getting the result without polling
+
+Instead of creating your task with the endpoint `POST https://api.pipe0.com/v1/searches/run` use the endpoint `POST https://api.pipe0.com/v1/searches/run/sync`.
+Use the same payload for both endpoints. The `/sync` endpoint will try to return the `completed` result in one round-trip.
+
+Read more about the trade-offs between <AppLink linkType="async">async vs sync requests</AppLink> here.
+
 
 ### Helpful links
 

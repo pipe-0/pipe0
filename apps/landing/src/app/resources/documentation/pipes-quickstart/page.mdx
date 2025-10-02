@@ -21,12 +21,12 @@ Before making your first request, the following is required:
 ## Making requests
 
 This request enriches one <AppLink linkType="inputObject">input object</AppLink>. The pipe `people:workemail:waterfall@1`
-adds a field called `work_email` to your input objects.
+adds a field called `work_email` to your input objects. You can find all available enrichments in the <AppLink linkType="pipeCatalog">pipe catalog</AppLink>.
 
 <CodeTabs items={["Typescript", "Python", "cURL"]}>
     <div>
 ```typescript
-const result = await fetch("https://api.pipe0.com/v1/pipes/run/sync", {
+const result = await fetch("https://api.pipe0.com/v1/pipes/run", {
     method: "POST",
     headers: {
         "Authorization": `Bearer ${API_KEY}`,
@@ -113,16 +113,55 @@ The result will look something like this:
 ]
 ```
 
-You can also try to find information like phone numbers and company details within the same request. For this, you can 
-chain multiple enrichment pipes.
-
 > [!NOTE]
 >
 > The response will contain more information than displayed here. Learn how to work with <AppLink linkType="pipelineResponse">response objects</AppLink>.
 
+## Getting the task result
+
+The request to `POST https://api.pipe0.com/v1/pipes/run` will create an enrichment task. 
+To get the result of the task, poll the `GET https://api.pipe0.com/v1/pipes/check/{task_id}` endpoint until the task status is 
+`completed`.
+
+<CodeTabs items={["Typescript", "Python", "cURL"]}>
+    <div>
+```typescript
+const result = await fetch("https://api.pipe0.com/v1/pipes/check/${taskId}", {
+    method: "POST",
+    headers: {
+        "Authorization": `Bearer ${API_KEY}`
+    }
+});
+```
+    </div>
+    <div>
+     ```python
+import requests
+import json
+
+headers = {
+    "Authorization": f"Bearer {API_KEY}",
+}
+response = requests.get(f"https://api.pipe0.com/v1/pipes/check/{task_id}", headers=headers)
+```
+    </div>
+    <div>
+    ```bash
+curl -X GET "https://api.pipe0.com/v1/pipes/check/$TASK_ID" \
+-H "Authorization: Bearer $API_KEY"
+```
+    </div>
+</CodeTabs>
+
+## Getting the result without polling
+
+Instead of creating your task with the endpoint `POST https://api.pipe0.com/v1/pipes/run` use the endpoint `POST https://api.pipe0.com/v1/pipes/run/sync`.
+Use the same payload for both endpoints. The `/sync` endpoint will try to return the `completed` result in one round-trip.
+
+Read more about the trade-offs between <AppLink linkType="async">async vs sync requests</AppLink> here.
+
 ### Helpful Links
 
-- <AppLink linkType="async">Async vs Sync requsts</AppLink>
 - <AppLink linkType="testMode">Making sandbox requests</AppLink>
 
 
