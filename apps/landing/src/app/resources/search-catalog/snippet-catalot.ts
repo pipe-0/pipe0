@@ -1,6 +1,6 @@
 import {
   SearchesPayloadMap,
-  SearchesRequest,
+  SearchesRequestPayload,
   SearchId,
 } from "@pipe0/client-sdk";
 import Oas from "oas";
@@ -199,5 +199,7 @@ export const snippetCatalog = {
     ],
   },
 } satisfies {
-  [K in SearchId]: SearchesRequest & { searches: SearchesPayloadMap[K][] };
+  [K in SearchId]: SearchesRequestPayload & {
+    searches: SearchesPayloadMap[K][];
+  };
 };

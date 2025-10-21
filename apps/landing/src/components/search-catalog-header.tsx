@@ -35,9 +35,11 @@ import {
   getField,
   getSearchDefaultPayload,
   getSearchEntry,
+  getSearchPayloadFormConfig,
   providerCatalog,
   SearchId,
 } from "@pipe0/client-sdk";
+import { useMemo } from "react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/cjs/styles/prism";
 
@@ -58,6 +60,17 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
   const video = videoCatalog[searchId as keyof typeof videoCatalog] as
     | string
     | undefined;
+
+  const formConfig = useMemo(() => {
+    try {
+      const config = getSearchPayloadFormConfig({
+        searchPayload: defaultSearchPayload,
+      });
+      return config;
+    } catch {
+      null;
+    }
+  }, []);
 
   return (
     <div className="pipe-header space-y-10">
@@ -168,12 +181,14 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
               />
             </AccordionContent>
           </AccordionItem>
-          <AccordionItem value="config-reference">
-            <AccordionTrigger className="">Config reference</AccordionTrigger>
-            <AccordionContent>
-              <PayloadDocumenation searchId={searchId} />
-            </AccordionContent>
-          </AccordionItem>
+          {formConfig && (
+            <AccordionItem value="config-reference">
+              <AccordionTrigger className="">Config reference</AccordionTrigger>
+              <AccordionContent>
+                <PayloadDocumenation formConfig={formConfig} />
+              </AccordionContent>
+            </AccordionItem>
+          )}
           <AccordionItem value="full-config">
             <AccordionTrigger className="">
               Full config example

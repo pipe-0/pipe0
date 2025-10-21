@@ -11,17 +11,15 @@ import { Button } from "@/components/ui/button";
 import { copyToClipboard } from "@/lib/utils";
 import {
   DateRangeMetadata,
+  FormSection,
   GeneratedFormField,
-  getPayloadFormConfig,
-  getPipePayloadSchema,
-  getSearchPayloadSchema,
   IntegerMetadata,
   isBooleanField,
   isDateRangeField,
   isIncludeExcludeField,
   isIncludeExcludeSelectField,
   isIntegerField,
-  isJSONExtractionField,
+  isJsonExtractionField,
   isJsonSchemaInput,
   isNumberField,
   isOutputField,
@@ -30,11 +28,9 @@ import {
   isTextareaField,
   isTextField,
   NumberMetadata,
-  PipeId,
   RangeMetadata,
   RECORD_FIELD_FORMATS,
   RECORD_FIELD_TYPES,
-  SearchId,
   SelectMetadata,
   TextMetadata,
 } from "@pipe0/client-sdk";
@@ -177,7 +173,7 @@ function generateCodeExample(field: GeneratedFormField): string {
   if (isIntegerField(field) || isNumberField(field)) {
     return generateNumericExample(fieldName, field);
   }
-  if (isJSONExtractionField(field)) {
+  if (isJsonExtractionField(field)) {
     return generateJsonExtractionExample(fieldName);
   }
   if (isJsonSchemaInput(field)) {
@@ -380,11 +376,11 @@ function OptionsSection({ field }: { field: GeneratedFormField }) {
 
 function ReferencesSection({ field }: { field: GeneratedFormField }) {
   const showFieldFormatOptions = useMemo(() => {
-    return isJSONExtractionField(field);
+    return isJsonExtractionField(field);
   }, []);
 
   const showTypeOptions = useMemo(() => {
-    return isJSONExtractionField(field);
+    return isJsonExtractionField(field);
   }, []);
 
   return (
@@ -513,31 +509,10 @@ function FieldDocumentation({ field }: { field: GeneratedFormField }) {
 }
 
 interface FilterDocumentationProps {
-  searchId?: SearchId;
-  pipeId?: PipeId;
+  formConfig: FormSection[];
 }
 
-export function PayloadDocumenation({
-  searchId,
-  pipeId,
-}: FilterDocumentationProps) {
-  const formConfig = useMemo(() => {
-    let PayloadSchema: any;
-    if (searchId) {
-      PayloadSchema = getSearchPayloadSchema(searchId);
-    } else if (pipeId) {
-      PayloadSchema = getPipePayloadSchema(pipeId);
-    } else {
-      throw new Error("Must define either pipeId or searchId");
-    }
-    const config = getPayloadFormConfig({
-      schema: PayloadSchema,
-      staticOnly: false,
-    });
-
-    return config;
-  }, [searchId, pipeId]);
-
+export function PayloadDocumenation({ formConfig }: FilterDocumentationProps) {
   const allFields = formConfig.flatMap((section) =>
     section.groups.flatMap((group) => group.fields)
   );

@@ -22,7 +22,6 @@ import {
 } from "@/components/ui/accordion";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -41,17 +40,23 @@ import { appLinks } from "@/lib/links";
 import { formatCredits } from "@/lib/utils";
 import {
   BillableOperationDef,
+  FieldAnnotationsType,
   FieldName,
   getDefaultOutputFields,
   getDefaultPipeProviders,
   getField,
   getPipeDefaultPayload,
   getPipeEntry,
+  getPipeInstances,
+  getPipePayloadFormConfig,
   PipeId,
+  PipePayload,
   providerCatalog,
+  validatePipeline,
 } from "@pipe0/client-sdk";
-import { Check, Download, Terminal, Upload } from "lucide-react";
+import { Download, Terminal, Upload } from "lucide-react";
 import Link from "next/link";
+import { useMemo } from "react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/cjs/styles/prism";
 
@@ -64,6 +69,26 @@ type PipeHeaderProps = {
   pipeId: PipeId;
 };
 
+function getFieldAnnotations(payload: PipePayload) {
+  const [instance] = getPipeInstances([payload]);
+  if (!instance) {
+    throw new Error("Can't create pipe instance");
+  }
+  const fieldAnnotations: FieldAnnotationsType = {};
+  const inputGroups = instance.getInputGroups();
+  for (const inputGroup of inputGroups) {
+    Object.entries(inputGroup.fields).forEach(([fieldName, def]) => {
+      fieldAnnotations[fieldName] = {
+        type: typeof def.type === "function" ? "unknown" : def.type,
+        format: typeof def.format === "function" ? null : def.format,
+        json_metadata: null,
+        label: def.label,
+      };
+    });
+  }
+  return fieldAnnotations;
+}
+
 export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
   const pipeEntry = getPipeEntry(pipeId);
   const defaultPayload = getPipeDefaultPayload(pipeId);
@@ -72,6 +97,24 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
   let video = videoCatalog[pipeId as keyof typeof videoCatalog] as
     | string
     | undefined;
+
+  const formConfig = useMemo(() => {
+    try {
+      const payload = snippetCatalog[pipeId].pipes[0];
+      const validationContext = validatePipeline({
+        pipes: [payload],
+        fieldAnnotations: getFieldAnnotations(payload),
+      });
+      return getPipePayloadFormConfig({
+        pipePayload: payload,
+        userConnections: [],
+        validationContext,
+      });
+    } catch (err) {
+      console.log(err);
+      return null;
+    }
+  }, []);
 
   return (
     <div className="space-y-3">
@@ -401,12 +444,14 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
               />
             </AccordionContent>
           </AccordionItem>
-          <AccordionItem value="config-reference">
-            <AccordionTrigger className="">Config reference</AccordionTrigger>
-            <AccordionContent>
-              <PayloadDocumenation pipeId={pipeId} />
-            </AccordionContent>
-          </AccordionItem>
+          {formConfig && (
+            <AccordionItem value="config-reference">
+              <AccordionTrigger className="">Config reference</AccordionTrigger>
+              <AccordionContent>
+                <PayloadDocumenation formConfig={formConfig} />
+              </AccordionContent>
+            </AccordionItem>
+          )}
           <AccordionItem value="config">
             <AccordionTrigger className="text-sm">
               Default config

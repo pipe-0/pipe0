@@ -1,4 +1,9 @@
-import { PipeId, PipePayloadMap, PipesRequest } from "@pipe0/client-sdk";
+import {
+  PipeId,
+  PipeRequestPayloadMap,
+  PipesRequest,
+  PipesRequestPayload,
+} from "@pipe0/client-sdk";
 import Oas from "oas";
 import { OASDocument } from "oas/types";
 
@@ -441,8 +446,7 @@ export const snippetCatalog = {
         pipe_id: "message:write@1",
         config: {
           model: "gemini-flash-latest",
-          prompt: {
-            template: `
+          template: `
 Write an internal slack message that notifies the team about a high value signup 
 that customer success should reach out to personally.
 
@@ -454,7 +458,6 @@ As well as the company name they work for:
 
 {{ input company_name type="string" }}
             `,
-          },
         },
       },
     ],
@@ -481,8 +484,7 @@ John Doe
 Head of Customer Success
 [LinkedIn](https://https://linkedin.com/li/john-doe)
           `,
-          prompt: {
-            template: `
+          template: `
 Write a welcome message for new users of my app Pipe0.
 
 Pipe0 is a data enrichment framework that serves both software engineers working on products that 
@@ -492,7 +494,6 @@ Use the job title of the user to figure out which function the new user has: {{ 
 
 Customize the message using the name of the user: {{ input name type="string" required="true" }}.
             `,
-          },
         },
       },
     ],
@@ -554,7 +555,7 @@ Customize the message using the name of the user: {{ input name type="string" re
           strategy: "first",
           connections: [
             {
-              connection: "<PROVIDE_YOUR_OWN_CONNECTION_VIA_DASHBOARD>",
+              connection: "resend_123",
               type: "vault",
             },
           ],
@@ -585,7 +586,7 @@ Customize the message using the name of the user: {{ input name type="string" re
           strategy: "first",
           connections: [
             {
-              connection: "<PROVIDE_YOUR_OWN_CONNECTION_VIA_DASHBOARD>",
+              connection: "gmail_123",
               type: "vault",
             },
           ],
@@ -615,7 +616,7 @@ Customize the message using the name of the user: {{ input name type="string" re
           strategy: "first",
           connections: [
             {
-              connection: "<PROVIDE_YOUR_OWN_CONNECTION_VIA_DASHBOARD>",
+              connection: "slack_123",
               type: "vault",
             },
           ],
@@ -800,7 +801,7 @@ Customize the message using the name of the user: {{ input name type="string" re
         config: {
           input_fields: {
             website_url: {
-              alias: "<POINT_TO_ANY_URL_FIELD>",
+              alias: "",
             },
           },
         },
@@ -847,4 +848,6 @@ Customize the message using the name of the user: {{ input name type="string" re
       },
     ],
   },
-} satisfies { [K in PipeId]: PipesRequest & { pipes: PipePayloadMap[K][] } };
+} satisfies {
+  [K in PipeId]: PipesRequestPayload & { pipes: PipeRequestPayloadMap[K][] };
+};
