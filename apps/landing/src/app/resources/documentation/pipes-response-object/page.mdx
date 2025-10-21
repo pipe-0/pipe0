@@ -72,11 +72,6 @@ import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "..
       }
     }
   },
-  "pipes": [
-    {
-      "pipe_id": "company:websiteurl:email@1",
-    }
-  ],
   "errors": [],
   "records": {
     "e99e5017-7943-4dc1-91f9-67f70a9fd6dd": {
@@ -92,6 +87,7 @@ import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "..
             "hash": null
           },
           "resolved_by": {
+            "environment": "production",
             "ref": "input",
             "hash": null
           },
@@ -111,6 +107,7 @@ import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "..
           },
           "resolved_by": {
             "ref": "input",
+            "environment": "production",
             "hash": null
           },
           "meta": null,
@@ -128,6 +125,7 @@ import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "..
             "hash": "e0b8a4ef"
           },
           "resolved_by": {
+            "environment": "production",
             "ref": "company:websiteurl:email@1",
             "hash": "e0b8a4ef"
           },
@@ -193,12 +191,6 @@ are the columns.
 The `field_definitions` object contains all fields that 
 exist in your pipeline. This includes pipe output fields and field derived from <AppLink linkType="inputObject">input objects</AppLink>.
 `field_definitions` is an object. The keys contain field names and the values field properties.
-
-### pipes
-
-The list of pipes that you sent as part of your request along with the pipe configuration. The pipes
-are reordered according to their valid processing order. If pipeline validation failed, pipes are returned in the 
-original order.
 
 ### errors
 

@@ -19,12 +19,26 @@ Here's a sample payload:
 
 ```json
 {
+  "config": {
+    "environment": "sandbox",
+    "ui": {
+      "widgets": {
+        "enabled": true
+      }
+    }
+  },
   "pipes": [
     { 
       "pipe_id": "company:identity@1",
       "config": {
         "input_fields": {
           "company_name": {
+            "alias": ""
+          }
+        },
+        "output_fields": {
+          "company_website_url": {
+            "enabled": true,
             "alias": ""
           }
         }
@@ -43,6 +57,17 @@ Here's a sample payload:
 
 
 ## Request payload properties
+
+### config
+
+#### config.environment
+
+Execute your request in `sandbox` or `production` <AppLink linkType="testMode">mode</AppLink>.
+
+#### <span className="badge-new" /> config.ui.widgets.enabled 
+
+Enable/disable widget metadata. Widgets are part of the <AppLink linkType="pipelineResponse">pipes response</AppLink> and are often used to 
+visualize the enriched results (e.g. provider logos).
 
 ### pipes[]
 
@@ -85,6 +110,10 @@ Pipe configuration for the output fields of a pipe.
 Rename the pipe output field to a different `field_name`. This can be useful if you have two pipes that output the same field (error).
 
 To avoid a duplicate output field, rename the output field by using an `alias`.
+
+#### pipe.config.output_field.enabled
+
+Enable/disable output fields. You can find information on which pipe fields are enabled/disabled by default in the <AppLink linkType="pipeCatalog">pipe catalog</AppLink>
 
 ### input[]
 
