@@ -5,8 +5,8 @@ export function BetaAnnouncementBanner() {
     <AnnouncementBanner
       content={
         <>
-          🎉<b className="hidden md:inline">v0.5 is live.</b>&nbsp;The official
-          beta is here!
+          <b className="hidden md:inline">📄 Introducing Sheets!</b>
+          &nbsp;A clay alternative from the future.
         </>
       }
     />
