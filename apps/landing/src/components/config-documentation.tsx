@@ -21,12 +21,14 @@ import {
   isIntegerField,
   isJsonExtractionField,
   isJsonSchemaInput,
+  isMultiSelectField,
   isNumberField,
   isOutputField,
   isRangeField,
   isSelectField,
   isTextareaField,
   isTextField,
+  MultiSelectMetadata,
   NumberMetadata,
   RangeMetadata,
   RECORD_FIELD_FORMATS,
@@ -126,14 +128,16 @@ const generateTextExample = (fieldName: string) => `{
 }`;
 
 const generateSelectExample = (fieldName: string, field: SelectMetadata) =>
-  field.multiple
-    ? `{
-  "${fieldName}": ["option1", "option2"]
-}`
-    : `{
+  `{
   "${fieldName}": "option1"
 }`;
 
+const generateMultiSelectExample = (
+  fieldName: string,
+  field: MultiSelectMetadata
+) => `{
+  "${fieldName}": ["option1", "option2"]
+}`;
 const generateNumericExample = (
   fieldName: string,
   field: IntegerMetadata | NumberMetadata
@@ -209,7 +213,7 @@ function getConstraintInfo(field: GeneratedFormField): string[] {
     }
   }
 
-  if (isSelectField(field) && field.multiple) {
+  if (isMultiSelectField(field)) {
     constraints.push("multiple");
   }
 
@@ -316,7 +320,12 @@ function OptionsSection({ field }: { field: GeneratedFormField }) {
   if (!options) return null;
 
   const handleCopyOptions = () => {
-    const value = field.suggestions || field.options;
+    let value;
+    if ("suggestions" in field) {
+      value = field.suggestions;
+    } else if ("options" in field) {
+      value = field.options;
+    }
     copyToClipboard(JSON.stringify(value, null, 2));
   };
 
@@ -524,6 +533,8 @@ export function PayloadDocumenation({ formConfig }: FilterDocumentationProps) {
           const Icon = getFieldIcon(field.type);
           const constraints = getConstraintInfo(field);
 
+          const hasRequired = "required" in field;
+
           return (
             <AccordionItem key={`${field.path}-${idx}`} value={`field-${idx}`}>
               <AccordionTrigger>
@@ -545,10 +556,10 @@ export function PayloadDocumenation({ formConfig }: FilterDocumentationProps) {
                       </span>
                     )}
                     <Badge
-                      variant={field.required ? "default" : "secondary"}
+                      variant={hasRequired ? "default" : "secondary"}
                       className="text-xs"
                     >
-                      {field.required ? "required" : "optional"}
+                      {hasRequired ? "required" : "optional"}
                     </Badge>
                     <Badge variant="outline" className="text-xs">
                       {field.type.replace(/_/g, " ")}

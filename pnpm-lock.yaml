@@ -24,11 +24,11 @@ importers:
         specifier: ^15.1.6
         version: 15.1.6(@mdx-js/loader@3.1.0(acorn@8.14.0))(@mdx-js/react@3.1.0(@types/react@19.0.8)(react@19.0.0))
       '@pipe0/client-sdk':
-        specifier: 0.0.98
-        version: 0.0.98
+        specifier: 0.0.99
+        version: 0.0.99
       '@pipe0/react-sdk':
-        specifier: 0.0.57
-        version: 0.0.57
+        specifier: 0.0.58
+        version: 0.0.58
       '@radix-ui/react-accordion':
         specifier: ^1.2.3
         version: 1.2.3(@types/react-dom@19.0.3(@types/react@19.0.8))(@types/react@19.0.8)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -1832,11 +1832,11 @@ packages:
   '@pipe0/client-sdk@0.0.59':
     resolution: {integrity: sha512-am7C3aZBXYt4+/P4vAZFZXVQwynhqEE85qz9UOzmWwWbBYZuEJoATESJhFRGrAHfL7UhAXWp3l4WBm+ohRzizg==}
 
-  '@pipe0/client-sdk@0.0.98':
-    resolution: {integrity: sha512-rkA7hA70ARsCQBNOrteKh+xyuqS8jNQdvoIj1ilX8PQWsJAeRNaLf5V6A1hsdAXeb+fISVjYRbRQdrxLj4IL6w==}
+  '@pipe0/client-sdk@0.0.99':
+    resolution: {integrity: sha512-hvqEKZMkbspePFtGdnwY3Kswh+ld04LqreLWLDyGbV2XmZqRQ0PjiOt5V/91gQSBfqPm3yQX/b2Zq5LWrzb+1w==}
 
-  '@pipe0/react-sdk@0.0.57':
-    resolution: {integrity: sha512-sp8DlXMwefmgxi9qBSYSZoyq5EoHi8K3V5Akt2/GKHmIizHIYe4NQibKjF3nUl2isYWQYYG5DFPUSjYsjCbopA==}
+  '@pipe0/react-sdk@0.0.58':
+    resolution: {integrity: sha512-gYmWd4OVFjp226Xd/Rq/zWXHOD1ATu2IipQj1B9iIy2rZKNgf+Z2gixinRDI63/5GXZQbpY9fX+DmLZMAFQDtQ==}
 
   '@popperjs/core@2.11.8':
     resolution: {integrity: sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==}
@@ -8783,7 +8783,7 @@ snapshots:
       lodash.defaultsdeep: 4.6.1
       zod: 4.0.5
 
-  '@pipe0/client-sdk@0.0.98':
+  '@pipe0/client-sdk@0.0.99':
     dependencies:
       '@asteasolutions/zod-to-openapi': 8.0.0(zod@4.1.12)
       ajv: 8.17.1
@@ -8796,9 +8796,9 @@ snapshots:
       xxhash-wasm: 1.1.0
       zod: 4.1.12
 
-  '@pipe0/react-sdk@0.0.57':
+  '@pipe0/react-sdk@0.0.58':
     dependencies:
-      '@pipe0/client-sdk': 0.0.98
+      '@pipe0/client-sdk': 0.0.99
       '@tanstack/react-table': 8.21.3(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       lucide-react: 0.475.0(react@19.1.1)
       react: 19.1.1

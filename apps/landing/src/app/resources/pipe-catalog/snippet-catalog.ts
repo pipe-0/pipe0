@@ -177,6 +177,7 @@ export const snippetCatalog = {
       {
         pipe_id: "prompt:run@1",
         config: {
+          model: "openai-gpt-latest",
           prompt: {
             template: `
     Tell me if {{ input name required="true" type="string" }} fits the ICP criteria for my company <YOUR_COMPANY_NAME>.
@@ -445,7 +446,7 @@ export const snippetCatalog = {
       {
         pipe_id: "message:write@1",
         config: {
-          model: "gemini-flash-latest",
+          model: "openai-gpt-latest",
           template: `
 Write an internal slack message that notifies the team about a high value signup 
 that customer success should reach out to personally.
@@ -477,7 +478,7 @@ As well as the company name they work for:
       {
         pipe_id: "email:write@1",
         config: {
-          model: "gemini-flash-latest",
+          model: "openai-gpt-latest",
           persona: "customer_success",
           signature: `
 John Doe
