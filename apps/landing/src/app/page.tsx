@@ -354,7 +354,7 @@ const response = await piper.pipes({
             </div>
 
             <p className="absolute right-0 bottom-0 p-4 max-w-full md:max-w-[75%] text-sm md:text-base text-muted-foreground text-right">
-              Integrate with CRM, ATS, Survey, and sequencing tools{" "}
+              Integrate with CRM, ATS, survey, and sequencing tools{" "}
               <span className="text-foreground">without writing code.</span>
             </p>
           </div>
