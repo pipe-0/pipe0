@@ -5,8 +5,11 @@ export function BetaAnnouncementBanner() {
     <AnnouncementBanner
       content={
         <>
-          <b className="hidden md:inline">📄 Introducing Sheets!</b>
-          &nbsp;A clay alternative from the future.
+          <b className="md:inline">📄 Introducing Sheets!</b>
+          <span className="md:hidden">&nbsp;Infinite data tables.</span>
+          <span className="hidden md:inline">
+            &nbsp;A clay alternative from the future.
+          </span>
         </>
       }
     />

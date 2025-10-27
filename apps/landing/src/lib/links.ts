@@ -23,6 +23,8 @@ export const appLinks = {
   connections: () => `/resources/documentation/connections`,
   authentication: () => `/resources/documentation/authentication`,
 
+  docs: () => `/resources/documentation/`,
+
   // Searches
   searchesQuickstart: () => `/resources/documentation/searches-quickstart`,
   // Pipes
