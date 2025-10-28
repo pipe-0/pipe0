@@ -12,7 +12,7 @@ import { copyToClipboard } from "@/lib/utils";
 import {
   DateRangeMetadata,
   FormSection,
-  GeneratedFormField,
+  GeneratedFormElement,
   IntegerMetadata,
   isBooleanField,
   isDateRangeField,
@@ -48,7 +48,7 @@ import {
 import { PropsWithChildren, useMemo } from "react";
 
 const isNumericField = (
-  field: GeneratedFormField
+  field: GeneratedFormElement
 ): field is RangeMetadata | IntegerMetadata | NumberMetadata =>
   isRangeField(field) || isIntegerField(field) || isNumberField(field);
 
@@ -152,7 +152,7 @@ const generateOutputFieldExmple = (fieldName: string) => `{
   }
 }`;
 
-function generateCodeExample(field: GeneratedFormField): string {
+function generateCodeExample(field: GeneratedFormElement): string {
   const pathParts = field.path.split(".");
   const fieldName = pathParts[pathParts.length - 1];
 
@@ -192,7 +192,7 @@ function generateCodeExample(field: GeneratedFormField): string {
 }`;
 }
 
-function getConstraintInfo(field: GeneratedFormField): string[] {
+function getConstraintInfo(field: GeneratedFormElement): string[] {
   const constraints: string[] = [];
 
   if (isNumericField(field)) {
@@ -296,7 +296,7 @@ function ConfigSectionWrapper({ children }: PropsWithChildren) {
   );
 }
 
-function ConfigurationSection({ field }: { field: GeneratedFormField }) {
+function ConfigurationSection({ field }: { field: GeneratedFormElement }) {
   return (
     <>
       {isNumericField(field) && <NumericConfig field={field} />}
@@ -308,7 +308,7 @@ function ConfigurationSection({ field }: { field: GeneratedFormField }) {
   );
 }
 
-function OptionsSection({ field }: { field: GeneratedFormField }) {
+function OptionsSection({ field }: { field: GeneratedFormElement }) {
   const getOptions = () => {
     if (isSelectField(field)) return field.options;
     if (isIncludeExcludeSelectField(field)) return field.options;
@@ -383,7 +383,7 @@ function OptionsSection({ field }: { field: GeneratedFormField }) {
   );
 }
 
-function ReferencesSection({ field }: { field: GeneratedFormField }) {
+function ReferencesSection({ field }: { field: GeneratedFormElement }) {
   const showFieldFormatOptions = useMemo(() => {
     return isJsonExtractionField(field);
   }, []);
@@ -452,7 +452,7 @@ const DATE_OPERATOR_INFO = [
   { symbol: "lte", description: "On or before" },
 ];
 
-function OperatorsSection({ field }: { field: GeneratedFormField }) {
+function OperatorsSection({ field }: { field: GeneratedFormElement }) {
   if (!isRangeField(field) && !isDateRangeField(field)) return null;
 
   const operators = isDateRangeField(field)
@@ -483,7 +483,7 @@ function OperatorsSection({ field }: { field: GeneratedFormField }) {
   );
 }
 
-function FieldDocumentation({ field }: { field: GeneratedFormField }) {
+function FieldDocumentation({ field }: { field: GeneratedFormElement }) {
   const codeExample = generateCodeExample(field);
 
   return (
