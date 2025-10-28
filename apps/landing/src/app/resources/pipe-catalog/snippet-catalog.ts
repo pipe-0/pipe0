@@ -849,6 +849,22 @@ Customize the message using the name of the user: {{ input name type="string" re
       },
     ],
   },
+  "people:email:validate:millionverifier@1": {
+    config: {
+      environment: "production",
+    },
+    pipes: [
+      {
+        pipe_id: "people:email:validate:millionverifier@1",
+      },
+    ],
+    input: [
+      {
+        id: "1",
+        email: "john@pipe0.com",
+      },
+    ],
+  },
 } satisfies {
   [K in PipeId]: PipesRequestPayload & { pipes: PipeRequestPayloadMap[K][] };
 };
