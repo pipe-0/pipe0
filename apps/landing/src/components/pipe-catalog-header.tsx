@@ -168,7 +168,9 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
 
                 return (
                   <TableRow key={billableOperation}>
-                    <TableCell className="">{billableOperation}</TableCell>
+                    <TableCell className="">
+                      <div>{billableOperation}</div>
+                    </TableCell>
                     <TableCell className="">
                       <div className="flex gap-2">
                         <Avatar>

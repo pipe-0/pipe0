@@ -800,6 +800,7 @@ Customize the message using the name of the user: {{ input name type="string" re
       {
         pipe_id: "website:scrape:firecrawl@1",
         config: {
+          scrape_main_only: true,
           input_fields: {
             website_url: {
               alias: "",
@@ -862,6 +863,53 @@ Customize the message using the name of the user: {{ input name type="string" re
       {
         id: "1",
         email: "john@pipe0.com",
+      },
+    ],
+  },
+  "website:scrapelist:firecrawl@1": {
+    config: {
+      environment: "production",
+    },
+    pipes: [
+      {
+        pipe_id: "website:scrapelist:firecrawl@1",
+        config: {
+          scrape_main_only: true,
+          formats: ["markdown", "links"],
+        },
+      },
+    ],
+    input: [
+      {
+        id: "1",
+        urls: [
+          "https://pipe0.com",
+          "https://pipe0.com/resources/documentation",
+        ],
+      },
+    ],
+  },
+  "website:maplinks:firecrawl@1": {
+    config: {
+      environment: "production",
+    },
+    pipes: [
+      {
+        pipe_id: "website:maplinks:firecrawl@1",
+        config: {
+          sitemap: "include",
+          page_limit: 20,
+          search: "",
+        },
+      },
+    ],
+    input: [
+      {
+        id: "1",
+        urls: [
+          "https://pipe0.com",
+          "https://pipe0.com/resources/documentation",
+        ],
       },
     ],
   },

@@ -71,7 +71,7 @@ export function FieldRow({
   rightAction?: ReactNode;
 }) {
   const fieldResult = useMemo(() => findFieldByName(fieldName), []);
-  const jsonExample = fieldResult?.jsonExample;
+  const jsonExample = fieldResult?.jsonMeta?.exampleValue;
 
   const [showSucces, setShowSuccess] = useState(false);
   const handleCopyToClipboard = () => {

@@ -135,9 +135,20 @@ const generateSelectExample = (fieldName: string, field: SelectMetadata) =>
 const generateMultiSelectExample = (
   fieldName: string,
   field: MultiSelectMetadata
-) => `{
+) => {
+  const options = field.options.slice(0, 2).map((o) => o.value);
+
+  if (options.length < 2) {
+    return `{
   "${fieldName}": ["option1", "option2"]
 }`;
+  }
+
+  return `{
+  "${fieldName}": ["${options[0]}", "${options[1]}"]
+}`;
+};
+
 const generateNumericExample = (
   fieldName: string,
   field: IntegerMetadata | NumberMetadata
@@ -173,6 +184,9 @@ function generateCodeExample(field: GeneratedFormElement): string {
   }
   if (isSelectField(field)) {
     return generateSelectExample(fieldName, field);
+  }
+  if (isMultiSelectField(field)) {
+    return generateMultiSelectExample(fieldName, field);
   }
   if (isIntegerField(field) || isNumberField(field)) {
     return generateNumericExample(fieldName, field);
