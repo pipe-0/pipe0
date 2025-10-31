@@ -89,7 +89,9 @@ const SearchIntegrationCard = ({
           <Coins className=" size-4" />{" "}
           {tableEntry.cost.mode === "per_result"
             ? tableEntry.cost.creditsPerResult
-            : tableEntry.cost.creditsPerSearch || "Free"}
+            : tableEntry.cost.mode === "per_search"
+            ? tableEntry.cost.creditsPerSearch
+            : tableEntry.cost.creditsPerPage}
         </span>
         <CardHeader className="pb-2">
           <div className="flex justify-between items-start">

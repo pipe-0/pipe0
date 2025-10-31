@@ -88,7 +88,11 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
               <TableHead>Billing Mode</TableHead>
               <TableHead>Credentials</TableHead>
               <TableHead>
-                Cost per result{" "}
+                {searchEntry.cost.mode === "per_result"
+                  ? "Cost per result"
+                  : searchEntry.cost.mode === "per_search"
+                  ? "Cost per search"
+                  : "Cost per page"}
                 <InlineDocsBadge href={appLinks.searchBilling()} />
               </TableHead>
             </TableRow>
@@ -125,9 +129,17 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
                   {formatCredits(
                     searchEntry.cost.mode === "per_result"
                       ? searchEntry.cost.creditsPerResult
-                      : searchEntry.cost.creditsPerSearch
+                      : searchEntry.cost.mode === "per_search"
+                      ? searchEntry.cost.creditsPerSearch
+                      : searchEntry.cost.creditsPerPage
                   ) || "Free"}{" "}
                   credits
+                </p>
+                <p className="max-w-[150px]">
+                  <small className="text-muted-foreground">
+                    {searchEntry.cost.mode === "per_page" &&
+                      "1 page = 100 records; 200 results = 2 pages"}
+                  </small>
                 </p>
               </TableCell>
             </TableRow>

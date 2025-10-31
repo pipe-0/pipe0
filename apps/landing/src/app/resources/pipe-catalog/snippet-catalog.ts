@@ -913,6 +913,31 @@ Customize the message using the name of the user: {{ input name type="string" re
       },
     ],
   },
+  "contact:create:resend@1": {
+    config: {
+      environment: "production",
+    },
+    pipes: [
+      {
+        pipe_id: "contact:create:resend@1",
+        connector: {
+          strategy: "first",
+          connections: [{ type: "vault", connection: "resend_123" }],
+        },
+        config: {
+          audience_id: "abc",
+          add_as_subscribed: true,
+        },
+      },
+    ],
+    input: [
+      {
+        id: "1",
+        email: "test@pipe0.com",
+        name: "John Dorr",
+      },
+    ],
+  },
 } satisfies {
   [K in PipeId]: PipesRequestPayload & { pipes: PipeRequestPayloadMap[K][] };
 };

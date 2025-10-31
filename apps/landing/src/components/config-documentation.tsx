@@ -547,7 +547,7 @@ export function PayloadDocumenation({ formConfig }: FilterDocumentationProps) {
           const Icon = getFieldIcon(field.type);
           const constraints = getConstraintInfo(field);
 
-          const hasRequired = "required" in field;
+          const hasRequired = "required" in field && field.required;
 
           return (
             <AccordionItem key={`${field.path}-${idx}`} value={`field-${idx}`}>

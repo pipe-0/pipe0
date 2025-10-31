@@ -141,6 +141,27 @@ export const snippetCatalog = {
       },
     ],
   },
+  "people:profiles:clado@2": {
+    config: {
+      environment: "production",
+      dedup: {
+        strategy: "default",
+      },
+    },
+    searches: [
+      {
+        search_id: "people:profiles:clado@2",
+        config: {
+          limit: 100,
+          offset: undefined,
+          search_id: "",
+          filters: {
+            query: "Go-to-market specialists in Rome, Italy.",
+          },
+        },
+      },
+    ],
+  },
   "people:employees:leadmagic@1": {
     config: {
       environment: "production",
