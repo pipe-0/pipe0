@@ -46,6 +46,7 @@ import {
 import { appInfo } from "@/lib/const";
 import { cn, copyToClipboard } from "@/lib/utils";
 import {
+  getDefaultSearchOutputFields,
   getSearchEntry,
   getSearchVersion,
   providerCatalog,
@@ -158,14 +159,16 @@ const SearchIntegrationCard = ({
                 }}
               >
                 <DropdownMenuGroup>
-                  {tableEntry.defaultOutputFields.map((field) => (
-                    <DropdownMenuItem
-                      key={field}
-                      className="py-1 cursor-pointer block text-muted-foreground hover:text-foreground"
-                    >
-                      {field}
-                    </DropdownMenuItem>
-                  ))}
+                  {getDefaultSearchOutputFields(tableEntry.searchId).map(
+                    (field) => (
+                      <DropdownMenuItem
+                        key={field}
+                        className="py-1 cursor-pointer block text-muted-foreground hover:text-foreground"
+                      >
+                        {field}
+                      </DropdownMenuItem>
+                    )
+                  )}
                 </DropdownMenuGroup>
               </DropdownMenuContent>
             </DropdownMenu>

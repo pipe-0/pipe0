@@ -102,6 +102,9 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
     try {
       const payload = snippetCatalog[pipeId].pipes[0];
       const validationContext = validatePipeline({
+        config: {
+          environment: "production",
+        },
         pipes: [payload],
         fieldAnnotations: getFieldAnnotations(payload),
       });

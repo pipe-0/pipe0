@@ -18,12 +18,13 @@ The following API operations return a response of type `PipesResponse`.
 - `GET https://api.pipe0.com/v1/pipes/check/{task_id}` (used to check the processing state)
 - `POST https://api.pipe0.com/v1/pipes/run/sync` (used to run the pipeline synchronously)
 
-At first, seeing the full response object can be intimidating. But our response object has been 
-designed to make your life easy. Here are some things our responses are designed for:
+Here are some things our responses are designed for:
 
-💅 Building UIs inspired by tools like [Clay](https://clay.com) or [Airtable](https://airtable.com) <br />
-📀 Enriching server-side to push to a CRM, ATS, or database <br />
-🧙🏻 Perform actions like lead scoring, CRM updates, or outreach without writing code
+💅 Building rich data tables like [Clay](https://clay.com) or node-based workflow builders like [zapier](https://zapier.com).<br />
+🦄 Automate and enrich with code (think [n8n](https://n8n.io) as code)<br />
+
+By default, responses contain enriched data only. Enable <AppLink linkType="widgets"> widgets</AppLink> and 
+<AppLink linkType="fieldDefinitions"> field definitions</AppLink> for additional metadata e.g. which providers where used in a waterfall.
 
 ## The raw response object
 
@@ -41,97 +42,52 @@ import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "..
 
 ```JSON
 {
-  "id": "sgrqhch5qqinn58ojs192zne",
+  "id": "xgvxuqk2771d8t17n60vphu9",
   "status": "completed",
-  "order": [
-    "e99e5017-7943-4dc1-91f9-67f70a9fd6dd",
-  ],
-  "field_definitions": {
-    "id": {
-      "type": "string",
-      "label": "id",
-      "added_by": {
-        "ref": "input",
-        "hash": null
-      }
-    },
-    "email": {
-      "type": "string",
-      "label": "Email",
-      "added_by": {
-        "ref": "input",
-        "hash": null
-      }
-    },
-    "company_website_url": {
-      "type": "string",
-      "label": "Company Website URL",
-      "added_by": {
-        "ref": "company:websiteurl:email@1",
-        "hash": "e0b8a4ef"
-      }
-    }
-  },
+  "field_definitions": {},
   "errors": [],
+  "order": [
+    1
+  ],
+  "organization_id": "org-1",
   "records": {
-    "e99e5017-7943-4dc1-91f9-67f70a9fd6dd": {
-      "id": "e99e5017-7943-4dc1-91f9-67f70a9fd6dd",
+    "1": {
+      "id": 1,
       "fields": {
         "id": {
-          "value": "e99e5017-7943-4dc1-91f9-67f70a9fd6dd",
-          "status": "completed",
-          "type": "string",
+          "type": "number",
+          "value": 1,
+          "format": null,
           "reason": null,
+          "status": "completed",
+          "widgets": {},
           "claimed_by": {
             "ref": "input",
-            "hash": null
+            "config_hash": null
           },
           "resolved_by": {
-            "environment": "production",
             "ref": "input",
-            "hash": null
-          },
-          "meta": null,
-          "ui": {
-            "severity": "none"
+            "input_hash": null,
+            "config_hash": null,
+            "environment": null
           }
         },
-        "email": {
-          "value": "emma@amazon.com",
-          "status": "completed",
+        "name": {
           "type": "string",
+          "value": "Same dude",
+          "format": "text",
           "reason": null,
+          "status": "completed",
+          "widgets": {},
           "claimed_by": {
             "ref": "input",
-            "hash": null
+            "config_hash": null
           },
           "resolved_by": {
             "ref": "input",
-            "environment": "production",
-            "hash": null
-          },
-          "meta": null,
-          "ui": {
-            "severity": "none"
-          }
-        },
-        "company_website_url": {
-          "value": "https://amazon.com",
-          "status": "completed",
-          "type": "string",
-          "reason": null,
-          "claimed_by": {
-            "ref": "company:websiteurl:email@1",
-            "hash": "e0b8a4ef"
-          },
-          "resolved_by": {
-            "environment": "production",
-            "ref": "company:websiteurl:email@1",
-            "hash": "e0b8a4ef"
-          },
-          "meta": null,
-          "ui": {
-            "severity": "none"
+            "input_hash": null,
+            "config_hash": null,
+            "environment": null
           }
         }
       }
@@ -191,6 +147,54 @@ are the columns.
 The `field_definitions` object contains all fields that 
 exist in your pipeline. This includes pipe output fields and field derived from <AppLink linkType="inputObject">input objects</AppLink>.
 `field_definitions` is an object. The keys contain field names and the values field properties.
+
+
+<Accordion
+      type="single"
+      collapsible
+      className="w-full"
+    >
+      <AccordionItem value="item-1">
+        <AccordionTrigger>Toggle field_definitions example</AccordionTrigger>
+        <AccordionContent className="flex flex-col gap-4 text-balance">
+          <div>
+
+```JSON
+{
+    "id": {
+      "type": "string",
+      "label": "id",
+      "added_by": {
+        "ref": "input",
+        "config_hash": null,
+        "pipe_index": null
+      }
+    },
+    "email": {
+      "type": "string",
+      "label": "Email",
+      "added_by": {
+        "ref": "input",
+        "config_hash": null,
+        "pipe_index": null
+      }
+    },
+    "company_website_url": {
+      "type": "string",
+      "label": "Company Website URL",
+      "added_by": {
+        "ref": "company:websiteurl:email@1",
+        "hash": "e0b8a4ef",
+        "config_hash": "x0b5a4ef",
+        "pipe_index": 0,
+      }
+    }
+}
+```
+          </div>
+        </AccordionContent>
+      </AccordionItem>
+    </Accordion>
 
 ### errors
 

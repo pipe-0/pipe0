@@ -22,6 +22,10 @@ export const appLinks = {
   inputExpansion: () => `/resources/documentation/pipes-inputs#input-expansion`,
   connections: () => `/resources/documentation/connections`,
   authentication: () => `/resources/documentation/authentication`,
+  widgets: () =>
+    `/resources/documentation/pipes-request-payload#-configwidgetsenabled`,
+  fieldDefinitions: () =>
+    `/resources/documentation/pipes-request-payload#-configfield_definitionsenabled`,
 
   docs: () => `/resources/documentation/`,
 

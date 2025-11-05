@@ -14,7 +14,7 @@ const meta: MetaRecord = {
   },
   "search-catalog": {
     type: "page",
-    title: <span className="badge-new">Searches</span>,
+    title: "Searches",
     theme: {
       collapsed: true,
     },

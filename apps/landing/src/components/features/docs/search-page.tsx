@@ -1,10 +1,8 @@
-import { getSearchEntryMap } from "@/app/resources/search-catalog/get-searches";
 import {
   AvailableVersions,
   CatalogPageLayout,
   TagList,
 } from "@/components/features/docs/docs-layout";
-import { TextLink } from "@/components/text-link";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -20,12 +18,12 @@ import {
   SearchId,
 } from "@pipe0/client-sdk";
 import Link from "next/link";
-import React, { PropsWithChildren } from "react";
+import { PropsWithChildren } from "react";
 
 function findAllSearchVersions(searchId: SearchId) {
   const searchEntry = getSearchEntry(searchId);
   const res = Object.entries(searchCatalog)
-    .map(([searchId, entry]) => ({ searchId: searchId as SearchId, ...entry }))
+    .map(([, entry]) => entry)
     .filter((e) => e.baseSearch === searchEntry.baseSearch)
     .sort((a, b) => {
       const versionA = getSearchVersion(a.searchId);

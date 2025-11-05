@@ -21,10 +21,11 @@ Here's a sample payload:
 {
   "config": {
     "environment": "sandbox",
-    "ui": {
-      "widgets": {
-        "enabled": true
-      }
+    "widgets": {
+      "enabled": false
+    },
+    "field_definitions": {
+      "enabled": false
     }
   },
   "pipes": [
@@ -64,10 +65,14 @@ Here's a sample payload:
 
 Execute your request in `sandbox` or `production` <AppLink linkType="testMode">mode</AppLink>.
 
-#### <span className="badge-new" /> config.ui.widgets.enabled 
+#### <span className="badge-new" /> config.widgets.enabled 
 
 Enable/disable widget metadata. Widgets are part of the <AppLink linkType="pipelineResponse">pipes response</AppLink> and are often used to 
 visualize the enriched results (e.g. provider logos).
+
+#### <span className="badge-new" /> config.field_definitions.enabled 
+
+Enable/disable additional metadata on fields.
 
 ### pipes[]
 

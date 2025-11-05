@@ -21,7 +21,7 @@ const meta: MetaRecord = {
   },
   __: {
     type: "separator",
-    title: <span className="badge-new">Searches</span>,
+    title: "Searches",
   },
   "searches-quickstart": {
     title: "Quickstart",
@@ -54,11 +54,7 @@ const meta: MetaRecord = {
     title: "Response Object",
   },
   "pipe-concepts": {
-    title: (
-      <>
-        Concepts <span className="badge-new" />
-      </>
-    ),
+    title: <>Concepts</>,
   },
   "pipes-inputs": {
     title: "Inputs",
@@ -82,11 +78,7 @@ const meta: MetaRecord = {
     },
   },
   connections: {
-    title: (
-      <>
-        Connections <span className="badge-new" />
-      </>
-    ),
+    title: <>Connections</>,
     theme: {
       toc: true,
       layout: "full",

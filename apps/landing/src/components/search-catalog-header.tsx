@@ -32,6 +32,7 @@ import { appLinks } from "@/lib/links";
 import { formatCredits } from "@/lib/utils";
 import {
   FieldName,
+  getDefaultSearchOutputFields,
   getField,
   getSearchDefaultPayload,
   getSearchEntry,
@@ -148,30 +149,32 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
         <div>
           <h3 className="font-medium mb-3 pb-2 border-b">Output Fields</h3>
           <div className="space-y-2">
-            {searchEntry.defaultOutputFields.map((fieldName) => {
-              const found = getField(fieldName as FieldName);
-              const isEnabledByDefault = !!(
-                defaultSearchPayload?.config?.output_fields as Record<
-                  string,
-                  any
-                >
-              )?.[fieldName]?.enabled;
-              if (!found) return null;
+            {getDefaultSearchOutputFields(searchEntry.searchId).map(
+              (fieldName) => {
+                const found = getField(fieldName as FieldName);
+                const isEnabledByDefault = !!(
+                  defaultSearchPayload?.config?.output_fields as Record<
+                    string,
+                    any
+                  >
+                )?.[fieldName]?.enabled;
+                if (!found) return null;
 
-              return (
-                <FieldRow
-                  key={fieldName}
-                  fieldName={found.name}
-                  fieldType={found.type}
-                  description={found.description}
-                  rightAction={
-                    <OutputFieldEnabledBadge
-                      isEnabledByDefault={isEnabledByDefault}
-                    />
-                  }
-                />
-              );
-            })}
+                return (
+                  <FieldRow
+                    key={fieldName}
+                    fieldName={found.name}
+                    fieldType={found.type}
+                    description={found.description}
+                    rightAction={
+                      <OutputFieldEnabledBadge
+                        isEnabledByDefault={isEnabledByDefault}
+                      />
+                    }
+                  />
+                );
+              }
+            )}
           </div>
         </div>
       </CatalogHeader>

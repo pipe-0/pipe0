@@ -925,8 +925,71 @@ Customize the message using the name of the user: {{ input name type="string" re
           connections: [{ type: "vault", connection: "resend_123" }],
         },
         config: {
-          audience_id: "abc",
+          audience_id: "audience_id_12xeeb12",
           add_as_subscribed: true,
+        },
+      },
+    ],
+    input: [
+      {
+        id: "1",
+        email: "test@pipe0.com",
+        name: "John Dorr",
+      },
+    ],
+  },
+  "sheet:append@1": {
+    config: {
+      environment: "production",
+    },
+    pipes: [
+      {
+        pipe_id: "sheet:append@1",
+        connector: {
+          strategy: "first",
+          connections: [
+            {
+              type: "vault",
+              connection: "pipe0_123",
+            },
+          ],
+        },
+        config: {
+          sheet: "sheet_id",
+          run: true,
+          allow_field_creation: true,
+          included_fields: ["name"],
+        },
+      },
+    ],
+    input: [
+      {
+        id: "1",
+        email: "test@pipe0.com",
+        name: "John Dorr",
+      },
+    ],
+  },
+  "sheet:expandappend@1": {
+    config: {
+      environment: "production",
+    },
+    pipes: [
+      {
+        pipe_id: "sheet:expandappend@1",
+        connector: {
+          strategy: "first",
+          connections: [
+            {
+              type: "vault",
+              connection: "pipe0_123",
+            },
+          ],
+        },
+        config: {
+          sheet: "sheet_id",
+          run: true,
+          allow_field_creation: true,
         },
       },
     ],
