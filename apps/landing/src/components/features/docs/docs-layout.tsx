@@ -4,7 +4,7 @@ import { HeaderVideoSection } from "@/components/features/docs/header-video-sect
 import { TextLink } from "@/components/text-link";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { providerCatalog, ProviderName } from "@pipe0/client-sdk";
+import { providerCatalog, ProviderName } from "@pipe0/ops";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { Fragment, PropsWithChildren, ReactNode } from "react";

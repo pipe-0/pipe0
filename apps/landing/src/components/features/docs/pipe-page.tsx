@@ -13,11 +13,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { cn } from "@/lib/utils";
-import {
-  getPipeEntry,
-  PipeId,
-  sortPipeCatalogByBasePipe,
-} from "@pipe0/client-sdk";
+import { getPipeEntry, PipeId, sortPipeCatalogByBasePipe } from "@pipe0/ops";
 import Link from "next/link";
 import React, { PropsWithChildren } from "react";
 

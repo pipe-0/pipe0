@@ -1,5 +1,5 @@
 import { PipeEntry } from "@/app/resources/pipe-catalog/get-pipes";
-import { PipeId, SearchId } from "@pipe0/client-sdk";
+import { PipeId, SearchId } from "@pipe0/ops";
 import { clsx, type ClassValue } from "clsx";
 import { Metadata } from "next";
 import { toast } from "sonner";

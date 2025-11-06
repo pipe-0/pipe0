@@ -1,7 +1,7 @@
 import { PipePage } from "@/components/features/docs/pipe-page";
 import { PipeCatalogHeader } from "@/components/pipe-catalog-header";
 import { generatePipeMetadata } from "@/lib/utils";
-import { PipeId } from "@pipe0/client-sdk";
+import { PipeId } from "@pipe0/ops";
 
 const pipeId: PipeId = "people:phone:workemail:waterfall@1";
 

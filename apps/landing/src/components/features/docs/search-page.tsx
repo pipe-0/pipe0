@@ -16,7 +16,7 @@ import {
   getSearchVersion,
   searchCatalog,
   SearchId,
-} from "@pipe0/client-sdk";
+} from "@pipe0/ops";
 import Link from "next/link";
 import { PropsWithChildren } from "react";
 

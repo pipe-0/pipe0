@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { CodeBlock } from "@/components/ui/code-block";
 import { appInfo } from "@/lib/const";
 import { appLinks } from "@/lib/links";
-import { providerCatalog } from "@pipe0/client-sdk";
+import { providerCatalog } from "@pipe0/ops";
 import { ArrowRight, Search, Sparkle } from "lucide-react";
 import Link from "next/link";
 import type { ReactNode } from "react";

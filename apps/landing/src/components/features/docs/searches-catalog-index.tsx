@@ -53,7 +53,7 @@ import {
   SearchCatalogTableData,
   SearchCategory,
   SearchId,
-} from "@pipe0/client-sdk";
+} from "@pipe0/ops";
 import { useSearchCatalogTable } from "@pipe0/react-sdk";
 import {
   ArrowDown,

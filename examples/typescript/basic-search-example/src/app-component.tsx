@@ -1,4 +1,4 @@
-import type { SearchesRequestPayload } from "@pipe0/client-sdk";
+import type { SearchesRequestPayload } from "@pipe0/ops";
 import { SearchSection } from "./search-section";
 
 const searchSections = [

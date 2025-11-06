@@ -35,7 +35,7 @@ import {
   RECORD_FIELD_TYPES,
   SelectMetadata,
   TextMetadata,
-} from "@pipe0/client-sdk";
+} from "@pipe0/ops";
 import {
   Calendar,
   Copy,

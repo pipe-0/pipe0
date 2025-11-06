@@ -53,7 +53,7 @@ import {
   PipePayload,
   providerCatalog,
   validatePipeline,
-} from "@pipe0/client-sdk";
+} from "@pipe0/ops";
 import { Download, Terminal, Upload } from "lucide-react";
 import Link from "next/link";
 import { useMemo } from "react";

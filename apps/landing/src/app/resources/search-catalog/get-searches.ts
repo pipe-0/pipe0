@@ -1,9 +1,4 @@
-import {
-  PipeId,
-  SearchId,
-  getSearchEntry,
-  pipeCatalog,
-} from "@pipe0/client-sdk";
+import { PipeId, SearchId, getSearchEntry, pipeCatalog } from "@pipe0/ops";
 import { normalizePages } from "nextra/normalize-pages";
 import { getPageMap } from "nextra/page-map";
 

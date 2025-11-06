@@ -11,7 +11,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { cn, copyToClipboard } from "@/lib/utils";
-import { fieldCatalog, InputGroup, RecordFieldType } from "@pipe0/client-sdk";
+import { fieldCatalog, InputGroup, RecordFieldType } from "@pipe0/ops";
 import { Check, Copy, X } from "lucide-react";
 import { ReactNode, useMemo, useState } from "react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";

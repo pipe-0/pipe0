@@ -46,6 +46,7 @@ import {
 } from "@/components/ui/tooltip";
 import { appInfo } from "@/lib/const";
 import { cn, copyToClipboard } from "@/lib/utils";
+import { usePipeCatalogTable } from "@pipe0/react-sdk";
 import {
   getDefaultOutputFields,
   getDefaultPipeProviders,
@@ -53,13 +54,12 @@ import {
   getStartingCostPerPipesProvider,
   pipeCatalog,
   PipeCatalogEntry,
-  PipeEntryWithLatestVersion,
   PipeCategory,
+  PipeEntryWithLatestVersion,
   PipeId,
   providerCatalog,
   ProviderName,
-} from "@pipe0/client-sdk";
-import { usePipeCatalogTable } from "@pipe0/react-sdk";
+} from "@pipe0/ops";
 import {
   ArrowDown,
   ArrowUp,
@@ -68,7 +68,6 @@ import {
   Copy,
   Database,
   Hammer,
-  Layers,
   ScanFace,
   Search,
   X,
@@ -632,7 +631,7 @@ export function PipeCatalogIndex({
                 return (
                   <IntegrationCard
                     key={row.original.pipeId}
-                    tableEntry={row.original}
+                    tableEntry={row.original as any}
                     filterByField={filterByField}
                     pipeEntry={pipeEntry}
                   />

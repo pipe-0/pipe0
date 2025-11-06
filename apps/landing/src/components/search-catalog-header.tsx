@@ -39,7 +39,7 @@ import {
   getSearchPayloadFormConfig,
   providerCatalog,
   SearchId,
-} from "@pipe0/client-sdk";
+} from "@pipe0/ops";
 import { useMemo } from "react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/cjs/styles/prism";

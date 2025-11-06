@@ -1,7 +1,4 @@
-import type {
-  SearchesRequestPayload,
-  SearchesResponse,
-} from "@pipe0/client-sdk";
+import type { SearchesRequestPayload, SearchesResponse } from "@pipe0/ops";
 import { useMutation } from "@tanstack/react-query";
 import React, { useState } from "react";
 

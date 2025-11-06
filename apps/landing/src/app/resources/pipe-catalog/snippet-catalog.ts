@@ -3,7 +3,7 @@ import {
   PipeRequestPayloadMap,
   PipesRequest,
   PipesRequestPayload,
-} from "@pipe0/client-sdk";
+} from "@pipe0/ops";
 import Oas from "oas";
 import { OASDocument } from "oas/types";
 

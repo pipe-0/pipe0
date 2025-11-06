@@ -1,7 +1,7 @@
 import { SearchPage } from "@/components/features/docs/search-page";
 import { SearchCatalogHeader } from "@/components/search-catalog-header";
 import { generateSearchMetadata } from "@/lib/utils";
-import { SearchId } from "@pipe0/client-sdk";
+import { SearchId } from "@pipe0/ops";
 
 const searchId: SearchId = "companies:profiles:icypeas@1";
 
