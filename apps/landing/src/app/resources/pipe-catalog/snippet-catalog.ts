@@ -1001,6 +1001,58 @@ Customize the message using the name of the user: {{ input name type="string" re
       },
     ],
   },
+  "people:match:role:waterfall@1": {
+    config: {
+      environment: "production",
+    },
+    pipes: [
+      {
+        pipe_id: "people:match:role:waterfall@1",
+        config: {
+          providers: [{ provider: "leadmagic" }],
+          roles: ["CEO"],
+        },
+      },
+    ],
+    input: [
+      {
+        id: "1",
+        company_website_url: "https://acme.com",
+      },
+    ],
+  },
+  "company:match:logodev@1": {
+    config: {
+      environment: "production",
+    },
+    pipes: [
+      {
+        pipe_id: "company:match:logodev@1",
+      },
+    ],
+    input: [
+      {
+        id: "1",
+        company_website_url: "https://acme.com",
+      },
+    ],
+  },
+  "company:lookalikes:companyenrich@1": {
+    config: {
+      environment: "production",
+    },
+    pipes: [
+      {
+        pipe_id: "company:lookalikes:companyenrich@1",
+      },
+    ],
+    input: [
+      {
+        id: "1",
+        company_website_url: "https://acme.com",
+      },
+    ],
+  },
 } satisfies {
   [K in PipeId]: PipesRequestPayload & { pipes: PipeRequestPayloadMap[K][] };
 };

@@ -106,7 +106,7 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
           environment: "production",
         },
         pipes: [payload],
-        fieldAnnotations: getFieldAnnotations(payload),
+        field_annotations: getFieldAnnotations(payload),
       });
       return getPipePayloadFormConfig({
         pipePayload: payload,

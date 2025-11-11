@@ -24,11 +24,11 @@ importers:
         specifier: ^15.1.6
         version: 15.1.6(@mdx-js/loader@3.1.0(acorn@8.14.0))(@mdx-js/react@3.1.0(@types/react@19.0.8)(react@19.0.0))
       '@pipe0/ops':
-        specifier: 0.0.2
-        version: 0.0.2
+        specifier: 0.0.3
+        version: 0.0.3
       '@pipe0/react-sdk':
-        specifier: 0.0.71
-        version: 0.0.71
+        specifier: 0.0.72
+        version: 0.0.72
       '@radix-ui/react-accordion':
         specifier: ^1.2.3
         version: 1.2.3(@types/react-dom@19.0.3(@types/react@19.0.8))(@types/react@19.0.8)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -1837,12 +1837,13 @@ packages:
 
   '@pipe0/client-sdk@0.0.59':
     resolution: {integrity: sha512-am7C3aZBXYt4+/P4vAZFZXVQwynhqEE85qz9UOzmWwWbBYZuEJoATESJhFRGrAHfL7UhAXWp3l4WBm+ohRzizg==}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
 
-  '@pipe0/ops@0.0.2':
-    resolution: {integrity: sha512-SHjwW8l0swqFl0xqqZn7FOiDyNZDJFCZWYw4yzBcTfA0lmWD10yLYTdNlQNY5u3JrmjO3xBxgOWPTaNqUTtD8Q==}
+  '@pipe0/ops@0.0.3':
+    resolution: {integrity: sha512-1pXLhqZECGYej4wZUlMvsCoenYiLpfhk8cX/7giFQXnf0PQmJ1Q+7FfW4fBj4+D69FG0P1xVR7CTKfbrCfbIMQ==}
 
-  '@pipe0/react-sdk@0.0.71':
-    resolution: {integrity: sha512-/1JIzvINijMFj0GX88JkPMye8SYtsxp7H1VM33hNyx0RJgoXTSZJbr+bpC7RHfMbbzKmlmAVNp1Gkpln9WDTbA==}
+  '@pipe0/react-sdk@0.0.72':
+    resolution: {integrity: sha512-v2xQZMYzXvHCsgn4bhEPG2F+63EGTWgemQPsUtU9J/Qxbdx+B47wWu8HGJam75xK02OjJeKE/8gIVYOX1MYAEA==}
 
   '@popperjs/core@2.11.8':
     resolution: {integrity: sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==}
@@ -8805,7 +8806,7 @@ snapshots:
       lodash.defaultsdeep: 4.6.1
       zod: 4.0.5
 
-  '@pipe0/ops@0.0.2':
+  '@pipe0/ops@0.0.3':
     dependencies:
       '@asteasolutions/zod-to-openapi': 8.0.0(zod@4.1.12)
       ajv: 8.17.1
@@ -8818,9 +8819,9 @@ snapshots:
       xxhash-wasm: 1.1.0
       zod: 4.1.12
 
-  '@pipe0/react-sdk@0.0.71':
+  '@pipe0/react-sdk@0.0.72':
     dependencies:
-      '@pipe0/ops': 0.0.2
+      '@pipe0/ops': 0.0.3
       '@tanstack/react-table': 8.21.3(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       lucide-react: 0.475.0(react@19.0.0)
       react: 19.0.0

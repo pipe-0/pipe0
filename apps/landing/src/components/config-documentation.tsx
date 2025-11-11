@@ -11,11 +11,13 @@ import { Button } from "@/components/ui/button";
 import { copyToClipboard } from "@/lib/utils";
 import {
   DateRangeMetadata,
+  ExactRangeMetadata,
   FormSection,
   GeneratedFormElement,
   IntegerMetadata,
   isBooleanField,
   isDateRangeField,
+  isExactRangeField,
   isIncludeExcludeField,
   isIncludeExcludeSelectField,
   isIntegerField,
@@ -103,10 +105,20 @@ const generateJsonSchemaExample = (fieldName: string) => `{
   }
 }`;
 
-const generateRangeExample = (fieldName: string, field: RangeMetadata) => `{
+const generateExactRangeExample = (
+  fieldName: string,
+  field: ExactRangeMetadata
+) => `{
   "${fieldName}": {
     "gt": ${field.min || 0},
     "lt": ${field.max || 100},
+  }
+}`;
+
+const generateRangeExample = (fieldName: string, field: RangeMetadata) => `{
+  "${fieldName}": {
+    "from": ${field.min || 0},
+    "to": ${field.max || 100},
   }
 }`;
 
@@ -169,6 +181,9 @@ function generateCodeExample(field: GeneratedFormElement): string {
 
   if (isIncludeExcludeField(field) || isIncludeExcludeSelectField(field)) {
     return generateIncludeExcludeExample(fieldName);
+  }
+  if (isExactRangeField(field)) {
+    return generateExactRangeExample(fieldName, field);
   }
   if (isRangeField(field)) {
     return generateRangeExample(fieldName, field);
@@ -467,7 +482,7 @@ const DATE_OPERATOR_INFO = [
 ];
 
 function OperatorsSection({ field }: { field: GeneratedFormElement }) {
-  if (!isRangeField(field) && !isDateRangeField(field)) return null;
+  if (!isExactRangeField(field) && !isDateRangeField(field)) return null;
 
   const operators = isDateRangeField(field)
     ? DATE_OPERATOR_INFO
