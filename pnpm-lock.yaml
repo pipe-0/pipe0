@@ -24,11 +24,11 @@ importers:
         specifier: ^15.1.6
         version: 15.1.6(@mdx-js/loader@3.1.0(acorn@8.14.0))(@mdx-js/react@3.1.0(@types/react@19.0.8)(react@19.0.0))
       '@pipe0/ops':
-        specifier: 0.0.3
-        version: 0.0.3
+        specifier: 0.0.4
+        version: 0.0.4
       '@pipe0/react-sdk':
-        specifier: 0.0.72
-        version: 0.0.72
+        specifier: 0.0.73
+        version: 0.0.73
       '@radix-ui/react-accordion':
         specifier: ^1.2.3
         version: 1.2.3(@types/react-dom@19.0.3(@types/react@19.0.8))(@types/react@19.0.8)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -1839,11 +1839,11 @@ packages:
     resolution: {integrity: sha512-am7C3aZBXYt4+/P4vAZFZXVQwynhqEE85qz9UOzmWwWbBYZuEJoATESJhFRGrAHfL7UhAXWp3l4WBm+ohRzizg==}
     deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
 
-  '@pipe0/ops@0.0.3':
-    resolution: {integrity: sha512-1pXLhqZECGYej4wZUlMvsCoenYiLpfhk8cX/7giFQXnf0PQmJ1Q+7FfW4fBj4+D69FG0P1xVR7CTKfbrCfbIMQ==}
+  '@pipe0/ops@0.0.4':
+    resolution: {integrity: sha512-N1sXivZonrRvreW70338aZ5fm3YK52rXY/zGPnNlxkgV9iO8LeZG5xIfHPDqbqQ/8zBuiwsUmOXw1773WRiSJg==}
 
-  '@pipe0/react-sdk@0.0.72':
-    resolution: {integrity: sha512-v2xQZMYzXvHCsgn4bhEPG2F+63EGTWgemQPsUtU9J/Qxbdx+B47wWu8HGJam75xK02OjJeKE/8gIVYOX1MYAEA==}
+  '@pipe0/react-sdk@0.0.73':
+    resolution: {integrity: sha512-JcF3YjTFGc1csHAsTeuJ7XXzwKwlKZxWJ9Zo8aff513gGLVh681aZSETubRvBuTKz/6Cs4401zKR7zP4F5rmDA==}
 
   '@popperjs/core@2.11.8':
     resolution: {integrity: sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==}
@@ -3043,6 +3043,10 @@ packages:
     resolution: {integrity: sha512-RHYhrR3hku0MJFRV+fN2gNbDNEh3dwKvY8XJvTxCSXeMOsCRSr+uKvDWQcbizrHgjML6ZmTE5OwMrl5wKcujCw==}
     peerDependencies:
       vite: ^5.2.0 || ^6 || ^7
+
+  '@tanstack/match-sorter-utils@8.19.4':
+    resolution: {integrity: sha512-Wo1iKt2b9OT7d+YGhvEPD3DXvPv2etTusIMhMUoG7fbhmxcXCtIjJDEygy91Y2JFlwGyjqiBPRozme7UD8hoqg==}
+    engines: {node: '>=12'}
 
   '@tanstack/query-core@5.83.1':
     resolution: {integrity: sha512-OG69LQgT7jSp+5pPuCfzltq/+7l2xoweggjme9vlbCPa/d7D7zaqv5vN/S82SzSYZ4EDLTxNO1PWrv49RAS64Q==}
@@ -6449,6 +6453,9 @@ packages:
   remark-stringify@11.0.0:
     resolution: {integrity: sha512-1OSmLd3awB/t8qdoEOMazZkNsfVTeY4fTsgzcQFdXNq8ToTN4ZGwrMnlda4K6smTFKD+GRV6O48i6Z4iKgPPpw==}
 
+  remove-accents@0.5.0:
+    resolution: {integrity: sha512-8g3/Otx1eJaVD12e31UbJj1YzdtVvzH85HV7t+9MJYk/u3XmkOUJ5Ys9wQrf9PCPK8+xn4ymzqYCiZl6QWKn+A==}
+
   remove-undefined-objects@6.0.0:
     resolution: {integrity: sha512-8fR4QQFV2xMKTYXazi1944rpr1f+JOzQu58TgUFi3xDu41fDon5qMXtjJ1/nhquOouTtJ621bKDrhE1IlOSP+A==}
     engines: {node: '>=18'}
@@ -8806,7 +8813,7 @@ snapshots:
       lodash.defaultsdeep: 4.6.1
       zod: 4.0.5
 
-  '@pipe0/ops@0.0.3':
+  '@pipe0/ops@0.0.4':
     dependencies:
       '@asteasolutions/zod-to-openapi': 8.0.0(zod@4.1.12)
       ajv: 8.17.1
@@ -8819,9 +8826,10 @@ snapshots:
       xxhash-wasm: 1.1.0
       zod: 4.1.12
 
-  '@pipe0/react-sdk@0.0.72':
+  '@pipe0/react-sdk@0.0.73':
     dependencies:
-      '@pipe0/ops': 0.0.3
+      '@pipe0/ops': 0.0.4
+      '@tanstack/match-sorter-utils': 8.19.4
       '@tanstack/react-table': 8.21.3(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       lucide-react: 0.475.0(react@19.0.0)
       react: 19.0.0
@@ -10158,6 +10166,10 @@ snapshots:
       '@tailwindcss/oxide': 4.1.11
       tailwindcss: 4.1.11
       vite: 7.0.6(jiti@2.4.2)(lightningcss@1.30.1)(yaml@2.8.1)
+
+  '@tanstack/match-sorter-utils@8.19.4':
+    dependencies:
+      remove-accents: 0.5.0
 
   '@tanstack/query-core@5.83.1': {}
 
@@ -14558,6 +14570,8 @@ snapshots:
       '@types/mdast': 4.0.4
       mdast-util-to-markdown: 2.1.2
       unified: 11.0.5
+
+  remove-accents@0.5.0: {}
 
   remove-undefined-objects@6.0.0: {}
 

@@ -31,14 +31,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
-import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
@@ -66,7 +58,7 @@ import {
   X,
 } from "lucide-react";
 import Link from "next/link";
-import { ComponentType, useMemo } from "react";
+import { ComponentType } from "react";
 
 // Featured searches - you can customize this list with your featured searches IDs
 const FEATURED_SEARCHES_IDS = [] satisfies SearchId[];
@@ -513,72 +505,6 @@ export function SearchCatalogIndex({
                   No integrations found. Try adjusting your filters.
                 </p>
               </div>
-            )}
-
-            {/* Pagination - optimized to prevent unnecessary calculations */}
-            {rows.length > 0 && (
-              <Pagination>
-                <PaginationContent>
-                  <PaginationItem>
-                    <PaginationPrevious
-                      size="sm"
-                      href="#"
-                      onClick={() => table.previousPage()}
-                      disabled={!table.getCanPreviousPage()}
-                    />
-                  </PaginationItem>
-
-                  {Array.from({ length: Math.min(5, totalPages) }).map(
-                    (_, i) => {
-                      let pageNumber: number;
-
-                      if (totalPages <= 5) {
-                        pageNumber = i + 1;
-                      } else if (currentPageNumber <= 3) {
-                        pageNumber = i + 1;
-                      } else if (currentPageNumber >= totalPages - 2) {
-                        pageNumber = totalPages - 4 + i;
-                      } else {
-                        pageNumber = currentPageNumber + i - 2;
-                      }
-
-                      return (
-                        <PaginationItem key={i}>
-                          <PaginationLink
-                            size="sm"
-                            href="#"
-                            isActive={currentPageNumber === pageNumber - 1}
-                            onClick={(e) => {
-                              e.preventDefault();
-                              table.setPageIndex(pageNumber - 1);
-                            }}
-                          >
-                            {pageNumber}
-                          </PaginationLink>
-                        </PaginationItem>
-                      );
-                    }
-                  )}
-
-                  <PaginationItem>
-                    <PaginationNext
-                      href="#"
-                      size="sm"
-                      disabled={!table.getCanNextPage()}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        if (currentPageNumber < totalPages)
-                          table.setPageIndex(currentPageNumber + 1);
-                      }}
-                      className={
-                        currentPageNumber === totalPages
-                          ? "pointer-events-none opacity-50"
-                          : ""
-                      }
-                    />
-                  </PaginationItem>
-                </PaginationContent>
-              </Pagination>
             )}
           </div>
         </div>
