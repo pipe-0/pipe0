@@ -219,6 +219,97 @@ export const snippetCatalog = {
       },
     ],
   },
+  "people:profiles:crustdata@1": {
+    config: {
+      environment: "production",
+      dedup: {
+        strategy: "default",
+      },
+    },
+    searches: [
+      {
+        search_id: "people:profiles:crustdata@1",
+        config: {
+          limit: 10,
+          cursor: "",
+          filters: {
+            locations: ["Berlin", "Germany"],
+            profile_headline_keywords: [],
+            profile_summary_keywords: [],
+            profile_languages: ["Arabic"],
+            languages: [],
+            skills: [],
+            years_of_experience: ["1 to 2 years"],
+            current_seniority_levels: {
+              include: [],
+              exclude: [],
+            },
+            current_employers: [],
+            current_job_titles: [],
+            current_employers_linkedin_industries: [],
+            years_at_current_company: ["1 to 2 years"],
+            previous_seniority_levels: {
+              include: [],
+              exclude: [],
+            },
+            previous_employers: [],
+            previous_employers_linkedin_industries: [],
+            previous_job_titles: [],
+            certifications: [],
+            honors: [],
+            recently_changed_jobs: false,
+            fields_of_study: [],
+            degree_names: [],
+            school_names: [],
+            current_school_names: [],
+            extracurricular_activities: [],
+          },
+        },
+      },
+    ],
+  },
+  "companies:profiles:crustdata@1": {
+    config: {
+      environment: "production",
+      dedup: {
+        strategy: "default",
+      },
+    },
+    searches: [
+      {
+        search_id: "companies:profiles:crustdata@1",
+        config: {
+          limit: 10,
+          cursor: "",
+          filters: {
+            company_types: [],
+            headcount_growth_last_6m_in_percent: [],
+            last_funding_amount: {
+              from: null,
+              to: null,
+            },
+            last_funding_type: [],
+            linkedin_industries: [],
+            linkedin_categories: [],
+            crunchbase_categories: [],
+            markets: [],
+            revenue_in_usd: {
+              from: 10000,
+              to: 1000000,
+            },
+            crunchbase_investors: [],
+            tracxn_investors: [],
+            follower_growth_last_6m_in_percent: [],
+            headcount: [],
+            hq_locations: [],
+            number_of_followers: [],
+            profile_summary_keywords: [],
+            competitor_websites: ["https://google.com"],
+          },
+        },
+      },
+    ],
+  },
 } satisfies {
   [K in SearchId]: SearchesRequestPayload & {
     searches: SearchesPayloadMap[K][];

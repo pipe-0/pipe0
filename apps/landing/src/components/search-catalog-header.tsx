@@ -1,7 +1,7 @@
 import {
   searchesMiniSpec,
   snippetCatalog,
-} from "@/app/resources/search-catalog/snippet-catalot";
+} from "@/app/resources/search-catalog/snippet-catalog";
 import { videoCatalog } from "@/app/resources/search-catalog/video-catalog";
 import { CodeTabs } from "@/components/code-tabs";
 import { PayloadDocumenation } from "@/components/config-documentation";

@@ -1053,6 +1053,22 @@ Customize the message using the name of the user: {{ input name type="string" re
       },
     ],
   },
+  "people:posts:crustdata@1": {
+    config: {
+      environment: "production",
+    },
+    pipes: [
+      {
+        pipe_id: "people:posts:crustdata@1",
+      },
+    ],
+    input: [
+      {
+        id: "1",
+        profile_url: "https://linkedin.com/li/john-doe-3445",
+      },
+    ],
+  },
 } satisfies {
   [K in PipeId]: PipesRequestPayload & { pipes: PipeRequestPayloadMap[K][] };
 };

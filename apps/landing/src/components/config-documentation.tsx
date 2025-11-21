@@ -1,5 +1,4 @@
-"use client";
-
+import { OptionsSection } from "@/components/config-documentation-options-section";
 import {
   Accordion,
   AccordionContent,
@@ -7,14 +6,13 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { copyToClipboard } from "@/lib/utils";
 import {
   DateRangeMetadata,
   ExactRangeMetadata,
   FormSection,
   GeneratedFormElement,
   IntegerMetadata,
+  isAsyncMultiSelectField,
   isBooleanField,
   isDateRangeField,
   isExactRangeField,
@@ -23,8 +21,10 @@ import {
   isIntegerField,
   isJsonExtractionField,
   isJsonSchemaInput,
+  isMultiCreateField,
   isMultiSelectField,
   isNumberField,
+  isOrderedMultiCreateField,
   isOutputField,
   isRangeField,
   isSelectField,
@@ -38,15 +38,7 @@ import {
   SelectMetadata,
   TextMetadata,
 } from "@pipe0/ops";
-import {
-  Calendar,
-  Copy,
-  FileText,
-  Hash,
-  List,
-  ToggleLeft,
-  Type,
-} from "lucide-react";
+import { Calendar, FileText, Hash, List, ToggleLeft, Type } from "lucide-react";
 import { PropsWithChildren, useMemo } from "react";
 
 const isNumericField = (
@@ -148,6 +140,8 @@ const generateMultiSelectExample = (
   fieldName: string,
   field: MultiSelectMetadata
 ) => {
+  if (Array.isArray(field.options) === false) return "";
+
   const options = field.options.slice(0, 2).map((o) => o.value);
 
   if (options.length < 2) {
@@ -158,6 +152,18 @@ const generateMultiSelectExample = (
 
   return `{
   "${fieldName}": ["${options[0]}", "${options[1]}"]
+}`;
+};
+
+const generateAsyncMultiSelectExample = (fieldName: string) => {
+  return `{
+    "${fieldName}": ["option1", "option2"]
+}`;
+};
+
+const generateOrderedMultiCreateExample = (fieldName: string) => {
+  return `{
+    "${fieldName}": ["option1", "option2"]
 }`;
 };
 
@@ -200,9 +206,23 @@ function generateCodeExample(field: GeneratedFormElement): string {
   if (isSelectField(field)) {
     return generateSelectExample(fieldName, field);
   }
+
   if (isMultiSelectField(field)) {
     return generateMultiSelectExample(fieldName, field);
   }
+
+  if (isAsyncMultiSelectField(field)) {
+    return generateAsyncMultiSelectExample(fieldName);
+  }
+
+  if (isOrderedMultiCreateField(field)) {
+    return generateOrderedMultiCreateExample(fieldName);
+  }
+
+  if (isMultiCreateField(field)) {
+    return generateOrderedMultiCreateExample(fieldName);
+  }
+
   if (isIntegerField(field) || isNumberField(field)) {
     return generateNumericExample(fieldName, field);
   }
@@ -337,81 +357,6 @@ function ConfigurationSection({ field }: { field: GeneratedFormElement }) {
   );
 }
 
-function OptionsSection({ field }: { field: GeneratedFormElement }) {
-  const getOptions = () => {
-    if (isSelectField(field)) return field.options;
-    if (isIncludeExcludeSelectField(field)) return field.options;
-    if (isIncludeExcludeField(field)) return field.suggestions;
-    return null;
-  };
-
-  const options = getOptions();
-  if (!options) return null;
-
-  const handleCopyOptions = () => {
-    let value;
-    if ("suggestions" in field) {
-      value = field.suggestions;
-    } else if ("options" in field) {
-      value = field.options;
-    }
-    copyToClipboard(JSON.stringify(value, null, 2));
-  };
-
-  return (
-    <div>
-      <div className="flex justify-between">
-        <h4 className="text-sm font-medium text-gray-900 mb-3">
-          {isIncludeExcludeField(field) && field.suggestions
-            ? "Suggestions"
-            : "Available options"}
-        </h4>
-
-        <Button
-          size={"icon"}
-          variant="ghost"
-          className="size-7"
-          onClick={handleCopyOptions}
-        >
-          <Copy className="size-4" />
-        </Button>
-      </div>
-
-      {isIncludeExcludeField(field) && field.suggestions ? (
-        <div className="max-h-32 overflow-y-auto border border-gray-200 rounded-lg p-3">
-          <div className="flex flex-wrap gap-1.5">
-            {field.suggestions.map((suggestion, idx) => (
-              <Badge
-                key={idx}
-                variant="secondary"
-                className="text-xs font-normal"
-              >
-                {suggestion.label}
-              </Badge>
-            ))}
-          </div>
-        </div>
-      ) : (
-        <div className="max-h-32 overflow-y-auto border border-gray-200 rounded-lg">
-          <div className="divide-y divide-gray-100">
-            {options.map((option, idx) => (
-              <div
-                key={idx}
-                className="px-3 py-2 flex items-center justify-between"
-              >
-                <code className="text-xs bg-gray-100 px-1.5 py-0.5 rounded font-mono">
-                  {option.value}
-                </code>
-                <span className="text-sm text-gray-600">{option.label}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
-
 function ReferencesSection({ field }: { field: GeneratedFormElement }) {
   const showFieldFormatOptions = useMemo(() => {
     return isJsonExtractionField(field);
@@ -537,7 +482,18 @@ function FieldDocumentation({ field }: { field: GeneratedFormElement }) {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <ConfigurationSection field={field} />
         <div className="space-y-6">
-          <OptionsSection field={field} />
+          <OptionsSection
+            options={
+              "options" in field && Array.isArray(field.options)
+                ? field.options
+                : undefined
+            }
+            suggestions={
+              "suggestions" in field && Array.isArray(field.suggestions)
+                ? field.suggestions
+                : undefined
+            }
+          />
           <OperatorsSection field={field} />
         </div>
       </div>
