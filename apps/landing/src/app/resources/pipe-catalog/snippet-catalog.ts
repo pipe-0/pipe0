@@ -1070,13 +1070,13 @@ Customize the message using the name of the user: {{ input name type="string" re
     ],
   },
 
-  "people:identity:workemail:waterfall@1": {
+  "people:identity:email:waterfall@1": {
     config: {
       environment: "production",
     },
     pipes: [
       {
-        pipe_id: "people:identity:workemail:waterfall@1",
+        pipe_id: "people:identity:email:waterfall@1",
       },
     ],
     input: [
