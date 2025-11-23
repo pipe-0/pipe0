@@ -1069,6 +1069,55 @@ Customize the message using the name of the user: {{ input name type="string" re
       },
     ],
   },
+
+  "people:identity:workemail:waterfall@1": {
+    config: {
+      environment: "production",
+    },
+    pipes: [
+      {
+        pipe_id: "people:identity:workemail:waterfall@1",
+      },
+    ],
+    input: [
+      {
+        id: "1",
+        work_email: "john@pipe0.com",
+      },
+    ],
+  },
+  "people:profile:workemail:crustdata@1": {
+    config: {
+      environment: "production",
+    },
+    pipes: [
+      {
+        pipe_id: "people:profile:workemail:crustdata@1",
+      },
+    ],
+    input: [
+      {
+        id: "1",
+        work_email: "john@pipe0.com",
+      },
+    ],
+  },
+  "people:workemail:profileurl:waterfall@1": {
+    config: {
+      environment: "production",
+    },
+    pipes: [
+      {
+        pipe_id: "people:workemail:profileurl:waterfall@1",
+      },
+    ],
+    input: [
+      {
+        id: "1",
+        profile_url: "https://linkedin.com/li/john-123abc",
+      },
+    ],
+  },
 } satisfies {
   [K in PipeId]: PipesRequestPayload & { pipes: PipeRequestPayloadMap[K][] };
 };
