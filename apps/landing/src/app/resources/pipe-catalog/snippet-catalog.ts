@@ -1118,6 +1118,22 @@ Customize the message using the name of the user: {{ input name type="string" re
       },
     ],
   },
+  "company:match:crustdata@1": {
+    config: {
+      environment: "production",
+    },
+    pipes: [
+      {
+        pipe_id: "company:match:crustdata@1",
+      },
+    ],
+    input: [
+      {
+        id: "1",
+        company_website_url: "https://microsoft.com",
+      },
+    ],
+  },
 } satisfies {
   [K in PipeId]: PipesRequestPayload & { pipes: PipeRequestPayloadMap[K][] };
 };

@@ -243,7 +243,7 @@ export const snippetCatalog = {
             current_seniority_levels: {
               include: [],
               exclude: [],
-            },
+          },
             current_employers: [],
             current_employers_website_urls: [],
             current_job_titles: [],
