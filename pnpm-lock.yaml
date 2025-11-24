@@ -24,11 +24,11 @@ importers:
         specifier: ^15.1.6
         version: 15.1.6(@mdx-js/loader@3.1.0(acorn@8.14.0))(@mdx-js/react@3.1.0(@types/react@19.0.8)(react@19.0.0))
       '@pipe0/ops':
-        specifier: 0.0.7
-        version: 0.0.7
+        specifier: 0.0.8
+        version: 0.0.8
       '@pipe0/react-sdk':
-        specifier: 0.0.76
-        version: 0.0.76
+        specifier: 0.0.77
+        version: 0.0.77
       '@radix-ui/react-accordion':
         specifier: ^1.2.3
         version: 1.2.3(@types/react-dom@19.0.3(@types/react@19.0.8))(@types/react@19.0.8)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -1839,14 +1839,14 @@ packages:
     resolution: {integrity: sha512-am7C3aZBXYt4+/P4vAZFZXVQwynhqEE85qz9UOzmWwWbBYZuEJoATESJhFRGrAHfL7UhAXWp3l4WBm+ohRzizg==}
     deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
 
-  '@pipe0/client@0.0.10':
-    resolution: {integrity: sha512-kgDjdUoFaxOvSq9pCX7N2pp4gyeanIATRTH8d4YKvMUl9ekEi5AFSRdyJggvA3222cxiRAYJO9eGUl8f4oy+/A==}
+  '@pipe0/client@0.0.11':
+    resolution: {integrity: sha512-Zf0kKmBgLOAi9IjfpygAURkTMJiD5BwIdtNcm9Ahs7CJQ90hLpRT90v0Uo/UGlS7ptqq92/7/05bET6d+Tg1Uw==}
 
-  '@pipe0/ops@0.0.7':
-    resolution: {integrity: sha512-aumjkxUM6UQQLcREpuI+yHGTgPWqF22kqkYFd9UVMTqX9C9J+fVSFbLEpziDPTwZ3wAxklKeEp57kPurUXPK3Q==}
+  '@pipe0/ops@0.0.8':
+    resolution: {integrity: sha512-XPJvOM4QWYgYqPxMaGiI9rve9ewinH1l5bVYNVm+MF7C+Pjb1KGwt9UAioTZ4eFP7W891TgCHRZ2fSo1SLYP7w==}
 
-  '@pipe0/react-sdk@0.0.76':
-    resolution: {integrity: sha512-DOQuJUlOfRYzhJ/+1vPgV5yhue+lY0FmLrJsmmLAxflc0SPCV2TcPvg5OuxfxRtqF9OM+4EJHJ7Kj3PWU0Rhig==}
+  '@pipe0/react-sdk@0.0.77':
+    resolution: {integrity: sha512-GYblK5Mp1lbsnUhYeFPKgRo9ATGGraVIzaiChJc9NBtynTPKPH5syjq3DErO/JkiZhOGMTQlL9h++n3dW2Yyxw==}
 
   '@popperjs/core@2.11.8':
     resolution: {integrity: sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==}
@@ -8819,14 +8819,14 @@ snapshots:
       lodash.defaultsdeep: 4.6.1
       zod: 4.0.5
 
-  '@pipe0/client@0.0.10':
+  '@pipe0/client@0.0.11':
     dependencies:
       openapi-fetch: 0.13.8
 
-  '@pipe0/ops@0.0.7':
+  '@pipe0/ops@0.0.8':
     dependencies:
       '@asteasolutions/zod-to-openapi': 8.0.0(zod@4.1.12)
-      '@pipe0/client': 0.0.10
+      '@pipe0/client': 0.0.11
       ajv: 8.17.1
       date-fns: 4.1.0
       immer: 10.2.0
@@ -8837,9 +8837,9 @@ snapshots:
       xxhash-wasm: 1.1.0
       zod: 4.1.12
 
-  '@pipe0/react-sdk@0.0.76':
+  '@pipe0/react-sdk@0.0.77':
     dependencies:
-      '@pipe0/ops': 0.0.7
+      '@pipe0/ops': 0.0.8
       '@tanstack/match-sorter-utils': 8.19.4
       '@tanstack/react-table': 8.21.3(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       lucide-react: 0.475.0(react@19.0.0)
