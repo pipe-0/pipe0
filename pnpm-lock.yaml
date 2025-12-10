@@ -24,11 +24,11 @@ importers:
         specifier: ^15.1.6
         version: 15.1.6(@mdx-js/loader@3.1.0(acorn@8.14.0))(@mdx-js/react@3.1.0(@types/react@19.0.8)(react@19.0.0))
       '@pipe0/ops':
-        specifier: 0.0.9
-        version: 0.0.9
+        specifier: 0.0.13
+        version: 0.0.13
       '@pipe0/react-sdk':
-        specifier: 0.0.78
-        version: 0.0.78
+        specifier: 0.0.82
+        version: 0.0.82
       '@radix-ui/react-accordion':
         specifier: ^1.2.3
         version: 1.2.3(@types/react-dom@19.0.3(@types/react@19.0.8))(@types/react@19.0.8)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -351,6 +351,11 @@ packages:
 
   '@asteasolutions/zod-to-openapi@8.0.0':
     resolution: {integrity: sha512-C56hBPiraeSWUNLz8mB5Z0/0LdfaFD5d6WB/+hdUg0MiC7egTgvWRGh3M3jZ3CRl03l/NJWnmv5D3OUAz+JGeg==}
+    peerDependencies:
+      zod: ^4.0.0
+
+  '@asteasolutions/zod-to-openapi@8.1.0':
+    resolution: {integrity: sha512-tQFxVs05J/6QXXqIzj6rTRk3nj1HFs4pe+uThwE95jL5II2JfpVXkK+CqkO7aT0Do5AYqO6LDrKpleLUFXgY+g==}
     peerDependencies:
       zod: ^4.0.0
 
@@ -1839,14 +1844,14 @@ packages:
     resolution: {integrity: sha512-am7C3aZBXYt4+/P4vAZFZXVQwynhqEE85qz9UOzmWwWbBYZuEJoATESJhFRGrAHfL7UhAXWp3l4WBm+ohRzizg==}
     deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
 
-  '@pipe0/client@0.0.12':
-    resolution: {integrity: sha512-F0flVk0JDT5ImYScsiCkBVMLHkjQbkhxf9sHkLwwyHfRxEtutGctIQDaRFlTxsVwLwHIP3nckm9Pkog4QIkMWQ==}
+  '@pipe0/client@0.0.16':
+    resolution: {integrity: sha512-d2n7R+QbCdAWtIVHlJACfMSIFg0YHR4fimuf6J0wn1/qC5WsntylIQ1IXyL0UN208PTGY/6c6WZ6+hZsYPYdFw==}
 
-  '@pipe0/ops@0.0.9':
-    resolution: {integrity: sha512-4MubrG4sChzOawPUTiVdo0grx7OWkot7MfrmbX9kX7p02+/5viOyRznrPBCDEj34WN80IHQ+i/5HVsdKhuKkeQ==}
+  '@pipe0/ops@0.0.13':
+    resolution: {integrity: sha512-oZsNZTSwVNgBozXCK/12GxBeTOJjjlisEd5bjyII/mLCvwghD+i98kdmZuCDQgf5NLCbC2Sd1HgkYKg6zUlUHw==}
 
-  '@pipe0/react-sdk@0.0.78':
-    resolution: {integrity: sha512-+AryVYawdXMPtvEaTWyodMEjf4pAHjKXhqNIOwyWUV+EhTdxRgsaaiI3PGHkW47ZP3d7Nm5xuf3jsjiwg16XfA==}
+  '@pipe0/react-sdk@0.0.82':
+    resolution: {integrity: sha512-KHM5Wjd62EJJSS8OTv7OIqxhEdOCASlnZLM5Qwpm6GpgPnnHb8pIckclZlureIMF4xaWsj5dhInILzao9dMOMA==}
 
   '@popperjs/core@2.11.8':
     resolution: {integrity: sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==}
@@ -5892,11 +5897,11 @@ packages:
   oniguruma-to-es@3.1.1:
     resolution: {integrity: sha512-bUH8SDvPkH3ho3dvwJwfonjlQ4R80vjyvrU8YpxuROddv55vAEJrTuCuCVUhhsHbtlD9tGGbaNApGQckXhS8iQ==}
 
-  openapi-fetch@0.13.8:
-    resolution: {integrity: sha512-yJ4QKRyNxE44baQ9mY5+r/kAzZ8yXMemtNAOFwOzRXJscdjSxxzWSNlyBAr+o5JjkUw9Lc3W7OIoca0cY3PYnQ==}
-
   openapi-fetch@0.14.0:
     resolution: {integrity: sha512-PshIdm1NgdLvb05zp8LqRQMNSKzIlPkyMxYFxwyHR+UlKD4t2nUjkDhNxeRbhRSEd3x5EUNh2w5sJYwkhOH4fg==}
+
+  openapi-fetch@0.15.0:
+    resolution: {integrity: sha512-OjQUdi61WO4HYhr9+byCPMj0+bgste/LtSBEcV6FzDdONTs7x0fWn8/ndoYwzqCsKWIxEZwo4FN/TG1c1rI8IQ==}
 
   openapi-types@12.1.3:
     resolution: {integrity: sha512-N4YtSYJqghVu4iek2ZUvcN/0aqH1kRDuNqzcycDxhOUpg7GdvLa2F3DgS6yBNhInhv2r/6I0Flkn7CqL8+nIcw==}
@@ -6829,6 +6834,13 @@ packages:
     resolution: {integrity: sha512-xRnPkJx9nvE5MF6LkB5e8QJjE2FW8269wTu/LQdf7zZqBgPly0QJPf/CWAo7srj5so4yXfoLEdCFgurlpi47zg==}
     hasBin: true
 
+  tldts-core@7.0.19:
+    resolution: {integrity: sha512-lJX2dEWx0SGH4O6p+7FPwYmJ/bu1JbcGJ8RLaG9b7liIgZ85itUVEPbMtWRVrde/0fnDPEPHW10ZsKW3kVsE9A==}
+
+  tldts@7.0.19:
+    resolution: {integrity: sha512-8PWx8tvC4jDB39BQw1m4x8y5MH1BcQ5xHeL2n7UVFulMPH/3Q0uiamahFJ3lXA0zO2SUyRXuVVbWSDmstlt9YA==}
+    hasBin: true
+
   to-regex-range@5.0.1:
     resolution: {integrity: sha512-65P7iz6X5yEr1cwcgvQxbbIw7Uk3gOy5dIdtZ4rDveLqhrdJP+Li/Hx6tyK0NEb+2GCyneCMJiGqrADCSNk8sQ==}
     engines: {node: '>=8.0'}
@@ -7442,7 +7454,7 @@ snapshots:
       openapi3-ts: 4.5.0
       zod: 4.0.5
 
-  '@asteasolutions/zod-to-openapi@8.0.0(zod@4.1.12)':
+  '@asteasolutions/zod-to-openapi@8.1.0(zod@4.1.12)':
     dependencies:
       openapi3-ts: 4.5.0
       zod: 4.1.12
@@ -8819,27 +8831,28 @@ snapshots:
       lodash.defaultsdeep: 4.6.1
       zod: 4.0.5
 
-  '@pipe0/client@0.0.12':
+  '@pipe0/client@0.0.16':
     dependencies:
-      openapi-fetch: 0.13.8
+      openapi-fetch: 0.15.0
 
-  '@pipe0/ops@0.0.9':
+  '@pipe0/ops@0.0.13':
     dependencies:
-      '@asteasolutions/zod-to-openapi': 8.0.0(zod@4.1.12)
-      '@pipe0/client': 0.0.12
+      '@asteasolutions/zod-to-openapi': 8.1.0(zod@4.1.12)
+      '@pipe0/client': 0.0.16
       ajv: 8.17.1
       date-fns: 4.1.0
       immer: 10.2.0
       json-schema-traverse: 1.0.0
       json-schema-typed: 8.0.2
       lodash: 4.17.21
-      openapi-fetch: 0.13.8
+      openapi-fetch: 0.15.0
+      tldts: 7.0.19
       xxhash-wasm: 1.1.0
       zod: 4.1.12
 
-  '@pipe0/react-sdk@0.0.78':
+  '@pipe0/react-sdk@0.0.82':
     dependencies:
-      '@pipe0/ops': 0.0.9
+      '@pipe0/ops': 0.0.13
       '@tanstack/match-sorter-utils': 8.19.4
       '@tanstack/react-table': 8.21.3(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       lucide-react: 0.475.0(react@19.0.0)
@@ -13834,11 +13847,11 @@ snapshots:
       regex: 6.0.1
       regex-recursion: 6.0.2
 
-  openapi-fetch@0.13.8:
+  openapi-fetch@0.14.0:
     dependencies:
       openapi-typescript-helpers: 0.0.15
 
-  openapi-fetch@0.14.0:
+  openapi-fetch@0.15.0:
     dependencies:
       openapi-typescript-helpers: 0.0.15
 
@@ -15042,6 +15055,12 @@ snapshots:
       arg: 5.0.2
       chalk: 5.4.1
       clipboardy: 4.0.0
+
+  tldts-core@7.0.19: {}
+
+  tldts@7.0.19:
+    dependencies:
+      tldts-core: 7.0.19
 
   to-regex-range@5.0.1:
     dependencies:

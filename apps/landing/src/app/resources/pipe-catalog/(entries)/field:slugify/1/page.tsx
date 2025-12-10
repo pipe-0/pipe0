@@ -3,7 +3,7 @@ import { PipeCatalogHeader } from "@/components/pipe-catalog-header";
 import { generatePipeMetadata } from "@/lib/utils";
 import { PipeId } from "@pipe0/ops";
 
-const pipeId: PipeId = "sheet:row:append@1";
+const pipeId: PipeId = "field:slugify@1";
 
 export const metadata = generatePipeMetadata(pipeId);
 

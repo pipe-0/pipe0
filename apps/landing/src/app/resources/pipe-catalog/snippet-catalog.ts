@@ -938,13 +938,13 @@ Customize the message using the name of the user: {{ input name type="string" re
       },
     ],
   },
-  "sheet:append@1": {
+  "sheet:row:append@1": {
     config: {
       environment: "production",
     },
     pipes: [
       {
-        pipe_id: "sheet:append@1",
+        pipe_id: "sheet:row:append@1",
         connector: {
           strategy: "first",
           connections: [
@@ -958,7 +958,7 @@ Customize the message using the name of the user: {{ input name type="string" re
           sheet: "sheet_id",
           run: true,
           allow_field_creation: true,
-          included_fields: ["name"],
+          included_fields: [{ field_name: "field_name" }],
         },
       },
     ],
@@ -970,13 +970,13 @@ Customize the message using the name of the user: {{ input name type="string" re
       },
     ],
   },
-  "sheet:expandappend@1": {
+  "sheet:row:expandappend@1": {
     config: {
       environment: "production",
     },
     pipes: [
       {
-        pipe_id: "sheet:expandappend@1",
+        pipe_id: "sheet:row:expandappend@1",
         connector: {
           strategy: "first",
           connections: [
@@ -1131,6 +1131,75 @@ Customize the message using the name of the user: {{ input name type="string" re
       {
         id: "1",
         company_website_url: "https://microsoft.com",
+      },
+    ],
+  },
+  "sheet:row:append:sheet@1": {
+    pipes: [
+      {
+        pipe_id: "sheet:row:append:sheet@1",
+        connector: {
+          strategy: "first",
+          connections: [{ type: "vault", connection: "pipe0_123" }],
+        },
+        config: {
+          run: true,
+          allow_sheet_creation: true,
+          allow_field_creation: true,
+          included_fields: [],
+          new_sheet_team_id: "",
+        },
+      },
+    ],
+    input: [{ id: "1", sheet: "sheet_1" }],
+  },
+  "people:identity:amplemarket@1": {
+    pipes: [
+      {
+        pipe_id: "people:identity:amplemarket@1",
+        connector: {
+          strategy: "first",
+          connections: [{ type: "vault", connection: "amplemarket_123" }],
+        },
+      },
+    ],
+    input: [{ id: "1", email: "hallp@pipe0.com" }],
+  },
+  "people:match:amplemarket@1": {
+    pipes: [
+      {
+        pipe_id: "people:match:amplemarket@1",
+        connector: {
+          strategy: "first",
+          connections: [{ type: "vault", connection: "amplemarket_123" }],
+        },
+      },
+    ],
+    input: [{ id: "1", profile_url: "https://linkedin.com/li/johndoe" }],
+  },
+  "field:domainify@1": {
+    pipes: [
+      {
+        pipe_id: "field:domainify@1",
+      },
+    ],
+    input: [
+      {
+        id: "1",
+        url_input: "https://google.com",
+      },
+    ],
+  },
+  "field:slugify@1": {
+    pipes: [
+      {
+        pipe_id: "field:slugify@1",
+      },
+    ],
+    input: [
+      {
+        id: "1",
+        string_input: "input value",
       },
     ],
   },
