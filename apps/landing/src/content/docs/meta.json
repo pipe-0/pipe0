@@ -1,0 +1,14 @@
+{
+  "pages": [
+    "index",
+    "searches",
+    "pipes",
+    "concepts",
+    "authentication",
+    "billing",
+    "requests",
+    "examples",
+    "---API Reference---",
+    "...(api)"
+  ]
+}

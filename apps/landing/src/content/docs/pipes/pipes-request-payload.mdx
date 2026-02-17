@@ -1,0 +1,135 @@
+---
+title: Request Payload
+category: Concepts
+description: The pipes request payload contains your input data and a description of the enrichment process.
+date: 2025-07-28
+---
+
+The following API operations require a request payload of type `PipesRequestPayload`:
+
+- `POST https://api.pipe0.com/v1/pipes/run` (create an enrichment task)
+- `POST https://api.pipe0.com/v1/pipes/run/sync` (create an enrichment task and return the result)
+
+<AppLink linkType="async">Learn more</AppLink> about the difference between sync and async operations.
+
+Here's a sample payload:
+
+```json
+{
+  "config": {
+    "environment": "sandbox",
+    "widgets": {
+      "enabled": false
+    },
+    "field_definitions": {
+      "enabled": false
+    }
+  },
+  "pipes": [
+    { 
+      "pipe_id": "company:identity@1",
+      "config": {
+        "input_fields": {
+          "company_name": {
+            "alias": ""
+          }
+        },
+        "output_fields": {
+          "company_website_url": {
+            "enabled": true,
+            "alias": ""
+          }
+        }
+      }
+    },
+  ],
+  "input": [
+    {
+      "id": 1,
+      "name": "Tom Schmidt",
+      "company_name": "Pipe0",
+    },
+  ],
+}
+```
+
+
+## Request payload properties
+
+### config
+
+#### config.environment
+
+Execute your request in `sandbox` or `production` <AppLink linkType="testMode">mode</AppLink>.
+
+#### config.widgets.enabled 
+
+Enable/disable widget metadata. Widgets are part of the <AppLink linkType="pipelineResponse">pipes response</AppLink> and are often used to 
+visualize the enriched results (e.g. provider logos).
+
+#### config.field_definitions.enabled 
+
+Enable/disable additional metadata on fields.
+
+### pipes[]
+
+An array of enrichment pipes alongside the pipe configuration. A full list of available pipes can be found in the 
+<AppLink linkType="pipeCatalog">pipe catalog</AppLink>.
+
+#### pipe.pipe_id
+
+The unique identifier of a pipe.
+
+#### pipe.config
+
+Pipe config object. The full config object can be found in the <AppLink linkType="pipeCatalog">pipe catalog</AppLink>.
+Passing pipe configuration is optional. If no configuration is passed, the default config is used.
+
+#### pipe.config.providers
+
+Pipes with multiple providers allow you to choose which providers are processed and their order or processing.
+Learn more about <AppLink linkType="waterfallPipes">waterfall pipes</AppLink>.
+
+#### pipe.config.input_fields
+
+Pipe configuration for the input fields of a pipe.
+
+#### pipe.config.input_field.alias
+
+Point the input field of a pipe to a custom field name.
+
+Example: You want to use the property `custom_company_name` for the input field `company_name`. Point the pipe input field `company_name` to your
+custom field by providing the `"alias": "custom_company_name"` in the pipe config.
+
+The field you point to must have the correct type.
+
+#### pipe.config.output_fields
+
+Pipe configuration for the output fields of a pipe.
+
+#### pipe.config.output_field.alias
+
+Rename the pipe output field to a different `field_name`. This can be useful if you have two pipes that output the same field (error).
+
+To avoid a duplicate output field, rename the output field by using an `alias`.
+
+#### pipe.config.output_field.enabled
+
+Enable/disable output fields. You can find information on which pipe fields are enabled/disabled by default in the <AppLink linkType="pipeCatalog">pipe catalog</AppLink>
+
+### input[]
+
+An array of input objects. This is the data you want to enrich.
+
+#### input.id
+
+Each input object must have a unique `id` property. The id can be a `string` or a `number`. Id's can be as simple as `1`, `2`, `3`, ...
+
+#### input[number]
+
+Each object in the `input` array represents an input object.
+
+#### input[fieldName]
+
+Each property of an input object represents an input field. Input fields are used as pipe input after 
+<AppLink linkType="inputSanitation">input sanitation</AppLink>.

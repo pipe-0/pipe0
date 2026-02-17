@@ -14,11 +14,13 @@ import {
   IntegerMetadata,
   isAsyncMultiSelectField,
   isBooleanField,
+  isConnectorField,
   isDateRangeField,
   isExactRangeField,
   isIncludeExcludeField,
   isIncludeExcludeSelectField,
   isIntegerField,
+  isIProvidersField,
   isJsonExtractionField,
   isJsonSchemaInput,
   isMultiCreateField,
@@ -26,6 +28,7 @@ import {
   isNumberField,
   isOrderedMultiCreateField,
   isOutputField,
+  isPipeTriggerField,
   isRangeField,
   isSelectField,
   isTextareaField,
@@ -42,7 +45,7 @@ import { Calendar, FileText, Hash, List, ToggleLeft, Type } from "lucide-react";
 import { PropsWithChildren, useMemo } from "react";
 
 const isNumericField = (
-  field: GeneratedFormElement
+  field: GeneratedFormElement,
 ): field is RangeMetadata | IntegerMetadata | NumberMetadata =>
   isRangeField(field) || isIntegerField(field) || isNumberField(field);
 
@@ -99,7 +102,7 @@ const generateJsonSchemaExample = (fieldName: string) => `{
 
 const generateExactRangeExample = (
   fieldName: string,
-  field: ExactRangeMetadata
+  field: ExactRangeMetadata,
 ) => `{
   "${fieldName}": {
     "gt": ${field.min || 0},
@@ -112,6 +115,10 @@ const generateRangeExample = (fieldName: string, field: RangeMetadata) => `{
     "from": ${field.min || 0},
     "to": ${field.max || 100},
   }
+}`;
+
+const generateProvidersExample = (fieldName: string) => `{
+  "${fieldName}": [{ "provider": "value" }, { "provider": "value" }]
 }`;
 
 const generateDateRangeExample = (fieldName: string) => `{
@@ -138,7 +145,7 @@ const generateSelectExample = (fieldName: string, field: SelectMetadata) =>
 
 const generateMultiSelectExample = (
   fieldName: string,
-  field: MultiSelectMetadata
+  field: MultiSelectMetadata,
 ) => {
   if (Array.isArray(field.options) === false) return "";
 
@@ -169,7 +176,7 @@ const generateOrderedMultiCreateExample = (fieldName: string) => {
 
 const generateNumericExample = (
   fieldName: string,
-  field: IntegerMetadata | NumberMetadata
+  field: IntegerMetadata | NumberMetadata,
 ) => `{
   "${fieldName}": ${field.min || 0}
 }`;
@@ -181,12 +188,50 @@ const generateOutputFieldExmple = (fieldName: string) => `{
   }
 }`;
 
+const generateConnectorExample = (fieldName: string) => `{
+  "${fieldName}": {
+    "strategy": "first",
+    "connections": [
+      {
+        "type": "vault",
+        "connection": "provider_connection_id"
+      }
+    ]
+  }
+}`;
+
+const generatePipeTriggerExample = (fieldName: string) => `{
+  "${fieldName}": {
+    "action": "run",
+    "when": {
+      "logic": "and",
+      "conditions": [
+        {
+          "property": "value",
+          "field_name": "field_name",
+          "operator": "eq",
+          "value": "example"
+        }
+      ]
+    }
+  }
+}`;
+
 function generateCodeExample(field: GeneratedFormElement): string {
   const pathParts = field.path.split(".");
   const fieldName = pathParts[pathParts.length - 1];
 
   if (isIncludeExcludeField(field) || isIncludeExcludeSelectField(field)) {
     return generateIncludeExcludeExample(fieldName);
+  }
+  if (isConnectorField(field)) {
+    return generateConnectorExample(fieldName);
+  }
+  if (isPipeTriggerField(field)) {
+    return generatePipeTriggerExample(fieldName);
+  }
+  if (isIProvidersField(field)) {
+    return generateProvidersExample(fieldName);
   }
   if (isExactRangeField(field)) {
     return generateExactRangeExample(fieldName, field);
@@ -508,7 +553,7 @@ interface FilterDocumentationProps {
 
 export function PayloadDocumenation({ formConfig }: FilterDocumentationProps) {
   const allFields = formConfig.flatMap((section) =>
-    section.groups.flatMap((group) => group.fields)
+    section.groups.flatMap((group) => group.fields),
   );
 
   return (

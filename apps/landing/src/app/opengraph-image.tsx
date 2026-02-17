@@ -18,10 +18,10 @@ export const contentType = "image/png";
 
 export default async function Image() {
   const interLight = await readFile(
-    join(process.cwd(), "assets/inter-light.ttf")
+    join(process.cwd(), "assets/inter-light.ttf"),
   );
   const calSemiBold = await readFile(
-    join(process.cwd(), "assets/cal-sans-semibold.ttf")
+    join(process.cwd(), "assets/cal-sans-semibold.ttf"),
   );
 
   const element: OgElement = {
@@ -31,33 +31,27 @@ export default async function Image() {
   };
 
   return new ImageResponse(
-    (
-      <div
-        style={{
-          backgroundColor: "#0E172A",
-          width: "100%",
-          height: "100%",
-          display: "flex",
-          gap: "64px",
-          flexDirection: "column",
-          alignItems: "flex-start",
-          justifyContent: "center",
-          padding: "0px 128px",
-        }}
-      >
-        <img
-          src="https://imagedelivery.net/3B3AWuP94-S3Ro5eEac6JA/511b41c0-b91f-47ee-42f8-19df1b544100/ogimage"
-          alt="pipe0 Logo"
-          height="64"
-        />
-        <div style={{ color: "white", fontSize: 64, fontFamily: "Inter" }}>
-          {element.title}
-        </div>
-        <div style={{ color: "#A1A1AB", fontSize: 32 }}>
-          {element.description}
-        </div>
+    <div
+      style={{
+        backgroundColor: "#0E172A",
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        gap: "64px",
+        flexDirection: "column",
+        alignItems: "flex-start",
+        justifyContent: "center",
+        padding: "0px 128px",
+      }}
+    >
+      <img src="https://pipe0.com/logo-dark.svg" alt="pipe0 Logo" height="64" />
+      <div style={{ color: "white", fontSize: 64, fontFamily: "Inter" }}>
+        {element.title}
       </div>
-    ),
+      <div style={{ color: "#A1A1AB", fontSize: 32 }}>
+        {element.description}
+      </div>
+    </div>,
     {
       ...size,
       fonts: [
@@ -74,6 +68,6 @@ export default async function Image() {
           weight: 400,
         },
       ],
-    }
+    },
   );
 }

@@ -86,7 +86,7 @@ A React + TypeScript example demonstrating how to use the Pipe0 Search API with 
 
 ## 📚 Learn More
 
-- **Pipe0 Documentation**: [docs.pipe0.com](https://pipe0.com/resources/documentation)
+- **Pipe0 Documentation**: [docs.pipe0.com](https://pipe0.com/docs)
 - **Search Catalog**: [pipe0.com/resources/search-catalog](https://pipe0.com/resources/search-catalog)
 - **TanStack Query**: [tanstack.com/query](https://tanstack.com/query)
 

@@ -3,7 +3,7 @@ import { Analytics } from "@vercel/analytics/react";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { getBaseUrl } from "@/lib/utils";
-import "nextra-theme-docs/style.css";
+import { RootProvider } from "fumadocs-ui/provider/next";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -18,7 +18,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL(getBaseUrl()),
-  title: "pipe0 | Add data enrichment to any application. Fast.",
+  title: "The data enrichment framework",
   description:
     "Combine 50+ data providers into custom pipelines for lead and company enrichment. Add search for business emails, company details, and much more. Connect related enrichments with AI and waterfalls. Add Clay-like functionality to your application with ease.",
 };
@@ -33,9 +33,11 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
-        <Analytics />
-        <Toaster />
+        <RootProvider>
+          {children}
+          <Analytics />
+          <Toaster />
+        </RootProvider>
       </body>
     </html>
   );

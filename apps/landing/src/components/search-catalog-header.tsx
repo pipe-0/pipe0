@@ -1,9 +1,8 @@
 import {
   searchesMiniSpec,
   snippetCatalog,
-} from "@/app/resources/search-catalog/snippet-catalog";
-import { videoCatalog } from "@/app/resources/search-catalog/video-catalog";
-import { CodeTabs } from "@/components/code-tabs";
+} from "@/lib/searches/snippet-catalog";
+import { videoCatalog } from "@/lib/searches/video-catalog";
 import { PayloadDocumenation } from "@/components/config-documentation";
 import { ApiRequestCodeExample } from "@/components/features/docs/api-request-code-example";
 import { CatalogHeader } from "@/components/features/docs/docs-layout";
@@ -37,12 +36,23 @@ import {
   getSearchDefaultPayload,
   getSearchEntry,
   getSearchPayloadFormConfig,
+  getSearchVersion,
   providerCatalog,
+  searchCatalog,
   SearchId,
 } from "@pipe0/ops";
+import { Tabs, Tab } from "fumadocs-ui/components/tabs";
 import { useMemo } from "react";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { vscDarkPlus } from "react-syntax-highlighter/dist/cjs/styles/prism";
+import { DynamicCodeBlock } from "@/components/features/docs/dynamic-code-block";
+
+function findAllSearchVersions(searchId: SearchId) {
+  const searchEntry = getSearchEntry(searchId);
+  return Object.values(searchCatalog)
+    .filter((e) => e.baseSearch === searchEntry.baseSearch)
+    .sort(
+      (a, b) => getSearchVersion(b.searchId) - getSearchVersion(a.searchId),
+    );
+}
 
 type PipeHeaderProps = {
   searchId: SearchId;
@@ -50,6 +60,7 @@ type PipeHeaderProps = {
 
 export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
   const searchEntry = getSearchEntry(searchId);
+  const searchVersions = findAllSearchVersions(searchId);
 
   const defaultSearchPayload = getSearchDefaultPayload(searchId);
   const providerEntry = providerCatalog[searchEntry.provider];
@@ -74,80 +85,96 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
   }, []);
 
   return (
-    <div className="pipe-header space-y-10">
+    <div className="pipe-header space-y-5">
       <CatalogHeader
         label={searchEntry.label}
         description={searchEntry.description}
         defaultProviders={[searchEntry.provider]}
         id={searchId}
         video={video}
+        availableVersions={searchVersions.map((v) => {
+          const versionEntry = getSearchEntry(v.searchId);
+          return {
+            displayValue: `@${v.searchId.split("@")[1]}`,
+            link: versionEntry.docPath.replace(
+              "/resources/search-catalog",
+              "/docs/searches/searches-catalog",
+            ),
+            isDeprecated: !!versionEntry.lifecycle?.deprecatedOn,
+          };
+        })}
+        tags={searchEntry.tags}
       >
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Provider</TableHead>
-              <TableHead>Billing Mode</TableHead>
-              <TableHead>Credentials</TableHead>
-              <TableHead>
-                {searchEntry.cost.mode === "per_result"
-                  ? "Cost per result"
-                  : searchEntry.cost.mode === "per_search"
-                  ? "Cost per search"
-                  : "Cost per page"}
-                <InlineDocsBadge href={appLinks.searchBilling()} />
-              </TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            <TableRow>
-              <TableCell className="">
-                <div className="flex gap-2">
-                  <Avatar>
-                    <AvatarImage
-                      src={providerEntry.logoUrl}
-                      alt={`${providerEntry.label} logo`}
-                    />
-                    <AvatarFallback>P</AvatarFallback>
-                  </Avatar>
-                  <div className="font-medium">
-                    {providerEntry.label}{" "}
-                    <Info>{providerEntry.description}</Info>
-                  </div>
-                </div>
-              </TableCell>
-              <TableCell>
-                {searchEntry.cost.mode === "per_result"
-                  ? "Per Result"
-                  : "Per Search"}
-              </TableCell>
-              <TableCell>
-                <div className="flex items-center gap-2">
-                  {connections.join(", ")}
-                </div>
-              </TableCell>
-              <TableCell>
-                <p>
-                  {formatCredits(
-                    searchEntry.cost.mode === "per_result"
-                      ? searchEntry.cost.creditsPerResult
+        <div className="bg-accent/20 border rounded-sm">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Provider</TableHead>
+                <TableHead>Billing Mode</TableHead>
+                <TableHead>Credentials</TableHead>
+                <TableHead>
+                  <div className="flex gap-2 items-center">
+                    {searchEntry.cost.mode === "per_result"
+                      ? "Cost per result"
                       : searchEntry.cost.mode === "per_search"
-                      ? searchEntry.cost.creditsPerSearch
-                      : searchEntry.cost.creditsPerPage
-                  ) || "Free"}{" "}
-                  credits
-                </p>
-                <p className="max-w-[150px]">
-                  <small className="text-muted-foreground">
-                    {searchEntry.cost.mode === "per_page" &&
-                      "1 page = 100 records; 200 results = 2 pages"}
-                  </small>
-                </p>
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
+                        ? "Cost per search"
+                        : "Cost per page"}
+                    <InlineDocsBadge href={appLinks.searchBilling()} />
+                  </div>
+                </TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              <TableRow>
+                <TableCell className="">
+                  <div className="flex gap-2 items-center">
+                    <Avatar>
+                      <AvatarImage
+                        src={providerEntry.logoUrl}
+                        alt={`${providerEntry.label} logo`}
+                      />
+                      <AvatarFallback>P</AvatarFallback>
+                    </Avatar>
+                    <div className="font-medium">
+                      {providerEntry.label}{" "}
+                      <Info>{providerEntry.description}</Info>
+                    </div>
+                  </div>
+                </TableCell>
+                <TableCell>
+                  {searchEntry.cost.mode === "per_result"
+                    ? "Per Result"
+                    : "Per Search"}
+                </TableCell>
+                <TableCell>
+                  <div className="flex items-center gap-2">
+                    {connections.join(", ")}
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <p>
+                    {formatCredits(
+                      searchEntry.cost.mode === "per_result"
+                        ? searchEntry.cost.creditsPerResult
+                        : searchEntry.cost.mode === "per_search"
+                          ? searchEntry.cost.creditsPerSearch
+                          : searchEntry.cost.creditsPerPage,
+                    ) || "Free"}{" "}
+                    credits
+                  </p>
+                  <p className="max-w-37.5">
+                    <small className="text-muted-foreground">
+                      {searchEntry.cost.mode === "per_page" &&
+                        "1 page = 100 records; 200 results = 2 pages"}
+                    </small>
+                  </p>
+                </TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </div>
         <div>
-          <h3 className="font-medium mb-3 pb-2 border-b">Output Fields</h3>
+          <h3 className="text-2xl mb-3 pb-2 border-b">Output Fields</h3>
           <div className="space-y-2">
             {getDefaultSearchOutputFields(searchEntry.searchId).map(
               (fieldName) => {
@@ -166,36 +193,30 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
                     fieldName={found.name}
                     fieldType={found.type}
                     description={found.description}
-                    rightAction={
+                    leftAction={
                       <OutputFieldEnabledBadge
                         isEnabledByDefault={isEnabledByDefault}
                       />
                     }
                   />
                 );
-              }
+              },
             )}
           </div>
         </div>
       </CatalogHeader>
 
-      <div className="px-4">
+      <div>
+        <h2 className="text-2xl">Code Example</h2>
+        <ApiRequestCodeExample
+          oas={searchesMiniSpec}
+          operation={searchesMiniSpec.operation("/v1/searches/run", "post")}
+          harData={{ body: snippetCatalog[searchId] }}
+        />
+      </div>
+
+      <div className="">
         <Accordion type="multiple" defaultValue={["code"]}>
-          <AccordionItem value="code">
-            <AccordionTrigger className="text-sm">
-              Code example
-            </AccordionTrigger>
-            <AccordionContent>
-              <ApiRequestCodeExample
-                oas={searchesMiniSpec}
-                operation={searchesMiniSpec.operation(
-                  "/v1/searches/run",
-                  "post"
-                )}
-                harData={{ body: snippetCatalog[searchId] }}
-              />
-            </AccordionContent>
-          </AccordionItem>
           {formConfig && (
             <AccordionItem value="config-reference">
               <AccordionTrigger className="">Config reference</AccordionTrigger>
@@ -210,49 +231,43 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
             </AccordionTrigger>
             <AccordionContent>
               <div>
-                <CodeTabs items={["Typescript", "cURL"]}>
-                  <div>
-                    <SyntaxHighlighter
-                      language="typescript"
-                      style={vscDarkPlus}
-                      customStyle={{ borderRadius: "0.375rem" }}
-                    >
-                      {`const result = await fetch("https://api.pipe0.com/v1/searches/run", {
+                <Tabs items={["Typescript", "cURL"]}>
+                  <Tab value="Typescript">
+                    <DynamicCodeBlock
+                      lang="typescript"
+                      code={`const result = await fetch("https://api.pipe0.com/v1/searches/run", {
   method: "POST",
   headers: {
     "Authorization": \`Bearer \${API_KEY}\`,
     "Content-Type": "application/json",
   },
   body: JSON.stringify({
-    searches: [{ 
-      search_id: "${searchId}", 
+    searches: [{
+      search_id: "${searchId}",
       config: ${JSON.stringify(defaultSearchPayload, null, 2).replace(
         /\n/g,
-        "\n      "
-      )} 
+        "\n      ",
+      )}
     }],
   })
 });`}
-                    </SyntaxHighlighter>
-                  </div>
-                  <div>
-                    <SyntaxHighlighter
-                      language="bash"
-                      style={vscDarkPlus}
-                      customStyle={{ borderRadius: "0.375rem" }}
-                    >
-                      {`curl -X POST "https://api.pipe0.com/v1/searches/run" \\
+                    />
+                  </Tab>
+                  <Tab value="cURL">
+                    <DynamicCodeBlock
+                      lang="bash"
+                      code={`curl -X POST "https://api.pipe0.com/v1/searches/run" \\
 -H "Authorization: Bearer $API_KEY" \\
 -d '{
     "pipes": [{ "search_id": "${searchId}" }],
     "config": ${JSON.stringify(defaultSearchPayload, null, 2).replace(
       /\n/g,
-      "\n      "
-    )} 
+      "\n      ",
+    )}
 }'`}
-                    </SyntaxHighlighter>
-                  </div>
-                </CodeTabs>
+                    />
+                  </Tab>
+                </Tabs>
               </div>
             </AccordionContent>
           </AccordionItem>

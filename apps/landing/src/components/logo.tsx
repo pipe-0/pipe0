@@ -23,6 +23,27 @@ export function LogoRaw() {
   );
 }
 
+export function LogoRawSmall() {
+  return (
+    <>
+      <Image
+        src="/logo-small-dark.svg"
+        width={50}
+        height={50}
+        alt="logo-dark"
+        className="hidden dark:block w-8"
+      />
+      <Image
+        src="/logo-small-light.svg"
+        width={50}
+        height={50}
+        alt="logo-dark"
+        className="dark:hidden w-8"
+      />
+    </>
+  );
+}
+
 export function LinkLogo() {
   return (
     <Link href="/" className="">

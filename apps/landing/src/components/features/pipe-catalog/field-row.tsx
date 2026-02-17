@@ -21,6 +21,11 @@ import { RequiredAsterisk } from "@/components/required-asterisk";
 import { appLinks } from "@/lib/links";
 import Link from "next/link";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/cjs/styles/prism";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export function OutputFieldEnabledBadge({
   isEnabledByDefault,
@@ -31,21 +36,37 @@ export function OutputFieldEnabledBadge({
     <Link href={appLinks.outputFieldToggle()} target="_blank">
       <>
         {isEnabledByDefault ? (
-          <Badge
-            variant="outline"
-            className="border-none text-muted-foreground hover:underline font-normal"
-          >
-            <Check className="size-4" />
-            &nbsp; Enabled by default
-          </Badge>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="outline"
+                size="sm"
+                className={cn("size-5 bg-background")}
+              >
+                <Check className="size-3" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              Enabled by default. You can disable this field via the pipe
+              config.
+            </TooltipContent>
+          </Tooltip>
         ) : (
-          <Badge
-            variant="outline"
-            className="border-none text-muted-foreground hover:underline font-normal"
-          >
-            <X className="size-4" />
-            &nbsp; Disabled by default
-          </Badge>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="outline"
+                size="sm"
+                className={cn("size-5 bg-background")}
+              >
+                <X className="size-3" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              Disabled by default. You can enable this field via the pipe
+              config.
+            </TooltipContent>
+          </Tooltip>
         )}
       </>
     </Link>
@@ -63,12 +84,14 @@ export function FieldRow({
   description,
   groupCondition,
   rightAction,
+  leftAction,
 }: {
   fieldName: string;
   fieldType: RecordFieldType;
   description: string;
   groupCondition?: InputGroup["condition"];
   rightAction?: ReactNode;
+  leftAction?: ReactNode;
 }) {
   const fieldResult = useMemo(() => findFieldByName(fieldName), []);
   const jsonExample = fieldResult?.jsonMeta?.exampleValue;
@@ -90,20 +113,51 @@ export function FieldRow({
           <Badge variant="outline" className="bg-background">
             {fieldType}
           </Badge>
+          {jsonExample && (
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="h-5 rounded-[5px] text-xs font-semibold px-1 text-blue-500 hover:text-blue-600 hover:underline"
+                >
+                  example
+                </Button>
+              </SheetTrigger>
+              <SheetContent className="w-full max-w-none md:max-w-[600px] lg:max-w-[900px] overflow-auto gap-0">
+                <SheetHeader className="mb-0">
+                  <SheetTitle>Json Example</SheetTitle>
+                </SheetHeader>
+                <div className="grow overflow-auto">
+                  <SyntaxHighlighter language="json" style={vscDarkPlus}>
+                    {JSON.stringify(jsonExample, null, 2)}
+                  </SyntaxHighlighter>
+                </div>
+              </SheetContent>
+            </Sheet>
+          )}
 
-          <Button
-            onClick={handleCopyToClipboard}
-            variant="outline"
-            size="sm"
-            className={cn("size-5 bg-background", showSucces && "border")}
-          >
-            {showSucces ? (
-              <Check className="size-3 text-green-500" />
-            ) : (
-              <Copy className="size-3" />
-            )}
-          </Button>
-          <span className="text-sm text-muted-foreground">{fieldName}</span>
+          {leftAction}
+          <div className="flex gap-2 items-center pl-2">
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <span className="text-sm">{fieldName}</span>
+              </TooltipTrigger>
+              <TooltipContent>{description}</TooltipContent>
+            </Tooltip>
+            <Button
+              onClick={handleCopyToClipboard}
+              variant="ghost"
+              size="sm"
+              className={cn("size-5 bg-background", showSucces && "border")}
+            >
+              {showSucces ? (
+                <Check className="size-3 text-green-500" />
+              ) : (
+                <Copy className="size-3 text-muted-foreground" />
+              )}
+            </Button>
+          </div>
           {groupCondition && (
             <span>
               {groupCondition === "all" ? (
@@ -120,33 +174,7 @@ export function FieldRow({
         </div>
         <div className="flex items-center gap-4">
           <div className="text-sm text-muted-foreground flex gap-2">
-            {jsonExample && (
-              <Sheet>
-                <SheetTrigger asChild>
-                  <Button
-                    size="sm"
-                    variant="link"
-                    className="h-5 rounded-[5px] text-xs font-semibold"
-                  >
-                    {fieldType} (show example)
-                  </Button>
-                </SheetTrigger>
-                <SheetContent className="w-full max-w-none md:max-w-[600px] lg:max-w-[900px] overflow-auto gap-0">
-                  <SheetHeader className="mb-0">
-                    <SheetTitle>Json Example</SheetTitle>
-                  </SheetHeader>
-                  <div className="grow overflow-auto">
-                    <SyntaxHighlighter language="json" style={vscDarkPlus}>
-                      {JSON.stringify(jsonExample, null, 2)}
-                    </SyntaxHighlighter>
-                  </div>
-                </SheetContent>
-              </Sheet>
-            )}
-
             {rightAction}
-
-            <Info>{description}</Info>
           </div>
         </div>
       </div>

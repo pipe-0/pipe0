@@ -53,12 +53,10 @@ export function HeaderVideoSection({ videoUrl }: { videoUrl: string }) {
 
   return (
     <div>
-      <hr className="mb-5" />
-
       <div
         ref={containerRef}
         className={`overflow-hidden relative transition-all duration-500 ease-in-out ${
-          isExpanded ? "h-[600px]" : "h-[200px]"
+          isExpanded ? "h-150" : "h-50"
         }`}
       >
         <div className="rounded-3xl border-2 border-input bg-background h-[600px] relative">

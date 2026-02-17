@@ -22,6 +22,7 @@ bower_components/
 .next/
 out/
 build/
+.source
 dist/
 .nuxt/
 .vuepress/dist/
@@ -88,6 +89,7 @@ pids/
 .tern-port
 .vscode-test/
 .vscode
+.claude
 next-env.d.ts
 
 # Optional: Uncomment if your project uses Gatsby and not Next.js
