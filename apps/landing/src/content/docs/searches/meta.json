@@ -1,0 +1,9 @@
+{
+  "pages": [
+    "index",
+    "searches-catalog",
+    "searches-quickstart",
+    "searches-request-payload",
+    "searches-response-object"
+  ]
+}

@@ -21,7 +21,7 @@ import { BetaAnnouncementBanner } from "@/components/features/announcements/bann
 const navigationItems = [
   { href: "/", label: "Product" },
   { href: "/blog", label: "Blog" },
-  { href: "/resources/documentation", label: "Docs" },
+  { href: "/docs", label: "Docs" },
   { href: "/pricing", label: "Pricing" },
 ];
 
@@ -51,7 +51,6 @@ export function Header({}: {
           </nav>
 
           <div className="gap-3 items-center hidden md:flex">
-            {/* <ModeSwitcher /> */}
             {/* Desktop Sign In */}
             <Link href={`${appInfo.links.loginUrl}`} rel="nofollow">
               <Button

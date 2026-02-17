@@ -3,14 +3,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { copyToClipboard } from "@/lib/utils";
-import {
-  GeneratedFormElement,
-  isIncludeExcludeField,
-  isIncludeExcludeSelectField,
-  isSelectField,
-  PayloadSelectOption,
-  SelectMetadata,
-} from "@pipe0/ops";
+import { PayloadSelectOption } from "@pipe0/ops";
 import { Copy } from "lucide-react";
 
 export function OptionsSection({

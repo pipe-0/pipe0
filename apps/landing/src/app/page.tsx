@@ -176,12 +176,9 @@ export default function Home() {
                   </Link>
                 </div>
               </div>
-              {/* <SignupCta /> */}
             </div>
           </div>
         </section>
-
-        {/* <LandingPageMarquee /> */}
 
         {/* Code Example Section */}
         <section className="container mx-auto gap-2 pt-6 grid grid-cols-1 lg:grid-cols-6 px-4 md:px-6 lg:px-0">

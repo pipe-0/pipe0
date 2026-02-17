@@ -1,14 +1,11 @@
-"use-client";
-
-import { CodeTabs } from "@/components/code-tabs";
 import oasToSnippet from "@readme/oas-to-snippet";
 import { SupportedTargets } from "@readme/oas-to-snippet/languages";
 import Oas from "oas";
 import { Operation } from "oas/operation";
 import { DataForHAR } from "oas/types";
+import { Tabs, Tab } from "fumadocs-ui/components/tabs";
 import { useMemo } from "react";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { vscDarkPlus } from "react-syntax-highlighter/dist/cjs/styles/prism";
+import { DynamicCodeBlock } from "@/components/features/docs/dynamic-code-block";
 
 const languageOptions: SupportedTargets[] = [
   "javascript",
@@ -37,7 +34,7 @@ export function ApiRequestCodeExample({
         {
           bearerAuth: "<TOKEN>",
         },
-        o
+        o,
       );
       return code;
     });
@@ -45,18 +42,13 @@ export function ApiRequestCodeExample({
 
   return (
     <div>
-      <CodeTabs items={languageOptions}>
+      <Tabs items={languageOptions}>
         {languageOptions.map((option, i) => (
-          <SyntaxHighlighter
-            key={option}
-            language="typescript"
-            style={vscDarkPlus}
-            customStyle={{ borderRadius: "0.375rem" }}
-          >
-            {String(snippets[i])}
-          </SyntaxHighlighter>
+          <Tab key={option} value={option}>
+            <DynamicCodeBlock code={String(snippets[i])} lang={option === "shell" ? "bash" : option} />
+          </Tab>
         ))}
-      </CodeTabs>
+      </Tabs>
     </div>
   );
 }

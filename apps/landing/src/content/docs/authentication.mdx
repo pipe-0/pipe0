@@ -1,0 +1,37 @@
+---
+title: Authentication
+date: 2025-03-07
+---
+
+## Making Authenticated Requests
+
+All requests to pipe0 require authentication. The following is required:
+
+👾 Create an account <br />
+💳 Buy a subscription to make requests in production mode <br />
+
+<Callout type="warn">
+Don't store API keys in the browser. Connect your browser-based app to pipe0 by
+proxying requests through a secure server or serverless function that can
+[store API keys securely](https://cloud.google.com/docs/authentication/api-keys-best-practices).
+</Callout>
+
+### Create an API Key
+
+API keys can be created through the dashboard.
+
+1. Log in to your account
+2. Navigate to the settings page
+3. Select "API keys" in the sidebar
+4. Click "Create"
+
+### Making authenticated requests
+
+To make authenticated requests, send your API key as part of the 
+[`Authorization` header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Authentication#the_general_http_authentication_framework).
+
+```bash filename="Authenticated request"
+curl -X POST "https://api.pipe0.com/v1/pipes/run" \
+-H "Authorization: Bearer <API_KEY>" \
+-H "Content-Type: application/json" 
+```

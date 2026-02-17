@@ -1,10 +1,4 @@
-import {
-  pipesMiniSpec,
-  snippetCatalog,
-} from "@/app/resources/pipe-catalog/snippet-catalog";
-import { videoCatalog } from "@/app/resources/pipe-catalog/video-catalog";
 import AppLink from "@/components/app-link";
-import { CodeTabs } from "@/components/code-tabs";
 import { PayloadDocumenation } from "@/components/config-documentation";
 import { ApiRequestCodeExample } from "@/components/features/docs/api-request-code-example";
 import { CatalogHeader } from "@/components/features/docs/docs-layout";
@@ -12,7 +6,7 @@ import {
   FieldRow,
   OutputFieldEnabledBadge,
 } from "@/components/features/pipe-catalog/field-row";
-import { Info } from "@/components/info";
+import { H2, H3 } from "@/components/headings";
 import { InlineDocsBadge } from "@/components/inline-docs-badge";
 import {
   Accordion,
@@ -37,6 +31,8 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { appLinks } from "@/lib/links";
+import { pipesMiniSpec, snippetCatalog } from "@/lib/pipes/snippet-catalog";
+import { videoCatalog } from "@/lib/pipes/video-catalog";
 import { formatCredits } from "@/lib/utils";
 import {
   BillableOperationDef,
@@ -52,18 +48,21 @@ import {
   PipeId,
   PipePayload,
   providerCatalog,
+  sortPipeCatalogByBasePipe,
   validatePipeline,
 } from "@pipe0/ops";
+import { Tabs, Tab } from "fumadocs-ui/components/tabs";
 import { Download, Terminal, Upload } from "lucide-react";
 import Link from "next/link";
 import { useMemo } from "react";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { vscDarkPlus } from "react-syntax-highlighter/dist/cjs/styles/prism";
+import { DynamicCodeBlock } from "@/components/features/docs/dynamic-code-block";
 
 const dateFormatter = new Intl.DateTimeFormat("en-US", {
   month: "short",
   day: "2-digit",
 });
+
+const pipesByBasePipes = sortPipeCatalogByBasePipe();
 
 type PipeHeaderProps = {
   pipeId: PipeId;
@@ -93,6 +92,7 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
   const pipeEntry = getPipeEntry(pipeId);
   const defaultPayload = getPipeDefaultPayload(pipeId);
   const defaultOutputFields = getDefaultOutputFields(pipeEntry);
+  const pipeVersions = pipesByBasePipes[pipeEntry.basePipe];
 
   let video = videoCatalog[pipeId as keyof typeof videoCatalog] as
     | string
@@ -120,20 +120,32 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
   }, []);
 
   return (
-    <div className="space-y-3">
+    <div className="">
       <CatalogHeader
         label={pipeEntry.label}
         description={pipeEntry.description}
         defaultProviders={getDefaultPipeProviders(pipeId)}
         id={pipeEntry.pipeId}
         video={video}
+        availableVersions={pipeVersions?.map((v) => {
+          const versionEntry = getPipeEntry(v.pipeId);
+          return {
+            displayValue: `@${v.pipeId.split("@")[1]}`,
+            link: versionEntry.docPath.replace(
+              "/resources/pipe-catalog",
+              "/docs/pipes/pipes-catalog",
+            ),
+            isDeprecated: !!versionEntry.lifecycle?.deprecatedOn,
+          };
+        })}
+        tags={pipeEntry.tags}
         deprecationAlert={
           pipeEntry.lifecycle?.replacedBy && (
             <Alert variant="destructive" className="mb-2">
               <AlertTitle>
                 Deprecated by{" "}
                 {dateFormatter.format(
-                  new Date(pipeEntry.lifecycle.deprecatedOn)
+                  new Date(pipeEntry.lifecycle.deprecatedOn),
                 )}
               </AlertTitle>
               <AlertDescription>
@@ -143,87 +155,101 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
           )
         }
       >
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Billable Operation</TableHead>
-              <TableHead>Provider</TableHead>
-              <TableHead>
-                Billing Mode <InlineDocsBadge href={appLinks.billingMode()} />
-              </TableHead>
-              <TableHead>
-                Connection <InlineDocsBadge href={appLinks.connections()} />
-              </TableHead>
-              <TableHead>
-                Cost per operation <InlineDocsBadge href={appLinks.billing()} />
-              </TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {Object.entries(pipeEntry.billableOperations).map(
-              ([billableOperation, billableOperationDef]) => {
-                const def = billableOperationDef as BillableOperationDef;
-                const provider = providerCatalog[def.provider];
+        <div className="bg-accent/20 border rounded-sm">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Provider</TableHead>
+                <TableHead>
+                  Billing Mode <InlineDocsBadge href={appLinks.billingMode()} />
+                </TableHead>
+                <TableHead>
+                  Connection <InlineDocsBadge href={appLinks.connections()} />
+                </TableHead>
+                <TableHead>
+                  Cost per operation{" "}
+                  <InlineDocsBadge href={appLinks.billing()} />
+                </TableHead>
+                <TableHead>Event</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {Object.entries(pipeEntry.billableOperations).map(
+                ([billableOperation, billableOperationDef]) => {
+                  const def = billableOperationDef as BillableOperationDef;
+                  const provider = providerCatalog[def.provider];
 
-                let connections = [];
-                if (provider.hasManagedConnections) connections.push("Managed");
-                if (provider.allowsUserConnections) connections.push("User");
+                  let connections = [];
+                  if (provider.hasManagedConnections)
+                    connections.push("Managed");
+                  if (provider.allowsUserConnections) connections.push("User");
 
-                return (
-                  <TableRow key={billableOperation}>
-                    <TableCell className="">
-                      <div>{billableOperation}</div>
-                    </TableCell>
-                    <TableCell className="">
-                      <div className="flex gap-2">
-                        <Avatar>
-                          <AvatarImage
-                            src={provider.logoUrl}
-                            alt={`${provider.label} logo`}
-                          />
-                          <AvatarFallback>P</AvatarFallback>
-                        </Avatar>
-                        <div className="font-medium">
-                          {provider.label} <Info>{provider.description}</Info>
+                  return (
+                    <TableRow key={billableOperation}>
+                      <TableCell className="">
+                        <div className="flex gap-2 items-center">
+                          <Avatar>
+                            <AvatarImage
+                              src={provider.logoUrl}
+                              alt={`${provider.label} logo`}
+                            />
+                            <AvatarFallback>P</AvatarFallback>
+                          </Avatar>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <div className="font-medium cursor-default">
+                                {provider.label}
+                              </div>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              {provider.description}
+                            </TooltipContent>
+                          </Tooltip>
                         </div>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex gap-2 items-center">
-                        {def.mode === "onSuccess" ? (
-                          <>On Success </>
-                        ) : def.mode === "always" ? (
-                          <>Always</>
-                        ) : (
-                          "n/a"
-                        )}
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        {connections.join(", ")}
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <p>
-                        {def.credits === null
-                          ? "n/a"
-                          : formatCredits(def.credits) || "Free"}
-                        {def.credits !== null && " credits"}
-                      </p>
-                    </TableCell>
-                  </TableRow>
-                );
-              }
-            )}
-          </TableBody>
-        </Table>
-        <div className="space-y-4">
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex gap-2 items-center">
+                          {def.mode === "onSuccess" ? (
+                            <>On Success </>
+                          ) : def.mode === "always" ? (
+                            <>Always</>
+                          ) : (
+                            "n/a"
+                          )}
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          {connections.join(", ")}
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <p>
+                          {def.credits === null
+                            ? "n/a"
+                            : formatCredits(def.credits) || "Free"}
+                          {def.credits !== null && " credits"}
+                        </p>
+                      </TableCell>
+                      <TableCell>
+                        <span
+                          className="inline-block whitespace-nowrap overflow-hidden text-ellipsis w-25"
+                          title={billableOperation}
+                        >
+                          {billableOperation}
+                        </span>
+                      </TableCell>
+                    </TableRow>
+                  );
+                },
+              )}
+            </TableBody>
+          </Table>
+        </div>
+        <div className="space-y-8">
           {pipeEntry.inputFieldMode === "static" ? (
             <div>
-              <h3 className="font-bold text-sm mb-3 pb-2 border-b">
-                Input Fields
-              </h3>
+              <H2 className="mb-3 pb-2 border-b">Input Fields</H2>
               <div className="space-y-2">
                 {pipeEntry.defaultInputGroups.length === 0 && (
                   <Alert>
@@ -269,8 +295,8 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
                                   <Tooltip>
                                     <TooltipTrigger asChild>
                                       <Link
-                                        href={`/resources/pipe-catalog?type=output-field&value=${encodeURI(
-                                          fieldName
+                                        href={`/docs/pipes/pipes-catalog?type=output-field&value=${encodeURI(
+                                          fieldName,
                                         )}`}
                                       >
                                         <Button
@@ -310,8 +336,8 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
                           <Tooltip>
                             <TooltipTrigger asChild>
                               <Link
-                                href={`/resources/pipe-catalog?type=output-field&value=${encodeURI(
-                                  fieldName
+                                href={`/docs/pipes/pipes-catalog?type=output-field&value=${encodeURI(
+                                  fieldName,
                                 )}`}
                               >
                                 <Button
@@ -355,9 +381,7 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
           {/* Output Fields */}
           {pipeEntry.outputFieldMode === "static" ? (
             <div>
-              <h3 className="font-bold text-sm mb-3 pb-2 border-b">
-                Output Fields
-              </h3>
+              <H2 className="mb-3 pb-2 border-b">Output Fields</H2>
               <div className="space-y-2">
                 {defaultOutputFields.length === 0 && (
                   <Alert>
@@ -385,7 +409,7 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
                       fieldName={found.name}
                       fieldType={found.type}
                       description={found.description}
-                      rightAction={
+                      leftAction={
                         <div className="flex gap-2">
                           <OutputFieldEnabledBadge
                             isEnabledByDefault={isEnabledByDefault}
@@ -393,8 +417,8 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
                           <Tooltip>
                             <TooltipTrigger asChild>
                               <Link
-                                href={`/resources/pipe-catalog?type=input-field&value=${encodeURI(
-                                  fieldName
+                                href={`/docs/pipes/pipes-catalog?type=input-field&value=${encodeURI(
+                                  fieldName,
                                 )}`}
                               >
                                 <Button
@@ -435,20 +459,18 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
         </div>
       </CatalogHeader>
 
+      <div>
+        <H2>Code Examples</H2>
+
+        <ApiRequestCodeExample
+          oas={pipesMiniSpec}
+          operation={pipesMiniSpec.operation("/v1/pipes/run", "post")}
+          harData={{ body: snippetCatalog[pipeId] }}
+        />
+      </div>
+
       <div className="px-4">
-        <Accordion type="multiple" defaultValue={["code"]}>
-          <AccordionItem value="code">
-            <AccordionTrigger className="text-sm">
-              Code example
-            </AccordionTrigger>
-            <AccordionContent>
-              <ApiRequestCodeExample
-                oas={pipesMiniSpec}
-                operation={pipesMiniSpec.operation("/v1/pipes/run", "post")}
-                harData={{ body: snippetCatalog[pipeId] }}
-              />
-            </AccordionContent>
-          </AccordionItem>
+        <Accordion type="multiple">
           {formConfig && (
             <AccordionItem value="config-reference">
               <AccordionTrigger className="">Config reference</AccordionTrigger>
@@ -471,48 +493,42 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
                     contains the default pipe config.
                   </AlertDescription>
                 </Alert>
-                <CodeTabs items={["Typescript"]}>
-                  <div>
-                    <SyntaxHighlighter
-                      language="typescript"
-                      style={vscDarkPlus}
-                      customStyle={{ borderRadius: "0.375rem" }}
-                    >
-                      {`const result = await fetch("https://api.pipe0.com/v1/pipes/run", {
+                <Tabs items={["Typescript", "cURL"]}>
+                  <Tab value="Typescript">
+                    <DynamicCodeBlock
+                      lang="typescript"
+                      code={`const result = await fetch("https://api.pipe0.com/v1/pipes/run", {
   method: "POST",
   headers: {
     "Authorization": \`Bearer \${API_KEY}\`,
     "Content-Type": "application/json",
   },
   body: JSON.stringify({
-    pipes: [{ 
-      pipe_id: "${pipeId}", 
+    pipes: [{
+      pipe_id: "${pipeId}",
       config: ${JSON.stringify(defaultPayload, null, 2).replace(
         /\n/g,
-        "\n      "
-      )} 
+        "\n      ",
+      )}
     }],
     input: [] // <- your inputs go here
   })
 });`}
-                    </SyntaxHighlighter>
-                  </div>
-                  <div>
-                    <SyntaxHighlighter
-                      language="bash"
-                      style={vscDarkPlus}
-                      customStyle={{ borderRadius: "0.375rem" }}
-                    >
-                      {`curl -X POST "https://api.pipe0.com/v1/pipes/run" \\
+                    />
+                  </Tab>
+                  <Tab value="cURL">
+                    <DynamicCodeBlock
+                      lang="bash"
+                      code={`curl -X POST "https://api.pipe0.com/v1/pipes/run" \\
 -H "Authorization: Bearer $API_KEY" \\
 -H "Content-Type: application/json" \\
 -d '{
     "pipes": [{ "pipe_id": "${pipeId}" }],
     "input": []
 }'`}
-                    </SyntaxHighlighter>
-                  </div>
-                </CodeTabs>
+                    />
+                  </Tab>
+                </Tabs>
               </div>
             </AccordionContent>
           </AccordionItem>

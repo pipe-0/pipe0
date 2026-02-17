@@ -1,0 +1,197 @@
+---
+title: Inputs
+description: Pipe0 cleans and sanitizes your input data. It handles missing object keys and may heal common errors.
+date: 2025-03-07
+---
+
+## Input sanitation
+
+Data enrichment systems ingest user-provided data from sources like:
+
+- CRMs
+- ATSs
+- Web forms
+
+User-provided data can contain mistakes or be invalid. Pipe0 has a robust sanitation layer to clean
+and regenerate data.
+
+### Cleanup
+
+The following <AppLink linkType='pipelineRequest'>request payload</AppLink> contains
+common errors but will be processed successfully.
+
+```json
+{
+  "pipes": [
+    { 
+      "pipe_id": "company:identity@1",
+    },
+  ],
+  "input": [
+    {
+      "id": 1,
+      "name": "Susi Jui",
+      "company_websiste_url": "pipe0.com", // missing protocol 'https://'
+      "email": "mailto:susi@pipe0.com", // "malto:" prefix
+      "personal_website_url": "wwwww.susi.com" // wwww instad of www
+    },
+    {
+      "id": 2,
+      "name": "Tom Schmidt",
+      "company_name": "Pipe0",
+      "company_websiste_url": "not today" // invalid: expected URL
+    },
+  ],
+}
+```
+
+Here's how we clean this request:
+
+1. Parse URLs into a consistent format and clean common mistakes
+1. Parse email addresses into a consistent format and clean common mistakes
+1. Fix obvious typos and remove invalid characters
+1. Parse data formats on demand (int > float, float > int, int > string)
+
+### Regeneration
+
+In our example, `"company_websiste_url": "not today"` is not a valid URL.
+
+Because `company_websiste_url` is an <AppLink linkType="outputField">output field</AppLink> of `company:identity@1`,
+we can find the correct value.
+
+During processing, `company:identity@1` detects that `company_websiste_url` is of invalid format 
+and replaces it with the correct value.
+
+The result may look like this:
+
+```json
+{
+    "id": 2,
+    "name": "Tom Schmidt",
+    "company_name": "Pipe0",
+    "company_websiste_url": "https://valid-url.com" // healed
+},
+```
+
+<Callout>
+Valid input values are not regenerated. Instead, they are copied from the `input` to the <AppLink linkType="record">record</AppLink>.
+</Callout>
+
+### Incomplete data
+
+It is common for input data to be incomplete.
+
+Failing the entire task because one input object cannot be processed is impractical and annoying.
+
+#### Partially missing input fields
+
+If we find **at least one input object** that can be processed, pipeline validation will pass.
+
+Let's look at the following request payload:
+
+```json
+{
+  "pipes": [
+    { 
+      "pipe_id": "company:identity@1",
+    },
+  ],
+  "input": [
+    {
+      "id": 1,
+      "name": "Susi Jui",
+      "company_name": "Pipe0",
+      "company_websiste_url": "pipe0.com",
+    },
+    { // CANNOT be processed by "company:identity@1"
+      "id": 2,
+      // required `company_name` missing
+    },
+  ],
+}
+```
+
+The pipe `company:identity@1` requires the input field `company_website_url` which is not present
+in record `id=2`. In this case:
+
+- Pipeline validation passes
+- Record `id=1` is processed in full.
+- Record `id=2` has failed fields
+
+#### No input object has required input fields
+
+Let's look at another example:
+
+
+```json
+{
+  "pipes": [
+    { 
+      "pipe_id": "company:identity@1",
+    },
+  ],
+  "input": [
+    { // CANNOT be processed by "company:identity@1"
+      "id": 1,
+      "name": "Susi Jui",
+    },
+    { // CANNOT be processed by "company:identity@1"
+      "id": 2,
+      "name": "Tom Schmidt"
+    },
+  ],
+}
+```
+
+No input object has the required field `company_websiste_url`. The request will fail during request validation.
+
+The entire task will fail before processing starts.
+
+#### Never fail a task
+
+In practice, dealing with failing tasks can be annoying. If you don't want to deal 
+with failing tasks, there's an escape hatch: If you define the expected input fields and set them to `null`, pipeline validation will
+pass. The task will not fail. Instead, only individual fields fail.
+
+## Input expansion
+
+<Callout>
+Input expansion is an advanced concept that you can safely ignore if you don't plan to use pipe0 for complex UIs.
+</Callout>
+
+When you enrich data with pipe0 you transform your "input objects" into output records. An input object may look like this:
+
+```json
+{
+    "id": 2,
+    "name": "Tom Schmidt",
+}
+```
+Some interactions require you to reprocess previously processed fields. For this, it is common to transform your output records
+back to `input objects`. By doing so, previous processing information is lost. This includes metadata like 
+the result of a waterfall, UI widgets, etc.
+
+If you pass a plain value to the API, it will always be marked as `resolved_by:input`.
+
+Instead of passing your input as a plain value, there is another way: Input expansion.
+
+You can pass your inputs fully or partially expanded (as the field value of the response object).
+
+```json
+{
+  "id": 2,
+  "name": {
+      "value": "emma@amazon.com",
+      "status": "completed",
+      "type": "string",
+      "reason": null,
+      "meta": null,
+      "ui": {
+        "severity": "none"
+      }
+  },
+}
+```
+
+Expanding inputs gives control but shifts the responsibility of providing valid input states to you.
+

@@ -1,0 +1,140 @@
+---
+title: Quickstart
+description: Pipes are composable enrichment functions. Use pipes to to find email addresses, phone numbers, or trigger automations like a slack messages.
+date: 2025-04-01
+---
+
+<YoutubeEmbed href="https://youtube.com/embed/7H7kHJgwSOg" layout="full" />
+
+
+## Making requests
+
+This request enriches one <AppLink linkType="inputObject">input object</AppLink>. The pipe `people:workemail:waterfall@1`
+adds a field called `work_email` to your input objects. You can find all available enrichments in the <AppLink linkType="pipeCatalog">pipe catalog</AppLink>.
+
+```typescript tab="Typescript"
+const result = await fetch("https://api.pipe0.com/v1/pipes/run", {
+    method: "POST",
+    headers: {
+        "Authorization": `Bearer ${API_KEY}`,
+        "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+        config: {
+            environemnt: "production",
+        },
+        pipes: [
+        {
+            pipe_id: "people:workemail:waterfall@1"
+        },
+        ],
+        input: [
+            {
+                id: 1,
+                name: "John Doe",
+                company_website_url: "https://pipe0.com"
+            }
+        ]
+    })
+});
+```
+
+```python tab="Python"
+import requests
+import json
+
+headers = {
+    "Authorization": f"Bearer {API_KEY}",
+}
+payload = {
+    "pipes": [
+        {
+            "pipe_id": "people:workemail:waterfall@1"
+        },
+    ],
+    "input": [
+        {
+            "id": 1,
+            "name": "John Doe",
+            "company_website_url": "https://pipe0.com"
+        }
+    ]
+}
+response = requests.post("https://api.pipe0.com/v1/pipes/run", headers=headers, json=payload)
+```
+
+```bash tab="cURL"
+curl -X POST "https://api.pipe0.com/v1/pipes/run" \
+-H "Authorization: Bearer $API_KEY" \
+-H "Content-Type: application/json" \
+-d '{
+        "pipes": [
+            {
+            "pipe_id": "people:workemail:waterfall@1"
+            },
+        ],
+        "input": [
+            {
+            "id": 1,
+            "name": "John Doe",
+            "company_website_url": "https://pipe0.com"
+            }
+        ]
+    }'
+```
+
+The result will look something like this:
+
+```json
+[
+    {
+        "id": 1,
+        "name": "John Doe",
+        "company_website_url": "https://pipe0.com",
+        "work_email": "john@pipe0.com"
+    }
+]
+```
+
+<Callout>
+The response will contain more information than displayed here. Learn how to work with <AppLink linkType="pipelineResponse">response objects</AppLink>.
+</Callout>
+
+## Getting the task result
+
+The request to `POST https://api.pipe0.com/v1/pipes/run` will create an enrichment task. 
+To get the result of the task, poll the `GET https://api.pipe0.com/v1/pipes/check/{task_id}` endpoint until the task status is 
+`completed`.
+
+```typescript tab="Typescript"
+const result = await fetch("https://api.pipe0.com/v1/pipes/check/${taskId}", {
+    method: "POST",
+    headers: {
+        "Authorization": `Bearer ${API_KEY}`
+    }
+});
+```
+
+```python tab="Python"
+import requests
+import json
+
+headers = {
+    "Authorization": f"Bearer {API_KEY}",
+}
+response = requests.get(f"https://api.pipe0.com/v1/pipes/check/{task_id}", headers=headers)
+```
+
+```bash tab="cURL"
+curl -X GET "https://api.pipe0.com/v1/pipes/check/$TASK_ID" \
+-H "Authorization: Bearer $API_KEY"
+```
+
+## Getting the result without polling
+
+Instead of creating your task with the endpoint `POST https://api.pipe0.com/v1/pipes/run` use the endpoint `POST https://api.pipe0.com/v1/pipes/run/sync`.
+Use the same payload for both endpoints. The `/sync` endpoint will try to return the `completed` result in one round-trip.
+
+Read more about the trade-offs between <AppLink linkType="async">async vs sync requests</AppLink> here.
+
+

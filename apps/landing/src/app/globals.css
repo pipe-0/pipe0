@@ -2,6 +2,10 @@
 
 @plugin "tailwindcss-animate";
 
+@import "fumadocs-ui/css/shadcn.css";
+@import "fumadocs-openapi/css/preset.css";
+@import "fumadocs-ui/css/preset.css";
+
 @custom-variant dark (&:is(.dark *));
 
 :root {
@@ -38,14 +42,6 @@
   --sidebar-accent-foreground: hsl(240 5.9% 10%);
   --sidebar-border: hsl(220 13% 91%);
   --sidebar-ring: hsl(217.2 91.2% 59.8%);
-
-  /* Nextra */
-  --nextra-content-width: 1400px;
-
-  --x-color-nextra-bg: white;
-  --nextra-primary-hue: 236;
-  --nextra-primary-saturation: 77%;
-  --nextra-primary-lightness: 55%;
 }
 
 .dark {
@@ -81,12 +77,6 @@
   --sidebar-accent-foreground: hsl(240 4.8% 95.9%);
   --sidebar-border: hsl(240 3.7% 15.9%);
   --sidebar-ring: hsl(217.2 91.2% 59.8%);
-
-  /* Nextra */
-  --x-color-nextra-bg: black;
-  --nextra-primary-hue: 210;
-  --nextra-primary-saturation: 100%;
-  --nextra-primary-lightness: 61%;
 }
 
 @theme inline {
@@ -129,19 +119,19 @@
   --animate-marquee: marquee var(--duration) infinite linear;
   --animate-marquee-vertical: marquee-vertical var(--duration) linear infinite;
   @keyframes marquee {
-  from {
-    transform: translateX(0);
+    from {
+      transform: translateX(0);
     }
-  to {
-    transform: translateX(calc(-100% - var(--gap)));
+    to {
+      transform: translateX(calc(-100% - var(--gap)));
     }
   }
   @keyframes marquee-vertical {
-  from {
-    transform: translateY(0);
+    from {
+      transform: translateY(0);
     }
-  to {
-    transform: translateY(calc(-100% - var(--gap)));
+    to {
+      transform: translateY(calc(-100% - var(--gap)));
     }
   }
 }
@@ -153,6 +143,21 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+#nd-docs-layout.docs-layout-container {
+  grid-template:
+    "sidebar header toc"
+    "sidebar toc-popover toc"
+    "sidebar main toc" 1fr / var(--fd-sidebar-col)
+    minmax(
+      0,
+      calc(
+        var(--fd-layout-width, 97rem) - var(--fd-sidebar-width) -
+          var(--fd-toc-width)
+      )
+    )
+    min-content !important;
 }
 
 /* adds labels to the sidebar links */

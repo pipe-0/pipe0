@@ -1,17 +1,8 @@
 "use client";
 
-import type {
-  PipeEntry,
-  PipeEntryMap,
-} from "@/app/resources/pipe-catalog/get-pipes";
 import { ConditionalWrapper } from "@/components/conditional-wrapper";
 import { AvatarGroup } from "@/components/features/docs/avatar-group";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+import { H1 } from "@/components/headings";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -22,7 +13,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -32,13 +22,18 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { appInfo } from "@/lib/const";
+import { getPipeDocsURI } from "@/lib/pipes/get-pipe-docs-uri";
 import { cn, copyToClipboard } from "@/lib/utils";
-import { usePipeCatalogTable } from "@pipe0/react-sdk";
 import {
   getDefaultOutputFields,
   getDefaultPipeProviders,
@@ -52,6 +47,7 @@ import {
   providerCatalog,
   ProviderName,
 } from "@pipe0/ops";
+import { usePipeCatalogTable } from "@pipe0/react-sdk";
 import {
   ArrowDown,
   ArrowUp,
@@ -59,6 +55,8 @@ import {
   Coins,
   Copy,
   Database,
+  ExternalLink,
+  Filter,
   Hammer,
   ScanFace,
   Search,
@@ -66,7 +64,7 @@ import {
   Zap,
 } from "lucide-react";
 import Link from "next/link";
-import { ComponentType, useMemo } from "react";
+import { ComponentType, useMemo, useState } from "react";
 
 const dateFormatter = new Intl.DateTimeFormat("en-US", {
   month: "short",
@@ -84,15 +82,13 @@ const FEATURED_PIPE_IDS = [
 
 // Integration card component - memoized to prevent unnecessary re-renders
 const IntegrationCard = ({
-  pipeEntry,
   tableEntry,
   filterByField,
 }: {
-  pipeEntry: PipeEntry["children"][number];
   tableEntry: PipeEntryWithLatestVersion;
   filterByField: (
     id: "inputFields" | "outputFields",
-    fieldName: string
+    fieldName: string,
   ) => void;
 }) => {
   const pipeId = tableEntry.pipeId;
@@ -110,7 +106,7 @@ const IntegrationCard = ({
   const providers = getDefaultPipeProviders(pipeId);
 
   return (
-    <Link href={pipeEntry.route}>
+    <Link href={getPipeDocsURI(pipeId)}>
       <Card className="flex flex-col justify-stretch border-input hover:border-primary/50 transition-colors relative h-[290px]">
         <span className="absolute right-4 top-4 inline-flex gap-1 text-muted-foreground text-sm items-center">
           <Coins className=" size-4" /> {pipeStartingPrice || "Free"}
@@ -128,7 +124,7 @@ const IntegrationCard = ({
                 <CardTitle
                   className={cn(
                     "text-base flex items-center gap-2",
-                    tableEntry.lifecycle?.deprecatedOn && "line-through"
+                    tableEntry.lifecycle?.deprecatedOn && "line-through",
                   )}
                 >
                   {tableEntry.label}
@@ -152,7 +148,7 @@ const IntegrationCard = ({
               <AlertTitle>
                 Deprecated by{" "}
                 {dateFormatter.format(
-                  new Date(tableEntry.lifecycle.deprecatedOn)
+                  new Date(tableEntry.lifecycle.deprecatedOn),
                 )}
               </AlertTitle>
               <AlertDescription>
@@ -209,7 +205,7 @@ const IntegrationCard = ({
                         >
                           {field.name}
                         </DropdownMenuItem>
-                      ))
+                      )),
                     )}
                   </DropdownMenuGroup>
                 </DropdownMenuContent>
@@ -296,11 +292,16 @@ const quickStartOptions = [
   disabled: boolean;
 }[];
 
-export function PipeCatalogIndex({
-  pipeEntryMap,
-}: {
-  pipeEntryMap: PipeEntryMap;
-}) {
+type FilterColumn = "tags" | "providers" | "inputFields" | "outputFields";
+
+const filterSections: { key: FilterColumn; label: string }[] = [
+  { key: "tags", label: "Tags" },
+  { key: "providers", label: "Providers" },
+  { key: "inputFields", label: "Input Fields" },
+  { key: "outputFields", label: "Output Fields" },
+];
+
+export function PipeCatalogIndex() {
   const {
     category,
     filterByField,
@@ -312,9 +313,7 @@ export function PipeCatalogIndex({
     showFeaturedPipes,
     sidebar: {
       addColumnFilter,
-      expandedSidebarSections,
       removeColumnFilter,
-      setExpandedSidebarSections,
       sortedInputFieldEntries,
       sortedOutputFieldEntries,
       sortedProviderEntries,
@@ -322,325 +321,304 @@ export function PipeCatalogIndex({
     },
   } = usePipeCatalogTable();
 
+  const [activeFilterSection, setActiveFilterSection] =
+    useState<FilterColumn | null>(null);
+  const [filterOpen, setFilterOpen] = useState(false);
+
   const rows = table.getRowModel().rows;
-  const totalPages = table.getPageCount();
-  const currentPageNumber = table.getState().pagination.pageIndex;
+
+  // Determine which filters are active (exclude null/undefined values left by removeColumnFilter)
+  const activeFilters = table
+    .getState()
+    .columnFilters.filter((f) => f.value != null && f.value !== "");
+  const hasActiveFilters = activeFilters.length > 0;
+
+  const clearAllFilters = () => {
+    table.setColumnFilters([]);
+    setActiveFilterSection(null);
+  };
+
+  const getFilterEntries = (key: FilterColumn) => {
+    switch (key) {
+      case "tags":
+        return sortedTagEntries;
+      case "providers":
+        return sortedProviderEntries;
+      case "inputFields":
+        return sortedInputFieldEntries;
+      case "outputFields":
+        return sortedOutputFieldEntries;
+    }
+  };
+
+  const renderFilterOption = (
+    key: FilterColumn,
+    name: string,
+    count: number,
+  ) => {
+    const isChecked = isFilterChecked(key, name);
+    return (
+      <button
+        key={name}
+        onClick={() => {
+          if (isChecked) {
+            removeColumnFilter(key);
+          } else {
+            addColumnFilter(key, name);
+          }
+        }}
+        className={cn(
+          "flex items-center gap-2 w-full px-3 py-1.5 text-sm rounded-md transition-colors text-left",
+          isChecked
+            ? "bg-primary/10 text-primary font-medium"
+            : "text-muted-foreground hover:text-foreground hover:bg-muted",
+        )}
+      >
+        {key === "providers" && (
+          <img
+            src={providerCatalog[name as keyof typeof providerCatalog]?.logoUrl}
+            alt=""
+            className="w-4 h-4 shrink-0"
+          />
+        )}
+        <span className="truncate">
+          {key === "providers"
+            ? (providerCatalog[name as keyof typeof providerCatalog]?.label ??
+              name)
+            : name}
+        </span>
+        <span className="ml-auto text-xs text-muted-foreground shrink-0">
+          {count}
+        </span>
+      </button>
+    );
+  };
 
   return (
-    <div className="space-y-8 mx-auto pt-12">
+    <div className="space-y-6 mx-auto">
       {/* Header */}
       <div className="space-y-2">
-        <h1 className="text-4xl font-bold tracking-tight">Pipe Catalog</h1>
+        <div className="flex items-baseline justify-between">
+          <H1>Pipe Catalog</H1>
+          <Link
+            href={appInfo.links.requestPipe}
+            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <Button size="sm" variant="link">
+              Request a pipe <ExternalLink />
+            </Button>
+          </Link>
+        </div>
         <p className="text-lg text-muted-foreground">
-          Pipes are small enrichment functions. They take your input data and
-          expand it.
+          Use pipes to find email addresses, phone number, or to trigger
+          automations like slack messages. Pipes are composable enrichment
+          functions.
         </p>
       </div>
 
-      {/* Main content with sidebar */}
-      <div className="grid grid-cols-1 md:grid-cols-[250px_1fr] gap-8">
-        {/* Sidebar */}
-        <div className="space-y-6">
-          <div className="relative">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              type="search"
-              placeholder="Search pipes..."
-              className="w-full pl-8"
-              value={globalFilterInput}
-              onChange={(v) => setGlobalFilterInput(v.target.value)}
-            />
-          </div>
+      {/* Search bar */}
+      <div className="relative">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+        <Input
+          type="search"
+          placeholder="Search pipes..."
+          className="w-full pl-9 h-10"
+          value={globalFilterInput}
+          onChange={(v) => setGlobalFilterInput(v.target.value)}
+        />
+      </div>
 
-          <h6 className="text-sm">
-            Filtered by category{" "}
-            <span className="font-semibold text-primary">
-              {category?.replace("_", " ") || "all"}
-            </span>
-          </h6>
-
-          <Accordion
-            type="multiple"
-            value={expandedSidebarSections}
-            onValueChange={setExpandedSidebarSections}
-          >
-            <AccordionItem value="tags" className="border-none">
-              <AccordionTrigger className="py-1">Tags</AccordionTrigger>
-              <AccordionContent className="pt-2">
-                <div className="space-y-2">
-                  {sortedTagEntries.map(([tagName, pipeIdList]) => {
-                    return (
-                      <div
-                        key={tagName}
-                        className="flex items-center space-x-2"
-                      >
-                        <Checkbox
-                          id={`tag-${tagName}`}
-                          checked={isFilterChecked("tags", tagName)}
-                          onCheckedChange={(v) => {
-                            if (v === true) {
-                              addColumnFilter("tags", tagName);
-                            } else {
-                              removeColumnFilter("tags");
-                            }
-                          }}
-                        />
-                        <label
-                          htmlFor={`tag-${tagName}`}
-                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                        >
-                          {tagName}
-                          <span className="ml-1 text-muted-foreground">
-                            ({pipeIdList.length})
-                          </span>
-                        </label>
-                      </div>
-                    );
-                  })}
-                </div>
-              </AccordionContent>
-            </AccordionItem>
-            <AccordionItem value="providers" className="border-none">
-              <AccordionTrigger className="py-1">
-                <h3 className="font-medium">Providers</h3>
-              </AccordionTrigger>
-              <AccordionContent className="pt-2">
-                <div className="space-y-2">
-                  {sortedProviderEntries.map(([providerName, pipeIdList]) => {
-                    const providerEntry =
-                      providerCatalog[
-                        providerName as keyof typeof providerCatalog
-                      ];
-                    return (
-                      <div
-                        key={providerName}
-                        className="flex items-center space-x-2"
-                      >
-                        <Checkbox
-                          id={`providers-${providerName}`}
-                          checked={isFilterChecked("providers", providerName)}
-                          onCheckedChange={(v) => {
-                            if (v === true) {
-                              addColumnFilter("providers", providerName);
-                            } else if (v === false) {
-                              removeColumnFilter("providers");
-                            }
-                          }}
-                        />
-                        <label
-                          htmlFor={`providers-${providerName}`}
-                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                        >
-                          <img
-                            src={providerEntry.logoUrl}
-                            alt={providerEntry.label}
-                            className="inline-block w-4 mr-2"
-                          />
-                          {providerEntry.label}
-                          <span className="ml-1 text-muted-foreground">
-                            ({pipeIdList.length})
-                          </span>
-                        </label>
-                      </div>
-                    );
-                  })}
-                </div>
-              </AccordionContent>
-            </AccordionItem>
-            <AccordionItem value="inputFields" className="border-none">
-              <AccordionTrigger className="py-1">
-                <h3 className="font-medium">Input Fields</h3>
-              </AccordionTrigger>
-              <AccordionContent className="pt-2">
-                <div className="space-y-2">
-                  {sortedInputFieldEntries.map(([fieldName, pipeIdList]) => {
-                    return (
-                      <div
-                        key={fieldName}
-                        className="flex items-center space-x-2"
-                      >
-                        <Checkbox
-                          id={`input-field-${fieldName}`}
-                          checked={isFilterChecked("inputFields", fieldName)}
-                          onCheckedChange={(v) => {
-                            if (v === true) {
-                              addColumnFilter("inputFields", fieldName);
-                            } else if (v === false) {
-                              removeColumnFilter("inputFields");
-                            }
-                          }}
-                        />
-                        <label
-                          htmlFor={`input-field-${fieldName}`}
-                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                        >
-                          {fieldName}
-                          <span className="ml-1 text-muted-foreground">
-                            ({pipeIdList.length})
-                          </span>
-                        </label>
-                      </div>
-                    );
-                  })}
-                </div>
-              </AccordionContent>
-            </AccordionItem>
-
-            <AccordionItem value="outputFields" className="border-none">
-              <AccordionTrigger className="py-1">
-                <h3 className="font-medium">Output Fields</h3>
-              </AccordionTrigger>
-              <AccordionContent className="pt-2">
-                <div className="space-y-2">
-                  {sortedOutputFieldEntries.map(([fieldName, pipeIdList]) => {
-                    return (
-                      <div
-                        key={fieldName}
-                        className="flex items-center space-x-2"
-                      >
-                        <Checkbox
-                          id={`output-field-${fieldName}`}
-                          checked={isFilterChecked("outputFields", fieldName)}
-                          onCheckedChange={(v) => {
-                            if (v === true) {
-                              addColumnFilter("outputFields", fieldName);
-                            } else if (v === false) {
-                              removeColumnFilter("outputFields");
-                            }
-                          }}
-                        />
-                        <label
-                          htmlFor={`output-field-${fieldName}`}
-                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                        >
-                          {fieldName}
-                          <span className="ml-1 text-muted-foreground">
-                            ({pipeIdList.length})
-                          </span>
-                        </label>
-                      </div>
-                    );
-                  })}
-                </div>
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
-
-          <div className="pt-4">
-            <Link href={appInfo.links.requestPipe}>
-              <Button variant="outline" className="w-full">
-                Request a pipe
-              </Button>
-            </Link>
-          </div>
+      {/* Categories + Filter button */}
+      <div className="flex items-center gap-2">
+        <div className="flex gap-2 flex-wrap flex-1">
+          {quickStartOptions.map((option) => {
+            const IconComponent = option.icon;
+            const isActive = category === option.id;
+            return (
+              <ConditionalWrapper
+                key={option.id}
+                condition={!!option.disabled}
+                wrapper={(c) => (
+                  <Tooltip>
+                    <TooltipTrigger>{c}</TooltipTrigger>
+                    <TooltipContent>Coming soon</TooltipContent>
+                  </Tooltip>
+                )}
+              >
+                <button
+                  data-disabled={option.disabled}
+                  className={cn(
+                    "inline-flex items-center gap-1.5 px-3 py-1.5 text-sm rounded-md border transition-colors",
+                    option.id === "deprecated" && "opacity-60",
+                    isActive
+                      ? "bg-primary text-primary-foreground border-primary font-medium"
+                      : "bg-background text-muted-foreground border-input hover:text-foreground hover:bg-muted",
+                    "data-[disabled=true]:opacity-50 data-[disabled=true]:pointer-events-none",
+                  )}
+                  onClick={() => setCategory(option.id)}
+                >
+                  <IconComponent className="w-3.5 h-3.5" strokeWidth={1.5} />
+                  {option.id === "deprecated" ? (
+                    <s>{option.title}</s>
+                  ) : (
+                    option.title
+                  )}
+                </button>
+              </ConditionalWrapper>
+            );
+          })}
         </div>
 
-        {/* Main content */}
-        <div className="space-y-10">
-          <div className="flex gap-3 flex-wrap">
-            {quickStartOptions.map((option) => {
-              const IconComponent = option.icon;
-              return (
-                <ConditionalWrapper
-                  key={option.id}
-                  condition={!!option.disabled}
-                  wrapper={(c) => (
-                    <Tooltip>
-                      <TooltipTrigger>{c}</TooltipTrigger>
-                      <TooltipContent>Coming soon</TooltipContent>
-                    </Tooltip>
+        {/* Filter popover */}
+        <Popover open={filterOpen} onOpenChange={setFilterOpen}>
+          <PopoverTrigger asChild>
+            <button
+              className={cn(
+                "inline-flex items-center justify-center rounded-md border p-2 transition-colors",
+                hasActiveFilters
+                  ? "border-primary text-primary bg-primary/5"
+                  : "border-input text-muted-foreground hover:text-foreground hover:bg-muted",
+              )}
+            >
+              <Filter className="h-4 w-4" />
+              {hasActiveFilters && (
+                <span className="ml-1.5 text-xs font-medium">
+                  {activeFilters.length}
+                </span>
+              )}
+            </button>
+          </PopoverTrigger>
+          <PopoverContent align="end" className="w-64 p-0" sideOffset={8}>
+            {activeFilterSection === null ? (
+              <div className="py-1">
+                <div className="px-3 py-2 flex items-center justify-between">
+                  <span className="text-sm font-medium">Filters</span>
+                  {hasActiveFilters && (
+                    <button
+                      onClick={clearAllFilters}
+                      className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+                    >
+                      Clear all
+                    </button>
                   )}
-                >
-                  <Card
-                    data-isactive={category === option.id}
-                    data-disabled={option.disabled}
-                    className={cn(
-                      option.id === "deprecated" && "opacity-60",
-                      "group cursor-pointer border hover:shadow-sm transition-all duration-200 pr-4",
-                      "data-[isactive=true]:bg-primary data-[isactive=true]:text-primary-foreground data-[isactive=true]:border-primary data-[isactive=true]:font-semibold",
-                      "data-[disabled=true]:bg-muted data-[disabled=true]:text-muted-foreground data-[disabled=true]:opacity-80"
-                    )}
-                    onClick={() => setCategory(option.id)}
-                  >
-                    <CardContent className="p-1">
-                      <div className="flex items-center gap-3">
-                        <div className={`p-2 rounded-lg`}>
-                          <IconComponent
-                            className={`w-5 h-5`}
-                            strokeWidth={1.5}
-                          />
-                        </div>
-                        <div className="flex-1 whitespace-nowrap">
-                          <h3 className="text-sm">
-                            {option.id === "deprecated" ? (
-                              <s>{option.title}</s>
-                            ) : (
-                              option.title
-                            )}
-                          </h3>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </ConditionalWrapper>
-              );
-            })}
-          </div>
-
-          {/* Featured section */}
-          {showFeaturedPipes && (
-            <div className="space-y-4">
-              <h2 className="text-2xl font-bold">Featured</h2>
-              <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-                {FEATURED_PIPE_IDS.map((pipeId) => {
-                  const pipeEntry = pipeEntryMap[pipeId];
-                  if (!pipeEntry) return null;
+                </div>
+                {filterSections.map(({ key, label }) => {
+                  const currentFilter = activeFilters.find((f) => f.id === key);
                   return (
-                    <IntegrationCard
-                      key={pipeId}
-                      tableEntry={{
-                        ...(pipeCatalog[pipeId] as PipeCatalogEntry),
-                        latestVersion: getPipeVersion(pipeId),
-                      }}
-                      pipeEntry={pipeEntry}
-                      filterByField={filterByField}
-                    />
+                    <button
+                      key={key}
+                      onClick={() => setActiveFilterSection(key)}
+                      className="flex items-center justify-between w-full px-3 py-2 text-sm hover:bg-muted transition-colors"
+                    >
+                      <span>{label}</span>
+                      <span className="text-xs text-muted-foreground">
+                        {currentFilter ? String(currentFilter.value) : "Any"}
+                      </span>
+                    </button>
                   );
                 })}
               </div>
-            </div>
-          )}
-
-          {/* All integrations */}
-          <div className="space-y-4">
-            {showFeaturedPipes && (
-              <h2 className="text-2xl font-bold">All integrations</h2>
-            )}
-            <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-              {rows.map((row) => {
-                const pipeEntry = pipeEntryMap[row.original.pipeId];
-                if (!pipeEntry) return null;
-                return (
-                  <IntegrationCard
-                    key={row.original.pipeId}
-                    tableEntry={row.original as any}
-                    filterByField={filterByField}
-                    pipeEntry={pipeEntry}
-                  />
-                );
-              })}
-            </div>
-
-            {/* Empty state */}
-            {rows.length === 0 && (
-              <div className="flex h-[200px] flex-col items-center justify-center rounded-md border border-dashed p-8 text-center">
-                <p className="text-sm text-muted-foreground">
-                  No integrations found. Try adjusting your filters.
-                </p>
+            ) : (
+              <div className="py-1">
+                <button
+                  onClick={() => setActiveFilterSection(null)}
+                  className="flex items-center gap-1 px-3 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors w-full"
+                >
+                  <ArrowUp className="h-3 w-3 rotate-[-90deg]" />
+                  <span>
+                    {
+                      filterSections.find((s) => s.key === activeFilterSection)
+                        ?.label
+                    }
+                  </span>
+                </button>
+                <div className="max-h-[280px] overflow-y-auto px-1 py-1">
+                  {getFilterEntries(activeFilterSection).map(([name, items]) =>
+                    renderFilterOption(
+                      activeFilterSection,
+                      name,
+                      (items as any[]).length,
+                    ),
+                  )}
+                </div>
               </div>
             )}
+          </PopoverContent>
+        </Popover>
+      </div>
+
+      {/* Active filter pills */}
+      {hasActiveFilters && (
+        <div className="flex items-center gap-2 flex-wrap">
+          {activeFilters.map((filter) => (
+            <span
+              key={filter.id}
+              className="inline-flex items-center gap-1 px-2 py-0.5 text-xs rounded-md bg-primary/10 text-primary"
+            >
+              <span className="text-primary/60">
+                {filterSections.find((s) => s.key === filter.id)?.label}:
+              </span>
+              {String(filter.value)}
+              <button
+                onClick={() => removeColumnFilter(filter.id as FilterColumn)}
+                className="ml-0.5 hover:text-primary/80"
+              >
+                <X className="h-3 w-3" />
+              </button>
+            </span>
+          ))}
+          <button
+            onClick={clearAllFilters}
+            className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+          >
+            Clear all
+          </button>
+        </div>
+      )}
+
+      {/* Featured section */}
+      {showFeaturedPipes && (
+        <div className="space-y-4">
+          <h2 className="text-2xl font-bold">Featured</h2>
+          <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+            {FEATURED_PIPE_IDS.map((pipeId) => {
+              return (
+                <IntegrationCard
+                  key={pipeId}
+                  tableEntry={{
+                    ...(pipeCatalog[pipeId] as PipeCatalogEntry),
+                    latestVersion: getPipeVersion(pipeId),
+                  }}
+                  filterByField={filterByField}
+                />
+              );
+            })}
           </div>
         </div>
+      )}
+
+      <div className="space-y-4">
+        {showFeaturedPipes && <h2 className="text-2xl font-bold">All pipes</h2>}
+        <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+          {rows.map((row) => {
+            return (
+              <IntegrationCard
+                key={row.original.pipeId}
+                tableEntry={row.original as any}
+                filterByField={filterByField}
+              />
+            );
+          })}
+        </div>
+
+        {/* Empty state */}
+        {rows.length === 0 && (
+          <div className="flex h-[200px] flex-col items-center justify-center rounded-md border border-dashed p-8 text-center">
+            <p className="text-sm text-muted-foreground">
+              No pipes found. Try adjusting your filters.
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );

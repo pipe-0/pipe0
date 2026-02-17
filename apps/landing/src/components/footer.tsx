@@ -93,7 +93,7 @@ export function Footer() {
             <ul className="space-y-2">
               <li>
                 <Link
-                  href="/resources/documentation"
+                  href="/docs"
                   className="text-sm dark:text-muted-foreground dark:hover:text-white"
                 >
                   Documentation
@@ -109,7 +109,7 @@ export function Footer() {
               </li>
               <li>
                 <Link
-                  href="/resources/pipe-catalog"
+                  href="/docs/pipes/pipes-catalog"
                   className="text-sm dark:text-muted-foreground dark:hover:text-white"
                 >
                   Pipe Catalog

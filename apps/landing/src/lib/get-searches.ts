@@ -1,0 +1,57 @@
+import {
+  getSearchEntry as getOpsEntry,
+  getSearchVersion,
+  searchCatalog,
+  SearchId,
+} from "@pipe0/ops";
+
+export type SearchEntry = {
+  baseSearch: string;
+  route: string;
+  children: {
+    searchId: SearchId;
+    version: number;
+    route: string;
+  }[];
+};
+
+export type SearchEntryMap = Record<SearchId, SearchEntry>;
+
+export async function getSearchEntryMap(): Promise<SearchEntryMap> {
+  const searchesByBase: Record<string, SearchId[]> = {};
+
+  for (const searchId of Object.keys(searchCatalog) as SearchId[]) {
+    const entry = getOpsEntry(searchId);
+    if (!searchesByBase[entry.baseSearch]) {
+      searchesByBase[entry.baseSearch] = [];
+    }
+    searchesByBase[entry.baseSearch].push(searchId);
+  }
+
+  const map: SearchEntryMap = {} as SearchEntryMap;
+
+  for (const [baseSearch, searchIds] of Object.entries(searchesByBase)) {
+    const sortedIds = searchIds.sort((a, b) => {
+      return getSearchVersion(b) - getSearchVersion(a);
+    });
+
+    const children = sortedIds.map((searchId) => {
+      const entry = getOpsEntry(searchId);
+      return {
+        searchId,
+        version: getSearchVersion(searchId),
+        route: `/docs/searches/searches-catalog/${entry.baseSearch}/${getSearchVersion(searchId)}`,
+      };
+    });
+
+    for (const child of children) {
+      map[child.searchId] = {
+        baseSearch,
+        route: child.route,
+        children,
+      };
+    }
+  }
+
+  return map;
+}

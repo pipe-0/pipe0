@@ -7,7 +7,7 @@ import Link from "next/link";
 
 export function BlogBanner() {
   return (
-    <Link href="/">
+    <Link href="/" className="no-underline">
       <Card className="border-input mt-20">
         <CardHeader>
           <CardDescription className="text-2xl flex items-center flex-wrap gap-4">
@@ -15,7 +15,7 @@ export function BlogBanner() {
               <div className="pb-4">
                 <LogoRaw />
               </div>
-              <div className="max-w-[500px]">
+              <div className="max-w-125">
                 Add{" "}
                 <HighlightSection>clay-like data enrichment</HighlightSection>{" "}
                 to your application. <HighlightSection>Fast.</HighlightSection>

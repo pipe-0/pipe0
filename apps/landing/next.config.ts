@@ -1,11 +1,23 @@
+import path from "node:path";
 import { NextConfig } from "next";
-import nextra from "nextra";
+import { createMDX } from "fumadocs-mdx/next";
 
 /** @type {import('next').NextConfig} */
 const nextConfig: NextConfig = {
+  turbopack: {
+    root: path.resolve(__dirname, "../.."),
+  },
   images: {
     remotePatterns: [{ hostname: "imagedelivery.net" }],
     dangerouslyAllowSVG: true,
+  },
+  async rewrites() {
+    return [
+      {
+        source: "/docs/:path*.mdx",
+        destination: "/llms.mdx/docs/:path*",
+      },
+    ];
   },
 };
 
@@ -47,7 +59,7 @@ export function createAstObject(obj) {
 const rehypeOpenGraphImage = () => (ast: any) => {
   // @ts-expect-error -- fixme
   const frontMatterNode = ast.children.find((node) =>
-    isExportNode(node, "metadata")
+    isExportNode(node, "metadata"),
   );
   if (!frontMatterNode) {
     return;
@@ -72,11 +84,6 @@ if (process.env.NODE_ENV === "production") {
   plugins.push(rehypeOpenGraphImage);
 }
 
-const withNextra = nextra({
-  defaultShowCopyCode: true,
-  mdxOptions: {
-    rehypePlugins: plugins,
-  },
-});
+const curriedConfig = createMDX({});
 
-export default withNextra(nextConfig);
+export default curriedConfig(nextConfig);
