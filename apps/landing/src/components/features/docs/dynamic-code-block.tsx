@@ -1,10 +1,7 @@
 "use client";
 
 import { useShiki } from "fumadocs-core/highlight/client";
-import {
-  CodeBlock,
-  Pre,
-} from "fumadocs-ui/components/codeblock";
+import { CodeBlock, Pre } from "fumadocs-ui/components/codeblock";
 import { Suspense } from "react";
 
 const shikiComponents = { pre: Pre };
@@ -24,12 +21,14 @@ function ShikiHighlight({ code, lang }: { code: string; lang: string }) {
 export function DynamicCodeBlock({
   code,
   lang,
+  className,
 }: {
   code: string;
   lang: string;
+  className?: string;
 }) {
   return (
-    <CodeBlock>
+    <CodeBlock className={className}>
       <Suspense
         fallback={
           <Pre>

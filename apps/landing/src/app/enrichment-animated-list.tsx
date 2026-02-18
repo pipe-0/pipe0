@@ -56,12 +56,12 @@ const Notification = ({ name, description, icon, provider }: Item) => {
           <span className="text-lg">{icon}</span>
         </div>
         <div className="flex flex-col overflow-hidden">
-          <figcaption className="flex flex-row items-center text-lg font-medium whitespace-pre dark:text-white">
+          <figcaption className="flex flex-row items-center text-lg font-medium whitespace-pre">
             <span className="text-sm sm:text-lg">{name}</span>
             <span className="mx-1">·</span>
-            <span className="text-xs text-gray-500">{provider}</span>
+            <span className="text-xs text-muted-foreground">{provider}</span>
           </figcaption>
-          <p className="text-sm font-normal dark:text-white/60">
+          <p className="text-sm font-normal text-muted-foreground">
             {description}
           </p>
         </div>

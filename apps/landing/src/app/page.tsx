@@ -1,9 +1,10 @@
 import { EnrichmentAnimatedList } from "@/app/enrichment-animated-list";
 import { EnrichmentCardMarquee } from "@/app/enrichment-card-marquee";
 import CalButton from "@/components/cal-button";
+import { DynamicCodeBlock } from "@/components/features/docs/dynamic-code-block";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
-import { ThemeSwitcher } from "@/components/theme-switcher";
+
 import { Button } from "@/components/ui/button";
 import { CodeBlock } from "@/components/ui/code-block";
 import { appInfo } from "@/lib/const";
@@ -29,7 +30,7 @@ const integrations: Integration[] = [
         role="img"
         viewBox="0 0 24 24"
         xmlns="http://www.w3.org/2000/svg"
-        className=" text-gray-400"
+        className="text-muted-foreground"
         fill="none"
         stroke="currentColor"
       >
@@ -47,7 +48,7 @@ const integrations: Integration[] = [
         role="img"
         viewBox="0 0 24 24"
         xmlns="http://www.w3.org/2000/svg"
-        className="text-gray-400"
+        className="text-muted-foreground"
         fill="none"
         stroke="currentColor"
       >
@@ -65,7 +66,7 @@ const integrations: Integration[] = [
         role="img"
         viewBox="0 0 24 24"
         xmlns="http://www.w3.org/2000/svg"
-        className="text-gray-400"
+        className="text-muted-foreground"
         fill="none"
         stroke="currentColor"
       >
@@ -83,7 +84,7 @@ const integrations: Integration[] = [
         role="img"
         viewBox="0 0 24 24"
         xmlns="http://www.w3.org/2000/svg"
-        className="text-gray-400"
+        className="text-muted-foreground"
         fill="none"
         stroke="currentColor"
       >
@@ -101,7 +102,7 @@ const integrations: Integration[] = [
         role="img"
         viewBox="0 0 24 24"
         xmlns="http://www.w3.org/2000/svg"
-        className="text-gray-400"
+        className="text-muted-foreground"
         fill="none"
         stroke="currentColor"
       >
@@ -119,7 +120,7 @@ const integrations: Integration[] = [
         role="img"
         viewBox="0 0 24 24"
         xmlns="http://www.w3.org/2000/svg"
-        className="text-gray-400"
+        className="text-muted-foreground"
         fill="none"
         stroke="currentColor"
       >
@@ -133,8 +134,7 @@ const integrations: Integration[] = [
 
 export default function Home() {
   return (
-    <div className="min-h-screen" data-theme="light">
-      <ThemeSwitcher />
+    <div className="min-h-screen">
       <div>
         {/* Header */}
         <Header page="product" />
@@ -184,10 +184,10 @@ export default function Home() {
         <section className="container mx-auto gap-2 pt-6 grid grid-cols-1 lg:grid-cols-6 px-4 md:px-6 lg:px-0">
           <div className="flex flex-col overflow-hidden lg:col-span-4 bg-accent border">
             <div className="p-1">
-              <div className="bg-background rounded-md border p-6">
-                <CodeBlock
-                  language="typescript"
-                  code={`// Find work email and company description
+              <DynamicCodeBlock
+                className="my-0 rounded-sm"
+                lang="typescript"
+                code={`// Find work email and company description
 const response = await piper.pipes({
     pipes: [
       {
@@ -205,8 +205,7 @@ const response = await piper.pipes({
       }
     ],
   });`}
-                />
-              </div>
+              />
             </div>
 
             <div className="p-4 max-w-lg grow flex flex-col justify-end gap-2 pt-12">
@@ -270,7 +269,7 @@ const response = await piper.pipes({
           <div className="text-muted-foreground text-sm md:text-md pb-4">
             Trusted by
           </div>
-          <div className="flex flex-wrap gap-4 md:gap-8 [&_img]:block [&_img]:w-[100px] md:[&_img]:w-[150px] grayscale max-w-[650px] items-center">
+          <div className="flex flex-wrap gap-4 md:gap-8 [&_img]:block [&_img]:w-[100px] md:[&_img]:w-[150px] grayscale dark:invert max-w-[650px] items-center">
             <img
               src="/media/website/logos/pie-light.svg"
               className="max-w-15"
@@ -439,7 +438,7 @@ const response = await piper.pipes({
 
       {/* CTA Section */}
       <section className="px-4 md:px-6 lg:px-0 py-16 md:py-24 lg:py-32 relative overflow-hidden border-t">
-        <div className="absolute inset-0 bg-accent dark:bg-gradient-to-b from-blue-600/20 via-purple-600/20 to-black" />
+        <div className="absolute inset-0 bg-accent dark:bg-gradient-to-b dark:from-blue-600/10 dark:via-purple-600/10 dark:to-background" />
         <div className="container relative mx-auto">
           <div className="max-w-2xl mx-auto text-center">
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif mb-6 md:mb-8">

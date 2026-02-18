@@ -23,17 +23,17 @@ export default function Home() {
         <div className="grid md:grid-cols-2 gap-8 max-w-5xl">
           <PricingCard />
           {/* Test Mode */}
-          <div className="dark:bg-gray-900 border dark:border-gray-800 rounded-xl p-8 flex flex-col h-full">
+          <div className="bg-accent border rounded-xl p-8 flex flex-col h-full">
             <div className="mb-6">
               <h2 className="text-2xl font-bold mb-2">Test Mode</h2>
-              <p className="text-gray-400">Perfect to get started</p>
+              <p className="text-muted-foreground">Perfect to get started</p>
             </div>
 
             <div className="mb-8">
               <div className="flex items-baseline">
                 <span className="text-4xl font-bold">Free</span>
               </div>
-              <p className="text-gray-400 mt-2">Use mock data</p>
+              <p className="text-muted-foreground mt-2">Use mock data</p>
             </div>
 
             <div className="space-y-4 mb-8 flex-grow">
@@ -68,7 +68,7 @@ export default function Home() {
               <h3 className="text-xl font-medium mb-3">
                 What is included in the base price?
               </h3>
-              <p className="text-gray-400">
+              <p className="text-muted-foreground">
                 The base price includes access to our platform, API keys,
                 dashboard, and basic support. Usage of pipes is billed
                 separately based on your consumption.
@@ -79,7 +79,7 @@ export default function Home() {
               <h3 className="text-xl font-medium mb-3">
                 How does usage-based billing work?
               </h3>
-              <p className="text-gray-400">
+              <p className="text-muted-foreground">
                 You&apos;re only charged for when you successfully execute a
                 pipe. Each pipe has a different price that you can find in the
                 pipe catalog.
@@ -90,7 +90,7 @@ export default function Home() {
               <h3 className="text-xl font-medium mb-3">
                 How do I get started?
               </h3>
-              <p className="text-gray-400">
+              <p className="text-muted-foreground">
                 Create an account to try our platform. Once you&apos;re ready to
                 purchase credits navigate to the billing section in the
                 dashboard.

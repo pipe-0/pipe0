@@ -12,7 +12,7 @@ export function SignupCta() {
           </div>
         </HoverBorderGradient>
       </a>
-      <ul className="text-sm pt-6 pl-4 md:pt-2  dark:text-muted-foreground flex gap-4 flex-wrap">
+      <ul className="text-sm pt-6 pl-4 md:pt-2 text-muted-foreground flex gap-4 flex-wrap">
         <li className="flex gap-2 items-center">
           <CreditCard className="size-4" /> No card required
         </li>

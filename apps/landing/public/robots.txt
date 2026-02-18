@@ -7,3 +7,9 @@ Host: https://pipe0.com
 
 # Sitemaps
 Sitemap: https://pipe0.com/sitemap.xml
+
+# LLMs
+# See https://llmstxt.org for the llms.txt standard
+# Full documentation index: https://pipe0.com/llms.txt
+# Full documentation content: https://pipe0.com/llms-full.txt
+# Individual pages as markdown: append .mdx to any /docs/ URL

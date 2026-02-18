@@ -16,10 +16,10 @@ const plans: Plan[] = [
 export function PricingCard() {
   const [selectedCredits, setSelectedCredits] = useState<Plan>(plans[0]);
   return (
-    <div className="bg-accent dark:bg-gray-900 border dark:border-gray-800 rounded-xl p-8 flex flex-col h-full">
+    <div className="bg-accent border rounded-xl p-8 flex flex-col h-full">
       <div className="mb-6">
         <h2 className="text-2xl font-bold mb-2">Professional</h2>
-        <p className="text-gray-400 pb-4">Choose a credit amount</p>
+        <p className="text-muted-foreground pb-4">Choose a credit amount</p>
         <div className="flex gap-2">
           {plans.map((e) => (
             <Badge
@@ -38,9 +38,9 @@ export function PricingCard() {
       <div className="mb-8">
         <div className="flex items-baseline">
           <span className="text-4xl font-bold">${selectedCredits.price}</span>
-          <span className="text-gray-400 ml-2">/month</span>
+          <span className="text-muted-foreground ml-2">/month</span>
         </div>
-        <p className="text-gray-400 mt-2">{selectedCredits.credits} Credits</p>
+        <p className="text-muted-foreground mt-2">{selectedCredits.credits} Credits</p>
       </div>
 
       <div className="space-y-4 mb-8 flex-grow">

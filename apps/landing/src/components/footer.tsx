@@ -5,7 +5,7 @@ import Link from "next/link";
 
 export function Footer() {
   return (
-    <footer className="px-6 lg:px-0 border-t dark:border-white/10 py-12 ">
+    <footer className="px-6 lg:px-0 border-t py-12 ">
       <div className="container mx-auto">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           <div>
@@ -81,7 +81,7 @@ export function Footer() {
               <li>
                 <Link
                   href="/blog"
-                  className="text-sm dark:text-muted-foreground dark:hover:text-white"
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
                   Blog
                 </Link>
@@ -94,7 +94,7 @@ export function Footer() {
               <li>
                 <Link
                   href="/docs"
-                  className="text-sm dark:text-muted-foreground dark:hover:text-white"
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
                   Documentation
                 </Link>
@@ -102,7 +102,7 @@ export function Footer() {
               <li>
                 <Link
                   href="/pricing"
-                  className="text-sm dark:text-muted-foreground dark:hover:text-white"
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
                   Pricing
                 </Link>
@@ -110,7 +110,7 @@ export function Footer() {
               <li>
                 <Link
                   href="/docs/pipes/pipes-catalog"
-                  className="text-sm dark:text-muted-foreground dark:hover:text-white"
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
                   Pipe Catalog
                 </Link>
@@ -119,7 +119,7 @@ export function Footer() {
                 <Link
                   rel="nofollow"
                   href={appInfo.links.signupUrl}
-                  className="text-sm dark:text-muted-foreground dark:hover:text-white"
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
                   Sign up
                 </Link>
@@ -128,7 +128,7 @@ export function Footer() {
                 <Link
                   rel="nofollow"
                   href={appInfo.links.loginUrl}
-                  className="text-sm dark:text-muted-foreground dark:hover:text-white"
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
                   Login
                 </Link>
@@ -141,7 +141,7 @@ export function Footer() {
               <li>
                 <Link
                   href="/resources/legal/imprint"
-                  className="text-sm dark:text-muted-foreground dark:hover:text-white"
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
                   About
                 </Link>
@@ -149,7 +149,7 @@ export function Footer() {
               <li>
                 <Link
                   href="/resources/legal/privacy-policy/20250404"
-                  className="text-sm dark:text-muted-foreground dark:hover:text-white"
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
                   Privacy
                 </Link>
@@ -157,45 +157,16 @@ export function Footer() {
               <li>
                 <Link
                   href="/resources/legal/terms-of-service/20250404"
-                  className="text-sm dark:text-muted-foreground dark:hover:text-white"
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
                   Terms
                 </Link>
               </li>
             </ul>
           </div>
-          {/* <div>
-            <h4 className="font-semibold mb-4">Contact</h4>
-            <ul className="space-y-2">
-              <li>
-                <Link
-                  href="#"
-                  className="text-sm text-gray-400 hover:text-white"
-                >
-                  Sales
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="#"
-                  className="text-sm text-gray-400 hover:text-white"
-                >
-                  Support
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="#"
-                  className="text-sm text-gray-400 hover:text-white"
-                >
-                  Status
-                </Link>
-              </li>
-            </ul>
-          </div> */}
         </div>
-        <div className="mt-12 pt-8 border-t border-white/10">
-          <p className="text-sm text-gray-400">
+        <div className="mt-12 pt-8 border-t">
+          <p className="text-sm text-muted-foreground">
             © {new Date().getFullYear()} {appInfo.productName}. All rights
             reserved.
           </p>

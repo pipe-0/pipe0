@@ -1,6 +1,6 @@
 "use client";
 
-import { Github, Menu } from "lucide-react";
+import { Menu } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -33,93 +33,84 @@ export function Header({}: {
   return (
     <>
       <BetaAnnouncementBanner />
-      <header className="sticky top-0 z-50 w-full lg:px-0">
-        <div className="container mx-auto px-4 md:px-0 flex items-center justify-between py-2 backdrop-blur-sm">
+      <header className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-lg">
+        <div className="container mx-auto px-4 md:px-6 lg:px-0 flex h-14 items-center">
           <LinkLogo />
 
           {/* Desktop Navigation */}
-          <nav className="hidden space-x-1 md:flex grow px-6">
+          <nav className="hidden md:flex items-center gap-1 px-6 grow">
             {navigationItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className="text-sm dark:text-gray-300 transition-colors hover:text-white"
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors p-2"
               >
-                <Button variant="ghost">{item.label}</Button>
+                {item.label}
               </Link>
             ))}
           </nav>
 
-          <div className="gap-3 items-center hidden md:flex">
+          <div className="hidden md:flex items-center gap-2">
             {/* Desktop Sign In */}
             <Link href={`${appInfo.links.loginUrl}`} rel="nofollow">
-              <Button
-                variant="outline"
-                className="hidden border md:inline-flex shadow-sm  hover:bg-stone/30"
-              >
+              <Button variant="outline" className="md:inline-flex">
                 Login
               </Button>
             </Link>
             <Link href={`${appInfo.links.signupUrl}`} rel="nofollow">
-              <Button
-                variant="default"
-                className="hidden shadow-sm md:inline-flex hover:bg-stone/30"
-              >
+              <Button variant="default" className="md:inline-flex">
                 Sign up
               </Button>
             </Link>
           </div>
 
           {/* Mobile Menu */}
-          <Sheet open={isOpen} onOpenChange={setIsOpen}>
-            <SheetTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="md:hidden"
-                aria-label="Toggle menu"
-              >
-                <Menu className="h-6 w-6" />
-                <span className="sr-only">Open mobile menu</span>
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="right" className="w-[80%] sm:w-[350px]">
-              <SheetHeader>
-                <SheetTitle>Menu</SheetTitle>
-              </SheetHeader>
-              <div className="mt-6 flex flex-col space-y-4">
-                {navigationItems.map((item) => (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className="text-lg text-foreground transition-colors hover:text-muted-foreground"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    <div className="px-6">{item.label}</div>
-                  </Link>
-                ))}
-                <Separator className="my-2" />
-                <div className="mt-4 px-6">
-                  <Link
-                    href={`${appInfo.links.loginUrl}`}
-                    rel="nofollow"
-                    className="block mb-3"
-                  >
-                    <Button className="w-full">Login</Button>
-                  </Link>
-                  <Link
-                    href={`${appInfo.links.signupUrl}`}
-                    rel="nofollow"
-                    className="block"
-                  >
-                    <Button variant="outline" className="w-full">
-                      Sign up
-                    </Button>
-                  </Link>
+          <div className="md:hidden grow flex justify-end">
+            <Sheet open={isOpen} onOpenChange={setIsOpen}>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="icon" aria-label="Toggle menu">
+                  <Menu className="h-6 w-6" />
+                  <span className="sr-only">Open mobile menu</span>
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right" className="w-[80%] sm:w-[350px]">
+                <SheetHeader>
+                  <SheetTitle>Menu</SheetTitle>
+                </SheetHeader>
+                <div className="mt-6 flex flex-col space-y-4">
+                  {navigationItems.map((item) => (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      className="text-lg text-foreground transition-colors hover:text-muted-foreground"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      <div className="px-6">{item.label}</div>
+                    </Link>
+                  ))}
+                  <Separator className="my-2" />
+                  <div className="mt-4 px-6">
+                    <Link
+                      href={`${appInfo.links.loginUrl}`}
+                      rel="nofollow"
+                      className="block mb-3"
+                    >
+                      <Button className="w-full">Login</Button>
+                    </Link>
+                    <Link
+                      href={`${appInfo.links.signupUrl}`}
+                      rel="nofollow"
+                      className="block"
+                    >
+                      <Button variant="outline" className="w-full">
+                        Sign up
+                      </Button>
+                    </Link>
+                  </div>
                 </div>
-              </div>
-            </SheetContent>
-          </Sheet>
+              </SheetContent>
+            </Sheet>
+          </div>
         </div>
       </header>
     </>
