@@ -8,7 +8,11 @@ import { lucideIconsPlugin } from "fumadocs-core/source/lucide-icons";
 import { openapiPlugin } from "fumadocs-openapi/server";
 import { toFumadocsSource } from "fumadocs-mdx/runtime/server";
 import { catalogIconPlugin } from "./catalog-sidebar-plugin";
-import { blog as blogPosts, docs } from "fumadocs-mdx:collections/server";
+import {
+  blog as blogPosts,
+  docs,
+  legal as legalPages,
+} from "fumadocs-mdx:collections/server";
 import { createPipeCatalogSource } from "./pipe-catalog-source";
 import { createSearchCatalogSource } from "./search-catalog-source";
 
@@ -33,6 +37,10 @@ export const source = loader({
 
 export const blog = loader(toFumadocsSource(blogPosts, []), {
   baseUrl: "/blog",
+});
+
+export const legal = loader(toFumadocsSource(legalPages, []), {
+  baseUrl: "/resources/legal",
 });
 
 export type Page = InferPageType<typeof source>;

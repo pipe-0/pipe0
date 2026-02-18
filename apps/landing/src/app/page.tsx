@@ -237,7 +237,7 @@ const response = await piper.pipes({
                 Up to 2M records per table, point-in-time recovery,
                 multi-player, API support, and sandbox mode–
                 <span className="text-foreground">
-                  we're building the most powerful data table in the world.
+                  we&apos;re building the most powerful data table in the world.
                 </span>
               </p>
               <div>
@@ -299,7 +299,7 @@ const response = await piper.pipes({
             <h1 className="text-2xl sm:text-3xl md:text-4xl font-serif tracking-tight text-muted-foreground">
               Save thousands of hours and access{" "}
               <span className="text-foreground">
-                the world's most powerful data model for data enrichment
+                the world&apos;s most powerful data model for data enrichment
               </span>
               .
             </h1>

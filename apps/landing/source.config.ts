@@ -124,6 +124,15 @@ export const docs = defineDocs({
 
 const isLint = process.env.LINT === "1";
 
+export const legal = defineCollections({
+  type: "doc",
+  dir: "src/content/legal",
+  schema: pageSchema.extend({
+    date: z.iso.date().or(z.date()).optional(),
+  }),
+  async: true,
+});
+
 export const blog = defineCollections({
   type: "doc",
   dir: "src/content/blog",
