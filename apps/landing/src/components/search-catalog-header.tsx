@@ -1,8 +1,8 @@
 import {
-  searchesMiniSpec,
-  snippetCatalog,
-} from "@/lib/searches/snippet-catalog";
-import { videoCatalog } from "@/lib/searches/video-catalog";
+  searchMiniSpec,
+  searchSnippetCatalog,
+} from "@/lib/search/snippet-catalog";
+import { videoCatalog } from "@/lib/search/video-catalog";
 import { PayloadDocumenation } from "@/components/config-documentation";
 import { ApiRequestCodeExample } from "@/components/features/docs/api-request-code-example";
 import { CatalogHeader } from "@/components/features/docs/docs-layout";
@@ -27,7 +27,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { appLinks } from "@/lib/links";
+import { docsLinkPaths } from "@pipe0/docs-links";
 import { formatCredits } from "@/lib/utils";
 import {
   FieldName,
@@ -80,9 +80,9 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
       });
       return config;
     } catch {
-      null;
+      return undefined;
     }
-  }, []);
+  }, [defaultSearchPayload]);
 
   return (
     <div className="pipe-header space-y-5">
@@ -98,9 +98,9 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
             displayValue: `@${v.searchId.split("@")[1]}`,
             link: versionEntry.docPath.replace(
               "/resources/search-catalog",
-              "/docs/searches/searches-catalog",
+              "/docs/search/search-catalog",
             ),
-            isDeprecated: !!versionEntry.lifecycle?.deprecatedOn,
+            isDeprecated: !!(versionEntry.lifecycle as any)?.deprecatedOn,
           };
         })}
         tags={searchEntry.tags}
@@ -119,7 +119,7 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
                       : searchEntry.cost.mode === "per_search"
                         ? "Cost per search"
                         : "Cost per page"}
-                    <InlineDocsBadge href={appLinks.searchBilling()} />
+                    <InlineDocsBadge href={docsLinkPaths.searchBilling} />
                   </div>
                 </TableHead>
               </TableRow>
@@ -209,9 +209,9 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
       <div>
         <h2 className="text-2xl">Code Example</h2>
         <ApiRequestCodeExample
-          oas={searchesMiniSpec}
-          operation={searchesMiniSpec.operation("/v1/searches/run", "post")}
-          harData={{ body: snippetCatalog[searchId] }}
+          oas={searchMiniSpec}
+          operation={searchMiniSpec.operation("/v1/search/run", "post")}
+          harData={{ body: searchSnippetCatalog[searchId] }}
         />
       </div>
 
@@ -235,20 +235,20 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
                   <Tab value="Typescript">
                     <DynamicCodeBlock
                       lang="typescript"
-                      code={`const result = await fetch("https://api.pipe0.com/v1/searches/run", {
+                      code={`const result = await fetch("https://api.pipe0.com/v1/search/run", {
   method: "POST",
   headers: {
     "Authorization": \`Bearer \${API_KEY}\`,
     "Content-Type": "application/json",
   },
   body: JSON.stringify({
-    searches: [{
+    search: {
       search_id: "${searchId}",
       config: ${JSON.stringify(defaultSearchPayload, null, 2).replace(
         /\n/g,
         "\n      ",
       )}
-    }],
+    },
   })
 });`}
                     />
@@ -256,14 +256,17 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
                   <Tab value="cURL">
                     <DynamicCodeBlock
                       lang="bash"
-                      code={`curl -X POST "https://api.pipe0.com/v1/searches/run" \\
+                      code={`curl -X POST "https://api.pipe0.com/v1/search/run" \\
 -H "Authorization: Bearer $API_KEY" \\
+-H "Content-Type: application/json" \\
 -d '{
-    "pipes": [{ "search_id": "${searchId}" }],
-    "config": ${JSON.stringify(defaultSearchPayload, null, 2).replace(
-      /\n/g,
-      "\n      ",
-    )}
+    "search": {
+      "search_id": "${searchId}",
+      "config": ${JSON.stringify(defaultSearchPayload, null, 2).replace(
+        /\n/g,
+        "\n      ",
+      )}
+    }
 }'`}
                     />
                   </Tab>

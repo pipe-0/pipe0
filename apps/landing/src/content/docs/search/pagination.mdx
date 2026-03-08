@@ -1,0 +1,89 @@
+---
+title: Pagination
+description: How pagination works in the pipe0 Search API
+date: 2026-03-08
+---
+
+## Overview
+
+The Search API abstracts different provider pagination strategies behind a single interface.
+Every search response includes a `next_page` field — pass it as the `search` payload to fetch the next page.
+When `next_page` is `null`, there are no more results.
+
+## Paginating through results
+
+Make your first request as usual:
+
+```typescript
+const res = await fetch("https://api.pipe0.com/v1/search/run/sync", {
+    method: "POST",
+    headers: {
+        "Authorization": `Bearer ${API_KEY}`,
+        "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+        search: {
+            search_id: "people:profiles:crustdata@1",
+            config: {
+                limit: 25,
+                filters: {
+                    current_job_titles: ["Software Engineer"]
+                }
+            }
+        }
+    })
+});
+
+const page1 = await res.json();
+```
+
+The response contains a `next_page` object. To get the next page, pass it directly as the `search` field:
+
+```typescript
+if (page1.next_page) {
+    const res2 = await fetch("https://api.pipe0.com/v1/search/run/sync", {
+        method: "POST",
+        headers: {
+            "Authorization": `Bearer ${API_KEY}`,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            search: page1.next_page
+        })
+    });
+
+    const page2 = await res2.json();
+}
+```
+
+### Full iteration loop
+
+```typescript
+let nextPage = page1.next_page;
+
+while (nextPage) {
+    const res = await fetch("https://api.pipe0.com/v1/search/run/sync", {
+        method: "POST",
+        headers: {
+            "Authorization": `Bearer ${API_KEY}`,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            search: nextPage
+        })
+    });
+
+    const page = await res.json();
+    // Process page.results ...
+
+    nextPage = page.next_page;
+}
+```
+
+## How it works
+
+The `next_page` object is a complete, ready-to-use search payload. The API carries forward your entire search configuration — `search_id`, filters, limit — and updates only the internal pagination state. You don't need to manage cursors or page numbers yourself.
+
+## Async search
+
+Pagination works the same way with async search (`POST /v1/search/run` + `GET /v1/search/check/{task_id}`). The `next_page` field is included in the response from `/v1/search/check/{task_id}` once the task completes.

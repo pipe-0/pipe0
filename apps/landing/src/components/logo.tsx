@@ -23,7 +23,7 @@ export function LogoRaw() {
   );
 }
 
-export function LogoRawSmall() {
+export function LogoRawSmall({ className }: { className?: string }) {
   return (
     <>
       <Image
@@ -31,14 +31,14 @@ export function LogoRawSmall() {
         width={50}
         height={50}
         alt="logo-dark"
-        className="hidden dark:block w-8"
+        className={cn("hidden dark:block w-8", className)}
       />
       <Image
         src="/logo-small-light.svg"
         width={50}
         height={50}
         alt="logo-dark"
-        className="dark:hidden w-8"
+        className={cn("dark:hidden w-8", className)}
       />
     </>
   );

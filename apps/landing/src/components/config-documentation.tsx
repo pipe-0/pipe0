@@ -14,17 +14,19 @@ import {
   IntegerMetadata,
   isAsyncMultiSelectField,
   isBooleanField,
+  isNullableBooleanField,
   isConnectorField,
   isDateRangeField,
   isExactRangeField,
   isIncludeExcludeField,
   isIncludeExcludeSelectField,
   isIntegerField,
-  isIProvidersField,
+  isProvidersField,
   isJsonExtractionField,
   isJsonSchemaInput,
   isMultiCreateField,
   isMultiSelectField,
+  isAsyncIncludeExcludeSelectField,
   isNumberField,
   isOrderedMultiCreateField,
   isOutputField,
@@ -68,6 +70,14 @@ function getFieldIcon(type: string) {
 
 // Code example generators - each handles its own type safely
 const generateIncludeExcludeExample = (fieldName: string) => `{
+  "${fieldName}": {
+    "include": ["value1", "value2"],
+    "exclude": ["unwanted1", "unwanted2"]
+  }
+}`;
+
+// Code example generators - each handles its own type safely
+const generateAsyncInlcudeExcludeSelectFieldExample = (fieldName: string) => `{
   "${fieldName}": {
     "include": ["value1", "value2"],
     "exclude": ["unwanted1", "unwanted2"]
@@ -230,7 +240,7 @@ function generateCodeExample(field: GeneratedFormElement): string {
   if (isPipeTriggerField(field)) {
     return generatePipeTriggerExample(fieldName);
   }
-  if (isIProvidersField(field)) {
+  if (isProvidersField(field)) {
     return generateProvidersExample(fieldName);
   }
   if (isExactRangeField(field)) {
@@ -245,6 +255,9 @@ function generateCodeExample(field: GeneratedFormElement): string {
   if (isBooleanField(field)) {
     return generateBooleanExample(fieldName);
   }
+  if (isNullableBooleanField(field)) {
+    return generateBooleanExample(fieldName);
+  }
   if (isTextField(field) || isTextareaField(field)) {
     return generateTextExample(fieldName);
   }
@@ -254,6 +267,10 @@ function generateCodeExample(field: GeneratedFormElement): string {
 
   if (isMultiSelectField(field)) {
     return generateMultiSelectExample(fieldName, field);
+  }
+
+  if (isAsyncIncludeExcludeSelectField(field)) {
+    return generateAsyncInlcudeExcludeSelectFieldExample(fieldName);
   }
 
   if (isAsyncMultiSelectField(field)) {
@@ -323,14 +340,14 @@ function NumericConfig({
     <ConfigSectionWrapper>
       {field.min && (
         <div>
-          <span className="text-gray-500">Min value: </span>
-          <span className="text-gray-900">{field.min}</span>
+          <span className="">Min value: </span>
+          <span className="text-muted-foreground">{field.min}</span>
         </div>
       )}
       {field.max && (
         <div>
-          <span className="text-gray-500">Max value: </span>
-          <span className="text-gray-900">{field.max}</span>
+          <span className="">Max value: </span>
+          <span className="text-muted-foreground">{field.max}</span>
         </div>
       )}
     </ConfigSectionWrapper>
@@ -342,20 +359,20 @@ function DateRangeConfig({ field }: { field: DateRangeMetadata }) {
     <ConfigSectionWrapper>
       {field.format && (
         <div className="flex justify-between">
-          <span className="text-gray-500">Format:</span>
-          <span className="text-gray-900">{field.format}</span>
+          <span className="">Format:</span>
+          <span className="text-muted-foreground">{field.format}</span>
         </div>
       )}
       {field.minDate && (
         <div className="flex justify-between">
-          <span className="text-gray-500">Min date:</span>
-          <span className="text-gray-900">{field.minDate}</span>
+          <span className="">Min date:</span>
+          <span className="text-muted-foreground">{field.minDate}</span>
         </div>
       )}
       {field.maxDate && (
         <div className="flex justify-between">
-          <span className="text-gray-500">Max date:</span>
-          <span className="text-gray-900">{field.maxDate}</span>
+          <span className="">Max date:</span>
+          <span className="text-muted-foreground">{field.maxDate}</span>
         </div>
       )}
     </ConfigSectionWrapper>
@@ -367,14 +384,14 @@ function TextConfig({ field }: { field: TextMetadata }) {
     <ConfigSectionWrapper>
       {field.minLength && (
         <div className="flex justify-between">
-          <span className="text-gray-500">Min length:</span>
-          <span className="text-gray-900">{field.minLength}</span>
+          <span className="">Min length:</span>
+          <span className="text-muted-foreground">{field.minLength}</span>
         </div>
       )}
       {field.maxLength && (
         <div className="flex justify-between">
-          <span className="text-gray-500">Max length:</span>
-          <span className="text-gray-900">{field.maxLength}</span>
+          <span className="">Max length:</span>
+          <span className="text-muted-foreground">{field.maxLength}</span>
         </div>
       )}
     </ConfigSectionWrapper>
@@ -384,7 +401,7 @@ function TextConfig({ field }: { field: TextMetadata }) {
 function ConfigSectionWrapper({ children }: PropsWithChildren) {
   return (
     <div>
-      <h4 className="text-sm font-medium text-gray-900 mb-3">Configuration</h4>
+      <h4 className="text-sm font-medium mb-3">Configuration</h4>
       <div className="space-y-2 text-sm">{children}</div>
     </div>
   );
@@ -403,10 +420,12 @@ function ConfigurationSection({ field }: { field: GeneratedFormElement }) {
 }
 
 function ReferencesSection({ field }: { field: GeneratedFormElement }) {
+  // eslint-disable-next-line react-hooks/preserve-manual-memoization
   const showFieldFormatOptions = useMemo(() => {
     return isJsonExtractionField(field);
   }, []);
 
+  // eslint-disable-next-line react-hooks/preserve-manual-memoization
   const showTypeOptions = useMemo(() => {
     return isJsonExtractionField(field);
   }, []);
@@ -480,7 +499,7 @@ function OperatorsSection({ field }: { field: GeneratedFormElement }) {
 
   return (
     <div>
-      <h4 className="text-sm font-medium text-gray-900 mb-3">Operators</h4>
+      <h4 className="text-sm font-medium mb-3">Operators</h4>
       <div className="space-y-2">
         <div className="grid grid-cols-2 gap-3 text-sm">
           {operators.map(({ symbol, description }) => (
@@ -488,12 +507,12 @@ function OperatorsSection({ field }: { field: GeneratedFormElement }) {
               <code className="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono">
                 {symbol}
               </code>
-              <span className="text-gray-600">{description}</span>
+              <span className="text-muted-foreground">{description}</span>
             </div>
           ))}
         </div>
         {isDateRangeField(field) && (
-          <p className="text-xs text-gray-500 mt-2">
+          <p className="text-xs text-muted-foreground mt-2">
             Use ISO 8601 format: YYYY-MM-DDTHH:mm:ssZ
           </p>
         )}
@@ -509,7 +528,7 @@ function FieldDocumentation({ field }: { field: GeneratedFormElement }) {
     <div className="space-y-6">
       {field.description && (
         <div>
-          <p className="text-sm text-gray-600 leading-relaxed">
+          <p className="text-sm text-muted-foreground leading-relaxed">
             {field.description}
           </p>
         </div>
@@ -517,10 +536,10 @@ function FieldDocumentation({ field }: { field: GeneratedFormElement }) {
 
       <div>
         <div className="flex items-center justify-between mb-3">
-          <h4 className="text-sm font-medium text-gray-900">Example</h4>
+          <h4 className="text-sm font-medium">Example</h4>
         </div>
-        <pre className="bg-gray-50 border border-gray-200 rounded-lg p-4 text-sm overflow-x-auto">
-          <code className="text-gray-800">{codeExample}</code>
+        <pre className=" border rounded-lg p-4 text-sm overflow-x-auto">
+          <code className="">{codeExample}</code>
         </pre>
       </div>
 
@@ -581,7 +600,7 @@ export function PayloadDocumenation({ formConfig }: FilterDocumentationProps) {
                   </div>
                   <div className="flex items-center gap-2">
                     {constraints.length > 0 && (
-                      <span className="text-xs text-gray-500 px-2 py-1 rounded">
+                      <span className="text-xs px-2 py-1 rounded">
                         {constraints.join(", ")}
                       </span>
                     )}

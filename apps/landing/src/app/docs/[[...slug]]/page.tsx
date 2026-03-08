@@ -15,6 +15,7 @@ import { PipeEntryPage } from "@/components/features/docs/pipe-entry-page";
 import { SearchCatalogIndexPage } from "@/components/features/docs/search-catalog-index-page";
 import { SearchEntryPage } from "@/components/features/docs/search-entry-page";
 import { PipeCatalogIndexPage } from "@/components/features/docs/pipe-catalog-index-page";
+import { DocsIndexPage } from "@/components/features/docs/docs-index-page";
 
 function decodeSlug(slug: string[] | undefined): string[] | undefined {
   return slug?.map((s) => decodeURIComponent(s));
@@ -47,6 +48,17 @@ export default async function Page(
   // Virtual search entry
   if (data._virtualType === "search-entry") {
     return <SearchEntryPage searchId={data._searchId} />;
+  }
+
+  // Docs landing page (index with no slug)
+  if (!params.slug || params.slug.length === 0) {
+    return (
+      <DocsPage toc={[]} full>
+        <DocsBody>
+          <DocsIndexPage />
+        </DocsBody>
+      </DocsPage>
+    );
   }
 
   // Standard MDX page (existing code)

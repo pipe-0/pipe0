@@ -1,0 +1,42 @@
+{
+  "name": "@pipe0/docs-links",
+  "version": "0.0.0",
+  "description": "Documentation links for pipe0",
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "private": false,
+  "module": "./dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "exports": {
+    "import": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "rimraf ./dist && tsc -p tsconfig.production.json",
+    "dev": "tsc -w"
+  },
+  "keywords": [
+    "pipe0",
+    "docs",
+    "links",
+    "documentation"
+  ],
+  "author": "pipe0",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pipe-0/pipe0"
+  },
+  "devDependencies": {
+    "rimraf": "^6.0.0",
+    "typescript": "^5.9.3"
+  }
+}

@@ -1,5 +1,5 @@
 import { getSearchEntryMap } from "@/lib/get-searches";
-import { SearchCatalogIndex } from "@/components/features/docs/searches-catalog-index";
+import { SearchCatalogIndex } from "@/components/features/docs/search-catalog-index";
 import { DocsPage } from "fumadocs-ui/layouts/docs/page";
 import { Suspense } from "react";
 

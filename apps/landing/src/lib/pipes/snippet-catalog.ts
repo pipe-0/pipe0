@@ -95,6 +95,7 @@ export const snippetCatalog = {
     pipes: [
       {
         pipe_id: "company:identity@2",
+        config: {},
       },
     ],
     input: [
@@ -369,6 +370,7 @@ export const snippetCatalog = {
     pipes: [
       {
         pipe_id: "company:newssummary:website@1",
+        config: {},
       },
     ],
     input: [
@@ -759,6 +761,7 @@ Customize the message using the name of the user: {{ input name type="string" re
     pipes: [
       {
         pipe_id: "company:overview@2",
+        config: {},
       },
     ],
     input: [
@@ -882,10 +885,7 @@ Customize the message using the name of the user: {{ input name type="string" re
     input: [
       {
         id: "1",
-        urls: [
-          "https://pipe0.com",
-          "https://pipe0.com/docs",
-        ],
+        urls: ["https://pipe0.com", "https://pipe0.com/docs"],
       },
     ],
   },
@@ -906,10 +906,7 @@ Customize the message using the name of the user: {{ input name type="string" re
     input: [
       {
         id: "1",
-        urls: [
-          "https://pipe0.com",
-          "https://pipe0.com/docs",
-        ],
+        urls: ["https://pipe0.com", "https://pipe0.com/docs"],
       },
     ],
   },

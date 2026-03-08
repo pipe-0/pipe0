@@ -1,13 +1,13 @@
-import type { SearchesRequestPayload, SearchesResponse } from "@pipe0/ops";
 import { useMutation } from "@tanstack/react-query";
 import React, { useState } from "react";
+import { type SearchRequestPayload, type SearchResponse } from "@pipe0/ops";
 
 const API_BASE_URL = "https://sandbox-proxy.pipe0.com/v1";
 
 const useSearch = () => {
-  return useMutation<SearchesResponse, Error, SearchesRequestPayload>({
+  return useMutation<SearchResponse, Error, SearchRequestPayload>({
     mutationFn: async (payload) => {
-      const response = await fetch(`${API_BASE_URL}/searches/run/sync`, {
+      const response = await fetch(`${API_BASE_URL}/search/run/sync`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -30,7 +30,7 @@ const useSearch = () => {
 interface SearchSectionProps {
   title: string;
   description: string;
-  payload: SearchesRequestPayload;
+  payload: SearchRequestPayload;
   emoji: string;
 }
 
@@ -100,7 +100,7 @@ interface CodeBlockProps {
 }
 
 export const RequestCodeBlock: React.FC<CodeBlockProps> = ({ code }) => {
-  const codeString = `const response = await fetch("https://api.pipe0.com/v1/searches/run", {
+  const codeString = `const response = await fetch("https://api.pipe0.com/v1/search/run", {
   method: "POST",
   headers: {
     "Content-Type": "application/json"

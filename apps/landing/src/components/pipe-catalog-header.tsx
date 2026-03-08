@@ -30,7 +30,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { appLinks } from "@/lib/links";
+import { docsLinkPaths } from "@pipe0/docs-links";
 import { pipesMiniSpec, snippetCatalog } from "@/lib/pipes/snippet-catalog";
 import { videoCatalog } from "@/lib/pipes/video-catalog";
 import { formatCredits } from "@/lib/utils";
@@ -49,7 +49,7 @@ import {
   PipePayload,
   providerCatalog,
   sortPipeCatalogByBasePipe,
-  validatePipeline,
+  validatePipesOrError,
 } from "@pipe0/ops";
 import { Tabs, Tab } from "fumadocs-ui/components/tabs";
 import { Download, Terminal, Upload } from "lucide-react";
@@ -101,7 +101,7 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
   const formConfig = useMemo(() => {
     try {
       const payload = snippetCatalog[pipeId].pipes[0];
-      const validationContext = validatePipeline({
+      const validationContext = validatePipesOrError({
         config: {
           environment: "production",
         },
@@ -161,14 +161,14 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
               <TableRow>
                 <TableHead>Provider</TableHead>
                 <TableHead>
-                  Billing Mode <InlineDocsBadge href={appLinks.billingMode()} />
+                  Billing Mode <InlineDocsBadge href={docsLinkPaths.billingMode} />
                 </TableHead>
                 <TableHead>
-                  Connection <InlineDocsBadge href={appLinks.connections()} />
+                  Connection <InlineDocsBadge href={docsLinkPaths.connections} />
                 </TableHead>
                 <TableHead>
                   Cost per operation{" "}
-                  <InlineDocsBadge href={appLinks.billing()} />
+                  <InlineDocsBadge href={docsLinkPaths.billing} />
                 </TableHead>
                 <TableHead>Event</TableHead>
               </TableRow>
@@ -256,7 +256,7 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
                     <Upload className="h-4 w-4" />
                     <AlertTitle>No input fields</AlertTitle>
                     <AlertDescription>
-                      <p>This pipe's has no input fields.</p>
+                      <p>This pipe&apos;s has no input fields.</p>
                     </AlertDescription>
                   </Alert>
                 )}
@@ -368,7 +368,7 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
               <AlertTitle>Input field mode: `config`</AlertTitle>
               <AlertDescription>
                 <p>
-                  This pipe's input fields{" "}
+                  This pipe&apos;s input fields{" "}
                   <AppLink linkType="fieldModeConfig">
                     can be configured by you
                   </AppLink>
@@ -388,7 +388,7 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
                     <Upload className="h-4 w-4" />
                     <AlertTitle>No output fields</AlertTitle>
                     <AlertDescription>
-                      <p>This pipe's has no output fields.</p>
+                      <p>This pipe&apos;s has no output fields.</p>
                     </AlertDescription>
                   </Alert>
                 )}
@@ -447,7 +447,7 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
               <AlertTitle>Output field mode: `config`</AlertTitle>
               <AlertDescription>
                 <p>
-                  This pipe's output fields{" "}
+                  This pipe&apos;s output fields{" "}
                   <AppLink linkType="fieldModeConfig">
                     can be configured by you
                   </AppLink>

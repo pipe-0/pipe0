@@ -1,9 +1,11 @@
 {
+  "$schema": "../../../../.source/json-schema/docs.meta.json",
   "pages": [
     "index",
     "searches-catalog",
     "searches-quickstart",
     "searches-request-payload",
-    "searches-response-object"
+    "searches-response-object",
+    "pagination"
   ]
 }

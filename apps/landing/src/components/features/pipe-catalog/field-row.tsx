@@ -18,7 +18,7 @@ import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { toast } from "sonner";
 
 import { RequiredAsterisk } from "@/components/required-asterisk";
-import { appLinks } from "@/lib/links";
+import { docsLinkPaths } from "@pipe0/docs-links";
 import Link from "next/link";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/cjs/styles/prism";
 import {
@@ -33,7 +33,7 @@ export function OutputFieldEnabledBadge({
   isEnabledByDefault: boolean;
 }) {
   return (
-    <Link href={appLinks.outputFieldToggle()} target="_blank">
+    <Link href={docsLinkPaths.outputFieldToggle} target="_blank">
       <>
         {isEnabledByDefault ? (
           <Tooltip>

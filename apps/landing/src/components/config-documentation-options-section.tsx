@@ -33,7 +33,7 @@ export function OptionsSection({
   return (
     <div>
       <div className="flex justify-between">
-        <h4 className="text-sm font-medium text-gray-900 mb-3">
+        <h4 className="text-sm font-medium">
           {suggestions ? "Suggestions" : "Available options"}
         </h4>
 
@@ -48,7 +48,7 @@ export function OptionsSection({
       </div>
 
       {suggestions && Array.isArray(suggestions) ? (
-        <div className="max-h-32 overflow-y-auto border border-gray-200 rounded-lg p-3">
+        <div className="max-h-32 overflow-y-auto border rounded-lg p-3">
           <div className="flex flex-wrap gap-1.5">
             {suggestions.map((suggestion, idx) => (
               <Badge
@@ -62,17 +62,19 @@ export function OptionsSection({
           </div>
         </div>
       ) : options && Array.isArray(options) ? (
-        <div className="max-h-32 overflow-y-auto border border-gray-200 rounded-lg">
-          <div className="divide-y divide-gray-100">
+        <div className="max-h-32 overflow-y-auto border rounded-lg">
+          <div className="divide-y">
             {options.map((option, idx) => (
               <div
                 key={idx}
                 className="px-3 py-2 flex items-center justify-between"
               >
-                <code className="text-xs bg-gray-100 px-1.5 py-0.5 rounded font-mono">
+                <code className="text-xs px-1.5 py-0.5 rounded font-mono">
                   {option.value}
                 </code>
-                <span className="text-sm text-gray-600">{option.label}</span>
+                <span className="text-sm text-muted-foreground">
+                  {option.label}
+                </span>
               </div>
             ))}
           </div>

@@ -1,7 +1,7 @@
 {
   "pages": [
-    "index",
-    "searches",
+    "introduction",
+    "search",
     "pipes",
     "concepts",
     "authentication",

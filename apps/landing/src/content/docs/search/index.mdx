@@ -1,0 +1,126 @@
+---
+title: Quickstart
+description: Use search to find companies and people using filters. Searching for companies & people is often called "prospecting", "list building" or "sourcing".
+date: 2025-04-01
+---
+
+The <AppLink linkType="searchCatalog">search catalog</AppLink> lists all available datasets.
+
+## Making requests
+
+This request fetches a list of people using the [`people:profiles:crustdata@1`](/docs/search/search-catalog/people:profiles:crustdata/1) dataset.
+
+```typescript tab="Typescript"
+const result = await fetch("https://api.pipe0.com/v1/search/run", {
+    method: "POST",
+    headers: {
+        "Authorization": `Bearer ${API_KEY}`,
+        "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+        search: {
+            search_id: "people:profiles:crustdata@1",
+            config: {
+                limit: 100,
+                filters: {
+                    current_job_titles: ["Software Engineer", "Developer"]
+                }
+            }
+        },
+    })
+});
+```
+
+You can find the list of available filters per dataset in the <AppLink linkType="searchCatalog">search catalog</AppLink>.
+
+## Getting the task result
+
+The request to `POST https://api.pipe0.com/v1/search/run` will create a search task.
+To get the result of the task, poll the `GET https://api.pipe0.com/v1/search/check/{task_id}` endpoint until the task status is
+`completed`.
+
+```typescript tab="Typescript"
+const result = await fetch("https://api.pipe0.com/v1/search/check/${taskId}", {
+    method: "GET",
+    headers: {
+        "Authorization": `Bearer ${API_KEY}`
+    }
+});
+```
+
+```python tab="Python"
+import requests
+import json
+
+headers = {
+    "Authorization": f"Bearer {API_KEY}",
+}
+response = requests.get(f"https://api.pipe0.com/v1/search/check/{task_id}", headers=headers)
+```
+
+```bash tab="cURL"
+curl -X GET "https://api.pipe0.com/v1/search/check/$TASK_ID" \
+-H "Authorization: Bearer $API_KEY"
+```
+
+
+The result will look something like this:
+
+
+```json
+{
+	"id": "jyg5w5p7unhcufkp8f7z5za8",
+	"status": "completed",
+	"search_id": "people:profiles:crustdata@1",
+	"organization_id": "v417gjrw51ft55f85ueeqgpt",
+	"errors": [],
+	"total_pages": 2764,
+	"pagination_type": "cursor",
+	"next_page": {
+		"config": {
+			"filters": {
+				"current_job_titles": ["Software Engineer", "Developer"]
+			},
+			"pagination": {
+				"limit": 100,
+				"cursor": "H4sIAMaPrWkC..."
+			},
+			"output_fields": {
+				"name": { "alias": "", "enabled": true },
+				"job_title": { "alias": "", "enabled": true }
+			}
+		},
+		"search_id": "people:profiles:crustdata@1"
+	},
+	"results": [
+		{
+			"name": {
+				"ui": {},
+				"type": "string",
+				"value": "Gayle Pouros",
+				"format": "text",
+				"status": "completed"
+			},
+			"job_title": {
+				"ui": {},
+				"type": "string",
+				"value": "Product Intranet Manager",
+				"format": "text",
+				"status": "completed"
+			}
+		}
+	]
+}
+```
+
+The `results` of a search can be the input for a <AppLink linkType="pipesQuickstart">pipes request</AppLink> (enrichment).
+Under the hood, this uses <AppLink linkType="inputExpansion">input expansion</AppLink>.
+
+## Getting the result without polling
+
+Instead of creating your task with the endpoint `POST https://api.pipe0.com/v1/search/run` use the endpoint `POST https://api.pipe0.com/v1/search/run/sync`.
+Use the same payload for both endpoints. The `/sync` endpoint will try to return the `completed` result in one round-trip.
+
+Read more about the trade-offs between <AppLink linkType="async">async vs sync requests</AppLink> here.
+
+

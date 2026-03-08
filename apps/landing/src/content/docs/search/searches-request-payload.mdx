@@ -1,0 +1,53 @@
+---
+title: Request Payload
+category: Concepts
+description: The searches payload contains a description of what you want to find. Compose filters and searches to find companies or people.
+date: 2025-06-02
+---
+
+The following API operations require a request payload of type `SearchRequestPayload`:
+
+- `POST https://api.pipe0.com/v1/search/run` (create a search task)
+- `POST https://api.pipe0.com/v1/search/run/sync` (create a search task and return the result)
+
+<AppLink linkType="async">Learn more</AppLink> about the difference between sync and async operations.
+
+Here's a sample payload:
+
+```json
+{
+	"search": {
+		"search_id": "people:profiles:crustdata@1",
+		"config": {
+			"limit": 100,
+			"filters": {
+				"current_job_titles": ["Software Engineer", "Developer"]
+			}
+		}
+	}
+}
+```
+
+
+## Search request payload properties
+
+### search
+
+The search object containing the search configuration. Each request accepts a single search.
+
+#### search.search_id
+
+The unique identifier of a search. Find available `search_id`s in the <AppLink linkType="searchCatalog">search catalog</AppLink>.
+
+#### search.config
+
+Search configuration object. The full config object can be found in the <AppLink linkType="searchCatalog">search catalog</AppLink>.
+All searches require at least one filter in `search.config.filters`. Empty filter objects are invalid.
+
+#### search.config.limit
+
+Limit the number of search results. Find the default `limit` in the <AppLink linkType="searchCatalog">search catalog</AppLink>.
+
+#### search.config.filters
+
+A set of filters that varies by search. Find the available filters per search in the <AppLink linkType="searchCatalog">search catalog</AppLink>.

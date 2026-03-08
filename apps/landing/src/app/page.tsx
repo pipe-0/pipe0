@@ -8,7 +8,7 @@ import { Header } from "@/components/header";
 import { Button } from "@/components/ui/button";
 import { CodeBlock } from "@/components/ui/code-block";
 import { appInfo } from "@/lib/const";
-import { appLinks } from "@/lib/links";
+import { docsLinkPaths } from "@pipe0/docs-links";
 import { providerCatalog } from "@pipe0/ops";
 import { ArrowRight, Search, Sparkle } from "lucide-react";
 import Link from "next/link";
@@ -156,7 +156,7 @@ export default function Home() {
               </div>
               <div>
                 <div className="flex flex-col sm:flex-row gap-2">
-                  <Link href={appLinks.docs()}>
+                  <Link href={docsLinkPaths.docs}>
                     <Button
                       variant="outline"
                       size="sm"
@@ -319,7 +319,7 @@ const response = await piper.pipes({
                   Search for people and companies using multiple providers.
                 </p>
               </div>
-              <Link href={appLinks.searchCatalog()}>
+              <Link href={docsLinkPaths.searchCatalog}>
                 <Button
                   variant="default"
                   size="sm"
@@ -408,7 +408,7 @@ const response = await piper.pipes({
               <p className="text-muted-foreground text-sm pb-4">
                 Compose hundreds of enrichments to get the data you want.
               </p>
-              <Link href={appLinks.pipeCatalog()}>
+              <Link href={docsLinkPaths.pipeCatalog}>
                 <Button size="sm" className="w-full sm:w-auto">
                   Explore enrichments <Sparkle className="ml-2" />
                 </Button>

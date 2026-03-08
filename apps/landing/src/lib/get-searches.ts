@@ -18,19 +18,19 @@ export type SearchEntry = {
 export type SearchEntryMap = Record<SearchId, SearchEntry>;
 
 export async function getSearchEntryMap(): Promise<SearchEntryMap> {
-  const searchesByBase: Record<string, SearchId[]> = {};
+  const searchByBase: Record<string, SearchId[]> = {};
 
   for (const searchId of Object.keys(searchCatalog) as SearchId[]) {
     const entry = getOpsEntry(searchId);
-    if (!searchesByBase[entry.baseSearch]) {
-      searchesByBase[entry.baseSearch] = [];
+    if (!searchByBase[entry.baseSearch]) {
+      searchByBase[entry.baseSearch] = [];
     }
-    searchesByBase[entry.baseSearch].push(searchId);
+    searchByBase[entry.baseSearch].push(searchId);
   }
 
   const map: SearchEntryMap = {} as SearchEntryMap;
 
-  for (const [baseSearch, searchIds] of Object.entries(searchesByBase)) {
+  for (const [baseSearch, searchIds] of Object.entries(searchByBase)) {
     const sortedIds = searchIds.sort((a, b) => {
       return getSearchVersion(b) - getSearchVersion(a);
     });
@@ -40,7 +40,7 @@ export async function getSearchEntryMap(): Promise<SearchEntryMap> {
       return {
         searchId,
         version: getSearchVersion(searchId),
-        route: `/docs/searches/searches-catalog/${entry.baseSearch}/${getSearchVersion(searchId)}`,
+        route: `/docs/search/search-catalog/${entry.baseSearch}/${getSearchVersion(searchId)}`,
       };
     });
 

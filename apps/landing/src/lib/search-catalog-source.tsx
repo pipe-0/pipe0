@@ -90,10 +90,10 @@ function generateSearchMarkdown(searchId: SearchId): string {
   lines.push("## Code Example");
   lines.push("");
   lines.push("```bash");
-  lines.push(`curl -X POST "https://api.pipe0.com/v1/searches/run" \\`);
+  lines.push(`curl -X POST "https://api.pipe0.com/v1/search/run" \\`);
   lines.push(`  -H "Authorization: Bearer $API_KEY" \\`);
   lines.push(`  -H "Content-Type: application/json" \\`);
-  lines.push(`  -d '{"searches": [{"search_id": "${searchId}"}]}'`);
+  lines.push(`  -d '{"search": {"search_id": "${searchId}"}}'`);
   lines.push("```");
   lines.push("");
 
@@ -105,12 +105,10 @@ function generateSearchMarkdown(searchId: SearchId): string {
   lines.push(
     JSON.stringify(
       {
-        searches: [
-          {
-            search_id: searchId,
-            config: defaultPayload,
-          },
-        ],
+        search: {
+          search_id: searchId,
+          config: defaultPayload,
+        },
       },
       null,
       2,
@@ -169,7 +167,7 @@ export function createSearchCatalogSource(): SearchCatalogSource {
   // Index page as a flat page (not inside a folder) — renders as a simple sidebar link
   files.push({
     type: "page",
-    path: "searches/searches-catalog.mdx",
+    path: "search/searches-catalog.mdx",
     data: {
       title: "Search Catalog",
       description: "Browse search functions",
@@ -194,7 +192,7 @@ export function createSearchCatalogSource(): SearchCatalogSource {
     files.push({
       type: "page",
       path: `_search-entries/${baseSearch}/${version}.mdx`,
-      slugs: ["searches", "searches-catalog", baseSearch, String(version)],
+      slugs: ["search", "searches-catalog", baseSearch, String(version)],
       data: {
         title: `${entry.label} (${searchId})`,
         description: entry.description,

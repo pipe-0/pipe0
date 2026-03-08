@@ -14,7 +14,10 @@ export default {
 				url.pathname === '/v1/pipes/check' ||
 				url.pathname === '/v1/searches/run/sync' ||
 				url.pathname === '/v1/searches/run' ||
-				url.pathname === '/v1/searches/check'
+				url.pathname === '/v1/searches/check' ||
+				url.pathname === '/v1/search/run/sync' ||
+				url.pathname === '/v1/search/run' ||
+				url.pathname === '/v1/search/check'
 			)
 		) {
 			return new Response('Not Found', { status: 404 });

@@ -1,4 +1,4 @@
-import type { SearchesRequestPayload } from "@pipe0/ops";
+import type { SearchRequestPayload } from "./search-section";
 import { SearchSection } from "./search-section";
 
 const searchSections = [
@@ -9,28 +9,20 @@ const searchSections = [
     searchType: "icypeas",
     emoji: "🔍",
     payload: {
-      config: {
-        environment: "sandbox",
-        dedup: {
-          strategy: "default",
-        },
-      },
-      searches: [
-        {
-          search_id: "people:profiles:icypeas@1",
-          config: {
-            limit: 5,
-            filters: {
-              currentJobTitle: {
-                include: ["Software Engineer", "Developer"],
-              },
-              location: {
-                include: ["San Francisco", "New York"],
-              },
+      search: {
+        search_id: "people:profiles:icypeas@1",
+        config: {
+          limit: 5,
+          filters: {
+            currentJobTitle: {
+              include: ["Software Engineer", "Developer"],
+            },
+            location: {
+              include: ["San Francisco", "New York"],
             },
           },
         },
-      ],
+      },
     },
   },
   {
@@ -40,60 +32,15 @@ const searchSections = [
     searchType: "clado",
     emoji: "🤖",
     payload: {
-      config: {
-        environment: "sandbox",
-        dedup: {
-          strategy: "default",
+      search: {
+        search_id: "people:profiles:clado@1",
+        config: {
+          limit: 5,
+          filters: {
+            query: "software engineer at startup",
+          },
         },
       },
-      searches: [
-        {
-          search_id: "people:profiles:clado@1",
-          config: {
-            limit: 5,
-            filters: {
-              query: "software engineer at startup",
-            },
-          },
-        },
-      ],
-    },
-  },
-  {
-    title: "Search for leads with Icypeas and Clado in one request",
-    description:
-      "Combines both datasets in a single request with deduplication",
-    searchType: "combined",
-    emoji: "🔄",
-    payload: {
-      config: {
-        environment: "sandbox",
-        dedup: {
-          strategy: "default",
-        },
-      },
-      searches: [
-        {
-          search_id: "people:profiles:icypeas@1",
-          config: {
-            limit: 3,
-            filters: {
-              currentJobTitle: {
-                include: ["Software Engineer"],
-              },
-            },
-          },
-        },
-        {
-          search_id: "people:profiles:clado@1",
-          config: {
-            limit: 3,
-            filters: {
-              query: "frontend developer",
-            },
-          },
-        },
-      ],
     },
   },
 ] satisfies {
@@ -101,7 +48,7 @@ const searchSections = [
   description: string;
   searchType: string;
   emoji: string;
-  payload: SearchesRequestPayload;
+  payload: SearchRequestPayload;
 }[];
 
 export function App() {

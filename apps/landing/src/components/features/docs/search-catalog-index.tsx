@@ -57,8 +57,9 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { ComponentType, useState } from "react";
-import { getSearchDocsURI } from "@/lib/searches/get-search-docs-uri";
+import { getSearchDocsURI } from "@/lib/search/get-search-docs-uri";
 import { H1 } from "@/components/headings";
+import { Callout } from "fumadocs-ui/components/callout";
 
 // Featured searches - you can customize this list with your featured searches IDs
 const FEATURED_SEARCHES_IDS = [] satisfies SearchId[];
@@ -330,6 +331,20 @@ export function SearchCatalogIndex({
         </p>
       </div>
 
+      {/* Legacy docs callout */}
+      <Callout type="info" title="Looking for the old search docs?">
+        The legacy search endpoint documentation is still available at{" "}
+        <a
+          href="https://legacydocs.pipe0.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="underline font-medium"
+        >
+          legacydocs.pipe0.com
+        </a>
+        .
+      </Callout>
+
       {/* Search bar */}
       <div className="relative">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -519,7 +534,7 @@ export function SearchCatalogIndex({
         )}
         <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
           {rows.map((row) => {
-            const searchEntry = searchEntryMap[row.original.searchId];
+            const searchEntry = getSearchEntry(row.original.searchId);
             if (!searchEntry) return null;
             return (
               <SearchIntegrationCard
