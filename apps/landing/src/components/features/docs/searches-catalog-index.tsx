@@ -524,7 +524,7 @@ export function SearchCatalogIndex({
             return (
               <SearchIntegrationCard
                 key={row.original.searchId}
-                tableEntry={row.original}
+                tableEntry={row.original as any}
               />
             );
           })}

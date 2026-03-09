@@ -403,10 +403,12 @@ function ConfigurationSection({ field }: { field: GeneratedFormElement }) {
 }
 
 function ReferencesSection({ field }: { field: GeneratedFormElement }) {
+  // eslint-disable-next-line react-hooks/preserve-manual-memoization
   const showFieldFormatOptions = useMemo(() => {
     return isJsonExtractionField(field);
   }, []);
 
+  // eslint-disable-next-line react-hooks/preserve-manual-memoization
   const showTypeOptions = useMemo(() => {
     return isJsonExtractionField(field);
   }, []);
