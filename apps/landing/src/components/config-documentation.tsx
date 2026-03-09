@@ -20,7 +20,7 @@ import {
   isIncludeExcludeField,
   isIncludeExcludeSelectField,
   isIntegerField,
-  isIProvidersField,
+  isProvidersField,
   isJsonExtractionField,
   isJsonSchemaInput,
   isMultiCreateField,
@@ -230,7 +230,7 @@ function generateCodeExample(field: GeneratedFormElement): string {
   if (isPipeTriggerField(field)) {
     return generatePipeTriggerExample(fieldName);
   }
-  if (isIProvidersField(field)) {
+  if (isProvidersField(field)) {
     return generateProvidersExample(fieldName);
   }
   if (isExactRangeField(field)) {
