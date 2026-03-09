@@ -2,10 +2,8 @@ import { source } from "@/lib/source";
 import { DocsLayout } from "fumadocs-ui/layouts/docs";
 import { baseOptions, getSection, linkItems } from "@/lib/layout.shared";
 import { LogoRawSmall } from "@/components/logo";
-
-export default function Layout({
-  children,
-}: LayoutProps<"/docs">) {
+// test
+export default function Layout({ children }: LayoutProps<"/docs">) {
   const base = baseOptions();
 
   return (

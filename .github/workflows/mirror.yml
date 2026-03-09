@@ -2,7 +2,7 @@ name: Mirror Repository
 
 on:
   push:
-    branches: [main]
+    branches: [main, legacy]
   workflow_dispatch: # Allows manual triggering of the workflow
 
 jobs:
