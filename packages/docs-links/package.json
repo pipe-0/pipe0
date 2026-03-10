@@ -1,6 +1,6 @@
 {
   "name": "@pipe0/docs-links",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Documentation links for pipe0",
   "type": "module",
   "types": "./dist/index.d.ts",
