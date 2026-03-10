@@ -11,7 +11,7 @@ export function getBaseUrl() {
     ? "https://pipe0.com"
     : "http://localhost:3000";
 }
-
+// test
 export function formatCredits(credits: number | string | null) {
   const c = credits ? Number(credits) : 0;
   const fixed = c.toFixed(2);
