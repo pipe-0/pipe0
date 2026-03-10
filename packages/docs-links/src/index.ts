@@ -42,8 +42,7 @@ export const docsLinkPaths = {
   pipeCatalog: `/docs/pipes/pipes-catalog`,
   record: `/docs/response-object#bing-your-own-connections`,
 
-  // Searches
-  searchesQuickstart: `/docs/searches-quickstart`,
+  // Search
   searchCatalog: `/docs/search/search-catalog`,
 
   // Billing

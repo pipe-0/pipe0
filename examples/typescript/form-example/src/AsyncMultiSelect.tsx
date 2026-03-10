@@ -18,14 +18,18 @@ export function AsyncMultiSelect({
   onChange: (values: string[]) => void;
 }) {
   const [query, setQuery] = useState("");
-  const [suggestions, setSuggestions] = useState<{ value: string; label: string }[]>([]);
+  const [suggestions, setSuggestions] = useState<
+    { value: string; label: string }[]
+  >([]);
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
-  const debounceRef = useRef<ReturnType<typeof setTimeout>>();
+  const debounceRef = useRef<ReturnType<typeof setTimeout>>(null);
 
   // Fetch suggestions when query changes (debounced)
   useEffect(() => {
-    clearTimeout(debounceRef.current);
+    if (debounceRef.current) {
+      clearTimeout(debounceRef.current);
+    }
 
     if (!query.trim()) {
       setSuggestions([]);
@@ -44,14 +48,16 @@ export function AsyncMultiSelect({
       }
     }, 300);
 
-    return () => clearTimeout(debounceRef.current);
+    return () => {
+      debounceRef.current && clearTimeout(debounceRef.current);
+    };
   }, [query, field]);
 
   const toggle = (value: string) => {
     onChange(
       selected.includes(value)
         ? selected.filter((v) => v !== value)
-        : [...selected, value]
+        : [...selected, value],
     );
   };
 
@@ -61,7 +67,9 @@ export function AsyncMultiSelect({
 
       {/* Selected tags */}
       {selected.length > 0 && (
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 4, marginTop: 4 }}>
+        <div
+          style={{ display: "flex", flexWrap: "wrap", gap: 4, marginTop: 4 }}
+        >
           {selected.map((v) => (
             <span
               key={v}
@@ -79,7 +87,12 @@ export function AsyncMultiSelect({
               <button
                 type="button"
                 onClick={() => toggle(v)}
-                style={{ background: "none", border: "none", cursor: "pointer", padding: 0 }}
+                style={{
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                  padding: 0,
+                }}
               >
                 x
               </button>
@@ -98,7 +111,12 @@ export function AsyncMultiSelect({
         }}
         onFocus={() => setOpen(true)}
         placeholder={`Search ${field.label?.toLowerCase()}...`}
-        style={{ display: "block", width: "100%", marginTop: 4, padding: "6px 8px" }}
+        style={{
+          display: "block",
+          width: "100%",
+          marginTop: 4,
+          padding: "6px 8px",
+        }}
       />
 
       {/* Dropdown */}
@@ -118,7 +136,9 @@ export function AsyncMultiSelect({
             boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
           }}
         >
-          {loading && <div style={{ padding: 8, color: "#888" }}>Loading...</div>}
+          {loading && (
+            <div style={{ padding: 8, color: "#888" }}>Loading...</div>
+          )}
           {!loading && suggestions.length === 0 && (
             <div style={{ padding: 8, color: "#888" }}>No results</div>
           )}

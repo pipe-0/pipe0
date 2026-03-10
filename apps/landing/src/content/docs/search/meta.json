@@ -3,9 +3,9 @@
   "pages": [
     "index",
     "search-catalog",
-    "searches-quickstart",
-    "searches-request-payload",
-    "searches-response-object",
+    "search-quickstart",
+    "search-request-payload",
+    "search-response-object",
     "pagination"
   ]
 }

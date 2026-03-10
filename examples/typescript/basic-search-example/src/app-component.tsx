@@ -1,43 +1,21 @@
-import type { SearchRequestPayload } from "./search-section";
 import { SearchSection } from "./search-section";
 
 const searchSections = [
   {
-    title: "Search for leads with Icypeas",
+    title: "Search for leads with Crustdata",
     description:
       "Uses the Icypeas dataset to find software engineers in San Francisco and New York",
     searchType: "icypeas",
     emoji: "🔍",
     payload: {
       search: {
-        search_id: "people:profiles:icypeas@1",
+        search_id: "people:profiles:crustdata@1",
         config: {
           limit: 5,
           filters: {
-            currentJobTitle: {
-              include: ["Software Engineer", "Developer"],
+            current_employers_website_urls: {
+              include: ["https://microsoft.com"],
             },
-            location: {
-              include: ["San Francisco", "New York"],
-            },
-          },
-        },
-      },
-    },
-  },
-  {
-    title: "Search for leads with Clado",
-    description:
-      "Uses the Clado dataset with natural language query for startup software engineers",
-    searchType: "clado",
-    emoji: "🤖",
-    payload: {
-      search: {
-        search_id: "people:profiles:clado@1",
-        config: {
-          limit: 5,
-          filters: {
-            query: "software engineer at startup",
           },
         },
       },
@@ -48,7 +26,8 @@ const searchSections = [
   description: string;
   searchType: string;
   emoji: string;
-  payload: SearchRequestPayload;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  payload: any;
 }[];
 
 export function App() {
@@ -71,7 +50,8 @@ export function App() {
                 key={section.title}
                 title={section.title}
                 description={section.description}
-                payload={section.payload}
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                payload={section.payload as any}
                 emoji={section.emoji}
               />
             ))}
