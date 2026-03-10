@@ -44,7 +44,7 @@ export const docsLinkPaths = {
 
   // Searches
   searchesQuickstart: `/docs/searches-quickstart`,
-  searchCatalog: `/docs/searches/searches-catalog`,
+  searchCatalog: `/docs/search/search-catalog`,
 
   // Billing
   billing: `/docs/billing`,

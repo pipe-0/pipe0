@@ -167,7 +167,7 @@ export function createSearchCatalogSource(): SearchCatalogSource {
   // Index page as a flat page (not inside a folder) — renders as a simple sidebar link
   files.push({
     type: "page",
-    path: "search/searches-catalog.mdx",
+    path: "search/search-catalog.mdx",
     data: {
       title: "Search Catalog",
       description: "Browse search functions",
@@ -192,7 +192,7 @@ export function createSearchCatalogSource(): SearchCatalogSource {
     files.push({
       type: "page",
       path: `_search-entries/${baseSearch}/${version}.mdx`,
-      slugs: ["search", "searches-catalog", baseSearch, String(version)],
+      slugs: ["search", "search-catalog", baseSearch, String(version)],
       data: {
         title: `${entry.label} (${searchId})`,
         description: entry.description,

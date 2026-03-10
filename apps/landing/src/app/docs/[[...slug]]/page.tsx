@@ -21,9 +21,7 @@ function decodeSlug(slug: string[] | undefined): string[] | undefined {
   return slug?.map((s) => decodeURIComponent(s));
 }
 
-export default async function Page(
-  props: PageProps<"/docs/[[...slug]]">,
-) {
+export default async function Page(props: PageProps<"/docs/[[...slug]]">) {
   const params = await props.params;
   const page = source.getPage(decodeSlug(params.slug));
   if (!page) notFound();

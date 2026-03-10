@@ -2,7 +2,7 @@
   "$schema": "../../../../.source/json-schema/docs.meta.json",
   "pages": [
     "index",
-    "searches-catalog",
+    "search-catalog",
     "searches-quickstart",
     "searches-request-payload",
     "searches-response-object",
