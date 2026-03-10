@@ -18,6 +18,7 @@
     "@next/mdx": "16.1.6",
     "@pipe0/docs-links": "workspace:*",
     "@pipe0/ops": "catalog:",
+    "@pipe0/client": "catalog:",
     "@pipe0/react-sdk": "catalog:",
     "@radix-ui/react-accordion": "^1.2.3",
     "@radix-ui/react-avatar": "^1.1.3",

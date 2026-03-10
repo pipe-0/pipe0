@@ -1,3 +1,4 @@
+import { ClientSearchPayloadMap } from "@pipe0/client";
 import { SearchId, SearchPayloadCatalog } from "@pipe0/ops";
 import Oas from "oas";
 import { OASDocument } from "oas/types";
@@ -137,5 +138,5 @@ export const searchSnippetCatalog = {
     },
   },
 } as {
-  [K in SearchId]: SearchRequestPayloadMap[K];
+  [K in SearchId]: ClientSearchPayloadMap[K];
 };

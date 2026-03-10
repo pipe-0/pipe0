@@ -1,11 +1,7 @@
-import {
-  PipeId,
-  PipeRequestPayloadMap,
-  PipesRequest,
-  PipesRequestPayload,
-} from "@pipe0/ops";
+import { PipeId, PipesRequestPayload } from "@pipe0/ops";
 import Oas from "oas";
 import { OASDocument } from "oas/types";
+import { ClientPipesPayloadMap } from "@pipe0/client";
 
 const miniSpec: OASDocument = {
   openapi: "3.1.0",
@@ -1201,5 +1197,7 @@ Customize the message using the name of the user: {{ input name type="string" re
     ],
   },
 } satisfies {
-  [K in PipeId]: PipesRequestPayload & { pipes: PipeRequestPayloadMap[K][] };
+  [K in PipeId]: PipesRequestPayload & {
+    pipes: ClientPipesPayloadMap[K][];
+  };
 };

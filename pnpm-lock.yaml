@@ -6,12 +6,15 @@ settings:
 
 catalogs:
   default:
+    '@pipe0/client':
+      specifier: 0.0.22
+      version: 0.0.22
     '@pipe0/ops':
-      specifier: 0.0.19
-      version: 0.0.19
+      specifier: 0.0.20
+      version: 0.0.20
     '@pipe0/react-sdk':
-      specifier: 0.0.88
-      version: 0.0.88
+      specifier: 0.0.89
+      version: 0.0.89
 
 importers:
 
@@ -47,15 +50,18 @@ importers:
       '@next/mdx':
         specifier: 16.1.6
         version: 16.1.6(@mdx-js/loader@3.1.0(acorn@8.15.0))(@mdx-js/react@3.1.0(@types/react@19.2.14)(react@19.2.4))
+      '@pipe0/client':
+        specifier: 'catalog:'
+        version: 0.0.22
       '@pipe0/docs-links':
         specifier: workspace:*
         version: link:../../packages/docs-links
       '@pipe0/ops':
         specifier: 'catalog:'
-        version: 0.0.19
+        version: 0.0.20
       '@pipe0/react-sdk':
         specifier: 'catalog:'
-        version: 0.0.88
+        version: 0.0.89
       '@radix-ui/react-accordion':
         specifier: ^1.2.3
         version: 1.2.3(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -267,7 +273,7 @@ importers:
     dependencies:
       '@pipe0/ops':
         specifier: 'catalog:'
-        version: 0.0.19
+        version: 0.0.20
       '@tailwindcss/vite':
         specifier: ^4.1.11
         version: 4.1.11(vite@7.0.6(@types/node@20.17.17)(jiti@2.6.1)(lightningcss@1.30.2)(yaml@2.8.1))
@@ -322,7 +328,7 @@ importers:
     dependencies:
       '@pipe0/ops':
         specifier: 'catalog:'
-        version: 0.0.19
+        version: 0.0.20
       '@types/react':
         specifier: ^19.2.14
         version: 19.2.14
@@ -369,15 +375,6 @@ importers:
       zod:
         specifier: ^3.24.1
         version: 3.24.1
-
-  packages/references:
-    devDependencies:
-      tsc-alias:
-        specifier: ^1.8.16
-        version: 1.8.16
-      typescript:
-        specifier: ^5
-        version: 5.7.3
 
   workers/icypeas-webhook-resolver:
     devDependencies:
@@ -2079,14 +2076,14 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@pipe0/client@0.0.21':
-    resolution: {integrity: sha512-qgPJ/n6JT5RJ5fupPj42IwQd8fAnuiHE9h5PPJqdfEkrwEDigq0cZ7vCqoXpixFS2q6cEJQO6v15yLltbSzuVg==}
+  '@pipe0/client@0.0.22':
+    resolution: {integrity: sha512-l6KkGjUu+Ax6t5C6AxvBVj8UuhIZkKcRWMI/LXM3fWciGFtZ3gUQMl4+0qrp/jMnST2cj6AFi4rZWur8EN49iw==}
 
-  '@pipe0/ops@0.0.19':
-    resolution: {integrity: sha512-E5wBYCNt9AKNL+qEVXrJh7rG8EiVJU7ojoVg7QA++b77BJVHNpROzPIiVONhhymgtIjQj+mpcfbZLQYrCruPuA==}
+  '@pipe0/ops@0.0.20':
+    resolution: {integrity: sha512-NCps1WlhV28cvnys9NJ09v/UDwbfUYJFETiDqdTw7FhtOY1XMoJQkvwEAsbxXszCdezJyiKozhTfNqJ1CsdsLQ==}
 
-  '@pipe0/react-sdk@0.0.88':
-    resolution: {integrity: sha512-jtGNj+gPSvowmoPFqNwIMFg///BHIqhD4Gn4NcZzaBbTvnuMHCOAhrd1GNQpyrA6zRMelTQQR6Lrt2mK0H/V5Q==}
+  '@pipe0/react-sdk@0.0.89':
+    resolution: {integrity: sha512-Q3gJTym3ULuNr6AeGgi0/RzWwtC9u2OYdtmHod4uCO4wv528G3Khlr0LZfzYEJJlOmz19aPMLNEY1NDQudF/lw==}
 
   '@radix-ui/number@1.1.1':
     resolution: {integrity: sha512-MkKCwxlXTgz6CFoJx3pCwn07GKp36+aZyu/u2Ln2VrA5DcdyCZkASEDBTd8x5whTQQL5CiYf4prXKLcgQdv29g==}
@@ -9285,14 +9282,14 @@ snapshots:
   '@oxc-transform/binding-win32-x64-msvc@0.112.0':
     optional: true
 
-  '@pipe0/client@0.0.21':
+  '@pipe0/client@0.0.22':
     dependencies:
       openapi-fetch: 0.15.0
 
-  '@pipe0/ops@0.0.19':
+  '@pipe0/ops@0.0.20':
     dependencies:
       '@asteasolutions/zod-to-openapi': 8.1.0(zod@4.1.12)
-      '@pipe0/client': 0.0.21
+      '@pipe0/client': 0.0.22
       ajv: 8.17.1
       date-fns: 4.1.0
       immer: 10.2.0
@@ -9304,9 +9301,9 @@ snapshots:
       xxhash-wasm: 1.1.0
       zod: 4.1.12
 
-  '@pipe0/react-sdk@0.0.88':
+  '@pipe0/react-sdk@0.0.89':
     dependencies:
-      '@pipe0/ops': 0.0.19
+      '@pipe0/ops': 0.0.20
       '@tanstack/match-sorter-utils': 8.19.4
       '@tanstack/react-table': 8.21.3(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       lucide-react: 0.475.0(react@19.2.4)
