@@ -8,7 +8,7 @@ const sections = [
     title: "Framework",
     description:
       "Learn the basics of Pipe0. Set up your API key, make your first request, and understand the core concepts.",
-    href: "/docs/authentication",
+    href: "/docs/introduction",
     icon: BookOpen,
   },
   {
