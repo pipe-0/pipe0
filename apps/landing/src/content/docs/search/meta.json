@@ -3,9 +3,7 @@
   "pages": [
     "index",
     "search-catalog",
-    "search-quickstart",
-    "search-request-payload",
-    "search-response-object",
-    "pagination"
+    "examples",
+    "advanced"
   ]
 }

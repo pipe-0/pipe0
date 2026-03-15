@@ -1,6 +1,6 @@
 import { LogoRawSmall } from "@/components/logo";
 import { docsLinkPaths } from "@pipe0/docs-links";
-import { ArrowRight, BookOpen, Search, Zap } from "lucide-react";
+import { ArrowRight, BookOpen, FileCode2, Search, Zap } from "lucide-react";
 import Link from "next/link";
 
 const sections = [
@@ -66,6 +66,21 @@ export function DocsIndexPage() {
             </div>
           </Link>
         ))}
+      </div>
+
+      {/* OpenAPI */}
+      <div className="mb-12">
+        <h2 className="text-lg font-semibold mb-2">OpenAPI</h2>
+        <p className="text-sm text-muted-foreground mb-3">
+          Generate a typed API client from our OpenAPI specification.
+        </p>
+        <Link
+          href="https://api.pipe0.com/openapi"
+          className="inline-flex items-center gap-2 text-sm font-medium no-underline hover:underline"
+        >
+          <FileCode2 className="size-4" strokeWidth={1.5} />
+          https://api.pipe0.com/openapi
+        </Link>
       </div>
     </div>
   );
