@@ -7,8 +7,8 @@ settings:
 catalogs:
   default:
     '@pipe0/client':
-      specifier: 0.0.22
-      version: 0.0.22
+      specifier: 0.0.24
+      version: 0.0.24
     '@pipe0/ops':
       specifier: 0.0.20
       version: 0.0.20
@@ -52,7 +52,7 @@ importers:
         version: 16.1.6(@mdx-js/loader@3.1.0(acorn@8.15.0))(@mdx-js/react@3.1.0(@types/react@19.2.14)(react@19.2.4))
       '@pipe0/client':
         specifier: 'catalog:'
-        version: 0.0.22
+        version: 0.0.24
       '@pipe0/docs-links':
         specifier: workspace:*
         version: link:../../packages/docs-links
@@ -255,9 +255,9 @@ importers:
 
   examples/typescript/basic-script:
     dependencies:
-      openapi-fetch:
-        specifier: ^0.14.0
-        version: 0.14.0
+      '@pipe0/client':
+        specifier: 0.0.24
+        version: 0.0.24
     devDependencies:
       openapi-typescript:
         specifier: ^7.8.0
@@ -272,8 +272,8 @@ importers:
   examples/typescript/basic-search-example:
     dependencies:
       '@pipe0/ops':
-        specifier: 'catalog:'
-        version: 0.0.20
+        specifier: latest
+        version: 0.0.21
       '@tailwindcss/vite':
         specifier: ^4.1.11
         version: 4.1.11(vite@7.0.6(@types/node@20.17.17)(jiti@2.6.1)(lightningcss@1.30.2)(yaml@2.8.1))
@@ -327,8 +327,8 @@ importers:
   examples/typescript/form-example:
     dependencies:
       '@pipe0/ops':
-        specifier: 'catalog:'
-        version: 0.0.20
+        specifier: latest
+        version: 0.0.21
       '@types/react':
         specifier: ^19.2.14
         version: 19.2.14
@@ -2079,8 +2079,17 @@ packages:
   '@pipe0/client@0.0.22':
     resolution: {integrity: sha512-l6KkGjUu+Ax6t5C6AxvBVj8UuhIZkKcRWMI/LXM3fWciGFtZ3gUQMl4+0qrp/jMnST2cj6AFi4rZWur8EN49iw==}
 
+  '@pipe0/client@0.0.23':
+    resolution: {integrity: sha512-EeHp2Dkj76IpGpfaQdypHf8w0rudLKQHsIQI3ektliR1euOb+rNGJTC/+WnfCQTiW50oRF/kjChkOONZpOj2fw==}
+
+  '@pipe0/client@0.0.24':
+    resolution: {integrity: sha512-SuMfC+3Gemh/DiJ4hmSawJNkFVYUEOUovusLE3PrY1mzPlZwamYVDcqyHk7NtpwyItR/RQ1Z4tf4jJAi1dkl8Q==}
+
   '@pipe0/ops@0.0.20':
     resolution: {integrity: sha512-NCps1WlhV28cvnys9NJ09v/UDwbfUYJFETiDqdTw7FhtOY1XMoJQkvwEAsbxXszCdezJyiKozhTfNqJ1CsdsLQ==}
+
+  '@pipe0/ops@0.0.21':
+    resolution: {integrity: sha512-f0uj8LA5RaqlfNU+towvB2ogqREeWYnFkVD4YUvTbGGAaTSpqadfZbSvGEeBVRp8a/c0xDztaDeptXEenCDAAA==}
 
   '@pipe0/react-sdk@0.0.89':
     resolution: {integrity: sha512-Q3gJTym3ULuNr6AeGgi0/RzWwtC9u2OYdtmHod4uCO4wv528G3Khlr0LZfzYEJJlOmz19aPMLNEY1NDQudF/lw==}
@@ -6308,9 +6317,6 @@ packages:
   oniguruma-to-es@4.3.4:
     resolution: {integrity: sha512-3VhUGN3w2eYxnTzHn+ikMI+fp/96KoRSVK9/kMTcFqj1NRDh2IhQCKvYxDnWePKRXY/AqH+Fuiyb7VHSzBjHfA==}
 
-  openapi-fetch@0.14.0:
-    resolution: {integrity: sha512-PshIdm1NgdLvb05zp8LqRQMNSKzIlPkyMxYFxwyHR+UlKD4t2nUjkDhNxeRbhRSEd3x5EUNh2w5sJYwkhOH4fg==}
-
   openapi-fetch@0.15.0:
     resolution: {integrity: sha512-OjQUdi61WO4HYhr9+byCPMj0+bgste/LtSBEcV6FzDdONTs7x0fWn8/ndoYwzqCsKWIxEZwo4FN/TG1c1rI8IQ==}
 
@@ -9286,10 +9292,33 @@ snapshots:
     dependencies:
       openapi-fetch: 0.15.0
 
+  '@pipe0/client@0.0.23':
+    dependencies:
+      openapi-fetch: 0.15.0
+
+  '@pipe0/client@0.0.24':
+    dependencies:
+      openapi-fetch: 0.15.0
+
   '@pipe0/ops@0.0.20':
     dependencies:
       '@asteasolutions/zod-to-openapi': 8.1.0(zod@4.1.12)
       '@pipe0/client': 0.0.22
+      ajv: 8.17.1
+      date-fns: 4.1.0
+      immer: 10.2.0
+      json-schema-traverse: 1.0.0
+      json-schema-typed: 8.0.2
+      lodash: 4.17.21
+      openapi-fetch: 0.15.0
+      tldts: 7.0.19
+      xxhash-wasm: 1.1.0
+      zod: 4.1.12
+
+  '@pipe0/ops@0.0.21':
+    dependencies:
+      '@asteasolutions/zod-to-openapi': 8.1.0(zod@4.1.12)
+      '@pipe0/client': 0.0.23
       ajv: 8.17.1
       date-fns: 4.1.0
       immer: 10.2.0
@@ -14194,10 +14223,6 @@ snapshots:
       oniguruma-parser: 0.12.1
       regex: 6.0.1
       regex-recursion: 6.0.2
-
-  openapi-fetch@0.14.0:
-    dependencies:
-      openapi-typescript-helpers: 0.0.15
 
   openapi-fetch@0.15.0:
     dependencies:

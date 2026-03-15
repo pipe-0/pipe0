@@ -1,6 +1,6 @@
 import { LogoRawSmall } from "@/components/logo";
-import { docsLinkPaths } from "@pipe0/docs-links";
-import { ArrowRight, BookOpen, Search, Zap } from "lucide-react";
+import { docsLinkPaths, getDocsUrl } from "@pipe0/docs-links";
+import { ArrowRight, BookOpen, FileCode2, Search, Zap } from "lucide-react";
 import Link from "next/link";
 
 const sections = [
@@ -44,7 +44,7 @@ export function DocsIndexPage() {
       </div>
 
       {/* Section cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
         {sections.map((section) => (
           <Link
             key={section.title}
@@ -66,6 +66,36 @@ export function DocsIndexPage() {
             </div>
           </Link>
         ))}
+      </div>
+
+      {/* OpenAPI */}
+      <div className="px-4">
+        <div className="mb-12">
+          <h2 className="text-lg font-semibold mb-2">OpenAPI</h2>
+          <p className="text-sm text-muted-foreground mb-3">
+            Generate a typed API client from our OpenAPI specification.
+          </p>
+          <Link
+            href="https://api.pipe0.com/openapi"
+            className="inline-flex items-center gap-2 text-sm font-medium no-underline hover:underline"
+          >
+            <FileCode2 className="size-4" strokeWidth={1.5} />
+            https://api.pipe0.com/openapi
+          </Link>
+        </div>
+        <div className="mb-12">
+          <h2 className="text-lg font-semibold mb-2">MCP</h2>
+          <p className="text-sm text-muted-foreground mb-3">
+            Access enrichment and search data from an MCP client.
+          </p>
+          <Link
+            href={getDocsUrl("mcp")}
+            className="inline-flex items-center gap-2 text-sm font-medium no-underline hover:underline"
+          >
+            <FileCode2 className="size-4" strokeWidth={1.5} />
+            {getDocsUrl("mcp")}
+          </Link>
+        </div>
       </div>
     </div>
   );

@@ -1,0 +1,9 @@
+{
+  "$schema": "../../../../../.source/json-schema/docs.meta.json",
+  "title": "Advanced",
+  "pages": [
+    "search-request-payload",
+    "search-response-object",
+    "pagination"
+  ]
+}

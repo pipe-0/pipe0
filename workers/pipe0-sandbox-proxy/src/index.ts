@@ -7,20 +7,16 @@ export default {
 		const url = new URL(request.url);
 
 		// Only allow /run and /run/sync paths
-		if (
-			!(
-				url.pathname === '/v1/pipes/run' ||
-				url.pathname === '/v1/pipes/run/sync' ||
-				url.pathname === '/v1/pipes/check' ||
-				url.pathname === '/v1/searches/run/sync' ||
-				url.pathname === '/v1/searches/run' ||
-				url.pathname === '/v1/searches/check' ||
-				url.pathname === '/v1/search/run/sync' ||
-				url.pathname === '/v1/search/run' ||
-				url.pathname === '/v1/search/check'
-			)
-		) {
-			return new Response('Not Found', { status: 404 });
+		const allowedPrefixes = [
+			'/v1/pipes/run',
+			'/v1/pipes/check',
+			'/v1/searches/run',
+			'/v1/searches/check',
+			'/v1/search/run',
+			'/v1/search/check',
+		];
+		if (!allowedPrefixes.some((prefix) => url.pathname.startsWith(prefix))) {
+			return new Response('Not Found', { status: 404, headers: getCorsHeaders() });
 		}
 
 		// Handle preflight CORS requests

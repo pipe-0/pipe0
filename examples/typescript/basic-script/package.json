@@ -10,7 +10,7 @@
     "client:generate": "npx openapi-typescript https://api.pipe0.com/doc -o ./src/schema.ts"
   },
   "dependencies": {
-    "openapi-fetch": "^0.14.0"
+    "@pipe0/client": "0.0.24"
   },
   "devDependencies": {
     "typescript": "~5.8.3",

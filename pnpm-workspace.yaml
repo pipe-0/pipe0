@@ -6,5 +6,5 @@ packages:
   - "workers/*"
 catalog:
   "@pipe0/ops": "0.0.20"
-  "@pipe0/client": "0.0.22"
+  "@pipe0/client": "0.0.24"
   "@pipe0/react-sdk": "0.0.89"

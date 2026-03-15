@@ -123,4 +123,47 @@ Use the same payload for both endpoints. The `/sync` endpoint will try to return
 
 Read more about the trade-offs between <AppLink linkType="async">async vs sync requests</AppLink> here.
 
+## Pagination
+
+Search results are paginated. Every search response includes a `next_page` field — pass it as the `search` payload to fetch the next page. When `next_page` is `null`, there are no more results.
+
+```typescript
+// First request
+const res = await fetch("https://api.pipe0.com/v1/search/run/sync", {
+    method: "POST",
+    headers: {
+        "Authorization": `Bearer ${API_KEY}`,
+        "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+        search: {
+            search_id: "people:profiles:crustdata@1",
+            config: {
+                limit: 25,
+                filters: {
+                    current_job_titles: ["Software Engineer"]
+                }
+            }
+        }
+    })
+});
+
+const page1 = await res.json();
+
+// To get the next page, pass `next_page` as the `search` field
+if (page1.next_page) {
+    const res2 = await fetch("https://api.pipe0.com/v1/search/run/sync", {
+        method: "POST",
+        headers: {
+            "Authorization": `Bearer ${API_KEY}`,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            search: page1.next_page
+        })
+    });
+}
+```
+
+For a full iteration loop and more details, see the <AppLink linkType="pagination">pagination guide</AppLink>.
 
