@@ -1,5 +1,6 @@
 import { source } from "@/lib/source";
 import { DocsLayout } from "fumadocs-ui/layouts/docs";
+import { RootProvider } from "fumadocs-ui/provider/next";
 import { baseOptions, getSection, linkItems } from "@/lib/layout.shared";
 import { LogoRawSmall } from "@/components/logo";
 
@@ -9,6 +10,7 @@ export default function Layout({
   const base = baseOptions();
 
   return (
+    <RootProvider>
     <DocsLayout
       {...base}
       tree={source.getPageTree()}
@@ -52,5 +54,6 @@ export default function Layout({
     >
       {children}
     </DocsLayout>
+    </RootProvider>
   );
 }

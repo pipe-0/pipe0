@@ -10,7 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@pipe0/ops": "catalog:",
+    "@pipe0/ops": "latest",
     "@tailwindcss/vite": "^4.1.11",
     "@tanstack/react-query": "^5.84.1",
     "react": "^19.1.0",

@@ -2,9 +2,7 @@
   "pages": [
     "index",
     "pipes-catalog",
-    "pipes-request-payload",
-    "pipes-response-object",
-    "pipes-concepts",
-    "pipes-inputs"
+    "examples",
+    "advanced"
   ]
 }
