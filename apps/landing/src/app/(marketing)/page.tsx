@@ -139,43 +139,21 @@ export default function Home() {
         {/* Header */}
         <Header page="product" />
         {/* Hero Section */}
-        <section className="pt-12 md:pt-24 lg:pt-8 pb-4 px-4 md:px-6 lg:px-0 relative">
-          <div className="container lg:grid-cols-2 gap-12 items-center mx-auto relative">
-            <div className="space-y-4 md:space-y-6 max-w-3xl">
-              <div className="space-y-2">
-                <h1 className="text-3xl sm:text-4xl md:text-4xl font-serif tracking-tight text-muted-foreground">
-                  <span className="text-foreground font-sans font-medium">
-                    Data enrichment
-                  </span>{" "}
-                  for the next generation of GTM teams & tools
-                </h1>
-                <p className="text-base md:text-lg text-muted-foreground">
-                  AI native, multi-provider, API support, 6-12x more
-                  cost-effective.
-                </p>
-              </div>
-              <div>
-                <div className="flex flex-col sm:flex-row gap-2">
-                  <Link href={docsLinkPaths.docs}>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="w-full sm:w-auto bg-transparent"
-                    >
-                      Read docs
-                    </Button>
-                  </Link>
-                  <Link href={`${appInfo.links.signupUrl}`} rel="nofollow">
-                    <Button
-                      variant="default"
-                      size="sm"
-                      className="w-full sm:w-auto"
-                    >
-                      Start for free
-                    </Button>
-                  </Link>
-                </div>
-              </div>
+        <section className="pt-24 md:pt-6 lg:pt-10 pb-4 md:pb-4 px-4 md:px-6 lg:px-0 relative">
+          <div className="container mx-auto max-w-3xl text-center">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl tracking-tight text-foreground leading-[1.1]">
+              The data <span className="font-serif italic">enrichment</span>{" "}
+              &amp; <span className="font-serif italic">sales automation</span>{" "}
+              framework
+            </h1>
+            <div className="mt-8">
+              <Link
+                href={docsLinkPaths.docs}
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors inline-flex items-center gap-1"
+              >
+                Learn more about building with {appInfo.productName}{" "}
+                <ArrowRight className="size-3.5" />
+              </Link>
             </div>
           </div>
         </section>
@@ -209,10 +187,11 @@ const response = await piper.pipes({
             </div>
 
             <div className="p-4 max-w-lg grow flex flex-col justify-end gap-2 pt-12">
-              <h2 className="text-2xl md:text-2xl text-muted-foreground font-serif">
-                The next generation of CRMs & ATSs is built on{" "}
+              <h2 className="text-2xl md:text-2xl tracking-tight">
+                The <span className="font-serif italic">next generation</span>{" "}
+                of CRMs &amp; ATSs is built on{" "}
                 <span className="text-foreground">
-                  instant access to world-class enrichment & prospecting.
+                  instant access to world-class enrichment &amp; prospecting.
                 </span>
               </h2>
               <p className="text-sm md:text-base text-muted-foreground">
@@ -228,9 +207,12 @@ const response = await piper.pipes({
 
           <div className="relative flex flex-col items-stretch py-4 overflow-hidden lg:col-span-2 bg-background border">
             <div className="grow p-4 max-w-md top-0 left-0">
-              <h2 className="text-2xl md:text-2xl text-muted-foreground font-serif pb-2">
+              <h2 className="text-2xl md:text-2xl pb-2">
                 Sheets: Discover a Clay alternative{" "}
-                <span className="text-foreground">from the future</span>.
+                <span className="text-foreground font-serif italic">
+                  from the future
+                </span>
+                .
               </h2>
               <p className="text-sm md:text-base text-muted-foreground pb-4 md:pb-8">
                 Up to 2M records per table, point-in-time recovery,
@@ -252,14 +234,14 @@ const response = await piper.pipes({
                 </small>
               </div>
             </div>
-            <div className="h-[320px] lg:h-[220px] relative">
+            <div className="h-80 lg:h-55 relative">
               <img
-                className="absolute block w-[600px] lg:w-[600px] max-w-none opacity-70 bottom-0 left-1/2 -translate-x-1/2 from-background bg-linear-to-b"
+                className="absolute block w-150 lg:w-150 max-w-none opacity-70 bottom-0 left-1/2 -translate-x-1/2 from-background bg-linear-to-b"
                 src="/media/website/sheets-preview.svg"
                 alt="Sheets preview"
               />
             </div>
-            <div className="from-background pointer-events-none absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t"></div>
+            <div className="from-background pointer-events-none absolute inset-x-0 bottom-0 h-1/4 bg-linear-to-t"></div>
           </div>
         </section>
       </div>
@@ -295,12 +277,10 @@ const response = await piper.pipes({
       <section className="pt-12 md:pt-18 mb-8 md:mb-12 px-4 md:px-6 lg:px-0">
         <div className="container lg:grid-cols-2 gap-12 items-center mx-auto relative">
           <div className="space-y-4 md:space-y-6 max-w-3xl">
-            <h1 className="text-2xl sm:text-3xl md:text-4xl font-serif tracking-tight text-muted-foreground">
-              Save thousands of hours and access{" "}
-              <span className="text-foreground">
-                the world&apos;s most powerful data model for data enrichment
-              </span>
-              .
+            <h1 className="text-2xl sm:text-3xl md:text-4xl tracking-tight">
+              Save <span className="font-serif italic">thousands of hours</span>{" "}
+              and access the world&apos;s most powerful data model for data
+              enrichment.
             </h1>
           </div>
         </div>
@@ -309,11 +289,9 @@ const response = await piper.pipes({
           <div className="md:col-span-2 lg:col-span-8 border p-4 bg-accent">
             <div className="flex flex-col md:flex-row items-start justify-between pb-3 gap-3">
               <div>
-                <h3 className="text-xl md:text-2xl text-muted-foreground font-serif">
-                  Find{" "}
-                  <span className="text-foreground">
-                    who you are looking for
-                  </span>
+                <h3 className="text-xl md:text-2xl tracking-tight">
+                  <span className="font-serif italic">Find</span> who you are
+                  looking for
                 </h3>
                 <p className="text-sm md:text-base text-muted-foreground">
                   Search for people and companies using multiple providers.
@@ -333,8 +311,8 @@ const response = await piper.pipes({
           </div>
 
           <div className="md:col-span-2 lg:col-span-4 border p-4 relative min-h-[300px] md:min-h-[400px]">
-            <h3 className="text-xl md:text-2xl text-muted-foreground font-serif">
-              Integrate. Fast.
+            <h3 className="text-xl md:text-2xl tracking-tight">
+              Integrate. <span className="font-serif italic">Fast.</span>
             </h3>
 
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-[90%] md:max-w-[80%] flex gap-2 md:gap-3 overflow-hidden justify-center">
@@ -356,8 +334,8 @@ const response = await piper.pipes({
           </div>
 
           <div className="md:col-span-2 lg:col-span-7 min-h-[200px] p-4 relative">
-            <h3 className="text-xl md:text-2xl text-muted-foreground font-serif pb-4">
-              And action 🎬
+            <h3 className="text-xl md:text-2xl tracking-tight pb-4">
+              And <span className="font-serif italic">action</span> 🎬
             </h3>
 
             <div className="bottom-0 w-full flex flex-col md:flex-row justify-start gap-4 items-start md:items-end">
@@ -401,9 +379,9 @@ const response = await piper.pipes({
 
           <div className="md:col-span-2 lg:col-span-5 lg:row-span-2 border p-4 bg-accent relative min-h-[400px]">
             <div className="pb-4">
-              <h3 className="text-xl md:text-2xl text-muted-foreground font-serif">
-                Enrich{" "}
-                <span className="text-foreground">company and people data</span>
+              <h3 className="text-xl md:text-2xl tracking-tight">
+                <span className="font-serif italic">Enrich</span> company and
+                people data
               </h3>
               <p className="text-muted-foreground text-sm pb-4">
                 Compose hundreds of enrichments to get the data you want.
@@ -419,11 +397,9 @@ const response = await piper.pipes({
           </div>
 
           <div className="md:col-span-2 lg:col-span-7 lg:row-span-1 min-h-[200px] lg:max-h-[200px] lg:self-end p-4 border rounded-sm flex flex-col justify-between relative">
-            <h3 className="text-xl md:text-2xl text-muted-foreground font-serif">
-              Get started for free.{" "}
-              <span className="text-foreground">
-                Your first 20 credits are on us.
-              </span>
+            <h3 className="text-xl md:text-2xl tracking-tight">
+              Get started <span className="font-serif italic">for free.</span>{" "}
+              Your first 20 credits are on us.
             </h3>
             <div className="mt-4 md:mt-0 md:absolute md:right-0 md:bottom-0 md:p-4">
               <Link href={appInfo.links.signupUrl}>
@@ -441,8 +417,9 @@ const response = await piper.pipes({
         <div className="absolute inset-0 bg-accent dark:bg-gradient-to-b dark:from-blue-600/10 dark:via-purple-600/10 dark:to-background" />
         <div className="container relative mx-auto">
           <div className="max-w-2xl mx-auto text-center">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif mb-6 md:mb-8">
-              Get a personalized tour of {appInfo.productName}
+            <h2 className="text-2xl sm:text-3xl md:text-4xl tracking-tight mb-6 md:mb-8">
+              Get a <span className="font-serif italic">personalized</span> tour
+              of {appInfo.productName}
             </h2>
 
             <CalButton>
