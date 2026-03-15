@@ -3,7 +3,6 @@ import { Analytics } from "@vercel/analytics/react";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { getBaseUrl } from "@/lib/utils";
-import { RootProvider } from "fumadocs-ui/provider/next";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -33,11 +32,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <RootProvider>
-          {children}
-          <Analytics />
-          <Toaster />
-        </RootProvider>
+        {children}
+        <Analytics />
+        <Toaster />
       </body>
     </html>
   );
