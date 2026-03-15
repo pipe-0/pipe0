@@ -6,6 +6,7 @@
     "authentication",
     "billing",
     "connections",
+    "mcp",
     "---API Reference---",
     "...(api)"
   ]

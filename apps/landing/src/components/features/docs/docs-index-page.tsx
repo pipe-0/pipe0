@@ -44,7 +44,7 @@ export function DocsIndexPage() {
       </div>
 
       {/* Section cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
         {sections.map((section) => (
           <Link
             key={section.title}
@@ -69,18 +69,20 @@ export function DocsIndexPage() {
       </div>
 
       {/* OpenAPI */}
-      <div className="mb-12">
-        <h2 className="text-lg font-semibold mb-2">OpenAPI</h2>
-        <p className="text-sm text-muted-foreground mb-3">
-          Generate a typed API client from our OpenAPI specification.
-        </p>
-        <Link
-          href="https://api.pipe0.com/openapi"
-          className="inline-flex items-center gap-2 text-sm font-medium no-underline hover:underline"
-        >
-          <FileCode2 className="size-4" strokeWidth={1.5} />
-          https://api.pipe0.com/openapi
-        </Link>
+      <div className="px-4">
+        <div className="mb-12">
+          <h2 className="text-lg font-semibold mb-2">OpenAPI</h2>
+          <p className="text-sm text-muted-foreground mb-3">
+            Generate a typed API client from our OpenAPI specification.
+          </p>
+          <Link
+            href="https://api.pipe0.com/openapi"
+            className="inline-flex items-center gap-2 text-sm font-medium no-underline hover:underline"
+          >
+            <FileCode2 className="size-4" strokeWidth={1.5} />
+            https://api.pipe0.com/openapi
+          </Link>
+        </div>
       </div>
     </div>
   );
