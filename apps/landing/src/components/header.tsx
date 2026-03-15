@@ -15,7 +15,6 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { appInfo } from "@/lib/const";
-import { BetaAnnouncementBanner } from "@/components/features/announcements/banners/beta-announcement-banner";
 
 // Navigation items array for better maintainability
 const navigationItems = [
@@ -43,7 +42,7 @@ export function Header({}: {
               <Link
                 key={item.href}
                 href={item.href}
-                className="text-sm text-muted-foreground hover:text-foreground transition-colors p-2"
+                className="text-sm hover:text-foreground p-2 hover:scale-105 transition-all"
               >
                 {item.label}
               </Link>

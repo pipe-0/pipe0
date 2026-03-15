@@ -4,6 +4,7 @@ import CalButton from "@/components/cal-button";
 import { DynamicCodeBlock } from "@/components/features/docs/dynamic-code-block";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
+import { LogoRawSmall } from "@/components/logo";
 
 import { Button } from "@/components/ui/button";
 import { CodeBlock } from "@/components/ui/code-block";
@@ -151,7 +152,8 @@ export default function Home() {
                 href={docsLinkPaths.docs}
                 className="text-sm text-muted-foreground hover:text-foreground transition-colors inline-flex items-center gap-1"
               >
-                Learn more about building with {appInfo.productName}{" "}
+                Learn more about building with{" "}
+                <LogoRawSmall className="size-5" />
                 <ArrowRight className="size-3.5" />
               </Link>
             </div>
@@ -215,13 +217,12 @@ const response = await piper.pipes({
                 .
               </h2>
               <p className="text-sm md:text-base text-muted-foreground pb-4 md:pb-8">
-                Up to 2M records per table, point-in-time recovery,
-                multi-player, API support, and sandbox mode–
-                <span className="text-foreground">
-                  we&apos;re building the most powerful data table in the world.
-                </span>
+                Up to{" "}
+                <span className="text-foreground">2M records per table</span>,
+                point-in-time recovery, multi-player, API support, and sandbox
+                mode.
               </p>
-              <div>
+              <div className="">
                 <div>
                   <Link href={`${appInfo.links.signupUrl}`} rel="nofollow">
                     <Button size="sm" className="w-full sm:w-auto">
@@ -399,7 +400,7 @@ const response = await piper.pipes({
           <div className="md:col-span-2 lg:col-span-7 lg:row-span-1 min-h-[200px] lg:max-h-[200px] lg:self-end p-4 border rounded-sm flex flex-col justify-between relative">
             <h3 className="text-xl md:text-2xl tracking-tight">
               Get started <span className="font-serif italic">for free.</span>{" "}
-              Your first 20 credits are on us.
+              The first 20 credits are on us.
             </h3>
             <div className="mt-4 md:mt-0 md:absolute md:right-0 md:bottom-0 md:p-4">
               <Link href={appInfo.links.signupUrl}>
