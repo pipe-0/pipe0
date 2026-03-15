@@ -279,10 +279,9 @@ const response = await piper.pipes({
         <div className="container lg:grid-cols-2 gap-12 items-center mx-auto relative">
           <div className="space-y-4 md:space-y-6 max-w-3xl">
             <h1 className="text-2xl sm:text-3xl md:text-4xl tracking-tight">
-              <span className="font-serif italic">
-                The world&apos;s most powerful
-              </span>{" "}
-              data model for enrichment & automation.
+              A <span className="font-serif italic">unified data model</span>{" "}
+              for enrichment & automation that{" "}
+              <span className="font-serif italic">scales</span>.
             </h1>
           </div>
         </div>
