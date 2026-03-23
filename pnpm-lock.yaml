@@ -7,14 +7,14 @@ settings:
 catalogs:
   default:
     '@pipe0/client':
-      specifier: 0.0.24
-      version: 0.0.24
+      specifier: 0.0.25
+      version: 0.0.25
     '@pipe0/ops':
-      specifier: 0.0.20
-      version: 0.0.20
+      specifier: 0.0.23
+      version: 0.0.23
     '@pipe0/react-sdk':
-      specifier: 0.0.89
-      version: 0.0.89
+      specifier: 0.0.92
+      version: 0.0.92
 
 importers:
 
@@ -52,16 +52,16 @@ importers:
         version: 16.1.6(@mdx-js/loader@3.1.0(acorn@8.15.0))(@mdx-js/react@3.1.0(@types/react@19.2.14)(react@19.2.4))
       '@pipe0/client':
         specifier: 'catalog:'
-        version: 0.0.24
+        version: 0.0.25
       '@pipe0/docs-links':
         specifier: workspace:*
         version: link:../../packages/docs-links
       '@pipe0/ops':
         specifier: 'catalog:'
-        version: 0.0.20
+        version: 0.0.23
       '@pipe0/react-sdk':
         specifier: 'catalog:'
-        version: 0.0.89
+        version: 0.0.92
       '@radix-ui/react-accordion':
         specifier: ^1.2.3
         version: 1.2.3(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -2076,23 +2076,23 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@pipe0/client@0.0.22':
-    resolution: {integrity: sha512-l6KkGjUu+Ax6t5C6AxvBVj8UuhIZkKcRWMI/LXM3fWciGFtZ3gUQMl4+0qrp/jMnST2cj6AFi4rZWur8EN49iw==}
-
   '@pipe0/client@0.0.23':
     resolution: {integrity: sha512-EeHp2Dkj76IpGpfaQdypHf8w0rudLKQHsIQI3ektliR1euOb+rNGJTC/+WnfCQTiW50oRF/kjChkOONZpOj2fw==}
 
   '@pipe0/client@0.0.24':
     resolution: {integrity: sha512-SuMfC+3Gemh/DiJ4hmSawJNkFVYUEOUovusLE3PrY1mzPlZwamYVDcqyHk7NtpwyItR/RQ1Z4tf4jJAi1dkl8Q==}
 
-  '@pipe0/ops@0.0.20':
-    resolution: {integrity: sha512-NCps1WlhV28cvnys9NJ09v/UDwbfUYJFETiDqdTw7FhtOY1XMoJQkvwEAsbxXszCdezJyiKozhTfNqJ1CsdsLQ==}
+  '@pipe0/client@0.0.25':
+    resolution: {integrity: sha512-4qTS/v3GkOBfKzi3HbZoTXO7LHpgMQCZOy2quVzeOUEmmdPUrPSqD9lY9UeJPjfdWI47R7j+erHZ5FIF9mWVeQ==}
 
   '@pipe0/ops@0.0.21':
     resolution: {integrity: sha512-f0uj8LA5RaqlfNU+towvB2ogqREeWYnFkVD4YUvTbGGAaTSpqadfZbSvGEeBVRp8a/c0xDztaDeptXEenCDAAA==}
 
-  '@pipe0/react-sdk@0.0.89':
-    resolution: {integrity: sha512-Q3gJTym3ULuNr6AeGgi0/RzWwtC9u2OYdtmHod4uCO4wv528G3Khlr0LZfzYEJJlOmz19aPMLNEY1NDQudF/lw==}
+  '@pipe0/ops@0.0.23':
+    resolution: {integrity: sha512-eaaEFbSxNL8LzpS4qnHbyJLm0Xn85EtpZIUi8JTnRmzB+Vd2kkBA+bgJsXs0yRwEl/4kuq5U9iMxBehlynW4oQ==}
+
+  '@pipe0/react-sdk@0.0.92':
+    resolution: {integrity: sha512-NVKswZQU77UNNX1ecTuTbZIVutu591zWje2q+YpVcarJNzDNgDAfXMB6YkhUY6uEfPcAKscH99wb+Ol4B39kNA==}
 
   '@radix-ui/number@1.1.1':
     resolution: {integrity: sha512-MkKCwxlXTgz6CFoJx3pCwn07GKp36+aZyu/u2Ln2VrA5DcdyCZkASEDBTd8x5whTQQL5CiYf4prXKLcgQdv29g==}
@@ -9288,10 +9288,6 @@ snapshots:
   '@oxc-transform/binding-win32-x64-msvc@0.112.0':
     optional: true
 
-  '@pipe0/client@0.0.22':
-    dependencies:
-      openapi-fetch: 0.15.0
-
   '@pipe0/client@0.0.23':
     dependencies:
       openapi-fetch: 0.15.0
@@ -9300,20 +9296,9 @@ snapshots:
     dependencies:
       openapi-fetch: 0.15.0
 
-  '@pipe0/ops@0.0.20':
+  '@pipe0/client@0.0.25':
     dependencies:
-      '@asteasolutions/zod-to-openapi': 8.1.0(zod@4.1.12)
-      '@pipe0/client': 0.0.22
-      ajv: 8.17.1
-      date-fns: 4.1.0
-      immer: 10.2.0
-      json-schema-traverse: 1.0.0
-      json-schema-typed: 8.0.2
-      lodash: 4.17.21
       openapi-fetch: 0.15.0
-      tldts: 7.0.19
-      xxhash-wasm: 1.1.0
-      zod: 4.1.12
 
   '@pipe0/ops@0.0.21':
     dependencies:
@@ -9330,9 +9315,24 @@ snapshots:
       xxhash-wasm: 1.1.0
       zod: 4.1.12
 
-  '@pipe0/react-sdk@0.0.89':
+  '@pipe0/ops@0.0.23':
     dependencies:
-      '@pipe0/ops': 0.0.20
+      '@asteasolutions/zod-to-openapi': 8.1.0(zod@4.1.12)
+      '@pipe0/client': 0.0.25
+      ajv: 8.17.1
+      date-fns: 4.1.0
+      immer: 10.2.0
+      json-schema-traverse: 1.0.0
+      json-schema-typed: 8.0.2
+      lodash: 4.17.21
+      openapi-fetch: 0.15.0
+      tldts: 7.0.19
+      xxhash-wasm: 1.1.0
+      zod: 4.1.12
+
+  '@pipe0/react-sdk@0.0.92':
+    dependencies:
+      '@pipe0/ops': 0.0.23
       '@tanstack/match-sorter-utils': 8.19.4
       '@tanstack/react-table': 8.21.3(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       lucide-react: 0.475.0(react@19.2.4)

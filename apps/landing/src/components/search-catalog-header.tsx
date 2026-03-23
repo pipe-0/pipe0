@@ -1,7 +1,4 @@
-import {
-  searchMiniSpec,
-  searchSnippetCatalog,
-} from "@/lib/search/snippet-catalog";
+import { searchMiniSpec } from "@/lib/search/snippet-catalog";
 import { videoCatalog } from "@/lib/search/video-catalog";
 import { PayloadDocumenation } from "@/components/config-documentation";
 import { ApiRequestCodeExample } from "@/components/features/docs/api-request-code-example";
@@ -40,6 +37,7 @@ import {
   providerCatalog,
   searchCatalog,
   SearchId,
+  searchSnippetCatalog,
 } from "@pipe0/ops";
 import { Tabs, Tab } from "fumadocs-ui/components/tabs";
 import { useMemo } from "react";
@@ -211,7 +209,7 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
         <ApiRequestCodeExample
           oas={searchMiniSpec}
           operation={searchMiniSpec.operation("/v1/search/run", "post")}
-          harData={{ body: searchSnippetCatalog[searchId] }}
+          harData={{ body: searchSnippetCatalog[searchId][0] }}
         />
       </div>
 

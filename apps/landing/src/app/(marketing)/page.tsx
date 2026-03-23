@@ -7,7 +7,6 @@ import { Header } from "@/components/header";
 import { LogoRawSmall } from "@/components/logo";
 
 import { Button } from "@/components/ui/button";
-import { CodeBlock } from "@/components/ui/code-block";
 import { appInfo } from "@/lib/const";
 import { docsLinkPaths } from "@pipe0/docs-links";
 import { providerCatalog } from "@pipe0/ops";
@@ -143,9 +142,9 @@ export default function Home() {
         <section className="pt-24 md:pt-6 lg:pt-10 pb-4 md:pb-4 px-4 md:px-6 lg:px-0 relative">
           <div className="container mx-auto max-w-3xl text-center">
             <h1 className="text-4xl sm:text-5xl md:text-6xl tracking-tight text-foreground leading-[1.1]">
-              The <span className="font-serif italic">data enrichment</span>{" "}
-              &amp; <span className="font-serif italic">sales automation</span>{" "}
-              framework
+              Add <span className="font-serif italic">clay-like🦄</span> data
+              enrichment to your application.{" "}
+              <span className="font-serif italic">Fast</span>.
             </h1>
             <div className="mt-8">
               <Link

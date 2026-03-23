@@ -31,7 +31,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { docsLinkPaths } from "@pipe0/docs-links";
-import { pipesMiniSpec, snippetCatalog } from "@/lib/pipes/snippet-catalog";
+import { pipesMiniSpec } from "@/lib/pipes/snippet-catalog";
 import { videoCatalog } from "@/lib/pipes/video-catalog";
 import { formatCredits } from "@/lib/utils";
 import {
@@ -47,6 +47,7 @@ import {
   getPipePayloadFormConfig,
   PipeId,
   PipePayload,
+  pipesSnippetCatalog,
   providerCatalog,
   sortPipeCatalogByBasePipe,
   validatePipesOrError,
@@ -100,7 +101,7 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
 
   const formConfig = useMemo(() => {
     try {
-      const payload = snippetCatalog[pipeId].pipes[0];
+      const payload = pipesSnippetCatalog[pipeId][0].pipes[0];
       const validationContext = validatePipesOrError({
         config: {
           environment: "production",
@@ -161,10 +162,12 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
               <TableRow>
                 <TableHead>Provider</TableHead>
                 <TableHead>
-                  Billing Mode <InlineDocsBadge href={docsLinkPaths.billingMode} />
+                  Billing Mode{" "}
+                  <InlineDocsBadge href={docsLinkPaths.billingMode} />
                 </TableHead>
                 <TableHead>
-                  Connection <InlineDocsBadge href={docsLinkPaths.connections} />
+                  Connection{" "}
+                  <InlineDocsBadge href={docsLinkPaths.connections} />
                 </TableHead>
                 <TableHead>
                   Cost per operation{" "}
@@ -465,7 +468,7 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
         <ApiRequestCodeExample
           oas={pipesMiniSpec}
           operation={pipesMiniSpec.operation("/v1/pipes/run", "post")}
-          harData={{ body: snippetCatalog[pipeId] }}
+          harData={{ body: pipesSnippetCatalog[pipeId][0] }}
         />
       </div>
 
