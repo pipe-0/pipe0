@@ -17,7 +17,7 @@
     "@mdx-js/react": "^3.1.0",
     "@next/mdx": "16.1.6",
     "@pipe0/docs-links": "workspace:*",
-    "@pipe0/ops": "catalog:",
+    "@pipe0/elements": "catalog:",
     "@pipe0/client": "catalog:",
     "@pipe0/react-sdk": "catalog:",
     "@radix-ui/react-accordion": "^1.2.3",

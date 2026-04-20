@@ -38,7 +38,7 @@ import {
   searchCatalog,
   SearchId,
   searchSnippetCatalog,
-} from "@pipe0/ops";
+} from "@pipe0/elements";
 import { Tabs, Tab } from "fumadocs-ui/components/tabs";
 import { useMemo } from "react";
 import { DynamicCodeBlock } from "@/components/features/docs/dynamic-code-block";

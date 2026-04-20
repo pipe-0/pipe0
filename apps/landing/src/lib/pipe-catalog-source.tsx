@@ -9,7 +9,7 @@ import {
   pipeCatalog,
   PipeId,
   providerCatalog,
-} from "@pipe0/ops";
+} from "@pipe0/elements";
 
 interface PipeCatalogPageData {
   title: string;

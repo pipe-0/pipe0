@@ -3,7 +3,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { copyToClipboard } from "@/lib/utils";
-import { PayloadSelectOption } from "@pipe0/ops";
+import { PayloadSelectOption } from "@pipe0/elements";
 import { Copy } from "lucide-react";
 
 export function OptionsSection({

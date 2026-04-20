@@ -1,5 +1,5 @@
 import { PipeCatalogHeader } from "@/components/pipe-catalog-header";
-import type { PipeId } from "@pipe0/ops";
+import type { PipeId } from "@pipe0/elements";
 import { DocsPage } from "fumadocs-ui/layouts/docs/page";
 
 export async function PipeEntryPage({ pipeId }: { pipeId: string }) {

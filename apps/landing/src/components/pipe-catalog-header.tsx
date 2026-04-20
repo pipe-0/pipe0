@@ -51,7 +51,7 @@ import {
   providerCatalog,
   sortPipeCatalogByBasePipe,
   validatePipesOrError,
-} from "@pipe0/ops";
+} from "@pipe0/elements";
 import { Tabs, Tab } from "fumadocs-ui/components/tabs";
 import { Download, Terminal, Upload } from "lucide-react";
 import Link from "next/link";

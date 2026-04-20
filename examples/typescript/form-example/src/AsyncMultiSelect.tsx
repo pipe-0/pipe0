@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import type { AsyncMultiSelectMetadata } from "@pipe0/ops";
+import type { AsyncMultiSelectMetadata } from "@pipe0/elements";
 
 /**
  * Minimal async multi-select component.

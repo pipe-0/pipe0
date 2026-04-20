@@ -46,7 +46,7 @@ import {
   PipeId,
   providerCatalog,
   ProviderName,
-} from "@pipe0/ops";
+} from "@pipe0/elements";
 import { usePipeCatalogTable } from "@pipe0/react-sdk";
 import {
   ArrowDown,

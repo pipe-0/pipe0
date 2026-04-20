@@ -3,7 +3,7 @@ import {
   getSearchVersion,
   searchCatalog,
   SearchId,
-} from "@pipe0/ops";
+} from "@pipe0/elements";
 
 export type SearchEntry = {
   baseSearch: string;

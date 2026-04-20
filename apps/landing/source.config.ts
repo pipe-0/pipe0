@@ -11,7 +11,7 @@ import lastModified from "fumadocs-mdx/plugins/last-modified";
 import { RemarkAutoTypeTableOptions } from "fumadocs-typescript";
 import type { ElementContent } from "hast";
 import type { ShikiTransformer } from "shiki";
-import z from "zod";
+import { z } from "zod";
 
 function transformerEscape(): ShikiTransformer {
   return {

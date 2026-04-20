@@ -42,7 +42,7 @@ import {
   RECORD_FIELD_TYPES,
   SelectMetadata,
   TextMetadata,
-} from "@pipe0/ops";
+} from "@pipe0/elements";
 import { Calendar, FileText, Hash, List, ToggleLeft, Type } from "lucide-react";
 import { PropsWithChildren, useMemo } from "react";
 
