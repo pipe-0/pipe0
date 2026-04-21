@@ -7,49 +7,25 @@ import {
 } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
 import {
-  DateRangeMetadata,
-  ExactRangeMetadata,
   FormSection,
-  GeneratedFormElement,
-  IntegerMetadata,
-  isAsyncMultiSelectField,
-  isBooleanField,
-  isNullableBooleanField,
-  isConnectorField,
-  isDateRangeField,
-  isExactRangeField,
-  isIncludeExcludeField,
-  isIncludeExcludeSelectField,
-  isIntegerField,
-  isProvidersField,
-  isJsonExtractionField,
-  isJsonSchemaInput,
-  isMultiCreateField,
-  isMultiSelectField,
-  isAsyncIncludeExcludeSelectField,
-  isNumberField,
-  isOrderedMultiCreateField,
-  isOutputField,
-  isPipeTriggerField,
-  isRangeField,
-  isSelectField,
-  isTextareaField,
-  isTextField,
-  MultiSelectMetadata,
-  NumberMetadata,
-  RangeMetadata,
+  GeneratedInputMeta,
+  GeneratedInputMetaMap,
+  inputGuards,
   RECORD_FIELD_FORMATS,
   RECORD_FIELD_TYPES,
-  SelectMetadata,
-  TextMetadata,
 } from "@pipe0/elements";
 import { Calendar, FileText, Hash, List, ToggleLeft, Type } from "lucide-react";
 import { PropsWithChildren, useMemo } from "react";
 
 const isNumericField = (
-  field: GeneratedFormElement,
-): field is RangeMetadata | IntegerMetadata | NumberMetadata =>
-  isRangeField(field) || isIntegerField(field) || isNumberField(field);
+  field: GeneratedInputMeta,
+): field is
+  | GeneratedInputMetaMap["range_input"]
+  | GeneratedInputMetaMap["int_input"]
+  | GeneratedInputMetaMap["number_input"] =>
+  inputGuards.range_input(field) ||
+  inputGuards.int_input(field) ||
+  inputGuards.number_input(field);
 
 const FIELD_ICONS = {
   include_exclude_input: List,
@@ -112,7 +88,7 @@ const generateJsonSchemaExample = (fieldName: string) => `{
 
 const generateExactRangeExample = (
   fieldName: string,
-  field: ExactRangeMetadata,
+  field: GeneratedInputMetaMap["exact_range_input"],
 ) => `{
   "${fieldName}": {
     "gt": ${field.min || 0},
@@ -120,7 +96,10 @@ const generateExactRangeExample = (
   }
 }`;
 
-const generateRangeExample = (fieldName: string, field: RangeMetadata) => `{
+const generateRangeExample = (
+  fieldName: string,
+  field: GeneratedInputMetaMap["range_input"],
+) => `{
   "${fieldName}": {
     "from": ${field.min || 0},
     "to": ${field.max || 100},
@@ -148,14 +127,17 @@ const generateTextExample = (fieldName: string) => `{
   "${fieldName}": "example text"
 }`;
 
-const generateSelectExample = (fieldName: string, field: SelectMetadata) =>
+const generateSelectExample = (
+  fieldName: string,
+  field: GeneratedInputMetaMap["select_input"],
+) =>
   `{
   "${fieldName}": "option1"
 }`;
 
 const generateMultiSelectExample = (
   fieldName: string,
-  field: MultiSelectMetadata,
+  field: GeneratedInputMetaMap["multi_select_input"],
 ) => {
   if (Array.isArray(field.options) === false) return "";
 
@@ -186,7 +168,9 @@ const generateOrderedMultiCreateExample = (fieldName: string) => {
 
 const generateNumericExample = (
   fieldName: string,
-  field: IntegerMetadata | NumberMetadata,
+  field:
+    | GeneratedInputMetaMap["int_input"]
+    | GeneratedInputMetaMap["number_input"],
 ) => `{
   "${fieldName}": ${field.min || 0}
 }`;
@@ -227,74 +211,77 @@ const generatePipeTriggerExample = (fieldName: string) => `{
   }
 }`;
 
-function generateCodeExample(field: GeneratedFormElement): string {
+function generateCodeExample(field: GeneratedInputMeta): string {
   const pathParts = field.path.split(".");
   const fieldName = pathParts[pathParts.length - 1];
 
-  if (isIncludeExcludeField(field) || isIncludeExcludeSelectField(field)) {
+  if (
+    inputGuards.include_exclude_input(field) ||
+    inputGuards.include_exclude_select_input(field)
+  ) {
     return generateIncludeExcludeExample(fieldName);
   }
-  if (isConnectorField(field)) {
+  if (inputGuards.connector_input(field)) {
     return generateConnectorExample(fieldName);
   }
-  if (isPipeTriggerField(field)) {
+  if (inputGuards.pipes_trigger_input(field)) {
     return generatePipeTriggerExample(fieldName);
   }
-  if (isProvidersField(field)) {
+  if (inputGuards.providers_input(field)) {
     return generateProvidersExample(fieldName);
   }
-  if (isExactRangeField(field)) {
+  if (inputGuards.exact_range_input(field)) {
     return generateExactRangeExample(fieldName, field);
   }
-  if (isRangeField(field)) {
+  if (inputGuards.range_input(field)) {
     return generateRangeExample(fieldName, field);
   }
-  if (isDateRangeField(field)) {
+  if (inputGuards.date_range_input(field)) {
     return generateDateRangeExample(fieldName);
   }
-  if (isBooleanField(field)) {
+  if (inputGuards.boolean_input(field)) {
     return generateBooleanExample(fieldName);
   }
-  if (isNullableBooleanField(field)) {
+  if (inputGuards.nullable_boolean_input(field)) {
     return generateBooleanExample(fieldName);
   }
-  if (isTextField(field) || isTextareaField(field)) {
+  if (inputGuards.text_input(field) || inputGuards.textarea_input(field)) {
     return generateTextExample(fieldName);
   }
-  if (isSelectField(field)) {
+  if (inputGuards.select_input(field)) {
     return generateSelectExample(fieldName, field);
   }
 
-  if (isMultiSelectField(field)) {
+  if (inputGuards.multi_select_input(field)) {
     return generateMultiSelectExample(fieldName, field);
   }
 
-  if (isAsyncIncludeExcludeSelectField(field)) {
+  if (inputGuards.async_include_exclude_select_input(field)) {
     return generateAsyncInlcudeExcludeSelectFieldExample(fieldName);
   }
 
-  if (isAsyncMultiSelectField(field)) {
+  if (inputGuards.async_multi_select_input(field)) {
     return generateAsyncMultiSelectExample(fieldName);
   }
 
-  if (isOrderedMultiCreateField(field)) {
+  if (inputGuards.ordered_multi_create_input(field)) {
     return generateOrderedMultiCreateExample(fieldName);
   }
 
-  if (isMultiCreateField(field)) {
+  if (inputGuards.multi_create_input(field)) {
     return generateOrderedMultiCreateExample(fieldName);
   }
 
-  if (isIntegerField(field) || isNumberField(field)) {
+  if (inputGuards.int_input(field) || inputGuards.number_input(field)) {
     return generateNumericExample(fieldName, field);
   }
-  if (isJsonExtractionField(field)) {
+  if (inputGuards.json_extraction_input(field)) {
     return generateJsonExtractionExample(fieldName);
   }
-  if (isJsonSchemaInput(field)) {
+  if (inputGuards.json_schema_input(field)) {
     return generateJsonSchemaExample(fieldName);
   }
-  if (isOutputField(field)) {
+  if (inputGuards.output_field_input(field)) {
     return generateOutputFieldExmple(fieldName);
   }
 
@@ -303,11 +290,11 @@ function generateCodeExample(field: GeneratedFormElement): string {
 }`;
 }
 
-function getConstraintInfo(field: GeneratedFormElement): string[] {
+function getConstraintInfo(field: GeneratedInputMeta): string[] {
   const constraints: string[] = [];
 
   if (isNumericField(field)) {
-    const unit = isRangeField(field) ? field.unit || "" : "";
+    const unit = inputGuards.range_input(field) ? field.unit || "" : "";
 
     if (field.min !== undefined && field.max !== undefined) {
       constraints.push(`${field.min}-${field.max}${unit ? ` ${unit}` : ""}`);
@@ -318,13 +305,16 @@ function getConstraintInfo(field: GeneratedFormElement): string[] {
     }
   }
 
-  if (isIncludeExcludeField(field) || isIncludeExcludeSelectField(field)) {
+  if (
+    inputGuards.include_exclude_input(field) ||
+    inputGuards.include_exclude_select_input(field)
+  ) {
     if (field.maxItems) {
       constraints.push(`max: ${field.maxItems} items`);
     }
   }
 
-  if (isMultiSelectField(field)) {
+  if (inputGuards.multi_select_input(field)) {
     constraints.push("multiple");
   }
 
@@ -334,7 +324,10 @@ function getConstraintInfo(field: GeneratedFormElement): string[] {
 function NumericConfig({
   field,
 }: {
-  field: NumberMetadata | IntegerMetadata | RangeMetadata;
+  field:
+    | GeneratedInputMetaMap["number_input"]
+    | GeneratedInputMetaMap["int_input"]
+    | GeneratedInputMetaMap["range_input"];
 }) {
   return (
     <ConfigSectionWrapper>
@@ -354,7 +347,11 @@ function NumericConfig({
   );
 }
 
-function DateRangeConfig({ field }: { field: DateRangeMetadata }) {
+function DateRangeConfig({
+  field,
+}: {
+  field: GeneratedInputMetaMap["date_range_input"];
+}) {
   return (
     <ConfigSectionWrapper>
       {field.format && (
@@ -379,7 +376,11 @@ function DateRangeConfig({ field }: { field: DateRangeMetadata }) {
   );
 }
 
-function TextConfig({ field }: { field: TextMetadata }) {
+function TextConfig({
+  field,
+}: {
+  field: GeneratedInputMetaMap["text_input"];
+}) {
   return (
     <ConfigSectionWrapper>
       {field.minLength && (
@@ -407,27 +408,26 @@ function ConfigSectionWrapper({ children }: PropsWithChildren) {
   );
 }
 
-function ConfigurationSection({ field }: { field: GeneratedFormElement }) {
+function ConfigurationSection({ field }: { field: GeneratedInputMeta }) {
   return (
     <>
       {isNumericField(field) && <NumericConfig field={field} />}
-      {isDateRangeField(field) && <DateRangeConfig field={field} />}
-      {isTextField(field) && (field.minLength || field.maxLength) && (
-        <TextConfig field={field} />
-      )}
+      {inputGuards.date_range_input(field) && <DateRangeConfig field={field} />}
+      {inputGuards.text_input(field) &&
+        (field.minLength || field.maxLength) && <TextConfig field={field} />}
     </>
   );
 }
 
-function ReferencesSection({ field }: { field: GeneratedFormElement }) {
+function ReferencesSection({ field }: { field: GeneratedInputMeta }) {
   // eslint-disable-next-line react-hooks/preserve-manual-memoization
   const showFieldFormatOptions = useMemo(() => {
-    return isJsonExtractionField(field);
+    return inputGuards.json_extraction_input(field);
   }, []);
 
   // eslint-disable-next-line react-hooks/preserve-manual-memoization
   const showTypeOptions = useMemo(() => {
-    return isJsonExtractionField(field);
+    return inputGuards.json_extraction_input(field);
   }, []);
 
   return (
@@ -490,10 +490,11 @@ const DATE_OPERATOR_INFO = [
   { symbol: "lte", description: "On or before" },
 ];
 
-function OperatorsSection({ field }: { field: GeneratedFormElement }) {
-  if (!isExactRangeField(field) && !isDateRangeField(field)) return null;
+function OperatorsSection({ field }: { field: GeneratedInputMeta }) {
+  if (!inputGuards.exact_range_input(field) && !inputGuards.date_range_input(field))
+    return null;
 
-  const operators = isDateRangeField(field)
+  const operators = inputGuards.date_range_input(field)
     ? DATE_OPERATOR_INFO
     : OPERATOR_INFO;
 
@@ -511,7 +512,7 @@ function OperatorsSection({ field }: { field: GeneratedFormElement }) {
             </div>
           ))}
         </div>
-        {isDateRangeField(field) && (
+        {inputGuards.date_range_input(field) && (
           <p className="text-xs text-muted-foreground mt-2">
             Use ISO 8601 format: YYYY-MM-DDTHH:mm:ssZ
           </p>
@@ -521,7 +522,7 @@ function OperatorsSection({ field }: { field: GeneratedFormElement }) {
   );
 }
 
-function FieldDocumentation({ field }: { field: GeneratedFormElement }) {
+function FieldDocumentation({ field }: { field: GeneratedInputMeta }) {
   const codeExample = generateCodeExample(field);
 
   return (
