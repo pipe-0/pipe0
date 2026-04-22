@@ -10,11 +10,11 @@ catalogs:
       specifier: 0.0.25
       version: 0.0.25
     '@pipe0/elements':
-      specifier: 0.0.7
-      version: 0.0.7
+      specifier: 0.0.9
+      version: 0.0.9
     '@pipe0/elements-react':
-      specifier: 0.0.6
-      version: 0.0.6
+      specifier: ^0.0.12
+      version: 0.0.12
     '@pipe0/react-sdk':
       specifier: 0.0.92
       version: 0.0.92
@@ -70,10 +70,10 @@ importers:
         version: link:../../packages/docs-links
       '@pipe0/elements':
         specifier: 'catalog:'
-        version: 0.0.7
+        version: 0.0.9
       '@pipe0/elements-react':
         specifier: 'catalog:'
-        version: 0.0.6(@date-fns/tz@1.4.1)(@tiptap/core@2.27.2(@tiptap/pm@2.27.2))(@types/node@20.17.17)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(date-fns@4.1.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.7.3)
+        version: 0.0.12(@date-fns/tz@1.4.1)(@tiptap/core@2.27.2(@tiptap/pm@2.27.2))(@types/node@20.17.17)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(date-fns@4.1.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.7.3)
       '@pipe0/react-sdk':
         specifier: 'catalog:'
         version: 0.0.92
@@ -1707,9 +1707,6 @@ packages:
   '@floating-ui/utils@0.2.9':
     resolution: {integrity: sha512-MDWhGtE+eHw5JW7lq4qhc5yRLS11ERl1c7Z6Xd0a58DozHES6EnNNwUWbMiG4J9Cgj053Bhk8zvlhFYKVhULwg==}
 
-  '@fontsource-variable/geist@5.2.8':
-    resolution: {integrity: sha512-cJ6m9e+8MQ5dCYJsLylfZrgBh6KkG4bOLckB35Tr9J/EqdkEM6QllH5PxqP1dhTvFup+HtMRPuz9xOjxXJggxw==}
-
   '@formatjs/fast-memoize@3.1.0':
     resolution: {integrity: sha512-b5mvSWCI+XVKiz5WhnBCY3RJ4ZwfjAidU0yVlKa3d3MSgKmH1hC3tBGEAtYyN5mqL7N0G5x0BOUYyO8CEupWgg==}
 
@@ -2398,8 +2395,8 @@ packages:
   '@pipe0/autocomplete@0.0.2':
     resolution: {integrity: sha512-ikWO3TAc4QPvoP5N3bsNaYxmxjH/Q8qstdBICO+5fxeKPGjZWYzybi6XomHBkNNlbpQC45MCttu11z03U+hESA==}
 
-  '@pipe0/autocomplete@0.0.3':
-    resolution: {integrity: sha512-KG0bnqDF4FnEmNtrqot1PMLavUpxnRA63NCo9YmyaQwSa4ri8pmyTfBnIpvKUF1TAxOiTouXE2Xk7BQhzJIZ4g==}
+  '@pipe0/autocomplete@0.0.4':
+    resolution: {integrity: sha512-gm9OIX/AJkBaeba3bniCpwFBQo5WGzIZazTJMVBwAQLsMHQRLezhX14CnLcyLmXDHIK9knFxNsk+eqdLDN5X8Q==}
 
   '@pipe0/client@0.0.24':
     resolution: {integrity: sha512-SuMfC+3Gemh/DiJ4hmSawJNkFVYUEOUovusLE3PrY1mzPlZwamYVDcqyHk7NtpwyItR/RQ1Z4tf4jJAi1dkl8Q==}
@@ -2407,8 +2404,8 @@ packages:
   '@pipe0/client@0.0.25':
     resolution: {integrity: sha512-4qTS/v3GkOBfKzi3HbZoTXO7LHpgMQCZOy2quVzeOUEmmdPUrPSqD9lY9UeJPjfdWI47R7j+erHZ5FIF9mWVeQ==}
 
-  '@pipe0/elements-react@0.0.6':
-    resolution: {integrity: sha512-2wbJVnp3AiyIDO9xHKpNzJLEye4mJ29oEVY/YhAob/9v1pGYhVRCSoO1UnP0s6lY3HqfRCueoAVZZH+m2Mg02g==}
+  '@pipe0/elements-react@0.0.12':
+    resolution: {integrity: sha512-4Tkca2GA11ZicaSo8OK3YBvFS8x0kSvqrOLM6LR6LgnChuoU8fJIloVv1qgvmDWYIpr5ajf657HCdHBMeNlrjg==}
     peerDependencies:
       react: ^18.0.0 || ^19.0.0
       react-dom: ^18.0.0 || ^19.0.0
@@ -2416,8 +2413,8 @@ packages:
   '@pipe0/elements@0.0.4':
     resolution: {integrity: sha512-eqtpaCU1qMUYTBy6MvGMTJGt2k4Ie02wLhsmtVNw+yAO/yrHxT/dt6heE/PKObr2tIbxXurhK7D+77hBKi55hw==}
 
-  '@pipe0/elements@0.0.7':
-    resolution: {integrity: sha512-UMCVTlaAygUsVE9c+mwLglacM04Dxb1SZMhGBQNHGTaa2ynPuObZbr1P1HOiCMeBL2b0TeMB/TzK6SSdmHbgIg==}
+  '@pipe0/elements@0.0.9':
+    resolution: {integrity: sha512-GmRWUZ0+4EfwoxIVsJJpu70mqxR1TqYkNS2h+6cHBPyl0LqY5Wk3okemArH6VO76lJSpbEA5t5jR8C9bCdTIyg==}
 
   '@pipe0/ops@0.0.23':
     resolution: {integrity: sha512-eaaEFbSxNL8LzpS4qnHbyJLm0Xn85EtpZIUi8JTnRmzB+Vd2kkBA+bgJsXs0yRwEl/4kuq5U9iMxBehlynW4oQ==}
@@ -10473,8 +10470,6 @@ snapshots:
 
   '@floating-ui/utils@0.2.9': {}
 
-  '@fontsource-variable/geist@5.2.8': {}
-
   '@formatjs/fast-memoize@3.1.0':
     dependencies:
       tslib: 2.8.1
@@ -11055,7 +11050,7 @@ snapshots:
     dependencies:
       zod: 4.1.12
 
-  '@pipe0/autocomplete@0.0.3':
+  '@pipe0/autocomplete@0.0.4':
     dependencies:
       zod: 4.1.12
 
@@ -11067,16 +11062,15 @@ snapshots:
     dependencies:
       openapi-fetch: 0.15.0
 
-  '@pipe0/elements-react@0.0.6(@date-fns/tz@1.4.1)(@tiptap/core@2.27.2(@tiptap/pm@2.27.2))(@types/node@20.17.17)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(date-fns@4.1.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.7.3)':
+  '@pipe0/elements-react@0.0.12(@date-fns/tz@1.4.1)(@tiptap/core@2.27.2(@tiptap/pm@2.27.2))(@types/node@20.17.17)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(date-fns@4.1.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.7.3)':
     dependencies:
       '@base-ui/react': 1.4.0(@date-fns/tz@1.4.1)(@types/react@19.2.14)(date-fns@4.1.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@dnd-kit/core': 6.3.1(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@dnd-kit/sortable': 10.0.0(@dnd-kit/core@6.3.1(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)
       '@dnd-kit/utilities': 3.2.2(react@19.2.4)
       '@floating-ui/react': 0.26.28(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
-      '@fontsource-variable/geist': 5.2.8
       '@hookform/resolvers': 5.2.2(react-hook-form@7.71.1(react@19.2.4))
-      '@pipe0/elements': 0.0.7
+      '@pipe0/elements': 0.0.9
       '@radix-ui/react-checkbox': 1.3.3(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@radix-ui/react-collapsible': 1.1.12(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@radix-ui/react-dialog': 1.1.15(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -11134,10 +11128,10 @@ snapshots:
       xxhash-wasm: 1.1.0
       zod: 4.1.12
 
-  '@pipe0/elements@0.0.7':
+  '@pipe0/elements@0.0.9':
     dependencies:
       '@asteasolutions/zod-to-openapi': 8.1.0(zod@4.1.12)
-      '@pipe0/autocomplete': 0.0.3
+      '@pipe0/autocomplete': 0.0.4
       '@pipe0/client': 0.0.25
       ajv: 8.17.1
       date-fns: 4.1.0

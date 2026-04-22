@@ -1,0 +1,341 @@
+---
+title: Form UI (Beta)
+description: Drop-in React components for rendering pipe and search configuration forms.
+date: 2026-04-20
+---
+
+import { PipeFormPreview } from "@/components/features/docs/pipe-form-preview";
+import { docsLinkPaths } from "@pipe0/docs-links";
+
+`@pipe0/elements-react` is a React component library that renders the same
+configuration forms you see throughout these docs. Embed them in your own
+product to let end-users configure pipes and searches without writing any
+UI yourself.
+
+<Accordions>
+<Accordion title="Example: Work email from LinkedIn URL">
+<PipeFormPreview
+  pipeId="people:workemail:profileurl:waterfall@1"
+  pipeLabel="Work email from LinkedIn URL"
+  docsHref={docsLinkPaths.elementsReact}
+/>
+</Accordion>
+</Accordions>
+
+## Installation
+
+```bash tab="pnpm"
+pnpm i @pipe0/elements-react
+```
+
+```bash tab="npm"
+npm install @pipe0/elements-react
+```
+
+```bash tab="yarn"
+yarn add @pipe0/elements-react
+```
+
+```bash tab="bun"
+bun add @pipe0/elements-react
+```
+
+Then import the stylesheet once at the root of your app:
+
+```ts
+import "@pipe0/elements-react/styles";
+```
+
+## Quickstart
+
+Pass a `pipeId`, a `publicKey`, and an `onSubmit` handler. The form renders
+itself with sensible defaults.
+
+```tsx
+import { PipeForm } from "@pipe0/elements-react";
+import { getPipeDefaultPayload } from "@pipe0/elements";
+
+export function MyPipeForm() {
+  return (
+    <PipeForm
+      pipeId="json:extract@1"
+      publicKey="pk_abc..."
+      defaultValues={getPipeDefaultPayload("json:extract@1")}
+      onSubmit={(payload) => {
+        console.log("Submitted:", payload);
+      }}
+    />
+  );
+}
+```
+
+A `SearchForm` is available with the same shape for search payloads:
+
+```tsx
+import { SearchForm } from "@pipe0/elements-react";
+import { getSearchDefaultPayload } from "@pipe0/elements";
+
+<SearchForm
+  searchId="people:profiles:crustdata@1"
+  publicKey="pk_abc..."
+  defaultValues={getSearchDefaultPayload("people:profiles:crustdata@1")}
+  onSubmit={(payload) => console.log("Submitted:", payload)}
+/>;
+```
+
+## Customization
+
+The `<SearchForm>` and `<PipeForm>` are convenience components.
+
+You can customize them by using headless components.
+
+### Headless Components
+
+#### Custom layout
+
+```tsx
+import {
+  PipeForm,
+  PipeFormHeader,
+  PipeFormTitle,
+  PipeFormContent,
+  PipeFormFooter,
+  PipeFormSubmitButton,
+  usePipeForm,
+} from "@pipe0/elements-react";
+
+function MyForm() {
+  const context = usePipeForm({
+    pipeId: "json:extract@1",
+    publicKey: "pk_test123",
+  });
+
+  return (
+    <PipeForm context={context} onSubmit={(payload) => console.log(payload)}>
+      <PipeFormHeader>
+        <PipeFormTitle>Extract JSON</PipeFormTitle>
+      </PipeFormHeader>
+      <PipeFormContent />
+      <PipeFormFooter>
+        <PipeFormSubmitButton />
+      </PipeFormFooter>
+    </PipeForm>
+  );
+}
+```
+
+#### Custom form sections
+
+`*Content` accepts a render prop that hands you the sections and lets you lay
+them out however you want:
+
+```tsx
+<PipeFormContent
+  render={(props, { sections }) => (
+    <div {...props} className="grid gap-6">
+      {sections.map((section) => (
+        <PipeFormSection key={section.key} section={section} />
+      ))}
+    </div>
+  )}
+/>
+```
+
+#### Going fully headless
+
+If you need to bypass the subcomponents entirely — e.g. to render inside a
+design system that has its own form primitives — read `sections` and `form`
+directly off the hook:
+
+```tsx
+const { sections, form } = usePipeForm({ pipeId, publicKey });
+
+const onSubmit = form.handleSubmit((payload) => console.log(payload));
+
+return (
+  <form onSubmit={onSubmit}>
+    {sections.map((section) => (
+      <fieldset key={section.key}>
+        {section.label && <legend>{section.label}</legend>}
+        {section.groups.map((group) =>
+          group.fields.map((field) => {
+            if (field.kind === "text_input") {
+              return <input {...field.inputProps} key={field.path} />;
+            }
+            if (field.kind === "boolean_input") {
+              return (
+                <button onClick={field.toggle} key={field.path}>
+                  {field.checked ? "On" : "Off"}
+                </button>
+              );
+            }
+            // ...handle the other kinds
+          })
+        )}
+      </fieldset>
+    ))}
+    <button type="submit">Submit</button>
+  </form>
+);
+```
+
+### Styling with `classNames`
+
+If you just want to restyle the default layout, pass a `classNames` object.
+Each key targets a slot:
+
+```tsx
+<PipeForm
+  pipeId="json:extract@1"
+  publicKey="pk_test123"
+  classNames={{
+    label: "custom-label",
+    field: "custom-field",
+    group: "custom-group",
+    groupHeader: "custom-group-header",
+  }}
+  onSubmit={onSubmit}
+/>
+```
+
+### Custom labels and visibility
+
+Three props control which sections, groups, and fields appear and what
+they're called:
+
+- `sectionMap` — keyed by section key (`"connector"`, `"input"`, `"output"`, …).
+- `groupMap` — keyed by group key.
+- `pathMap` — keyed by field dot-path (`"settings.api_key"`).
+
+Each entry accepts an override object or `null` to hide:
+
+```tsx
+<PipeForm
+  pipeId="json:extract@1"
+  publicKey="pk_test123"
+  sectionMap={{
+    output: { label: "What you'll get back" },
+  }}
+  groupMap={{
+    advanced: null, // hide the "advanced" group entirely
+  }}
+  pathMap={{
+    "settings.timeout_ms": {
+      label: "Timeout",
+      description: "How long to wait before giving up (milliseconds).",
+    },
+  }}
+  onSubmit={onSubmit}
+/>
+```
+
+### Resolvers
+
+Imagine a pipe that sends a message to a slack channel. We could:
+- Let the user navigate to slack, copy the `channelId` and paste it into pipe0
+- Render a dropdown with available channels to dispatch the message to
+
+Option 2 is a much nicer.
+
+Resolvers allow you to fetch dynamic that gets rendered in forms.
+
+In the slack example, the slack channel field depends on the user selecting a custom connection.
+
+If a custom connection is available (e.g. user selection), we call the `getPipeFieldContext` to fetch and render 
+the dynamic values.
+
+```tsx
+import type { FormResolvers, PipeRequestPayload } from "@pipe0/elements";
+
+const resolvers: FormResolvers = {
+  // Called once on mount. Return the user's connected providers.
+  // If omitted, the connector section and connector-dependent fields are hidden.
+  getConnections: async () => {
+    const res = await fetch("<CALL_YOUR_BACKEND>");
+    return res.json();
+  },
+
+  // Called per dynamic field: on mount, when a dependency changes,
+  // and when the user types in the dropdown.
+  getPipeFieldContext: async ({
+    fieldPath,
+    query,
+    payload,
+  }: {fieldPath: string; query: string; payload: PipeRequestPayload}) => {
+    const res = await fetch("https://<CALL_YOUR_BACKEND>", {
+      method: "POST",
+      headers: { "content-type": "application/json", "Authorization": "Bearer <YOUR_USER_TOKEN>" },
+      body: JSON.stringify({ fieldPath, query, payload }),
+    });
+    const { suggestions } = await res.json();
+    return suggestions;
+  },
+};
+
+<PipeForm
+  pipeId="email:send:resend@1"
+  publicKey="pk_test123"
+  resolvers={resolvers}
+  onSubmit={onSubmit}
+/>;
+```
+
+#### You must proxy resolvers through your backend
+
+<Callout type="warn">
+Never call pipe0's context or connection APIs directly from the browser.
+</Callout>
+
+`publicKey` identifies your pipe0 project to the browser, but it does not
+authorize resolver requests. The underlying endpoints (e.g. `POST
+/v1/pipes/field-context`) require your pipe0 API key, and they need to know
+which of your end users is asking so the right connections come back.
+
+Shipping the API key to the browser would leak it, and pipe0 has no way to
+know who your logged-in user is. So resolvers must call your backend, which:
+
+1. Authenticates the request using your app's auth (session cookie, JWT, etc.).
+2. Looks up that user's pipe0 connections and permissions.
+3. Forwards the request to pipe0 using the server-side API key.
+
+#### Example: Next.js proxy
+
+```ts filename="app/api/pipe0/context/route.ts"
+import { Pipe0 } from "@pipe0/client";
+
+const pipe0 = new Pipe0({ apiKey: process.env.PIPE0_API_KEY! });
+
+export async function POST(req: Request) {
+  const user = await requireUser(req); // your auth
+  const { pipeId, fieldPath, query, connectionId, payload } = await req.json();
+
+  // Optionally: verify `connectionId` belongs to `user` before forwarding.
+  const response = await fetch({
+    url: "https://api.pipe0.com/v1/pipes/field-context",
+    method: "POST",
+    headers: {
+      "Authorization": "Bearer <PIPE0_API_KEY>",
+      "Accept": "application/json"
+    },
+    body: JSON.stringify({
+      field_path: fieldPath,
+      query,
+      payload,
+    })
+  })
+
+  return response.json();
+}
+```
+
+```ts filename="app/api/pipe0/connections/route.ts"
+export async function GET(req: Request) {
+  const user = await requireUser(req);
+  const connections = await db.getPipe0ConnectionsForUser(user.id);
+  // Shape: [{ public_id: string, provider: string }]
+  return Response.json(connections);
+}
+```
+
+With those two routes, the client-side resolvers above work without ever
+touching the pipe0 API key directly.

@@ -6,8 +6,8 @@ packages:
   - "workers/*"
 catalog:
   "@asteasolutions/zod-to-openapi": "8.1.0"
-  "@pipe0/elements": "latest"
-  "@pipe0/elements-react": "latest"
+  "@pipe0/elements": "0.0.9"
+  "@pipe0/elements-react": "^0.0.12"
   "@pipe0/client": "0.0.25"
   "@pipe0/react-sdk": "0.0.92"
   "eslint": "^9.30.1"

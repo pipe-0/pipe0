@@ -12,7 +12,7 @@ export const docsLinkPaths = {
   fieldModeConfig: `/docs/pipes/advanced/pipes-concepts#field-mode-config`,
   openAPI: `/docs/#openapi`,
   catalogs: `/docs/`,
-  mcp: "/docs/mcp",
+  mcp: "/docs/sdks/mcp",
   async: `/docs/pipes#getting-the-task-result`,
   sync: `/docs/pipes#getting-the-result-without-polling`,
   waterfallPipes: `/docs/pipes/advanced/pipes-concepts#waterfall-pipes`,
@@ -51,6 +51,9 @@ export const docsLinkPaths = {
   billing: `/docs/billing`,
   billingMode: `/docs/billing#billing-mode`,
   searchBilling: `/docs/billing#search-billing`,
+
+  // SDKs
+  elementsReact: `/docs/sdks/form-ui`,
 } as const;
 
 export type DocsLinkKey = keyof typeof docsLinkPaths;

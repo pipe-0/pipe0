@@ -1,0 +1,233 @@
+---
+title: TypeScript Client
+description: Strongly-typed TypeScript SDK for running enrichment pipes and provider searches against the pipe0 API.
+date: 2026-04-22
+---
+
+The `@pipe0/client` package is a fully typed TypeScript SDK for the pipe0
+API. It turns pipe and search IDs into autocomplete-friendly,
+compile-checked entrypoints, so you get real feedback from your editor the
+moment a pipe expects different config than you've written.
+
+## Installation
+
+```bash tab="pnpm"
+pnpm add @pipe0/client
+```
+
+```bash tab="npm"
+npm install @pipe0/client
+```
+
+```bash tab="yarn"
+yarn add @pipe0/client
+```
+
+```bash tab="bun"
+bun add @pipe0/client
+```
+
+## Creating a client
+
+```ts
+import { Pipe0 } from "@pipe0/client";
+
+export const pipe0 = new Pipe0({
+  apiKey: process.env.PIPE0_API_KEY,
+});
+```
+
+All options:
+
+| Option                  | Default                       | Notes                                              |
+| ----------------------- | ----------------------------- | -------------------------------------------------- |
+| `apiKey`                | `process.env.PIPE0_API_KEY`   | Sent as `Authorization: Bearer …`.                 |
+| `baseUrl`               | `https://api.pipe0.com`       | Override for self-hosted / staging.                |
+
+## Data Enrichment (pipes)
+
+Use `pipes.pipe()` to enrich **up to 100 input objects** at a time. Use `pipes.pipeInBatches()` to enrich 
+any number of input objects.
+
+### Examples Split a name
+
+```ts
+const result = await pipe0.pipes.pipe({
+  config: { environment: "sandbox" },
+  pipes: [{ pipe_id: "people:name:split@1" }],
+  input: [{ id: "1", name: "John Doe" }],
+});
+
+const record = result.records["1"]; // "1" is the id property
+record.fields.first_name.value; // "John"
+record.fields.last_name.value; // "Doe"
+```
+
+### Chain pipes (enrich → LLM → send)
+
+```ts
+const result = await pipe0.pipes.pipe({
+  config: { environment: "sandbox" },
+  pipes: [
+    { pipe_id: "people:profile:waterfall@1" },
+    {
+      pipe_id: "prompt:run@1",
+      config: {
+        model: "gemini-flash-latest",
+        prompt: {
+          template: `
+            Profile: {{ input profile type="json" }}
+            {{ output icp_fit type="boolean" description="Does this match our ICP?" }}
+            {{ output reasoning type="string" description="Why or why not?" }}
+          `,
+        },
+      },
+    },
+    {
+      pipe_id: "message:send:slack@1",
+      trigger: { action: "run", when: { icp_fit: { equals: true } } },
+      config: { channel: "#new-leads" },
+    },
+  ],
+  input: [{ id: "1", email: "jane@acme.com" }],
+});
+```
+
+Note `trigger` — the Slack pipe only runs when the previous step marked
+`icp_fit` true. Conditional execution is part of the typed payload.
+
+### Large inputs: `pipeInBatches`
+
+Splits input into chunks and runs them with bounded concurrency.
+
+```ts
+import { Pipe0BatchError } from "@pipe0/client";
+
+try {
+  const batches = await pipe0.pipes.pipeInBatches(
+    {
+      pipes: [{ pipe_id: "people:workemail:waterfall@1" }],
+      input: tenThousandRows,
+    },
+    {
+      stopOnError: false,
+      onBatchComplete: (i, res) => console.log(`batch ${i}: ${res.status}`),
+    },
+  );
+} catch (err) {
+  if (err instanceof Pipe0BatchError) {
+    console.error(`${err.errors.length} batches failed`);
+    console.log(`${err.successfulBatches.length} succeeded`);
+  }
+}
+```
+
+### Advanced: Manual polling
+
+If you want control over the the polling process, use the manual handlers.
+
+```ts
+// Sends a valid API requests
+const runId = await pipe0.pipes.create({
+  pipes: [{ pipe_id: "people:workemail:waterfall@1" }],
+  input: largeInput,
+});
+
+// Check the status of the task
+const status = await pipe0.pipes.check(runId);
+
+// Or manually wait until complete (same as pipes.pipe())
+const done = await pipe0.pipes.waitUntilComplete(runId, {
+  onPoll: (response) => console.log(response.status),
+});
+```
+
+## Running searches
+
+Searches discover new records from external providers (Crustdata, Exa,
+Icypeas, Clado, Leadmagic, …) based on filters.
+
+### Find people by title and location
+
+```ts
+const result = await pipe0.searches.search({
+  config: {
+    environment: "sandbox",
+  },
+  searches: [
+    {
+      search_id: "people:profiles:crustdata@1",
+      config: {
+        limit: 25,
+        filters: {
+          current_job_titles: { include: ["Head of RevOps"] },
+          locations: { include: ["San Francisco", "New York"] },
+        },
+      },
+    },
+  ],
+});
+
+for (const row of result.results) {
+  row.name.value; // string
+  row.job_title.value; // string
+  row.company_website_url; // typed per output_fields
+}
+```
+
+### Combining searches with pipes
+
+The output of a search is a set of records — feed them into a pipe to enrich
+further:
+
+```ts
+const input = await pipe0.searches.search({ /* … */ });
+
+const enriched = await pipe0.pipes.pipe({
+  config: { environment: "sandbox" },
+  pipes: [{ pipe_id: "people:workemail:waterfall@1" }],
+  input,
+});
+```
+
+## Error handling
+
+The client throws typed errors you can discriminate on:
+
+```ts
+import {
+  Pipe0TimeoutError,
+  Pipe0AbortError,
+  Pipe0TaskError,
+  Pipe0ServerError,
+  Pipe0BatchError,
+} from "@pipe0/client";
+
+try {
+  await pipe0.pipes.pipe({ /* … */ });
+} catch (err) {
+  if (err instanceof Pipe0TimeoutError) {
+    // Polling exceeded pollingTimeoutMs — err.runId is still valid,
+    // call pipes.check(err.runId) later.
+  } else if (err instanceof Pipe0TaskError) {
+    // The API returned a task-level error.
+    console.error(err.responseBody);
+  } else if (err instanceof Pipe0ServerError) {
+    // Non-2xx response.
+  }
+}
+```
+
+Cancellation uses standard `AbortController`:
+
+```ts
+const controller = new AbortController();
+setTimeout(() => controller.abort(), 30_000);
+
+await pipe0.pipes.pipe(payload, { signal: controller.signal });
+```
+
+## See also
+
+- <AppLink linkType="pipeCatalog">Pipe catalog</AppLink> — every `pipe_id` and its config shape.
+- <AppLink linkType="searchCatalog">Search catalog</AppLink> — every `search_id`.

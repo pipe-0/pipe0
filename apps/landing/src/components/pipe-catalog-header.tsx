@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/accordion";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -57,6 +58,7 @@ import { Download, Terminal, Upload } from "lucide-react";
 import Link from "next/link";
 import { useMemo } from "react";
 import { DynamicCodeBlock } from "@/components/features/docs/dynamic-code-block";
+import { PipeFormPreview } from "@/components/features/docs/pipe-form-preview";
 
 const dateFormatter = new Intl.DateTimeFormat("en-US", {
   month: "short",
@@ -111,17 +113,17 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
       });
       return getPipePayloadFormConfig({
         pipePayload: payload,
-        userConnections: [],
         validationContext,
+        store: { fieldOptions: {} },
       });
     } catch (err) {
       console.log(err);
       return null;
     }
-  }, []);
+  }, [pipeId]);
 
   return (
-    <div className="">
+    <div className="space-y-8">
       <CatalogHeader
         label={pipeEntry.label}
         description={pipeEntry.description}
@@ -146,7 +148,7 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
               <AlertTitle>
                 Deprecated by{" "}
                 {dateFormatter.format(
-                  new Date(pipeEntry.lifecycle.deprecatedOn),
+                  new Date(pipeEntry.lifecycle.deprecatedOn || ""),
                 )}
               </AlertTitle>
               <AlertDescription>
@@ -254,7 +256,7 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
             <div>
               <H2 className="mb-3 pb-2 border-b">Input Fields</H2>
               <div className="space-y-2">
-                {pipeEntry.defaultInputGroups.length === 0 && (
+                {(pipeEntry.defaultInputGroups || []).length === 0 && (
                   <Alert>
                     <Upload className="h-4 w-4" />
                     <AlertTitle>No input fields</AlertTitle>
@@ -533,6 +535,23 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
                   </Tab>
                 </Tabs>
               </div>
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="form-ui">
+            <AccordionTrigger className="text-sm">
+              <span className="flex items-center gap-2">
+                Form UI
+                <Badge className="text-[10px] px-1.5 py-0 font-medium leading-none">
+                  Beta
+                </Badge>
+              </span>
+            </AccordionTrigger>
+            <AccordionContent>
+              <PipeFormPreview
+                pipeId={pipeId}
+                pipeLabel={pipeEntry.label}
+                docsHref={docsLinkPaths.elementsReact}
+              />
             </AccordionContent>
           </AccordionItem>
         </Accordion>

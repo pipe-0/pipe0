@@ -49,14 +49,13 @@ function generatePipeMarkdown(pipeId: PipeId): string {
   lines.push(entry.description);
   lines.push("");
 
+  const defaultInputGroups = entry.defaultInputGroups || [];
+
   // Input Fields
-  if (
-    entry.inputFieldMode === "static" &&
-    entry.defaultInputGroups.length > 0
-  ) {
+  if (entry.inputFieldMode === "static" && defaultInputGroups.length > 0) {
     lines.push("## Input Fields");
     lines.push("");
-    for (const group of entry.defaultInputGroups) {
+    for (const group of defaultInputGroups) {
       for (const fieldName of Object.keys(group.fields)) {
         const field = getField(fieldName as any);
         if (field) {
@@ -165,7 +164,7 @@ function generatePipeStructuredData(pipeId: PipeId) {
 
   // Input fields
   if (entry.inputFieldMode === "static") {
-    for (const group of entry.defaultInputGroups) {
+    for (const group of entry.defaultInputGroups || []) {
       for (const fieldName of Object.keys(group.fields)) {
         const field = getField(fieldName as any);
         if (field) {
