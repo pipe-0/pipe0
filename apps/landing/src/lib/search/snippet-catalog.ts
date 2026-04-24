@@ -1,8 +1,8 @@
 import { ClientSearchPayloadMap } from "@pipe0/client";
-import { SearchId, SearchPayloadCatalog } from "@pipe0/ops";
+import { SearchId, SearchPayloadCatalog } from "@pipe0/elements";
 import Oas from "oas";
 import { OASDocument } from "oas/types";
-import z from "zod";
+import { z } from "zod";
 
 export type SearchRequestPayloadMap = {
   [k in keyof SearchPayloadCatalog]: z.input<SearchPayloadCatalog[k]>;

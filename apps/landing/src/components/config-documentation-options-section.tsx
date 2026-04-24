@@ -3,15 +3,15 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { copyToClipboard } from "@/lib/utils";
-import { PayloadSelectOption } from "@pipe0/ops";
+import { StoreOption } from "@pipe0/elements";
 import { Copy } from "lucide-react";
 
 export function OptionsSection({
   options: o,
   suggestions,
 }: {
-  options?: PayloadSelectOption[];
-  suggestions?: PayloadSelectOption[];
+  options?: StoreOption[];
+  suggestions?: StoreOption[];
 }) {
   const getOptions = () => {
     if (o) {

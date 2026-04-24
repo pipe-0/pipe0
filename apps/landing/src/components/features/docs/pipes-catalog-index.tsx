@@ -46,7 +46,7 @@ import {
   PipeId,
   providerCatalog,
   ProviderName,
-} from "@pipe0/ops";
+} from "@pipe0/elements";
 import { usePipeCatalogTable } from "@pipe0/react-sdk";
 import {
   ArrowDown,
@@ -99,7 +99,7 @@ const IntegrationCard = ({
       number
     >;
     return Math.min(...Object.values(starting));
-  }, []);
+  }, [pipeId]);
 
   const isNew = (tableEntry.tags as string[]).includes("new");
 
@@ -148,7 +148,7 @@ const IntegrationCard = ({
               <AlertTitle>
                 Deprecated by{" "}
                 {dateFormatter.format(
-                  new Date(tableEntry.lifecycle.deprecatedOn),
+                  new Date(tableEntry.lifecycle.deprecatedOn || ""),
                 )}
               </AlertTitle>
               <AlertDescription>
@@ -194,7 +194,7 @@ const IntegrationCard = ({
                   }}
                 >
                   <DropdownMenuGroup>
-                    {tableEntry.defaultInputGroups.map((group) =>
+                    {(tableEntry.defaultInputGroups || []).map((group) =>
                       Object.values(group.fields).map((field) => (
                         <DropdownMenuItem
                           className="py-1 cursor-pointer block text-muted-foreground hover:text-foreground"

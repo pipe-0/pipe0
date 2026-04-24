@@ -40,7 +40,7 @@ import {
   SearchCatalogTableData,
   SearchCategory,
   SearchId,
-} from "@pipe0/ops";
+} from "@pipe0/elements";
 import { useSearchCatalogTable } from "@pipe0/react-sdk";
 import {
   ArrowDown,

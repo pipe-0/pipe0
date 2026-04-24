@@ -9,7 +9,7 @@ import { LogoRawSmall } from "@/components/logo";
 import { Button } from "@/components/ui/button";
 import { appInfo } from "@/lib/const";
 import { docsLinkPaths } from "@pipe0/docs-links";
-import { providerCatalog } from "@pipe0/ops";
+import { providerCatalog } from "@pipe0/elements";
 import { ArrowRight, Search, Sparkle } from "lucide-react";
 import Link from "next/link";
 import type { ReactNode } from "react";

@@ -3,7 +3,7 @@ import { HeaderVideoSection } from "@/components/features/docs/header-video-sect
 import { H1 } from "@/components/headings";
 import { TextLink } from "@/components/text-link";
 import { cn } from "@/lib/utils";
-import { ProviderName } from "@pipe0/ops";
+import { ProviderName } from "@pipe0/elements";
 import { Fragment, PropsWithChildren, ReactNode } from "react";
 
 export function CatalogHeader({

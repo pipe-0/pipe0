@@ -6,7 +6,7 @@
     "dev": "next dev",
     "prune": "rm ./.next/cache",
     "build": "next build",
-    "pipe0-deps": "pnpm update @pipe0/ops@latest @pipe0/react-sdk@latest",
+    "pipe0-deps": "pnpm update @pipe0/elements@latest @pipe0/elements-react@latest",
     "start": "next start",
     "lint": "eslint ."
   },
@@ -17,7 +17,8 @@
     "@mdx-js/react": "^3.1.0",
     "@next/mdx": "16.1.6",
     "@pipe0/docs-links": "workspace:*",
-    "@pipe0/ops": "catalog:",
+    "@pipe0/elements": "catalog:",
+    "@pipe0/elements-react": "catalog:",
     "@pipe0/client": "catalog:",
     "@pipe0/react-sdk": "catalog:",
     "@radix-ui/react-accordion": "^1.2.3",

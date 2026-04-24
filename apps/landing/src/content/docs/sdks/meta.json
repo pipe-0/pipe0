@@ -1,0 +1,5 @@
+{
+  "$schema": "../../../../.source/json-schema/docs.meta.json",
+  "title": "Agents & SDKs",
+  "pages": ["typescript-client", "form-ui", "mcp"]
+}

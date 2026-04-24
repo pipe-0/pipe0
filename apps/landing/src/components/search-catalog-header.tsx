@@ -16,6 +16,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import {
   Table,
   TableBody,
@@ -38,10 +39,11 @@ import {
   searchCatalog,
   SearchId,
   searchSnippetCatalog,
-} from "@pipe0/ops";
+} from "@pipe0/elements";
 import { Tabs, Tab } from "fumadocs-ui/components/tabs";
 import { useMemo } from "react";
 import { DynamicCodeBlock } from "@/components/features/docs/dynamic-code-block";
+import { SearchFormPreview } from "@/components/features/docs/search-form-preview";
 
 function findAllSearchVersions(searchId: SearchId) {
   const searchEntry = getSearchEntry(searchId);
@@ -75,6 +77,7 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
     try {
       const config = getSearchPayloadFormConfig({
         searchPayload: defaultSearchPayload,
+        formContext: { fieldOptions: {} },
       });
       return config;
     } catch {
@@ -270,6 +273,24 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
                   </Tab>
                 </Tabs>
               </div>
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="form-ui">
+            <AccordionTrigger className="">
+              <span className="flex items-center gap-2">
+                Form UI
+                <Badge className="text-[10px] px-1.5 py-0 font-medium leading-none">
+                  Beta
+                </Badge>
+              </span>
+            </AccordionTrigger>
+            <AccordionContent>
+              <SearchFormPreview
+                searchId={searchId}
+                searchLabel={searchEntry.label}
+                defaultValues={defaultSearchPayload}
+                docsHref={docsLinkPaths.elementsReact}
+              />
             </AccordionContent>
           </AccordionItem>
         </Accordion>

@@ -8,7 +8,7 @@
     "build": "tsc -b && vite build"
   },
   "dependencies": {
-    "@pipe0/ops": "latest",
+    "@pipe0/elements": "latest",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "react": "^19.2.4",
