@@ -77,7 +77,7 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
     try {
       const config = getSearchPayloadFormConfig({
         searchPayload: defaultSearchPayload,
-        formContext: { fieldOptions: {} },
+        formContext: { field_options: {} },
       });
       return config;
     } catch {

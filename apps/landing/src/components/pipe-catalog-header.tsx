@@ -114,7 +114,7 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
       return getPipePayloadFormConfig({
         pipePayload: payload,
         validationContext,
-        store: { fieldOptions: {} },
+        store: { field_options: {} },
       });
     } catch (err) {
       console.log(err);
