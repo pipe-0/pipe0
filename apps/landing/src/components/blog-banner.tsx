@@ -16,9 +16,9 @@ export function BlogBanner() {
                 <LogoRaw />
               </div>
               <div className="max-w-125">
-                Add{" "}
-                <HighlightSection>clay-like data enrichment</HighlightSection>{" "}
-                to your application. <HighlightSection>Fast.</HighlightSection>
+                <HighlightSection>Clay-like data enrichment</HighlightSection>{" "}
+                for your apps & agents.{" "}
+                <HighlightSection>Fast.</HighlightSection>
               </div>
             </div>
             <div className="grid place-items-center py-8">

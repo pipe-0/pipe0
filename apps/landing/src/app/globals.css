@@ -137,6 +137,20 @@
       transform: translateY(calc(-100% - var(--gap)));
     }
   }
+  @keyframes hero-slide-fade {
+    from {
+      opacity: 0;
+      transform: translateY(4px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+.hero-slide-fade {
+  animation: hero-slide-fade 400ms ease-out;
 }
 
 @layer base {

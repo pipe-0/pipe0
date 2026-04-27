@@ -46,8 +46,9 @@ import {
   PipeId,
   providerCatalog,
   ProviderName,
+  requirementToInputFields,
 } from "@pipe0/elements";
-import { usePipeCatalogTable } from "@pipe0/react-sdk";
+import { usePipeCatalogTable } from "@pipe0/elements-react";
 import {
   ArrowDown,
   ArrowUp,
@@ -94,11 +95,16 @@ const IntegrationCard = ({
   const pipeId = tableEntry.pipeId;
 
   const pipeStartingPrice = useMemo(() => {
-    const starting = getStartingCostPerPipesProvider(pipeId) as Record<
-      ProviderName,
-      number
-    >;
-    return Math.min(...Object.values(starting));
+    let starting: Partial<Record<ProviderName, number>> = {};
+    try {
+      starting = getStartingCostPerPipesProvider(pipeId) as Record<
+        ProviderName,
+        number
+      >;
+    } catch (err) {
+      console.log(pipeId);
+    }
+    return Math.min(...Object.values(starting), 0);
   }, [pipeId]);
 
   const isNew = (tableEntry.tags as string[]).includes("new");
@@ -194,8 +200,10 @@ const IntegrationCard = ({
                   }}
                 >
                   <DropdownMenuGroup>
-                    {(tableEntry.defaultInputGroups || []).map((group) =>
-                      Object.values(group.fields).map((field) => (
+                    {tableEntry.defaultInputRequirement &&
+                      requirementToInputFields(
+                        tableEntry.defaultInputRequirement,
+                      ).map((field) => (
                         <DropdownMenuItem
                           className="py-1 cursor-pointer block text-muted-foreground hover:text-foreground"
                           key={field.name}
@@ -205,8 +213,7 @@ const IntegrationCard = ({
                         >
                           {field.name}
                         </DropdownMenuItem>
-                      )),
-                    )}
+                      ))}
                   </DropdownMenuGroup>
                 </DropdownMenuContent>
               </DropdownMenu>
