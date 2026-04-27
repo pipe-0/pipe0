@@ -1,7 +1,7 @@
 import { EnrichmentAnimatedList } from "@/app/enrichment-animated-list";
 import { EnrichmentCardMarquee } from "@/app/enrichment-card-marquee";
+import { HeroCarousel } from "@/app/hero-carousel";
 import CalButton from "@/components/cal-button";
-import { DynamicCodeBlock } from "@/components/features/docs/dynamic-code-block";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
 import { LogoRawSmall } from "@/components/logo";
@@ -143,7 +143,7 @@ export default function Home() {
           <div className="container mx-auto max-w-3xl text-center">
             <h1 className="text-4xl sm:text-5xl md:text-6xl tracking-tight text-foreground leading-[1.1]">
               Add <span className="font-serif italic">clay-like🦄</span> data
-              enrichment to your application.{" "}
+              enrichment to your apps & agents.{" "}
               <span className="font-serif italic">Fast</span>.
             </h1>
             <div className="mt-8">
@@ -161,53 +161,17 @@ export default function Home() {
 
         {/* Code Example Section */}
         <section className="container mx-auto gap-2 pt-6 grid grid-cols-1 lg:grid-cols-6 px-4 md:px-6 lg:px-0">
-          <div className="flex flex-col overflow-hidden lg:col-span-4 bg-accent border">
-            <div className="p-1">
-              <DynamicCodeBlock
-                className="my-0 rounded-sm"
-                lang="typescript"
-                code={`// Find work email and company description
-const response = await piper.pipes({
-    pipes: [
-      {
-        pipe_id: "people:workemail:waterfall@1"
-      },
-      {
-        pipe_id: "company:description@1"
-      }
-    ],
-    input: [
-      {
-        id: 1,
-        name: "John Doe",
-        company_name: "Pipe0"
-      }
-    ],
-  });`}
-              />
-            </div>
+          <HeroCarousel />
 
-            <div className="p-4 max-w-lg grow flex flex-col justify-end gap-2 pt-12">
-              <h2 className="text-2xl md:text-2xl tracking-tight">
-                The <span className="font-serif italic">next generation</span>{" "}
-                of CRMs &amp; ATSs is built on{" "}
-                <span className="text-foreground">
-                  instant access to world-class enrichment &amp; prospecting.
-                </span>
-              </h2>
-              <p className="text-sm md:text-base text-muted-foreground">
-                Add clay-like data enrichment with{" "}
-                <span className="text-foreground">
-                  50+ providers, actions & conditions
-                </span>{" "}
-                to your application.{" "}
-                <span className="text-foreground">Fast</span>.
-              </p>
-            </div>
-          </div>
-
-          <div className="relative flex flex-col items-stretch py-4 overflow-hidden lg:col-span-2 bg-background border">
-            <div className="grow p-4 max-w-md top-0 left-0">
+          <div className="relative flex flex-col items-stretch overflow-hidden lg:col-span-2 bg-background border min-h-[520px] lg:min-h-[420px]">
+            <img
+              className="pointer-events-none absolute block w-150 max-w-none opacity-70 bottom-0 left-1/2 -translate-x-1/2"
+              src="/media/website/sheets-preview.svg"
+              alt="Sheets preview"
+            />
+            <div className="from-background to-transparent pointer-events-none absolute inset-x-0 top-0 h-1/2 bg-linear-to-b"></div>
+            <div className="from-background to-transparent pointer-events-none absolute inset-x-0 bottom-0 h-1/4 bg-linear-to-t"></div>
+            <div className="relative z-10 p-4 max-w-md">
               <h2 className="text-2xl md:text-2xl pb-2">
                 Discover a <s>clay</s> alternative{" "}
                 <span className="text-foreground font-serif italic">
@@ -221,7 +185,7 @@ const response = await piper.pipes({
                 point-in-time recovery, multi-player, API support, and sandbox
                 mode.
               </p>
-              <div className="">
+              <div>
                 <div>
                   <Link href={`${appInfo.links.signupUrl}`} rel="nofollow">
                     <Button size="sm" className="w-full sm:w-auto">
@@ -234,14 +198,6 @@ const response = await piper.pipes({
                 </small>
               </div>
             </div>
-            <div className="h-80 lg:h-55 relative">
-              <img
-                className="absolute block w-150 lg:w-150 max-w-none opacity-70 bottom-0 left-1/2 -translate-x-1/2 from-background bg-linear-to-b"
-                src="/media/website/sheets-preview.svg"
-                alt="Sheets preview"
-              />
-            </div>
-            <div className="from-background pointer-events-none absolute inset-x-0 bottom-0 h-1/4 bg-linear-to-t"></div>
           </div>
         </section>
       </div>
