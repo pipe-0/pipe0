@@ -9,6 +9,7 @@ import {
   pipeCatalog,
   PipeId,
   providerCatalog,
+  requirementToInputFields,
 } from "@pipe0/elements";
 
 interface PipeCatalogPageData {
@@ -49,20 +50,20 @@ function generatePipeMarkdown(pipeId: PipeId): string {
   lines.push(entry.description);
   lines.push("");
 
-  const defaultInputGroups = entry.defaultInputGroups || [];
+  const inputFields = entry.defaultInputRequirement
+    ? requirementToInputFields(entry.defaultInputRequirement)
+    : [];
 
   // Input Fields
-  if (entry.inputFieldMode === "static" && defaultInputGroups.length > 0) {
+  if (entry.inputFieldMode === "static" && inputFields.length > 0) {
     lines.push("## Input Fields");
     lines.push("");
-    for (const group of defaultInputGroups) {
-      for (const fieldName of Object.keys(group.fields)) {
-        const field = getField(fieldName as any);
-        if (field) {
-          lines.push(
-            `- **${fieldName}** (${field.type}): ${field.description}`,
-          );
-        }
+    for (const inputField of inputFields) {
+      const field = getField(inputField.resolvedName as any);
+      if (field) {
+        lines.push(
+          `- **${inputField.resolvedName}** (${field.type}): ${field.description}`,
+        );
       }
     }
     lines.push("");
@@ -163,16 +164,16 @@ function generatePipeStructuredData(pipeId: PipeId) {
   });
 
   // Input fields
-  if (entry.inputFieldMode === "static") {
-    for (const group of entry.defaultInputGroups || []) {
-      for (const fieldName of Object.keys(group.fields)) {
-        const field = getField(fieldName as any);
-        if (field) {
-          contents.push({
-            heading: "input-fields",
-            content: `${fieldName}: ${field.description}`,
-          });
-        }
+  if (entry.inputFieldMode === "static" && entry.defaultInputRequirement) {
+    for (const inputField of requirementToInputFields(
+      entry.defaultInputRequirement,
+    )) {
+      const field = getField(inputField.resolvedName as any);
+      if (field) {
+        contents.push({
+          heading: "input-fields",
+          content: `${inputField.resolvedName}: ${field.description}`,
+        });
       }
     }
   }

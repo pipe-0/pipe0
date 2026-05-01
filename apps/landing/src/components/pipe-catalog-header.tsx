@@ -2,10 +2,7 @@ import AppLink from "@/components/app-link";
 import { PayloadDocumenation } from "@/components/config-documentation";
 import { ApiRequestCodeExample } from "@/components/features/docs/api-request-code-example";
 import { CatalogHeader } from "@/components/features/docs/docs-layout";
-import {
-  FieldRow,
-  OutputFieldEnabledBadge,
-} from "@/components/features/pipe-catalog/field-row";
+import { FieldRow } from "@/components/features/pipe-catalog/field-row";
 import { H2, H3 } from "@/components/headings";
 import { InlineDocsBadge } from "@/components/inline-docs-badge";
 import {
@@ -17,7 +14,6 @@ import {
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -37,6 +33,7 @@ import { videoCatalog } from "@/lib/pipes/video-catalog";
 import { formatCredits } from "@/lib/utils";
 import {
   BillableOperationDef,
+  collectRequirementFields,
   FieldAnnotationsType,
   FieldName,
   getDefaultOutputFields,
@@ -47,15 +44,17 @@ import {
   getPipeInstances,
   getPipePayloadFormConfig,
   PipeId,
+  PipeInputField,
   PipePayload,
   pipesSnippetCatalog,
   providerCatalog,
+  Requirement,
   sortPipeCatalogByBasePipe,
   validatePipesOrError,
 } from "@pipe0/elements";
 import { Tabs, Tab } from "fumadocs-ui/components/tabs";
 import { Download, Terminal, Upload } from "lucide-react";
-import Link from "next/link";
+import * as React from "react";
 import { useMemo } from "react";
 import { DynamicCodeBlock } from "@/components/features/docs/dynamic-code-block";
 import { PipeFormPreview } from "@/components/features/docs/pipe-form-preview";
@@ -77,18 +76,90 @@ function getFieldAnnotations(payload: PipePayload) {
     throw new Error("Can't create pipe instance");
   }
   const fieldAnnotations: FieldAnnotationsType = {};
-  const inputGroups = instance.getInputGroups();
-  for (const inputGroup of inputGroups) {
-    Object.entries(inputGroup.fields).forEach(([fieldName, def]) => {
-      fieldAnnotations[fieldName] = {
-        type: typeof def.type === "function" ? "unknown" : def.type,
-        format: typeof def.format === "function" ? null : def.format,
-        json_metadata: null,
-        label: def.label,
-      };
-    });
+  for (const { field } of collectRequirementFields(
+    instance.getInputRequirement(),
+  )) {
+    fieldAnnotations[field.resolvedName] = {
+      type: typeof field.type === "function" ? "unknown" : field.type,
+      format: typeof field.format === "function" ? null : field.format,
+      json_metadata: null,
+      label: field.label,
+    };
   }
   return fieldAnnotations;
+}
+
+type DisplayGroup = {
+  condition: "all" | "atLeastOne" | "none";
+  fields: PipeInputField[];
+};
+
+function requirementToDisplayGroups(r: Requirement | null): DisplayGroup[] {
+  if (!r) return [];
+
+  const requiredFields: PipeInputField[] = [];
+  const optionalFields: PipeInputField[] = [];
+  const atLeastOneGroups: PipeInputField[][] = [];
+
+  function visit(node: Requirement) {
+    switch (node.kind) {
+      case "field":
+        requiredFields.push(node.field);
+        break;
+      case "optional":
+        optionalFields.push(node.field);
+        break;
+      case "all":
+        node.of.forEach(visit);
+        break;
+      case "any":
+        atLeastOneGroups.push(
+          collectRequirementFields(node).map(({ field }) => field),
+        );
+        break;
+    }
+  }
+
+  visit(r);
+
+  const groups: DisplayGroup[] = [];
+  if (requiredFields.length > 0) {
+    groups.push({ condition: "all", fields: requiredFields });
+  }
+  for (const fields of atLeastOneGroups) {
+    groups.push({ condition: "atLeastOne", fields });
+  }
+  if (optionalFields.length > 0) {
+    groups.push({ condition: "none", fields: optionalFields });
+  }
+  return groups;
+}
+
+function BandCard({
+  label,
+  description,
+  count,
+  children,
+}: {
+  label: string;
+  description: string;
+  count: number;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="rounded-md border border-border overflow-hidden">
+      <div className="flex items-center gap-3 bg-muted/50 px-3 py-1.5 border-b border-border">
+        <span className="text-sm font-medium text-foreground">{label}</span>
+        <span className="text-xs text-muted-foreground flex-1 truncate">
+          {description}
+        </span>
+        <span className="text-xs text-muted-foreground tabular-nums">
+          {count}
+        </span>
+      </div>
+      <div className="px-3 py-2 space-y-1">{children}</div>
+    </div>
+  );
 }
 
 export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
@@ -255,116 +326,60 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
           {pipeEntry.inputFieldMode === "static" ? (
             <div>
               <H2 className="mb-3 pb-2 border-b">Input Fields</H2>
-              <div className="space-y-2">
-                {(pipeEntry.defaultInputGroups || []).length === 0 && (
-                  <Alert>
-                    <Upload className="h-4 w-4" />
-                    <AlertTitle>No input fields</AlertTitle>
-                    <AlertDescription>
-                      <p>This pipe&apos;s has no input fields.</p>
-                    </AlertDescription>
-                  </Alert>
-                )}
-                {pipeEntry.defaultInputGroups?.map((group, groupIndex) => {
-                  const fieldEntries = Object.entries(group.fields);
-
-                  // For groups with multiple fields, show relationship
-                  if (fieldEntries.length > 1) {
+              <div className="space-y-3">
+                {(() => {
+                  const inputGroups = requirementToDisplayGroups(
+                    pipeEntry.defaultInputRequirement,
+                  );
+                  if (inputGroups.length === 0) {
                     return (
-                      <div
-                        key={groupIndex}
-                        className="border-l-3 border-border pl-3"
-                      >
-                        <div className="pb-3">
-                          <h4 className="text-sm">Field group</h4>
-                          <small className="text-muted-foreground">
-                            {group.condition === "all" && "All Required"}
-                            {group.condition === "atLeastOne" &&
-                              "At Least one of the following fields is required"}
-                            {group.condition === "none" && "None Required"}
-                          </small>
-                        </div>
-
-                        <div className="space-y-2">
-                          {fieldEntries.map(([fieldName]) => {
-                            const found = getField(fieldName as FieldName);
-                            if (!found) return null;
-
-                            return (
-                              <FieldRow
-                                key={fieldName}
-                                fieldName={fieldName}
-                                fieldType={found.type}
-                                description={found.description}
-                                rightAction={
-                                  <Tooltip>
-                                    <TooltipTrigger asChild>
-                                      <Link
-                                        href={`/docs/pipes/pipes-catalog?type=output-field&value=${encodeURI(
-                                          fieldName,
-                                        )}`}
-                                      >
-                                        <Button
-                                          variant="ghost"
-                                          size="sm"
-                                          className="size-5"
-                                        >
-                                          <Download className="size-3" />
-                                        </Button>
-                                      </Link>
-                                    </TooltipTrigger>
-                                    <TooltipContent>
-                                      Find pipes that output this field
-                                    </TooltipContent>
-                                  </Tooltip>
-                                }
-                              />
-                            );
-                          })}
-                        </div>
-                      </div>
-                    );
-                  } else if (fieldEntries.length === 1) {
-                    // For single field groups, show them individually
-                    const [fieldName] = fieldEntries[0];
-                    const found = getField(fieldName as FieldName);
-                    if (!found) return null;
-
-                    return (
-                      <FieldRow
-                        key={fieldName}
-                        description={found.description}
-                        groupCondition={group.condition}
-                        fieldName={fieldName}
-                        fieldType={found.type}
-                        rightAction={
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <Link
-                                href={`/docs/pipes/pipes-catalog?type=output-field&value=${encodeURI(
-                                  fieldName,
-                                )}`}
-                              >
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  className="size-5"
-                                >
-                                  <Download className="size-3" />
-                                </Button>
-                              </Link>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              Find pipes that output this field
-                            </TooltipContent>
-                          </Tooltip>
-                        }
-                      />
+                      <Alert>
+                        <Upload className="h-4 w-4" />
+                        <AlertTitle>No input fields</AlertTitle>
+                        <AlertDescription>
+                          <p>This pipe&apos;s has no input fields.</p>
+                        </AlertDescription>
+                      </Alert>
                     );
                   }
+                  return inputGroups.map((group, groupIndex) => {
+                    const bandLabel =
+                      group.condition === "all"
+                        ? "All required"
+                        : group.condition === "atLeastOne"
+                          ? "At least one"
+                          : "Optional";
+                    const bandDescription =
+                      group.condition === "all"
+                        ? "Every field below must be set."
+                        : group.condition === "atLeastOne"
+                          ? "Provide at least one of the fields below."
+                          : "These fields are optional.";
+                    return (
+                      <BandCard
+                        key={groupIndex}
+                        label={bandLabel}
+                        description={bandDescription}
+                        count={group.fields.length}
+                      >
+                        {group.fields.map((inputField) => {
+                          const fieldName = inputField.resolvedName;
+                          const found = getField(fieldName as FieldName);
+                          if (!found) return null;
 
-                  return null;
-                })}
+                          return (
+                            <FieldRow
+                              key={fieldName}
+                              fieldName={fieldName}
+                              fieldType={found.type}
+                              description={found.description}
+                            />
+                          );
+                        })}
+                      </BandCard>
+                    );
+                  });
+                })()}
               </div>
             </div>
           ) : (
@@ -386,64 +401,82 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
           {/* Output Fields */}
           {pipeEntry.outputFieldMode === "static" ? (
             <div>
-              <H2 className="mb-3 pb-2 border-b">Output Fields</H2>
-              <div className="space-y-2">
-                {defaultOutputFields.length === 0 && (
-                  <Alert>
-                    <Upload className="h-4 w-4" />
-                    <AlertTitle>No output fields</AlertTitle>
-                    <AlertDescription>
-                      <p>This pipe&apos;s has no output fields.</p>
-                    </AlertDescription>
-                  </Alert>
-                )}
-                {defaultOutputFields.map((fieldName) => {
-                  const isEnabledByDefault = !!(
-                    pipeEntry?.defaultPayload.config?.output_fields as Record<
-                      string,
-                      any
-                    >
-                  )?.[fieldName]?.enabled;
-
-                  const found = getField(fieldName as FieldName);
-                  if (!found) return null;
-
-                  return (
+              <H2 className="mb-3 pb-2">Output Fields</H2>
+              <div className="space-y-3">
+                {(() => {
+                  const enabled: {
+                    fieldName: string;
+                    found: ReturnType<typeof getField>;
+                  }[] = [];
+                  const optional: {
+                    fieldName: string;
+                    found: ReturnType<typeof getField>;
+                  }[] = [];
+                  for (const fieldName of defaultOutputFields) {
+                    const isEnabledByDefault = !!(
+                      pipeEntry?.defaultPayload.config?.output_fields as Record<
+                        string,
+                        any
+                      >
+                    )?.[fieldName]?.enabled;
+                    const found = getField(fieldName as FieldName);
+                    if (!found) continue;
+                    (isEnabledByDefault ? enabled : optional).push({
+                      fieldName,
+                      found,
+                    });
+                  }
+                  const renderRow = ({
+                    fieldName,
+                    found,
+                  }: {
+                    fieldName: string;
+                    found: NonNullable<ReturnType<typeof getField>>;
+                  }) => (
                     <FieldRow
                       key={fieldName}
                       fieldName={found.name}
                       fieldType={found.type}
                       description={found.description}
-                      leftAction={
-                        <div className="flex gap-2">
-                          <OutputFieldEnabledBadge
-                            isEnabledByDefault={isEnabledByDefault}
-                          />
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <Link
-                                href={`/docs/pipes/pipes-catalog?type=input-field&value=${encodeURI(
-                                  fieldName,
-                                )}`}
-                              >
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  className="size-5"
-                                >
-                                  <Upload className="size-3" />
-                                </Button>
-                              </Link>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              Find pipes that input this field
-                            </TooltipContent>
-                          </Tooltip>
-                        </div>
-                      }
                     />
                   );
-                })}
+                  return (
+                    <>
+                      {enabled.length > 0 && (
+                        <BandCard
+                          label="Enabled by default"
+                          description="These fields are returned without extra config."
+                          count={enabled.length}
+                        >
+                          {enabled.map((item) =>
+                            renderRow(
+                              item as {
+                                fieldName: string;
+                                found: NonNullable<ReturnType<typeof getField>>;
+                              },
+                            ),
+                          )}
+                        </BandCard>
+                      )}
+                      {optional.length > 0 && (
+                        <BandCard
+                          label="Enable on demand"
+                          description="Opt in to these fields via the pipe config."
+                          count={optional.length}
+                        >
+                          {optional.map((item) =>
+                            renderRow(
+                              item as {
+                                fieldName: string;
+                                found: NonNullable<ReturnType<typeof getField>>;
+                              },
+                            ),
+                          )}
+                        </BandCard>
+                      )}
+                    </>
+                  );
+                })()}
               </div>
             </div>
           ) : (

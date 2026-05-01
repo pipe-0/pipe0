@@ -41,7 +41,7 @@ import {
   SearchCategory,
   SearchId,
 } from "@pipe0/elements";
-import { useSearchCatalogTable } from "@pipe0/react-sdk";
+import { useSearchCatalogTable } from "@pipe0/elements-react";
 import {
   ArrowDown,
   ArrowUp,

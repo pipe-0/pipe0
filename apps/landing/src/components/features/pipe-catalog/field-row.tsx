@@ -10,7 +10,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { cn, copyToClipboard } from "@/lib/utils";
-import { fieldCatalog, InputGroup, RecordFieldType } from "@pipe0/elements";
+import { fieldCatalog, RecordFieldType } from "@pipe0/elements";
 import { Check, Copy, X } from "lucide-react";
 import { ReactNode, useState } from "react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
@@ -81,14 +81,14 @@ export function FieldRow({
   fieldName,
   fieldType,
   description,
-  groupCondition,
+  required,
   rightAction,
   leftAction,
 }: {
   fieldName: string;
   fieldType: RecordFieldType;
   description: string;
-  groupCondition?: InputGroup["condition"];
+  required?: boolean;
   rightAction?: ReactNode;
   leftAction?: ReactNode;
 }) {
@@ -105,7 +105,7 @@ export function FieldRow({
   };
 
   return (
-    <div className="group flex items-center justify-between gap-3 -mx-2 px-2">
+    <div className="group flex items-center justify-between gap-3 -mx-2 py-1 px-2">
       <div className="flex items-center gap-1 min-w-0">
         <Tooltip>
           <TooltipTrigger asChild>
@@ -113,10 +113,10 @@ export function FieldRow({
           </TooltipTrigger>
           <TooltipContent>{description}</TooltipContent>
         </Tooltip>
-        {groupCondition === "all" && (
+        {required === true && (
           <RequiredAsterisk>This field is required</RequiredAsterisk>
         )}
-        {groupCondition === "none" && (
+        {required === false && (
           <span className="text-xs text-muted-foreground">(optional)</span>
         )}
         {jsonExample && (

@@ -8,10 +8,12 @@ import {
   type PipeId,
   type PipePayload,
   validatePipesOrError,
+  collectRequirementFields,
 } from "@pipe0/elements";
 import dynamic from "next/dynamic";
 import { useMemo } from "react";
 import "@pipe0/elements-react/styles";
+import { ClientPipesPayload } from "@pipe0/client";
 
 const PipeFormComponents = dynamic(
   () => import("./pipe-form-inner").then((mod) => mod.PipeFormInner),
@@ -42,15 +44,15 @@ function getFieldAnnotations(payload: PipePayload): FieldAnnotationsType {
   const [instance] = getPipeInstances([payload]);
   if (!instance) return {};
   const annotations: FieldAnnotationsType = {};
-  for (const inputGroup of instance.getInputGroups()) {
-    for (const [fieldName, def] of Object.entries(inputGroup.fields)) {
-      annotations[fieldName] = {
-        type: typeof def.type === "function" ? "unknown" : def.type,
-        format: typeof def.format === "function" ? null : def.format,
-        json_metadata: null,
-        label: def.label,
-      };
-    }
+  for (const { field } of collectRequirementFields(
+    instance.getInputRequirement(),
+  )) {
+    annotations[field.resolvedName] = {
+      type: typeof field.type === "function" ? "unknown" : field.type,
+      format: typeof field.format === "function" ? null : field.format,
+      json_metadata: null,
+      label: field.label,
+    };
   }
   return annotations;
 }
