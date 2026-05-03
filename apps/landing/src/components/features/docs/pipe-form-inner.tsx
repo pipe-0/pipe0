@@ -1,6 +1,6 @@
 "use client";
 
-import type { PipeId, PipePayload, ValidationContext } from "@pipe0/elements";
+import type { PipeId, PipePayload, ValidationContext } from "@pipe0/base";
 import {
   PipeForm,
   PipeFormContent,
@@ -8,7 +8,7 @@ import {
   PipeFormHeader,
   PipeFormSubmitButton,
   PipeFormTitle,
-} from "@pipe0/elements-react";
+} from "@pipe0/react";
 
 export function PipeFormInner({
   pipeId,

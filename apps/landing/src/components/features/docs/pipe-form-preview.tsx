@@ -9,10 +9,10 @@ import {
   type PipePayload,
   validatePipesOrError,
   collectRequirementFields,
-} from "@pipe0/elements";
+} from "@pipe0/base";
 import dynamic from "next/dynamic";
 import { useMemo } from "react";
-import "@pipe0/elements-react/styles";
+import "@pipe0/react/styles";
 import { ClientPipesPayload } from "@pipe0/client";
 
 const PipeFormComponents = dynamic(
@@ -65,9 +65,9 @@ function generateExampleCode(pipeId: PipeId, pipeLabel: string): string {
   PipeFormHeader,
   PipeFormSubmitButton,
   PipeFormTitle,
-} from "@pipe0/elements-react";
-import { getPipeDefaultPayload } from "@pipe0/elements";
-import "@pipe0/elements-react/styles";
+} from "@pipe0/react";
+import { getPipeDefaultPayload } from "@pipe0/base";
+import "@pipe0/react/styles";
 
 export function ${toComponentName(pipeId)}Form() {
   return (

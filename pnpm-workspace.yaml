@@ -6,10 +6,9 @@ packages:
   - "workers/*"
 catalog:
   "@asteasolutions/zod-to-openapi": "8.1.0"
-  "@pipe0/elements": "0.0.14"
-  "@pipe0/elements-react": "0.0.17"
-  "@pipe0/client": "0.0.28"
-  "@pipe0/react-sdk": "0.0.92"
+  "@pipe0/base": "0.0.5"
+  "@pipe0/react": "0.0.5"
+  "@pipe0/client": "0.0.30"
   "eslint": "^9.30.1"
   "typescript-eslint": "^8.36.0"
   "typescript": "^5.8.0"

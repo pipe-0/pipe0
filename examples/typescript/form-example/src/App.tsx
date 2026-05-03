@@ -8,7 +8,7 @@ import {
   type AsyncMultiSelectMetadata,
   getSearchDefaultPayload,
   MultiSelectMetadata,
-} from "@pipe0/elements";
+} from "@pipe0/base";
 import { AsyncMultiSelect } from "./AsyncMultiSelect";
 
 // ---------------------------------------------------------------------------

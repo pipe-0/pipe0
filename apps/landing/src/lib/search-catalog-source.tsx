@@ -8,7 +8,7 @@ import {
   providerCatalog,
   searchCatalog,
   SearchId,
-} from "@pipe0/elements";
+} from "@pipe0/base";
 
 interface SearchCatalogPageData {
   title: string;

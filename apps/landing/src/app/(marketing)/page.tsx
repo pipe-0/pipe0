@@ -8,8 +8,8 @@ import { LogoRawSmall } from "@/components/logo";
 
 import { Button } from "@/components/ui/button";
 import { appInfo } from "@/lib/const";
-import { docsLinkPaths } from "@pipe0/docs-links";
-import { providerCatalog } from "@pipe0/elements";
+import { docsLinkPaths } from "@pipe0/doc-links";
+import { providerCatalog } from "@pipe0/base";
 import { ArrowRight, Search, Sparkle } from "lucide-react";
 import Link from "next/link";
 import type { ReactNode } from "react";

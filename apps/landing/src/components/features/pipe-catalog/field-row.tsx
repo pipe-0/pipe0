@@ -10,14 +10,14 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { cn, copyToClipboard } from "@/lib/utils";
-import { fieldCatalog, RecordFieldType } from "@pipe0/elements";
+import { fieldCatalog, RecordFieldType } from "@pipe0/base";
 import { Check, Copy, X } from "lucide-react";
 import { ReactNode, useState } from "react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { toast } from "sonner";
 
 import { RequiredAsterisk } from "@/components/required-asterisk";
-import { docsLinkPaths } from "@pipe0/docs-links";
+import { docsLinkPaths } from "@pipe0/doc-links";
 import Link from "next/link";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/cjs/styles/prism";
 import {

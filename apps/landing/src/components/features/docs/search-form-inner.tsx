@@ -1,6 +1,6 @@
 "use client";
 
-import type { SearchId, SearchPayload } from "@pipe0/elements";
+import type { SearchId, SearchPayload } from "@pipe0/base";
 import {
   SearchForm,
   SearchFormContent,
@@ -8,7 +8,7 @@ import {
   SearchFormHeader,
   SearchFormSubmitButton,
   SearchFormTitle,
-} from "@pipe0/elements-react";
+} from "@pipe0/react";
 
 export function SearchFormInner({
   searchId,

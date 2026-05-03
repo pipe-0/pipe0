@@ -1,8 +1,11 @@
 "use client";
 
-import { SearchEntryMap } from "@/lib/get-searches";
 import { ConditionalWrapper } from "@/components/conditional-wrapper";
-import { AvatarGroup } from "@/components/features/docs/avatar-group";
+import {
+  CatalogFieldList,
+  CatalogListRow,
+} from "@/components/features/pipe-catalog/catalog-list-row";
+import { H1 } from "@/components/headings";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,109 +20,365 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { appInfo } from "@/lib/const";
+import { SearchEntryMap } from "@/lib/get-searches";
+import { getSearchDocsURI } from "@/lib/search/get-search-docs-uri";
 import { cn, copyToClipboard } from "@/lib/utils";
 import {
   getDefaultSearchOutputFields,
   getSearchEntry,
   getSearchVersion,
-  providerCatalog,
+  searchCatalog,
+  SearchCatalogEntry,
   SearchCatalogTableData,
   SearchCategory,
   SearchId,
-} from "@pipe0/elements";
-import { useSearchCatalogTable } from "@pipe0/elements-react";
+  sortSearchCatalogByBaseSearch,
+} from "@pipe0/base";
+import {
+  AvatarGroup,
+  PricingBadge,
+  type SearchCardData,
+  SearchCatalog,
+  SearchCatalogActiveFilters,
+  SearchCatalogCategoryFilter,
+  SearchCatalogEmpty,
+  SearchCatalogList,
+  SearchCatalogOutputFieldFilter,
+  SearchCatalogProviderFilter,
+  SearchCatalogSearchFilter,
+  useSearchCatalogContext,
+  useSearchCatalogTable,
+} from "@pipe0/react";
+import { Callout } from "fumadocs-ui/components/callout";
 import {
   ArrowDown,
-  ArrowUp,
-  Building2,
-  Coins,
+  ChevronDown,
   Copy,
-  Database,
   ExternalLink,
-  Filter,
   Search,
-  User,
   X,
 } from "lucide-react";
 import Link from "next/link";
-import { ComponentType, useState } from "react";
-import { getSearchDocsURI } from "@/lib/search/get-search-docs-uri";
-import { H1 } from "@/components/headings";
-import { Callout } from "fumadocs-ui/components/callout";
+import { type ComponentType, type ReactNode, useMemo } from "react";
 
-// Featured searches - you can customize this list with your featured searches IDs
 const FEATURED_SEARCHES_IDS = [] satisfies SearchId[];
+const FEATURED_SEARCHES_ID_SET = new Set<string>(FEATURED_SEARCHES_IDS);
 
-// Integration card component - memoized to prevent unnecessary re-renders
-const SearchIntegrationCard = ({
-  tableEntry,
+function getSearchCost(entry: SearchCatalogTableData): number {
+  if (entry.cost.mode === "per_result") return entry.cost.creditsPerResult;
+  if (entry.cost.mode === "per_search") return entry.cost.creditsPerSearch;
+  return entry.cost.creditsPerPage;
+}
+
+function getSearchUnit(entry: SearchCatalogTableData): string {
+  if (entry.cost.mode === "per_result") return "result";
+  if (entry.cost.mode === "per_search") return "search";
+  return "page";
+}
+
+type CategoryOption = {
+  id: SearchCategory | null;
+  title: string;
+  color?: string;
+  disabled: boolean;
+};
+
+// Search category colors mirror the catalog used in the related app.
+const SEARCH_CATEGORY_COLORS: Record<SearchCategory, string> = {
+  people: "#8B7DFF",
+  companies: "#10B981",
+  deprecated: "#94A3B8",
+};
+
+const quickStartOptions: CategoryOption[] = [
+  { id: null, title: "All", disabled: false },
+  {
+    id: "companies",
+    title: "Companies",
+    color: SEARCH_CATEGORY_COLORS.companies,
+    disabled: false,
+  },
+  {
+    id: "people",
+    title: "People",
+    color: SEARCH_CATEGORY_COLORS.people,
+    disabled: false,
+  },
+  {
+    id: "deprecated",
+    title: "Deprecated",
+    color: SEARCH_CATEGORY_COLORS.deprecated,
+    disabled: false,
+  },
+];
+
+const GROUP_CATEGORIES: { id: SearchCategory; title: string }[] = [
+  { id: "companies", title: "Find Companies" },
+  { id: "people", title: "Find People" },
+  { id: "deprecated", title: "Deprecated" },
+];
+
+// Render-prop option type used by the headless filter components.
+type FilterOption = {
+  label: ReactNode;
+  value: string;
+  icon?: ComponentType<{ className?: string }>;
+  imageSrc?: string;
+};
+
+function DocsFilterDropdown({
+  defaultLabel,
+  leadingIcon,
+  value,
+  setValue,
+  options,
+  renderItem,
 }: {
-  tableEntry: SearchCatalogTableData;
-}) => {
-  const searchId = tableEntry.searchId;
+  defaultLabel: string;
+  leadingIcon?: ReactNode;
+  value: string;
+  setValue: (v: string | null) => void;
+  options: ReadonlyArray<FilterOption>;
+  renderItem: (option: FilterOption) => ReactNode;
+}) {
+  const activeOption = value
+    ? options.find((o) => o.value === value)
+    : undefined;
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <button
+          className={cn(
+            "inline-flex items-center gap-1.5 px-3 py-1.5 text-sm rounded-md border transition-colors min-w-[140px] max-w-[220px]",
+            value
+              ? "border-primary text-primary bg-primary/5"
+              : "border-input text-foreground hover:bg-muted",
+          )}
+        >
+          {leadingIcon && (
+            <span className="shrink-0 text-muted-foreground">{leadingIcon}</span>
+          )}
+          <span className="truncate flex-1 text-left">
+            {activeOption ? activeOption.label : defaultLabel}
+          </span>
+          <ChevronDown className="size-3.5 shrink-0 text-muted-foreground" />
+        </button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent
+        align="start"
+        className="max-h-72 overflow-y-auto w-56"
+      >
+        {value && (
+          <>
+            <DropdownMenuItem className="pl-2" onClick={() => setValue(null)}>
+              Clear
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+          </>
+        )}
+        {options.map((option) => {
+          const checked = option.value === value;
+          return (
+            <DropdownMenuItem
+              key={option.value}
+              className={cn(
+                "pl-2",
+                checked && "bg-primary/10 text-primary focus:bg-primary/15",
+              )}
+              onSelect={(e) => {
+                e.preventDefault();
+                if (checked) setValue(null);
+                else setValue(option.value);
+              }}
+            >
+              <span className="flex items-center gap-2 flex-1 min-w-0">
+                {renderItem(option)}
+              </span>
+            </DropdownMenuItem>
+          );
+        })}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
 
+function DocsCategoryButtons({
+  value,
+  setValue,
+}: {
+  value: SearchCategory | null;
+  setValue: (v: SearchCategory | null) => void;
+}) {
+  // Counts per category, derived from the latest version of each base search.
+  // Stable across other filter changes (matches today's behavior).
+  const categoryCounts = useMemo(() => {
+    const counts: Partial<Record<"all" | SearchCategory, number>> = {};
+    let allCount = 0;
+    const byBaseSearch = sortSearchCatalogByBaseSearch();
+    for (const versions of Object.values(byBaseSearch)) {
+      const latest = versions[0];
+      if (!latest) continue;
+      const entry = searchCatalog[latest.searchId] as
+        | { categories?: readonly SearchCategory[] }
+        | undefined;
+      const cats = (entry?.categories ?? []) as SearchCategory[];
+      const isDeprecated = cats.includes("deprecated");
+      if (!isDeprecated) allCount += 1;
+      for (const cat of cats) {
+        counts[cat] = (counts[cat] ?? 0) + 1;
+      }
+    }
+    counts.all = allCount;
+    return counts;
+  }, []);
+
+  return (
+    <div className="flex gap-1 flex-wrap items-center">
+      {quickStartOptions.map((option) => {
+        const isActive = value === option.id;
+        const count =
+          option.id === null ? categoryCounts.all : categoryCounts[option.id];
+        return (
+          <ConditionalWrapper
+            key={option.id}
+            condition={!!option.disabled}
+            wrapper={(c) => (
+              <Tooltip>
+                <TooltipTrigger>{c}</TooltipTrigger>
+                <TooltipContent>Coming soon</TooltipContent>
+              </Tooltip>
+            )}
+          >
+            <button
+              data-disabled={option.disabled}
+              className={cn(
+                "inline-flex items-center gap-1.5 px-2.5 py-1 text-sm rounded-md transition-colors",
+                option.id === "deprecated" && !isActive && "opacity-60",
+                isActive
+                  ? "bg-foreground text-background font-medium"
+                  : "text-foreground hover:bg-muted",
+                "data-[disabled=true]:opacity-50 data-[disabled=true]:pointer-events-none",
+              )}
+              onClick={() => setValue(option.id)}
+            >
+              {option.color && (
+                <span
+                  className="size-2 rounded-full shrink-0"
+                  style={{ backgroundColor: option.color }}
+                  aria-hidden
+                />
+              )}
+              {option.id === "deprecated" ? <s>{option.title}</s> : option.title}
+              {typeof count === "number" && count > 0 && (
+                <span
+                  className={cn(
+                    "tabular-nums text-xs",
+                    isActive ? "text-background/70" : "text-muted-foreground",
+                  )}
+                >
+                  {count}
+                </span>
+              )}
+            </button>
+          </ConditionalWrapper>
+        );
+      })}
+    </div>
+  );
+}
+
+function DocsActiveFiltersStrip({
+  filters,
+}: {
+  filters: ReadonlyArray<{
+    id: string;
+    value: string;
+    label: string;
+    remove: () => void;
+  }>;
+}) {
+  const { resetFilters } = useSearchCatalogContext();
+  if (filters.length === 0) return null;
+  return (
+    <div className="flex items-center gap-2 flex-wrap">
+      {filters.map((filter) => (
+        <span
+          key={filter.id}
+          className="inline-flex items-center gap-1 px-2 py-0.5 text-xs rounded-md bg-primary/10 text-primary"
+        >
+          <span className="text-primary/60">{filter.label}:</span>
+          {filter.value}
+          <button
+            onClick={filter.remove}
+            className="ml-0.5 hover:text-primary/80"
+          >
+            <X className="h-3 w-3" />
+          </button>
+        </span>
+      ))}
+      <button
+        onClick={resetFilters}
+        className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+      >
+        Clear all
+      </button>
+    </div>
+  );
+}
+
+const SearchCard = ({ tableEntry }: { tableEntry: SearchCatalogTableData }) => {
+  const searchId = tableEntry.searchId;
   const isNew = (tableEntry.tags as string[]).includes("new");
+  const cost = getSearchCost(tableEntry);
 
   return (
     <Link href={getSearchDocsURI(searchId)}>
-      <Card className="flex flex-col justify-stretch border-input hover:border-primary/50 transition-colors relative h-[290px]">
-        <span className="absolute right-4 top-4 inline-flex gap-1 text-muted-foreground text-sm items-center">
-          <Coins className=" size-4" />{" "}
-          {tableEntry.cost.mode === "per_result"
-            ? tableEntry.cost.creditsPerResult
-            : tableEntry.cost.mode === "per_search"
-              ? tableEntry.cost.creditsPerSearch
-              : tableEntry.cost.creditsPerPage}
+      <Card className="flex flex-col justify-stretch border-input hover:border-primary/50 transition-colors relative h-full min-h-[230px]">
+        <span className="absolute right-3 top-3 inline-flex gap-1 text-muted-foreground text-xs items-center">
+          {cost ? <PricingBadge credits={cost} /> : "Free"}
+          {cost ? (
+            <span className="text-muted-foreground/70">
+              / {getSearchUnit(tableEntry)}
+            </span>
+          ) : null}
         </span>
-        <CardHeader className="pb-2">
-          <div className="flex justify-between items-start">
-            <div className="flex items-center gap-3">
-              <div className="flex">
-                <AvatarGroup
-                  providerCatalog={providerCatalog}
-                  providers={[tableEntry.provider]}
-                />
-              </div>
-              <div>
-                <CardTitle className="text-base flex items-center gap-2">
-                  {tableEntry.label}
-                  {isNew && (
-                    <Badge
-                      variant="default"
-                      className="text-xs bg-black text-white"
-                    >
-                      New
-                    </Badge>
-                  )}
-                </CardTitle>
-              </div>
+        <CardHeader className="pb-1.5">
+          <div className="flex items-start gap-3">
+            <AvatarGroup providers={[tableEntry.provider]} size="sm" />
+            <div className="min-w-0 pr-12">
+              <CardTitle className="text-sm font-semibold leading-tight flex items-center gap-2">
+                <span className="truncate">{tableEntry.label}</span>
+                {isNew && (
+                  <Badge
+                    variant="default"
+                    className="text-[10px] px-1.5 py-0 leading-none bg-foreground text-background shrink-0"
+                  >
+                    New
+                  </Badge>
+                )}
+              </CardTitle>
             </div>
-            <div className="flex flex-row-reverse"></div>
           </div>
         </CardHeader>
-        <CardContent className="grow text-sm">
-          <p>{tableEntry.description}</p>
+        <CardContent className="grow text-xs text-muted-foreground leading-relaxed">
+          <p className="line-clamp-3">{tableEntry.description}</p>
         </CardContent>
-        <CardFooter className="pt-2 block pb-3">
-          <div className="flex items-center justify-start pb-4 gap-2 text-muted-foreground text-sm">
-            <span className="whitespace-nowrap">{searchId}</span>
+        <CardFooter className="pt-0 pb-3 px-4 flex flex-col items-stretch gap-2">
+          <div className="flex items-center gap-1.5 text-muted-foreground text-xs">
+            <span className="font-mono break-all truncate">{searchId}</span>
             <Button
               size="icon"
-              className="size-4"
+              className="size-5 shrink-0"
               variant="ghost"
               onClick={(e) => {
                 e.stopPropagation();
@@ -130,16 +389,15 @@ const SearchIntegrationCard = ({
               <Copy className="size-3" />
             </Button>
           </div>
-
-          <div className="flex gap-1 items-center">
+          <div className="flex gap-1 items-center -mx-2">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
                   size="sm"
                   variant="ghost"
-                  className="text-muted-foreground text-sm hover:text-foreground"
+                  className="text-muted-foreground text-xs hover:text-foreground h-7 px-2"
                 >
-                  <ArrowDown className="size-3" /> Ouputs
+                  <ArrowDown className="size-3" /> Outputs
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent
@@ -170,151 +428,152 @@ const SearchIntegrationCard = ({
   );
 };
 
-const quickStartOptions = [
-  {
-    id: null,
-    disabled: false,
-    icon: Database,
-    title: "All",
-  },
-  {
-    id: "companies",
-    disabled: false,
-    icon: Building2,
-    title: "Find Companies",
-  },
-  {
-    id: "people",
-    disabled: false,
-    icon: User,
-    title: "Find People",
-  },
-  {
-    id: "deprecated",
-    disabled: false,
-    icon: X,
-    title: "Deprecated",
-  },
-] satisfies {
-  id: SearchCategory | null;
-  title: string;
-  icon: ComponentType;
-  disabled: boolean;
-}[];
+function Featured({ searchEntryMap }: { searchEntryMap: SearchEntryMap }) {
+  const { category, globalFilterInput, table } = useSearchCatalogContext();
+  const showFeatured =
+    category === null &&
+    globalFilterInput === "" &&
+    table.getState().columnFilters.length === 0;
 
-type FilterColumn = "tags" | "providers" | "outputFields";
+  const featuredEntries = useMemo(() => {
+    return FEATURED_SEARCHES_IDS.map((searchId) => {
+      const searchEntry = searchEntryMap[searchId];
+      if (!searchEntry) return null;
+      return {
+        ...getSearchEntry(searchId),
+        searchId,
+        latestVersion: getSearchVersion(searchId),
+      } as unknown as SearchCatalogTableData;
+    }).filter((e): e is SearchCatalogTableData => e !== null);
+  }, [searchEntryMap]);
 
-const filterSections: { key: FilterColumn; label: string }[] = [
-  { key: "tags", label: "Tags" },
-  { key: "providers", label: "Providers" },
-  { key: "outputFields", label: "Output Fields" },
-];
+  if (!showFeatured || featuredEntries.length === 0) return null;
+
+  return (
+    <div className="space-y-3">
+      <div className="flex items-baseline gap-2">
+        <h2 className="text-lg font-semibold tracking-tight">Featured</h2>
+        <span className="text-xs text-muted-foreground">
+          · Most-used searches.
+        </span>
+      </div>
+      <div className="grid gap-3 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+        {featuredEntries.map((entry) => (
+          <SearchCard key={entry.searchId} tableEntry={entry} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function GroupedList({ cards }: { cards: SearchCardData[] }) {
+  const { category, globalFilterInput, table } = useSearchCatalogContext();
+  const featuredShown =
+    category === null &&
+    globalFilterInput === "" &&
+    table.getState().columnFilters.length === 0;
+
+  const visible = useMemo(
+    () =>
+      featuredShown
+        ? cards.filter((c) => !FEATURED_SEARCHES_ID_SET.has(c.searchId))
+        : cards,
+    [cards, featuredShown],
+  );
+
+  // Each search is placed in the first matching category (deprecated last).
+  const groupedRows = useMemo(() => {
+    const seen = new Set<string>();
+    const groups: {
+      category: SearchCategory;
+      entries: SearchCardData[];
+    }[] = [];
+    for (const cat of GROUP_CATEGORIES) {
+      const entries: SearchCardData[] = [];
+      for (const card of visible) {
+        if (seen.has(card.searchId)) continue;
+        const cats = ((card.latestEntry as SearchCatalogEntry).categories ??
+          []) as SearchCategory[];
+        if (cats.includes(cat.id)) {
+          entries.push(card);
+          seen.add(card.searchId);
+        }
+      }
+      if (entries.length > 0) groups.push({ category: cat.id, entries });
+    }
+    const leftovers = visible.filter((c) => !seen.has(c.searchId));
+    if (leftovers.length > 0) {
+      groups.push({
+        category: "companies" as SearchCategory,
+        entries: leftovers,
+      });
+    }
+    return groups;
+  }, [visible]);
+
+  return (
+    <div className="space-y-6">
+      {groupedRows.map(({ category: catId, entries }) => {
+        const meta = GROUP_CATEGORIES.find((c) => c.id === catId);
+        if (!meta) return null;
+        return (
+          <section key={catId} className="space-y-2">
+            <div className="flex items-baseline gap-2">
+              <h2 className="text-lg font-semibold tracking-tight">
+                {meta.title}
+              </h2>
+              <span className="text-xs text-muted-foreground tabular-nums">
+                {entries.length}
+              </span>
+            </div>
+            <div>
+              {entries.map((card) => {
+                const entry = card.entry;
+                const credits = getSearchCost(entry);
+                const isNew = (entry.tags as string[]).includes("new");
+                const outputFields: CatalogFieldList =
+                  getDefaultSearchOutputFields(card.searchId).map((name) => ({
+                    name,
+                  }));
+                return (
+                  <CatalogListRow
+                    key={card.searchId}
+                    href={getSearchDocsURI(card.searchId)}
+                    label={card.label}
+                    entryId={card.searchId}
+                    description={card.description}
+                    providers={[card.provider]}
+                    outputFields={outputFields}
+                    credits={credits}
+                    billableUnit={getSearchUnit(entry)}
+                    isNew={isNew}
+                  />
+                );
+              })}
+            </div>
+          </section>
+        );
+      })}
+    </div>
+  );
+}
 
 export function SearchCatalogIndex({
   searchEntryMap,
 }: {
   searchEntryMap: SearchEntryMap;
 }) {
-  const {
-    category,
-    globalFilterInput,
-    isFilterChecked,
-    setCategory,
-    setGlobalFilterInput,
-    table,
-    showFeaturedSearches,
-    sidebar: {
-      removeColumnFilter,
-      sortedOutputFieldEntries,
-      sortedProviderEntries,
-      sortedTagEntries,
-    },
-  } = useSearchCatalogTable();
-
-  // Workaround: the SDK's addColumnFilter for searches injects a reference to
-  // a non-existent "categories" column, causing a TanStack Table error.
-  // Use table.setColumnFilters directly instead.
-  const addColumnFilter = (id: string, value: string) => {
-    table.setColumnFilters([{ id, value }]);
-  };
-
-  const [activeFilterSection, setActiveFilterSection] =
-    useState<FilterColumn | null>(null);
-  const [filterOpen, setFilterOpen] = useState(false);
-
-  const rows = table.getRowModel().rows;
-
-  // Determine which filters are active (exclude null/undefined values left by removeColumnFilter)
-  const activeFilters = table
-    .getState()
-    .columnFilters.filter((f) => f.value != null && f.value !== "");
-  const hasActiveFilters = activeFilters.length > 0;
-
-  const clearAllFilters = () => {
-    table.setColumnFilters([]);
-    setActiveFilterSection(null);
-  };
-
-  const getFilterEntries = (key: FilterColumn) => {
-    switch (key) {
-      case "tags":
-        return sortedTagEntries;
-      case "providers":
-        return sortedProviderEntries;
-      case "outputFields":
-        return sortedOutputFieldEntries;
-    }
-  };
-
-  const renderFilterOption = (
-    key: FilterColumn,
-    name: string,
-    count: number,
-  ) => {
-    const isChecked = isFilterChecked(key, name);
-    return (
-      <button
-        key={name}
-        onClick={() => {
-          if (isChecked) {
-            removeColumnFilter(key);
-          } else {
-            addColumnFilter(key, name);
-          }
-        }}
-        className={cn(
-          "flex items-center gap-2 w-full px-3 py-1.5 text-sm rounded-md transition-colors text-left",
-          isChecked
-            ? "bg-primary/10 text-primary font-medium"
-            : "text-muted-foreground hover:text-foreground hover:bg-muted",
-        )}
-      >
-        {key === "providers" && (
-          <img
-            src={providerCatalog[name as keyof typeof providerCatalog]?.logoUrl}
-            alt=""
-            className="w-4 h-4 shrink-0"
-          />
-        )}
-        <span className="truncate">
-          {key === "providers"
-            ? (providerCatalog[name as keyof typeof providerCatalog]?.label ??
-              name)
-            : name}
-        </span>
-        <span className="ml-auto text-xs text-muted-foreground shrink-0">
-          {count}
-        </span>
-      </button>
-    );
-  };
+  const ctx = useSearchCatalogTable();
 
   return (
-    <div className="space-y-6 mx-auto">
+    <SearchCatalog
+      context={ctx}
+      className="space-y-5 mx-auto min-w-0 max-w-full"
+    >
       {/* Header */}
-      <div className="space-y-2">
-        <div className="flex items-center justify-between">
-          <H1>Search Catalog</H1>
+      <div className="space-y-2 min-w-0">
+        <div className="flex items-baseline justify-between gap-4">
+          <H1 className="pb-0">Search Catalog</H1>
           <Link
             href={appInfo.links.requestPipe}
             className="text-sm text-muted-foreground hover:text-foreground transition-colors"
@@ -324,7 +583,7 @@ export function SearchCatalogIndex({
             </Button>
           </Link>
         </div>
-        <p className="text-lg text-muted-foreground">
+        <p className="text-sm text-muted-foreground max-w-3xl">
           Searches give you access to datasets for finding leads and companies
           using various filters. You can combine multiple searches into one
           request and deduplicate the results.
@@ -346,214 +605,92 @@ export function SearchCatalogIndex({
       </Callout>
 
       {/* Search bar */}
-      <div className="relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-        <Input
-          type="search"
-          placeholder="Search..."
-          className="w-full pl-9 h-10"
-          value={globalFilterInput}
-          onChange={(v) => setGlobalFilterInput(v.target.value)}
+      <SearchCatalogSearchFilter
+        render={({ value, setValue }) => (
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              type="search"
+              placeholder="Search..."
+              className="w-full pl-9 h-10"
+              value={value}
+              onChange={(e) => setValue(e.target.value)}
+            />
+          </div>
+        )}
+      />
+
+      {/* Categories */}
+      <SearchCatalogCategoryFilter
+        render={({ value, setValue }) => (
+          <DocsCategoryButtons value={value} setValue={setValue} />
+        )}
+      />
+
+      {/* Provider + Output quick filters */}
+      <div className="flex items-center gap-2 flex-wrap">
+        <SearchCatalogProviderFilter
+          render={({ value, setValue, options }) => (
+            <DocsFilterDropdown
+              defaultLabel="Provider"
+              value={value}
+              setValue={setValue}
+              options={options}
+              renderItem={(option) => (
+                <>
+                  {option.imageSrc && (
+                    <img
+                      src={option.imageSrc}
+                      alt=""
+                      className="size-4 shrink-0 rounded-sm"
+                    />
+                  )}
+                  <span className="truncate">{option.label}</span>
+                </>
+              )}
+            />
+          )}
+        />
+
+        <SearchCatalogOutputFieldFilter
+          render={({ value, setValue, options }) => (
+            <DocsFilterDropdown
+              defaultLabel="Output fields"
+              leadingIcon={<ArrowDown className="size-3.5" />}
+              value={value}
+              setValue={setValue}
+              options={options}
+              renderItem={(option) => (
+                <span className="truncate">{option.label}</span>
+              )}
+            />
+          )}
         />
       </div>
 
-      {/* Categories + Filter button */}
-      <div className="flex items-center gap-2">
-        <div className="flex gap-2 flex-wrap flex-1">
-          {quickStartOptions.map((option) => {
-            const IconComponent = option.icon;
-            const isActive = category === option.id;
-            return (
-              <ConditionalWrapper
-                key={option.id}
-                condition={!!option.disabled}
-                wrapper={(c) => (
-                  <Tooltip>
-                    <TooltipTrigger>{c}</TooltipTrigger>
-                    <TooltipContent>Coming soon</TooltipContent>
-                  </Tooltip>
-                )}
-              >
-                <button
-                  data-disabled={option.disabled}
-                  className={cn(
-                    "inline-flex items-center gap-1.5 px-3 py-1.5 text-sm rounded-md border transition-colors",
-                    option.id === "deprecated" && "opacity-60",
-                    isActive
-                      ? "bg-primary text-primary-foreground border-primary font-medium"
-                      : "bg-background text-muted-foreground border-input hover:text-foreground hover:bg-muted",
-                    "data-[disabled=true]:opacity-50 data-[disabled=true]:pointer-events-none",
-                  )}
-                  onClick={() => setCategory(option.id)}
-                >
-                  <IconComponent className="w-3.5 h-3.5" strokeWidth={1.5} />
-                  {option.id === "deprecated" ? (
-                    <s>{option.title}</s>
-                  ) : (
-                    option.title
-                  )}
-                </button>
-              </ConditionalWrapper>
-            );
-          })}
-        </div>
-
-        {/* Filter popover */}
-        <Popover open={filterOpen} onOpenChange={setFilterOpen}>
-          <PopoverTrigger asChild>
-            <button
-              className={cn(
-                "inline-flex items-center justify-center rounded-md border p-2 transition-colors",
-                hasActiveFilters
-                  ? "border-primary text-primary bg-primary/5"
-                  : "border-input text-muted-foreground hover:text-foreground hover:bg-muted",
-              )}
-            >
-              <Filter className="h-4 w-4" />
-              {hasActiveFilters && (
-                <span className="ml-1.5 text-xs font-medium">
-                  {activeFilters.length}
-                </span>
-              )}
-            </button>
-          </PopoverTrigger>
-          <PopoverContent align="end" className="w-64 p-0" sideOffset={8}>
-            {activeFilterSection === null ? (
-              <div className="py-1">
-                <div className="px-3 py-2 flex items-center justify-between">
-                  <span className="text-sm font-medium">Filters</span>
-                  {hasActiveFilters && (
-                    <button
-                      onClick={clearAllFilters}
-                      className="text-xs text-muted-foreground hover:text-foreground transition-colors"
-                    >
-                      Clear all
-                    </button>
-                  )}
-                </div>
-                {filterSections.map(({ key, label }) => {
-                  const currentFilter = activeFilters.find((f) => f.id === key);
-                  return (
-                    <button
-                      key={key}
-                      onClick={() => setActiveFilterSection(key)}
-                      className="flex items-center justify-between w-full px-3 py-2 text-sm hover:bg-muted transition-colors"
-                    >
-                      <span>{label}</span>
-                      <span className="text-xs text-muted-foreground">
-                        {currentFilter ? String(currentFilter.value) : "Any"}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-            ) : (
-              <div className="py-1">
-                <button
-                  onClick={() => setActiveFilterSection(null)}
-                  className="flex items-center gap-1 px-3 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors w-full"
-                >
-                  <ArrowUp className="h-3 w-3 -rotate-90" />
-                  <span>
-                    {
-                      filterSections.find((s) => s.key === activeFilterSection)
-                        ?.label
-                    }
-                  </span>
-                </button>
-                <div className="max-h-70 overflow-y-auto px-1 py-1">
-                  {getFilterEntries(activeFilterSection).map(([name, items]) =>
-                    renderFilterOption(
-                      activeFilterSection,
-                      name,
-                      (items as any[]).length,
-                    ),
-                  )}
-                </div>
-              </div>
-            )}
-          </PopoverContent>
-        </Popover>
-      </div>
-
       {/* Active filter pills */}
-      {hasActiveFilters && (
-        <div className="flex items-center gap-2 flex-wrap">
-          {activeFilters.map((filter) => (
-            <span
-              key={filter.id}
-              className="inline-flex items-center gap-1 px-2 py-0.5 text-xs rounded-md bg-primary/10 text-primary"
-            >
-              <span className="text-primary/60">
-                {filterSections.find((s) => s.key === filter.id)?.label}:
-              </span>
-              {String(filter.value)}
-              <button
-                onClick={() => removeColumnFilter(filter.id as FilterColumn)}
-                className="ml-0.5 hover:text-primary/80"
-              >
-                <X className="h-3 w-3" />
-              </button>
-            </span>
-          ))}
-          <button
-            onClick={clearAllFilters}
-            className="text-xs text-muted-foreground hover:text-foreground transition-colors"
-          >
-            Clear all
-          </button>
-        </div>
-      )}
+      <SearchCatalogActiveFilters
+        render={({ filters }) => <DocsActiveFiltersStrip filters={filters} />}
+      />
 
       {/* Featured section */}
-      {showFeaturedSearches && FEATURED_SEARCHES_IDS.length ? (
-        <div className="space-y-4">
-          <h2 className="text-2xl font-bold">Featured</h2>
-          <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-            {FEATURED_SEARCHES_IDS.map((searchId) => {
-              const searchEntry = searchEntryMap[searchId];
-              if (!searchEntry) return null;
-              return (
-                <SearchIntegrationCard
-                  key={searchId}
-                  tableEntry={{
-                    ...getSearchEntry(searchId),
-                    searchId: searchId,
-                    latestVersion: getSearchVersion(searchId),
-                  }}
-                />
-              );
-            })}
-          </div>
-        </div>
-      ) : null}
+      <Featured searchEntryMap={searchEntryMap} />
 
-      <div className="space-y-4">
-        {showFeaturedSearches && (
-          <h2 className="text-2xl font-bold">All searches</h2>
-        )}
-        <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-          {rows.map((row) => {
-            const searchEntry = getSearchEntry(row.original.searchId);
-            if (!searchEntry) return null;
-            return (
-              <SearchIntegrationCard
-                key={row.original.searchId}
-                tableEntry={row.original}
-              />
-            );
-          })}
-        </div>
+      {/* Grouped list view */}
+      <SearchCatalogList
+        render={({ cards }) => <GroupedList cards={cards} />}
+      />
 
-        {/* Empty state */}
-        {rows.length === 0 && (
+      {/* Empty state */}
+      <SearchCatalogEmpty
+        render={() => (
           <div className="flex h-50 flex-col items-center justify-center rounded-md border border-dashed p-8 text-center">
             <p className="text-sm text-muted-foreground">
               No searches found. Try adjusting your filters.
             </p>
           </div>
         )}
-      </div>
-    </div>
+      />
+    </SearchCatalog>
   );
 }

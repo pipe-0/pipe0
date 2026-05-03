@@ -9,7 +9,7 @@ export async function SearchCatalogIndexPage() {
   return (
     <DocsPage
       tableOfContent={{ enabled: false, component: null }}
-      className="lg:col-[main-start/toc-end] max-w-6xl"
+      className="lg:col-[main-start/toc-end] max-w-[1200px]"
     >
       <div className="mb-12 min-h-screen">
         <Suspense>

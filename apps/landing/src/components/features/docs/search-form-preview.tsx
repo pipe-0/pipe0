@@ -1,10 +1,10 @@
 "use client";
 
 import { UiExampleCard } from "@/components/features/docs/ui-example-card";
-import type { SearchId, SearchPayload } from "@pipe0/elements";
+import type { SearchId, SearchPayload } from "@pipe0/base";
 import dynamic from "next/dynamic";
 import { useMemo } from "react";
-import "@pipe0/elements-react/styles";
+import "@pipe0/react/styles";
 
 const SearchFormComponents = dynamic(
   () => import("./search-form-inner").then((mod) => mod.SearchFormInner),
@@ -39,9 +39,9 @@ function generateExampleCode(searchId: SearchId, searchLabel: string): string {
   SearchFormHeader,
   SearchFormSubmitButton,
   SearchFormTitle,
-} from "@pipe0/elements-react";
-import { getSearchDefaultPayload } from "@pipe0/elements";
-import "@pipe0/elements-react/styles";
+} from "@pipe0/react";
+import { getSearchDefaultPayload } from "@pipe0/base";
+import "@pipe0/react/styles";
 
 export function ${toComponentName(searchId)}Form() {
   return (
