@@ -1,5 +1,5 @@
 import { ClientSearchPayloadMap } from "@pipe0/client";
-import { SearchId, SearchPayloadCatalog } from "@pipe0/elements";
+import { SearchId, SearchPayloadCatalog } from "@pipe0/base";
 import Oas from "oas";
 import { OASDocument } from "oas/types";
 import { z } from "zod";

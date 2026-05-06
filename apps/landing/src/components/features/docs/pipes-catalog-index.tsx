@@ -1,7 +1,10 @@
 "use client";
 
 import { ConditionalWrapper } from "@/components/conditional-wrapper";
-import { AvatarGroup } from "@/components/features/docs/avatar-group";
+import {
+  CatalogFieldList,
+  CatalogListRow,
+} from "@/components/features/pipe-catalog/catalog-list-row";
 import { H1 } from "@/components/headings";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
@@ -18,61 +21,66 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { appInfo } from "@/lib/const";
+import { PIPE_CATEGORY_COLORS } from "@/lib/pipes/category-colors";
 import { getPipeDocsURI } from "@/lib/pipes/get-pipe-docs-uri";
+import { getPipeStartingPrice } from "@/lib/pipes/get-pipe-starting-price";
 import { cn, copyToClipboard } from "@/lib/utils";
 import {
   getDefaultOutputFields,
   getDefaultPipeProviders,
   getPipeVersion,
-  getStartingCostPerPipesProvider,
   pipeCatalog,
   PipeCatalogEntry,
   PipeCategory,
   PipeEntryWithLatestVersion,
   PipeId,
-  providerCatalog,
-  ProviderName,
+  Requirement,
   requirementToInputFields,
-} from "@pipe0/elements";
-import { usePipeCatalogTable } from "@pipe0/elements-react";
+  sortPipeCatalogByBasePipe,
+} from "@pipe0/base";
+import {
+  AvatarGroup,
+  type PipeCardData,
+  PipeCatalog,
+  PipeCatalogActiveFilters,
+  PipeCatalogCategoryFilter,
+  PipeCatalogEmpty,
+  PipeCatalogInputFieldFilter,
+  PipeCatalogList,
+  PipeCatalogOutputFieldFilter,
+  PipeCatalogProviderFilter,
+  PipeCatalogSearchFilter,
+  PricingBadge,
+  usePipeCatalogContext,
+  usePipeCatalogTable,
+} from "@pipe0/react";
 import {
   ArrowDown,
   ArrowUp,
-  Building2,
-  Coins,
+  ChevronDown,
   Copy,
-  Database,
   ExternalLink,
-  Filter,
-  Hammer,
-  ScanFace,
   Search,
   X,
-  Zap,
 } from "lucide-react";
 import Link from "next/link";
-import { ComponentType, useMemo, useState } from "react";
+import { type ComponentType, type ReactNode, useMemo } from "react";
 
 const dateFormatter = new Intl.DateTimeFormat("en-US", {
   month: "short",
   day: "2-digit",
 });
 
-// Featured pipes - you can customize this list with your featured pipe IDs
 const FEATURED_PIPE_IDS = [
   "people:phone:profile:waterfall@1",
   "people:workemail:waterfall@1",
@@ -81,74 +89,345 @@ const FEATURED_PIPE_IDS = [
   "company:overview@2",
 ] satisfies PipeId[];
 
-// Integration card component - memoized to prevent unnecessary re-renders
-const IntegrationCard = ({
+const FEATURED_PIPE_ID_SET = new Set<string>(FEATURED_PIPE_IDS);
+
+// Walks the requirement tree to flatten input fields and mark which are required.
+// Required = reachable through "all"/"field" only. "any" branches are at-least-one,
+// "optional" branches are not required. Dedupes by name (required wins).
+function getInputFieldsWithRequired(
+  req: Requirement | null | undefined,
+): { name: string; required: boolean }[] {
+  if (!req) return [];
+  const map = new Map<string, boolean>();
+  function walk(node: Requirement, parentRequired: boolean) {
+    switch (node.kind) {
+      case "field": {
+        const n = node.field.resolvedName;
+        map.set(n, (map.get(n) ?? false) || parentRequired);
+        break;
+      }
+      case "all":
+        node.of.forEach((c) => walk(c, parentRequired));
+        break;
+      case "any":
+        node.of.forEach((c) => walk(c, false));
+        break;
+      case "optional": {
+        const n = node.field.resolvedName;
+        if (!map.has(n)) map.set(n, false);
+        break;
+      }
+    }
+  }
+  walk(req, true);
+  return Array.from(map, ([name, required]) => ({ name, required }));
+}
+
+type CategoryOption = {
+  id: PipeCategory | null;
+  title: string;
+  color?: string;
+  disabled: boolean;
+};
+
+const quickStartOptions: CategoryOption[] = [
+  { id: null, title: "All", disabled: false },
+  {
+    id: "people_data",
+    title: "People",
+    color: PIPE_CATEGORY_COLORS.people_data,
+    disabled: false,
+  },
+  {
+    id: "company_data",
+    title: "Company",
+    color: PIPE_CATEGORY_COLORS.company_data,
+    disabled: false,
+  },
+  {
+    id: "tools",
+    title: "Tools",
+    color: PIPE_CATEGORY_COLORS.tools,
+    disabled: false,
+  },
+  {
+    id: "actions",
+    title: "Actions",
+    color: PIPE_CATEGORY_COLORS.actions,
+    disabled: false,
+  },
+  {
+    id: "deprecated",
+    title: "Deprecated",
+    color: PIPE_CATEGORY_COLORS.deprecated,
+    disabled: false,
+  },
+];
+
+// Categories that group the non-featured list view.
+const GROUP_CATEGORIES: { id: PipeCategory; title: string }[] = [
+  { id: "people_data", title: "People Data" },
+  { id: "company_data", title: "Company Data" },
+  { id: "tools", title: "Tools" },
+  { id: "actions", title: "Actions" },
+  { id: "deprecated", title: "Deprecated" },
+];
+
+// Render-prop option type used by the headless filter components.
+type FilterOption = {
+  label: ReactNode;
+  value: string;
+  icon?: ComponentType<{ className?: string }>;
+  imageSrc?: string;
+};
+
+function DocsFilterDropdown({
+  defaultLabel,
+  leadingIcon,
+  value,
+  setValue,
+  options,
+  renderItem,
+}: {
+  defaultLabel: string;
+  leadingIcon?: ReactNode;
+  value: string;
+  setValue: (v: string | null) => void;
+  options: ReadonlyArray<FilterOption>;
+  renderItem: (option: FilterOption) => ReactNode;
+}) {
+  const activeOption = value
+    ? options.find((o) => o.value === value)
+    : undefined;
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <button
+          className={cn(
+            "inline-flex items-center gap-1.5 px-3 py-1.5 text-sm rounded-md border transition-colors min-w-[140px] max-w-[220px]",
+            value
+              ? "border-primary text-primary bg-primary/5"
+              : "border-input text-foreground hover:bg-muted",
+          )}
+        >
+          {leadingIcon && (
+            <span className="shrink-0 text-muted-foreground">{leadingIcon}</span>
+          )}
+          <span className="truncate flex-1 text-left">
+            {activeOption ? activeOption.label : defaultLabel}
+          </span>
+          <ChevronDown className="size-3.5 shrink-0 text-muted-foreground" />
+        </button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent
+        align="start"
+        className="max-h-72 overflow-y-auto w-56"
+      >
+        {value && (
+          <>
+            <DropdownMenuItem className="pl-2" onClick={() => setValue(null)}>
+              Clear
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+          </>
+        )}
+        {options.map((option) => {
+          const checked = option.value === value;
+          return (
+            <DropdownMenuItem
+              key={option.value}
+              className={cn(
+                "pl-2",
+                checked && "bg-primary/10 text-primary focus:bg-primary/15",
+              )}
+              onSelect={(e) => {
+                e.preventDefault();
+                if (checked) setValue(null);
+                else setValue(option.value);
+              }}
+            >
+              <span className="flex items-center gap-2 flex-1 min-w-0">
+                {renderItem(option)}
+              </span>
+            </DropdownMenuItem>
+          );
+        })}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
+
+function DocsCategoryButtons({
+  value,
+  setValue,
+}: {
+  value: PipeCategory | null;
+  setValue: (v: PipeCategory | null) => void;
+}) {
+  // Counts per category, derived from the latest version of each base pipe.
+  // Stable across other filter changes (matches today's behavior).
+  const categoryCounts = useMemo(() => {
+    const counts: Partial<Record<"all" | PipeCategory, number>> = {};
+    let allCount = 0;
+    const byBasePipe = sortPipeCatalogByBasePipe();
+    for (const versions of Object.values(byBasePipe)) {
+      const latest = versions[0];
+      if (!latest) continue;
+      const entry = pipeCatalog[latest.pipeId] as PipeCatalogEntry | undefined;
+      const cats = (entry?.categories ?? []) as PipeCategory[];
+      const isDeprecated = cats.includes("deprecated");
+      if (!isDeprecated) allCount += 1;
+      for (const cat of cats) {
+        counts[cat] = (counts[cat] ?? 0) + 1;
+      }
+    }
+    counts.all = allCount;
+    return counts;
+  }, []);
+
+  return (
+    <div className="flex gap-1 flex-wrap items-center">
+      {quickStartOptions.map((option) => {
+        const isActive = value === option.id;
+        const count =
+          option.id === null ? categoryCounts.all : categoryCounts[option.id];
+        return (
+          <ConditionalWrapper
+            key={option.id}
+            condition={!!option.disabled}
+            wrapper={(c) => (
+              <Tooltip>
+                <TooltipTrigger>{c}</TooltipTrigger>
+                <TooltipContent>Coming soon</TooltipContent>
+              </Tooltip>
+            )}
+          >
+            <button
+              data-disabled={option.disabled}
+              className={cn(
+                "inline-flex items-center gap-1.5 px-2.5 py-1 text-sm rounded-md transition-colors",
+                option.id === "deprecated" && !isActive && "opacity-60",
+                isActive
+                  ? "bg-foreground text-background font-medium"
+                  : "text-foreground hover:bg-muted",
+                "data-[disabled=true]:opacity-50 data-[disabled=true]:pointer-events-none",
+              )}
+              onClick={() => setValue(option.id)}
+            >
+              {option.color && (
+                <span
+                  className="size-2 rounded-full shrink-0"
+                  style={{ backgroundColor: option.color }}
+                  aria-hidden
+                />
+              )}
+              {option.id === "deprecated" ? <s>{option.title}</s> : option.title}
+              {typeof count === "number" && count > 0 && (
+                <span
+                  className={cn(
+                    "tabular-nums text-xs",
+                    isActive ? "text-background/70" : "text-muted-foreground",
+                  )}
+                >
+                  {count}
+                </span>
+              )}
+            </button>
+          </ConditionalWrapper>
+        );
+      })}
+    </div>
+  );
+}
+
+function DocsActiveFiltersStrip({
+  filters,
+}: {
+  filters: ReadonlyArray<{
+    id: string;
+    value: string;
+    label: string;
+    remove: () => void;
+  }>;
+}) {
+  const { resetFilters } = usePipeCatalogContext();
+  if (filters.length === 0) return null;
+  return (
+    <div className="flex items-center gap-2 flex-wrap">
+      {filters.map((filter) => (
+        <span
+          key={filter.id}
+          className="inline-flex items-center gap-1 px-2 py-0.5 text-xs rounded-md bg-primary/10 text-primary"
+        >
+          <span className="text-primary/60">{filter.label}:</span>
+          {filter.value}
+          <button
+            onClick={filter.remove}
+            className="ml-0.5 hover:text-primary/80"
+          >
+            <X className="h-3 w-3" />
+          </button>
+        </span>
+      ))}
+      <button
+        onClick={resetFilters}
+        className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+      >
+        Clear all
+      </button>
+    </div>
+  );
+}
+
+const PipeCard = ({
   tableEntry,
-  filterByField,
 }: {
   tableEntry: PipeEntryWithLatestVersion;
-  filterByField: (
-    id: "inputFields" | "outputFields",
-    fieldName: string,
-  ) => void;
 }) => {
+  const { addColumnFilter } = usePipeCatalogContext();
   const pipeId = tableEntry.pipeId;
-
-  const pipeStartingPrice = useMemo(() => {
-    let starting: Partial<Record<ProviderName, number>> = {};
-    try {
-      starting = getStartingCostPerPipesProvider(pipeId) as Record<
-        ProviderName,
-        number
-      >;
-    } catch (err) {
-      console.log(pipeId);
-    }
-    return Math.min(...Object.values(starting), 0);
-  }, [pipeId]);
+  const pipeStartingPrice = useMemo(
+    () => getPipeStartingPrice(pipeId),
+    [pipeId],
+  );
 
   const isNew = (tableEntry.tags as string[]).includes("new");
-
   const providers = getDefaultPipeProviders(pipeId);
 
   return (
     <Link href={getPipeDocsURI(pipeId)}>
-      <Card className="flex flex-col justify-stretch border-input hover:border-primary/50 transition-colors relative h-[290px]">
-        <span className="absolute right-4 top-4 inline-flex gap-1 text-muted-foreground text-sm items-center">
-          <Coins className=" size-4" /> {pipeStartingPrice || "Free"}
+      <Card className="flex flex-col justify-stretch border-input hover:border-primary/50 transition-colors relative h-full min-h-[230px]">
+        <span className="absolute right-3 top-3 inline-flex gap-1 text-muted-foreground text-xs items-center">
+          {pipeStartingPrice ? (
+            <PricingBadge credits={pipeStartingPrice} />
+          ) : (
+            "Free"
+          )}
         </span>
-        <CardHeader className="pb-2">
-          <div className="flex justify-between items-start">
-            <div className="flex items-center gap-3">
-              <div className="flex">
-                <AvatarGroup
-                  providerCatalog={providerCatalog}
-                  providers={providers}
-                />
-              </div>
-              <div>
-                <CardTitle
-                  className={cn(
-                    "text-base flex items-center gap-2",
-                    tableEntry.lifecycle?.deprecatedOn && "line-through",
-                  )}
-                >
-                  {tableEntry.label}
-                  {isNew && (
-                    <Badge
-                      variant="default"
-                      className="text-xs bg-black text-white"
-                    >
-                      New
-                    </Badge>
-                  )}
-                </CardTitle>
-              </div>
+        <CardHeader className="pb-1.5">
+          <div className="flex items-start gap-3">
+            <AvatarGroup providers={providers} size="sm" />
+            <div className="min-w-0 pr-12">
+              <CardTitle
+                className={cn(
+                  "text-sm font-semibold leading-tight flex items-center gap-2",
+                  tableEntry.lifecycle?.deprecatedOn && "line-through",
+                )}
+              >
+                <span className="truncate">{tableEntry.label}</span>
+                {isNew && (
+                  <Badge
+                    variant="default"
+                    className="text-[10px] px-1.5 py-0 leading-none bg-foreground text-background shrink-0"
+                  >
+                    New
+                  </Badge>
+                )}
+              </CardTitle>
             </div>
-            <div className="flex flex-row-reverse"></div>
           </div>
         </CardHeader>
-        <CardContent className="grow text-sm">
+        <CardContent className="grow text-xs text-muted-foreground leading-relaxed">
           {tableEntry.lifecycle?.replacedBy && (
             <Alert variant="destructive" className="py-1 px-2 mb-2">
               <AlertTitle>
@@ -162,14 +441,14 @@ const IntegrationCard = ({
               </AlertDescription>
             </Alert>
           )}
-          <p>{tableEntry.description}</p>
+          <p className="line-clamp-3">{tableEntry.description}</p>
         </CardContent>
-        <CardFooter className="pt-2 block pb-3">
-          <div className="flex items-center justify-end pb-4 gap-2 text-muted-foreground text-sm">
-            <span className="break-all">{pipeId}</span>
+        <CardFooter className="pt-0 pb-3 px-4 flex flex-col items-stretch gap-2">
+          <div className="flex items-center gap-1.5 text-muted-foreground text-xs">
+            <span className="font-mono break-all truncate">{pipeId}</span>
             <Button
               size="icon"
-              className="size-4"
+              className="size-5 shrink-0"
               variant="ghost"
               onClick={(e) => {
                 e.stopPropagation();
@@ -181,13 +460,13 @@ const IntegrationCard = ({
             </Button>
           </div>
           {tableEntry.inputFieldMode === "static" && (
-            <div className="flex gap-1 items-center">
+            <div className="flex gap-1 items-center -mx-2">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button
                     size="sm"
                     variant="ghost"
-                    className="text-muted-foreground text-sm hover:text-foreground"
+                    className="text-muted-foreground text-xs hover:text-foreground h-7 px-2"
                   >
                     <ArrowUp className="size-3" /> Inputs
                   </Button>
@@ -208,7 +487,7 @@ const IntegrationCard = ({
                           className="py-1 cursor-pointer block text-muted-foreground hover:text-foreground"
                           key={field.name}
                           onClick={() =>
-                            filterByField("outputFields", field.name)
+                            addColumnFilter("outputFields", field.name)
                           }
                         >
                           {field.name}
@@ -222,9 +501,9 @@ const IntegrationCard = ({
                   <Button
                     size="sm"
                     variant="ghost"
-                    className="text-muted-foreground text-sm hover:text-foreground"
+                    className="text-muted-foreground text-xs hover:text-foreground h-7 px-2"
                   >
-                    <ArrowDown className="size-3" /> Ouputs
+                    <ArrowDown className="size-3" /> Outputs
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent
@@ -239,7 +518,7 @@ const IntegrationCard = ({
                       <DropdownMenuItem
                         key={field}
                         className="py-1 cursor-pointer block text-muted-foreground hover:text-foreground"
-                        onClick={() => filterByField("inputFields", field)}
+                        onClick={() => addColumnFilter("inputFields", field)}
                       >
                         {field}
                       </DropdownMenuItem>
@@ -255,158 +534,153 @@ const IntegrationCard = ({
   );
 };
 
-const quickStartOptions = [
-  {
-    id: null,
-    title: "All",
-    icon: Database,
-    disabled: false,
-  },
-  {
-    id: "people_data",
-    title: "People Data",
-    icon: ScanFace,
-    disabled: false,
-  },
-  {
-    id: "company_data",
-    title: "Company Data",
-    icon: Building2,
-    disabled: false,
-  },
-  {
-    id: "tools",
-    title: "Tools",
-    icon: Hammer,
-    disabled: false,
-  },
-  {
-    id: "actions",
-    title: "Actions",
-    icon: Zap,
-    disabled: false,
-  },
-  {
-    id: "deprecated",
-    title: "Deprecated",
-    icon: X,
-    disabled: false,
-  },
-] satisfies {
-  id: PipeCategory | null;
-  title: string;
-  icon: ComponentType;
-  disabled: boolean;
-}[];
+function Featured() {
+  const { category, globalFilterInput, table } = usePipeCatalogContext();
+  const showFeatured =
+    category === null &&
+    globalFilterInput === "" &&
+    table.getState().columnFilters.length === 0;
 
-type FilterColumn = "tags" | "providers" | "inputFields" | "outputFields";
+  const featuredEntries = useMemo(() => {
+    return FEATURED_PIPE_IDS.map((pipeId) => {
+      const entry = pipeCatalog[pipeId] as PipeCatalogEntry | undefined;
+      if (!entry) return null;
+      return {
+        ...entry,
+        latestVersion: getPipeVersion(pipeId),
+      } as PipeEntryWithLatestVersion;
+    }).filter((e): e is PipeEntryWithLatestVersion => e !== null);
+  }, []);
 
-const filterSections: { key: FilterColumn; label: string }[] = [
-  { key: "tags", label: "Tags" },
-  { key: "providers", label: "Providers" },
-  { key: "inputFields", label: "Input Fields" },
-  { key: "outputFields", label: "Output Fields" },
-];
-
-export function PipeCatalogIndex() {
-  const {
-    category,
-    filterByField,
-    globalFilterInput,
-    isFilterChecked,
-    setCategory,
-    setGlobalFilterInput,
-    table,
-    showFeaturedPipes,
-    sidebar: {
-      addColumnFilter,
-      removeColumnFilter,
-      sortedInputFieldEntries,
-      sortedOutputFieldEntries,
-      sortedProviderEntries,
-      sortedTagEntries,
-    },
-  } = usePipeCatalogTable();
-
-  const [activeFilterSection, setActiveFilterSection] =
-    useState<FilterColumn | null>(null);
-  const [filterOpen, setFilterOpen] = useState(false);
-
-  const rows = table.getRowModel().rows;
-
-  // Determine which filters are active (exclude null/undefined values left by removeColumnFilter)
-  const activeFilters = table
-    .getState()
-    .columnFilters.filter((f) => f.value != null && f.value !== "");
-  const hasActiveFilters = activeFilters.length > 0;
-
-  const clearAllFilters = () => {
-    table.setColumnFilters([]);
-    setActiveFilterSection(null);
-  };
-
-  const getFilterEntries = (key: FilterColumn) => {
-    switch (key) {
-      case "tags":
-        return sortedTagEntries;
-      case "providers":
-        return sortedProviderEntries;
-      case "inputFields":
-        return sortedInputFieldEntries;
-      case "outputFields":
-        return sortedOutputFieldEntries;
-    }
-  };
-
-  const renderFilterOption = (
-    key: FilterColumn,
-    name: string,
-    count: number,
-  ) => {
-    const isChecked = isFilterChecked(key, name);
-    return (
-      <button
-        key={name}
-        onClick={() => {
-          if (isChecked) {
-            removeColumnFilter(key);
-          } else {
-            addColumnFilter(key, name);
-          }
-        }}
-        className={cn(
-          "flex items-center gap-2 w-full px-3 py-1.5 text-sm rounded-md transition-colors text-left",
-          isChecked
-            ? "bg-primary/10 text-primary font-medium"
-            : "text-muted-foreground hover:text-foreground hover:bg-muted",
-        )}
-      >
-        {key === "providers" && (
-          <img
-            src={providerCatalog[name as keyof typeof providerCatalog]?.logoUrl}
-            alt=""
-            className="w-4 h-4 shrink-0"
-          />
-        )}
-        <span className="truncate">
-          {key === "providers"
-            ? (providerCatalog[name as keyof typeof providerCatalog]?.label ??
-              name)
-            : name}
-        </span>
-        <span className="ml-auto text-xs text-muted-foreground shrink-0">
-          {count}
-        </span>
-      </button>
-    );
-  };
+  if (!showFeatured || featuredEntries.length === 0) return null;
 
   return (
-    <div className="space-y-6 mx-auto">
+    <div className="space-y-3">
+      <div className="flex items-baseline gap-2">
+        <h2 className="text-lg font-semibold tracking-tight">Featured</h2>
+        <span className="text-xs text-muted-foreground">
+          · Most-used pipes.
+        </span>
+      </div>
+      <div className="grid gap-3 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+        {featuredEntries.map((entry) => (
+          <PipeCard key={entry.pipeId} tableEntry={entry} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function GroupedList({ cards }: { cards: PipeCardData[] }) {
+  const { category, globalFilterInput, table } = usePipeCatalogContext();
+  // Featured pipes render in the section above only when no filter is active.
+  // When a filter is active, surface them inside the grouped list so they
+  // don't disappear from the catalog entirely.
+  const featuredShown =
+    category === null &&
+    globalFilterInput === "" &&
+    table.getState().columnFilters.length === 0;
+
+  const visible = useMemo(
+    () =>
+      featuredShown
+        ? cards.filter((c) => !FEATURED_PIPE_ID_SET.has(c.pipeId))
+        : cards,
+    [cards, featuredShown],
+  );
+
+  // Each pipe is placed in the first matching category (deprecated last).
+  const groupedRows = useMemo(() => {
+    const seen = new Set<string>();
+    const groups: {
+      category: PipeCategory;
+      entries: PipeCardData[];
+    }[] = [];
+    for (const cat of GROUP_CATEGORIES) {
+      const entries: PipeCardData[] = [];
+      for (const card of visible) {
+        if (seen.has(card.pipeId)) continue;
+        const cats = (card.latestEntry.categories ?? []) as PipeCategory[];
+        if (cats.includes(cat.id)) {
+          entries.push(card);
+          seen.add(card.pipeId);
+        }
+      }
+      if (entries.length > 0) groups.push({ category: cat.id, entries });
+    }
+    // Anything that didn't match a known category lands under "Other" → tools bucket.
+    const leftovers = visible.filter((c) => !seen.has(c.pipeId));
+    if (leftovers.length > 0) {
+      groups.push({ category: "tools" as PipeCategory, entries: leftovers });
+    }
+    return groups;
+  }, [visible]);
+
+  return (
+    <div className="space-y-6">
+      {groupedRows.map(({ category: catId, entries }) => {
+        const meta = GROUP_CATEGORIES.find((c) => c.id === catId);
+        if (!meta) return null;
+        return (
+          <section key={catId} className="space-y-2">
+            <div className="flex items-baseline gap-2">
+              <h2 className="text-lg font-semibold tracking-tight">
+                {meta.title}
+              </h2>
+              <span className="text-xs text-muted-foreground tabular-nums">
+                {entries.length}
+              </span>
+            </div>
+            <div>
+              {entries.map((card) => {
+                const entry = card.entry;
+                const providers = getDefaultPipeProviders(card.pipeId);
+                const credits = getPipeStartingPrice(card.pipeId);
+                const isNew = (entry.tags as string[]).includes("new");
+                const inputFields: CatalogFieldList =
+                  entry.inputFieldMode === "static"
+                    ? getInputFieldsWithRequired(entry.defaultInputRequirement)
+                    : "dynamic";
+                const outputFields: CatalogFieldList =
+                  entry.outputFieldMode === "static"
+                    ? getDefaultOutputFields(entry).map((name) => ({ name }))
+                    : "dynamic";
+                return (
+                  <CatalogListRow
+                    key={card.pipeId}
+                    href={getPipeDocsURI(card.pipeId)}
+                    label={card.label}
+                    entryId={card.pipeId}
+                    description={card.description}
+                    providers={providers}
+                    inputFields={inputFields}
+                    outputFields={outputFields}
+                    credits={credits}
+                    isNew={isNew}
+                    isDeprecated={!!entry.lifecycle?.deprecatedOn}
+                  />
+                );
+              })}
+            </div>
+          </section>
+        );
+      })}
+    </div>
+  );
+}
+
+export function PipeCatalogIndex() {
+  const ctx = usePipeCatalogTable();
+
+  return (
+    <PipeCatalog
+      context={ctx}
+      className="space-y-5 mx-auto min-w-0 max-w-full"
+    >
       {/* Header */}
-      <div className="space-y-2">
-        <div className="flex items-baseline justify-between">
-          <H1>Pipe Catalog</H1>
+      <div className="space-y-2 min-w-0">
+        <div className="flex items-baseline justify-between gap-4">
+          <H1 className="pb-0">Pipe Catalog</H1>
           <Link
             href={appInfo.links.requestPipe}
             className="text-sm text-muted-foreground hover:text-foreground transition-colors"
@@ -416,217 +690,115 @@ export function PipeCatalogIndex() {
             </Button>
           </Link>
         </div>
-        <p className="text-lg text-muted-foreground">
-          Use pipes to find email addresses, phone number, or to trigger
-          automations like slack messages. Pipes are composable enrichment
+        <p className="text-sm text-muted-foreground max-w-3xl">
+          Use pipes to find email addresses, phone numbers, or to trigger
+          automations like Slack messages. Pipes are composable enrichment
           functions.
         </p>
       </div>
 
       {/* Search bar */}
-      <div className="relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-        <Input
-          type="search"
-          placeholder="Search pipes..."
-          className="w-full pl-9 h-10"
-          value={globalFilterInput}
-          onChange={(v) => setGlobalFilterInput(v.target.value)}
+      <PipeCatalogSearchFilter
+        render={({ value, setValue }) => (
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              type="search"
+              placeholder="Search pipes..."
+              className="w-full pl-9 h-10"
+              value={value}
+              onChange={(e) => setValue(e.target.value)}
+            />
+          </div>
+        )}
+      />
+
+      {/* Categories */}
+      <PipeCatalogCategoryFilter
+        render={({ value, setValue }) => (
+          <DocsCategoryButtons value={value} setValue={setValue} />
+        )}
+      />
+
+      {/* Provider + Input + Output quick filters */}
+      <div className="flex items-center gap-2 flex-wrap">
+        <PipeCatalogProviderFilter
+          render={({ value, setValue, options }) => (
+            <DocsFilterDropdown
+              defaultLabel="Provider"
+              value={value}
+              setValue={setValue}
+              options={options}
+              renderItem={(option) => (
+                <>
+                  {option.imageSrc && (
+                    <img
+                      src={option.imageSrc}
+                      alt=""
+                      className="size-4 shrink-0 rounded-sm"
+                    />
+                  )}
+                  <span className="truncate">{option.label}</span>
+                </>
+              )}
+            />
+          )}
+        />
+
+        <PipeCatalogInputFieldFilter
+          render={({ value, setValue, options }) => (
+            <DocsFilterDropdown
+              defaultLabel="Input fields"
+              leadingIcon={<ArrowUp className="size-3.5" />}
+              value={value}
+              setValue={setValue}
+              options={options}
+              renderItem={(option) => (
+                <span className="truncate">{option.label}</span>
+              )}
+            />
+          )}
+        />
+
+        <PipeCatalogOutputFieldFilter
+          render={({ value, setValue, options }) => (
+            <DocsFilterDropdown
+              defaultLabel="Output fields"
+              leadingIcon={<ArrowDown className="size-3.5" />}
+              value={value}
+              setValue={setValue}
+              options={options}
+              renderItem={(option) => (
+                <span className="truncate">{option.label}</span>
+              )}
+            />
+          )}
         />
       </div>
 
-      {/* Categories + Filter button */}
-      <div className="flex items-center gap-2">
-        <div className="flex gap-2 flex-wrap flex-1">
-          {quickStartOptions.map((option) => {
-            const IconComponent = option.icon;
-            const isActive = category === option.id;
-            return (
-              <ConditionalWrapper
-                key={option.id}
-                condition={!!option.disabled}
-                wrapper={(c) => (
-                  <Tooltip>
-                    <TooltipTrigger>{c}</TooltipTrigger>
-                    <TooltipContent>Coming soon</TooltipContent>
-                  </Tooltip>
-                )}
-              >
-                <button
-                  data-disabled={option.disabled}
-                  className={cn(
-                    "inline-flex items-center gap-1.5 px-3 py-1.5 text-sm rounded-md border transition-colors",
-                    option.id === "deprecated" && "opacity-60",
-                    isActive
-                      ? "bg-primary text-primary-foreground border-primary font-medium"
-                      : "bg-background text-muted-foreground border-input hover:text-foreground hover:bg-muted",
-                    "data-[disabled=true]:opacity-50 data-[disabled=true]:pointer-events-none",
-                  )}
-                  onClick={() => setCategory(option.id)}
-                >
-                  <IconComponent className="w-3.5 h-3.5" strokeWidth={1.5} />
-                  {option.id === "deprecated" ? (
-                    <s>{option.title}</s>
-                  ) : (
-                    option.title
-                  )}
-                </button>
-              </ConditionalWrapper>
-            );
-          })}
-        </div>
-
-        {/* Filter popover */}
-        <Popover open={filterOpen} onOpenChange={setFilterOpen}>
-          <PopoverTrigger asChild>
-            <button
-              className={cn(
-                "inline-flex items-center justify-center rounded-md border p-2 transition-colors",
-                hasActiveFilters
-                  ? "border-primary text-primary bg-primary/5"
-                  : "border-input text-muted-foreground hover:text-foreground hover:bg-muted",
-              )}
-            >
-              <Filter className="h-4 w-4" />
-              {hasActiveFilters && (
-                <span className="ml-1.5 text-xs font-medium">
-                  {activeFilters.length}
-                </span>
-              )}
-            </button>
-          </PopoverTrigger>
-          <PopoverContent align="end" className="w-64 p-0" sideOffset={8}>
-            {activeFilterSection === null ? (
-              <div className="py-1">
-                <div className="px-3 py-2 flex items-center justify-between">
-                  <span className="text-sm font-medium">Filters</span>
-                  {hasActiveFilters && (
-                    <button
-                      onClick={clearAllFilters}
-                      className="text-xs text-muted-foreground hover:text-foreground transition-colors"
-                    >
-                      Clear all
-                    </button>
-                  )}
-                </div>
-                {filterSections.map(({ key, label }) => {
-                  const currentFilter = activeFilters.find((f) => f.id === key);
-                  return (
-                    <button
-                      key={key}
-                      onClick={() => setActiveFilterSection(key)}
-                      className="flex items-center justify-between w-full px-3 py-2 text-sm hover:bg-muted transition-colors"
-                    >
-                      <span>{label}</span>
-                      <span className="text-xs text-muted-foreground">
-                        {currentFilter ? String(currentFilter.value) : "Any"}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-            ) : (
-              <div className="py-1">
-                <button
-                  onClick={() => setActiveFilterSection(null)}
-                  className="flex items-center gap-1 px-3 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors w-full"
-                >
-                  <ArrowUp className="h-3 w-3 rotate-[-90deg]" />
-                  <span>
-                    {
-                      filterSections.find((s) => s.key === activeFilterSection)
-                        ?.label
-                    }
-                  </span>
-                </button>
-                <div className="max-h-[280px] overflow-y-auto px-1 py-1">
-                  {getFilterEntries(activeFilterSection).map(([name, items]) =>
-                    renderFilterOption(
-                      activeFilterSection,
-                      name,
-                      (items as any[]).length,
-                    ),
-                  )}
-                </div>
-              </div>
-            )}
-          </PopoverContent>
-        </Popover>
-      </div>
-
       {/* Active filter pills */}
-      {hasActiveFilters && (
-        <div className="flex items-center gap-2 flex-wrap">
-          {activeFilters.map((filter) => (
-            <span
-              key={filter.id}
-              className="inline-flex items-center gap-1 px-2 py-0.5 text-xs rounded-md bg-primary/10 text-primary"
-            >
-              <span className="text-primary/60">
-                {filterSections.find((s) => s.key === filter.id)?.label}:
-              </span>
-              {String(filter.value)}
-              <button
-                onClick={() => removeColumnFilter(filter.id as FilterColumn)}
-                className="ml-0.5 hover:text-primary/80"
-              >
-                <X className="h-3 w-3" />
-              </button>
-            </span>
-          ))}
-          <button
-            onClick={clearAllFilters}
-            className="text-xs text-muted-foreground hover:text-foreground transition-colors"
-          >
-            Clear all
-          </button>
-        </div>
-      )}
+      <PipeCatalogActiveFilters
+        render={({ filters }) => <DocsActiveFiltersStrip filters={filters} />}
+      />
 
       {/* Featured section */}
-      {showFeaturedPipes && (
-        <div className="space-y-4">
-          <h2 className="text-2xl font-bold">Featured</h2>
-          <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-            {FEATURED_PIPE_IDS.map((pipeId) => {
-              return (
-                <IntegrationCard
-                  key={pipeId}
-                  tableEntry={{
-                    ...(pipeCatalog[pipeId] as PipeCatalogEntry),
-                    latestVersion: getPipeVersion(pipeId),
-                  }}
-                  filterByField={filterByField}
-                />
-              );
-            })}
-          </div>
-        </div>
-      )}
+      <Featured />
 
-      <div className="space-y-4">
-        {showFeaturedPipes && <h2 className="text-2xl font-bold">All pipes</h2>}
-        <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-          {rows.map((row) => {
-            return (
-              <IntegrationCard
-                key={row.original.pipeId}
-                tableEntry={row.original as any}
-                filterByField={filterByField}
-              />
-            );
-          })}
-        </div>
+      {/* Grouped list view */}
+      <PipeCatalogList
+        render={({ cards }) => <GroupedList cards={cards} />}
+      />
 
-        {/* Empty state */}
-        {rows.length === 0 && (
+      {/* Empty state */}
+      <PipeCatalogEmpty
+        render={() => (
           <div className="flex h-[200px] flex-col items-center justify-center rounded-md border border-dashed p-8 text-center">
             <p className="text-sm text-muted-foreground">
               No pipes found. Try adjusting your filters.
             </p>
           </div>
         )}
-      </div>
-    </div>
+      />
+    </PipeCatalog>
   );
 }

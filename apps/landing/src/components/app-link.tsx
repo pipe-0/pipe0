@@ -1,5 +1,5 @@
 // components/AppLink.jsx
-import { docsLinkPaths, DocsLinkKey } from "@pipe0/docs-links";
+import { docsLinkPaths, DocsLinkKey } from "@pipe0/doc-links";
 import { cn } from "@/lib/utils";
 import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";

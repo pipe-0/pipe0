@@ -1,0 +1,49 @@
+"use client";
+
+import Link from "fumadocs-core/link";
+import { usePathname } from "fumadocs-core/framework";
+import type { FC } from "react";
+import * as PageTree from "fumadocs-core/page-tree";
+import { cn } from "@/lib/utils";
+
+const NESTED_MATCH_URLS = new Set([
+  "/docs/pipes/pipes-catalog",
+  "/docs/search/search-catalog",
+]);
+
+function trimTrailingSlash(path: string): string {
+  return path.length > 1 && path.endsWith("/") ? path.slice(0, -1) : path;
+}
+
+function isActive(href: string, pathname: string, nested: boolean): boolean {
+  const a = trimTrailingSlash(href);
+  const b = trimTrailingSlash(pathname);
+  return a === b || (nested && b.startsWith(`${a}/`));
+}
+
+const itemClass = cn(
+  "relative flex flex-row items-center gap-2 rounded-lg p-2 ps-3 text-start text-fd-muted-foreground transition-colors wrap-anywhere",
+  "hover:bg-fd-accent/50 hover:text-fd-accent-foreground/80 hover:transition-none",
+  "data-[active=true]:bg-fd-primary/10 data-[active=true]:text-fd-primary data-[active=true]:hover:transition-colors",
+  "[&_svg]:size-4 [&_svg]:shrink-0",
+);
+
+export const CatalogAwareSidebarItem: FC<{ item: PageTree.Item }> = ({
+  item,
+}) => {
+  const pathname = usePathname();
+  const nested = NESTED_MATCH_URLS.has(item.url);
+  const active = isActive(item.url, pathname, nested);
+
+  return (
+    <Link
+      href={item.url}
+      external={item.external}
+      data-active={active}
+      className={itemClass}
+    >
+      {item.icon}
+      {item.name}
+    </Link>
+  );
+};

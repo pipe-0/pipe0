@@ -1,4 +1,10 @@
-# @pipe0/docs-links
+# @pipe0/doc-links
+
+## 0.0.2
+
+### Patch Changes
+
+- Init
 
 ## 0.0.5
 

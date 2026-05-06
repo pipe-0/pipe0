@@ -5,32 +5,32 @@ date: 2026-04-20
 ---
 
 import { PipeFormPreview } from "@/components/features/docs/pipe-form-preview";
-import { docsLinkPaths } from "@pipe0/docs-links";
+import { docsLinkPaths } from "@pipe0/doc-links";
 
-`@pipe0/elements-react` is a React component library for pipe0 forms.
+`@pipe0/react` is a React component library for pipe0 forms.
 
 ## Installation
 
 ```bash tab="pnpm"
-pnpm i @pipe0/elements-react
+pnpm i @pipe0/react
 ```
 
 ```bash tab="npm"
-npm install @pipe0/elements-react
+npm install @pipe0/react
 ```
 
 ```bash tab="yarn"
-yarn add @pipe0/elements-react
+yarn add @pipe0/react
 ```
 
 ```bash tab="bun"
-bun add @pipe0/elements-react
+bun add @pipe0/react
 ```
 
 Then import the stylesheet once at the root of your app:
 
 ```ts
-import "@pipe0/elements-react/styles";
+import "@pipe0/react/styles";
 ```
 
 ## Quickstart
@@ -39,8 +39,8 @@ Pass a `pipeId`, a `publicKey`, and an `onSubmit` handler. The form renders
 itself with sensible defaults.
 
 ```tsx
-import { PipeForm } from "@pipe0/elements-react";
-import { getPipeDefaultPayload } from "@pipe0/elements";
+import { PipeForm } from "@pipe0/react";
+import { getPipeDefaultPayload } from "@pipe0/base";
 
 export function MyPipeForm() {
   return (
@@ -59,8 +59,8 @@ export function MyPipeForm() {
 A `SearchForm` is available with the same shape for search payloads:
 
 ```tsx
-import { SearchForm } from "@pipe0/elements-react";
-import { getSearchDefaultPayload } from "@pipe0/elements";
+import { SearchForm } from "@pipe0/react";
+import { getSearchDefaultPayload } from "@pipe0/base";
 
 <SearchForm
   searchId="people:profiles:crustdata@1"
@@ -89,7 +89,7 @@ import {
   PipeFormFooter,
   PipeFormSubmitButton,
   usePipeForm,
-} from "@pipe0/elements-react";
+} from "@pipe0/react";
 
 function MyForm() {
   const context = usePipeForm({
@@ -232,7 +232,7 @@ If a custom connection is available (e.g. user selection), we call the `getPipeF
 the dynamic values.
 
 ```tsx
-import type { FormResolvers, PipeRequestPayload } from "@pipe0/elements";
+import type { FormResolvers, PipeRequestPayload } from "@pipe0/base";
 
 const resolvers: FormResolvers = {
   // Called once on mount. Return the user's connected providers.

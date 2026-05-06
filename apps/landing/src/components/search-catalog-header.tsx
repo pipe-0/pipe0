@@ -1,12 +1,12 @@
+"use client";
+
 import { searchMiniSpec } from "@/lib/search/snippet-catalog";
 import { videoCatalog } from "@/lib/search/video-catalog";
 import { PayloadDocumenation } from "@/components/config-documentation";
 import { ApiRequestCodeExample } from "@/components/features/docs/api-request-code-example";
 import { CatalogHeader } from "@/components/features/docs/docs-layout";
-import {
-  FieldRow,
-  OutputFieldEnabledBadge,
-} from "@/components/features/pipe-catalog/field-row";
+import { BandCard } from "@/components/features/pipe-catalog/band-card";
+import { FieldRow } from "@/components/features/pipe-catalog/field-row";
 import { Info } from "@/components/info";
 import { InlineDocsBadge } from "@/components/inline-docs-badge";
 import {
@@ -25,7 +25,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { docsLinkPaths } from "@pipe0/docs-links";
+import { docsLinkPaths } from "@pipe0/doc-links";
 import { formatCredits } from "@/lib/utils";
 import {
   FieldName,
@@ -39,7 +39,7 @@ import {
   searchCatalog,
   SearchId,
   searchSnippetCatalog,
-} from "@pipe0/elements";
+} from "@pipe0/base";
 import { Tabs, Tab } from "fumadocs-ui/components/tabs";
 import { useMemo } from "react";
 import { DynamicCodeBlock } from "@/components/features/docs/dynamic-code-block";
@@ -176,33 +176,69 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
         </div>
         <div>
           <h3 className="text-2xl mb-3 pb-2 border-b">Output Fields</h3>
-          <div className="space-y-2">
-            {getDefaultSearchOutputFields(searchEntry.searchId).map(
-              (fieldName) => {
+          <div className="space-y-3">
+            {(() => {
+              const enabled: {
+                fieldName: string;
+                found: NonNullable<ReturnType<typeof getField>>;
+              }[] = [];
+              const optional: {
+                fieldName: string;
+                found: NonNullable<ReturnType<typeof getField>>;
+              }[] = [];
+              for (const fieldName of getDefaultSearchOutputFields(
+                searchEntry.searchId,
+              )) {
                 const found = getField(fieldName as FieldName);
+                if (!found) continue;
                 const isEnabledByDefault = !!(
                   defaultSearchPayload?.config?.output_fields as Record<
                     string,
                     any
                   >
                 )?.[fieldName]?.enabled;
-                if (!found) return null;
-
-                return (
-                  <FieldRow
-                    key={fieldName}
-                    fieldName={found.name}
-                    fieldType={found.type}
-                    description={found.description}
-                    leftAction={
-                      <OutputFieldEnabledBadge
-                        isEnabledByDefault={isEnabledByDefault}
-                      />
-                    }
-                  />
-                );
-              },
-            )}
+                (isEnabledByDefault ? enabled : optional).push({
+                  fieldName,
+                  found,
+                });
+              }
+              const renderRow = ({
+                fieldName,
+                found,
+              }: {
+                fieldName: string;
+                found: NonNullable<ReturnType<typeof getField>>;
+              }) => (
+                <FieldRow
+                  key={fieldName}
+                  fieldName={found.name}
+                  fieldType={found.type}
+                  description={found.description}
+                />
+              );
+              return (
+                <>
+                  {enabled.length > 0 && (
+                    <BandCard
+                      label="Enabled by default"
+                      description="These fields are returned without extra config."
+                      count={enabled.length}
+                    >
+                      {enabled.map(renderRow)}
+                    </BandCard>
+                  )}
+                  {optional.length > 0 && (
+                    <BandCard
+                      label="Enable optionally"
+                      description="Opt in to these fields via the search config."
+                      count={optional.length}
+                    >
+                      {optional.map(renderRow)}
+                    </BandCard>
+                  )}
+                </>
+              );
+            })()}
           </div>
         </div>
       </CatalogHeader>
@@ -222,7 +258,11 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
             <AccordionItem value="config-reference">
               <AccordionTrigger className="">Config reference</AccordionTrigger>
               <AccordionContent>
-                <PayloadDocumenation formConfig={formConfig} />
+                <PayloadDocumenation
+                  formConfig={formConfig}
+                  searchable
+                  exampleFilename={`${searchId.replace(/[@:]/g, "-")}-config-example`}
+                />
               </AccordionContent>
             </AccordionItem>
           )}

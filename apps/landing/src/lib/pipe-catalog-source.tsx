@@ -10,7 +10,7 @@ import {
   PipeId,
   providerCatalog,
   requirementToInputFields,
-} from "@pipe0/elements";
+} from "@pipe0/base";
 
 interface PipeCatalogPageData {
   title: string;

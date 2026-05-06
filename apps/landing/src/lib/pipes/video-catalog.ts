@@ -1,4 +1,4 @@
-import { PipeId } from "@pipe0/elements";
+import { PipeId } from "@pipe0/base";
 
 export const videoCatalog = {
   "people:workemail:waterfall@1": "https://youtu.be/HFlm8XOIMsQ",

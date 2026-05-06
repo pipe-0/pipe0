@@ -1,3 +1,5 @@
+"use client";
+
 import { OptionsSection } from "@/components/config-documentation-options-section";
 import {
   Accordion,
@@ -6,16 +8,83 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
+  buildPopulatedExample,
+  generateFieldExampleSnippet,
+  optionsDefSummary,
+} from "@/lib/docs/build-populated-example";
+import { copyToClipboard } from "@/lib/utils";
 import {
   FormSection,
   GeneratedInputMeta,
   GeneratedInputMetaMap,
+  IconKey,
   inputGuards,
   RECORD_FIELD_FORMATS,
   RECORD_FIELD_TYPES,
-} from "@pipe0/elements";
-import { Calendar, FileText, Hash, List, ToggleLeft, Type } from "lucide-react";
-import { PropsWithChildren, useMemo } from "react";
+} from "@pipe0/base";
+import {
+  Activity,
+  Award,
+  Bolt,
+  Book,
+  Box,
+  Boxes,
+  Braces,
+  Brain,
+  Briefcase,
+  Building2,
+  Calculator,
+  Calendar,
+  Check,
+  Code,
+  Contact,
+  Copy,
+  Download,
+  ExternalLink,
+  Factory,
+  FileText,
+  Filter,
+  Globe,
+  GraduationCap,
+  Handshake,
+  Hash,
+  History,
+  Languages,
+  LineChart,
+  Link as LinkIcon,
+  Linkedin,
+  List,
+  ListOrdered,
+  Mail,
+  MapPin,
+  Network,
+  Plug,
+  Search,
+  Settings2,
+  Sparkles,
+  Star,
+  Swords,
+  Tag,
+  ToggleLeft,
+  Type,
+  User,
+  Workflow,
+} from "lucide-react";
+import {
+  PropsWithChildren,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 
 const isNumericField = (
   field: GeneratedInputMeta,
@@ -27,267 +96,130 @@ const isNumericField = (
   inputGuards.int_input(field) ||
   inputGuards.number_input(field);
 
-const FIELD_ICONS = {
-  include_exclude_input: List,
-  include_exclude_select_input: List,
-  range_input: Hash,
-  int_input: Hash,
-  number_input: Hash,
-  date_range_input: Calendar,
-  boolean_input: ToggleLeft,
-  text_input: Type,
-  textarea_input: Type,
-  select_input: List,
-} as const;
-
-function getFieldIcon(type: string) {
-  return FIELD_ICONS[type as keyof typeof FIELD_ICONS] || FileText;
+function FieldIcon({
+  type,
+  className,
+}: {
+  type: string;
+  className?: string;
+}) {
+  switch (type) {
+    case "include_exclude_input":
+    case "include_exclude_select_input":
+    case "async_include_exclude_select_input":
+    case "select_input":
+    case "multi_select_input":
+    case "async_multi_select_input":
+      return <List className={className} />;
+    case "range_input":
+    case "int_input":
+    case "number_input":
+    case "exact_range_input":
+      return <Hash className={className} />;
+    case "date_range_input":
+      return <Calendar className={className} />;
+    case "boolean_input":
+    case "nullable_boolean_input":
+      return <ToggleLeft className={className} />;
+    case "text_input":
+    case "textarea_input":
+      return <Type className={className} />;
+    default:
+      return <FileText className={className} />;
+  }
 }
 
-// Code example generators - each handles its own type safely
-const generateIncludeExcludeExample = (fieldName: string) => `{
-  "${fieldName}": {
-    "include": ["value1", "value2"],
-    "exclude": ["unwanted1", "unwanted2"]
+function GroupIcon({
+  iconKey,
+  className,
+}: {
+  iconKey?: IconKey;
+  className?: string;
+}) {
+  switch (iconKey) {
+    case "school":
+    case "scholar":
+      return <GraduationCap className={className} />;
+    case "user":
+      return <User className={className} />;
+    case "location":
+      return <MapPin className={className} />;
+    case "language":
+      return <Languages className={className} />;
+    case "brain":
+      return <Brain className={className} />;
+    case "book":
+      return <Book className={className} />;
+    case "web":
+      return <Globe className={className} />;
+    case "plug":
+    case "source":
+      return <Plug className={className} />;
+    case "money":
+    case "bill":
+      return <Calculator className={className} />;
+    case "office":
+      return <Building2 className={className} />;
+    case "job":
+    case "briefcase":
+      return <Briefcase className={className} />;
+    case "search":
+      return <Search className={className} />;
+    case "output":
+    case "input":
+      return <ListOrdered className={className} />;
+    case "mix":
+      return <Network className={className} />;
+    case "linkedin":
+      return <Linkedin className={className} />;
+    case "text":
+      return <Type className={className} />;
+    case "workflow":
+      return <Workflow className={className} />;
+    case "letter":
+    case "mail":
+      return <Mail className={className} />;
+    case "activity":
+      return <Activity className={className} />;
+    case "boxes":
+      return <Boxes className={className} />;
+    case "cometition":
+      return <Swords className={className} />;
+    case "bolt":
+      return <Bolt className={className} />;
+    case "star":
+      return <Star className={className} />;
+    case "history":
+      return <History className={className} />;
+    case "sparkles":
+      return <Sparkles className={className} />;
+    case "list":
+      return <List className={className} />;
+    case "sliders":
+      return <Settings2 className={className} />;
+    case "factory":
+      return <Factory className={className} />;
+    case "award":
+      return <Award className={className} />;
+    case "tags":
+      return <Tag className={className} />;
+    case "handshake":
+      return <Handshake className={className} />;
+    case "contact":
+      return <Contact className={className} />;
+    case "calendar":
+      return <Calendar className={className} />;
+    case "chart":
+      return <LineChart className={className} />;
+    case "code":
+      return <Code className={className} />;
+    case "braces":
+      return <Braces className={className} />;
+    case "filter":
+      return <Filter className={className} />;
+    default:
+      return <Box className={className} />;
   }
-}`;
-
-// Code example generators - each handles its own type safely
-const generateAsyncInlcudeExcludeSelectFieldExample = (fieldName: string) => `{
-  "${fieldName}": {
-    "include": ["value1", "value2"],
-    "exclude": ["unwanted1", "unwanted2"]
-  }
-}`;
-
-const generateJsonExtractionExample = (fieldName: string) => `{
-  "${fieldName}": {
-    "extractions": [
-      "path": "foo.bar",
-      "output_field": {
-        "name": "extracted_name",
-        "format": "text",
-        "label": "Extracted name",
-        "type": "string",
-      }
-    ]
-  }
-}`;
-
-const generateJsonSchemaExample = (fieldName: string) => `{
-  "${fieldName}": {
-    "type": "object",
-    "properties": {
-      "foo": {
-        "type": "string"
-      }
-    },
-    "required": ["foo"]
-  }
-}`;
-
-const generateExactRangeExample = (
-  fieldName: string,
-  field: GeneratedInputMetaMap["exact_range_input"],
-) => `{
-  "${fieldName}": {
-    "gt": ${field.min || 0},
-    "lt": ${field.max || 100},
-  }
-}`;
-
-const generateRangeExample = (
-  fieldName: string,
-  field: GeneratedInputMetaMap["range_input"],
-) => `{
-  "${fieldName}": {
-    "from": ${field.min || 0},
-    "to": ${field.max || 100},
-  }
-}`;
-
-const generateProvidersExample = (fieldName: string) => `{
-  "${fieldName}": [{ "provider": "value" }, { "provider": "value" }]
-}`;
-
-const generateDateRangeExample = (fieldName: string) => `{
-  "${fieldName}": {
-    "gt": "2024-01-01T00:00:00Z",
-    "lt": "2024-12-31T23:59:59Z",
-    "gte": "",
-    "lte": ""
-  }
-}`;
-
-const generateBooleanExample = (fieldName: string) => `{
-  "${fieldName}": true
-}`;
-
-const generateTextExample = (fieldName: string) => `{
-  "${fieldName}": "example text"
-}`;
-
-const generateSelectExample = (
-  fieldName: string,
-  field: GeneratedInputMetaMap["select_input"],
-) =>
-  `{
-  "${fieldName}": "option1"
-}`;
-
-const generateMultiSelectExample = (
-  fieldName: string,
-  field: GeneratedInputMetaMap["multi_select_input"],
-) => {
-  if (Array.isArray(field.options) === false) return "";
-
-  const options = field.options.slice(0, 2).map((o) => o.value);
-
-  if (options.length < 2) {
-    return `{
-  "${fieldName}": ["option1", "option2"]
-}`;
-  }
-
-  return `{
-  "${fieldName}": ["${options[0]}", "${options[1]}"]
-}`;
-};
-
-const generateAsyncMultiSelectExample = (fieldName: string) => {
-  return `{
-    "${fieldName}": ["option1", "option2"]
-}`;
-};
-
-const generateOrderedMultiCreateExample = (fieldName: string) => {
-  return `{
-    "${fieldName}": ["option1", "option2"]
-}`;
-};
-
-const generateNumericExample = (
-  fieldName: string,
-  field:
-    | GeneratedInputMetaMap["int_input"]
-    | GeneratedInputMetaMap["number_input"],
-) => `{
-  "${fieldName}": ${field.min || 0}
-}`;
-
-const generateOutputFieldExmple = (fieldName: string) => `{
-  "${fieldName}": {
-    "enabled": true,
-    "alias": ""
-  }
-}`;
-
-const generateConnectorExample = (fieldName: string) => `{
-  "${fieldName}": {
-    "strategy": "first",
-    "connections": [
-      {
-        "type": "vault",
-        "connection": "provider_connection_id"
-      }
-    ]
-  }
-}`;
-
-const generatePipeTriggerExample = (fieldName: string) => `{
-  "${fieldName}": {
-    "action": "run",
-    "when": {
-      "logic": "and",
-      "conditions": [
-        {
-          "property": "value",
-          "field_name": "field_name",
-          "operator": "eq",
-          "value": "example"
-        }
-      ]
-    }
-  }
-}`;
-
-function generateCodeExample(field: GeneratedInputMeta): string {
-  const pathParts = field.path.split(".");
-  const fieldName = pathParts[pathParts.length - 1];
-
-  if (
-    inputGuards.include_exclude_input(field) ||
-    inputGuards.include_exclude_select_input(field)
-  ) {
-    return generateIncludeExcludeExample(fieldName);
-  }
-  if (inputGuards.connector_input(field)) {
-    return generateConnectorExample(fieldName);
-  }
-  if (inputGuards.pipes_trigger_input(field)) {
-    return generatePipeTriggerExample(fieldName);
-  }
-  if (inputGuards.providers_input(field)) {
-    return generateProvidersExample(fieldName);
-  }
-  if (inputGuards.exact_range_input(field)) {
-    return generateExactRangeExample(fieldName, field);
-  }
-  if (inputGuards.range_input(field)) {
-    return generateRangeExample(fieldName, field);
-  }
-  if (inputGuards.date_range_input(field)) {
-    return generateDateRangeExample(fieldName);
-  }
-  if (inputGuards.boolean_input(field)) {
-    return generateBooleanExample(fieldName);
-  }
-  if (inputGuards.nullable_boolean_input(field)) {
-    return generateBooleanExample(fieldName);
-  }
-  if (inputGuards.text_input(field) || inputGuards.textarea_input(field)) {
-    return generateTextExample(fieldName);
-  }
-  if (inputGuards.select_input(field)) {
-    return generateSelectExample(fieldName, field);
-  }
-
-  if (inputGuards.multi_select_input(field)) {
-    return generateMultiSelectExample(fieldName, field);
-  }
-
-  if (inputGuards.async_include_exclude_select_input(field)) {
-    return generateAsyncInlcudeExcludeSelectFieldExample(fieldName);
-  }
-
-  if (inputGuards.async_multi_select_input(field)) {
-    return generateAsyncMultiSelectExample(fieldName);
-  }
-
-  if (inputGuards.ordered_multi_create_input(field)) {
-    return generateOrderedMultiCreateExample(fieldName);
-  }
-
-  if (inputGuards.multi_create_input(field)) {
-    return generateOrderedMultiCreateExample(fieldName);
-  }
-
-  if (inputGuards.int_input(field) || inputGuards.number_input(field)) {
-    return generateNumericExample(fieldName, field);
-  }
-  if (inputGuards.json_extraction_input(field)) {
-    return generateJsonExtractionExample(fieldName);
-  }
-  if (inputGuards.json_schema_input(field)) {
-    return generateJsonSchemaExample(fieldName);
-  }
-  if (inputGuards.output_field_input(field)) {
-    return generateOutputFieldExmple(fieldName);
-  }
-
-  return `{
-  "${fieldName}": "value"
-}`;
 }
 
 function getConstraintInfo(field: GeneratedInputMeta): string[] {
@@ -331,13 +263,13 @@ function NumericConfig({
 }) {
   return (
     <ConfigSectionWrapper>
-      {field.min && (
+      {field.min !== undefined && field.min !== null && (
         <div>
           <span className="">Min value: </span>
           <span className="text-muted-foreground">{field.min}</span>
         </div>
       )}
-      {field.max && (
+      {field.max !== undefined && field.max !== null && (
         <div>
           <span className="">Max value: </span>
           <span className="text-muted-foreground">{field.max}</span>
@@ -376,11 +308,7 @@ function DateRangeConfig({
   );
 }
 
-function TextConfig({
-  field,
-}: {
-  field: GeneratedInputMetaMap["text_input"];
-}) {
+function TextConfig({ field }: { field: GeneratedInputMetaMap["text_input"] }) {
   return (
     <ConfigSectionWrapper>
       {field.minLength && (
@@ -420,15 +348,10 @@ function ConfigurationSection({ field }: { field: GeneratedInputMeta }) {
 }
 
 function ReferencesSection({ field }: { field: GeneratedInputMeta }) {
-  // eslint-disable-next-line react-hooks/preserve-manual-memoization
-  const showFieldFormatOptions = useMemo(() => {
-    return inputGuards.json_extraction_input(field);
-  }, []);
+  const showFieldFormatOptions = inputGuards.json_extraction_input(field);
+  const showTypeOptions = inputGuards.json_extraction_input(field);
 
-  // eslint-disable-next-line react-hooks/preserve-manual-memoization
-  const showTypeOptions = useMemo(() => {
-    return inputGuards.json_extraction_input(field);
-  }, []);
+  if (!showFieldFormatOptions && !showTypeOptions) return null;
 
   return (
     <div className="flex gap-3 flex-wrap">
@@ -491,7 +414,10 @@ const DATE_OPERATOR_INFO = [
 ];
 
 function OperatorsSection({ field }: { field: GeneratedInputMeta }) {
-  if (!inputGuards.exact_range_input(field) && !inputGuards.date_range_input(field))
+  if (
+    !inputGuards.exact_range_input(field) &&
+    !inputGuards.date_range_input(field)
+  )
     return null;
 
   const operators = inputGuards.date_range_input(field)
@@ -523,7 +449,8 @@ function OperatorsSection({ field }: { field: GeneratedInputMeta }) {
 }
 
 function FieldDocumentation({ field }: { field: GeneratedInputMeta }) {
-  const codeExample = generateCodeExample(field);
+  const codeExample = generateFieldExampleSnippet(field);
+  const sourceSummary = optionsDefSummary(field);
 
   return (
     <div className="space-y-6">
@@ -538,9 +465,18 @@ function FieldDocumentation({ field }: { field: GeneratedInputMeta }) {
       <div>
         <div className="flex items-center justify-between mb-3">
           <h4 className="text-sm font-medium">Example</h4>
+          <Button
+            size="icon"
+            variant="ghost"
+            className="size-7"
+            aria-label="Copy example"
+            onClick={() => copyToClipboard(codeExample)}
+          >
+            <Copy className="size-3.5" />
+          </Button>
         </div>
-        <pre className=" border rounded-lg p-4 text-sm overflow-x-auto">
-          <code className="">{codeExample}</code>
+        <pre className="border rounded-lg p-4 text-sm overflow-x-auto bg-muted/30">
+          <code>{codeExample}</code>
         </pre>
       </div>
 
@@ -551,13 +487,19 @@ function FieldDocumentation({ field }: { field: GeneratedInputMeta }) {
             options={
               "options" in field && Array.isArray(field.options)
                 ? field.options
-                : undefined
+                : sourceSummary?.kind === "static"
+                  ? sourceSummary.options.map((o) => ({
+                      value: o.value,
+                      label: o.label ?? o.value,
+                    }))
+                  : undefined
             }
             suggestions={
               "suggestions" in field && Array.isArray(field.suggestions)
                 ? field.suggestions
                 : undefined
             }
+            optionsDef={sourceSummary}
           />
           <OperatorsSection field={field} />
         </div>
@@ -567,63 +509,420 @@ function FieldDocumentation({ field }: { field: GeneratedInputMeta }) {
   );
 }
 
-interface FilterDocumentationProps {
-  formConfig: FormSection[];
+function SourceBadge({ field }: { field: GeneratedInputMeta }) {
+  const summary = optionsDefSummary(field);
+  if (!summary) return null;
+
+  if (summary.kind === "csv") {
+    return (
+      <a
+        href={summary.url}
+        target="_blank"
+        rel="noreferrer"
+        onClick={(e) => e.stopPropagation()}
+        className="hidden md:inline-flex items-center gap-1 text-[10px] text-blue-600 hover:underline"
+      >
+        {summary.file}
+        <ExternalLink className="size-2.5" />
+      </a>
+    );
+  }
+  if (summary.kind === "provider") {
+    return (
+      <span className="hidden md:inline text-[10px] text-muted-foreground">
+        provider-driven
+      </span>
+    );
+  }
+  if (summary.kind === "static" && summary.count > 0) {
+    return (
+      <span className="hidden md:inline text-[10px] text-muted-foreground">
+        {summary.count} values
+      </span>
+    );
+  }
+  return null;
 }
 
-export function PayloadDocumenation({ formConfig }: FilterDocumentationProps) {
-  const allFields = formConfig.flatMap((section) =>
-    section.groups.flatMap((group) => group.fields),
-  );
+function FieldAnchorButton({
+  fieldPath,
+  onCopied,
+}: {
+  fieldPath: string;
+  onCopied?: () => void;
+}) {
+  const [copied, setCopied] = useState(false);
+
+  const trigger = (e: React.SyntheticEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+    if (typeof window === "undefined") return;
+    const url = `${window.location.origin}${window.location.pathname}#${fieldPath}`;
+    void navigator.clipboard?.writeText(url);
+    if (window.history && window.location.hash !== `#${fieldPath}`) {
+      window.history.replaceState(null, "", `#${fieldPath}`);
+    }
+    setCopied(true);
+    onCopied?.();
+    setTimeout(() => setCopied(false), 1200);
+  };
 
   return (
-    <div className="">
-      <Accordion type="multiple" className="w-full space-y-1">
-        {allFields.map((field, idx) => {
-          const Icon = getFieldIcon(field.type);
-          const constraints = getConstraintInfo(field);
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <span
+          role="button"
+          tabIndex={0}
+          onClick={trigger}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") trigger(e);
+          }}
+          aria-label={`Copy link to ${fieldPath}`}
+          className="size-5 flex items-center justify-center rounded text-muted-foreground hover:text-foreground opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity cursor-pointer"
+        >
+          {copied ? (
+            <Check className="size-3 text-green-600" />
+          ) : (
+            <LinkIcon className="size-3" />
+          )}
+        </span>
+      </TooltipTrigger>
+      <TooltipContent>Copy link</TooltipContent>
+    </Tooltip>
+  );
+}
 
-          const hasRequired = "required" in field && field.required;
+function FieldAccordionItem({ field }: { field: GeneratedInputMeta }) {
+  const constraints = getConstraintInfo(field);
+  const hasRequired = "required" in field && field.required;
 
-          return (
-            <AccordionItem key={`${field.path}-${idx}`} value={`field-${idx}`}>
-              <AccordionTrigger>
-                <div className="flex items-center justify-between w-full">
-                  <div className="flex items-center gap-3">
-                    <Icon className="h-4 w-4 text-muted-foreground" />
-                    <div className="text-left">
-                      <div className="flex items-center gap-2">
-                        <p className="text-sm  px-1.5 py-0.5 rounded">
-                          {field.path}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    {constraints.length > 0 && (
-                      <span className="text-xs px-2 py-1 rounded">
-                        {constraints.join(", ")}
-                      </span>
-                    )}
-                    <Badge
-                      variant={hasRequired ? "default" : "secondary"}
-                      className="text-xs"
-                    >
-                      {hasRequired ? "required" : "optional"}
-                    </Badge>
-                    <Badge variant="outline" className="text-xs">
-                      {field.type.replace(/_/g, " ")}
-                    </Badge>
-                  </div>
-                </div>
-              </AccordionTrigger>
-              <AccordionContent className="px-4 pb-4">
-                <FieldDocumentation field={field} />
-              </AccordionContent>
-            </AccordionItem>
-          );
-        })}
+  return (
+    <AccordionItem
+      value={field.path}
+      id={field.path}
+      className="scroll-mt-24 group"
+    >
+      <AccordionTrigger>
+        <div className="flex items-center justify-between w-full gap-2 min-w-0">
+          <div className="flex items-center gap-2 min-w-0">
+            <FieldIcon
+              type={field.type}
+              className="h-3.5 w-3.5 text-muted-foreground shrink-0"
+            />
+            <span className="font-mono text-sm truncate">{field.path}</span>
+            <FieldAnchorButton fieldPath={field.path} />
+          </div>
+          <div className="flex items-center gap-1.5 shrink-0">
+            {constraints.length > 0 && (
+              <span className="text-[10px] text-muted-foreground hidden md:inline">
+                {constraints.join(", ")}
+              </span>
+            )}
+            <SourceBadge field={field} />
+            <Badge
+              variant="outline"
+              className="text-[10px] font-mono px-1.5 py-0"
+            >
+              {field.type.replace(/_/g, " ")}
+            </Badge>
+            <Badge
+              variant={hasRequired ? "default" : "secondary"}
+              className="text-[10px] uppercase tracking-wide px-1.5 py-0"
+            >
+              {hasRequired ? "required" : "optional"}
+            </Badge>
+          </div>
+        </div>
+      </AccordionTrigger>
+      <AccordionContent className="pl-6 pb-4">
+        <FieldDocumentation field={field} />
+      </AccordionContent>
+    </AccordionItem>
+  );
+}
+
+interface FilterDocumentationProps {
+  formConfig: FormSection[];
+  searchable?: boolean;
+  exampleFilename?: string;
+}
+
+type FilteredGroup = {
+  groupPath: string;
+  label?: string;
+  description?: string;
+  iconKey?: IconKey;
+  defaultExpand: boolean;
+  fields: GeneratedInputMeta[];
+};
+
+type FilteredSection = {
+  path: string;
+  label?: string;
+  description?: string;
+  groups: FilteredGroup[];
+};
+
+function buildFilteredSections(
+  formConfig: FormSection[],
+  query: string,
+): FilteredSection[] {
+  const q = query.trim().toLowerCase();
+  const matches = (field: GeneratedInputMeta) => {
+    if (!q) return true;
+    const path = field.path?.toLowerCase() ?? "";
+    const label = ("label" in field && field.label
+      ? String(field.label)
+      : ""
+    ).toLowerCase();
+    const type = field.type.toLowerCase();
+    return path.includes(q) || label.includes(q) || type.includes(q);
+  };
+
+  const result: FilteredSection[] = [];
+  const seenPaths = new Set<string>();
+
+  for (const section of formConfig) {
+    const groups: FilteredGroup[] = [];
+    for (const group of section.groups) {
+      const fields: GeneratedInputMeta[] = [];
+      for (const field of group.fields) {
+        if (seenPaths.has(field.path)) continue;
+        if (!matches(field)) continue;
+        seenPaths.add(field.path);
+        fields.push(field);
+      }
+      if (fields.length === 0) continue;
+      groups.push({
+        groupPath: group.groupPath,
+        label: group.label,
+        description: group.description,
+        iconKey: group.iconKey,
+        defaultExpand: false,
+        fields,
+      });
+    }
+    if (groups.length === 0) continue;
+    result.push({
+      path: section.metadata.path,
+      label: section.metadata.label,
+      description: section.metadata.description,
+      groups,
+    });
+  }
+
+  return result;
+}
+
+function GroupBlock({
+  group,
+  forceOpenFieldPaths,
+}: {
+  group: FilteredGroup;
+  forceOpenFieldPaths: Set<string>;
+}) {
+  const [userOpenItems, setUserOpenItems] = useState<string[] | null>(null);
+
+  const openItems = useMemo(() => {
+    const base =
+      userOpenItems ??
+      (group.defaultExpand ? group.fields.map((f) => f.path) : []);
+    const next = new Set(base);
+    group.fields.forEach((f) => {
+      if (forceOpenFieldPaths.has(f.path)) next.add(f.path);
+    });
+    return Array.from(next);
+  }, [userOpenItems, group, forceOpenFieldPaths]);
+
+  return (
+    <div className="rounded-lg border border-border bg-card/40">
+      <div className="flex items-center gap-2 px-3 py-2 border-b border-border">
+        <GroupIcon
+          iconKey={group.iconKey}
+          className="size-4 text-muted-foreground"
+        />
+        <div className="min-w-0">
+          <div className="text-sm font-medium leading-tight">
+            {group.label ?? group.groupPath}
+          </div>
+          {group.description && (
+            <div className="text-xs text-muted-foreground">
+              {group.description}
+            </div>
+          )}
+        </div>
+        <span className="ml-auto text-[10px] text-muted-foreground tabular-nums">
+          {group.fields.length}
+        </span>
+      </div>
+      <Accordion
+        type="multiple"
+        value={openItems}
+        onValueChange={setUserOpenItems}
+        className="px-3"
+      >
+        {group.fields.map((field) => (
+          <FieldAccordionItem key={field.path} field={field} />
+        ))}
       </Accordion>
+    </div>
+  );
+}
+
+export function PayloadDocumenation({
+  formConfig,
+  searchable,
+  exampleFilename,
+}: FilterDocumentationProps) {
+  const [query, setQuery] = useState("");
+  const [hashField, setHashField] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const apply = () => {
+      const hash = window.location.hash.replace(/^#/, "");
+      setHashField(hash || null);
+    };
+    apply();
+    window.addEventListener("hashchange", apply);
+    return () => window.removeEventListener("hashchange", apply);
+  }, []);
+
+  useEffect(() => {
+    if (!hashField) return;
+    const el = document.getElementById(hashField);
+    if (el) {
+      requestAnimationFrame(() =>
+        el.scrollIntoView({ behavior: "smooth", block: "start" }),
+      );
+    }
+  }, [hashField]);
+
+  const sections = useMemo(
+    () => buildFilteredSections(formConfig, query),
+    [formConfig, query],
+  );
+
+  const totalFields = useMemo(
+    () =>
+      formConfig.reduce(
+        (acc, s) =>
+          acc + s.groups.reduce((a, g) => a + g.fields.length, 0),
+        0,
+      ),
+    [formConfig],
+  );
+
+  const visibleFields = useMemo(
+    () =>
+      sections.reduce(
+        (acc, s) => acc + s.groups.reduce((a, g) => a + g.fields.length, 0),
+        0,
+      ),
+    [sections],
+  );
+
+  const forceOpenFieldPaths = useMemo(() => {
+    const set = new Set<string>();
+    if (hashField) set.add(hashField);
+    return set;
+  }, [hashField]);
+
+  const handleCopyAll = useCallback(() => {
+    const populated = buildPopulatedExample(formConfig);
+    copyToClipboard(JSON.stringify(populated, null, 2));
+  }, [formConfig]);
+
+  const handleDownload = useCallback(() => {
+    const populated = buildPopulatedExample(formConfig);
+    const blob = new Blob([JSON.stringify(populated, null, 2)], {
+      type: "application/json",
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${exampleFilename ?? "config-example"}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }, [formConfig, exampleFilename]);
+
+  return (
+    <div className="space-y-4">
+      <div className="flex flex-wrap items-center gap-2">
+        {searchable && (
+          <div className="relative flex-1 min-w-[200px]">
+            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground" />
+            <Input
+              type="search"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Filter config keys..."
+              className="h-8 pl-8 text-sm"
+            />
+          </div>
+        )}
+        <div className="flex items-center gap-2 ml-auto">
+          <Button
+            variant="outline"
+            size="sm"
+            className="h-8 gap-1.5"
+            onClick={handleCopyAll}
+          >
+            <Copy className="size-3.5" />
+            Copy example
+          </Button>
+        </div>
+      </div>
+
+      {visibleFields === 0 ? (
+        <div className="rounded-md border border-dashed py-6 text-center text-xs text-muted-foreground">
+          {query.trim()
+            ? `No config keys match "${query}".`
+            : "No config keys."}
+        </div>
+      ) : (
+        <div className="space-y-6">
+          {sections.map((section) => (
+            <section
+              key={section.path}
+              id={`section-${section.path}`}
+              className="space-y-3"
+            >
+              {(section.label || section.description) && (
+                <div className="space-y-0.5">
+                  {section.label && (
+                    <h3 className="text-base font-semibold tracking-tight">
+                      {section.label}
+                    </h3>
+                  )}
+                  {section.description && (
+                    <p className="text-xs text-muted-foreground">
+                      {section.description}
+                    </p>
+                  )}
+                </div>
+              )}
+              <div className="space-y-3">
+                {section.groups.map((group) => (
+                  <GroupBlock
+                    key={group.groupPath}
+                    group={group}
+                    forceOpenFieldPaths={forceOpenFieldPaths}
+                  />
+                ))}
+              </div>
+            </section>
+          ))}
+        </div>
+      )}
+
+      {searchable && query.trim() && visibleFields > 0 && (
+        <p className="text-[11px] text-muted-foreground">
+          Showing {visibleFields} of {totalFields} fields.
+        </p>
+      )}
     </div>
   );
 }

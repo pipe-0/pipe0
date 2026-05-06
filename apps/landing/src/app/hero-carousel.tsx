@@ -107,7 +107,7 @@ function FormVisual() {
         <Sparkle className="size-3.5 text-muted-foreground" />
         <span className="text-sm font-medium">Find work email</span>
         <span className="ml-auto font-mono text-[10px] text-muted-foreground">
-          @pipe0/elements-react
+          @pipe0/react
         </span>
       </div>
 
@@ -265,7 +265,7 @@ const slides: Slide[] = [
     ),
     body: (
       <>
-        <span className="text-foreground">@pipe0/elements-react</span> renders
+        <span className="text-foreground">@pipe0/react</span> renders
         production-ready, fully composable forms for every pipe and search.
       </>
     ),

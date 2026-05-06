@@ -1,5 +1,5 @@
 import { LogoRawSmall } from "@/components/logo";
-import { docsLinkPaths, getDocsUrl } from "@pipe0/docs-links";
+import { docsLinkPaths, getDocsUrl } from "@pipe0/doc-links";
 import { ArrowRight, BookOpen, FileCode2, Search, Zap } from "lucide-react";
 import Link from "next/link";
 

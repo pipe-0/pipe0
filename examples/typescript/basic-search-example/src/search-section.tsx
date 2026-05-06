@@ -1,9 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import React, { useState } from "react";
-import {
-  type SearchRequestPayload,
-  type SearchResponse,
-} from "@pipe0/elements";
+import { type SearchRequestPayload, type SearchResponse } from "@pipe0/base";
 
 const API_BASE_URL = "https://sandbox-proxy.pipe0.com/v1";
 
