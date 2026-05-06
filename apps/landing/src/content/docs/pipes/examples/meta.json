@@ -2,6 +2,7 @@
   "$schema": "../../../../../.source/json-schema/docs.meta.json",
   "title": "Examples",
   "pages": [
+    "dough",
     "basic-script-typescript",
     "signup-alerts"
   ]
