@@ -5,7 +5,8 @@
     "changeset:publish": "npx changeset publish",
     "cs": "npx changeset",
     "catalog:bump": "node scripts/bump-catalog.mjs",
-    "examples:bump": "node scripts/bump-examples.mjs"
+    "examples:bump": "node scripts/bump-examples.mjs",
+    "bump": "pnpm run catalog:bump && pnpm examples:bump && pnpm i"
   },
   "devDependencies": {
     "@changesets/changelog-github": "^0.6.0",

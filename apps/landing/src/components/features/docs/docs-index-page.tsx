@@ -1,16 +1,9 @@
 import { LogoRawSmall } from "@/components/logo";
 import { docsLinkPaths, getDocsUrl } from "@pipe0/doc-links";
-import { ArrowRight, BookOpen, FileCode2, Search, Zap } from "lucide-react";
+import { ArrowRight, FileCode2, Search, Zap } from "lucide-react";
 import Link from "next/link";
 
 const sections = [
-  {
-    title: "Framework",
-    description:
-      "Learn the basics of Pipe0. Set up your API key, make your first request, and understand the core concepts.",
-    href: "/docs/introduction",
-    icon: BookOpen,
-  },
   {
     title: "Enrich",
     description:
@@ -44,7 +37,7 @@ export function DocsIndexPage() {
       </div>
 
       {/* Section cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
         {sections.map((section) => (
           <Link
             key={section.title}

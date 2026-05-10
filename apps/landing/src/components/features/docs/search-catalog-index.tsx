@@ -159,19 +159,19 @@ function DocsFilterDropdown({
       <DropdownMenuTrigger asChild>
         <button
           className={cn(
-            "inline-flex items-center gap-1.5 px-3 py-1.5 text-sm rounded-md border transition-colors min-w-[140px] max-w-[220px]",
+            "inline-flex items-center gap-1 px-2 py-1 text-xs rounded-md border transition-colors max-w-[220px]",
             value
               ? "border-primary text-primary bg-primary/5"
-              : "border-input text-foreground hover:bg-muted",
+              : "border-input text-muted-foreground hover:bg-muted hover:text-foreground",
           )}
         >
           {leadingIcon && (
             <span className="shrink-0 text-muted-foreground">{leadingIcon}</span>
           )}
-          <span className="truncate flex-1 text-left">
+          <span className="truncate text-left">
             {activeOption ? activeOption.label : defaultLabel}
           </span>
-          <ChevronDown className="size-3.5 shrink-0 text-muted-foreground" />
+          <ChevronDown className="size-3 shrink-0 text-muted-foreground" />
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent
@@ -466,7 +466,7 @@ function Featured({ searchEntryMap }: { searchEntryMap: SearchEntryMap }) {
   );
 }
 
-function GroupedList({ cards }: { cards: SearchCardData[] }) {
+function GroupedList({ cards }: { cards: ReadonlyArray<SearchCardData> }) {
   const { category, globalFilterInput, table } = useSearchCatalogContext();
   const featuredShown =
     category === null &&
@@ -606,7 +606,7 @@ export function SearchCatalogIndex({
 
       {/* Search bar */}
       <SearchCatalogSearchFilter
-        render={({ value, setValue }) => (
+        render={(_, { value, setValue }) => (
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
@@ -620,57 +620,60 @@ export function SearchCatalogIndex({
         )}
       />
 
-      {/* Categories */}
-      <SearchCatalogCategoryFilter
-        render={({ value, setValue }) => (
-          <DocsCategoryButtons value={value} setValue={setValue} />
-        )}
-      />
+      {/* Filters cluster: categories + provider/output quick filters */}
+      <div className="space-y-2">
+        <SearchCatalogCategoryFilter
+          render={(_, { value, setValue }) => (
+            <DocsCategoryButtons value={value} setValue={setValue} />
+          )}
+        />
 
-      {/* Provider + Output quick filters */}
-      <div className="flex items-center gap-2 flex-wrap">
-        <SearchCatalogProviderFilter
-          render={({ value, setValue, options }) => (
-            <DocsFilterDropdown
-              defaultLabel="Provider"
-              value={value}
-              setValue={setValue}
-              options={options}
-              renderItem={(option) => (
-                <>
-                  {option.imageSrc && (
-                    <img
-                      src={option.imageSrc}
-                      alt=""
-                      className="size-4 shrink-0 rounded-sm"
-                    />
-                  )}
+        <div className="flex items-center gap-1.5 flex-wrap">
+          <SearchCatalogProviderFilter
+            render={(_, { value, setValue, options }) => (
+              <DocsFilterDropdown
+                defaultLabel="Provider"
+                value={value}
+                setValue={setValue}
+                options={options}
+                renderItem={(option) => (
+                  <>
+                    {option.imageSrc && (
+                      <img
+                        src={option.imageSrc}
+                        alt=""
+                        className="size-4 shrink-0 rounded-sm"
+                      />
+                    )}
+                    <span className="truncate">{option.label}</span>
+                  </>
+                )}
+              />
+            )}
+          />
+
+          <SearchCatalogOutputFieldFilter
+            render={(_, { value, setValue, options }) => (
+              <DocsFilterDropdown
+                defaultLabel="Output fields"
+                leadingIcon={<ArrowDown className="size-3.5" />}
+                value={value}
+                setValue={setValue}
+                options={options}
+                renderItem={(option) => (
                   <span className="truncate">{option.label}</span>
-                </>
-              )}
-            />
-          )}
-        />
-
-        <SearchCatalogOutputFieldFilter
-          render={({ value, setValue, options }) => (
-            <DocsFilterDropdown
-              defaultLabel="Output fields"
-              leadingIcon={<ArrowDown className="size-3.5" />}
-              value={value}
-              setValue={setValue}
-              options={options}
-              renderItem={(option) => (
-                <span className="truncate">{option.label}</span>
-              )}
-            />
-          )}
-        />
+                )}
+              />
+            )}
+          />
+        </div>
       </div>
 
       {/* Active filter pills */}
       <SearchCatalogActiveFilters
-        render={({ filters }) => <DocsActiveFiltersStrip filters={filters} />}
+        render={(_, { activeFilters }) => (
+          <DocsActiveFiltersStrip filters={activeFilters} />
+        )}
       />
 
       {/* Featured section */}
@@ -678,7 +681,7 @@ export function SearchCatalogIndex({
 
       {/* Grouped list view */}
       <SearchCatalogList
-        render={({ cards }) => <GroupedList cards={cards} />}
+        render={(_, { cards }) => <GroupedList cards={cards} />}
       />
 
       {/* Empty state */}

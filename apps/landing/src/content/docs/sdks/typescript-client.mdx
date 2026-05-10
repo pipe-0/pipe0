@@ -85,7 +85,15 @@ const result = await pipe0.pipes.pipe({
     },
     {
       pipe_id: "message:send:slack@1",
-      trigger: { action: "run", when: { icp_fit: { equals: true } } },
+      run_if: {
+        action: "run",
+        when: {
+          logic: "and",
+          conditions: [
+            { field_name: "icp_fit", property: "value", operator: "eq", value: true },
+          ],
+        },
+      },
       config: { channel: "#new-leads" },
     },
   ],
@@ -93,7 +101,7 @@ const result = await pipe0.pipes.pipe({
 });
 ```
 
-Note `trigger` — the Slack pipe only runs when the previous step marked
+Note `run_if` — the Slack pipe only runs when the previous step marked
 `icp_fit` true. Conditional execution is part of the typed payload.
 
 ### Large inputs: `pipeInBatches`
