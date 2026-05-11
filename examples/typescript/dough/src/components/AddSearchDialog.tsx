@@ -30,7 +30,7 @@ export function AddSearchDialog({
           className="flex flex-1 min-h-0 flex-col gap-3"
         >
           <SearchCatalogSearchFilter
-            render={({ value, setValue }) => (
+            render={(_, { value, setValue }) => (
               <input
                 type="search"
                 placeholder="Search…"
@@ -42,7 +42,7 @@ export function AddSearchDialog({
           />
           <div className="flex-1 min-h-0 overflow-auto">
             <SearchCatalogList
-              render={({ cards }) => (
+              render={(_, { cards }) => (
                 <div className="flex flex-col gap-2">
                   {cards.map((card) => (
                     <SearchCatalogCard

@@ -64,4 +64,3 @@ if (changed === 0) {
 
 writeFileSync(workspaceFile, updated);
 console.log(`\nUpdated ${changed} entr${changed === 1 ? "y" : "ies"}. Running pnpm install...`);
-execSync("pnpm install", { stdio: "inherit" });

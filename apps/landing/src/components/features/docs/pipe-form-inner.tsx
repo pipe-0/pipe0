@@ -5,9 +5,12 @@ import {
   PipeForm,
   PipeFormContent,
   PipeFormFooter,
+  PipeFormGroup,
   PipeFormHeader,
+  PipeFormSection,
   PipeFormSubmitButton,
   PipeFormTitle,
+  usePipeForm,
 } from "@pipe0/react";
 
 export function PipeFormInner({
@@ -21,12 +24,16 @@ export function PipeFormInner({
   defaultValues: PipePayload;
   validationContext?: ValidationContext;
 }) {
+  const pipeForm = usePipeForm({
+    pipeId,
+    publicKey: "pk_docs_preview",
+    defaultValues,
+    validationContext,
+  });
+
   return (
     <PipeForm
-      pipeId={pipeId}
-      publicKey="pk_docs_preview"
-      defaultValues={defaultValues}
-      validationContext={validationContext}
+      context={pipeForm}
       onSubmit={(payload) => {
         console.log("Submitted pipe payload:", payload);
       }}
@@ -38,7 +45,15 @@ export function PipeFormInner({
           className="text-sm font-semibold m-0"
         />
       </PipeFormHeader>
-      <PipeFormContent className="flex-1 overflow-auto min-h-0 p-4 max-h-120" />
+      <PipeFormContent className="flex-1 overflow-auto min-h-0 p-4 max-h-120">
+        {pipeForm.sections.map((section) => (
+          <PipeFormSection key={section.key} section={section}>
+            {section.groups.map((group) => (
+              <PipeFormGroup key={group.key} group={group} />
+            ))}
+          </PipeFormSection>
+        ))}
+      </PipeFormContent>
       <PipeFormFooter className="shrink-0 border-t border-input p-3">
         <PipeFormSubmitButton className="w-full">Run</PipeFormSubmitButton>
       </PipeFormFooter>

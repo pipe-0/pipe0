@@ -223,9 +223,9 @@ The previous `{{ input ... }}` / `{{ secret ... }}` / `{{ output ... }}` / `<tag
 | `<tag>…</tag>` blocks | rewrite as `{{ … }}` refs and Liquid control flow |
 
 
-## Triggers <span className="badge-new" />
+## Run-if <span className="badge-new" />
 
-Triggers allow you to run pipes conditionally. You can specify conditions like:
+`run_if` lets you run pipes conditionally. You can specify conditions like:
 
 > Run pipe `people:name:split@1` if the field `name` is `completed` and the resolved value `contains` the value `Tom`.
 
@@ -235,7 +235,7 @@ The request for the example above would look like this.
 	"pipes": [
 		{
 			"pipe_id": "people:name:split@1",
-			"trigger": {
+			"run_if": {
 				"action": "run",
 				"when": {
 					"logic": "and",
@@ -255,24 +255,24 @@ The request for the example above would look like this.
 }
 ```
 
-### Trigger Structure
+### Run-if Structure
 
 #### action
-The action that will be performed if all conditions are evaluated to true.
+The action that will be performed when conditions match. Defaults to `"run"` (run the pipe only on matching records). Reserved for future extension.
 
 **Supported values**: `run`.
 
-> Triggers don't bypass other mechanisms of pipe evaluation. Example: If your trigger conditions are met, but required input 
+> `run_if` doesn't bypass other mechanisms of pipe evaluation. Example: If your conditions are met, but required input
 > fields are missing pipe execution will still be `skipped`.
 
 
 #### when.logic
 A logic operator that connects all conditions. <br />
-**Supported values**: `and`, `or`.
+**Supported values**: `and` (all conditions must match), `or` (any condition matches).
 
 #### when.conditions[]
 
-A list of conditions. If all conditions evaluate to true, the action will be performed.
+A list of conditions. Each condition checks either a field value or its resolution status. Combined using `when.logic`.
 
 #### condition.field_name
 
@@ -285,7 +285,7 @@ A field in your pipeline that will be used for evaluation. This field can be pro
 
 The property of the target field (`field_name`) that will be evaluated by the `operator` and `value`.
 
-**Supported values**: `value`, `status`.
+**Supported values**: `value` (compare the actual field value), `status` (compare the field resolution status).
 
 #### condition.operator
 
@@ -296,14 +296,16 @@ The operator used for comparison. Allowed operators are determined by `property`
 | Property      | Type | Supported operators    |
 | :---        |    :---   |         :--- |
 | value      | string       | `eq`, `neq`, `contains`   |
-| value   | string, date        | `eq`, `neq`, `lt`, `lte`, `gt`, `gte`, `contains`      |
+| value   | date        | `eq`, `neq`, `lt`, `lte`, `gt`, `gte`, `contains`      |
 | value   | number        | `eq`, `neq`, `lt`, `lte`, `gt`, `gte`, `contains`      |
-| value   | boolean        | `eq`, `neq`, `contains`      |
-| status   | /        | `eq`, `neq`, `contains`      |
-
-**Supported values**: `value`, `status`.
+| value   | boolean        | `eq`, `neq`      |
+| status   | /        | `eq`, `neq`      |
 
 #### condition.value
 
-The value to compare against. 
+The value to compare against.
+
+For `property: "value"`, must be a primitive (string, number, boolean, or null).
+
+For `property: "status"`, must be one of: `completed`, `no_result`, `failed`, `skipped`.
 

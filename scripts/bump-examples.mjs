@@ -116,4 +116,3 @@ if (totalChanged === 0) {
 }
 
 console.log(`\nUpdated ${totalChanged} entr${totalChanged === 1 ? "y" : "ies"}. Running pnpm install...`);
-execSync("pnpm install", { stdio: "inherit", cwd: repoRoot });

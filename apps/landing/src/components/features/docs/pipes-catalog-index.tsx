@@ -82,11 +82,11 @@ const dateFormatter = new Intl.DateTimeFormat("en-US", {
 });
 
 const FEATURED_PIPE_IDS = [
-  "people:phone:profile:waterfall@1",
-  "people:workemail:waterfall@1",
-  "company:techstack:builtwith@1",
-  "company:identity@2",
-  "company:overview@2",
+  "person:mobile:profileurl:waterfall@1",
+  "person:workemail:waterfall@1",
+  "company:techstack:builtwith@2",
+  "company:identity@3",
+  "company:overview@3",
 ] satisfies PipeId[];
 
 const FEATURED_PIPE_ID_SET = new Set<string>(FEATURED_PIPE_IDS);
@@ -204,19 +204,19 @@ function DocsFilterDropdown({
       <DropdownMenuTrigger asChild>
         <button
           className={cn(
-            "inline-flex items-center gap-1.5 px-3 py-1.5 text-sm rounded-md border transition-colors min-w-[140px] max-w-[220px]",
+            "inline-flex items-center gap-1 px-2 py-1 text-xs rounded-md border transition-colors max-w-[220px]",
             value
               ? "border-primary text-primary bg-primary/5"
-              : "border-input text-foreground hover:bg-muted",
+              : "border-input text-muted-foreground hover:bg-muted hover:text-foreground",
           )}
         >
           {leadingIcon && (
             <span className="shrink-0 text-muted-foreground">{leadingIcon}</span>
           )}
-          <span className="truncate flex-1 text-left">
+          <span className="truncate text-left">
             {activeOption ? activeOption.label : defaultLabel}
           </span>
-          <ChevronDown className="size-3.5 shrink-0 text-muted-foreground" />
+          <ChevronDown className="size-3 shrink-0 text-muted-foreground" />
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent
@@ -571,7 +571,7 @@ function Featured() {
   );
 }
 
-function GroupedList({ cards }: { cards: PipeCardData[] }) {
+function GroupedList({ cards }: { cards: ReadonlyArray<PipeCardData> }) {
   const { category, globalFilterInput, table } = usePipeCatalogContext();
   // Featured pipes render in the section above only when no filter is active.
   // When a filter is active, surface them inside the grouped list so they
@@ -699,7 +699,7 @@ export function PipeCatalogIndex() {
 
       {/* Search bar */}
       <PipeCatalogSearchFilter
-        render={({ value, setValue }) => (
+        render={(_, { value, setValue }) => (
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
@@ -713,72 +713,75 @@ export function PipeCatalogIndex() {
         )}
       />
 
-      {/* Categories */}
-      <PipeCatalogCategoryFilter
-        render={({ value, setValue }) => (
-          <DocsCategoryButtons value={value} setValue={setValue} />
-        )}
-      />
+      {/* Filters cluster: categories + provider/input/output quick filters */}
+      <div className="space-y-2">
+        <PipeCatalogCategoryFilter
+          render={(_, { value, setValue }) => (
+            <DocsCategoryButtons value={value} setValue={setValue} />
+          )}
+        />
 
-      {/* Provider + Input + Output quick filters */}
-      <div className="flex items-center gap-2 flex-wrap">
-        <PipeCatalogProviderFilter
-          render={({ value, setValue, options }) => (
-            <DocsFilterDropdown
-              defaultLabel="Provider"
-              value={value}
-              setValue={setValue}
-              options={options}
-              renderItem={(option) => (
-                <>
-                  {option.imageSrc && (
-                    <img
-                      src={option.imageSrc}
-                      alt=""
-                      className="size-4 shrink-0 rounded-sm"
-                    />
-                  )}
+        <div className="flex items-center gap-1.5 flex-wrap">
+          <PipeCatalogProviderFilter
+            render={(_, { value, setValue, options }) => (
+              <DocsFilterDropdown
+                defaultLabel="Provider"
+                value={value}
+                setValue={setValue}
+                options={options}
+                renderItem={(option) => (
+                  <>
+                    {option.imageSrc && (
+                      <img
+                        src={option.imageSrc}
+                        alt=""
+                        className="size-4 shrink-0 rounded-sm"
+                      />
+                    )}
+                    <span className="truncate">{option.label}</span>
+                  </>
+                )}
+              />
+            )}
+          />
+
+          <PipeCatalogInputFieldFilter
+            render={(_, { value, setValue, options }) => (
+              <DocsFilterDropdown
+                defaultLabel="Input fields"
+                leadingIcon={<ArrowUp className="size-3.5" />}
+                value={value}
+                setValue={setValue}
+                options={options}
+                renderItem={(option) => (
                   <span className="truncate">{option.label}</span>
-                </>
-              )}
-            />
-          )}
-        />
+                )}
+              />
+            )}
+          />
 
-        <PipeCatalogInputFieldFilter
-          render={({ value, setValue, options }) => (
-            <DocsFilterDropdown
-              defaultLabel="Input fields"
-              leadingIcon={<ArrowUp className="size-3.5" />}
-              value={value}
-              setValue={setValue}
-              options={options}
-              renderItem={(option) => (
-                <span className="truncate">{option.label}</span>
-              )}
-            />
-          )}
-        />
-
-        <PipeCatalogOutputFieldFilter
-          render={({ value, setValue, options }) => (
-            <DocsFilterDropdown
-              defaultLabel="Output fields"
-              leadingIcon={<ArrowDown className="size-3.5" />}
-              value={value}
-              setValue={setValue}
-              options={options}
-              renderItem={(option) => (
-                <span className="truncate">{option.label}</span>
-              )}
-            />
-          )}
-        />
+          <PipeCatalogOutputFieldFilter
+            render={(_, { value, setValue, options }) => (
+              <DocsFilterDropdown
+                defaultLabel="Output fields"
+                leadingIcon={<ArrowDown className="size-3.5" />}
+                value={value}
+                setValue={setValue}
+                options={options}
+                renderItem={(option) => (
+                  <span className="truncate">{option.label}</span>
+                )}
+              />
+            )}
+          />
+        </div>
       </div>
 
       {/* Active filter pills */}
       <PipeCatalogActiveFilters
-        render={({ filters }) => <DocsActiveFiltersStrip filters={filters} />}
+        render={(_, { activeFilters }) => (
+          <DocsActiveFiltersStrip filters={activeFilters} />
+        )}
       />
 
       {/* Featured section */}
@@ -786,7 +789,7 @@ export function PipeCatalogIndex() {
 
       {/* Grouped list view */}
       <PipeCatalogList
-        render={({ cards }) => <GroupedList cards={cards} />}
+        render={(_, { cards }) => <GroupedList cards={cards} />}
       />
 
       {/* Empty state */}

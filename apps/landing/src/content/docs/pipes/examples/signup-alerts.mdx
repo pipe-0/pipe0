@@ -21,7 +21,7 @@ zero.POST("/v1/pipes/run/sync", {
       { pipe_id: "people:email:iswork@1" },
       {
         pipe_id: "company:websiteurl:email@1",
-        trigger: {
+        run_if: {
           action: "run",
           when: {
             logic: "and",
@@ -77,7 +77,7 @@ Estimated revenue: {{ input estimated_revenue type="string" }}
       },
       {
         pipe_id: "message:write@1",
-        trigger: {
+        run_if: {
           action: "run",
           when: {
             logic: "and",

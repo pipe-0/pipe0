@@ -238,7 +238,7 @@ export function exampleValueForField(field: GeneratedInputMeta): unknown {
     };
   }
 
-  if (inputGuards.pipes_trigger_input(field)) {
+  if (inputGuards.pipes_run_if_input(field)) {
     return {
       action: "run",
       when: {

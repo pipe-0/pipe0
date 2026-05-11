@@ -9,8 +9,8 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { cn, copyToClipboard } from "@/lib/utils";
-import { providerCatalog } from "@pipe0/base";
-import { PricingBadge } from "@pipe0/react";
+import { type ProviderName, providerCatalog } from "@pipe0/base";
+import { AvatarGroup, PricingBadge } from "@pipe0/react";
 import { ArrowRight, Copy } from "lucide-react";
 import Link from "next/link";
 
@@ -271,7 +271,12 @@ export function CatalogListRow({
             </span>
           ) : null}
         </div>
-        {providerCount > 0 && <ProviderStack providers={providers} />}
+        {providerCount > 0 && (
+          <AvatarGroup
+            providers={providers as readonly ProviderName[]}
+            size="sm"
+          />
+        )}
         {providerCount > 0 && (
           <span className="text-[10px] text-muted-foreground/70">
             {providerCount} provider{providerCount === 1 ? "" : "s"}

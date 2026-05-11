@@ -5,9 +5,12 @@ import {
   SearchForm,
   SearchFormContent,
   SearchFormFooter,
+  SearchFormGroup,
   SearchFormHeader,
+  SearchFormSection,
   SearchFormSubmitButton,
   SearchFormTitle,
+  useSearchForm,
 } from "@pipe0/react";
 
 export function SearchFormInner({
@@ -19,12 +22,16 @@ export function SearchFormInner({
   searchLabel: string;
   defaultValues: SearchPayload;
 }) {
+  const searchForm = useSearchForm({
+    searchId,
+    publicKey: "pk_docs_preview",
+    defaultValues,
+    sectionMap: { pagination: null },
+  });
+
   return (
     <SearchForm
-      searchId={searchId}
-      publicKey="pk_docs_preview"
-      defaultValues={defaultValues}
-      sectionMap={{ pagination: null }}
+      context={searchForm}
       onSubmit={(payload) => {
         console.log("Submitted search payload:", payload);
       }}
@@ -36,7 +43,15 @@ export function SearchFormInner({
           className="text-sm font-semibold m-0"
         />
       </SearchFormHeader>
-      <SearchFormContent className="flex-1 overflow-auto min-h-0 p-4 max-h-120" />
+      <SearchFormContent className="flex-1 overflow-auto min-h-0 p-4 max-h-120">
+        {searchForm.sections.map((section) => (
+          <SearchFormSection key={section.key} section={section}>
+            {section.groups.map((group) => (
+              <SearchFormGroup key={group.key} group={group} />
+            ))}
+          </SearchFormSection>
+        ))}
+      </SearchFormContent>
       <SearchFormFooter className="shrink-0 border-t border-input p-3">
         <SearchFormSubmitButton className="w-full">
           Run search

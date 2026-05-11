@@ -36,28 +36,43 @@ function generateExampleCode(searchId: SearchId, searchLabel: string): string {
   SearchForm,
   SearchFormContent,
   SearchFormFooter,
+  SearchFormGroup,
   SearchFormHeader,
+  SearchFormSection,
   SearchFormSubmitButton,
   SearchFormTitle,
+  useSearchForm,
 } from "@pipe0/react";
 import { getSearchDefaultPayload } from "@pipe0/base";
 import "@pipe0/react/styles";
 
 export function ${toComponentName(searchId)}Form() {
+  const searchForm = useSearchForm({
+    searchId: "${searchId}",
+    publicKey: "pk_abc...",
+    defaultValues: getSearchDefaultPayload("${searchId}"),
+    sectionMap: { pagination: null },
+  });
+
   return (
     <SearchForm
-      searchId="${searchId}"
-      publicKey="pk_abc..."
-      defaultValues={getSearchDefaultPayload("${searchId}")}
-      sectionMap={{ pagination: null }}
+      context={searchForm}
       onSubmit={(payload) => console.log(payload)}
       className="flex flex-col h-full"
     >
-      <SearchFormHeader className="shrink-0 border-b px-4 py-3">
+      <SearchFormHeader className="shrink-0 border-b border-input px-4 py-3">
         <SearchFormTitle label="${escape(searchLabel)}" className="text-sm font-semibold m-0" />
       </SearchFormHeader>
-      <SearchFormContent className="flex-1 overflow-auto min-h-0 p-4 max-h-120" />
-      <SearchFormFooter className="shrink-0 border-t p-3">
+      <SearchFormContent className="flex-1 overflow-auto min-h-0 p-4 max-h-120">
+        {searchForm.sections.map((section) => (
+          <SearchFormSection key={section.key} section={section}>
+            {section.groups.map((group) => (
+              <SearchFormGroup key={group.key} group={group} />
+            ))}
+          </SearchFormSection>
+        ))}
+      </SearchFormContent>
+      <SearchFormFooter className="shrink-0 border-t border-input p-3">
         <SearchFormSubmitButton className="w-full">Run search</SearchFormSubmitButton>
       </SearchFormFooter>
     </SearchForm>
