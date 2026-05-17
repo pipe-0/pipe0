@@ -1,6 +1,7 @@
 {
   "$schema": "../../../../../.source/json-schema/docs.meta.json",
   "title": "Advanced",
+  "defaultOpen": false,
   "pages": [
     "search-request-payload",
     "search-response-object",
