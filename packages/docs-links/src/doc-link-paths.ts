@@ -40,11 +40,11 @@ export const docsLinkPaths = {
   pipesQuickstart: `/docs/pipes`,
   pipelineRequest: `/docs/pipes/advanced/pipes-request-payload`,
   pipelineResponse: `/docs/pipes/advanced/pipes-response-object`,
-  pipeCatalog: `/docs/pipes/pipes-catalog`,
+  pipeCatalog: `/docs/pipe-catalog`,
   record: `/docs/pipes/advanced/pipes-response-object#records`,
 
   // Search
-  searchCatalog: `/docs/search/search-catalog`,
+  searchCatalog: `/docs/search-catalog`,
   pagination: `/docs/search/advanced/pagination`,
 
   // Billing

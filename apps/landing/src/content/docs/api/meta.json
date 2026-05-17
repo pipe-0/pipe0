@@ -1,0 +1,12 @@
+{
+  "$schema": "../../../../.source/json-schema/docs.meta.json",
+  "root": true,
+  "title": "API Reference",
+  "description": "REST endpoints and schemas",
+  "icon": "Code",
+  "pages": [
+    "index",
+    "pipes",
+    "search"
+  ]
+}

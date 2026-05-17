@@ -31,9 +31,11 @@ interface PipeCatalogPageData {
 
 interface PipeCatalogMetaData {
   title: string;
+  description?: string;
   icon?: string;
   pages?: string[];
   defaultOpen?: boolean;
+  root?: boolean;
 }
 
 type PipeCatalogSource = Source<{
@@ -211,10 +213,22 @@ export function createPipeCatalogSource(): PipeCatalogSource {
     metaData: PipeCatalogMetaData;
   }>[] = [];
 
-  // Index page as a flat page (not inside a folder) — renders as a simple sidebar link
+  // Root meta — makes Pipe Catalog its own dropdown panel in the sidebar.
+  files.push({
+    type: "meta",
+    path: "pipe-catalog/meta.json",
+    data: {
+      title: "Pipe Catalog",
+      root: true,
+      description: "Browse enrichment pipes",
+      icon: "Library",
+    },
+  });
+
+  // Index page — rendered by PipeCatalogIndexPage via the _virtualType branch.
   files.push({
     type: "page",
-    path: "pipes/pipes-catalog.mdx",
+    path: "pipe-catalog/index.mdx",
     data: {
       title: "Pipe Catalog",
       description: "Browse enrichment pipes",
@@ -225,9 +239,8 @@ export function createPipeCatalogSource(): PipeCatalogSource {
     },
   });
 
-  // Individual pipe entry pages — placed in a hidden folder with explicit slugs
-  // so their URLs remain /pipe-catalog/<basePipe>/<version> but they don't
-  // create a visible folder in the sidebar.
+  // Individual pipe entry pages — hidden folder with explicit slugs so URLs
+  // are /pipe-catalog/<basePipe>/<version> without exposing the folder.
   for (const pipeId of Object.keys(pipeCatalog) as PipeId[]) {
     const entry = getPipeEntry(pipeId);
     const basePipe = entry.basePipe;
@@ -239,7 +252,7 @@ export function createPipeCatalogSource(): PipeCatalogSource {
     files.push({
       type: "page",
       path: `_pipe-entries/${basePipe}/${version}.mdx`,
-      slugs: ["pipes", "pipes-catalog", basePipe, String(version)],
+      slugs: ["pipe-catalog", basePipe, String(version)],
       data: {
         title: `${entry.label} (${pipeId})`,
         description: entry.description,

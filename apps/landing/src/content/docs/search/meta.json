@@ -1,9 +1,0 @@
-{
-  "$schema": "../../../../.source/json-schema/docs.meta.json",
-  "pages": [
-    "index",
-    "search-catalog",
-    "examples",
-    "advanced"
-  ]
-}

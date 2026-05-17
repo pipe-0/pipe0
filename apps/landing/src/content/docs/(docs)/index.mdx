@@ -1,0 +1,130 @@
+---
+title: Quickstart
+description: Pipe0 is a data enrichment and automation framework. Search for leads, enrich records, and automate workflows.
+date: 2025-06-01
+full: true
+---
+
+<Cards>
+  <Card icon={<Zap />} title="Pipes" description="Enrich records with composable functions — emails, phone numbers, company data." href="/docs/pipes" />
+  <Card icon={<Search />} title="Search" description="Build prospect lists with flexible filters across multiple datasets." href="/docs/search" />
+  <Card icon={<Library />} title="Pipe Catalog" description="Every enrichment, with input/output fields and pricing." href="/docs/pipe-catalog" />
+  <Card icon={<Library />} title="Search Catalog" description="Every dataset, with filters and pricing." href="/docs/search-catalog" />
+</Cards>
+
+## Make your first request
+
+Grab an API key from the [dashboard](https://app.pipe0.com), then run one of the examples below. Both endpoints accept the same authorization header.
+
+### Enrich a record with a pipe
+
+This request enriches one input object using the `people:workemail:waterfall@1` pipe — it adds a `work_email` field to your record.
+
+```typescript tab="Typescript"
+const result = await fetch("https://api.pipe0.com/v1/pipes/run/sync", {
+    method: "POST",
+    headers: {
+        "Authorization": `Bearer ${API_KEY}`,
+        "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+        pipes: [{ pipe_id: "people:workemail:waterfall@1" }],
+        input: [
+            {
+                id: 1,
+                name: "John Doe",
+                company_website_url: "https://pipe0.com"
+            }
+        ]
+    })
+});
+```
+
+```python tab="Python"
+import requests
+
+headers = { "Authorization": f"Bearer {API_KEY}" }
+payload = {
+    "pipes": [{ "pipe_id": "people:workemail:waterfall@1" }],
+    "input": [
+        {
+            "id": 1,
+            "name": "John Doe",
+            "company_website_url": "https://pipe0.com"
+        }
+    ]
+}
+response = requests.post("https://api.pipe0.com/v1/pipes/run/sync", headers=headers, json=payload)
+```
+
+```bash tab="cURL"
+curl -X POST "https://api.pipe0.com/v1/pipes/run/sync" \
+  -H "Authorization: Bearer $API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "pipes": [{ "pipe_id": "people:workemail:waterfall@1" }],
+    "input": [
+      { "id": 1, "name": "John Doe", "company_website_url": "https://pipe0.com" }
+    ]
+  }'
+```
+
+### Search a dataset
+
+This request fetches a page of people from the `people:profiles:crustdata@1` dataset using a job-title filter.
+
+```typescript tab="Typescript"
+const result = await fetch("https://api.pipe0.com/v1/search/run/sync", {
+    method: "POST",
+    headers: {
+        "Authorization": `Bearer ${API_KEY}`,
+        "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+        search: {
+            search_id: "people:profiles:crustdata@1",
+            config: {
+                limit: 25,
+                filters: {
+                    current_job_titles: ["Software Engineer"]
+                }
+            }
+        }
+    })
+});
+```
+
+```python tab="Python"
+import requests
+
+headers = { "Authorization": f"Bearer {API_KEY}" }
+payload = {
+    "search": {
+        "search_id": "people:profiles:crustdata@1",
+        "config": {
+            "limit": 25,
+            "filters": { "current_job_titles": ["Software Engineer"] }
+        }
+    }
+}
+response = requests.post("https://api.pipe0.com/v1/search/run/sync", headers=headers, json=payload)
+```
+
+```bash tab="cURL"
+curl -X POST "https://api.pipe0.com/v1/search/run/sync" \
+  -H "Authorization: Bearer $API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "search": {
+      "search_id": "people:profiles:crustdata@1",
+      "config": { "limit": 25, "filters": { "current_job_titles": ["Software Engineer"] } }
+    }
+  }'
+```
+
+## Next steps
+
+<Cards>
+  <Card icon={<Code />} title="API Reference" description="REST endpoints, schemas, and request/response examples." href="/docs/api" />
+  <Card icon={<Boxes />} title="SDKs & Integrations" description="TypeScript client, MCP server, and headless Form UI." href="/docs/sdks" />
+</Cards>

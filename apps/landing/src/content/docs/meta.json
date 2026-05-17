@@ -1,13 +1,3 @@
 {
-  "pages": [
-    "index",
-    "search",
-    "pipes",
-    "authentication",
-    "billing",
-    "connections",
-    "sdks",
-    "---API Reference---",
-    "...(api)"
-  ]
+  "pages": ["(docs)", "api", "pipe-catalog", "search-catalog"]
 }

@@ -1,0 +1,9 @@
+{
+  "$schema": "../../../../../.source/json-schema/docs.meta.json",
+  "title": "Pipes",
+  "pages": [
+    "run",
+    "run-sync",
+    "check"
+  ]
+}

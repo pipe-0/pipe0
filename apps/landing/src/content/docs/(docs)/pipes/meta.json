@@ -1,7 +1,7 @@
 {
   "pages": [
     "index",
-    "pipes-catalog",
+    "[Pipe Catalog](/docs/pipe-catalog)",
     "examples",
     "advanced"
   ]
