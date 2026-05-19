@@ -154,13 +154,7 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
                 </TableCell>
                 <TableCell>
                   <p>
-                    {formatCredits(
-                      searchEntry.cost.mode === "per_result"
-                        ? searchEntry.cost.creditsPerResult
-                        : searchEntry.cost.mode === "per_search"
-                          ? searchEntry.cost.creditsPerSearch
-                          : searchEntry.cost.creditsPerPage,
-                    ) || "Free"}{" "}
+                    {formatCredits(searchEntry.cost.credits.default) || "Free"}{" "}
                     credits
                   </p>
                   <p className="max-w-37.5">

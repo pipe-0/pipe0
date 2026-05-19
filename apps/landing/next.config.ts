@@ -32,6 +32,16 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
+        source: "/docs/pipes-catalog",
+        destination: "/docs/pipe-catalog",
+        permanent: true,
+      },
+      {
+        source: "/docs/pipes-catalog/:path*",
+        destination: "/docs/pipe-catalog/:path*",
+        permanent: true,
+      },
+      {
         source: "/docs/search/search-catalog",
         destination: "/docs/search-catalog",
         permanent: true,

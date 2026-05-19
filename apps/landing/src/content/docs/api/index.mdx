@@ -5,9 +5,11 @@ description: REST endpoints for Pipe0, grouped by product. Each endpoint shows r
 
 Pick a category from the sidebar to browse endpoints, or jump straight to a common operation.
 
+Pipe and search operations have complex requests and responsees designed for automated SDK generation.
+
 <Cards>
-  <Card icon={<Zap className="text-amber-400" />} title="Run a pipe" description="POST /v1/pipes/run — enrich records asynchronously." href="/docs/api/pipes/run" />
-  <Card icon={<Search className="text-cyan-400" />} title="Run a search" description="POST /v1/search/run — query a dataset with filters." href="/docs/api/search/run" />
+  <Card icon={<Zap />} title="Run a pipe" description="POST /v1/pipes/run — enrich records asynchronously." href="/docs/api/pipes/run" />
+  <Card icon={<Search />} title="Run a search" description="POST /v1/search/run — query a dataset with filters." href="/docs/api/search/run" />
 </Cards>
 
 ## Authentication

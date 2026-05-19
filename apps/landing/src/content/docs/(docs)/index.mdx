@@ -1,21 +1,32 @@
 ---
 title: Quickstart
-description: Pipe0 is a data enrichment and automation framework. Search for leads, enrich records, and automate workflows.
+description: Pipe0 is a data enrichment and automation framework.
 date: 2025-06-01
 full: true
 icon: Rocket
 ---
 
 <Cards>
-  <Card icon={<Zap />} title="Pipes" description="Enrich records with composable functions — emails, phone numbers, company data." href="/docs/pipes" />
-  <Card icon={<Search />} title="Search" description="Build prospect lists with flexible filters across multiple datasets." href="/docs/search" />
-  <Card icon={<Library />} title="Pipe Catalog" description="Every enrichment, with input/output fields and pricing." href="/docs/pipe-catalog" />
-  <Card icon={<Library />} title="Search Catalog" description="Every dataset, with filters and pricing." href="/docs/search-catalog" />
+  <Card icon={<Zap />} title="Pipe Catalog" description="Every enrichment, with input/output fields and pricing." href="/docs/pipe-catalog" />
+  <Card icon={<Search />} title="Search Catalog" description="Every dataset, with filters and pricing." href="/docs/search-catalog" />
+  <Card icon={<Library />} title="API Reference" description="Public API endpoints." href="/docs/api" />
 </Cards>
 
-## Make your first request
+### Motivation
 
-Grab an API key from the [dashboard](https://app.pipe0.com), then run one of the examples below. Both endpoints accept the same authorization header.
+When [Ivan Zhao](https://www.linkedin.com/in/ivanhzhao) explains the idea behind [Notion](https://www.notion.com/) he compares it to paper:
+
+> Paper is simple enough for a 3-year-old to take out of the drawer and paint on it. Yet it's versatile enough that the bureaucracies of entire countries
+> can run on it.
+
+Pipe0's philosophy is similar.
+
+You can use it as a simple API/UI/MCP to find email addresses, phone numbers, and LinkedIn data. It will only take minutes to set up
+and requires no coding knowledge.
+
+Yet you can build entire experiences similar to Clay & n8n on top of it — check out the <AppLink linkType="dough">Dough example</AppLink>, a Clay-like table built from ~400 lines of code.
+
+For simple use-cases the docs are overkill. Read this page then jump to the <AppLink linkType="pipeCatalog">pipe</AppLink> or <AppLink linkType="searchCatalog">search</AppLink> catalog.
 
 ### Enrich a record with a pipe
 
@@ -40,7 +51,6 @@ const result = await fetch("https://api.pipe0.com/v1/pipes/run/sync", {
     })
 });
 ```
-
 ```python tab="Python"
 import requests
 
@@ -58,21 +68,89 @@ payload = {
 response = requests.post("https://api.pipe0.com/v1/pipes/run/sync", headers=headers, json=payload)
 ```
 
+### Compose pipes
+
+You can stack multiple pipes in one request to build complex workflows where pipes read each other's output.
+
+Here's an example:
+- You start with `input: [{id: "1", first_name: "John", last_name: "Doe", company_name: "Alphabet Inc."}]`
+- Use the `name:join@1` pipe to join `first_name` and `last_name` into a new `name` field.
+- Use the `people:workemail:waterfall@1` pipe to read `name` (output of the previous pipe) and `company_name` and find the prospect's email address.
+
+<Accordions>
+<Accordion title="Toggle full example request">
+
+```typescript tab="Typescript"
+const result = await fetch("https://api.pipe0.com/v1/pipes/run/sync", {
+    method: "POST",
+    headers: {
+        "Authorization": `Bearer ${API_KEY}`,
+        "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+        pipes: [
+            { pipe_id: "name:join@1" },
+            { pipe_id: "people:workemail:waterfall@1" }
+        ],
+        input: [
+            {
+                id: "1",
+                first_name: "John",
+                last_name: "Doe",
+                company_name: "Alphabet Inc."
+            }
+        ]
+    })
+});
+```
+
+```python tab="Python"
+import requests
+
+headers = { "Authorization": f"Bearer {API_KEY}" }
+payload = {
+    "pipes": [
+        { "pipe_id": "name:join@1" },
+        { "pipe_id": "people:workemail:waterfall@1" }
+    ],
+    "input": [
+        {
+            "id": "1",
+            "first_name": "John",
+            "last_name": "Doe",
+            "company_name": "Alphabet Inc."
+        }
+    ]
+}
+response = requests.post("https://api.pipe0.com/v1/pipes/run/sync", headers=headers, json=payload)
+```
+
+
 ```bash tab="cURL"
 curl -X POST "https://api.pipe0.com/v1/pipes/run/sync" \
   -H "Authorization: Bearer $API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
-    "pipes": [{ "pipe_id": "people:workemail:waterfall@1" }],
+    "pipes": [
+      { "pipe_id": "name:join@1" },
+      { "pipe_id": "people:workemail:waterfall@1" }
+    ],
     "input": [
-      { "id": 1, "name": "John Doe", "company_website_url": "https://pipe0.com" }
+      { "id": "1", "first_name": "John", "last_name": "Doe", "company_name": "Alphabet Inc." }
     ]
   }'
 ```
 
-### Search a dataset
+</Accordion>
+</Accordions>
 
-This request fetches a page of people from the `people:profiles:crustdata@1` dataset using a job-title filter.
+### Search
+
+While pipes take input objects and add fields to them, `search` creates a list of input objects.
+
+This can be helpful if you're looking for people or companies based on filters.
+
+Here's an example request that fetches a list of people `people:profiles:crustdata@1` using a job-title filter.
 
 ```typescript tab="Typescript"
 const result = await fetch("https://api.pipe0.com/v1/search/run/sync", {
@@ -122,10 +200,3 @@ curl -X POST "https://api.pipe0.com/v1/search/run/sync" \
     }
   }'
 ```
-
-## Next steps
-
-<Cards>
-  <Card icon={<Code />} title="API Reference" description="REST endpoints, schemas, and request/response examples." href="/docs/api" />
-  <Card icon={<Boxes />} title="SDKs & Integrations" description="TypeScript client, MCP server, and headless Form UI." href="/docs/sdks" />
-</Cards>

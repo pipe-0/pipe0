@@ -64,13 +64,13 @@ function generateSearchMarkdown(searchId: SearchId): string {
   lines.push("");
   if (entry.cost.mode === "per_result") {
     lines.push(`- Billing mode: Per Result`);
-    lines.push(`- Cost: ${entry.cost.creditsPerResult} credits per result`);
+    lines.push(`- Cost: ${entry.cost.credits.default} credits per result`);
   } else if (entry.cost.mode === "per_search") {
     lines.push(`- Billing mode: Per Search`);
-    lines.push(`- Cost: ${entry.cost.creditsPerSearch} credits per search`);
+    lines.push(`- Cost: ${entry.cost.credits.default} credits per search`);
   } else if (entry.cost.mode === "per_page") {
     lines.push(`- Billing mode: Per Page`);
-    lines.push(`- Cost: ${entry.cost.creditsPerPage} credits per page`);
+    lines.push(`- Cost: ${entry.cost.credits.default} credits per page`);
   }
   lines.push("");
 

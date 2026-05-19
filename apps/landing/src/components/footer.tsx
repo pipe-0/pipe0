@@ -109,7 +109,7 @@ export function Footer() {
               </li>
               <li>
                 <Link
-                  href="/docs/pipes/pipes-catalog"
+                  href="/docs/pipe-catalog"
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
                   Pipe Catalog

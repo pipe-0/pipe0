@@ -198,7 +198,7 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
         displayValue: `@${v.pipeId.split("@")[1]}`,
         link: versionEntry.docPath.replace(
           "/resources/pipe-catalog",
-          "/docs/pipes/pipes-catalog",
+          "/docs/pipe-catalog",
         ),
         isDeprecated: !!versionEntry.lifecycle?.deprecatedOn,
       };
@@ -721,7 +721,7 @@ function ProviderTable({ entries }: { entries: [string, unknown][] }) {
                   <span className="text-muted-foreground">n/a</span>
                 ) : (
                   <>
-                    <span>{formatCredits(def.credits) || "Free"}</span>
+                    <span>{formatCredits(def.credits.default) || "Free"}</span>
                     {def.credits !== null && (
                       <span className="text-muted-foreground ml-1">
                         credits

@@ -51,9 +51,16 @@ export const docsLinkPaths = {
   billing: `/docs/billing`,
   billingMode: `/docs/billing#billing-mode`,
   searchBilling: `/docs/billing#search-billing`,
+  highUsageBilling: `/docs/billing#high-usage-billing`,
 
   // SDKs
   elementsReact: `/docs/sdks/form-ui`,
+
+  // Examples
+  dough: "/docs/pipes/examples/dough",
+
+  // API endpoints
+  apiReference: '/docs/api',
 } as const;
 
 export type DocsLinkKey = keyof typeof docsLinkPaths;
