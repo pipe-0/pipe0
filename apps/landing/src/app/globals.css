@@ -11,13 +11,13 @@
 :root {
   --background: hsl(0 0% 100%);
   --foreground: hsl(0 0% 3.9%);
-  --card: hsl(0 0% 100%);
+  --card: hsl(0 0% 99%);
   --card-foreground: hsl(0 0% 3.9%);
   --popover: hsl(0 0% 100%);
   --popover-foreground: hsl(0 0% 3.9%);
   --primary: hsl(236, 77%, 55%);
   --primary-foreground: hsl(0 0% 98%);
-  --secondary: hsl(0 0% 96.1%);
+  --secondary: hsl(0 0% 97.5%);
   --secondary-foreground: hsl(0 0% 9%);
   --muted: hsl(0 0% 96.1%);
   --muted-foreground: hsl(0 0% 45.1%);
@@ -45,23 +45,23 @@
 }
 
 .dark {
-  --background: hsl(0 0% 3.9%);
+  --background: hsl(0 0% 7%);
   --foreground: hsl(0 0% 98%);
-  --card: hsl(0 0% 3.9%);
+  --card: hsl(0 0% 10.5%);
   --card-foreground: hsl(0 0% 98%);
-  --popover: hsl(0 0% 3.9%);
+  --popover: hsl(0 0% 10.5%);
   --popover-foreground: hsl(0 0% 98%);
   --primary: hsl(210, 100%, 61%);
   --primary-foreground: hsl(0 0% 98%);
-  --secondary: hsl(0 0% 14.9%);
+  --secondary: hsl(0 0% 11%);
   --secondary-foreground: hsl(0 0% 98%);
-  --muted: hsl(0 0% 14.9%);
+  --muted: hsl(0 0% 13%);
   --muted-foreground: hsl(0 0% 63.9%);
-  --accent: hsl(0 0% 14.9%);
+  --accent: hsl(0 0% 14%);
   --accent-foreground: hsl(0 0% 98%);
   --destructive: hsl(0 62.8% 30.6%);
   --destructive-foreground: hsl(0 0% 98%);
-  --border: hsl(0 0% 14.9%);
+  --border: hsl(0 0% 17%);
   --input: hsl(0, 0%, 20%);
   --ring: hsl(0 0% 83.1%);
   --chart-1: hsl(220 70% 50%);
@@ -193,6 +193,41 @@
       )
     )
     min-content !important;
+}
+
+/* Subtle lift for docs cards (Notion-inspired) */
+[data-card] {
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.04),
+    0 1px 3px rgba(0, 0, 0, 0.06);
+  transition:
+    background-color 150ms ease,
+    box-shadow 150ms ease,
+    transform 150ms ease,
+    border-color 150ms ease;
+}
+
+[data-card]:hover {
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.05),
+    0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.dark [data-card] {
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.3),
+    0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.dark [data-card]:hover {
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.35),
+    0 6px 16px rgba(0, 0, 0, 0.35);
+}
+
+/* Soften icon tile inside cards: lighter accent, no heavy shadow */
+.dark [data-card] > .not-prose:first-child {
+  box-shadow: none;
 }
 
 /* adds labels to the sidebar links */

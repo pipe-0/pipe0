@@ -1,0 +1,21 @@
+{
+  "$schema": "../../../../.source/json-schema/docs.meta.json",
+  "root": true,
+  "title": "Documentation",
+  "description": "Guides, concepts, and SDKs",
+  "icon": "BookOpen",
+  "pages": [
+    "---Getting Started---",
+    "index",
+    "authentication",
+    "---Pipes---",
+    "...pipes",
+    "---Search---",
+    "...search",
+    "---Agents & SDKs---",
+    "...sdks",
+    "---Account---",
+    "connections",
+    "billing"
+  ]
+}

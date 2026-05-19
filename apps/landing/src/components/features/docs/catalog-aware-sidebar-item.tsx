@@ -7,7 +7,7 @@ import * as PageTree from "fumadocs-core/page-tree";
 import { cn } from "@/lib/utils";
 
 const NESTED_MATCH_URLS = new Set([
-  "/docs/pipes/pipes-catalog",
+  "/docs/pipe-catalog",
   "/docs/search/search-catalog",
 ]);
 

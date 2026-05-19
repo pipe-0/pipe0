@@ -1,5 +1,17 @@
 # @pipe0/doc-links
 
+## 0.0.4
+
+### Patch Changes
+
+- Add dough link
+
+## 0.0.3
+
+### Patch Changes
+
+- Update docs links
+
 ## 0.0.2
 
 ### Patch Changes

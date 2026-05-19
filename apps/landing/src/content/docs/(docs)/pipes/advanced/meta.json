@@ -1,0 +1,11 @@
+{
+  "$schema": "../../../../../.source/json-schema/docs.meta.json",
+  "title": "Advanced",
+  "defaultOpen": false,
+  "pages": [
+    "pipes-concepts",
+    "pipes-inputs",
+    "pipes-request-payload",
+    "pipes-response-object"
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "$schema": "../../../../../.source/json-schema/docs.meta.json",
+  "title": "Search",
+  "pages": [
+    "run",
+    "run-sync",
+    "check"
+  ]
+}

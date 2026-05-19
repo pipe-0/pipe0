@@ -9,10 +9,10 @@ export function getSection(path: string | undefined) {
   if (!dir) return "framework";
   return (
     {
-      ui: "ui",
-      mdx: "mdx",
-      cli: "cli",
-      headless: "headless",
+      "(docs)": "framework",
+      api: "ui",
+      "pipe-catalog": "headless",
+      "search-catalog": "mdx",
     }[dir] ?? "framework"
   );
 }

@@ -1,0 +1,10 @@
+{
+  "$schema": "../../../../../.source/json-schema/docs.meta.json",
+  "title": "Examples",
+  "defaultOpen": false,
+  "pages": [
+    "dough",
+    "basic-script-typescript",
+    "signup-alerts"
+  ]
+}

@@ -40,20 +40,27 @@ export const docsLinkPaths = {
   pipesQuickstart: `/docs/pipes`,
   pipelineRequest: `/docs/pipes/advanced/pipes-request-payload`,
   pipelineResponse: `/docs/pipes/advanced/pipes-response-object`,
-  pipeCatalog: `/docs/pipes/pipes-catalog`,
+  pipeCatalog: `/docs/pipe-catalog`,
   record: `/docs/pipes/advanced/pipes-response-object#records`,
 
   // Search
-  searchCatalog: `/docs/search/search-catalog`,
+  searchCatalog: `/docs/search-catalog`,
   pagination: `/docs/search/advanced/pagination`,
 
   // Billing
   billing: `/docs/billing`,
   billingMode: `/docs/billing#billing-mode`,
   searchBilling: `/docs/billing#search-billing`,
+  highUsageBilling: `/docs/billing#high-usage-billing`,
 
   // SDKs
   elementsReact: `/docs/sdks/form-ui`,
+
+  // Examples
+  dough: "/docs/pipes/examples/dough",
+
+  // API endpoints
+  apiReference: '/docs/api',
 } as const;
 
 export type DocsLinkKey = keyof typeof docsLinkPaths;

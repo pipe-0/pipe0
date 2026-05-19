@@ -29,9 +29,11 @@ interface SearchCatalogPageData {
 
 interface SearchCatalogMetaData {
   title: string;
+  description?: string;
   icon?: string;
   pages?: string[];
   defaultOpen?: boolean;
+  root?: boolean;
 }
 
 type SearchCatalogSource = Source<{
@@ -62,13 +64,13 @@ function generateSearchMarkdown(searchId: SearchId): string {
   lines.push("");
   if (entry.cost.mode === "per_result") {
     lines.push(`- Billing mode: Per Result`);
-    lines.push(`- Cost: ${entry.cost.creditsPerResult} credits per result`);
+    lines.push(`- Cost: ${entry.cost.credits.default} credits per result`);
   } else if (entry.cost.mode === "per_search") {
     lines.push(`- Billing mode: Per Search`);
-    lines.push(`- Cost: ${entry.cost.creditsPerSearch} credits per search`);
+    lines.push(`- Cost: ${entry.cost.credits.default} credits per search`);
   } else if (entry.cost.mode === "per_page") {
     lines.push(`- Billing mode: Per Page`);
-    lines.push(`- Cost: ${entry.cost.creditsPerPage} credits per page`);
+    lines.push(`- Cost: ${entry.cost.credits.default} credits per page`);
   }
   lines.push("");
 
@@ -164,13 +166,25 @@ export function createSearchCatalogSource(): SearchCatalogSource {
     metaData: SearchCatalogMetaData;
   }>[] = [];
 
-  // Index page as a flat page (not inside a folder) — renders as a simple sidebar link
+  // Root meta — makes Search Catalog its own dropdown panel in the sidebar.
   files.push({
-    type: "page",
-    path: "search/search-catalog.mdx",
+    type: "meta",
+    path: "search-catalog/meta.json",
     data: {
       title: "Search Catalog",
-      description: "Browse search functions",
+      root: true,
+      description: "Browse search datasets",
+      icon: "Library",
+    },
+  });
+
+  // Index page — rendered by SearchCatalogIndexPage via the _virtualType branch.
+  files.push({
+    type: "page",
+    path: "search-catalog/index.mdx",
+    data: {
+      title: "Search Catalog",
+      description: "Browse search datasets",
       full: true,
       structuredData: { headings: [], contents: [] },
       _isVirtual: true,
@@ -178,9 +192,8 @@ export function createSearchCatalogSource(): SearchCatalogSource {
     },
   });
 
-  // Individual search entry pages — placed in a hidden folder with explicit slugs
-  // so their URLs remain /search-catalog/<baseSearch>/<version> but they don't
-  // create a visible folder in the sidebar.
+  // Individual search entry pages — hidden folder with explicit slugs so URLs
+  // are /search-catalog/<baseSearch>/<version> without exposing the folder.
   for (const searchId of Object.keys(searchCatalog) as SearchId[]) {
     const entry = getSearchEntry(searchId);
     const baseSearch = entry.baseSearch;
@@ -192,7 +205,7 @@ export function createSearchCatalogSource(): SearchCatalogSource {
     files.push({
       type: "page",
       path: `_search-entries/${baseSearch}/${version}.mdx`,
-      slugs: ["search", "search-catalog", baseSearch, String(version)],
+      slugs: ["search-catalog", baseSearch, String(version)],
       data: {
         title: `${entry.label} (${searchId})`,
         description: entry.description,

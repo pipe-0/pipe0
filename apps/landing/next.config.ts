@@ -19,6 +19,40 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  async redirects() {
+    return [
+      {
+        source: "/docs/pipes/pipes-catalog",
+        destination: "/docs/pipe-catalog",
+        permanent: true,
+      },
+      {
+        source: "/docs/pipes/pipes-catalog/:path*",
+        destination: "/docs/pipe-catalog/:path*",
+        permanent: true,
+      },
+      {
+        source: "/docs/pipes-catalog",
+        destination: "/docs/pipe-catalog",
+        permanent: true,
+      },
+      {
+        source: "/docs/pipes-catalog/:path*",
+        destination: "/docs/pipe-catalog/:path*",
+        permanent: true,
+      },
+      {
+        source: "/docs/search/search-catalog",
+        destination: "/docs/search-catalog",
+        permanent: true,
+      },
+      {
+        source: "/docs/search/search-catalog/:path*",
+        destination: "/docs/search-catalog/:path*",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 const DEFAULT_PROPERTY_PROPS = {
