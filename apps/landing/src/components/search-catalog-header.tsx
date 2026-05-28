@@ -242,7 +242,7 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
         <ApiRequestCodeExample
           oas={searchMiniSpec}
           operation={searchMiniSpec.operation("/v1/search/run", "post")}
-          harData={{ body: searchSnippetCatalog[searchId][0] }}
+          harData={{ body: { search: searchSnippetCatalog[searchId][0] } }}
         />
       </div>
 
