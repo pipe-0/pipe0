@@ -7,14 +7,14 @@ settings:
 catalogs:
   default:
     '@pipe0/base':
-      specifier: 0.1.2
-      version: 0.1.2
+      specifier: 0.1.4
+      version: 0.1.4
     '@pipe0/client':
-      specifier: 0.0.39
-      version: 0.0.39
+      specifier: 0.0.41
+      version: 0.0.41
     '@pipe0/react':
-      specifier: 0.0.15
-      version: 0.0.15
+      specifier: 0.0.17
+      version: 0.0.17
     eslint:
       specifier: ^9.30.1
       version: 9.32.0
@@ -61,16 +61,16 @@ importers:
         version: 16.1.6(@mdx-js/loader@3.1.0(acorn@8.15.0))(@mdx-js/react@3.1.0(@types/react@19.2.14)(react@19.2.4))
       '@pipe0/base':
         specifier: 'catalog:'
-        version: 0.1.2
+        version: 0.1.4
       '@pipe0/client':
         specifier: 'catalog:'
-        version: 0.0.39
+        version: 0.0.41
       '@pipe0/doc-links':
         specifier: workspace:*
         version: link:../../packages/docs-links
       '@pipe0/react':
         specifier: 'catalog:'
-        version: 0.0.15(@date-fns/tz@1.4.1)(@dnd-kit/core@6.3.1(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@dnd-kit/sortable@10.0.0(@dnd-kit/core@6.3.1(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4))(@dnd-kit/utilities@3.2.2(react@19.2.4))(@floating-ui/react@0.26.28(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@hookform/resolvers@3.10.0(react-hook-form@7.54.2(react@19.2.4)))(@tanstack/react-table@8.21.3(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@tiptap/pm@2.27.2)(@tiptap/react@2.27.2(@tiptap/core@2.27.2(@tiptap/pm@2.27.2))(@tiptap/pm@2.27.2)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@tiptap/starter-kit@2.27.2)(@tiptap/suggestion@2.27.2(@tiptap/core@2.27.2(@tiptap/pm@2.27.2))(@tiptap/pm@2.27.2))(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(date-fns@4.1.0)(react-dom@19.2.4(react@19.2.4))(react-hook-form@7.54.2(react@19.2.4))(react@19.2.4)(zod@4.0.5)
+        version: 0.0.17(@date-fns/tz@1.4.1)(@dnd-kit/core@6.3.1(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@dnd-kit/sortable@10.0.0(@dnd-kit/core@6.3.1(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4))(@dnd-kit/utilities@3.2.2(react@19.2.4))(@floating-ui/react@0.26.28(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@hookform/resolvers@3.10.0(react-hook-form@7.54.2(react@19.2.4)))(@tanstack/react-table@8.21.3(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@tiptap/pm@2.27.2)(@tiptap/react@2.27.2(@tiptap/core@2.27.2(@tiptap/pm@2.27.2))(@tiptap/pm@2.27.2)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@tiptap/starter-kit@2.27.2)(@tiptap/suggestion@2.27.2(@tiptap/core@2.27.2(@tiptap/pm@2.27.2))(@tiptap/pm@2.27.2))(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(date-fns@4.1.0)(react-dom@19.2.4(react@19.2.4))(react-hook-form@7.54.2(react@19.2.4))(react@19.2.4)(zod@4.0.5)
       '@radix-ui/react-accordion':
         specifier: ^1.2.3
         version: 1.2.3(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -2281,14 +2281,14 @@ packages:
   '@pipe0/base@0.0.12':
     resolution: {integrity: sha512-MC+6UIy3GrzKOIdpJd1oH6Hih9xbZ9//W8S8hYTyDadUkehkXTvOL6Tac2L2rVgz6ArNev2IphAQGle7zgYCyA==}
 
-  '@pipe0/base@0.1.2':
-    resolution: {integrity: sha512-qRcfGeFBq02DgyLOPOasTXS7hKRWrV/SJjE0yUD9dR/+oEhPg5m4sToyB6B/HM2bQ7WKHsk1N6s7gu0U1U511g==}
+  '@pipe0/base@0.1.4':
+    resolution: {integrity: sha512-+FGQB4gOBvBHinK3aeA+ha0WViwH+VD4AwkS74qwv1yBbm//HpXeVHvV7fuAnpslXHfzX2rpN8+Vbv/bVJ5ZAg==}
 
   '@pipe0/client@0.0.36':
     resolution: {integrity: sha512-Mad3vzwPNkmKCEjqiEy1SuMFYJvRgTJbRRQhkIgIUmMDdLNwNuZUxJ97wn1ysRON9HDzzLF7X5vxsmtxFlUhkw==}
 
-  '@pipe0/client@0.0.39':
-    resolution: {integrity: sha512-Uyg7BkqbnELQFDhzKWzeRLzQ7tYHobNW0jdoZKvebHz0oe0CvzXpFDstA+LIYvA5Imz++o7GUmiezAAzCyKBcw==}
+  '@pipe0/client@0.0.41':
+    resolution: {integrity: sha512-/LPgsKF9tVeabzhnXSKo4pOYKOvqbUBr+1ec1K75jxmTuz0I4xZohRtJlgAL6FbCgrU1Bb2lC2NsNjoM/cQC3Q==}
 
   '@pipe0/react@0.0.12':
     resolution: {integrity: sha512-COuw557GX8wwzVOjBQuhrouEyNFELewjl2SIUdpSPM9ktnxmeuDZOrH93L9ADIBlqS32dgdqMEGYLKoylRyiCg==}
@@ -2316,8 +2316,8 @@ packages:
       '@types/react-dom':
         optional: true
 
-  '@pipe0/react@0.0.15':
-    resolution: {integrity: sha512-63PXvoZeQmoilOazHojPlPylb+e9nVJwhavbg+Dhk6KYfWpfH11v1ydU29KhHMoVgOUUdsKCHXavkharDCjwqQ==}
+  '@pipe0/react@0.0.17':
+    resolution: {integrity: sha512-QLxIWTDfCY1o1OnNCjyP0SBV+ChjM9uMl4kFnmhx4rbfDVOlrRU2+unSkgIjIwjgXJ4J8JtdE439BKN65+HtGQ==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
       '@dnd-kit/core': ^6.0.0
@@ -9864,10 +9864,10 @@ snapshots:
       xxhash-wasm: 1.1.0
       zod: 4.1.12
 
-  '@pipe0/base@0.1.2':
+  '@pipe0/base@0.1.4':
     dependencies:
       '@asteasolutions/zod-to-openapi': 8.1.0(zod@4.1.12)
-      '@pipe0/client': 0.0.39
+      '@pipe0/client': 0.0.41
       ajv: 8.17.1
       date-fns: 4.1.0
       immer: 10.2.0
@@ -9884,7 +9884,7 @@ snapshots:
     dependencies:
       openapi-fetch: 0.15.0
 
-  '@pipe0/client@0.0.39':
+  '@pipe0/client@0.0.41':
     dependencies:
       openapi-fetch: 0.15.0
 
@@ -9922,7 +9922,7 @@ snapshots:
       - '@date-fns/tz'
       - date-fns
 
-  '@pipe0/react@0.0.15(@date-fns/tz@1.4.1)(@dnd-kit/core@6.3.1(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@dnd-kit/sortable@10.0.0(@dnd-kit/core@6.3.1(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4))(@dnd-kit/utilities@3.2.2(react@19.2.4))(@floating-ui/react@0.26.28(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@hookform/resolvers@3.10.0(react-hook-form@7.54.2(react@19.2.4)))(@tanstack/react-table@8.21.3(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@tiptap/pm@2.27.2)(@tiptap/react@2.27.2(@tiptap/core@2.27.2(@tiptap/pm@2.27.2))(@tiptap/pm@2.27.2)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@tiptap/starter-kit@2.27.2)(@tiptap/suggestion@2.27.2(@tiptap/core@2.27.2(@tiptap/pm@2.27.2))(@tiptap/pm@2.27.2))(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(date-fns@4.1.0)(react-dom@19.2.4(react@19.2.4))(react-hook-form@7.54.2(react@19.2.4))(react@19.2.4)(zod@4.0.5)':
+  '@pipe0/react@0.0.17(@date-fns/tz@1.4.1)(@dnd-kit/core@6.3.1(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@dnd-kit/sortable@10.0.0(@dnd-kit/core@6.3.1(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4))(@dnd-kit/utilities@3.2.2(react@19.2.4))(@floating-ui/react@0.26.28(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@hookform/resolvers@3.10.0(react-hook-form@7.54.2(react@19.2.4)))(@tanstack/react-table@8.21.3(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@tiptap/pm@2.27.2)(@tiptap/react@2.27.2(@tiptap/core@2.27.2(@tiptap/pm@2.27.2))(@tiptap/pm@2.27.2)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@tiptap/starter-kit@2.27.2)(@tiptap/suggestion@2.27.2(@tiptap/core@2.27.2(@tiptap/pm@2.27.2))(@tiptap/pm@2.27.2))(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(date-fns@4.1.0)(react-dom@19.2.4(react@19.2.4))(react-hook-form@7.54.2(react@19.2.4))(react@19.2.4)(zod@4.0.5)':
     dependencies:
       '@base-ui/react': 1.4.0(@date-fns/tz@1.4.1)(@types/react@19.2.14)(date-fns@4.1.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@dnd-kit/core': 6.3.1(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -9930,7 +9930,7 @@ snapshots:
       '@dnd-kit/utilities': 3.2.2(react@19.2.4)
       '@floating-ui/react': 0.26.28(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@hookform/resolvers': 3.10.0(react-hook-form@7.54.2(react@19.2.4))
-      '@pipe0/base': 0.1.2
+      '@pipe0/base': 0.1.4
       '@radix-ui/react-slot': 1.2.4(@types/react@19.2.14)(react@19.2.4)
       '@tanstack/match-sorter-utils': 8.19.4
       '@tanstack/react-table': 8.21.3(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
