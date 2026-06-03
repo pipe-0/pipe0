@@ -162,18 +162,16 @@ const result = await pipe0.searches.search({
   config: {
     environment: "sandbox",
   },
-  searches: [
-    {
-      search_id: "people:profiles:crustdata@1",
-      config: {
-        limit: 25,
-        filters: {
-          current_job_titles: { include: ["Head of RevOps"] },
-          locations: { include: ["San Francisco", "New York"] },
-        },
+  search: {
+    search_id: "people:profiles:crustdata@1",
+    config: {
+      limit: 25,
+      filters: {
+        current_job_titles: ["Head of RevOps"],
+        locations: ["San Francisco", "New York"],
       },
     },
-  ],
+  },
 });
 
 for (const row of result.results) {
@@ -182,6 +180,10 @@ for (const row of result.results) {
   row.company_website_url; // typed per output_fields
 }
 ```
+
+Each request accepts a single `search`. See the
+<AppLink linkType="searchCatalog">search catalog</AppLink> for every
+`search_id` and its available filters.
 
 ### Combining searches with pipes
 
