@@ -83,9 +83,9 @@ const dateFormatter = new Intl.DateTimeFormat("en-US", {
 
 const FEATURED_PIPE_IDS = [
   "person:mobile:profileurl:waterfall@1",
-  "person:workemail:waterfall@1",
-  "company:techstack:builtwith@2",
-  "company:identity@3",
+  "person:workemail:profileurl:waterfall@1",
+  "company:identity:crustdata@1",
+  "company:newssummary:domain@1",
   "company:overview@3",
 ] satisfies PipeId[];
 
