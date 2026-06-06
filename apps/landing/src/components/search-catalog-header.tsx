@@ -40,7 +40,9 @@ import {
   SearchId,
   searchSnippetCatalog,
 } from "@pipe0/base";
+import { Callout } from "fumadocs-ui/components/callout";
 import { Tabs, Tab } from "fumadocs-ui/components/tabs";
+import Link from "next/link";
 import { useMemo } from "react";
 import { DynamicCodeBlock } from "@/components/features/docs/dynamic-code-block";
 import { SearchFormPreview } from "@/components/features/docs/search-form-preview";
@@ -171,7 +173,28 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
         <div>
           <h3 className="text-2xl mb-3 pb-2 border-b">Output Fields</h3>
           <div className="space-y-3">
-            {(() => {
+            {searchEntry.outputFieldMode === "dynamic" ? (
+              <Callout type="info" title="Dynamic output fields">
+                This search&apos;s output columns are determined at run time and
+                depend on the data source, so they aren&apos;t known ahead of
+                time. Enable{" "}
+                <Link
+                  href="/docs/search/advanced/search-request-payload#configfield_definitionsenabled"
+                  className="underline text-primary"
+                >
+                  <code>config.field_definitions.enabled</code>
+                </Link>{" "}
+                to receive the columns alongside your results in the response{" "}
+                <Link
+                  href="/docs/search/advanced/search-response-object#field_definitions"
+                  className="underline text-primary"
+                >
+                  <code>field_definitions</code>
+                </Link>
+                .
+              </Callout>
+            ) : (
+            (() => {
               const enabled: {
                 fieldName: string;
                 found: NonNullable<ReturnType<typeof getField>>;
@@ -232,7 +255,8 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
                   )}
                 </>
               );
-            })()}
+            })()
+            )}
           </div>
         </div>
       </CatalogHeader>

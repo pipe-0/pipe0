@@ -9,41 +9,41 @@ This example illustrates a workflow designed to generate a Slack alert. The aler
 new user signup and is conditional on the user meeting your predetermined ideal customer profile (ICP) criteria.
 
 ```typescript filename="signup-alert.ts"
-zero.POST("/v1/pipes/run/sync", {
-  headers: {
-    Authorization: `Bearer <API_KEY>`,
+import { Pipe0 } from "@pipe0/client";
+
+const zero = new Pipe0({ apiKey: "<API_KEY>" });
+
+const result = await zero.pipes.pipe({
+  config: {
+    environment: "production",
   },
-  body: {
-    config: {
-      environment: "production",
-    },
-    pipes: [
-      { pipe_id: "people:email:iswork@1" },
-      {
-        pipe_id: "company:websiteurl:email@1",
-        run_if: {
-          action: "run",
-          when: {
-            logic: "and",
-            conditions: [
-              {
-                field_name: "is_work_email",
-                operator: "eq",
-                property: "value",
-                value: true,
-              },
-            ],
-          },
+  pipes: [
+    { pipe_id: "people:email:iswork@1" },
+    {
+      pipe_id: "company:websiteurl:email@1",
+      run_if: {
+        action: "run",
+        when: {
+          logic: "and",
+          conditions: [
+            {
+              field_name: "is_work_email",
+              operator: "eq",
+              property: "value",
+              value: true,
+            },
+          ],
         },
       },
-      {
-        pipe_id: "company:overview@1",
-      },
-      {
-        pipe_id: "prompt:run@1",
-        config: {
-          prompt: {
-            template: `
+    },
+    {
+      pipe_id: "company:overview@1",
+    },
+    {
+      pipe_id: "prompt:run@1",
+      config: {
+        prompt: {
+          template: `
 Your task is to determine if the user's current employer aligns with the ideal customer profile for our business, pipe0.
 
 [Business Description]
@@ -63,70 +63,69 @@ The user's employer should have a need for prospecting, lead generation, or sale
 
 [Available Information]
 To make your assessment, use the the following information:
-Company description: {{ input company_description type="string" }}
-Company industry: {{ input company_industry type="string" }}
-Company headcount: {{ input headcount type="string" }}
-Estimated revenue: {{ input estimated_revenue type="string" }}
+Company description: {{ company_description | default: "" }}
+Company industry: {{ company_industry | default: "" }}
+Company headcount: {{ headcount | default: "" }}
+Estimated revenue: {{ estimated_revenue | default: "" }}
 
 [Output]
-{{ output is_icp_fit type="boolean" description="A boolean flag indicating if the latest employer matches the ICP profile of the business. If no information is found or the user has no current employer, set to false." }}
-{{ output reason type="string" description="An explanation of how you arrived at your conclusion." }}
-            `,
-          },
+{% output is_icp_fit, type: "boolean", description: "A boolean flag indicating if the latest employer matches the ICP profile of the business. If no information is found or the user has no current employer, set to false." %}
+{% output reason, type: "string", description: "An explanation of how you arrived at your conclusion." %}
+          `,
         },
       },
-      {
-        pipe_id: "message:write@1",
-        run_if: {
-          action: "run",
-          when: {
-            logic: "and",
-            conditions: [
-              {
-                field_name: "is_icp_fit",
-                property: "value",
-                operator: "eq",
-                value: true,
-              },
-            ],
-          },
-        },
-        config: {
-          prompt: {
-            template: `
-Notify the pipe0 team that a high value customer signed up to the platform.
-
-Give the team the following information:
-Name of the user: {{ input name type="string" }}
-Company the user works for {{ input company_website_url type="string" }}
-Reason why it is a high value customer: {{ input reason type="string" }}
-            `,
-          },
-        },
-      },
-      {
-        pipe_id: "message:send:slack@1",
-        connector: {
-          strategy: "first",
-          connections: [
+    },
+    {
+      pipe_id: "message:write@1",
+      run_if: {
+        action: "run",
+        when: {
+          logic: "and",
+          conditions: [
             {
-              type: "vault",
-              connection: "<ADD_YOUR_CONNECTION>",
+              field_name: "is_icp_fit",
+              property: "value",
+              operator: "eq",
+              value: true,
             },
           ],
         },
-        config: {
-          channel_id: "<ADD_SLACK_CHANNEL_ID>",
+      },
+      config: {
+        prompt: {
+          template: `
+Notify the pipe0 team that a high value customer signed up to the platform.
+
+Give the team the following information:
+Name of the user: {{ name | default: "" }}
+Company the user works for {{ company_website_url | default: "" }}
+Reason why it is a high value customer: {{ reason | default: "" }}
+          `,
         },
       },
-    ],
-    input: [
-      {
-        id: 1,
-        name: "<NAME>",
-        email: "<EMAIL>",
+    },
+    {
+      pipe_id: "message:send:slack@1",
+      connector: {
+        strategy: "first",
+        connections: [
+          {
+            type: "vault",
+            connection: "<ADD_YOUR_CONNECTION>",
+          },
+        ],
       },
-    ],
-  },
+      config: {
+        channel_id: "<ADD_SLACK_CHANNEL_ID>",
+      },
+    },
+  ],
+  input: [
+    {
+      id: 1,
+      name: "<NAME>",
+      email: "<EMAIL>",
+    },
+  ],
 });
 ```

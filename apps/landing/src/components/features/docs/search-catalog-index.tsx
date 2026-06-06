@@ -95,7 +95,7 @@ type CategoryOption = {
 const SEARCH_CATEGORY_COLORS: Record<SearchCategory, string> = {
   people: "#8B7DFF",
   companies: "#10B981",
-  data: "#10B981",
+  data: "#F59E0B",
   deprecated: "#94A3B8",
 };
 
@@ -111,6 +111,12 @@ const quickStartOptions: CategoryOption[] = [
     id: "people",
     title: "People",
     color: SEARCH_CATEGORY_COLORS.people,
+    disabled: false,
+  },
+  {
+    id: "data",
+    title: "Data",
+    color: SEARCH_CATEGORY_COLORS.data,
     disabled: false,
   },
   {

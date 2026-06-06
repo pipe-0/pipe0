@@ -76,9 +76,9 @@ const result = await pipe0.pipes.pipe({
         model: "gemini-flash-latest",
         prompt: {
           template: `
-            Profile: {{ input profile type="json" }}
-            {{ output icp_fit type="boolean" description="Does this match our ICP?" }}
-            {{ output reasoning type="string" description="Why or why not?" }}
+            Profile: {{ profile }}
+            {% output icp_fit, type: "boolean", description: "Does this match our ICP?" %}
+            {% output reasoning, type: "string", description: "Why or why not?" %}
           `,
         },
       },

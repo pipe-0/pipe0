@@ -56,8 +56,9 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Callout } from "fumadocs-ui/components/callout";
 import { Tab, Tabs } from "fumadocs-ui/components/tabs";
-import { Copy, Download, Terminal, Upload } from "lucide-react";
+import { Copy, Terminal, Upload } from "lucide-react";
 import { Fragment, useMemo, useState } from "react";
 import { toast } from "sonner";
 
@@ -426,19 +427,20 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
                 })()}
               </div>
             ) : (
-              <Alert>
-                <Download className="h-4 w-4" />
-                <AlertTitle>Input field mode: `config`</AlertTitle>
-                <AlertDescription>
-                  <p>
-                    This pipe&apos;s input fields{" "}
-                    <AppLink linkType="fieldModeConfig">
-                      can be configured by you
-                    </AppLink>
-                    .
-                  </p>
-                </AlertDescription>
-              </Alert>
+              <Callout
+                type="info"
+                title={
+                  <>
+                    Input field mode: <code>config</code>
+                  </>
+                }
+              >
+                This pipe&apos;s input fields{" "}
+                <AppLink linkType="fieldModeConfig">
+                  can be configured by you
+                </AppLink>
+                .
+              </Callout>
             )}
           </AccordionContent>
         </AccordionItem>
@@ -518,19 +520,20 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
                 })()}
               </div>
             ) : (
-              <Alert>
-                <Upload className="h-4 w-4" />
-                <AlertTitle>Output field mode: `config`</AlertTitle>
-                <AlertDescription>
-                  <p>
-                    This pipe&apos;s output fields{" "}
-                    <AppLink linkType="fieldModeConfig">
-                      can be configured by you
-                    </AppLink>
-                    .
-                  </p>
-                </AlertDescription>
-              </Alert>
+              <Callout
+                type="info"
+                title={
+                  <>
+                    Output field mode: <code>config</code>
+                  </>
+                }
+              >
+                This pipe&apos;s output fields{" "}
+                <AppLink linkType="fieldModeConfig">
+                  can be configured by you
+                </AppLink>
+                .
+              </Callout>
             )}
           </AccordionContent>
         </AccordionItem>

@@ -51,7 +51,13 @@ The following API operations return a response of type `SearchResponse`.
 				"type": "string",
 				"value": "Gayle Pouros",
 				"format": "text",
-				"status": "completed"
+				"status": "completed",
+				"resolved_by": {
+					"ref": "people:profiles:crustdata@1",
+					"environment": "production",
+					"config_hash": "…",
+					"input_hash": "…"
+				}
 			},
 			"job_title": {
 				"ui": {},
@@ -137,10 +143,73 @@ The search id to use for the next page request.
 
 The config object pre-filled with the cursor and filters for the next page.
 
+### field_definitions
+
+A map describing every column the search returns. This field is **only present when you opt in** via
+[`config.field_definitions.enabled`](/docs/search/advanced/search-request-payload#configfield_definitionsenabled) in the request. When omitted from
+the request (the default), the response contains no `field_definitions` and existing clients are unaffected.
+
+`field_definitions` gives you a uniform, self-describing way to learn a search's columns — for example to build a results table before any rows arrive.
+It is populated for every search, not just dynamic ones:
+
+- **Static searches** derive their columns from the catalog output fields. The column set is fixed and known ahead of time.
+- **Dynamic searches** (e.g. `sheet:rows@1`) supply their columns from the run. The column set equals the underlying data source (for `sheet:rows@1`,
+  the sheet's columns) and can vary per run.
+
+The keys are column names and the values describe each column:
+
+```json
+{
+	"email": { "type": "string", "label": "Email", "format": "email", "json_metadata": null },
+	"company": { "type": "string", "label": "Company", "format": null, "json_metadata": null },
+	"score": { "type": "number", "label": "Lead score", "format": null, "json_metadata": null }
+}
+```
+
+- `type` — one of `string`, `number`, `boolean`, `json`, or `unknown`.
+- `label` — an optional human-readable column name.
+- `format` — an optional value format hint (e.g. `email`, `url`, `date`).
+- `json_metadata` — for `json` columns, an optional `{ schema, example_value }` descriptor; `null` otherwise.
+
 ### results[]
 
 A list of search results. The fields of each object are normalized across searches. You can use the results as is
 or use them as input for a <AppLink linkType="pipelineRequest">pipes request</AppLink>.
+
+Each result is an object keyed by column name. The value of each column is a field object:
+
+#### result.field.value
+
+The value of the field.
+
+#### result.field.status
+
+The status of the field. Possible values include `completed`, `no_result`, and `failed`.
+
+#### result.field.type
+
+The type of the value. One of `string`, `number`, `boolean`, `json`, or `unknown`.
+
+#### result.field.format
+
+An optional value format hint (e.g. `email`, `url`), or `null`.
+
+#### result.field.resolved_by
+
+Provenance of the value: `{ ref, environment, config_hash, input_hash }`. `ref` identifies the operation that produced the value, or `input` for
+values that were not produced by a search or pipe. For dynamic reads like `sheet:rows@1` the provenance is passed through as stored — a cell that was
+originally produced by a pipe keeps that pipe's `ref` (the search is a reader, not the producer).
+
+#### result.field.widgets
+
+Additional metadata used to render the value (e.g. provider logos). See `config.widgets.enabled` in the
+<AppLink linkType="pipelineRequest">request payload</AppLink>.
+
+<Callout>
+`widgets` and stored `resolved_by` provenance are only included when the search payload sets `include_metadata: true` **and** the request sets
+`config.widgets.enabled: true`. With `include_metadata: false` (the default for searches that support it, such as `sheet:rows@1`) rows are a
+lightweight, value-only projection.
+</Callout>
 
 <Callout>
 Using the search result format as the input for a pipes request is supported via <AppLink linkType="inputExpansion">input expansion</AppLink>.

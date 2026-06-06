@@ -16,6 +16,15 @@ Here's a sample payload:
 
 ```json
 {
+	"config": {
+		"environment": "production",
+		"widgets": {
+			"enabled": false
+		},
+		"field_definitions": {
+			"enabled": false
+		}
+	},
 	"search": {
 		"search_id": "people:profiles:crustdata@1",
 		"config": {
@@ -30,6 +39,25 @@ Here's a sample payload:
 
 
 ## Search request payload properties
+
+### config
+
+The top-level config controls request-wide behaviour. It is optional — omit it to use the defaults below.
+
+#### config.environment
+
+Execute your request in `sandbox` or `production` <AppLink linkType="testMode">mode</AppLink>. Defaults to `production`.
+
+#### config.widgets.enabled
+
+Enable/disable widget metadata on result fields. Widgets are part of the [search response](/docs/search/advanced/search-response-object) and are
+often used to visualize results (e.g. provider logos). Defaults to `false`.
+
+#### config.field_definitions.enabled
+
+When `true`, the response includes a top-level [`field_definitions`](/docs/search/advanced/search-response-object#field_definitions) map that
+describes every column the search returns. This is opt-in and works for all searches: static searches derive their columns from the catalog, while
+dynamic searches (e.g. `sheet:rows@1`) supply their columns from the run. Defaults to `false`.
 
 ### search
 
