@@ -9,7 +9,7 @@ date: 2025-04-01
 
 ## Making requests
 
-This request enriches one <AppLink linkType="inputObject">input object</AppLink>. The pipe `people:workemail:waterfall@1`
+This request enriches one <AppLink linkType="inputObject">input object</AppLink>. The pipe `person:workemail:waterfall@1`
 adds a field called `work_email` to your input objects. You can find all available enrichments in the <AppLink linkType="pipeCatalog">pipe catalog</AppLink>.
 
 ```typescript tab="Typescript"
@@ -21,18 +21,18 @@ const result = await fetch("https://api.pipe0.com/v1/pipes/run", {
     },
     body: JSON.stringify({
         config: {
-            environemnt: "production",
+            environment: "production",
         },
         pipes: [
         {
-            pipe_id: "people:workemail:waterfall@1"
+            pipe_id: "person:workemail:waterfall@1"
         },
         ],
         input: [
             {
                 id: 1,
                 name: "John Doe",
-                company_website_url: "https://pipe0.com"
+                company_domain: "pipe0.com"
             }
         ]
     })
@@ -49,14 +49,14 @@ headers = {
 payload = {
     "pipes": [
         {
-            "pipe_id": "people:workemail:waterfall@1"
+            "pipe_id": "person:workemail:waterfall@1"
         },
     ],
     "input": [
         {
             "id": 1,
             "name": "John Doe",
-            "company_website_url": "https://pipe0.com"
+            "company_domain": "pipe0.com"
         }
     ]
 }
@@ -70,14 +70,14 @@ curl -X POST "https://api.pipe0.com/v1/pipes/run" \
 -d '{
         "pipes": [
             {
-            "pipe_id": "people:workemail:waterfall@1"
+            "pipe_id": "person:workemail:waterfall@1"
             },
         ],
         "input": [
             {
             "id": 1,
             "name": "John Doe",
-            "company_website_url": "https://pipe0.com"
+            "company_domain": "pipe0.com"
             }
         ]
     }'
@@ -90,7 +90,7 @@ The result will look something like this:
     {
         "id": 1,
         "name": "John Doe",
-        "company_website_url": "https://pipe0.com",
+        "company_domain": "pipe0.com",
         "work_email": "john@pipe0.com"
     }
 ]

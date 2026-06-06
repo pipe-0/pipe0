@@ -30,7 +30,7 @@ For simple use-cases the docs are overkill. Read this page then jump to the <App
 
 ### Enrich a record with a pipe
 
-This request enriches one input object using the `people:workemail:waterfall@1` pipe — it adds a `work_email` field to your record.
+This request enriches one input object using the `person:workemail:waterfall@1` pipe — it adds a `work_email` field to your record.
 
 ```typescript tab="Typescript"
 const result = await fetch("https://api.pipe0.com/v1/pipes/run/sync", {
@@ -40,12 +40,12 @@ const result = await fetch("https://api.pipe0.com/v1/pipes/run/sync", {
         "Content-Type": "application/json"
     },
     body: JSON.stringify({
-        pipes: [{ pipe_id: "people:workemail:waterfall@1" }],
+        pipes: [{ pipe_id: "person:workemail:waterfall@1" }],
         input: [
             {
                 id: 1,
                 name: "John Doe",
-                company_website_url: "https://pipe0.com"
+                company_domain: "pipe0.com"
             }
         ]
     })
@@ -56,12 +56,12 @@ import requests
 
 headers = { "Authorization": f"Bearer {API_KEY}" }
 payload = {
-    "pipes": [{ "pipe_id": "people:workemail:waterfall@1" }],
+    "pipes": [{ "pipe_id": "person:workemail:waterfall@1" }],
     "input": [
         {
             "id": 1,
             "name": "John Doe",
-            "company_website_url": "https://pipe0.com"
+            "company_domain": "pipe0.com"
         }
     ]
 }
@@ -74,8 +74,8 @@ You can stack multiple pipes in one request to build complex workflows where pip
 
 Here's an example:
 - You start with `input: [{id: "1", first_name: "John", last_name: "Doe", company_name: "Alphabet Inc."}]`
-- Use the `name:join@1` pipe to join `first_name` and `last_name` into a new `name` field.
-- Use the `people:workemail:waterfall@1` pipe to read `name` (output of the previous pipe) and `company_name` and find the prospect's email address.
+- Use the `person:name:join@1` pipe to join `first_name` and `last_name` into a new `name` field.
+- Use the `person:workemail:waterfall@1` pipe to read `name` (output of the previous pipe) and `company_name` and find the prospect's email address.
 
 <Accordions>
 <Accordion title="Toggle full example request">
@@ -89,8 +89,8 @@ const result = await fetch("https://api.pipe0.com/v1/pipes/run/sync", {
     },
     body: JSON.stringify({
         pipes: [
-            { pipe_id: "name:join@1" },
-            { pipe_id: "people:workemail:waterfall@1" }
+            { pipe_id: "person:name:join@1" },
+            { pipe_id: "person:workemail:waterfall@1" }
         ],
         input: [
             {
@@ -110,8 +110,8 @@ import requests
 headers = { "Authorization": f"Bearer {API_KEY}" }
 payload = {
     "pipes": [
-        { "pipe_id": "name:join@1" },
-        { "pipe_id": "people:workemail:waterfall@1" }
+        { "pipe_id": "person:name:join@1" },
+        { "pipe_id": "person:workemail:waterfall@1" }
     ],
     "input": [
         {
@@ -132,8 +132,8 @@ curl -X POST "https://api.pipe0.com/v1/pipes/run/sync" \
   -H "Content-Type: application/json" \
   -d '{
     "pipes": [
-      { "pipe_id": "name:join@1" },
-      { "pipe_id": "people:workemail:waterfall@1" }
+      { "pipe_id": "person:name:join@1" },
+      { "pipe_id": "person:workemail:waterfall@1" }
     ],
     "input": [
       { "id": "1", "first_name": "John", "last_name": "Doe", "company_name": "Alphabet Inc." }
@@ -150,7 +150,7 @@ While pipes take input objects and add fields to them, `search` creates a list o
 
 This can be helpful if you're looking for people or companies based on filters.
 
-Here's an example request that fetches a list of people `people:profiles:crustdata@1` using a job-title filter.
+Here's an example request that fetches a list of people `people:profiles:crustdata@2` using a job-title filter.
 
 ```typescript tab="Typescript"
 const result = await fetch("https://api.pipe0.com/v1/search/run/sync", {
@@ -161,7 +161,7 @@ const result = await fetch("https://api.pipe0.com/v1/search/run/sync", {
     },
     body: JSON.stringify({
         search: {
-            search_id: "people:profiles:crustdata@1",
+            search_id: "people:profiles:crustdata@2",
             config: {
                 limit: 25,
                 filters: {
@@ -179,7 +179,7 @@ import requests
 headers = { "Authorization": f"Bearer {API_KEY}" }
 payload = {
     "search": {
-        "search_id": "people:profiles:crustdata@1",
+        "search_id": "people:profiles:crustdata@2",
         "config": {
             "limit": 25,
             "filters": { "current_job_titles": ["Software Engineer"] }
@@ -195,7 +195,7 @@ curl -X POST "https://api.pipe0.com/v1/search/run/sync" \
   -H "Content-Type: application/json" \
   -d '{
     "search": {
-      "search_id": "people:profiles:crustdata@1",
+      "search_id": "people:profiles:crustdata@2",
       "config": { "limit": 25, "filters": { "current_job_titles": ["Software Engineer"] } }
     }
   }'

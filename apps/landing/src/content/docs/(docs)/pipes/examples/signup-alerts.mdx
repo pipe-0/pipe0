@@ -8,40 +8,38 @@ full: true
 This example illustrates a workflow designed to generate a Slack alert. The alert is triggered upon a 
 new user signup and is conditional on the user meeting your predetermined ideal customer profile (ICP) criteria.
 
-```typescript filename="signup-alert.ts"
-import { Pipe0 } from "@pipe0/client";
+The pipeline runs in one request:
 
-const zero = new Pipe0({ apiKey: "<API_KEY>" });
+1. `email:iswork@1` — is the signup using a work email?
+2. `company:domain:workemail@1` — resolve the company domain (only for work emails).
+3. `company:overview@3` — enrich the company.
+4. `prompt:run@1` — score the company against our ICP.
+5. `message:write@1` — draft the alert (only for ICP matches).
+6. `message:send:slack@1` — post the drafted message to Slack.
 
-const result = await zero.pipes.pipe({
-  config: {
-    environment: "production",
-  },
+export const signupAlertPayload = {
+  config: { environment: "production" },
   pipes: [
-    { pipe_id: "people:email:iswork@1" },
+    { pipe_id: "email:iswork@1" },
     {
-      pipe_id: "company:websiteurl:email@1",
+      pipe_id: "company:domain:workemail@1",
       run_if: {
         action: "run",
         when: {
           logic: "and",
           conditions: [
-            {
-              field_name: "is_work_email",
-              operator: "eq",
-              property: "value",
-              value: true,
-            },
+            { field_name: "is_work_email", operator: "eq", property: "value", value: true },
           ],
         },
       },
+      // The pipe expects a `work_email` field — point it at the signup `email`.
+      config: { input_fields: { work_email: { alias: "email" } } },
     },
-    {
-      pipe_id: "company:overview@1",
-    },
+    { pipe_id: "company:overview@3" },
     {
       pipe_id: "prompt:run@1",
       config: {
+        model: "gemini-flash-latest",
         prompt: {
           template: `
 Your task is to determine if the user's current employer aligns with the ideal customer profile for our business, pipe0.
@@ -53,10 +51,10 @@ pipe0 is an enrichment framework designed to help businesses add features around
 
 The company either offers or is involved in developing products that can benefit from data enrichment.
 
-Such companies often target use cases around: as AI agents, customer celationship management, applicant tracking, account research, investor intelligence, or
+Such companies often target use cases around: AI agents, customer relationship management, applicant tracking, account research, investor intelligence, or
 workflow automation.
 
-Alternatively, the user can be a go-to-market professional using workflow enrichment in their own workflows for automating 
+Alternatively, the user can be a go-to-market professional using workflow enrichment in their own workflows for automating
 go-to-market workflows.
 
 The user's employer should have a need for prospecting, lead generation, or sales intelligence tools.
@@ -82,50 +80,45 @@ Estimated revenue: {{ estimated_revenue | default: "" }}
         when: {
           logic: "and",
           conditions: [
-            {
-              field_name: "is_icp_fit",
-              property: "value",
-              operator: "eq",
-              value: true,
-            },
+            { field_name: "is_icp_fit", property: "value", operator: "eq", value: true },
           ],
         },
       },
       config: {
-        prompt: {
-          template: `
+        model: "gemini-flash-latest",
+        template: `
 Notify the pipe0 team that a high value customer signed up to the platform.
 
 Give the team the following information:
 Name of the user: {{ name | default: "" }}
-Company the user works for {{ company_website_url | default: "" }}
+Company the user works for: {{ company_domain | default: "" }}
 Reason why it is a high value customer: {{ reason | default: "" }}
-          `,
-        },
+        `,
       },
     },
     {
       pipe_id: "message:send:slack@1",
+      run_if: {
+        action: "run",
+        when: {
+          logic: "and",
+          conditions: [
+            { field_name: "is_icp_fit", property: "value", operator: "eq", value: true },
+          ],
+        },
+      },
       connector: {
         strategy: "first",
-        connections: [
-          {
-            type: "vault",
-            connection: "<ADD_YOUR_CONNECTION>",
-          },
-        ],
+        connections: [{ type: "vault", connection: "<ADD_YOUR_CONNECTION>" }],
       },
-      config: {
-        channel_id: "<ADD_SLACK_CHANNEL_ID>",
-      },
+      // `message:write@1` stored its output in the `message` field.
+      config: { channel_id: "<ADD_SLACK_CHANNEL_ID>", message: "{{ message }}" },
     },
   ],
-  input: [
-    {
-      id: 1,
-      name: "<NAME>",
-      email: "<EMAIL>",
-    },
-  ],
-});
-```
+  input: [{ id: 1, name: "<NAME>", email: "<EMAIL>" }],
+};
+
+<RequestExample kind="pipes" payload={signupAlertPayload} />
+
+Replace `<ADD_YOUR_CONNECTION>` with your Slack vault connection ID and `<ADD_SLACK_CHANNEL_ID>`
+with the target channel (see [Connections](/docs/connections)).

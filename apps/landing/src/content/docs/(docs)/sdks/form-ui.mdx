@@ -37,7 +37,7 @@ submit button by default.
 import { PipeForm } from "@pipe0/react";
 
 <PipeForm
-  pipeId="json:extract@1"
+  pipeId="json:extract:multi@1"
   publicKey="pk_abc..."
   onSubmit={(payload) => console.log(payload)}
 />;
@@ -73,7 +73,7 @@ import {
 } from "@pipe0/react";
 
 function MyForm({ publicKey, handle }) {
-  const pipeForm = usePipeForm({ pipeId: "json:extract@1", publicKey });
+  const pipeForm = usePipeForm({ pipeId: "json:extract:multi@1", publicKey });
 
   return (
     <PipeForm context={pipeForm} onSubmit={handle}>
@@ -145,7 +145,7 @@ const adapters: FieldAdapterMap = {
 };
 
 <FormProvider classNames={classNames} adapters={adapters}>
-  <PipeForm pipeId="json:extract@1" publicKey={pk} onSubmit={handle} />
+  <PipeForm pipeId="json:extract:multi@1" publicKey={pk} onSubmit={handle} />
 </FormProvider>;
 ```
 

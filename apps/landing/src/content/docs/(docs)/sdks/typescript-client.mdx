@@ -54,7 +54,7 @@ any number of input objects.
 ```ts
 const result = await pipe0.pipes.pipe({
   config: { environment: "sandbox" },
-  pipes: [{ pipe_id: "people:name:split@1" }],
+  pipes: [{ pipe_id: "person:name:split@1" }],
   input: [{ id: "1", name: "John Doe" }],
 });
 
@@ -69,7 +69,7 @@ record.fields.last_name.value; // "Doe"
 const result = await pipe0.pipes.pipe({
   config: { environment: "sandbox" },
   pipes: [
-    { pipe_id: "people:profile:waterfall@1" },
+    { pipe_id: "person:profile:waterfall@1" },
     {
       pipe_id: "prompt:run@1",
       config: {
@@ -114,7 +114,7 @@ import { Pipe0BatchError } from "@pipe0/client";
 try {
   const batches = await pipe0.pipes.pipeInBatches(
     {
-      pipes: [{ pipe_id: "people:workemail:waterfall@1" }],
+      pipes: [{ pipe_id: "person:workemail:waterfall@1" }],
       input: tenThousandRows,
     },
     {
@@ -137,7 +137,7 @@ If you want control over the the polling process, use the manual handlers.
 ```ts
 // Sends a valid API requests
 const runId = await pipe0.pipes.create({
-  pipes: [{ pipe_id: "people:workemail:waterfall@1" }],
+  pipes: [{ pipe_id: "person:workemail:waterfall@1" }],
   input: largeInput,
 });
 
@@ -163,7 +163,7 @@ const result = await pipe0.searches.search({
     environment: "sandbox",
   },
   search: {
-    search_id: "people:profiles:crustdata@1",
+    search_id: "people:profiles:crustdata@2",
     config: {
       limit: 25,
       filters: {
@@ -177,7 +177,7 @@ const result = await pipe0.searches.search({
 for (const row of result.results) {
   row.name.value; // string
   row.job_title.value; // string
-  row.company_website_url; // typed per output_fields
+  row.company_domain; // typed per output_fields
 }
 ```
 
@@ -195,7 +195,7 @@ const input = await pipe0.searches.search({ /* … */ });
 
 const enriched = await pipe0.pipes.pipe({
   config: { environment: "sandbox" },
-  pipes: [{ pipe_id: "people:workemail:waterfall@1" }],
+  pipes: [{ pipe_id: "person:workemail:waterfall@1" }],
   input,
 });
 ```

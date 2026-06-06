@@ -1,0 +1,48 @@
+---
+title: Search then Enrich
+description: Run a people search and pipe the results straight into an enrichment request
+date: 2026-06-06
+full: true
+---
+
+The point of this pattern is that a **search response is already a valid pipe `input`** — you don't
+have to reshape anything in between. Search for a list of people, then hand `search.results` directly
+to a pipes request to enrich every row.
+
+This example finds senior software-development people, then resolves a work email and mobile number
+for each of them.
+
+export const search = {
+  config: { environment: "production" },
+  search: {
+    search_id: "people:profiles:amplemarket@2",
+    config: {
+      limit: 10,
+      filters: {
+        current_employer_linkedin_industries: ["Software Development"],
+        current_seniority_levels: ["C-Suite", "VP", "Head", "Director"],
+      },
+    },
+  },
+};
+
+export const enrich = {
+  config: { environment: "production" },
+  pipes: [
+    { pipe_id: "person:workemail:profileurl:waterfall@1" },
+    { pipe_id: "person:mobile:profileurl:waterfall@1" },
+  ],
+};
+
+<SearchEnrichExample search={search} enrich={enrich} />
+
+## How it fits together
+
+- The search outputs `name`, `job_title`, `profile_url` and `company_domain` for each person.
+- Passing `search.results` as the pipe `input` works because search results are returned as fully
+  [expanded field values](/docs/pipes/advanced/pipes-inputs) — the API accepts them directly.
+- The two waterfall pipes read each row's `profile_url` and add `work_email` and `mobile`.
+
+For large result sets, swap `pipes.pipe` for [`pipeInBatches`](/docs/sdks/typescript-client) — it splits
+`search.results` into chunks and runs them with bounded concurrency, so the same code handles 10 rows
+or 10,000.

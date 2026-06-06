@@ -23,23 +23,24 @@ common errors but will be processed successfully.
 ```json
 {
   "pipes": [
-    { 
-      "pipe_id": "company:identity@1",
+    {
+      "pipe_id": "company:identity@3",
     },
   ],
   "input": [
     {
       "id": 1,
       "name": "Susi Jui",
-      "company_websiste_url": "pipe0.com", // missing protocol 'https://'
-      "email": "mailto:susi@pipe0.com", // "malto:" prefix
-      "personal_website_url": "wwwww.susi.com" // wwww instad of www
+      "company_name": "Pipe0",
+      "company_domain": "https://www.pipe0.com/about", // protocol, www and path get stripped
+      "email": "mailto:susi@pipe0.com", // "mailto:" prefix
+      "personal_website_url": "wwwww.susi.com" // wwww instead of www
     },
     {
       "id": 2,
       "name": "Tom Schmidt",
       "company_name": "Pipe0",
-      "company_websiste_url": "not today" // invalid: expected URL
+      "company_domain": "not today" // invalid: expected a domain
     },
   ],
 }
@@ -54,12 +55,12 @@ Here's how we clean this request:
 
 ### Regeneration
 
-In our example, `"company_websiste_url": "not today"` is not a valid URL.
+In our example, `"company_domain": "not today"` is not a valid domain.
 
-Because `company_websiste_url` is an <AppLink linkType="outputField">output field</AppLink> of `company:identity@1`,
+Because `company_domain` is an <AppLink linkType="outputField">output field</AppLink> of `company:identity@3`,
 we can find the correct value.
 
-During processing, `company:identity@1` detects that `company_websiste_url` is of invalid format 
+During processing, `company:identity@3` detects that `company_domain` is of invalid format 
 and replaces it with the correct value.
 
 The result may look like this:
@@ -69,7 +70,7 @@ The result may look like this:
     "id": 2,
     "name": "Tom Schmidt",
     "company_name": "Pipe0",
-    "company_websiste_url": "https://valid-url.com" // healed
+    "company_domain": "pipe0.com" // healed
 },
 ```
 
@@ -92,8 +93,8 @@ Let's look at the following request payload:
 ```json
 {
   "pipes": [
-    { 
-      "pipe_id": "company:identity@1",
+    {
+      "pipe_id": "company:identity@3",
     },
   ],
   "input": [
@@ -101,9 +102,8 @@ Let's look at the following request payload:
       "id": 1,
       "name": "Susi Jui",
       "company_name": "Pipe0",
-      "company_websiste_url": "pipe0.com",
     },
-    { // CANNOT be processed by "company:identity@1"
+    { // CANNOT be processed by "company:identity@3"
       "id": 2,
       // required `company_name` missing
     },
@@ -111,7 +111,7 @@ Let's look at the following request payload:
 }
 ```
 
-The pipe `company:identity@1` requires the input field `company_website_url` which is not present
+The pipe `company:identity@3` requires the input field `company_name` which is not present
 in record `id=2`. In this case:
 
 - Pipeline validation passes
@@ -126,16 +126,16 @@ Let's look at another example:
 ```json
 {
   "pipes": [
-    { 
-      "pipe_id": "company:identity@1",
+    {
+      "pipe_id": "company:identity@3",
     },
   ],
   "input": [
-    { // CANNOT be processed by "company:identity@1"
+    { // CANNOT be processed by "company:identity@3"
       "id": 1,
       "name": "Susi Jui",
     },
-    { // CANNOT be processed by "company:identity@1"
+    { // CANNOT be processed by "company:identity@3"
       "id": 2,
       "name": "Tom Schmidt"
     },
@@ -143,7 +143,7 @@ Let's look at another example:
 }
 ```
 
-No input object has the required field `company_websiste_url`. The request will fail during request validation.
+No input object has the required field `company_name`. The request will fail during request validation.
 
 The entire task will fail before processing starts.
 

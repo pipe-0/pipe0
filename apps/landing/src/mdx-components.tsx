@@ -1,6 +1,7 @@
 import AppLink from "@/components/app-link";
 import { BlogBanner } from "@/components/blog-banner";
 import { SandboxPreview } from "@/components/features/docs/sandbox-preview";
+import { RequestExample, SearchEnrichExample } from "@/components/features/docs/request-example";
 import type { MDXComponents } from "mdx/types";
 
 import defaultMdxComponents from "fumadocs-ui/mdx";
@@ -32,6 +33,8 @@ export const themeMdxComponents = {
   AppLink: AppLink,
   BlogBanner: BlogBanner,
   SandboxPreview: SandboxPreview,
+  RequestExample,
+  SearchEnrichExample,
   YoutubeEmbed,
   ...(icons as unknown as MDXComponents),
   ...defaultMdxComponents,

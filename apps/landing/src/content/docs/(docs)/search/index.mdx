@@ -8,7 +8,7 @@ The <AppLink linkType="searchCatalog">search catalog</AppLink> lists all availab
 
 ## Making requests
 
-This request fetches a list of people using the [`people:profiles:crustdata@1`](/docs/search/search-catalog/people:profiles:crustdata/1) dataset.
+This request fetches a list of people using the [`people:profiles:crustdata@2`](/docs/search/search-catalog/people:profiles:crustdata/2) dataset.
 
 ```typescript tab="Typescript"
 const result = await fetch("https://api.pipe0.com/v1/search/run", {
@@ -19,7 +19,7 @@ const result = await fetch("https://api.pipe0.com/v1/search/run", {
     },
     body: JSON.stringify({
         search: {
-            search_id: "people:profiles:crustdata@1",
+            search_id: "people:profiles:crustdata@2",
             config: {
                 limit: 100,
                 filters: {
@@ -71,7 +71,7 @@ The result will look something like this:
 {
 	"id": "jyg5w5p7unhcufkp8f7z5za8",
 	"status": "completed",
-	"search_id": "people:profiles:crustdata@1",
+	"search_id": "people:profiles:crustdata@2",
 	"organization_id": "v417gjrw51ft55f85ueeqgpt",
 	"errors": [],
 	"total_pages": 2764,
@@ -90,7 +90,7 @@ The result will look something like this:
 				"job_title": { "alias": "", "enabled": true }
 			}
 		},
-		"search_id": "people:profiles:crustdata@1"
+		"search_id": "people:profiles:crustdata@2"
 	},
 	"results": [
 		{
@@ -137,7 +137,7 @@ const res = await fetch("https://api.pipe0.com/v1/search/run/sync", {
     },
     body: JSON.stringify({
         search: {
-            search_id: "people:profiles:crustdata@1",
+            search_id: "people:profiles:crustdata@2",
             config: {
                 limit: 25,
                 filters: {

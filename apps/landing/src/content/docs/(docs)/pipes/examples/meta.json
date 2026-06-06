@@ -5,6 +5,8 @@
   "pages": [
     "dough",
     "basic-script-typescript",
+    "search-then-enrich",
+    "qualify-and-email",
     "signup-alerts"
   ]
 }
