@@ -156,7 +156,7 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
                 </TableCell>
                 <TableCell>
                   <p>
-                    {formatCredits(searchEntry.cost.credits.default) || "Free"}{" "}
+                    {searchEntry.cost.credits?.default ? formatCredits(searchEntry.cost.credits.default) : "Free"}{" "}
                     credits
                   </p>
                   <p className="max-w-37.5">
@@ -194,68 +194,68 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
                 .
               </Callout>
             ) : (
-            (() => {
-              const enabled: {
-                fieldName: string;
-                found: NonNullable<ReturnType<typeof getField>>;
-              }[] = [];
-              const optional: {
-                fieldName: string;
-                found: NonNullable<ReturnType<typeof getField>>;
-              }[] = [];
-              for (const fieldName of getDefaultSearchOutputFields(
-                searchEntry.searchId,
-              )) {
-                const found = getField(fieldName as FieldName);
-                if (!found) continue;
-                const isEnabledByDefault = !!(
-                  defaultSearchPayload?.config?.output_fields as Record<
-                    string,
-                    any
-                  >
-                )?.[fieldName]?.enabled;
-                (isEnabledByDefault ? enabled : optional).push({
+              (() => {
+                const enabled: {
+                  fieldName: string;
+                  found: NonNullable<ReturnType<typeof getField>>;
+                }[] = [];
+                const optional: {
+                  fieldName: string;
+                  found: NonNullable<ReturnType<typeof getField>>;
+                }[] = [];
+                for (const fieldName of getDefaultSearchOutputFields(
+                  searchEntry.searchId,
+                )) {
+                  const found = getField(fieldName as FieldName);
+                  if (!found) continue;
+                  const isEnabledByDefault = !!(
+                    defaultSearchPayload?.config?.output_fields as Record<
+                      string,
+                      any
+                    >
+                  )?.[fieldName]?.enabled;
+                  (isEnabledByDefault ? enabled : optional).push({
+                    fieldName,
+                    found,
+                  });
+                }
+                const renderRow = ({
                   fieldName,
                   found,
-                });
-              }
-              const renderRow = ({
-                fieldName,
-                found,
-              }: {
-                fieldName: string;
-                found: NonNullable<ReturnType<typeof getField>>;
-              }) => (
-                <FieldRow
-                  key={fieldName}
-                  fieldName={found.name}
-                  fieldType={found.type}
-                  description={found.description}
-                />
-              );
-              return (
-                <>
-                  {enabled.length > 0 && (
-                    <BandCard
-                      label="Enabled by default"
-                      description="These fields are returned without extra config."
-                      count={enabled.length}
-                    >
-                      {enabled.map(renderRow)}
-                    </BandCard>
-                  )}
-                  {optional.length > 0 && (
-                    <BandCard
-                      label="Enable optionally"
-                      description="Opt in to these fields via the search config."
-                      count={optional.length}
-                    >
-                      {optional.map(renderRow)}
-                    </BandCard>
-                  )}
-                </>
-              );
-            })()
+                }: {
+                  fieldName: string;
+                  found: NonNullable<ReturnType<typeof getField>>;
+                }) => (
+                  <FieldRow
+                    key={fieldName}
+                    fieldName={found.name}
+                    fieldType={found.type}
+                    description={found.description}
+                  />
+                );
+                return (
+                  <>
+                    {enabled.length > 0 && (
+                      <BandCard
+                        label="Enabled by default"
+                        description="These fields are returned without extra config."
+                        count={enabled.length}
+                      >
+                        {enabled.map(renderRow)}
+                      </BandCard>
+                    )}
+                    {optional.length > 0 && (
+                      <BandCard
+                        label="Enable optionally"
+                        description="Opt in to these fields via the search config."
+                        count={optional.length}
+                      >
+                        {optional.map(renderRow)}
+                      </BandCard>
+                    )}
+                  </>
+                );
+              })()
             )}
           </div>
         </div>
@@ -304,9 +304,9 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
     search: {
       search_id: "${searchId}",
       config: ${JSON.stringify(defaultSearchPayload, null, 2).replace(
-        /\n/g,
-        "\n      ",
-      )}
+                        /\n/g,
+                        "\n      ",
+                      )}
     },
   })
 });`}
@@ -322,9 +322,9 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
     "search": {
       "search_id": "${searchId}",
       "config": ${JSON.stringify(defaultSearchPayload, null, 2).replace(
-        /\n/g,
-        "\n      ",
-      )}
+                        /\n/g,
+                        "\n      ",
+                      )}
     }
 }'`}
                     />

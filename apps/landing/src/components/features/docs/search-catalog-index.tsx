@@ -75,7 +75,7 @@ const FEATURED_SEARCHES_IDS = [] satisfies SearchId[];
 const FEATURED_SEARCHES_ID_SET = new Set<string>(FEATURED_SEARCHES_IDS);
 
 function getSearchCost(entry: SearchCatalogTableData): number {
-  return entry.cost.credits.default;
+  return entry.cost.credits?.default || 0;
 }
 
 function getSearchUnit(entry: SearchCatalogTableData): string {
