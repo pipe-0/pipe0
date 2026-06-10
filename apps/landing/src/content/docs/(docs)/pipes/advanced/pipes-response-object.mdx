@@ -20,7 +20,7 @@ Here are some things our responses are designed for:
 🦄 Automate and enrich with code (think [n8n](https://n8n.io) as code)<br />
 
 By default, responses contain enriched data only. Enable <AppLink linkType="widgets"> widgets</AppLink> and 
-<AppLink linkType="fieldDefinitions"> field definitions</AppLink> for additional metadata e.g. which providers where used in a waterfall.
+<AppLink linkType="fieldDefinitions"> field definitions</AppLink> for additional metadata e.g. which providers were used in a waterfall.
 
 ## The raw response object
  
@@ -209,12 +209,12 @@ value was generated from an enrichment operation, it is added.
 
 The status of the field. Possible values are `completed`, `failed`, `pending`, `queued`, `processing`, `skipped`, or `no_result`.
 The `status` is `no_result` if processing is completed without yielding a meaningful 
-result. The status is `failed` if the pipe failed due to errors. The status is `skipped` if processing was skipped do to an unmet condition
+result. The status is `failed` if the pipe failed due to errors. The status is `skipped` if processing was skipped due to an unmet condition
 or missing input.
 
 #### record.field.type
 
-The type of the provided or generated value. Possible values are `string`, `number`, `boolean`, `json`, or `unkown`.
+The type of the provided or generated value. Possible values are `string`, `number`, `boolean`, `json`, or `unknown`.
 The type will be `unknown` if the field was derived from input data but no input object provided a value **and**
 the field is not an output field of a pipe.
 

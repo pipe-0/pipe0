@@ -1,391 +1,202 @@
-import { EnrichmentAnimatedList } from "@/app/enrichment-animated-list";
-import { EnrichmentCardMarquee } from "@/app/enrichment-card-marquee";
-import { HeroCarousel } from "@/app/hero-carousel";
-import CalButton from "@/components/cal-button";
+import { LandingSpotlight } from "@/app/landing-spotlight";
+import { LandingSystemCards } from "@/app/landing-system-cards";
+import { ScrollReveal } from "@/app/scroll-reveal";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
-import { LogoRawSmall } from "@/components/logo";
+import { CtaButtons, CtaPanel, Section } from "@/components/marketing";
+import Image from 'next/image'
 
-import { Button } from "@/components/ui/button";
-import { appInfo } from "@/lib/const";
-import { docsLinkPaths } from "@pipe0/doc-links";
-import { providerCatalog } from "@pipe0/base";
-import { ArrowRight, Search, Sparkle } from "lucide-react";
-import Link from "next/link";
-import type { ReactNode } from "react";
+const trustedLogos = [
+  {
+    src: "/media/website/logos/pie-light.svg",
+    alt: "Pie",
+    className: "h-6 w-auto",
+    width: 559,
+    height: 356,
+  },
+  {
+    src: "/media/website/logos/lightfield.svg",
+    alt: "Lightfield",
+    className: "h-5 w-auto",
+    width: 87,
+    height: 16,
+  },
+  {
+    src: "/media/website/logos/augusta-dark.svg",
+    alt: "Augusta Labs",
+    className: "h-5 w-auto",
+    width: 4288,
+    height: 924,
+  },
+  {
+    src: "/media/website/logos/aries-light.svg",
+    alt: "Aries",
+    className: "h-5 w-auto",
+    width: 28,
+    height: 11,
+  },
+];
 
-type Integration = {
-  name: string;
-  text: ReactNode;
-  icon: ReactNode;
-  category: ReactNode;
-};
+/* Mobile row sits on the page background, so it uses the light logo
+   variants (grayscale, inverted by the theme in dark mode). */
+const mobileTrustedLogos = trustedLogos.map((logo) =>
+  logo.alt === "Augusta Labs"
+    ? { ...logo, src: "/media/website/logos/augusta-light.svg" }
+    : logo,
+);
 
-const integrations: Integration[] = [
-  {
-    name: "Google Maps",
-    text: "Business names, addresses, and descriptions.",
-    icon: (
-      <svg
-        role="img"
-        viewBox="0 0 24 24"
-        xmlns="http://www.w3.org/2000/svg"
-        className="text-muted-foreground"
-        fill="none"
-        stroke="currentColor"
-      >
-        <title>Google Maps</title>
-        <path d="M19.527 4.799c1.212 2.608.937 5.678-.405 8.173-1.101 2.047-2.744 3.74-4.098 5.614-.619.858-1.244 1.75-1.669 2.727-.141.325-.263.658-.383.992-.121.333-.224.673-.34 1.008-.109.314-.236.684-.627.687h-.007c-.466-.001-.579-.53-.695-.887-.284-.874-.581-1.713-1.019-2.525-.51-.944-1.145-1.817-1.79-2.671L19.527 4.799zM8.545 7.705l-3.959 4.707c.724 1.54 1.821 2.863 2.871 4.18.247.31.494.622.737.936l4.984-5.925-.029.01c-1.741.601-3.691-.291-4.392-1.987a3.377 3.377 0 0 1-.209-.716c-.063-.437-.077-.761-.004-1.198l.001-.007zM5.492 3.149l-.003.004c-1.947 2.466-2.281 5.88-1.117 8.77l4.785-5.689-.058-.05-3.607-3.035zM14.661.436l-3.838 4.563a.295.295 0 0 1 .027-.01c1.6-.551 3.403.15 4.22 1.626.176.319.323.683.377 1.045.068.446.085.773.012 1.22l-.003.016 3.836-4.561A8.382 8.382 0 0 0 14.67.439l-.009-.003zM9.466 5.868L14.162.285l-.047-.012A8.31 8.31 0 0 0 11.986 0a8.439 8.439 0 0 0-6.169 2.766l-.016.018 3.665 3.084z" />
-      </svg>
-    ),
-    category: "Location",
-  },
-  {
-    name: "Salesforce",
-    text: "Lead information stored in your Salesforce cloud.",
-    icon: (
-      <svg
-        role="img"
-        viewBox="0 0 24 24"
-        xmlns="http://www.w3.org/2000/svg"
-        className="text-muted-foreground"
-        fill="none"
-        stroke="currentColor"
-      >
-        <title>Salesforce</title>
-        <path d="M10.006 5.415a4.195 4.195 0 013.045-1.306c1.56 0 2.954.9 3.69 2.205.63-.3 1.35-.45 2.1-.45 2.85 0 5.159 2.34 5.159 5.22s-2.31 5.22-5.176 5.22c-.345 0-.69-.044-1.02-.104a3.75 3.75 0 01-3.3 1.95c-.6 0-1.155-.15-1.65-.375A4.314 4.314 0 018.88 20.4a4.302 4.302 0 01-4.05-2.82c-.27.062-.54.076-.825.076-2.204 0-4.005-1.8-4.005-4.05 0-1.5.811-2.805 2.01-3.51-.255-.57-.39-1.2-.39-1.846 0-2.58 2.1-4.65 4.65-4.65 1.53 0 2.85.705 3.72 1.8" />
-      </svg>
-    ),
-    category: "CRM",
-  },
-  {
-    name: "Hubspot",
-    text: "Lead information stored in your Hubspot cloud.",
-    icon: (
-      <svg
-        role="img"
-        viewBox="0 0 24 24"
-        xmlns="http://www.w3.org/2000/svg"
-        className="text-muted-foreground"
-        fill="none"
-        stroke="currentColor"
-      >
-        <title>HubSpot</title>
-        <path d="M18.164 7.93V5.084a2.198 2.198 0 001.267-1.978v-.067A2.2 2.2 0 0017.238.845h-.067a2.2 2.2 0 00-2.193 2.193v.067a2.196 2.196 0 001.252 1.973l.013.006v2.852a6.22 6.22 0 00-2.969 1.31l.012-.01-7.828-6.095A2.497 2.497 0 104.3 4.656l-.012.006 7.697 5.991a6.176 6.176 0 00-1.038 3.446c0 1.343.425 2.588 1.147 3.607l-.013-.02-2.342 2.343a1.968 1.968 0 00-.58-.095h-.002a2.033 2.033 0 102.033 2.033 1.978 1.978 0 00-.1-.595l.005.014 2.317-2.317a6.247 6.247 0 104.782-11.134l-.036-.005zm-.964 9.378a3.206 3.206 0 113.215-3.207v.002a3.206 3.206 0 01-3.207 3.207z" />
-      </svg>
-    ),
-    category: "CRM",
-  },
-  {
-    name: "Github",
-    text: "GitHub usernames and activity.",
-    icon: (
-      <svg
-        role="img"
-        viewBox="0 0 24 24"
-        xmlns="http://www.w3.org/2000/svg"
-        className="text-muted-foreground"
-        fill="none"
-        stroke="currentColor"
-      >
-        <title>GitHub</title>
-        <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
-      </svg>
-    ),
-    category: "DevTooling",
-  },
-  {
-    name: "Gitlab",
-    text: "Gitlab usernames and contributions.",
-    icon: (
-      <svg
-        role="img"
-        viewBox="0 0 24 24"
-        xmlns="http://www.w3.org/2000/svg"
-        className="text-muted-foreground"
-        fill="none"
-        stroke="currentColor"
-      >
-        <title>GitLab</title>
-        <path d="m23.6004 9.5927-.0337-.0862L20.3.9814a.851.851 0 0 0-.3362-.405.8748.8748 0 0 0-.9997.0539.8748.8748 0 0 0-.29.4399l-2.2055 6.748H7.5375l-2.2057-6.748a.8573.8573 0 0 0-.29-.4412.8748.8748 0 0 0-.9997-.0537.8585.8585 0 0 0-.3362.4049L.4332 9.5015l-.0325.0862a6.0657 6.0657 0 0 0 2.0119 7.0105l.0113.0087.03.0213 4.976 3.7264 2.462 1.8633 1.4995 1.1321a1.0085 1.0085 0 0 0 1.2197 0l1.4995-1.1321 2.4619-1.8633 5.006-3.7489.0125-.01a6.0682 6.0682 0 0 0 2.0094-7.003z" />
-      </svg>
-    ),
-    category: "DevTooling",
-  },
-  {
-    name: "Typeform",
-    text: "Information provided via surveys.",
-    icon: (
-      <svg
-        role="img"
-        viewBox="0 0 24 24"
-        xmlns="http://www.w3.org/2000/svg"
-        className="text-muted-foreground"
-        fill="none"
-        stroke="currentColor"
-      >
-        <title>Typeform</title>
-        <path d="M15.502 13.035c-.5 0-.756-.411-.756-.917 0-.505.252-.894.756-.894.513 0 .756.407.756.894-.004.515-.261.917-.756.917Zm-4.888-1.81c.292 0 .414.17.414.317 0 .357-.365.514-1.126.536 0-.442.253-.854.712-.854Zm-3.241 1.81c-.473 0-.67-.384-.67-.917 0-.527.202-.894.67-.894.477 0 .702.38.702.894 0 .537-.234.917-.702.917Zm-3.997-2.334h-.738l1.224 2.808c-.234.519-.36.648-.522.648-.171 0-.333-.138-.45-.259l-.324.43c.22.232.522.366.832.366.387 0 .685-.224.856-.626l1.413-3.371h-.725l-.738 2.012-.828-2.008Zm19.553.523c.36 0 .432.246.432.823v1.516H24v-1.914c0-.689-.473-.988-.91-.988-.386 0-.742.241-.94.688a.901.901 0 0 0-.891-.688c-.365 0-.73.232-.927.666v-.626h-.64v2.857h.64v-1.22c0-.617.324-1.114.765-1.114.36 0 .427.246.427.823v1.516h.64l-.005-1.225c0-.617.329-1.114.77-1.114Zm-5.1-.523h-.324v2.857h.639v-1.095c0-.693.306-1.163.76-1.163.118 0 .217.005.325.05l.099-.676c-.081-.009-.153-.018-.225-.018-.45 0-.774.309-.964.707V10.7h-.31Zm-2.327-.045c-.846 0-1.418.644-1.418 1.458 0 .845.58 1.475 1.418 1.475.85 0 1.431-.648 1.431-1.475-.004-.818-.594-1.458-1.431-1.458Zm-4.852 2.38c-.333 0-.581-.17-.685-.515.847-.036 1.675-.242 1.675-.988 0-.43-.423-.872-1.03-.872-.82 0-1.374.666-1.374 1.457 0 .828.545 1.476 1.36 1.476.567 0 .927-.228 1.21-.559l-.31-.42c-.329.335-.531.42-.846.42Zm-3.151-2.38c-.324 0-.648.188-.774.483v-.438h-.64v3.98h.64v-1.422c.135.205.445.34.72.34.85 0 1.3-.631 1.3-1.48-.004-.841-.445-1.463-1.246-1.463Zm-4.483-1.1H0v.622h1.18v3.38h.67v-3.38h1.166v-.622Zm9.502 1.145h-.383v.572h.383v2.285h.639v-2.285h.621v-.572h-.621v-.447c0-.286.117-.385.382-.385.1 0 .19.027.311.068l.144-.537c-.117-.067-.351-.094-.504-.094-.612 0-.972.367-.972 1.002v.393Z" />
-      </svg>
-    ),
-    category: "Survey",
-  },
+/* Plain-words use cases — what pipe0 actually does. */
+const useCases = [
+  "Find email addresses",
+  "Find phone numbers",
+  "Find prospects",
+  "Find companies",
+  "Enrich your CRM",
+  "Data for CRM builders",
+  "Data for ATS builders",
 ];
 
 export default function Home() {
   return (
-    <div className="min-h-screen">
-      <div>
-        {/* Header */}
-        <Header page="product" />
-        {/* Hero Section */}
-        <section className="pt-24 md:pt-6 lg:pt-10 pb-4 md:pb-4 px-4 md:px-6 lg:px-0 relative">
-          <div className="container mx-auto max-w-3xl text-center">
-            <h1 className="text-4xl sm:text-5xl md:text-6xl tracking-tight text-foreground leading-[1.1]">
-              Add <span className="font-serif italic">clay-like🦄</span> data
-              enrichment to your apps & agents.{" "}
-              <span className="font-serif italic">Fast</span>.
+    <div className="landing min-h-screen bg-background">
+      <Header page="product" />
+      <ScrollReveal />
+
+      {/* ===== Hero — bounded sky panel that frames the page width ===== */}
+      <section className="mx-auto max-w-384 px-3 sm:px-6">
+        <div className="hero-panel border relative overflow-hidden rounded-[18px]">
+          {/* Animated, ever-moving sky gradient */}
+          <div className="hero-sky pointer-events-none absolute inset-0 z-0" aria-hidden />
+          {/* Top shadow so the white copy reads cleanly (mirrors the bottom scrim) */}
+          <div className="hero-top-scrim pointer-events-none absolute inset-x-0 top-0 z-[1] h-2/5" aria-hidden />
+
+          {/* Base scene — blurred on large screens only; on mobile the scene
+              is too small for the focus effect, so it stays sharp. */}
+          <Image
+            src="/media/website/hero-scene-4.png"
+            alt="A team working quietly together at a long table"
+            className="absolute w-full bottom-0 lg:translate-y-30 lg:blur-[2px]"
+            width={1024}
+            height={432}
+            style={{ objectFit: "contain" }}
+          />
+          {/* Sharp layer — a soft focus window roams the scene, bringing
+              one person at a time into focus (enrichment: finding people).
+              Desktop only. */}
+          <Image
+            src="/media/website/hero-scene-4.png"
+            alt=""
+            aria-hidden
+            className="hero-focus absolute hidden w-full bottom-0 lg:block lg:translate-y-30"
+            width={1024}
+            height={432}
+            style={{ objectFit: "contain" }}
+          />
+
+          <div className="relative z-10 px-5 pt-11 text-center sm:pt-14">
+            {/* <p className="eyebrow mb-4 !text-white/65">
+              Enrichment &amp; prospecting infrastructure
+            </p> */}
+            <h1 className="mx-auto max-w-3xl text-[clamp(38px,5.5vw,60px)] font-semibold leading-[1.08] tracking-[-0.025em] text-white">
+              Go to market <span className="hl">with great data</span>.
             </h1>
-            <div className="mt-8">
-              <Link
-                href={docsLinkPaths.docs}
-                className="text-sm text-muted-foreground hover:text-foreground transition-colors inline-flex items-center gap-1"
-              >
-                Learn more about building with{" "}
-                <LogoRawSmall className="size-5" />
-                <ArrowRight className="size-3.5" />
-              </Link>
-            </div>
+            <p className="mx-auto mt-5 max-w-165 text-[17px] leading-relaxed text-white/75 sm:text-[18.5px]">
+              Sales automation for agentic teams and tools.
+            </p>
+            <CtaButtons className="mt-7" />
           </div>
-        </section>
 
-        {/* Code Example Section */}
-        <section className="container mx-auto gap-2 pt-6 grid grid-cols-1 lg:grid-cols-6 px-4 md:px-6 lg:px-0">
-          <HeroCarousel />
+          <div className="relative mt-6 h-[40vw] lg:h-92.5">
 
-          <div className="relative flex flex-col items-stretch overflow-hidden lg:col-span-2 bg-background border min-h-[520px] lg:min-h-[420px]">
-            <img
-              className="pointer-events-none absolute block w-150 max-w-none opacity-70 bottom-0 left-1/2 -translate-x-1/2"
-              src="/media/website/sheets-preview.svg"
-              alt="Sheets preview"
-            />
-            <div className="from-background to-transparent pointer-events-none absolute inset-x-0 top-0 h-1/2 bg-linear-to-b"></div>
-            <div className="from-background to-transparent pointer-events-none absolute inset-x-0 bottom-0 h-1/4 bg-linear-to-t"></div>
-            <div className="relative z-10 p-4 max-w-md">
-              <h2 className="text-2xl md:text-2xl pb-2">
-                Discover a <s>clay</s> alternative{" "}
-                <span className="text-foreground font-serif italic">
-                  from the future
-                </span>
-                .
-              </h2>
-              <p className="text-sm md:text-base text-muted-foreground pb-4 md:pb-8">
-                Up to{" "}
-                <span className="text-foreground">2M records per table</span>,
-                point-in-time recovery, multi-player, API support, and sandbox
-                mode.
-              </p>
-              <div>
-                <div>
-                  <Link href={`${appInfo.links.signupUrl}`} rel="nofollow">
-                    <Button size="sm" className="w-full sm:w-auto">
-                      Sign up for free
-                    </Button>
-                  </Link>
-                </div>
-                <small className="text-muted-foreground">
-                  No credit card required
-                </small>
+            {/* Trusted-by, set into the sand at the foot of the scene */}
+            <div className="trusted-scrim absolute inset-x-0 bottom-0 z-10 hidden items-center justify-center gap-8 px-4 pb-6 pt-10 sm:flex md:gap-10">
+              <span className="text-[12px] font-semibold uppercase tracking-[0.12em] text-white/70">
+                Trusted by
+              </span>
+              <div className="flex max-w-140 flex-wrap items-center justify-center gap-6 opacity-90 md:gap-8 [&_img]:block [&_img]:brightness-0 [&_img]:invert">
+                {trustedLogos.map((logo) => (
+                  <Image
+                    key={logo.alt}
+                    src={logo.src}
+                    alt={`${logo.alt} logo`}
+                    width={logo.width}
+                    height={logo.height}
+                    className={logo.className}
+                  />
+                ))}
               </div>
             </div>
           </div>
-        </section>
+        </div>
+      </section>
+
+      {/* Trusted-by — on mobile the in-hero row is hidden, so it lives
+          below the hero on the page background, in theme-correct colors */}
+      <div className="mt-9 flex flex-col items-center gap-4 px-6 sm:hidden">
+        <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+          Trusted by
+        </span>
+        <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3 opacity-70 grayscale dark:invert [&_img]:block">
+          {mobileTrustedLogos.map((logo) => (
+            <Image
+              key={logo.alt}
+              src={logo.src}
+              alt={`${logo.alt} logo`}
+              width={logo.width}
+              height={logo.height}
+              className={logo.className}
+            />
+          ))}
+        </div>
       </div>
 
-      <section className="container mx-auto pt-8 md:pt-12 px-4 md:px-6 lg:px-0">
-        <div>
-          <div className="text-muted-foreground text-sm md:text-md pb-4">
-            Trusted by
-          </div>
-          <div className="flex flex-wrap gap-4 md:gap-8 [&_img]:block [&_img]:w-[100px] md:[&_img]:w-[150px] grayscale dark:invert max-w-[650px] items-center">
-            <img
-              src="/media/website/logos/pie-light.svg"
-              className="max-w-15"
-              alt="Pie logo"
-            />
-            <img
-              src="/media/website/logos/lightfield.svg"
-              alt="Lightfield logo"
-            />
-            <img
-              src="/media/website/logos/augusta-light.svg"
-              alt="Augusta logo"
-            />
-            <img
-              className="max-w-18 -translate-y-0.5"
-              src="/media/website/logos/aries-light.svg"
-              alt="Aries logo"
-            />
+      {/* ===== Use cases — what it does, in plain words ===== */}
+      <Section className="pt-12 sm:pt-16">
+        <div className="rv flex flex-col items-center gap-5 text-center">
+          <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-2.5">
+            {useCases.map((useCase, i) => (
+              <span
+                key={useCase}
+                className="use-chip rounded-full px-3.5 py-1.5 text-[13px] font-medium"
+                style={{ ["--chip-delay" as string]: `${i * 2}s` }}
+              >
+                {useCase}
+              </span>
+            ))}
           </div>
         </div>
-      </section>
+      </Section>
 
-      <section className="pt-12 md:pt-18 mb-8 md:mb-12 px-4 md:px-6 lg:px-0">
-        <div className="container lg:grid-cols-2 gap-12 items-center mx-auto relative">
-          <div className="space-y-4 md:space-y-6 max-w-3xl">
-            <h1 className="text-2xl sm:text-3xl md:text-4xl tracking-tight">
-              A <span className="font-serif italic">unified data model</span>{" "}
-              for enrichment & automation that{" "}
-              <span className="font-serif italic">scales</span>.
-            </h1>
-          </div>
+      {/* ===== Spotlight — one engine, three surfaces ===== */}
+      <Section className="pt-14 sm:pt-24">
+        <div className="rv">
+          <LandingSpotlight />
+        </div>
+      </Section>
+
+      {/* ===== System grid — a unified data model ===== */}
+      <Section className="pt-24">
+        <div className="rv mx-auto max-w-[720px] text-center">
+          <h2 className="text-[clamp(28px,3vw,38px)] font-semibold leading-tight tracking-[-0.02em] text-foreground">
+            A unified data model for enrichment &amp; automation that scales.
+          </h2>
         </div>
 
-        <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 pt-8 md:pt-12 gap-4">
-          <div className="md:col-span-2 lg:col-span-8 border p-4 bg-accent">
-            <div className="flex flex-col md:flex-row items-start justify-between pb-3 gap-3">
-              <div>
-                <h3 className="text-xl md:text-2xl tracking-tight">
-                  <span className="font-serif italic">Find</span> who you are
-                  looking for
-                </h3>
-                <p className="text-sm md:text-base text-muted-foreground">
-                  Search for people and companies using multiple providers.
-                </p>
-              </div>
-              <Link href={docsLinkPaths.searchCatalog}>
-                <Button
-                  variant="default"
-                  size="sm"
-                  className="w-full md:w-auto"
-                >
-                  Explore Searches <Search className="ml-2" />
-                </Button>
-              </Link>
-            </div>
-            <EnrichmentCardMarquee />
-          </div>
+        <LandingSystemCards />
+      </Section>
 
-          <div className="md:col-span-2 lg:col-span-4 border p-4 relative min-h-[300px] md:min-h-[400px]">
-            <h3 className="text-xl md:text-2xl tracking-tight">
-              Integrate. <span className="font-serif italic">Fast.</span>
-            </h3>
+      {/* ===== CTA panel ===== */}
+      <Section className="pt-14 sm:pt-24">
+        <CtaPanel
+          title={
+            <>
+              Get started <span className="hl">for free</span>.
+            </>
+          }
+          subtitle="The first 20 credits are on us. No credit card required."
+        />
+      </Section>
 
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-[90%] md:max-w-[80%] flex gap-2 md:gap-3 overflow-hidden justify-center">
-              {integrations.map((i, index) => {
-                return (
-                  <div key={index}>
-                    <div className="h-[60px] w-[60px] md:h-[80px] md:w-[80px] lg:h-[100px] lg:w-[100px] border rounded-sm relative grid place-items-center [&_svg]:size-12 md:[&_svg]:size-16 lg:[&_svg]:size-20">
-                      {i.icon}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            <p className="absolute right-0 bottom-0 p-4 max-w-full md:max-w-[75%] text-sm md:text-base text-muted-foreground text-right">
-              Integrate with CRM, ATS, survey, and sequencing tools{" "}
-              <span className="text-foreground">without writing code.</span>
-            </p>
-          </div>
-
-          <div className="md:col-span-2 lg:col-span-7 min-h-[200px] p-4 relative">
-            <h3 className="text-xl md:text-2xl tracking-tight pb-4">
-              And <span className="font-serif italic">action</span> 🎬
-            </h3>
-
-            <div className="bottom-0 w-full flex flex-col md:flex-row justify-start gap-4 items-start md:items-end">
-              <p className="text-muted-foreground text-sm max-w-full md:max-w-40">
-                Send emails, Slack, or Discord messages. Perform actions with
-                the tools your users love.
-              </p>
-
-              <div className="flex gap-2 items-center flex-wrap">
-                <img
-                  src={
-                    providerCatalog["slack"]["logoUrl"] || "/placeholder.svg"
-                  }
-                  className="block size-5"
-                  alt="Slack logo"
-                />
-                <img
-                  src={
-                    providerCatalog["gmail"]["logoUrl"] || "/placeholder.svg"
-                  }
-                  className="block size-8"
-                  alt="Gmail logo"
-                />
-                <img
-                  src={
-                    providerCatalog["gemini"]["logoUrl"] || "/placeholder.svg"
-                  }
-                  className="block size-8"
-                  alt="Gemini logo"
-                />
-                <img
-                  src={
-                    providerCatalog["openai"]["logoUrl"] || "/placeholder.svg"
-                  }
-                  className="block size-8"
-                  alt="OpenAI logo"
-                />
-              </div>
-            </div>
-          </div>
-
-          <div className="md:col-span-2 lg:col-span-5 lg:row-span-2 border p-4 bg-accent relative min-h-[400px]">
-            <div className="pb-4">
-              <h3 className="text-xl md:text-2xl tracking-tight">
-                Find <span className="font-serif italic">company</span> and{" "}
-                <span className="font-serif italic">people</span> data
-              </h3>
-              <p className="text-muted-foreground text-sm pb-4">
-                Compose hundreds of enrichments to get the data you want.
-              </p>
-              <Link href={docsLinkPaths.pipeCatalog}>
-                <Button size="sm" className="w-full sm:w-auto">
-                  Explore enrichments <Sparkle className="ml-2" />
-                </Button>
-              </Link>
-            </div>
-            <EnrichmentAnimatedList />
-            <div className="from-background pointer-events-none absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t"></div>
-          </div>
-
-          <div className="md:col-span-2 lg:col-span-7 lg:row-span-1 min-h-[200px] lg:max-h-[200px] lg:self-end p-4 border rounded-sm flex flex-col justify-between relative">
-            <h3 className="text-xl md:text-2xl tracking-tight">
-              Get started <span className="font-serif italic">for free.</span>{" "}
-              The first 20 credits are on us.
-            </h3>
-            <div className="mt-4 md:mt-0 md:absolute md:right-0 md:bottom-0 md:p-4">
-              <Link href={appInfo.links.signupUrl}>
-                <Button className="w-full sm:w-auto">
-                  Sign up free <ArrowRight className="ml-2" />
-                </Button>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="px-4 md:px-6 lg:px-0 py-16 md:py-24 lg:py-32 relative overflow-hidden border-t">
-        <div className="absolute inset-0 bg-accent dark:bg-gradient-to-b dark:from-blue-600/10 dark:via-purple-600/10 dark:to-background" />
-        <div className="container relative mx-auto">
-          <div className="max-w-2xl mx-auto text-center">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl tracking-tight mb-6 md:mb-8">
-              Get a <span className="font-serif italic">personalized</span> tour
-              of {appInfo.productName}
-            </h2>
-
-            <CalButton>
-              Book now <ArrowRight className="ml-2" />
-            </CalButton>
-          </div>
-        </div>
-      </section>
-
-      {/* Footer */}
       <Footer />
     </div>
   );

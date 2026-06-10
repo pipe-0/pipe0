@@ -52,6 +52,14 @@ export function LinkLogo() {
   );
 }
 
+export function LinkLogoSmall() {
+  return (
+    <Link href="/" className="">
+      <LogoRawSmall />
+    </Link>
+  );
+}
+
 export function LogoSmall({ className }: { className?: string }) {
   return (
     <Link href="/" className="text-xl font-bold font-mono">
