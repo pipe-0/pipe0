@@ -1,7 +1,14 @@
 import { Toaster } from "@/components/ui/toaster";
 import { Analytics } from "@vercel/analytics/react";
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
+import {
+  Geist,
+  Geist_Mono,
+  Hanken_Grotesk,
+  Instrument_Serif,
+  Newsreader,
+  Poppins,
+} from "next/font/google";
 import { getBaseUrl } from "@/lib/utils";
 import "./globals.css";
 
@@ -22,6 +29,27 @@ const instrumentSerif = Instrument_Serif({
   style: ["normal", "italic"],
 });
 
+// Marketing redesign fonts — Hanken Grotesk (body), Poppins (display
+// headings) and Newsreader (the italic-serif highlight gesture).
+const hankenGrotesk = Hanken_Grotesk({
+  variable: "--font-hanken",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+});
+
+const poppins = Poppins({
+  variable: "--font-poppins",
+  subsets: ["latin"],
+  weight: ["500", "600", "700"],
+});
+
+const newsreader = Newsreader({
+  variable: "--font-newsreader",
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  style: ["italic"],
+});
+
 export const metadata: Metadata = {
   metadataBase: new URL(getBaseUrl()),
   title: "The data enrichment framework",
@@ -37,7 +65,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${instrumentSerif.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${instrumentSerif.variable} ${hankenGrotesk.variable} ${poppins.variable} ${newsreader.variable} antialiased`}
       >
         {children}
         <Analytics />

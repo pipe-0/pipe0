@@ -1,80 +1,107 @@
-import { SignupCta } from "@/app/signup-cta";
+import { ScrollReveal } from "@/app/scroll-reveal";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
+import { CtaPanel, Section } from "@/components/marketing";
 import { PricingCard } from "@/components/pricing-card";
-import { Button } from "@/components/ui/button";
-import { appInfo } from "@/lib/const";
-import { ArrowRight } from "lucide-react";
-import Link from "next/link";
+import Image from "next/image";
 
-export default function Home() {
+const faqs = [
+  {
+    q: "What is included in the price?",
+    a: "The credit price includes access to our platform, API keys, dashboard, and basic support. Usage of pipes and searches consumes credits.",
+  },
+  {
+    q: "How does usage-based billing work?",
+    a: "You're only charged when you successfully execute a pipe or search. Each operation has a different credit price that you can find in the pipe or search catalog.",
+  },
+  {
+    q: "How do I get started?",
+    a: "Create an account to try pipe0. Once you're ready to purchase credits, navigate to the billing section in the dashboard.",
+  },
+];
+
+export default function Pricing() {
   return (
-    <div className="min-h-screen">
-      {/* Header */}
+    <div className="landing min-h-screen bg-background">
       <Header page="pricing" />
+      <ScrollReveal />
 
-      {/* Content */}
-      <main className="container mx-auto pt-12 md:pt-12 pb-20 px-4 md:px-6 lg:px-0">
-        <div className="mb-4 space-y-4 max-w-3xl">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl">
-            Simple, <span className="font-serif italic">transparent</span>{" "}
-            pricing
-          </h1>
-        </div>
+      {/* ===== Hero panel — header + plans over the dark-alley scene ===== */}
+      <section className="mx-auto max-w-384 px-3 sm:px-6">
+        <div className="hero-panel border relative overflow-hidden rounded-[18px]">
+          {/* Static backdrop */}
+          <Image
+            src="/media/website/skyline.png"
+            alt=""
+            aria-hidden
+            fill
+            priority
+            sizes="100vw"
+            className="pointer-events-none select-none object-cover"
+          />
+          {/* Legibility veil + top/bottom shading, like the product hero */}
+          <div className="pointer-events-none absolute inset-0 bg-black/30" aria-hidden />
+          <div
+            className="pointer-events-none absolute inset-x-0 top-0 h-2/5 bg-gradient-to-b from-black/15 to-transparent"
+            aria-hidden
+          />
+          <div
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/15 to-transparent"
+            aria-hidden
+          />
 
-        <div className="mb-20">
-          <p className="text-md md:text-xl mb-3 text-muted-foreground">
-            Select credit volume
-          </p>
+          <div className="relative z-10 px-5 pb-36 pt-14 text-center sm:px-10 sm:pb-56 sm:pt-20">
+            <h1 className="mx-auto max-w-2xl text-[clamp(34px,4.5vw,52px)] font-semibold leading-[1.08] tracking-[-0.025em] text-white">
+              Simple, <span className="hl">transparent</span> pricing.
+            </h1>
+            <p className="mx-auto mt-5 max-w-[560px] text-[17px] leading-relaxed text-white/75 sm:text-[18px]">
+              Pay only for what you run. Pick a credit volume to get started —
+              every plan includes the full platform.
+            </p>
 
-          <PricingCard />
-        </div>
-
-        {/* FAQ Section */}
-        <div>
-          <h2 className="text-xl md:text-2xl tracking-tight mb-8">
-            Frequently asked{" "}
-            <span className="font-serif italic">questions</span>
-          </h2>
-
-          <div className="space-y-6">
-            <div className="border-b pb-6">
-              <h3 className="text-base font-medium mb-2">
-                What is included in the price?
-              </h3>
-              <p className="text-sm text-muted-foreground">
-                The credit price includes access to our platform, API keys,
-                dashboard, and basic support. Usage of pipes and searches
-                consumes credits.
-              </p>
-            </div>
-
-            <div className="border-b pb-6">
-              <h3 className="text-base font-medium mb-2">
-                How does usage-based billing work?
-              </h3>
-              <p className="text-sm text-muted-foreground">
-                You&apos;re only charged for when you successfully execute a
-                pipe or search. Each operation has a different credit price that
-                you can find in the pipe or search catalog.
-              </p>
-            </div>
-
-            <div className="border-b pb-6">
-              <h3 className="text-base font-medium mb-2">
-                How do I get started?
-              </h3>
-              <p className="text-sm text-muted-foreground">
-                Create an account to try pipe0. Once you&apos;re ready to
-                purchase credits, navigate to the billing section in the
-                dashboard.
-              </p>
-            </div>
+            <p className="mt-14 text-center text-[clamp(20px,2vw,26px)] font-semibold tracking-[-0.01em] text-white">
+              Select credit volume
+            </p>
           </div>
         </div>
-      </main>
+      </section>
 
-      {/* Footer */}
+      {/* ===== Plans — overlapping the foot of the hero panel ===== */}
+      <Section className="relative z-10 -mt-28 sm:-mt-44">
+        <PricingCard />
+      </Section>
+
+      {/* ===== FAQ ===== */}
+      <Section className="mt-24">
+        <h2 className="mb-8 text-center text-[clamp(24px,2.6vw,32px)] font-semibold tracking-[-0.02em] text-foreground">
+          Frequently asked <span className="hl">questions</span>.
+        </h2>
+        <div className="mx-auto max-w-3xl">
+          {faqs.map((faq) => (
+            <div key={faq.q} className="border-b border-border py-6">
+              <h3 className="mb-2 text-base font-semibold text-foreground">
+                {faq.q}
+              </h3>
+              <p className="text-sm leading-relaxed text-muted-foreground">
+                {faq.a}
+              </p>
+            </div>
+          ))}
+        </div>
+      </Section>
+
+      {/* ===== CTA panel ===== */}
+      <Section className="mt-24">
+        <CtaPanel
+          title={
+            <>
+              Start for <span className="hl">free</span>.
+            </>
+          }
+          subtitle="The first 20 credits are on us. No credit card required."
+        />
+      </Section>
+
       <Footer />
     </div>
   );

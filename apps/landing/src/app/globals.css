@@ -42,6 +42,17 @@
   --sidebar-accent-foreground: hsl(240 5.9% 10%);
   --sidebar-border: hsl(220 13% 91%);
   --sidebar-ring: hsl(217.2 91.2% 59.8%);
+
+  /* ---- Marketing landing redesign tokens (light) ---- */
+  --sky-1: #c8ddf6; /* hero panel sky gradient */
+  --sky-2: #e9f1fb;
+  --sky-edge: #c0d3eb;
+  --deep: #181d6b; /* deep indigo spotlight pane */
+  --deep-2: #232a8a;
+  --accent-soft: #e9ecfb; /* blue-50 tint */
+  --accent-soft-2: #dde2f9;
+  --panel: hsl(0 0% 96.5%); /* crisp cool gray panels */
+  --panel-edge: hsl(0 0% 91%);
 }
 
 .dark {
@@ -77,12 +88,26 @@
   --sidebar-accent-foreground: hsl(240 4.8% 95.9%);
   --sidebar-border: hsl(240 3.7% 15.9%);
   --sidebar-ring: hsl(217.2 91.2% 59.8%);
+
+  /* ---- Marketing landing redesign tokens (dark) ---- */
+  --sky-1: hsl(222 30% 13%);
+  --sky-2: hsl(220 24% 9%);
+  --sky-edge: hsl(220 18% 20%);
+  --deep: #11163f;
+  --deep-2: #1a2160;
+  --accent-soft: hsl(229 38% 16%);
+  --accent-soft-2: hsl(229 36% 21%);
+  --panel: hsl(0 0% 11%);
+  --panel-edge: hsl(0 0% 17%);
 }
 
 @theme inline {
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --font-serif: var(--font-instrument-serif);
+  /* Marketing redesign families (see landing section below) */
+  --font-display: var(--font-poppins);
+  --font-body: var(--font-hanken);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -235,5 +260,461 @@
   @apply dark:after:border-blue-200/30 dark:after:bg-blue-900/30 dark:after:text-blue-200;
   &:after {
     @apply ms-1.5 rounded-full border border-blue-200 bg-blue-100 px-1.5 text-xs font-bold text-blue-900 content-["New"];
+  }
+}
+
+/* ============================================================
+   Marketing landing / pricing redesign
+   Scoped to `.landing`. Light is the primary theme; the design
+   tokens above carry dark-mode values so everything flips.
+   ============================================================ */
+.landing {
+  font-family: var(--font-body), "Helvetica Neue", Helvetica, sans-serif;
+}
+.landing h1,
+.landing h2,
+.landing h3 {
+  font-family: var(--font-display), var(--font-body), sans-serif;
+}
+
+/* Muted uppercase section label. */
+.eyebrow {
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+}
+
+/* The single serif-italic highlight gesture (hero + CTA only). */
+.hl {
+  font-family: var(--font-newsreader), Georgia, serif;
+  font-style: italic;
+  font-weight: 500;
+  letter-spacing: -0.008em;
+}
+
+/* Hero panel gloss — the same reflection language as .btn-glossy:
+   a crisp top highlight, a darker bottom edge, and a faint sheen,
+   layered above the scene as a non-interactive overlay. The spotlight
+   stage (.stage-glossy) shares the exact same treatment. */
+.hero-panel {
+  /* Border darker than the fill, like .btn-glossy, so the inner
+     highlight reads as a reflection rather than a doubled edge. */
+  border-color: color-mix(in oklab, #2c37a4, #000000 30%);
+  box-shadow:
+    0 1px 2px rgba(14, 17, 23, 0.12),
+    0 10px 30px rgba(14, 17, 23, 0.1);
+  /* Contain the z-indexed gloss overlay (::after) so it can never paint
+     above siblings that overlap the panel (e.g. the pricing cards). */
+  isolation: isolate;
+}
+/* On mostly-light fills (cards, carousel stage) the dark border reads
+   too heavy — use a soft indigo hairline instead. */
+.stage-glossy {
+  border-color: color-mix(in oklab, var(--primary), transparent 68%);
+  box-shadow:
+    0 1px 2px rgba(14, 17, 23, 0.08),
+    0 10px 30px rgba(14, 17, 23, 0.08);
+  isolation: isolate;
+}
+.hero-panel::after,
+.stage-glossy::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  pointer-events: none;
+  border-radius: inherit;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.55),
+    inset 0 2px 4px rgba(255, 255, 255, 0.18),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.17) 0%,
+    rgba(255, 255, 255, 0.05) 6%,
+    rgba(255, 255, 255, 0) 13%
+  );
+}
+
+/* Animated sky — dusk gradient: light blue at the horizon (meeting the
+   scene), turning quickly into the deep brand indigo, with a darker band
+   at the very top so the white hero copy reads cleanly. Light pools keep
+   drifting through for permanent, subtle motion. */
+.hero-sky {
+  background: linear-gradient(
+    180deg,
+    #2c37a4 0%,
+    #3a49c4 14%,
+    #4d61d6 28%,
+    #7b94e8 44%,
+    #b5d2f6 60%,
+    #cde4fb 78%,
+    #d6e9fc 100%
+  );
+  animation: hero-sky-base 24s ease-in-out infinite alternate;
+}
+.hero-sky::before,
+.hero-sky::after {
+  content: "";
+  position: absolute;
+  inset: -45%;
+  pointer-events: none;
+  will-change: transform;
+}
+/* Pools sit low, like light over the water; one faint glow up high. */
+.hero-sky::before {
+  background:
+    radial-gradient(
+      42% 36% at 22% 78%,
+      rgba(255, 255, 255, 0.4) 0%,
+      rgba(255, 255, 255, 0) 70%
+    ),
+    radial-gradient(
+      38% 34% at 80% 70%,
+      rgba(140, 196, 255, 0.45) 0%,
+      rgba(140, 196, 255, 0) 70%
+    ),
+    radial-gradient(
+      34% 30% at 70% 16%,
+      rgba(120, 140, 255, 0.3) 0%,
+      rgba(120, 140, 255, 0) 70%
+    );
+  animation: hero-sky-a 19s ease-in-out infinite alternate;
+}
+.hero-sky::after {
+  background:
+    radial-gradient(
+      36% 32% at 46% 84%,
+      rgba(186, 222, 255, 0.42) 0%,
+      rgba(186, 222, 255, 0) 70%
+    ),
+    radial-gradient(
+      34% 30% at 12% 30%,
+      rgba(110, 126, 245, 0.32) 0%,
+      rgba(110, 126, 245, 0) 70%
+    ),
+    radial-gradient(
+      30% 28% at 90% 38%,
+      rgba(150, 170, 255, 0.28) 0%,
+      rgba(150, 170, 255, 0) 70%
+    );
+  animation: hero-sky-b 27s ease-in-out infinite alternate;
+}
+@keyframes hero-sky-base {
+  from {
+    filter: hue-rotate(-6deg) saturate(1);
+  }
+  to {
+    filter: hue-rotate(8deg) saturate(1.12);
+  }
+}
+@keyframes hero-sky-a {
+  0% {
+    transform: translate3d(-9%, -6%, 0) scale(1.05) rotate(-3deg);
+  }
+  100% {
+    transform: translate3d(11%, 8%, 0) scale(1.28) rotate(4deg);
+  }
+}
+@keyframes hero-sky-b {
+  0% {
+    transform: translate3d(10%, 5%, 0) scale(1.24) rotate(3deg);
+  }
+  100% {
+    transform: translate3d(-11%, -7%, 0) scale(1.04) rotate(-4deg);
+  }
+}
+.dark .hero-sky {
+  background: linear-gradient(
+    180deg,
+    #0a0d28 0%,
+    #141a56 24%,
+    #232c8c 48%,
+    #4a63c4 70%,
+    #87a8da 86%,
+    #a9c6e8 100%
+  );
+}
+/* Focus roam — the sharp copy of the hero scene is revealed through a
+   soft-edged window that drifts from person to person: the product
+   "finding people". The blurred base stays underneath, so everything
+   outside the window remains gently out of focus. */
+.hero-focus {
+  -webkit-mask-image: radial-gradient(
+    ellipse 50% 50% at 50% 50%,
+    #000 0%,
+    #000 38%,
+    transparent 72%
+  );
+  mask-image: radial-gradient(
+    ellipse 50% 50% at 50% 50%,
+    #000 0%,
+    #000 38%,
+    transparent 72%
+  );
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 36% 90%;
+  mask-size: 36% 90%;
+  -webkit-mask-position: 13% 60%;
+  mask-position: 13% 60%;
+  animation: hero-focus-roam 20s ease-in-out infinite;
+}
+@keyframes hero-focus-roam {
+  /* linger on each person, glide fluidly between them */
+  0%,
+  10% {
+    -webkit-mask-position: 13% 60%;
+    mask-position: 13% 60%;
+  }
+  21%,
+  33% {
+    -webkit-mask-position: 38% 60%;
+    mask-position: 38% 60%;
+  }
+  44%,
+  56% {
+    -webkit-mask-position: 63% 60%;
+    mask-position: 63% 60%;
+  }
+  67%,
+  82% {
+    -webkit-mask-position: 88% 60%;
+    mask-position: 88% 60%;
+  }
+  100% {
+    -webkit-mask-position: 13% 60%;
+    mask-position: 13% 60%;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-focus {
+    animation: none;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+}
+
+/* Spotlight feature chips — one chip "lights up" at a time, cycling
+   through the row (4 chips × 2s = 8s loop). */
+.spot-chip {
+  border: 1px solid rgba(28, 35, 51, 0.12);
+  background: rgba(255, 255, 255, 0.72);
+  color: #5b6478;
+  animation: chip-pulse 8s infinite;
+  animation-delay: var(--chip-delay, 0s);
+}
+@keyframes chip-pulse {
+  0%,
+  20% {
+    background: var(--accent-soft);
+    border-color: rgba(61, 70, 221, 0.42);
+    color: #2c37a4;
+    box-shadow: 0 2px 12px rgba(61, 70, 221, 0.2);
+    transform: translateY(-1px);
+  }
+  26%,
+  100% {
+    background: rgba(255, 255, 255, 0.72);
+    border-color: rgba(28, 35, 51, 0.12);
+    color: #5b6478;
+    box-shadow: none;
+    transform: translateY(0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .spot-chip {
+    animation: none;
+  }
+}
+
+/* ---------- System cards — layered visuals ---------- */
+
+/* Film-grain overlay (no mask — clips to its container). */
+.grain-overlay {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 120px 120px;
+  opacity: 0.26;
+  mix-blend-mode: overlay;
+}
+
+/* Search card — queries cycle inside the floating search pill.
+   3 queries × 3s each = 9s loop; delays are set inline per item. */
+.search-query {
+  animation: query-cycle 9s ease-in-out infinite;
+  animation-delay: var(--q-delay, 0s);
+  opacity: 0;
+}
+@keyframes query-cycle {
+  0%,
+  3% {
+    opacity: 0;
+    transform: translateY(7px);
+  }
+  8%,
+  28% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  33%,
+  100% {
+    opacity: 0;
+    transform: translateY(-7px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .search-query {
+    animation: none;
+  }
+  .search-query:first-child {
+    opacity: 1;
+  }
+  .animate-marquee {
+    animation: none;
+  }
+}
+
+/* Use-case chips — plain-words strip under the hero. Theme-aware pills;
+   one lights up at a time (7 chips × 2s = 14s loop). */
+.use-chip {
+  border: 1px solid var(--border);
+  background: color-mix(in oklab, var(--card), transparent 30%);
+  color: var(--muted-foreground);
+  animation: use-chip-pulse 14s infinite;
+  animation-delay: var(--chip-delay, 0s);
+}
+@keyframes use-chip-pulse {
+  0%,
+  10% {
+    background: var(--accent-soft);
+    border-color: color-mix(in oklab, var(--primary), transparent 55%);
+    color: var(--primary);
+    box-shadow: 0 2px 12px
+      color-mix(in oklab, var(--primary), transparent 78%);
+    transform: translateY(-1px);
+  }
+  14%,
+  100% {
+    background: color-mix(in oklab, var(--card), transparent 30%);
+    border-color: var(--border);
+    color: var(--muted-foreground);
+    box-shadow: none;
+    transform: translateY(0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .use-chip {
+    animation: none;
+  }
+}
+
+/* Top shadow — a gentle darkening at the very top, echoing the
+   trusted-by scrim at the foot of the scene. */
+.hero-top-scrim {
+  background: linear-gradient(
+    180deg,
+    rgba(10, 14, 50, 0.28) 0%,
+    rgba(10, 14, 50, 0.1) 45%,
+    rgba(10, 14, 50, 0) 100%
+  );
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-sky,
+  .hero-sky::before,
+  .hero-sky::after {
+    animation: none;
+  }
+}
+
+/* Trusted-by row sits in a darkening shadow at the foot of the scene, so the
+   white wordmarks read cleanly in both light and dark mode. */
+.trusted-scrim {
+  background: linear-gradient(
+    180deg,
+    rgba(8, 11, 18, 0) 0%,
+    rgba(8, 11, 18, 0.55) 42%,
+    rgba(8, 11, 18, 0.92) 100%
+  );
+}
+
+/* Glassy CTA buttons — inner reflection, vertical gradient, darker edge. */
+.btn-glossy {
+  background: linear-gradient(
+    180deg,
+    color-mix(in oklab, var(--primary), #ffffff 16%) 0%,
+    var(--primary) 55%
+  );
+  border-color: color-mix(in oklab, var(--primary), #000000 18%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.34),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.12),
+    0 1px 2px rgba(14, 17, 23, 0.2);
+}
+.btn-glossy:hover {
+  background: linear-gradient(
+    180deg,
+    color-mix(in oklab, var(--primary), #000000 4%) 0%,
+    color-mix(in oklab, var(--primary), #000000 14%) 55%
+  );
+}
+.btn-glossy-outline {
+  background: rgba(255, 255, 255, 0.65);
+  border-color: rgba(14, 17, 23, 0.16);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 1px 2px rgba(14, 17, 23, 0.05);
+}
+.btn-glossy-outline:hover {
+  border-color: rgba(14, 17, 23, 0.34);
+  background: rgba(255, 255, 255, 0.9);
+}
+.dark .btn-glossy-outline {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.14);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+.dark .btn-glossy-outline:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.26);
+}
+
+/* Spotlight carousel — vertical progress rail that fills over the cycle. */
+.spot-rail i {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--primary);
+  border-radius: 2px;
+  transform-origin: top;
+  transform: scaleY(0);
+}
+.spot-rail.is-active i {
+  animation: spot-fill var(--spot-speed, 4200ms) linear forwards;
+}
+@keyframes spot-fill {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+/* Scroll-reveal stagger (reduced-motion safe). */
+@media (prefers-reduced-motion: no-preference) {
+  .rv {
+    opacity: 0;
+    transform: translateY(18px);
+    transition:
+      opacity 700ms cubic-bezier(0.2, 0.6, 0.2, 1),
+      transform 700ms cubic-bezier(0.2, 0.6, 0.2, 1);
+    transition-delay: var(--rv-delay, 0ms);
+  }
+  .rv.in {
+    opacity: 1;
+    transform: none;
   }
 }

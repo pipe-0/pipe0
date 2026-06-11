@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { appInfo } from "@/lib/const";
+import { cn } from "@/lib/utils";
 import { Check } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
@@ -22,30 +23,43 @@ const baseFeatures = [
   "Full support",
 ];
 
+// High-volume billing slots per plan — keep in sync with
+// pipe0-server-ts/packages/common/src/stripe-product-catalog.ts
+// (`highVolumeCapacity`).
 const plans: Plan[] = [
   {
     price: "49",
     credits: "1.600",
     perCredit: "0.031",
-    features: baseFeatures,
+    features: [...baseFeatures, "1 high-volume billing slot"],
   },
   {
     price: "149",
     credits: "5.000",
     perCredit: "0.030",
-    features: baseFeatures,
+    features: [...baseFeatures, "6 high-volume billing slots"],
   },
   {
     price: "349",
     credits: "12.000",
     perCredit: "0.029",
-    features: [...baseFeatures, "Lower cost for custom connections"],
+    features: [
+      ...baseFeatures,
+      "12 high-volume billing slots",
+      "Lower per-invocation cost",
+      "Lower cost for custom connections",
+    ],
   },
   {
     price: "999",
     credits: "34.000",
     perCredit: "0.029",
-    features: [...baseFeatures, "Lower cost for custom connections"],
+    features: [
+      ...baseFeatures,
+      "30 high-volume billing slots",
+      "Lower per-invocation cost",
+      "Lower cost for custom connections",
+    ],
   },
 ];
 
@@ -53,54 +67,78 @@ export function PricingCard() {
   const [selected, setSelected] = useState<Plan>(plans[0]);
 
   return (
-    <div className="w-full">
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
-        {plans.map((plan) => {
-          const isActive = plan.credits === selected.credits;
-          return (
-            <div
-              key={`${plan.credits}-${plan.price}`}
-              data-active={isActive}
-              className="border p-4 text-left cursor-pointer transition-colors hover:bg-accent data-[active=true]:border-foreground flex flex-col"
-              onClick={() => setSelected(plan)}
-            >
-              <div className="text-2xl font-medium tracking-tight">
-                {plan.credits}
-              </div>
-              <div className="text-sm text-muted-foreground">credits</div>
-              <div className="mt-3 text-lg font-medium">${plan.price}</div>
-              <div className="text-xs text-muted-foreground">/month</div>
-
-              <div className="mt-4 pt-4 border-t space-y-2 w-full flex-1">
-                {plan.features.map((feature) => (
-                  <div
-                    key={feature}
-                    className="flex items-start gap-2 text-sm text-muted-foreground"
-                  >
-                    <Check className="h-4 w-4 shrink-0 mt-0.5" />
-                    <span>{feature}</span>
-                  </div>
-                ))}
-              </div>
-
-              <Link
-                href={appInfo.links.signupUrl}
-                rel="nofollow"
-                onClick={(e) => e.stopPropagation()}
-                className="mt-4 w-full"
-              >
-                <Button
-                  size="sm"
-                  variant={isActive ? "default" : "outline"}
-                  className="w-full"
-                >
-                  Sign up
-                </Button>
-              </Link>
+    <div
+      role="radiogroup"
+      aria-label="Credit volume"
+      className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-4"
+    >
+      {plans.map((plan) => {
+        const isActive = plan.credits === selected.credits;
+        return (
+          <div
+            key={`${plan.credits}-${plan.price}`}
+            role="radio"
+            aria-checked={isActive}
+            tabIndex={0}
+            onClick={() => setSelected(plan)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                setSelected(plan);
+              }
+            }}
+            className={cn(
+              // Light surface — the cards overlap the dark hero panel's foot,
+              // so they carry a solid background and a lifting shadow.
+              "flex cursor-pointer flex-col rounded-[14px] border bg-card p-5 text-left shadow-[0_12px_36px_rgba(10,14,40,0.18)] transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring",
+              isActive
+                ? "border-primary ring-1 ring-primary"
+                : "border-border hover:bg-[var(--panel)]",
+            )}
+          >
+            <div className="font-display text-3xl font-semibold tracking-tight text-foreground">
+              {plan.credits}
             </div>
-          );
-        })}
-      </div>
+            <div className="text-sm text-muted-foreground">credits</div>
+
+            <div className="mt-4 flex items-baseline gap-1">
+              <span className="text-2xl font-semibold text-foreground">
+                ${plan.price}
+              </span>
+              <span className="text-sm text-muted-foreground">/month</span>
+            </div>
+            <div className="mt-1 text-xs text-muted-foreground">
+              ${plan.perCredit} per credit
+            </div>
+
+            <div className="mt-6 flex-1 space-y-2.5">
+              {plan.features.map((feature) => (
+                <div
+                  key={feature}
+                  className="flex items-start gap-2 text-sm text-muted-foreground"
+                >
+                  <Check className="mt-0.5 size-4 shrink-0 text-primary" />
+                  <span>{feature}</span>
+                </div>
+              ))}
+            </div>
+
+            <Link
+              href={appInfo.links.signupUrl}
+              rel="nofollow"
+              onClick={(e) => e.stopPropagation()}
+              className="mt-5 w-full"
+            >
+              <Button
+                variant={isActive ? "cta" : "ctaOutline"}
+                className="w-full"
+              >
+                Sign up
+              </Button>
+            </Link>
+          </div>
+        );
+      })}
     </div>
   );
 }
