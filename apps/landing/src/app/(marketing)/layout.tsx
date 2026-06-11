@@ -5,7 +5,11 @@ export default function MarketingLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // Follow the user's system theme — the redesign carries full dark-mode
-  // tokens, so the marketing pages no longer force light.
-  return <RootProvider>{children}</RootProvider>;
+  // Marketing pages (landing, pricing, resources) are always rendered in
+  // light mode — `forcedTheme` pins next-themes to light regardless of the
+  // visitor's system/stored preference, so the `.dark` class is never set
+  // on this subtree.
+  return (
+    <RootProvider theme={{ forcedTheme: "light" }}>{children}</RootProvider>
+  );
 }
