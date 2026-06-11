@@ -37,14 +37,6 @@ const trustedLogos = [
   },
 ];
 
-/* Mobile row sits on the page background, so it uses the light logo
-   variants (grayscale, inverted by the theme in dark mode). */
-const mobileTrustedLogos = trustedLogos.map((logo) =>
-  logo.alt === "Augusta Labs"
-    ? { ...logo, src: "/media/website/logos/augusta-light.svg" }
-    : logo,
-);
-
 /* Plain-words use cases — what pipe0 actually does. */
 const useCases = [
   "Find email addresses",
@@ -62,20 +54,22 @@ export default function Home() {
       <Header page="product" />
       <ScrollReveal />
 
-      {/* ===== Hero — bounded sky panel that frames the page width ===== */}
-      <section className="mx-auto max-w-384 px-3 sm:px-6">
-        <div className="hero-panel border relative overflow-hidden rounded-[18px]">
+      {/* ===== Hero — full-bleed sky panel (generous side gutters, no top
+              gap). Header + hero + pills fill the viewport; only very tall
+              desktops cap the height. ===== */}
+      <section className="mx-auto w-full max-w-[1750px] px-4 sm:px-7">
+        <div className="hero-panel border relative h-[min(100svh-6rem,720px)] overflow-hidden rounded-[18px] sm:h-[min(100svh-11rem,860px)]">
           {/* Animated, ever-moving sky gradient */}
           <div className="hero-sky pointer-events-none absolute inset-0 z-0" aria-hidden />
           {/* Top shadow so the white copy reads cleanly (mirrors the bottom scrim) */}
           <div className="hero-top-scrim pointer-events-none absolute inset-x-0 top-0 z-[1] h-2/5" aria-hidden />
 
-          {/* Base scene — blurred on large screens only; on mobile the scene
-              is too small for the focus effect, so it stays sharp. */}
+          {/* Base scene — anchored to the foot of the panel; blurred on large
+              screens only (on mobile it's too small for the focus effect). */}
           <Image
             src="/media/website/hero-scene-4.png"
             alt="A team working quietly together at a long table"
-            className="absolute w-full bottom-0 lg:translate-y-30 lg:blur-[2px]"
+            className="absolute inset-x-0 bottom-0 w-full lg:blur-[2px]"
             width={1024}
             height={432}
             style={{ objectFit: "contain" }}
@@ -87,16 +81,13 @@ export default function Home() {
             src="/media/website/hero-scene-4.png"
             alt=""
             aria-hidden
-            className="hero-focus absolute hidden w-full bottom-0 lg:block lg:translate-y-30"
+            className="hero-focus absolute inset-x-0 bottom-0 hidden w-full lg:block"
             width={1024}
             height={432}
             style={{ objectFit: "contain" }}
           />
 
-          <div className="relative z-10 px-5 pt-11 text-center sm:pt-14">
-            {/* <p className="eyebrow mb-4 !text-white/65">
-              Enrichment &amp; prospecting infrastructure
-            </p> */}
+          <div className="relative z-10 px-5 pt-14 text-center sm:pt-20">
             <h1 className="mx-auto max-w-3xl text-[clamp(38px,5.5vw,60px)] font-semibold leading-[1.08] tracking-[-0.025em] text-white">
               Go to market <span className="hl">with great data</span>.
             </h1>
@@ -106,59 +97,35 @@ export default function Home() {
             <CtaButtons className="mt-7" />
           </div>
 
-          <div className="relative mt-6 h-[40vw] lg:h-92.5">
-
-            {/* Trusted-by, set into the sand at the foot of the scene */}
-            <div className="trusted-scrim absolute inset-x-0 bottom-0 z-10 hidden items-center justify-center gap-8 px-4 pb-6 pt-10 sm:flex md:gap-10">
-              <span className="text-[12px] font-semibold uppercase tracking-[0.12em] text-white/70">
-                Trusted by
-              </span>
-              <div className="flex max-w-140 flex-wrap items-center justify-center gap-6 opacity-90 md:gap-8 [&_img]:block [&_img]:brightness-0 [&_img]:invert">
-                {trustedLogos.map((logo) => (
-                  <Image
-                    key={logo.alt}
-                    src={logo.src}
-                    alt={`${logo.alt} logo`}
-                    width={logo.width}
-                    height={logo.height}
-                    className={logo.className}
-                  />
-                ))}
-              </div>
+          {/* Trusted-by, set into the sand at the foot of the scene */}
+          <div className="trusted-scrim absolute inset-x-0 bottom-0 z-10 flex flex-col items-center justify-center gap-3 px-4 pb-5 pt-10 sm:flex-row sm:gap-8 md:gap-10">
+            <span className="text-[12px] font-semibold uppercase tracking-[0.12em] text-white/70">
+              Trusted by
+            </span>
+            <div className="flex max-w-140 flex-wrap items-center justify-center gap-6 opacity-90 md:gap-8 [&_img]:block [&_img]:brightness-0 [&_img]:invert">
+              {trustedLogos.map((logo) => (
+                <Image
+                  key={logo.alt}
+                  src={logo.src}
+                  alt={`${logo.alt} logo`}
+                  width={logo.width}
+                  height={logo.height}
+                  className={logo.className}
+                />
+              ))}
             </div>
           </div>
         </div>
       </section>
 
-      {/* Trusted-by — on mobile the in-hero row is hidden, so it lives
-          below the hero on the page background, in theme-correct colors */}
-      <div className="mt-9 flex flex-col items-center gap-4 px-6 sm:hidden">
-        <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
-          Trusted by
-        </span>
-        <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3 opacity-70 grayscale dark:invert [&_img]:block">
-          {mobileTrustedLogos.map((logo) => (
-            <Image
-              key={logo.alt}
-              src={logo.src}
-              alt={`${logo.alt} logo`}
-              width={logo.width}
-              height={logo.height}
-              className={logo.className}
-            />
-          ))}
-        </div>
-      </div>
-
       {/* ===== Use cases — what it does, in plain words ===== */}
-      <Section className="pt-12 sm:pt-16">
+      <Section className="pt-6 sm:pt-8">
         <div className="rv flex flex-col items-center gap-5 text-center">
           <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-2.5">
-            {useCases.map((useCase, i) => (
+            {useCases.map((useCase) => (
               <span
                 key={useCase}
-                className="use-chip rounded-full px-3.5 py-1.5 text-[13px] font-medium"
-                style={{ ["--chip-delay" as string]: `${i * 2}s` }}
+                className="rounded-full border border-border bg-card/70 px-3.5 py-1.5 text-[13px] font-medium text-muted-foreground"
               >
                 {useCase}
               </span>

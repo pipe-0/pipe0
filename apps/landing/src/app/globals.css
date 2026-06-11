@@ -277,15 +277,6 @@
   font-family: var(--font-display), var(--font-body), sans-serif;
 }
 
-/* Muted uppercase section label. */
-.eyebrow {
-  font-size: 12.5px;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--muted-foreground);
-}
-
 /* The single serif-italic highlight gesture (hero + CTA only). */
 .hl {
   font-family: var(--font-newsreader), Georgia, serif;
@@ -573,40 +564,6 @@
     opacity: 1;
   }
   .animate-marquee {
-    animation: none;
-  }
-}
-
-/* Use-case chips — plain-words strip under the hero. Theme-aware pills;
-   one lights up at a time (7 chips × 2s = 14s loop). */
-.use-chip {
-  border: 1px solid var(--border);
-  background: color-mix(in oklab, var(--card), transparent 30%);
-  color: var(--muted-foreground);
-  animation: use-chip-pulse 14s infinite;
-  animation-delay: var(--chip-delay, 0s);
-}
-@keyframes use-chip-pulse {
-  0%,
-  10% {
-    background: var(--accent-soft);
-    border-color: color-mix(in oklab, var(--primary), transparent 55%);
-    color: var(--primary);
-    box-shadow: 0 2px 12px
-      color-mix(in oklab, var(--primary), transparent 78%);
-    transform: translateY(-1px);
-  }
-  14%,
-  100% {
-    background: color-mix(in oklab, var(--card), transparent 30%);
-    border-color: var(--border);
-    color: var(--muted-foreground);
-    box-shadow: none;
-    transform: translateY(0);
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .use-chip {
     animation: none;
   }
 }
