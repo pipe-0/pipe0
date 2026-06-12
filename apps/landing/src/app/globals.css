@@ -581,8 +581,77 @@
 @media (prefers-reduced-motion: reduce) {
   .hero-sky,
   .hero-sky::before,
-  .hero-sky::after {
+  .hero-sky::after,
+  .card-sky::before,
+  .card-sky::after {
     animation: none;
+  }
+}
+
+/* Saturated indigo card background — the brand primary, with a couple of
+   light pools drifting through for permanent, subtle motion. Shared by all
+   three system cards so they read as one family. Drop in as a full-bleed
+   absolute layer (`card-sky absolute inset-0`) behind the card content. */
+.card-sky {
+  overflow: hidden;
+  background: linear-gradient(
+    150deg,
+    #232b94 0%,
+    #303bc4 32%,
+    var(--primary) 62%,
+    #5a6df0 100%
+  );
+}
+.card-sky::before,
+.card-sky::after {
+  content: "";
+  position: absolute;
+  inset: -45%;
+  pointer-events: none;
+  will-change: transform;
+}
+.card-sky::before {
+  background:
+    radial-gradient(
+      42% 38% at 24% 28%,
+      rgba(150, 168, 255, 0.55) 0%,
+      rgba(150, 168, 255, 0) 70%
+    ),
+    radial-gradient(
+      38% 36% at 80% 74%,
+      rgba(86, 108, 232, 0.5) 0%,
+      rgba(86, 108, 232, 0) 70%
+    );
+  animation: card-sky-a 22s ease-in-out infinite alternate;
+}
+.card-sky::after {
+  background:
+    radial-gradient(
+      36% 34% at 72% 18%,
+      rgba(176, 154, 255, 0.42) 0%,
+      rgba(176, 154, 255, 0) 70%
+    ),
+    radial-gradient(
+      34% 32% at 16% 82%,
+      rgba(120, 140, 255, 0.44) 0%,
+      rgba(120, 140, 255, 0) 70%
+    );
+  animation: card-sky-b 28s ease-in-out infinite alternate;
+}
+@keyframes card-sky-a {
+  0% {
+    transform: translate3d(-8%, -6%, 0) scale(1.05) rotate(-3deg);
+  }
+  100% {
+    transform: translate3d(10%, 8%, 0) scale(1.26) rotate(4deg);
+  }
+}
+@keyframes card-sky-b {
+  0% {
+    transform: translate3d(9%, 5%, 0) scale(1.22) rotate(3deg);
+  }
+  100% {
+    transform: translate3d(-10%, -7%, 0) scale(1.04) rotate(-4deg);
   }
 }
 

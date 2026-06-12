@@ -1,6 +1,4 @@
 import { providerCatalog } from "@pipe0/base";
-import Image from "next/image";
-import { Search } from "lucide-react";
 
 /* Provider rows for the "Compose enrichments" marquee. */
 const marqueeRowA = [
@@ -79,55 +77,25 @@ function MarqueeRow({
 /* ---- Card visuals ---- */
 
 function FindVisual() {
-  const queries = [
-    "VP Sales · Berlin · SaaS",
-    "Founders · Fintech · NYC",
-    "AI Engineers · Remote · EU",
-  ];
   return (
-    <div className="relative h-full overflow-hidden bg-[linear-gradient(180deg,#9cc3f2_0%,#cfe4fb_60%,#e8f2fd_100%)]">
-      {/* Static backdrop — softly blurred, with film grain on top */}
-      <Image
-        src="/media/website/background-1.png"
-        alt=""
-        aria-hidden
-        width={1024}
-        height={432}
-        className="pointer-events-none absolute inset-0 h-full w-full scale-[1.04] select-none object-cover"
-        style={{ filter: "blur(1.5px)" }}
-      />
-      <div className="grain-overlay pointer-events-none absolute inset-0" aria-hidden />
+    <div className="relative flex h-full items-center justify-center overflow-hidden px-6">
+      {/* Shared animated indigo background */}
+      <div className="card-sky absolute inset-0" aria-hidden />
       <div
         className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/25 to-transparent"
         aria-hidden
       />
-      {/* Animated foreground — floating search pill cycling queries */}
-      <div className="absolute inset-x-0 top-[18%] flex justify-center px-6">
-        <div className="w-full max-w-[280px]">
-          <div className="flex items-center gap-2.5 rounded-full border border-white/70 bg-white/90 px-4 py-2.5 shadow-[0_8px_24px_rgba(28,35,80,0.18)] backdrop-blur">
-            <Search className="size-3.5 shrink-0 text-[#5b6478]" />
-            <span className="relative h-[17px] flex-1 overflow-hidden text-[12.5px] font-medium text-[#1c2333]">
-              {queries.map((q, i) => (
-                <span
-                  key={q}
-                  className="search-query absolute inset-0 whitespace-nowrap"
-                  style={{ ["--q-delay" as string]: `${i * 3 - 9}s` }}
-                >
-                  {q}
-                </span>
-              ))}
-            </span>
-          </div>
-          <div className="mt-2.5 flex justify-center">
-            <span className="flex items-center gap-1.5 rounded-full border border-white/60 bg-white/80 px-2.5 py-1 text-[10.5px] font-semibold text-[#2c356e] shadow-sm backdrop-blur">
-              <span className="relative flex size-1.5">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-500 opacity-60" />
-                <span className="relative inline-flex size-1.5 rounded-full bg-emerald-500" />
-              </span>
-              247 matches
-            </span>
-          </div>
-        </div>
+      {/* Search demo, centered in a floating frame */}
+      <div className="relative w-full max-w-[300px] overflow-hidden rounded-[12px] border border-white/20 bg-white shadow-[0_24px_60px_rgba(0,0,0,0.4)]">
+        <video
+          className="block h-auto w-full"
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="metadata"
+          src="/media/website/search-demo.webm"
+        />
       </div>
     </div>
   );
@@ -135,10 +103,23 @@ function FindVisual() {
 
 function ComposeVisual() {
   return (
-    <div className="relative flex h-full flex-col justify-center gap-3.5 overflow-hidden bg-[linear-gradient(180deg,var(--accent-soft)_0%,#f3f5fd_100%)] [mask-image:linear-gradient(90deg,transparent,black_10%,black_90%,transparent)]">
-      <MarqueeRow ids={marqueeRowA} duration="30s" />
-      <MarqueeRow ids={marqueeRowB} duration="38s" reverse />
-      <MarqueeRow ids={[...marqueeRowB].reverse()} duration="26s" />
+    <div className="relative flex h-full flex-col justify-center gap-3.5 overflow-hidden">
+      {/* Shared animated indigo background */}
+      <div className="card-sky absolute inset-0" aria-hidden />
+      <div className="relative flex flex-col gap-3.5">
+        <MarqueeRow ids={marqueeRowA} duration="30s" />
+        <MarqueeRow ids={marqueeRowB} duration="38s" reverse />
+        <MarqueeRow ids={[...marqueeRowB].reverse()} duration="26s" />
+      </div>
+      {/* Dark edge scrims so the marquee fades into the indigo, like the hero */}
+      <div
+        className="pointer-events-none absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-[#11163f] to-transparent"
+        aria-hidden
+      />
+      <div
+        className="pointer-events-none absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-[#11163f] to-transparent"
+        aria-hidden
+      />
       {/* Static foreground — the composed pipe */}
       <div className="pointer-events-none absolute inset-0 grid place-items-center">
         <div className="rounded-[12px] border border-[#1c2333]/10 bg-white/92 px-4 py-3 shadow-[0_12px_32px_rgba(28,35,80,0.16)] backdrop-blur-sm">
@@ -157,17 +138,9 @@ function ComposeVisual() {
 
 function ActionVisual() {
   return (
-    <div className="relative flex h-full items-center justify-center overflow-hidden bg-[linear-gradient(180deg,var(--deep-2)_0%,var(--deep)_80%)] px-6">
-      {/* Static skyline-style grid pattern */}
-      <div
-        className="absolute inset-0 opacity-[0.16]"
-        style={{
-          backgroundImage:
-            "linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)",
-          backgroundSize: "26px 26px",
-        }}
-        aria-hidden
-      />
+    <div className="relative flex h-full items-center justify-center overflow-hidden px-6">
+      {/* Shared animated indigo background */}
+      <div className="card-sky absolute inset-0" aria-hidden />
       <div
         className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/40 to-transparent"
         aria-hidden
