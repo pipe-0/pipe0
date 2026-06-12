@@ -1,8 +1,9 @@
 import { source } from "@/lib/source";
 import { DocsLayout } from "fumadocs-ui/layouts/docs";
 import { RootProvider } from "fumadocs-ui/provider/next";
-import { baseOptions, getSection, linkItems } from "@/lib/layout.shared";
+import { baseOptions, linkItems } from "@/lib/layout.shared";
 import { LogoRawSmall } from "@/components/logo";
+import { CatalogAwareSidebarItem } from "@/components/features/docs/catalog-aware-sidebar-item";
 
 export default function Layout({
   children,
@@ -27,23 +28,19 @@ export default function Layout({
       containerProps={{ className: "docs-layout-container" }}
       sidebar={{
         defaultOpenLevel: 1,
+        components: {
+          Item: CatalogAwareSidebarItem,
+        },
         tabs: {
           transform(option, node) {
-            const meta = source.getNodeMeta(node);
-            if (!meta || !node.icon) return option;
-            const color = `var(--${getSection(meta.path)}-color, var(--color-fd-foreground))`;
+            if (!node.icon) return option;
 
             return {
               ...option,
+              // Flat hover in the dropdown rows — no gradient wash.
+              props: { className: "tabs-dd-item" },
               icon: (
-                <div
-                  className="[&_svg]:size-full rounded-lg size-full text-(--tab-color) max-md:bg-(--tab-color)/10 max-md:border max-md:p-1.5"
-                  style={
-                    {
-                      "--tab-color": color,
-                    } as object
-                  }
-                >
+                <div className="[&_svg]:size-full card-sky-sm flex size-full items-center justify-center rounded-lg border border-white/15 p-1.5 text-white shadow-sm">
                   {node.icon}
                 </div>
               ),

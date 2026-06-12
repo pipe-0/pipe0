@@ -12,7 +12,7 @@ date: 2025-04-01
 This request enriches one <AppLink linkType="inputObject">input object</AppLink>. The pipe `person:workemail:waterfall@1`
 adds a field called `work_email` to your input objects. You can find all available enrichments in the <AppLink linkType="pipeCatalog">pipe catalog</AppLink>.
 
-```typescript tab="Typescript"
+```typescript tab="TypeScript"
 const result = await fetch("https://api.pipe0.com/v1/pipes/run", {
     method: "POST",
     headers: {
@@ -20,13 +20,10 @@ const result = await fetch("https://api.pipe0.com/v1/pipes/run", {
         "Content-Type": "application/json"
     },
     body: JSON.stringify({
-        config: {
-            environment: "production",
-        },
         pipes: [
-        {
-            pipe_id: "person:workemail:waterfall@1"
-        },
+            {
+                pipe_id: "person:workemail:waterfall@1"
+            }
         ],
         input: [
             {
@@ -70,14 +67,14 @@ curl -X POST "https://api.pipe0.com/v1/pipes/run" \
 -d '{
         "pipes": [
             {
-            "pipe_id": "person:workemail:waterfall@1"
-            },
+                "pipe_id": "person:workemail:waterfall@1"
+            }
         ],
         "input": [
             {
-            "id": 1,
-            "name": "John Doe",
-            "company_domain": "pipe0.com"
+                "id": 1,
+                "name": "John Doe",
+                "company_domain": "pipe0.com"
             }
         ]
     }'
@@ -85,15 +82,26 @@ curl -X POST "https://api.pipe0.com/v1/pipes/run" \
 
 The result will look something like this:
 
-```json
-[
-    {
-        "id": 1,
-        "name": "John Doe",
-        "company_domain": "pipe0.com",
-        "work_email": "john@pipe0.com"
+```json title="Response"
+{
+  "id": "xgvxuqk2771d8t17n60vphu9",
+  "status": "completed",
+  "records": {
+    "1": {
+      "id": 1,
+      "fields": {
+        "work_email": {
+          "type": "string",
+          "value": "john@pipe0.com",
+          "status": "completed"
+          // ...
+        }
+        // ...
+      }
     }
-]
+  }
+  // ...
+}
 ```
 
 <Callout>
@@ -103,12 +111,12 @@ The response will contain more information than displayed here. Learn how to wor
 ## Getting the task result
 
 The request to `POST https://api.pipe0.com/v1/pipes/run` will create an enrichment task. 
-To get the result of the task, poll the `GET https://api.pipe0.com/v1/pipes/check/{task_id}` endpoint until the task status is 
+To get the result of the task, poll the `GET https://api.pipe0.com/v1/pipes/check/{run_id}` endpoint until the task status is 
 `completed`.
 
-```typescript tab="Typescript"
-const result = await fetch("https://api.pipe0.com/v1/pipes/check/${taskId}", {
-    method: "POST",
+```typescript tab="TypeScript"
+const result = await fetch(`https://api.pipe0.com/v1/pipes/check/${runId}`, {
+    method: "GET",
     headers: {
         "Authorization": `Bearer ${API_KEY}`
     }
@@ -117,16 +125,15 @@ const result = await fetch("https://api.pipe0.com/v1/pipes/check/${taskId}", {
 
 ```python tab="Python"
 import requests
-import json
 
 headers = {
     "Authorization": f"Bearer {API_KEY}",
 }
-response = requests.get(f"https://api.pipe0.com/v1/pipes/check/{task_id}", headers=headers)
+response = requests.get(f"https://api.pipe0.com/v1/pipes/check/{run_id}", headers=headers)
 ```
 
 ```bash tab="cURL"
-curl -X GET "https://api.pipe0.com/v1/pipes/check/$TASK_ID" \
+curl -X GET "https://api.pipe0.com/v1/pipes/check/$RUN_ID" \
 -H "Authorization: Bearer $API_KEY"
 ```
 
@@ -135,6 +142,14 @@ curl -X GET "https://api.pipe0.com/v1/pipes/check/$TASK_ID" \
 Instead of creating your task with the endpoint `POST https://api.pipe0.com/v1/pipes/run` use the endpoint `POST https://api.pipe0.com/v1/pipes/run/sync`.
 Use the same payload for both endpoints. The `/sync` endpoint will try to return the `completed` result in one round-trip.
 
-Read more about the trade-offs between <AppLink linkType="async">async vs sync requests</AppLink> here.
+Read more about the trade-offs between <AppLink linkType="async">async and sync requests</AppLink>.
+
+## Next steps
+
+<Cards>
+  <Card icon={<Zap />} title="Pipe catalog" description="Every pipe with inputs, outputs, and credit prices." href="/docs/pipe-catalog" />
+  <Card icon={<Braces />} title="Request payload" description="Every property of a pipes request." href="/docs/pipes/advanced/pipes-request-payload" />
+  <Card icon={<GitBranch />} title="Concepts" description="Waterfalls, templates, and conditional execution." href="/docs/pipes/advanced/pipes-concepts" />
+</Cards>
 
 

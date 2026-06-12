@@ -16,7 +16,7 @@ export default function AppLink({
   return (
     <Link
       href={value}
-      className={cn("underline text-primary", {
+      className={cn("underline text-fd-foreground", {
         "inline-flex gap-1": isExternal,
       })}
     >

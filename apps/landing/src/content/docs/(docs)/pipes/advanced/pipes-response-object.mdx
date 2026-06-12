@@ -2,8 +2,7 @@
 title: Response Object
 category: Concepts
 priority: 2
-description: The response object is the enriched data you receive after your request – along with metadata.
-icon: stack
+description: The response object is the enriched data you receive after your request, along with metadata.
 date: 2025-06-02
 isPublished: true
 ---
@@ -11,13 +10,11 @@ isPublished: true
 The following API operations return a response of type `PipesResponse`.
 
 - `POST https://api.pipe0.com/v1/pipes/run` (used to run the pipeline)
-- `GET https://api.pipe0.com/v1/pipes/check/{task_id}` (used to check the processing state)
+- `GET https://api.pipe0.com/v1/pipes/check/{run_id}` (used to check the processing state)
 - `POST https://api.pipe0.com/v1/pipes/run/sync` (used to run the pipeline synchronously)
 
-Here are some things our responses are designed for:
-
-💅 Building rich data tables like [clay](https://clay.com) or node-based workflow builders like [zapier](https://zapier.com).<br />
-🦄 Automate and enrich with code (think [n8n](https://n8n.io) as code)<br />
+Responses are designed for building rich data tables like [Clay](https://clay.com), node-based workflow
+builders like [Zapier](https://zapier.com), and plain automation code (think [n8n](https://n8n.io) as code).
 
 By default, responses contain enriched data only. Enable <AppLink linkType="widgets"> widgets</AppLink> and 
 <AppLink linkType="fieldDefinitions"> field definitions</AppLink> for additional metadata e.g. which providers were used in a waterfall.
@@ -25,9 +22,9 @@ By default, responses contain enriched data only. Enable <AppLink linkType="widg
 ## The raw response object
  
 <Accordions>
-<Accordion title="Toggle full response">
+<Accordion title="Full response">
 
-```json
+```json title="PipesResponse"
 {
   "id": "xgvxuqk2771d8t17n60vphu9",
   "status": "completed",
@@ -61,7 +58,7 @@ By default, responses contain enriched data only. Enable <AppLink linkType="widg
         },
         "name": {
           "type": "string",
-          "value": "Same dude",
+          "value": "Jane Doe",
           "format": "text",
           "reason": null,
           "status": "completed",
@@ -127,18 +124,18 @@ To preserve the original order of your input data we create the `order` property
 
 Metadata for all fields that exist in your <AppLink linkType="pipeline">pipeline</AppLink>.
 
-Think of each input object as the rows of a table. If input data are the rows, then `fields_definitions`
+Think of each input object as a row of a table. If input data are the rows, then `field_definitions`
 are the columns.
 
 The `field_definitions` object contains all fields that 
-exist in your pipeline. This includes pipe output fields and field derived from <AppLink linkType="inputObject">input objects</AppLink>.
+exist in your pipeline. This includes pipe output fields and fields derived from <AppLink linkType="inputObject">input objects</AppLink>.
 `field_definitions` is an object. The keys contain field names and the values field properties.
 
 
 <Accordions>
-<Accordion title="Toggle field_definitions example">
+<Accordion title="field_definitions example">
 
-```json
+```json title="field_definitions"
 {
     "id": {
       "type": "string",
@@ -186,19 +183,19 @@ Each input object is transformed into a `record` object during processing.
 
 #### record.id
 
-The `id` you provided in your input object
+The `id` you provided in your input object.
 
 #### record.fields
 
 If your original request contained an `input` array of the shape `[{id: 1, foo: "bar"}, {id: 2, "bar": "baz"}]`,
 all output `records` will have the fields `id`, `foo`, and `bar`.
 
-Notice, that the fields are normalized. All output records have the same fields. If an input object contains 
+Notice that the fields are normalized. All output records have the same fields. If an input object contains 
 a property, it is added to all output records.
 
 In addition to fields derived from input objects, the `record.fields` property contains pipe output fields too.
 
-It is guaranteed `field_definitions` and `record.fields` have the same keys.
+It is guaranteed that `field_definitions` and `record.fields` have the same keys.
 
 #### record.field.value
 
@@ -226,7 +223,7 @@ Will contain additional information about pipe failure.
 
 #### record.field.claimed_by
 
-Each field is assigned to an entity that is responsible for `resolving` it. Resolvers can be input data or pipes.
+Each field is assigned to an entity that is responsible for resolving it. Resolvers can be input data or pipes.
 A pipe will "claim" each field it is responsible for. However, just because a pipe claims a field does not mean it will
 resolve it.
 If your input object already contains a valid value, the field will be claimed by a pipe but resolved by `input`.

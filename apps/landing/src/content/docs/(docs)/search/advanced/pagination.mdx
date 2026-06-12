@@ -7,14 +7,14 @@ date: 2026-03-08
 ## Overview
 
 The Search API abstracts different provider pagination strategies behind a single interface.
-Every search response includes a `next_page` field — pass it as the `search` payload to fetch the next page.
+Every search response includes a `next_page` field. Pass it as the `search` payload to fetch the next page.
 When `next_page` is `null`, there are no more results.
 
 ## Paginating through results
 
 Make your first request as usual:
 
-```typescript
+```typescript title="First page"
 const res = await fetch("https://api.pipe0.com/v1/search/run/sync", {
     method: "POST",
     headers: {
@@ -39,7 +39,7 @@ const page1 = await res.json();
 
 The response contains a `next_page` object. To get the next page, pass it directly as the `search` field:
 
-```typescript
+```typescript title="Next page"
 if (page1.next_page) {
     const res2 = await fetch("https://api.pipe0.com/v1/search/run/sync", {
         method: "POST",
@@ -58,7 +58,7 @@ if (page1.next_page) {
 
 ### Full iteration loop
 
-```typescript
+```typescript title="Iterate all pages"
 let nextPage = page1.next_page;
 
 while (nextPage) {
@@ -86,4 +86,4 @@ The `next_page` object is a complete, ready-to-use search payload. The API carri
 
 ## Async search
 
-Pagination works the same way with async search (`POST /v1/search/run` + `GET /v1/search/check/{task_id}`). The `next_page` field is included in the response from `/v1/search/check/{task_id}` once the task completes.
+Pagination works the same way with async search (`POST /v1/search/run` + `GET /v1/search/check/{run_id}`). The `next_page` field is included in the response from `/v1/search/check/{run_id}` once the task completes.

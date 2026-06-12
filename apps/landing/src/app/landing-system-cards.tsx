@@ -82,11 +82,11 @@ function FindVisual() {
       {/* Shared animated indigo background */}
       <div className="card-sky absolute inset-0" aria-hidden />
       <div
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/25 to-transparent"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-linear-to-t from-black/25 to-transparent"
         aria-hidden
       />
       {/* Search demo, centered in a floating frame */}
-      <div className="relative w-full max-w-[300px] overflow-hidden rounded-[12px] border border-white/20 bg-white shadow-[0_24px_60px_rgba(0,0,0,0.4)]">
+      <div className="relative w-full max-w-75 overflow-hidden rounded-[12px] border border-white/20 bg-white shadow-[0_24px_60px_rgba(0,0,0,0.4)]">
         <video
           className="block h-auto w-full"
           autoPlay
@@ -113,11 +113,11 @@ function ComposeVisual() {
       </div>
       {/* Dark edge scrims so the marquee fades into the indigo, like the hero */}
       <div
-        className="pointer-events-none absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-[#11163f] to-transparent"
+        className="pointer-events-none absolute inset-y-0 left-0 w-24 bg-linear-to-r from-[#11163f] to-transparent"
         aria-hidden
       />
       <div
-        className="pointer-events-none absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-[#11163f] to-transparent"
+        className="pointer-events-none absolute inset-y-0 right-0 w-24 bg-linear-to-l from-[#11163f] to-transparent"
         aria-hidden
       />
       {/* Static foreground — the composed pipe */}

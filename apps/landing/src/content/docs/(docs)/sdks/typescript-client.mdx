@@ -11,20 +11,8 @@ moment a pipe expects different config than you've written.
 
 ## Installation
 
-```bash tab="pnpm"
-pnpm add @pipe0/client
-```
-
-```bash tab="npm"
-npm install @pipe0/client
-```
-
-```bash tab="yarn"
-yarn add @pipe0/client
-```
-
-```bash tab="bun"
-bun add @pipe0/client
+```package-install
+@pipe0/client
 ```
 
 ## Creating a client
@@ -44,12 +32,12 @@ All options:
 | `apiKey`                | `process.env.PIPE0_API_KEY`   | Sent as `Authorization: Bearer …`.                 |
 | `baseUrl`               | `https://api.pipe0.com`       | Override for self-hosted / staging.                |
 
-## Data Enrichment (pipes)
+## Data enrichment (pipes)
 
 Use `pipes.pipe()` to enrich **up to 100 input objects** at a time. Use `pipes.pipeInBatches()` to enrich 
 any number of input objects.
 
-### Examples Split a name
+### Split a name
 
 ```ts
 const result = await pipe0.pipes.pipe({
@@ -135,7 +123,7 @@ try {
 If you want control over the polling process, use the manual handlers.
 
 ```ts
-// Sends a valid API requests
+// Sends a valid API request
 const runId = await pipe0.pipes.create({
   pipes: [{ pipe_id: "person:workemail:waterfall@1" }],
   input: largeInput,
@@ -177,7 +165,7 @@ const result = await pipe0.searches.search({
 for (const row of result.results) {
   row.name.value; // string
   row.job_title.value; // string
-  row.company_domain; // typed per output_fields
+  row.company_domain.value; // typed per output_fields
 }
 ```
 
@@ -187,16 +175,16 @@ Each request accepts a single `search`. See the
 
 ### Combining searches with pipes
 
-The output of a search is a set of records — feed them into a pipe to enrich
+The output of a search is a set of records. Feed its `results` into a pipe to enrich
 further:
 
 ```ts
-const input = await pipe0.searches.search({ /* … */ });
+const search = await pipe0.searches.search({ /* … */ });
 
 const enriched = await pipe0.pipes.pipe({
   config: { environment: "sandbox" },
   pipes: [{ pipe_id: "person:workemail:waterfall@1" }],
-  input,
+  input: search.results,
 });
 ```
 
@@ -239,5 +227,7 @@ await pipe0.pipes.pipe(payload, { signal: controller.signal });
 
 ## See also
 
-- <AppLink linkType="pipeCatalog">Pipe catalog</AppLink> — every `pipe_id` and its config shape.
-- <AppLink linkType="searchCatalog">Search catalog</AppLink> — every `search_id`.
+<Cards>
+  <Card icon={<Zap />} title="Pipe catalog" description="Every pipe_id and its config shape." href="/docs/pipe-catalog" />
+  <Card icon={<Search />} title="Search catalog" description="Every search_id and its filters." href="/docs/search-catalog" />
+</Cards>

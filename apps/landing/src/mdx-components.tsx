@@ -3,12 +3,14 @@ import { BlogBanner } from "@/components/blog-banner";
 import { SandboxPreview } from "@/components/features/docs/sandbox-preview";
 import { RequestExample, SearchEnrichExample } from "@/components/features/docs/request-example";
 import { QuickstartCards } from "@/components/features/docs/quickstart-cards";
+import { Card, Cards } from "@/components/features/docs/next-steps-cards";
 import type { MDXComponents } from "mdx/types";
 
 import defaultMdxComponents from "fumadocs-ui/mdx";
 import * as FilesComponents from "fumadocs-ui/components/files";
 import * as TabsComponents from "fumadocs-ui/components/tabs";
 import { Accordion, Accordions } from "fumadocs-ui/components/accordion";
+import { Step, Steps } from "fumadocs-ui/components/steps";
 import * as icons from "lucide-react";
 import { YoutubeEmbed } from "@/components/features/mdx/youtube-embed";
 import { APIPage } from "@/components/api-page";
@@ -44,7 +46,12 @@ export const themeMdxComponents = {
   ...FilesComponents,
   Accordion,
   Accordions,
+  Step,
+  Steps,
   APIPage,
+  // Override the fumadocs default Card/Cards with our "next steps" list.
+  Card,
+  Cards,
   ...mdxComponents,
 } satisfies MDXComponents;
 

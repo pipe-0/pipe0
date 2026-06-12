@@ -8,9 +8,9 @@ The <AppLink linkType="searchCatalog">search catalog</AppLink> lists all availab
 
 ## Making requests
 
-This request fetches a list of people using the [`people:profiles:crustdata@2`](/docs/search/search-catalog/people:profiles:crustdata/2) dataset.
+This request fetches a list of people using the [`people:profiles:crustdata@2`](/docs/search-catalog/people:profiles:crustdata/2) dataset.
 
-```typescript tab="Typescript"
+```typescript tab="TypeScript"
 const result = await fetch("https://api.pipe0.com/v1/search/run", {
     method: "POST",
     headers: {
@@ -36,11 +36,11 @@ You can find the list of available filters per dataset in the <AppLink linkType=
 ## Getting the task result
 
 The request to `POST https://api.pipe0.com/v1/search/run` will create a search task.
-To get the result of the task, poll the `GET https://api.pipe0.com/v1/search/check/{task_id}` endpoint until the task status is
+To get the result of the task, poll the `GET https://api.pipe0.com/v1/search/check/{run_id}` endpoint until the task status is
 `completed`.
 
-```typescript tab="Typescript"
-const result = await fetch("https://api.pipe0.com/v1/search/check/${taskId}", {
+```typescript tab="TypeScript"
+const result = await fetch(`https://api.pipe0.com/v1/search/check/${runId}`, {
     method: "GET",
     headers: {
         "Authorization": `Bearer ${API_KEY}`
@@ -50,24 +50,22 @@ const result = await fetch("https://api.pipe0.com/v1/search/check/${taskId}", {
 
 ```python tab="Python"
 import requests
-import json
 
 headers = {
     "Authorization": f"Bearer {API_KEY}",
 }
-response = requests.get(f"https://api.pipe0.com/v1/search/check/{task_id}", headers=headers)
+response = requests.get(f"https://api.pipe0.com/v1/search/check/{run_id}", headers=headers)
 ```
 
 ```bash tab="cURL"
-curl -X GET "https://api.pipe0.com/v1/search/check/$TASK_ID" \
+curl -X GET "https://api.pipe0.com/v1/search/check/$RUN_ID" \
 -H "Authorization: Bearer $API_KEY"
 ```
 
 
 The result will look something like this:
 
-
-```json
+```json title="Response"
 {
 	"id": "jyg5w5p7unhcufkp8f7z5za8",
 	"status": "completed",
@@ -121,13 +119,13 @@ Under the hood, this uses <AppLink linkType="inputExpansion">input expansion</Ap
 Instead of creating your task with the endpoint `POST https://api.pipe0.com/v1/search/run` use the endpoint `POST https://api.pipe0.com/v1/search/run/sync`.
 Use the same payload for both endpoints. The `/sync` endpoint will try to return the `completed` result in one round-trip.
 
-Read more about the trade-offs between <AppLink linkType="async">async vs sync requests</AppLink> here.
+Read more about the trade-offs between <AppLink linkType="async">async and sync requests</AppLink>.
 
 ## Pagination
 
-Search results are paginated. Every search response includes a `next_page` field — pass it as the `search` payload to fetch the next page. When `next_page` is `null`, there are no more results.
+Search results are paginated. Every search response includes a `next_page` field. Pass it as the `search` payload to fetch the next page. When `next_page` is `null`, there are no more results.
 
-```typescript
+```typescript title="Paginate through results"
 // First request
 const res = await fetch("https://api.pipe0.com/v1/search/run/sync", {
     method: "POST",
@@ -166,4 +164,11 @@ if (page1.next_page) {
 ```
 
 For a full iteration loop and more details, see the <AppLink linkType="pagination">pagination guide</AppLink>.
+
+## Next steps
+
+<Cards>
+  <Card icon={<Search />} title="Search catalog" description="Every dataset with filters and credit prices." href="/docs/search-catalog" />
+  <Card icon={<ArrowRightLeft />} title="Search then enrich" description="Pipe search results straight into an enrichment request." href="/docs/pipes/examples/search-then-enrich" />
+</Cards>
 

@@ -1,21 +1,20 @@
 ---
 title: Billing
+description: How pipe0 bills pipes and searches in credits, and how subscriptions work.
 date: 2025-04-01
+icon: CreditCard
 ---
 
-Our billing system consists of:
-
-- 💲 Credits
-- 💳 Subscriptions
+Our billing system consists of two parts: credits and subscriptions.
 
 ## Credits
 
 Credits are the universal currency of pipe0. Requests in `production` mode are billed in credits.
 You are never billed if an operation returns an error.
 
-You can make request to third-party services without purchasing subscriptions to these services using credits.
+Credits let you make requests to third-party services without purchasing subscriptions to these services.
 
-You can find the credit costs per operation in the <AppLink linkType="pipeCatalog">pipe catalog</AppLink> and/or 
+You can find the credit costs per operation in the <AppLink linkType="pipeCatalog">pipe catalog</AppLink> and 
 <AppLink linkType="searchCatalog">search catalog</AppLink>.
 
 
@@ -35,7 +34,7 @@ A property of a pipe is its `billing_mode`.
 
 ### billing_mode `always`
 
-Pipes with `billing_mode='always'` are billed on every run. Credits are deducted from your balance regardless of 
+Pipes with `billing_mode="always"` are billed on every run. Credits are deducted from your balance regardless of 
 the pipe's result. Even if pipe output fields are marked as `no_result`, credits will be deducted
 from your balance. See <AppLink linkType="fieldStatus">field status</AppLink> for more info.
 
@@ -43,7 +42,7 @@ Pipes are not billed if the pipe run fails (error state).
 
 ### billing_mode `on_success`
 
-Pipes with `billing_mode=on_success` are billed when at least one of their output fields is marked 
+Pipes with `billing_mode="on_success"` are billed when at least one of their output fields is marked 
 as `completed`. This indicates a successful result. If all output fields of a pipe are marked as `no_result`, the pipe is not billed.
 See <AppLink linkType="fieldStatus">field status</AppLink> for more info.
 
@@ -66,8 +65,8 @@ The cost per search can be found in the <AppLink linkType="searchCatalog">search
 
 ## Insufficient balance
 
-If your credit balance is insufficient to complete an ongoing enrichment task, the entire task fails and you will be billed
-for the enrichment until failure.
+If your credit balance is insufficient to complete an ongoing enrichment task, the entire task fails and you are billed
+for the enrichment performed up to the failure.
 
 ## One-off purchases
 
@@ -91,9 +90,9 @@ If you're building a system that requires auto-top-ups to remain operational at 
 
 ## High-usage billing
 
-With high-usage billing you can opt into a discounted per-unit pricing.
+With high-usage billing you can opt into discounted per-unit pricing.
 
-You can check your plan features to see if your plan offers high usage quota.
+Check your plan features to see if your plan offers a high-usage quota.
 
 ### 30-day lock
 
@@ -102,7 +101,7 @@ To prevent abuse, users can only change their high-usage selection every 30 days
 
 ### Enrollment
 
-To enroll in high-volume usage for a specific pipe go to `dashboard` -> `billing` -> `High usage billing`.
+To enroll in high-usage billing for a specific pipe go to `dashboard` -> `billing` -> `High usage billing`.
 
 ### Custom discount levels
 

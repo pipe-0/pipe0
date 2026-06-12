@@ -3,7 +3,7 @@
 import { cn } from "@/lib/utils";
 import { ArrowUpRight, Library, Search, Zap } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 /**
  * The three quickstart entry points, rendered as media cards: the catalogs
@@ -13,20 +13,20 @@ import { useEffect, useState } from "react";
  */
 export function QuickstartCards() {
   return (
-    <div className="not-prose my-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    <div className="not-prose mt-5 mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
       <QuickstartCard
         href="/docs/pipe-catalog"
         icon={<Zap className="size-4" />}
         title="Pipe Catalog"
-        description="Every enrichment, with input/output fields and pricing."
+        description="Enrich individual rows or perform row-based actions."
         media={<DemoVideo src="/media/website/pipe-catalog-demo.webm" />}
       />
       <QuickstartCard
         href="/docs/search-catalog"
         icon={<Search className="size-4" />}
         title="Search Catalog"
-        description="Every dataset, with filters and pricing."
-        media={<DemoVideo src="/media/website/search-catalog-demo.webm" />}
+        description="Create rows by searching for people, companies, or data."
+        media={<DemoVideo src="/media/website/search-demo.webm" />}
       />
       <QuickstartCard
         href="/docs/api"
@@ -80,16 +80,37 @@ function QuickstartCard({
 }
 
 function DemoVideo({ src }: { src: string }) {
+  // Instead of a hard loop, each playthrough is followed by a random
+  // 3–10s rest on the final frame before the demo starts over.
+  const replayTimeout = useRef<number | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (replayTimeout.current !== null) {
+        window.clearTimeout(replayTimeout.current);
+      }
+    };
+  }, []);
+
   return (
     <div className="relative w-full max-w-[240px] overflow-hidden rounded-[10px] border border-white/20 bg-white shadow-[0_18px_40px_rgba(0,0,0,0.35)]">
       <video
         className="block h-auto w-full"
         autoPlay
-        loop
         muted
         playsInline
         preload="metadata"
         src={src}
+        onEnded={(e) => {
+          const video = e.currentTarget;
+          replayTimeout.current = window.setTimeout(
+            () => {
+              video.currentTime = 0;
+              void video.play();
+            },
+            3000 + Math.random() * 7000,
+          );
+        }}
       />
     </div>
   );
@@ -119,19 +140,38 @@ const codeLines: React.ReactNode[] = [
 ];
 
 function CodeWindow() {
-  // Starts on the full sample (also the SSR / reduced-motion state); the first
-  // tick wraps back to 0 and types the lines in on a loop.
+  // Starts on the full sample (also the SSR / reduced-motion state). The
+  // finished sample rests for a random 3–10s, then wipes and retypes —
+  // mirroring the demo videos' play/pause cycle.
   const [shown, setShown] = useState(codeLines.length);
 
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     let line = codeLines.length;
-    const id = window.setInterval(() => {
-      line = line >= codeLines.length ? 0 : line + 1;
-      setShown(line);
-    }, 700);
-    return () => window.clearInterval(id);
+    let timeout: number;
+
+    const schedule = () => {
+      if (line >= codeLines.length) {
+        timeout = window.setTimeout(
+          () => {
+            line = 0;
+            setShown(0);
+            schedule();
+          },
+          3000 + Math.random() * 7000,
+        );
+      } else {
+        timeout = window.setTimeout(() => {
+          line += 1;
+          setShown(line);
+          schedule();
+        }, 700);
+      }
+    };
+
+    schedule();
+    return () => window.clearTimeout(timeout);
   }, []);
 
   return (

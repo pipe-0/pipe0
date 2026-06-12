@@ -6,11 +6,11 @@ export const docsLinkPaths = {
   pipeConfig: `/docs/pipes/advanced/pipes-request-payload#config`,
   inputSanitation: `/docs/pipes/advanced/pipes-inputs#input-sanitation`,
   fieldStatus: `/docs/pipes/advanced/pipes-response-object#status`,
-  templateTags: `/docs/pipes/advanced/pipes-concepts#template-tags`,
+  templateTags: `/docs/pipes/advanced/pipes-concepts#tag-syntax`,
   fieldMode: `/docs/pipes/advanced/pipes-concepts#field-mode`,
-  outputFieldToggle: `/docs/pipes/advanced/pipes-concepts#disable-static-pipe-outputs`,
+  outputFieldToggle: `/docs/pipes/advanced/pipes-concepts#disable-outputs`,
   fieldModeConfig: `/docs/pipes/advanced/pipes-concepts#field-mode-config`,
-  openAPI: `/docs/#openapi`,
+  openAPI: `/docs/api#openapi-specification`,
   catalogs: `/docs/`,
   mcp: "/docs/sdks/mcp",
   async: `/docs/pipes#getting-the-task-result`,
@@ -18,7 +18,7 @@ export const docsLinkPaths = {
   waterfallPipes: `/docs/pipes/advanced/pipes-concepts#waterfall-pipes`,
   globalErrors: `/docs/pipes/advanced/pipes-response-object#errors`,
   records: `/docs/pipes/advanced/pipes-response-object#records`,
-  pipeline: `/docs/pipes/advanced/pipes-concepts#triggers`,
+  pipeline: `/docs/pipes/advanced/pipes-concepts#run-if`,
 
   // Input / Output
   inputExpansion: `/docs/pipes/advanced/pipes-inputs#input-expansion`,

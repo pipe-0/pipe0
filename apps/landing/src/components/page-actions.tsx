@@ -8,6 +8,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "fumadocs-ui/components/ui/popover";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 const cache = new Map<string, string>();
@@ -44,20 +45,17 @@ export function LLMCopyButton({
   });
 
   return (
-    <button
+    <Button
+      type="button"
+      variant="ctaOutline"
+      size="sm"
       disabled={isLoading}
-      className={cn(
-        buttonVariants({
-          color: "secondary",
-          size: "sm",
-          className: "gap-2 [&_svg]:size-3.5 [&_svg]:text-fd-muted-foreground",
-        }),
-      )}
+      className="h-7 gap-1.5 rounded-lg px-2.5 text-[13px] font-medium [&_svg]:size-3 [&_svg]:text-muted-foreground"
       onClick={onClick}
     >
       {checked ? <Check /> : <Copy />}
       Copy Markdown
-    </button>
+    </Button>
   );
 }
 

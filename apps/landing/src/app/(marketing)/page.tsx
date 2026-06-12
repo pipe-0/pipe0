@@ -1,4 +1,6 @@
+import { HeroVideo } from "@/app/hero-video";
 import { LandingSpotlight } from "@/app/landing-spotlight";
+import { LandingStatement } from "@/app/landing-statement";
 import { LandingSystemCards } from "@/app/landing-system-cards";
 import { ScrollReveal } from "@/app/scroll-reveal";
 import { Footer } from "@/components/footer";
@@ -65,41 +67,23 @@ export default function Home() {
           {/* Top shadow so the white copy reads cleanly (mirrors the bottom scrim) */}
           <div className="hero-top-scrim pointer-events-none absolute inset-x-0 top-0 z-[1] h-2/5" aria-hidden />
 
-          {/* Base scene — anchored to the foot of the panel; blurred on large
-              screens only (on mobile it's too small for the focus effect). */}
-          <Image
-            src="/media/website/hero-scene-4.png"
-            alt="A team working quietly together at a long table"
-            className="absolute inset-x-0 bottom-0 w-full lg:blur-[2px]"
-            width={1024}
-            height={432}
-            style={{ objectFit: "contain" }}
-          />
-          {/* Sharp layer — a soft focus window roams the scene, bringing
-              one person at a time into focus (enrichment: finding people).
-              Desktop only. */}
-          <Image
-            src="/media/website/hero-scene-4.png"
-            alt=""
-            aria-hidden
-            className="hero-focus absolute inset-x-0 bottom-0 hidden w-full lg:block"
-            width={1024}
-            height={432}
-            style={{ objectFit: "contain" }}
-          />
+          {/* Hero scene — anchored to the foot of the panel and nudged
+              below it, so only the globe's upper arc rises into view over
+              the animated sky background. */}
+          <HeroVideo />
 
           <div className="relative z-10 px-5 pt-14 text-center sm:pt-20">
             <h1 className="mx-auto max-w-3xl text-[clamp(38px,5.5vw,60px)] font-semibold leading-[1.08] tracking-[-0.025em] text-white">
               Go to market <span className="hl">with great data</span>.
             </h1>
-            <p className="mx-auto mt-5 max-w-165 text-[17px] leading-relaxed text-white/75 sm:text-[18.5px]">
-              Sales automation for agentic teams and tools.
-            </p>
+            {/* <p className="mx-auto mt-5 max-w-165 text-[17px] leading-relaxed text-white/75 sm:text-[18.5px]">
+              Next generation data and automation infrastructure for leading teams.
+            </p> */}
             <CtaButtons className="mt-7" />
           </div>
 
           {/* Trusted-by, set into the sand at the foot of the scene */}
-          <div className="trusted-scrim absolute inset-x-0 bottom-0 z-10 flex flex-col items-center justify-center gap-3 px-4 pb-5 pt-10 sm:flex-row sm:gap-8 md:gap-10">
+          <div className="trusted-scrim absolute inset-x-0 bottom-0 z-10 flex flex-col items-center justify-center gap-3 px-4 pb-5 pt-24 sm:flex-row sm:gap-8 md:gap-10">
             <span className="text-[12px] font-semibold uppercase tracking-[0.12em] text-white/70">
               Trusted by
             </span>
@@ -133,6 +117,11 @@ export default function Home() {
             ))}
           </div>
         </div>
+      </Section>
+
+      {/* ===== Statement — what pipe0 is, revealed word-by-word on scroll ===== */}
+      <Section className="py-32 sm:py-44">
+        <LandingStatement />
       </Section>
 
       {/* ===== Spotlight — one engine, three surfaces ===== */}

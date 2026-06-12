@@ -1,7 +1,6 @@
 import { getPageImage, source } from "@/lib/source";
 import {
   DocsBody,
-  DocsDescription,
   DocsPage,
   DocsTitle,
 } from "fumadocs-ui/layouts/docs/page";
@@ -9,8 +8,7 @@ import { notFound } from "next/navigation";
 import { getMDXComponents } from "@/mdx-components";
 import type { Metadata } from "next";
 import { createRelativeLink } from "fumadocs-ui/mdx";
-import { LLMCopyButton, ViewOptions } from "@/components/page-actions";
-import { gitConfig } from "@/lib/layout.shared";
+import { LLMCopyButton } from "@/components/page-actions";
 import { PipeEntryPage } from "@/components/features/docs/pipe-entry-page";
 import { SearchCatalogIndexPage } from "@/components/features/docs/search-catalog-index-page";
 import { SearchEntryPage } from "@/components/features/docs/search-entry-page";
@@ -52,17 +50,16 @@ export default async function Page(props: PageProps<"/docs/[[...slug]]">) {
   if (!MDX) notFound();
 
   return (
-    <DocsPage toc={page.data.toc} full={page.data.full}>
+    <DocsPage
+      toc={page.data.toc}
+      full={page.data.full}
+      footer={{ enabled: false }}
+    >
       <DocsTitle>{page.data.title}</DocsTitle>
-      <DocsDescription className="mb-0">
-        {page.data.description}
-      </DocsDescription>
-      <div className="flex flex-row gap-2 items-center border-b pb-6">
+      {/* Page description is intentionally not rendered in the docs body — it
+          is kept for SEO/metadata and card previews only. */}
+      <div className="flex flex-row gap-2 items-center -mt-2">
         <LLMCopyButton markdownUrl={`${page.url}.mdx`} />
-        <ViewOptions
-          markdownUrl={`${page.url}.mdx`}
-          githubUrl={`https://github.com/${gitConfig.user}/${gitConfig.repo}/blob/${gitConfig.branch}/content/docs/${page.path}`}
-        />
       </div>
       <DocsBody>
         <MDX

@@ -10,9 +10,9 @@ This example takes a list of LinkedIn profile URLs and, in a single request:
 1. Enriches the **full LinkedIn profile** for each person (`person:profile:waterfall@1`).
 2. Uses an AI prompt to decide whether they are an **ICP fit** (`prompt:run@1`).
 3. For matches only, resolves a **work email** (`person:workemail:profileurl:waterfall@1`), drafts a
-   **personalised email** (`email:write@1`), and **sends it** (`email:send:gmail@1`).
+   **personalized email** (`email:write@1`), and **sends it** (`email:send:gmail@1`).
 
-Steps 3–5 are gated with `run_if`, so non-matches never trigger an enrichment, a draft, or a send.
+The last three pipes are gated with `run_if`, so non-matches never trigger an enrichment, a draft, or a send.
 
 export const qualifyAndEmailPayload = {
   config: { environment: "production" },
@@ -55,7 +55,7 @@ benefit from data enrichment (sales intelligence, prospecting, lead generation).
         },
       },
     },
-    // 4. ICP matches only: draft a personalised email.
+    // 4. ICP matches only: draft a personalized email.
     {
       pipe_id: "email:write@1",
       run_if: {
@@ -74,7 +74,7 @@ benefit from data enrichment (sales intelligence, prospecting, lead generation).
 Write a short, friendly outbound email introducing pipe0, an enrichment framework that helps
 teams add data enrichment into their own products and go-to-market workflows.
 
-Personalise it using what we know about the person:
+Personalize it using what we know about the person:
 {{ profile }}
 
 Reason they are a good fit: {{ reason | default: "" }}
@@ -111,11 +111,11 @@ Keep it under 120 words and end with a soft call to action to book a quick call.
 
 A few things worth calling out:
 
-- **`person:profile:waterfall@1`** outputs a `profile` object — the AI prompt and the email writer
+- **`person:profile:waterfall@1`** outputs a `profile` object. The AI prompt and the email writer
   both reference it with `{{ profile }}`.
 - **`email:write@1`** produces `email_subject` and `email_body`; the send pipe wires them into its
   templated `subject` and `body` config fields.
 - **`email:send:gmail@1`** needs a Gmail connection from your vault. Replace
   `<ADD_YOUR_GMAIL_CONNECTION>` with your connection ID (see [Connections](/docs/connections)).
-- Swap `email:send:gmail@1` for `email:send:resend@1` if you send through Resend instead — that pipe
+- Swap `email:send:gmail@1` for `email:send:resend@1` if you send through Resend instead. That pipe
   also takes a `from` address.

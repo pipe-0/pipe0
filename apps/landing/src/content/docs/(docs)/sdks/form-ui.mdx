@@ -10,12 +10,8 @@ Both follow the same pattern — a root component + compound parts + a
 
 ## Install
 
-```bash tab="pnpm"
-pnpm i @pipe0/react
-```
-
-```bash tab="npm"
-npm install @pipe0/react
+```package-install
+@pipe0/react
 ```
 
 Import the stylesheet once at the app root:
@@ -216,7 +212,7 @@ requests. The underlying endpoints require your server-side API key and need
 to know which of your users is asking. Your resolver hits your backend, which
 authenticates the user and forwards the call to pipe0.
 
-```ts filename="app/api/pipe0/context/route.ts"
+```ts title="app/api/pipe0/context/route.ts"
 export async function POST(req: Request) {
   const user = await requireUser(req); // your auth
   const body = await req.json();

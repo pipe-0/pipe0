@@ -2,8 +2,7 @@
 title: Response Object
 category: Concepts
 priority: 2
-description: The response object contains your search results – along with metadata about your search.
-icon: stack
+description: The response object contains your search results, along with metadata about your search.
 date: 2025-07-28
 isPublished: true
 ---
@@ -11,14 +10,14 @@ isPublished: true
 The following API operations return a response of type `SearchResponse`.
 
 - `POST https://api.pipe0.com/v1/search/run` (create a search task)
-- `GET https://api.pipe0.com/v1/search/check/{task_id}` (check the processing state of a search task)
+- `GET https://api.pipe0.com/v1/search/check/{run_id}` (check the processing state of a search task)
 - `POST https://api.pipe0.com/v1/search/run/sync` (run a search task synchronously)
 
 <AppLink linkType="async">Learn more</AppLink> about the difference between sync and async operations.
 
 ## Full response object
 
-```json
+```json title="SearchResponse"
 {
 	"id": "jyg5w5p7unhcufkp8f7z5za8",
 	"status": "completed",
@@ -158,7 +157,7 @@ It is populated for every search, not just dynamic ones:
 
 The keys are column names and the values describe each column:
 
-```json
+```json title="field_definitions"
 {
 	"email": { "type": "string", "label": "Email", "format": "email", "json_metadata": null },
 	"company": { "type": "string", "label": "Company", "format": null, "json_metadata": null },

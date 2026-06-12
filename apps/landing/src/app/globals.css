@@ -67,13 +67,13 @@
   --secondary: hsl(0 0% 11%);
   --secondary-foreground: hsl(0 0% 98%);
   --muted: hsl(0 0% 13%);
-  --muted-foreground: hsl(0 0% 63.9%);
+  --muted-foreground: hsl(0 0% 69%);
   --accent: hsl(0 0% 14%);
   --accent-foreground: hsl(0 0% 98%);
   --destructive: hsl(0 62.8% 30.6%);
   --destructive-foreground: hsl(0 0% 98%);
-  --border: hsl(0 0% 17%);
-  --input: hsl(0, 0%, 20%);
+  --border: hsl(0 0% 20%);
+  --input: hsl(0, 0%, 24%);
   --ring: hsl(0 0% 83.1%);
   --chart-1: hsl(220 70% 50%);
   --chart-2: hsl(160 60% 45%);
@@ -220,8 +220,86 @@
     min-content !important;
 }
 
-/* Subtle lift for docs cards (Notion-inspired) */
-[data-card] {
+/* Tighter, more focused docs typography — denser than the fumadocs default.
+   Scoped to the docs layout so marketing/blog prose is untouched. */
+#nd-docs-layout .prose {
+  font-size: 0.9rem; /* 14.5px */
+  line-height: 1.6;
+}
+/* The `:not(:where(.not-prose, .not-prose *))` guard mirrors how Tailwind's
+   typography plugin exempts `not-prose` regions. Without it these hand-written
+   rules leak into components fumadocs marks `not-prose` — notably the Accordion
+   trigger, which is an <h3>; the injected heading margin, trapped by the
+   accordion's `overflow:hidden`, inflated the collapsed panel. */
+#nd-docs-layout .prose :where(h2):not(:where(.not-prose, .not-prose *)) {
+  margin-top: 2em;
+  margin-bottom: 0.5em;
+  font-size: 1.4rem;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.014em;
+}
+#nd-docs-layout .prose :where(h3):not(:where(.not-prose, .not-prose *)) {
+  margin-top: 1.5em;
+  margin-bottom: 0.4em;
+  font-size: 1.075rem;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.008em;
+}
+#nd-docs-layout .prose :where(h4):not(:where(.not-prose, .not-prose *)) {
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: -0.004em;
+}
+#nd-docs-layout
+  .prose
+  :where(p, ul, ol, blockquote):not(:where(.not-prose, .not-prose *)) {
+  margin-top: 0;
+  margin-bottom: 0.8em;
+}
+#nd-docs-layout .prose :where(li):not(:where(.not-prose, .not-prose *)) {
+  margin-top: 0.15em;
+  margin-bottom: 0.15em;
+}
+/* Docs links read as body text, not a blue accent: the default foreground
+   color with an underline in that same color. Fumadocs colors the text with
+   --tw-prose-links (already foreground) but draws the underline in the blue
+   --color-fd-primary — override it to currentColor so the line matches the
+   text in both light and dark mode. Heading anchors ([data-card]) are exempt,
+   as are not-prose components. */
+#nd-docs-layout
+  .prose
+  :where(a:not([data-card])):not(:where(.not-prose, .not-prose *)) {
+  color: var(--color-fd-foreground);
+  text-decoration-color: currentColor;
+}
+
+/* Page title — the top of the hierarchy: clearly larger and heavier than the
+   h2 section headings, so the size jump reads at a glance. Tight line-height
+   keeps the Copy-Markdown button hugging the title. */
+#nd-docs-layout #nd-page h1:first-child {
+  margin-bottom: 0;
+  font-size: 2.15rem;
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+}
+
+/* The Copy-Markdown action row sits right under the title; the body content
+   then follows at the article's own flex gap — strip the top margin the first
+   block (heading, cards, etc.) would otherwise add, so the space after the
+   button never balloons. */
+#nd-docs-layout #nd-page .prose > :first-child {
+  margin-top: 0 !important;
+}
+
+/* Subtle lift for docs cards (Notion-inspired).
+   Scoped with :not(.peer) so it never applies to heading anchor links —
+   fumadocs wraps heading text in <a data-card class="peer">, which otherwise
+   picked up a stray box-shadow on hover. Headings get no effect beyond their
+   appearing link icon. */
+[data-card]:not(.peer) {
   box-shadow:
     0 1px 2px rgba(0, 0, 0, 0.04),
     0 1px 3px rgba(0, 0, 0, 0.06);
@@ -232,27 +310,35 @@
     border-color 150ms ease;
 }
 
-[data-card]:hover {
+[data-card]:not(.peer):hover {
   box-shadow:
     0 2px 4px rgba(0, 0, 0, 0.05),
     0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
-.dark [data-card] {
+.dark [data-card]:not(.peer) {
   box-shadow:
     0 1px 2px rgba(0, 0, 0, 0.3),
     0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
-.dark [data-card]:hover {
+.dark [data-card]:not(.peer):hover {
   box-shadow:
     0 2px 4px rgba(0, 0, 0, 0.35),
     0 6px 16px rgba(0, 0, 0, 0.35);
 }
 
 /* Soften icon tile inside cards: lighter accent, no heavy shadow */
-.dark [data-card] > .not-prose:first-child {
+.dark [data-card]:not(.peer) > .not-prose:first-child {
   box-shadow: none;
+}
+
+/* Nested sidebar items: fumadocs draws a vertical tree line (the
+   `before:start-2.5` pseudo) down the folder content. It sat almost flush
+   against the item labels — indent the nested group so the line has a bit of
+   breathing room before the text. */
+#nd-sidebar [class*="before:start-2.5"] {
+  padding-inline-start: 0.625rem;
 }
 
 /* adds labels to the sidebar links */
@@ -428,66 +514,6 @@
     #a9c6e8 100%
   );
 }
-/* Focus roam — the sharp copy of the hero scene is revealed through a
-   soft-edged window that drifts from person to person: the product
-   "finding people". The blurred base stays underneath, so everything
-   outside the window remains gently out of focus. */
-.hero-focus {
-  -webkit-mask-image: radial-gradient(
-    ellipse 50% 50% at 50% 50%,
-    #000 0%,
-    #000 38%,
-    transparent 72%
-  );
-  mask-image: radial-gradient(
-    ellipse 50% 50% at 50% 50%,
-    #000 0%,
-    #000 38%,
-    transparent 72%
-  );
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-  -webkit-mask-size: 36% 90%;
-  mask-size: 36% 90%;
-  -webkit-mask-position: 13% 60%;
-  mask-position: 13% 60%;
-  animation: hero-focus-roam 20s ease-in-out infinite;
-}
-@keyframes hero-focus-roam {
-  /* linger on each person, glide fluidly between them */
-  0%,
-  10% {
-    -webkit-mask-position: 13% 60%;
-    mask-position: 13% 60%;
-  }
-  21%,
-  33% {
-    -webkit-mask-position: 38% 60%;
-    mask-position: 38% 60%;
-  }
-  44%,
-  56% {
-    -webkit-mask-position: 63% 60%;
-    mask-position: 63% 60%;
-  }
-  67%,
-  82% {
-    -webkit-mask-position: 88% 60%;
-    mask-position: 88% 60%;
-  }
-  100% {
-    -webkit-mask-position: 13% 60%;
-    mask-position: 13% 60%;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .hero-focus {
-    animation: none;
-    -webkit-mask-image: none;
-    mask-image: none;
-  }
-}
-
 /* Spotlight feature chips — one chip "lights up" at a time, cycling
    through the row (4 chips × 2s = 8s loop). */
 .spot-chip {
@@ -655,15 +681,75 @@
   }
 }
 
+/* Compact card-sky for small icon frames (sidebar tab icons). The drifting
+   light pools read as noise at icon scale, so a single highlight is baked into
+   a static gradient drawn from the same indigo family. */
+.card-sky-sm {
+  background:
+    radial-gradient(
+      125% 110% at 26% 16%,
+      rgba(150, 168, 255, 0.55) 0%,
+      rgba(150, 168, 255, 0) 62%
+    ),
+    linear-gradient(150deg, #232b94 0%, #303bc4 40%, var(--primary) 100%);
+}
+
+/* Icon tile for the docs "next steps" list — a soft neutral gradient with a
+   hairline edge, so the framed icon reads clearly at a larger size. */
+.icon-frame {
+  background: linear-gradient(160deg, hsl(0 0% 98%) 0%, hsl(0 0% 91%) 100%);
+  border-color: rgba(0, 0, 0, 0.08);
+  color: var(--color-fd-muted-foreground);
+}
+.dark .icon-frame {
+  background: linear-gradient(160deg, hsl(0 0% 18%) 0%, hsl(0 0% 12%) 100%);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Collection-switcher dropdown rows — keep a flat hover, never a gradient
+   wash on the selected/hovered row. */
+.tabs-dd-item {
+  background-image: none;
+}
+.tabs-dd-item:hover {
+  background-color: var(--color-fd-accent);
+  background-image: none;
+}
+
+/* Pricing hero foot — deeper than the landing hero's trusted-scrim, so the
+   pricing cards' light borders cut clearly against the panel. */
+.pricing-scrim {
+  background: linear-gradient(
+    180deg,
+    rgba(16, 20, 64, 0) 0%,
+    rgba(16, 20, 64, 0.28) 35%,
+    rgba(15, 18, 58, 0.58) 70%,
+    rgba(12, 15, 48, 0.88) 100%
+  );
+}
+
 /* Trusted-by row sits in a darkening shadow at the foot of the scene, so the
    white wordmarks read cleanly in both light and dark mode. */
 .trusted-scrim {
+  /* Saturated indigo, not a dark neutral — low-chroma darks muddy to
+     gray/black over the near-white globe. Eased stops keep the band
+     reading as the sky deepening rather than a shadow. */
   background: linear-gradient(
     180deg,
-    rgba(8, 11, 18, 0) 0%,
-    rgba(8, 11, 18, 0.55) 42%,
-    rgba(8, 11, 18, 0.92) 100%
+    rgba(44, 55, 164, 0) 0%,
+    rgba(44, 55, 164, 0.12) 30%,
+    rgba(42, 52, 158, 0.3) 60%,
+    rgba(38, 47, 148, 0.5) 85%,
+    rgba(35, 44, 140, 0.62) 100%
   );
+}
+
+/* Active sidebar / filter item — pin to a deep, saturated brand indigo so the
+   dark-mode primary's brighter sky-blue doesn't wash it out. Sits a touch
+   darker than the light-mode primary so it reads as a rich indigo on the
+   near-black sidebar rather than a glowing blue. */
+.btn-glossy-indigo {
+  --primary: hsl(235, 80%, 50%);
 }
 
 /* Glassy CTA buttons — inner reflection, vertical gradient, darker edge. */

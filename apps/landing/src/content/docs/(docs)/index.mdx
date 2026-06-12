@@ -8,7 +8,7 @@ icon: Rocket
 
 <QuickstartCards />
 
-### Motivation
+## Motivation
 
 When [Ivan Zhao](https://www.linkedin.com/in/ivanhzhao) explains the idea behind [Notion](https://www.notion.com/) he compares it to paper:
 
@@ -20,15 +20,15 @@ Pipe0's philosophy is similar.
 You can use it as a simple API/UI/MCP to find email addresses, phone numbers, and LinkedIn data. It will only take minutes to set up
 and requires no coding knowledge.
 
-Yet you can build entire experiences similar to Clay & n8n on top of it — check out the <AppLink linkType="dough">Dough example</AppLink>, a Clay-like table built from ~400 lines of code.
+Yet you can build entire experiences similar to Clay & n8n on top of it. Check out the <AppLink linkType="dough">Dough example</AppLink>, a Clay-like table built in ~400 lines of code.
 
-For simple use-cases the docs are overkill. Read this page then jump to the <AppLink linkType="pipeCatalog">pipe</AppLink> or <AppLink linkType="searchCatalog">search</AppLink> catalog.
+For simple use cases the docs are overkill. Read this page, then jump to the <AppLink linkType="pipeCatalog">pipe</AppLink> or <AppLink linkType="searchCatalog">search</AppLink> catalog.
 
-### Enrich a record with a pipe
+## Enrich a record with a pipe
 
-This request enriches one input object using the `person:workemail:waterfall@1` pipe — it adds a `work_email` field to your record.
+This request enriches one input object using the `person:workemail:waterfall@1` pipe. It adds a `work_email` field to your record.
 
-```typescript tab="Typescript"
+```typescript tab="TypeScript"
 const result = await fetch("https://api.pipe0.com/v1/pipes/run/sync", {
     method: "POST",
     headers: {
@@ -64,7 +64,7 @@ payload = {
 response = requests.post("https://api.pipe0.com/v1/pipes/run/sync", headers=headers, json=payload)
 ```
 
-### Compose pipes
+## Compose pipes
 
 You can stack multiple pipes in one request to build complex workflows where pipes read each other's output.
 
@@ -74,9 +74,9 @@ Here's an example:
 - Use the `person:workemail:waterfall@1` pipe to read `name` (output of the previous pipe) and `company_name` and find the prospect's email address.
 
 <Accordions>
-<Accordion title="Toggle full example request">
+<Accordion title="Full example request">
 
-```typescript tab="Typescript"
+```typescript tab="TypeScript"
 const result = await fetch("https://api.pipe0.com/v1/pipes/run/sync", {
     method: "POST",
     headers: {
@@ -140,7 +140,7 @@ curl -X POST "https://api.pipe0.com/v1/pipes/run/sync" \
 </Accordion>
 </Accordions>
 
-### Search
+## Search
 
 While pipes take input objects and add fields to them, `search` creates a list of input objects.
 
@@ -148,7 +148,7 @@ This can be helpful if you're looking for people or companies based on filters.
 
 Here's an example request that fetches a list of people `people:profiles:crustdata@2` using a job-title filter.
 
-```typescript tab="Typescript"
+```typescript tab="TypeScript"
 const result = await fetch("https://api.pipe0.com/v1/search/run/sync", {
     method: "POST",
     headers: {
@@ -196,3 +196,11 @@ curl -X POST "https://api.pipe0.com/v1/search/run/sync" \
     }
   }'
 ```
+
+## Next steps
+
+<Cards>
+  <Card icon={<KeyRound />} title="Authentication" description="Create an API key and make authenticated requests." href="/docs/authentication" />
+  <Card icon={<Code />} title="TypeScript client" description="Typed SDK with batching and polling built in." href="/docs/sdks/typescript-client" />
+  <Card icon={<Mail />} title="Qualify & email" description="Enrich, qualify with AI, and send an email in one request." href="/docs/pipes/examples/qualify-and-email" />
+</Cards>
