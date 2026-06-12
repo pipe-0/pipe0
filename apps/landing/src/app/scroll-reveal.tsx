@@ -30,7 +30,18 @@ export function ScrollReveal() {
       { rootMargin: "0px 0px -8% 0px" },
     );
 
-    els.forEach((el) => observer.observe(el));
+    const vh = window.innerHeight || document.documentElement.clientHeight;
+    els.forEach((el) => {
+      // Reveal immediately anything already even partly in view on load —
+      // the observer's negative bottom margin would otherwise leave
+      // below-the-fold-but-visible elements hidden until the user scrolls.
+      const rect = el.getBoundingClientRect();
+      if (rect.top < vh && rect.bottom > 0) {
+        el.classList.add("in");
+        return;
+      }
+      observer.observe(el);
+    });
     return () => observer.disconnect();
   }, []);
 

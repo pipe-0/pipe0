@@ -10,28 +10,29 @@ const trustedLogos = [
   {
     src: "/media/website/logos/pie-light.svg",
     alt: "Pie",
-    className: "h-6 w-auto",
+    className: "block h-6 w-auto",
     width: 559,
     height: 356,
   },
   {
     src: "/media/website/logos/lightfield.svg",
     alt: "Lightfield",
-    className: "h-5 w-auto",
+    className: "block h-5 w-auto",
     width: 87,
     height: 16,
   },
   {
     src: "/media/website/logos/augusta-dark.svg",
     alt: "Augusta Labs",
-    className: "h-5 w-auto",
+    className: "block h-5 w-auto",
     width: 4288,
     height: 924,
   },
   {
     src: "/media/website/logos/aries-light.svg",
     alt: "Aries",
-    className: "h-5 w-auto",
+    // Fourth logo — mobile shows only three across one row.
+    className: "hidden h-5 w-auto sm:block",
     width: 28,
     height: 11,
   },
@@ -58,7 +59,7 @@ export default function Home() {
               gap). Header + hero + pills fill the viewport; only very tall
               desktops cap the height. ===== */}
       <section className="mx-auto w-full max-w-[1750px] px-4 sm:px-7">
-        <div className="hero-panel border relative h-[min(100svh-6rem,720px)] overflow-hidden rounded-[18px] sm:h-[min(100svh-11rem,860px)]">
+        <div className="hero-panel border relative h-[max(600px,100svh-6rem)] overflow-hidden rounded-[18px] sm:h-[min(100svh-11rem,860px)]">
           {/* Animated, ever-moving sky gradient */}
           <div className="hero-sky pointer-events-none absolute inset-0 z-0" aria-hidden />
           {/* Top shadow so the white copy reads cleanly (mirrors the bottom scrim) */}
@@ -102,7 +103,7 @@ export default function Home() {
             <span className="text-[12px] font-semibold uppercase tracking-[0.12em] text-white/70">
               Trusted by
             </span>
-            <div className="flex max-w-140 flex-wrap items-center justify-center gap-6 opacity-90 md:gap-8 [&_img]:block [&_img]:brightness-0 [&_img]:invert">
+            <div className="flex w-full max-w-140 flex-nowrap items-center justify-between gap-4 opacity-90 sm:w-auto sm:flex-wrap sm:justify-center sm:gap-6 md:gap-8 [&_img]:brightness-0 [&_img]:invert">
               {trustedLogos.map((logo) => (
                 <Image
                   key={logo.alt}

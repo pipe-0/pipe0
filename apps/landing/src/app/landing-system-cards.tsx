@@ -201,17 +201,17 @@ function ActionVisual() {
 const cards = [
   {
     title: "Find who you're looking for",
-    copy: "Search for people and companies across multiple providers — one query, every source.",
+    copy: "Search people and companies across every provider in a single query.",
     visual: <FindVisual />,
   },
   {
     title: "Compose enrichments & integrate",
-    copy: "Stack hundreds of enrichments — work email, verification, company data — and connect CRM, ATS, survey and sequencing tools without writing code.",
+    copy: "Stack hundreds of enrichments like work email, verification, and company data. Connect CRM, ATS, survey, and sequencing tools without writing code.",
     visual: <ComposeVisual />,
   },
   {
     title: "Take action",
-    copy: "Send emails, Slack, or Discord messages — perform actions with the tools your users love.",
+    copy: "Send emails, Slack, and Discord messages. Take action with the tools your users love.",
     visual: <ActionVisual />,
   },
 ];

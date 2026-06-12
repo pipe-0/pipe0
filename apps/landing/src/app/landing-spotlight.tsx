@@ -9,21 +9,26 @@ type Surface = {
   copy: string;
 };
 
+/* One copy source, shared by the mobile and desktop layouts. */
+const spotlightHeading = "One engine. Three surfaces.";
+const spotlightIntro =
+  "The same enrichment core, wherever you work: your codebase, a sheet, or inside your agents.";
+
 const surfaces: Surface[] = [
   {
     key: "api",
     title: "Built for your codebase.",
-    copy: "A full enrichment & prospecting API. Compose 50+ providers, actions and conditions into pipes — and ship clay-like enrichment inside your own product.",
+    copy: "A full enrichment and prospecting API. Compose 50+ providers, actions, and conditions into pipes, then ship Clay-like enrichment inside your own product.",
   },
   {
     key: "sheets",
     title: "Tables that hold 2M records.",
-    copy: "Graphical enrichment tables — multiplayer by default, with point-in-time restoration when things go sideways. All the depth of the API, none of the code.",
+    copy: "Graphical enrichment tables, multiplayer by default, with point-in-time restoration when things go sideways. All the depth of the API, none of the code.",
   },
   {
     key: "mcp",
     title: "An MCP server, ready to go.",
-    copy: "Plug pipe0 into Codex, Claude Code, Cursor and friends. Your agents get the same enrichment engine you do — no glue code in between.",
+    copy: "Plug pipe0 into Codex, Claude Code, Cursor, and friends. Your agents get the same enrichment engine you do, with no glue code in between.",
   },
 ];
 
@@ -60,18 +65,17 @@ export function LandingSpotlight() {
     <div style={{ ["--spot-speed" as string]: `${CYCLE_MS}ms` }}>
       {/* ===== Mobile / tablet — stacked cards, copy next to its visual ===== */}
       <div className="flex flex-col gap-10 lg:hidden">
-        <div className="max-w-[720px]">
+        <div className="max-w-180">
           <h2 className="text-[clamp(28px,3vw,38px)] font-semibold leading-tight tracking-[-0.02em] text-foreground">
-            One engine. Three surfaces.
+            {spotlightHeading}
           </h2>
-          <p className="mt-3.5 max-w-[540px] text-base text-muted-foreground">
-            The same enrichment core, wherever your work happens — in your
-            codebase, in a sheet, or inside your agents.
+          <p className="mt-3.5 max-w-135 text-base text-muted-foreground">
+            {spotlightIntro}
           </p>
         </div>
         {surfaces.map((s, i) => (
           <div key={s.key} className="min-w-0">
-            <div className="stage-glossy relative mb-4 h-[300px] min-w-0 overflow-hidden rounded-[16px] border sm:h-[360px]">
+            <div className="stage-glossy relative mb-4 h-75 min-w-0 overflow-hidden rounded-2xl border sm:h-90">
               {panes[i]}
             </div>
             <h3 className="font-display text-[18px] font-semibold leading-snug tracking-tight text-foreground">
@@ -88,13 +92,12 @@ export function LandingSpotlight() {
       <div className="hidden gap-9 lg:grid lg:grid-cols-[minmax(320px,5fr)_7fr] lg:items-stretch">
         {/* Left column — heading on top, tabs fill the remaining height */}
         <div className="flex flex-col">
-          <div className="max-w-[720px]">
+          <div className="max-w-180">
             <h2 className="text-[clamp(28px,3vw,38px)] font-semibold leading-tight tracking-[-0.02em] text-foreground">
-              One engine. Three surfaces.
+              {spotlightHeading}
             </h2>
-            <p className="mt-3.5 max-w-[540px] text-base text-muted-foreground">
-              The same enrichment core, wherever your work happens — in your
-              codebase, in a sheet, or inside your agents.
+            <p className="mt-3.5 max-w-135 text-base text-muted-foreground">
+              {spotlightIntro}
             </p>
           </div>
 
@@ -114,7 +117,7 @@ export function LandingSpotlight() {
                   aria-selected={isActive}
                   onClick={() => setActive(i)}
                   className={cn(
-                    "relative grid gap-1.5 border-t border-border px-6 py-[18px] text-left transition-opacity duration-500 first:border-t-0",
+                    "relative grid gap-1.5 border-t border-border px-6 py-4.5 text-left transition-opacity duration-500 first:border-t-0",
                     isActive
                       ? "cursor-default opacity-100"
                       : "cursor-pointer opacity-45 hover:opacity-75",
@@ -122,7 +125,7 @@ export function LandingSpotlight() {
                 >
                   <span
                     className={cn(
-                      "spot-rail absolute top-[18px] bottom-[18px] left-0 w-0.5 rounded-sm bg-foreground/10 transition-opacity duration-300",
+                      "spot-rail absolute top-4.5 bottom-4.5 left-0 w-0.5 rounded-sm bg-foreground/10 transition-opacity duration-300",
                       isActive ? "is-active opacity-100" : "opacity-0",
                     )}
                   >
@@ -142,7 +145,7 @@ export function LandingSpotlight() {
 
         {/* Stage — glossy framed pane (same material as the hero), spans the
             full column height including the heading. Panes crossfade. */}
-        <div className="stage-glossy relative min-h-[360px] overflow-hidden rounded-[18px] border lg:min-h-[560px]">
+        <div className="stage-glossy relative min-h-90 overflow-hidden rounded-[18px] border lg:min-h-140">
           <StagePane active={active === 0}>
             <CodebasePane />
           </StagePane>
@@ -186,7 +189,7 @@ function CodebasePane() {
     <div className="relative flex h-full flex-col bg-[linear-gradient(180deg,var(--deep-2)_0%,var(--deep)_72%)] p-5 sm:p-7">
       {/* bottom darkening, like the hero's foot */}
       <div
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/35 to-transparent"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-linear-to-t from-black/35 to-transparent"
         aria-hidden
       />
       <div className="flex items-center gap-1.5 pb-4">
@@ -236,7 +239,7 @@ function SheetsPane() {
   return (
     <div className="relative flex h-full flex-col items-center justify-center gap-5 bg-[linear-gradient(180deg,#eef3fb_0%,#dde8f7_100%)] px-5 py-6 sm:px-8">
       {/* App window — the demo plays at fixed proportions inside a frame */}
-      <div className="w-full max-w-[600px] overflow-hidden rounded-[12px] border border-[#1c2333]/12 bg-white shadow-[0_1px_2px_rgba(14,17,23,0.06),0_16px_40px_rgba(28,35,80,0.18)]">
+      <div className="w-full max-w-150 overflow-hidden rounded-[12px] border border-[#1c2333]/12 bg-white shadow-[0_1px_2px_rgba(14,17,23,0.06),0_16px_40px_rgba(28,35,80,0.18)]">
         {/* Window chrome */}
         <div className="flex items-center gap-1.5 border-b border-[#1c2333]/8 bg-[#f7f9fc] px-3.5 py-2.5">
           <span className="size-2.5 rounded-full bg-[#1c2333]/15" />
@@ -258,7 +261,7 @@ function SheetsPane() {
         </div>
         {/* Demo recording */}
         <video
-          className="block aspect-[16/9] w-full object-cover object-top"
+          className="block aspect-video w-full object-cover object-top"
           autoPlay
           loop
           muted
@@ -269,7 +272,7 @@ function SheetsPane() {
       </div>
 
       {/* Feature chips — highlighted one at a time */}
-      <div className="flex max-w-[600px] flex-wrap items-center justify-center gap-2">
+      <div className="flex max-w-150 flex-wrap items-center justify-center gap-2">
         {sheetChips.map((chip, i) => (
           <span
             key={chip}
@@ -299,6 +302,7 @@ function McpPane({ active, reduced }: { active: boolean; reduced: boolean }) {
 
   useEffect(() => {
     if (reduced) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setStep(MCP_STEPS);
       return;
     }
@@ -323,7 +327,7 @@ function McpPane({ active, reduced }: { active: boolean; reduced: boolean }) {
     <div className="relative flex h-full flex-col gap-3 bg-[linear-gradient(180deg,#7b94e8_0%,#b5d2f6_58%,#d6e9fc_100%)] p-5 sm:p-7">
       {/* gentle top darkening, echoing the hero */}
       <div
-        className="pointer-events-none absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-[#1d2476]/25 to-transparent"
+        className="pointer-events-none absolute inset-x-0 top-0 h-16 bg-linear-to-b from-[#1d2476]/25 to-transparent"
         aria-hidden
       />
       <div
@@ -334,7 +338,7 @@ function McpPane({ active, reduced }: { active: boolean; reduced: boolean }) {
       >
         Find <span className="font-medium">100 software engineers</span> in{" "}
         <span className="font-medium">Berlin</span> at{" "}
-        <span className="font-medium">Google</span> — fetch work emails and
+        <span className="font-medium">Google</span>. Fetch work emails and
         phone numbers.
       </div>
       <div
