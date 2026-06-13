@@ -604,6 +604,25 @@
     rgba(10, 14, 50, 0) 100%
   );
 }
+
+/* Safari only. The globe video is opaque with the sky's base color (#bfd7fa)
+   baked in, because Safari can't decode the WebM's alpha. The hero panel is set
+   to that same #bfd7fa (.hero-panel-flat) so the video's edge is invisible, and
+   this layer just *darkens* the top into the saturated indigo — a single indigo
+   hue fading out via alpha, so there are no opaque color blocks and no seam. */
+.hero-safari-sky {
+  background: linear-gradient(
+    180deg,
+    rgba(44, 55, 164, 0.9) 0%,
+    rgba(44, 55, 164, 0.6) 20%,
+    rgba(44, 55, 164, 0.3) 37%,
+    rgba(44, 55, 164, 0) 56%
+  );
+}
+/* Flat sky base for Safari — same color the video bakes in. */
+.hero-panel-flat {
+  background: #bfd7fa;
+}
 @media (prefers-reduced-motion: reduce) {
   .hero-sky,
   .hero-sky::before,
