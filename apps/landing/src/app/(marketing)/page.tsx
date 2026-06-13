@@ -12,21 +12,21 @@ const trustedLogos = [
   {
     src: "/media/website/logos/pie-light.svg",
     alt: "Pie",
-    className: "block h-6 w-auto",
+    className: "block h-5 w-auto sm:h-6",
     width: 559,
     height: 356,
   },
   {
     src: "/media/website/logos/lightfield.svg",
     alt: "Lightfield",
-    className: "block h-5 w-auto",
+    className: "block h-4 w-auto sm:h-5",
     width: 87,
     height: 16,
   },
   {
     src: "/media/website/logos/augusta-dark.svg",
     alt: "Augusta Labs",
-    className: "block h-5 w-auto",
+    className: "block h-4 w-auto sm:h-5",
     width: 4288,
     height: 924,
   },
@@ -83,7 +83,7 @@ export default function Home() {
           </div>
 
           {/* Trusted-by, set into the sand at the foot of the scene */}
-          <div className="trusted-scrim absolute inset-x-0 bottom-0 z-10 flex flex-col items-center justify-center gap-3 px-4 pb-5 pt-24 sm:flex-row sm:gap-8 md:gap-10">
+          <div className="trusted-scrim absolute inset-x-0 bottom-0 z-10 flex flex-col items-center justify-center gap-3 px-9 pb-5 pt-24 sm:flex-row sm:gap-8 sm:px-4 md:gap-10">
             <span className="text-[12px] font-semibold uppercase tracking-[0.12em] text-white/70">
               Trusted by
             </span>
