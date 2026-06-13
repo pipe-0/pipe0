@@ -1,5 +1,11 @@
 # @pipe0/doc-links
 
+## 0.0.6
+
+### Patch Changes
+
+- [#16](https://github.com/pipe-0/pipe0/pull/16) [`a62e492`](https://github.com/pipe-0/pipe0/commit/a62e4927d77e3ddb45e9af2a8f14892232ece5b5) Thanks [@florianmartens](https://github.com/florianmartens)! - Update doc links
+
 ## 0.0.4
 
 ### Patch Changes
