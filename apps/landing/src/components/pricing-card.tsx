@@ -31,13 +31,21 @@ const plans: Plan[] = [
     price: "49",
     credits: "1.600",
     perCredit: "0.031",
-    features: [...baseFeatures, "1 high-volume billing slot"],
+    features: [
+      ...baseFeatures,
+      "40k rows per sheet",
+      "1 high-volume billing slot",
+    ],
   },
   {
     price: "149",
     credits: "5.000",
     perCredit: "0.030",
-    features: [...baseFeatures, "6 high-volume billing slots"],
+    features: [
+      ...baseFeatures,
+      "100k rows per sheet",
+      "6 high-volume billing slots",
+    ],
   },
   {
     price: "349",
@@ -45,6 +53,7 @@ const plans: Plan[] = [
     perCredit: "0.029",
     features: [
       ...baseFeatures,
+      "200k rows per sheet",
       "12 high-volume billing slots",
       "Lower per-invocation cost",
       "Lower cost for custom connections",
@@ -56,6 +65,7 @@ const plans: Plan[] = [
     perCredit: "0.029",
     features: [
       ...baseFeatures,
+      "1M rows per sheet",
       "30 high-volume billing slots",
       "Lower per-invocation cost",
       "Lower cost for custom connections",

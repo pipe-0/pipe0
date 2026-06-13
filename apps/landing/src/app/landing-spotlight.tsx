@@ -10,7 +10,7 @@ type Surface = {
 };
 
 /* One copy source, shared by the mobile and desktop layouts. */
-const spotlightHeading = "One engine. Three surfaces.";
+const spotlightHeading = "Three modes, one engine.";
 const spotlightIntro =
   "The same enrichment core, wherever you work: your codebase, a sheet, or inside your agents.";
 
@@ -237,7 +237,7 @@ const sheetChips = [
 
 function SheetsPane() {
   return (
-    <div className="relative flex h-full flex-col items-center justify-center gap-5 bg-[linear-gradient(180deg,#eef3fb_0%,#dde8f7_100%)] px-5 py-6 sm:px-8">
+    <div className="relative flex h-full flex-col items-center justify-center gap-5 bg-[linear-gradient(180deg,#e3edfd_0%,#bfd5f8_100%)] px-5 py-6 sm:px-8">
       {/* App window — the demo plays at fixed proportions inside a frame */}
       <div className="w-full max-w-150 overflow-hidden rounded-[12px] border border-[#1c2333]/12 bg-white shadow-[0_1px_2px_rgba(14,17,23,0.06),0_16px_40px_rgba(28,35,80,0.18)]">
         {/* Window chrome */}
@@ -267,7 +267,7 @@ function SheetsPane() {
           muted
           playsInline
           preload="metadata"
-          src="/media/website/sheets-demo.webm"
+          src="/media/website/sheet-enrich-demo.webm"
         />
       </div>
 

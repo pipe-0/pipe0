@@ -21,12 +21,19 @@ function isActive(href: string, pathname: string, nested: boolean): boolean {
   return a === b || (nested && b.startsWith(`${a}/`));
 }
 
-const itemClass = cn(
-  "relative flex flex-row items-center gap-2 rounded-lg p-2 ps-3 text-start text-fd-muted-foreground transition-colors wrap-anywhere",
-  "hover:bg-fd-accent/50 hover:text-fd-accent-foreground/80 hover:transition-none",
-  "data-[active=true]:bg-fd-primary/10 data-[active=true]:text-fd-primary data-[active=true]:hover:transition-colors",
+const baseClass = cn(
+  "relative flex flex-row items-center gap-2 rounded-lg p-2 ps-3 text-start transition-colors wrap-anywhere",
   "[&_svg]:size-4 [&_svg]:shrink-0",
 );
+
+const inactiveClass = cn(
+  "text-fd-muted-foreground",
+  "hover:bg-fd-accent/50 hover:text-fd-accent-foreground/80 hover:transition-none",
+);
+
+// Active item gets the same glossy treatment as primary CTA buttons —
+// primary gradient fill, darker edge, and the inset highlight/glare.
+const activeClass = cn("btn-glossy-indigo btn-glossy border text-white");
 
 export const CatalogAwareSidebarItem: FC<{ item: PageTree.Item }> = ({
   item,
@@ -40,7 +47,7 @@ export const CatalogAwareSidebarItem: FC<{ item: PageTree.Item }> = ({
       href={item.url}
       external={item.external}
       data-active={active}
-      className={itemClass}
+      className={cn(baseClass, active ? activeClass : inactiveClass)}
     >
       {item.icon}
       {item.name}

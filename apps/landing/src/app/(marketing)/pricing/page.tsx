@@ -3,7 +3,6 @@ import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
 import { CtaPanel, Section } from "@/components/marketing";
 import { PricingCard } from "@/components/pricing-card";
-import Image from "next/image";
 
 const faqs = [
   {
@@ -29,24 +28,12 @@ export default function Pricing() {
       {/* ===== Hero panel — header + plans over the dark-alley scene ===== */}
       <section className="mx-auto max-w-384 px-3 sm:px-6">
         <div className="hero-panel border relative overflow-hidden rounded-[18px]">
-          {/* Static backdrop */}
-          <Image
-            src="/media/website/skyline.png"
-            alt=""
-            aria-hidden
-            fill
-            priority
-            sizes="100vw"
-            className="pointer-events-none select-none object-cover"
-          />
-          {/* Legibility veil + top/bottom shading, like the product hero */}
-          <div className="pointer-events-none absolute inset-0 bg-black/30" aria-hidden />
+          {/* Indigo backdrop — the system cards' gradient */}
+          <div className="card-sky absolute inset-0" aria-hidden />
+          {/* Deep shadow at the foot, so the pricing cards' light borders
+              stand out against the panel */}
           <div
-            className="pointer-events-none absolute inset-x-0 top-0 h-2/5 bg-gradient-to-b from-black/15 to-transparent"
-            aria-hidden
-          />
-          <div
-            className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/15 to-transparent"
+            className="pricing-scrim pointer-events-none absolute inset-x-0 bottom-0 h-1/2"
             aria-hidden
           />
 

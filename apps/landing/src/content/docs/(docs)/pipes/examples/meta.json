@@ -3,9 +3,9 @@
   "title": "Examples",
   "defaultOpen": false,
   "pages": [
-    "dough",
     "basic-script-typescript",
     "search-then-enrich",
+    "dough",
     "qualify-and-email",
     "signup-alerts"
   ]

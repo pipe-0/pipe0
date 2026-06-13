@@ -37,17 +37,20 @@ The pipe's inputs and outputs are fixed. You can remap inputs and rename outputs
 
 Set `config.output_fields.<FIELD>.alias`:
 
-```javascript
+```javascript title="Rename an output field"
 fetch('https://api.pipe0.com/v1/pipes/run', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+        'Authorization': `Bearer ${API_KEY}`,
+        'Content-Type': 'application/json'
+    },
     body: JSON.stringify({
         pipes: [
             {
                 pipe_id: 'person:name:split@1',
                 config: {
                     output_fields: {
-                        first_name: { alias: 'special_first_name' } // <- RENAME
+                        first_name: { alias: 'special_first_name' } // [!code highlight]
                     }
                 }
             }
@@ -61,17 +64,20 @@ fetch('https://api.pipe0.com/v1/pipes/run', {
 
 Set `config.output_fields.<FIELD>.enabled: false`:
 
-```javascript
+```javascript title="Disable an output field"
 fetch('https://api.pipe0.com/v1/pipes/run', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+        'Authorization': `Bearer ${API_KEY}`,
+        'Content-Type': 'application/json'
+    },
     body: JSON.stringify({
         pipes: [
             {
                 pipe_id: 'person:name:split@1',
                 config: {
                     output_fields: {
-                        first_name: { enabled: false } // <- DISABLE
+                        first_name: { enabled: false } // [!code highlight]
                     }
                 }
             }
@@ -138,7 +144,7 @@ In prompt-style fields, declare model outputs with `{% output %}`:
 
 ```liquid
 {% output summary, type: "string", description: "One-line summary." %}
-{% output score, type: "number", description: "0–100 confidence.", required: false %}
+{% output score, type: "number", description: "Confidence from 0 to 100.", required: false %}
 {% output details, type: "json", schema: "ProductDetails", description: "Full product spec." %}
 ```
 
@@ -155,7 +161,7 @@ In prompt-style fields, declare model outputs with `{% output %}`:
 
 #### Template example
 
-```json
+```json title="Prompt config with output declarations"
 {
   "prompt": {
     "template": "Determine if {{ company_name }} is a good customer for my magic wand 🪄 business. {% output reason, type: \"json\", schema: \"reason\", description: \"Explain why the customer is a good prospect\" %} {% output is_good_customer, type: \"boolean\", description: \"Overall fit assessment\" %}",
@@ -186,15 +192,15 @@ The previous `{{ input ... }}` / `{{ secret ... }}` / `{{ output ... }}` / `<tag
 | `<tag>…</tag>` blocks | rewrite as `{{ … }}` refs and Liquid control flow |
 
 
-## Run-if <span className="badge-new" />
+## Run-if<span className="badge-new" />
 
 `run_if` runs a pipe only when its conditions match. For example:
 
-> Run `person:name:split@1` if `name` is `completed` and its value contains `Tom`.
+> Run `person:name:split@1` if the value of `name` contains `Tom`.
 
 Request:
 
-```json
+```json title="Request with run_if"
 {
   "pipes": [
     {
@@ -227,7 +233,9 @@ What to do when conditions match. Defaults to `"run"`. Reserved for future expan
 
 **Supported:** `run`.
 
-> `run_if` doesn't override other gating. A pipe with missing required inputs is still `skipped` even if its `run_if` matches.
+<Callout>
+`run_if` doesn't override other gating. A pipe with missing required inputs is still `skipped` even if its `run_if` matches.
+</Callout>
 
 #### `when.logic`
 
@@ -243,7 +251,9 @@ The conditions to evaluate. Each checks a field's value or status; combined with
 
 The field to evaluate. Either an input field or another pipe's `output_field`.
 
-> JSON fields can't be targeted directly. Expand JSON properties into their own fields first.
+<Callout>
+JSON fields can't be targeted directly. Expand JSON properties into their own fields first.
+</Callout>
 
 #### `condition.property`
 
@@ -261,7 +271,7 @@ How to compare. Allowed operators depend on `property` and `field.type`:
 | value    | date    | `eq`, `neq`, `lt`, `lte`, `gt`, `gte`, `contains` |
 | value    | number  | `eq`, `neq`, `lt`, `lte`, `gt`, `gte`, `contains` |
 | value    | boolean | `eq`, `neq` |
-| status   | —       | `eq`, `neq` |
+| status   | any     | `eq`, `neq` |
 
 #### `condition.value`
 

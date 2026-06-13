@@ -13,7 +13,9 @@ export function ShareButton({ url }: { url: string }) {
   return (
     <button
       type="button"
-      className={cn(buttonVariants({ size: "sm", className: "gap-2" }))}
+      className={cn(
+        buttonVariants({ size: "sm", variant: "secondary", className: "gap-2" }),
+      )}
       onClick={onCopy}
     >
       {isChecked ? (

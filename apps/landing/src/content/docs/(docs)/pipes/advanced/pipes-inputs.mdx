@@ -20,12 +20,12 @@ and regenerate data.
 The following <AppLink linkType='pipelineRequest'>request payload</AppLink> contains
 common errors but will be processed successfully.
 
-```json
+```json title="Request with common errors"
 {
   "pipes": [
     {
-      "pipe_id": "company:identity@3",
-    },
+      "pipe_id": "company:identity@3"
+    }
   ],
   "input": [
     {
@@ -41,8 +41,8 @@ common errors but will be processed successfully.
       "name": "Tom Schmidt",
       "company_name": "Pipe0",
       "company_domain": "not today" // invalid: expected a domain
-    },
-  ],
+    }
+  ]
 }
 ```
 
@@ -51,7 +51,7 @@ Here's how we clean this request:
 1. Parse URLs into a consistent format and clean common mistakes
 1. Parse email addresses into a consistent format and clean common mistakes
 1. Fix obvious typos and remove invalid characters
-1. Parse data formats on demand (int > float, float > int, int > string)
+1. Convert data formats on demand (int to float, float to int, int to string)
 
 ### Regeneration
 
@@ -65,13 +65,13 @@ and replaces it with the correct value.
 
 The result may look like this:
 
-```json
+```json title="Healed record"
 {
     "id": 2,
     "name": "Tom Schmidt",
     "company_name": "Pipe0",
     "company_domain": "pipe0.com" // healed
-},
+}
 ```
 
 <Callout>
@@ -88,58 +88,57 @@ Failing the entire task because one input object cannot be processed is impracti
 
 If we find **at least one input object** that can be processed, pipeline validation will pass.
 
-Let's look at the following request payload:
+Take the following request payload:
 
-```json
+```json title="One record can be processed"
 {
   "pipes": [
     {
-      "pipe_id": "company:identity@3",
-    },
+      "pipe_id": "company:identity@3"
+    }
   ],
   "input": [
     {
       "id": 1,
       "name": "Susi Jui",
-      "company_name": "Pipe0",
+      "company_name": "Pipe0"
     },
     { // CANNOT be processed by "company:identity@3"
-      "id": 2,
+      "id": 2
       // required `company_name` missing
-    },
-  ],
+    }
+  ]
 }
 ```
 
 The pipe `company:identity@3` requires the input field `company_name` which is not present
 in record `id=2`. In this case:
 
-- Pipeline validation passes
+- Pipeline validation passes.
 - Record `id=1` is processed in full.
-- Record `id=2` has failed fields
+- Record `id=2` has failed fields.
 
-#### No input object has required input fields
+#### No input object has the required input fields
 
-Let's look at another example:
+Another example:
 
-
-```json
+```json title="No record can be processed"
 {
   "pipes": [
     {
-      "pipe_id": "company:identity@3",
-    },
+      "pipe_id": "company:identity@3"
+    }
   ],
   "input": [
     { // CANNOT be processed by "company:identity@3"
       "id": 1,
-      "name": "Susi Jui",
+      "name": "Susi Jui"
     },
     { // CANNOT be processed by "company:identity@3"
       "id": 2,
       "name": "Tom Schmidt"
-    },
-  ],
+    }
+  ]
 }
 ```
 
@@ -164,7 +163,7 @@ When you enrich data with pipe0 you transform your "input objects" into output r
 ```json
 {
     "id": 2,
-    "name": "Tom Schmidt",
+    "name": "Tom Schmidt"
 }
 ```
 Some interactions require you to reprocess previously processed fields. For this, it is common to transform your output records
@@ -177,11 +176,11 @@ Instead of passing your input as a plain value, there is another way: Input expa
 
 You can pass your inputs fully or partially expanded (as the field value of the response object).
 
-```json
+```json title="Expanded input field"
 {
   "id": 2,
   "name": {
-      "value": "emma@amazon.com",
+      "value": "Tom Schmidt",
       "status": "completed",
       "type": "string",
       "reason": null,
@@ -189,7 +188,7 @@ You can pass your inputs fully or partially expanded (as the field value of the 
       "ui": {
         "severity": "none"
       }
-  },
+  }
 }
 ```
 

@@ -14,7 +14,7 @@ The following API operations require a request payload of type `PipesRequestPayl
 
 Here's a sample payload:
 
-```json
+```json title="PipesRequestPayload"
 {
   "config": {
     "environment": "sandbox",
@@ -26,7 +26,7 @@ Here's a sample payload:
     }
   },
   "pipes": [
-    { 
+    {
       "pipe_id": "company:identity@3",
       "config": {
         "input_fields": {
@@ -41,15 +41,15 @@ Here's a sample payload:
           }
         }
       }
-    },
+    }
   ],
   "input": [
     {
       "id": 1,
       "name": "Tom Schmidt",
-      "company_name": "Pipe0",
-    },
-  ],
+      "company_name": "Pipe0"
+    }
+  ]
 }
 ```
 
@@ -87,7 +87,7 @@ Passing pipe configuration is optional. If no configuration is passed, the defau
 
 #### pipe.config.providers
 
-Pipes with multiple providers allow you to choose which providers are processed and their order or processing.
+Pipes with multiple providers allow you to choose which providers are processed and in which order.
 Learn more about <AppLink linkType="waterfallPipes">waterfall pipes</AppLink>.
 
 #### pipe.config.input_fields

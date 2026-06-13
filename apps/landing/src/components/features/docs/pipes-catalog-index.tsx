@@ -308,7 +308,7 @@ function DocsCategoryButtons({
                 "inline-flex items-center gap-1.5 px-2.5 py-1 text-sm rounded-md transition-colors",
                 option.id === "deprecated" && !isActive && "opacity-60",
                 isActive
-                  ? "bg-foreground text-background font-medium"
+                  ? "btn-glossy-indigo btn-glossy border text-white font-medium"
                   : "text-foreground hover:bg-muted",
                 "data-[disabled=true]:opacity-50 data-[disabled=true]:pointer-events-none",
               )}
@@ -326,7 +326,7 @@ function DocsCategoryButtons({
                 <span
                   className={cn(
                     "tabular-nums text-xs",
-                    isActive ? "text-background/70" : "text-muted-foreground",
+                    isActive ? "text-white/70" : "text-muted-foreground",
                   )}
                 >
                   {count}
