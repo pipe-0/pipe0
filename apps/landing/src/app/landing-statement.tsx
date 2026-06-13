@@ -15,7 +15,7 @@ import { useRef } from "react";
    through the middle of the viewport. The "pipe0" token resolves to the
    inline wordmark. */
 const STATEMENT =
-  "A framework for B2B data and automation. Teams use pipe0 for GTM. Builders embed it into tools and agents. Start in minutes, powerful at any scale.";
+  "Enrichment and automation. Embed pipe0 into your tools and agents, or automate your go-to-market stack. Start in seconds, scale infinitely.";
 
 const WORDS = STATEMENT.split(" ");
 
