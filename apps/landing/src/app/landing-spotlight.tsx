@@ -10,7 +10,7 @@ type Surface = {
 };
 
 /* One copy source, shared by the mobile and desktop layouts. */
-const spotlightHeading = "Three modes, one engine.";
+const spotlightHeading = "Three products in one.";
 const spotlightIntro =
   "The same enrichment core, wherever you work: your codebase, a sheet, or inside your agents.";
 
@@ -74,14 +74,20 @@ export function LandingSpotlight() {
           </p>
         </div>
         {surfaces.map((s, i) => (
-          <div key={s.key} className="min-w-0">
+          /* Each surface is a self-contained box — the stacked single-column
+             layout runs all the way to lg, so without the border/wash the next
+             visual reads as belonging to the copy above it. */
+          <div
+            key={s.key}
+            className="min-w-0 rounded-[20px] border border-border bg-card/40 p-2.5"
+          >
             <div className="stage-glossy relative mb-4 h-75 min-w-0 overflow-hidden rounded-2xl border sm:h-90">
               {panes[i]}
             </div>
-            <h3 className="font-display text-[18px] font-semibold leading-snug tracking-tight text-foreground">
+            <h3 className="px-1.5 font-display text-[18px] font-semibold leading-snug tracking-tight text-foreground">
               {s.title}
             </h3>
-            <p className="mt-1.5 text-[14.5px] leading-relaxed text-muted-foreground">
+            <p className="mt-1.5 px-1.5 pb-1 text-[14.5px] leading-relaxed text-muted-foreground">
               {s.copy}
             </p>
           </div>

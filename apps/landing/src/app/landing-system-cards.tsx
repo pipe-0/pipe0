@@ -191,20 +191,27 @@ const cards = [
 
 export function LandingSystemCards() {
   return (
-    <div className="mt-12 grid gap-x-5 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+    <div className="mt-12 grid gap-x-5 gap-y-6 sm:grid-cols-2 sm:gap-y-10 lg:grid-cols-3 lg:gap-x-8">
       {cards.map((card, i) => (
         <div
           key={card.title}
-          className="rv min-w-0"
+          /* On mobile each card is a self-contained box — border, wash and
+             padding bind the image to its own text so the next card's image
+             never reads as belonging to the copy above it. On sm+ the layout
+             is already unambiguous, so the box treatment is removed. */
+          className="rv min-w-0 rounded-[20px] border border-border bg-card/40 p-2.5 sm:rounded-none sm:border-0 sm:bg-transparent sm:p-0"
           style={{ ["--rv-delay" as string]: `${i * 80}ms` }}
         >
-          <div className="stage-glossy relative mb-4 h-[260px] min-w-0 overflow-hidden rounded-[16px] border sm:h-[280px]">
+          {/* At lg the row is wider than before, so the image switches from a
+              fixed height to the aspect ratio it had pre-widening (~387×280)
+              and grows taller with the card instead of flattening out. */}
+          <div className="stage-glossy relative mb-4 h-[260px] min-w-0 overflow-hidden rounded-[16px] border sm:h-[280px] lg:h-auto lg:aspect-[387/280]">
             {card.visual}
           </div>
-          <h3 className="mb-1.5 text-[16px] font-semibold tracking-[-0.01em] text-foreground">
+          <h3 className="mb-1.5 px-1.5 text-[16px] font-semibold tracking-[-0.01em] text-foreground sm:px-0">
             {card.title}
           </h3>
-          <p className="max-w-[480px] text-sm leading-relaxed text-muted-foreground">
+          <p className="max-w-[480px] px-1.5 pb-1 text-sm leading-relaxed text-muted-foreground sm:px-0 sm:pb-0">
             {card.copy}
           </p>
         </div>

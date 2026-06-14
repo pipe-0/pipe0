@@ -131,16 +131,20 @@ export default function Home() {
         </div>
       </Section>
 
-      {/* ===== System grid — a unified data model ===== */}
+      {/* ===== System grid — a unified data model. Heading keeps the
+              standard content width; the cards span the full hero width so
+              each one gets more room on large screens. ===== */}
       <Section className="pt-24">
-        <div className="rv mx-auto max-w-[720px] text-center">
+        <div className="rv mx-auto max-w-140 text-center">
           <h2 className="text-[clamp(28px,3vw,38px)] font-semibold leading-tight tracking-[-0.02em] text-foreground">
-            A unified data model for enrichment &amp; automation that scales.
+            A unified solution for enrichment and automation.
           </h2>
         </div>
-
-        <LandingSystemCards />
       </Section>
+
+      <section className="mx-auto w-full max-w-[1750px] px-4 sm:px-7">
+        <LandingSystemCards />
+      </section>
 
       {/* ===== CTA panel ===== */}
       <Section className="pt-14 sm:pt-24">
