@@ -4,6 +4,7 @@ import { RootProvider } from "fumadocs-ui/provider/next";
 import { baseOptions, linkItems } from "@/lib/layout.shared";
 import { LogoRawSmall } from "@/components/logo";
 import { CatalogAwareSidebarItem } from "@/components/features/docs/catalog-aware-sidebar-item";
+import { AskAiButton } from "@/components/ai/ask-ai-button";
 
 export default function Layout({
   children,
@@ -50,6 +51,8 @@ export default function Layout({
       }}
     >
       {children}
+
+      <AskAiButton />
     </DocsLayout>
     </RootProvider>
   );

@@ -4,6 +4,7 @@ import { LandingStatement } from "@/app/landing-statement";
 import { LandingSystemCards } from "@/app/landing-system-cards";
 import { ScrollReveal } from "@/app/scroll-reveal";
 import { Footer } from "@/components/footer";
+import { AskAiButton } from "@/components/ai/ask-ai-button";
 import { Header } from "@/components/header";
 import { CtaButtons, CtaPanel, Section } from "@/components/marketing";
 import Image from 'next/image'
@@ -159,6 +160,9 @@ export default function Home() {
       </Section>
 
       <Footer />
+
+      {/* Bounded to the hero width (widest element on the page). */}
+      <AskAiButton bound="1750px" variant="overlay" />
     </div>
   );
 }

@@ -7,6 +7,12 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: path.resolve(__dirname, "../.."),
   },
+  // The Ask AI route reads ask-ai-instructions.md at runtime via
+  // readFileSync(new URL(...)). NFT usually traces that automatically, but force
+  // the include so the file is guaranteed to ship in the serverless function.
+  outputFileTracingIncludes: {
+    "/api/chat": ["./src/app/api/chat/ask-ai-instructions.md"],
+  },
   images: {
     remotePatterns: [{ hostname: "imagedelivery.net" }],
     dangerouslyAllowSVG: true,

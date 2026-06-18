@@ -1,5 +1,6 @@
 import { ScrollReveal } from "@/app/scroll-reveal";
 import { Footer } from "@/components/footer";
+import { AskAiButton } from "@/components/ai/ask-ai-button";
 import { Header } from "@/components/header";
 import { CtaPanel, Section } from "@/components/marketing";
 import { PricingCard } from "@/components/pricing-card";
@@ -90,6 +91,9 @@ export default function Pricing() {
       </Section>
 
       <Footer />
+
+      {/* Bounded to the pricing hero width (max-w-384 = 96rem). */}
+      <AskAiButton bound="96rem" variant="overlay" />
     </div>
   );
 }

@@ -10,6 +10,7 @@ import {
   Poppins,
 } from "next/font/google";
 import { getBaseUrl } from "@/lib/utils";
+import { AskAiProvider } from "@/components/ai/ask-ai-provider";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -67,7 +68,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${instrumentSerif.variable} ${hankenGrotesk.variable} ${poppins.variable} ${newsreader.variable} antialiased`}
       >
-        {children}
+        <AskAiProvider>{children}</AskAiProvider>
         <Analytics />
         <Toaster />
       </body>
