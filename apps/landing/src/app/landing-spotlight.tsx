@@ -10,7 +10,7 @@ type Surface = {
 };
 
 /* One copy source, shared by the mobile and desktop layouts. */
-const spotlightHeading = "Three products in one.";
+const spotlightHeading = "Three-in-one.";
 const spotlightIntro =
   "The same enrichment core, wherever you work: your codebase, a sheet, or inside your agents.";
 
