@@ -75,7 +75,8 @@ export default function Home() {
 
           <div className="relative z-10 px-5 pt-14 text-center sm:pt-20">
             <h1 className="mx-auto max-w-3xl text-[clamp(38px,5.5vw,60px)] font-semibold leading-[1.08] tracking-[-0.025em] text-white">
-              Go to market <span className="hl">with great data</span>.
+              <span className="block">The infrastructure for</span>
+              <span className="hl">modern go-to-market</span>.
             </h1>
             {/* <p className="mx-auto mt-5 max-w-165 text-[17px] leading-relaxed text-white/75 sm:text-[18.5px]">
               Next generation data and automation infrastructure for leading teams.

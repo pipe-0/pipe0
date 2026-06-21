@@ -15,7 +15,7 @@ import { useRef } from "react";
    through the middle of the viewport. The "pipe0" token resolves to the
    inline wordmark. */
 const STATEMENT =
-  "Embed pipe0 into your tools and agents, or automate your entire go-to-market stack. Start in seconds, scale infinitely.";
+  "Three products, one framework. pipe0 is infrastructure for enrichment and sales automation. Leading sales tools build on our API, sales organizations build growth engines in our app. ";
 
 const WORDS = STATEMENT.split(" ");
 
@@ -30,7 +30,7 @@ export function LandingStatement() {
   });
 
   return (
-    <div ref={targetRef} className="mx-auto max-w-260">
+    <div ref={targetRef} className="mx-auto max-w-280">
       <p className="flex flex-wrap justify-center gap-x-[0.26em] gap-y-[0.1em] text-center text-[clamp(25px,3.4vw,48px)] font-semibold leading-[1.22] tracking-[-0.02em]">
         {WORDS.map((word, i) => {
           const start = i / WORDS.length;
