@@ -74,9 +74,8 @@ export default function Home() {
           <HeroVideo />
 
           <div className="relative z-10 px-5 pt-14 text-center sm:pt-20">
-            <h1 className="mx-auto max-w-3xl text-[clamp(38px,5.5vw,60px)] font-semibold leading-[1.08] tracking-[-0.025em] text-white">
-              <span className="block">The infrastructure for</span>
-              <span className="hl">modern go-to-market</span>.
+            <h1 className="mx-auto max-w-4xl text-balance text-[clamp(38px,5.5vw,62px)] font-normal leading-[1.08] tracking-[-0.025em] text-white">
+              The infrastructure for modern go&#8209;to&#8209;market
             </h1>
             {/* <p className="mx-auto mt-5 max-w-165 text-[17px] leading-relaxed text-white/75 sm:text-[18.5px]">
               Next generation data and automation infrastructure for leading teams.
