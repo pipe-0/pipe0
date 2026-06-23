@@ -82,10 +82,31 @@ function QuickstartCard({
 function DemoVideo({ src }: { src: string }) {
   // Instead of a hard loop, each playthrough is followed by a random
   // 3–10s rest on the final frame before the demo starts over.
+  const videoRef = useRef<HTMLVideoElement>(null);
   const replayTimeout = useRef<number | null>(null);
+  // Only decode while on screen — several of these mount at once and
+  // decoding them all off-screen pins the GPU/CPU and spins laptop fans.
+  const inView = useRef(false);
 
   useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        inView.current = entry.isIntersecting;
+        if (entry.isIntersecting) {
+          void video.play().catch(() => {});
+        } else {
+          video.pause();
+        }
+      },
+      { threshold: 0 },
+    );
+    io.observe(video);
+
     return () => {
+      io.disconnect();
       if (replayTimeout.current !== null) {
         window.clearTimeout(replayTimeout.current);
       }
@@ -95,8 +116,8 @@ function DemoVideo({ src }: { src: string }) {
   return (
     <div className="relative w-full max-w-[240px] overflow-hidden rounded-[10px] border border-white/20 bg-white shadow-[0_18px_40px_rgba(0,0,0,0.35)]">
       <video
+        ref={videoRef}
         className="block h-auto w-full"
-        autoPlay
         muted
         playsInline
         preload="metadata"
@@ -105,6 +126,7 @@ function DemoVideo({ src }: { src: string }) {
           const video = e.currentTarget;
           replayTimeout.current = window.setTimeout(
             () => {
+              if (!inView.current) return;
               video.currentTime = 0;
               void video.play();
             },

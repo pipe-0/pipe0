@@ -1,5 +1,6 @@
 "use client";
 
+import { InViewVideo } from "@/components/in-view-video";
 import { useState } from "react";
 
 const GLOBE_CLASSES =
@@ -49,20 +50,19 @@ export function HeroVideo() {
       {isSafari && (
         <div className="hero-panel-flat absolute inset-0 z-0" aria-hidden />
       )}
-      <video
+      <InViewVideo
         key={src}
         src={src}
         className={GLOBE_CLASSES}
         width={2400}
         height={1350}
         style={{ objectFit: "contain" }}
-        autoPlay
         loop
         muted
         playsInline
         aria-label="A slowly rotating globe"
-        ref={(el) => {
-          if (el) el.playbackRate = 0.75;
+        onElementReady={(el) => {
+          el.playbackRate = 0.75;
         }}
       />
       {/* Safari: darkening layer that adds the saturated indigo top. */}

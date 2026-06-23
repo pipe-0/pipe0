@@ -1,5 +1,6 @@
 "use client";
 
+import { InViewVideo } from "@/components/in-view-video";
 import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
 
@@ -266,9 +267,8 @@ function SheetsPane() {
           </span>
         </div>
         {/* Demo recording */}
-        <video
+        <InViewVideo
           className="block aspect-video w-full object-cover object-top"
-          autoPlay
           loop
           muted
           playsInline

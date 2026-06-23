@@ -1,3 +1,4 @@
+import { InViewVideo } from "@/components/in-view-video";
 import { providerCatalog } from "@pipe0/base";
 
 /* Provider rows for the "Compose enrichments" marquee. */
@@ -87,9 +88,8 @@ function FindVisual() {
       />
       {/* Search demo, centered in a floating frame */}
       <div className="relative w-full max-w-75 overflow-hidden rounded-[12px] border border-white/20 bg-white shadow-[0_24px_60px_rgba(0,0,0,0.4)]">
-        <video
+        <InViewVideo
           className="block h-auto w-full"
-          autoPlay
           loop
           muted
           playsInline
@@ -155,9 +155,8 @@ function ActionVisual() {
             pipe0 · Actions
           </span>
         </div>
-        <video
+        <InViewVideo
           className="block aspect-[16/10] w-full object-cover object-top"
-          autoPlay
           loop
           muted
           playsInline
