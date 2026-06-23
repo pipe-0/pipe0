@@ -14,8 +14,8 @@ import { useRef } from "react";
    Each word lifts from a muted wash to the full foreground as it scrolls
    through the middle of the viewport. The "pipe0" token resolves to the
    inline wordmark. */
-// "Leading sales tools build on our API to add clay-like enrichment to their applicaitons. Sales organizations execute their entire go-to-market stack with our pipe0 tables and workflows.";
-const STATEMENT = "Leading sales tools build on our API to add clay-like enrichment to their applicaitons. Sales organizations execute their entire go-to-market stack with pipe0 tables and workflows.";
+// "Leading sales tools build on our API to add clay-like enrichment to their applications. Sales organizations execute their entire go-to-market stack with our pipe0 tables and workflows.";
+const STATEMENT = "Leading sales tools build on our API to add clay-like enrichment to their applications. Sales organizations execute their entire go-to-market stack with pipe0 tables and workflows.";
 
 const WORDS = STATEMENT.split(" ");
 
