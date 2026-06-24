@@ -1,3 +1,4 @@
+import { AnimationPauser } from "@/app/animation-pauser";
 import { HeroVideo } from "@/app/hero-video";
 import { LandingSpotlight } from "@/app/landing-spotlight";
 import { LandingStatement } from "@/app/landing-statement";
@@ -57,6 +58,7 @@ export default function Home() {
     <div className="landing min-h-screen bg-background">
       <Header page="product" />
       <ScrollReveal />
+      <AnimationPauser />
 
       {/* ===== Hero — full-bleed sky panel (generous side gutters, no top
               gap). Header + hero + pills fill the viewport; only very tall
@@ -132,20 +134,20 @@ export default function Home() {
         </div>
       </Section>
 
-      {/* ===== System grid — a unified data model. Heading keeps the
-              standard content width; the cards span the full hero width so
-              each one gets more room on large screens. ===== */}
+      {/* ===== System grid — a unified data model. Heading and cards share
+              the standard content width, matching the sections above and
+              below. ===== */}
       <Section className="pt-24">
         <div className="rv mx-auto max-w-140 text-center">
           <h2 className="text-[clamp(28px,3vw,38px)] font-semibold leading-tight tracking-[-0.02em] text-foreground">
-            A unified solution for enrichment and automation.
+            It has never been this easy to build a winning GTM engine
           </h2>
         </div>
       </Section>
 
-      <section className="mx-auto w-full max-w-[1750px] px-4 sm:px-7">
+      <Section>
         <LandingSystemCards />
-      </section>
+      </Section>
 
       {/* ===== CTA panel ===== */}
       <Section className="pt-14 sm:pt-24">

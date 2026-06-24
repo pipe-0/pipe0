@@ -430,7 +430,6 @@
     #cde4fb 78%,
     #d6e9fc 100%
   );
-  animation: hero-sky-base 24s ease-in-out infinite alternate;
 }
 .hero-sky::before,
 .hero-sky::after {
@@ -478,14 +477,6 @@
       rgba(150, 170, 255, 0) 70%
     );
   animation: hero-sky-b 27s ease-in-out infinite alternate;
-}
-@keyframes hero-sky-base {
-  from {
-    filter: hue-rotate(-6deg) saturate(1);
-  }
-  to {
-    filter: hue-rotate(8deg) saturate(1.12);
-  }
 }
 @keyframes hero-sky-a {
   0% {
@@ -832,6 +823,18 @@
   to {
     transform: scaleY(1);
   }
+}
+
+/* Off-screen pause — the AnimationPauser toggles `data-idle` on these
+   full-bleed animated gradient layers when they leave the viewport, so their
+   never-ending compositor work stops while they're not visible. Covers the
+   element and its two drifting light-pool pseudo-elements. */
+.hero-sky[data-idle],
+.hero-sky[data-idle]::before,
+.hero-sky[data-idle]::after,
+.card-sky[data-idle]::before,
+.card-sky[data-idle]::after {
+  animation-play-state: paused;
 }
 
 /* Scroll-reveal stagger (reduced-motion safe). */

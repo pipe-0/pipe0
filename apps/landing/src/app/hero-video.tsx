@@ -39,9 +39,12 @@ export function HeroVideo() {
   }
 
   const src = isSafari
-    ? "/media/website/globe-loop-bg.mp4" // opaque H.264, #bfd7fa baked in —
-    : // hardware-decoded by Safari (VP9 is software-decoded there and stutters)
-      "/media/website/globe-loop.webm"; // VP9 with alpha
+    ? // Opaque HEVC (hvc1), #bfd7fa baked in, hardware-decoded by Safari (VP9
+      // is software-decoded there and stutters). Encoded at the final 0.75×
+      // speed natively so it plays at playbackRate 1 — Safari judders when
+      // asked to retime a hardware-decoded stream to a non-1 rate.
+      "/media/website/globe-loop-bg.mp4"
+    : "/media/website/globe-loop.webm"; // VP9 with alpha
 
   return (
     <>
@@ -62,7 +65,9 @@ export function HeroVideo() {
         playsInline
         aria-label="A slowly rotating globe"
         onElementReady={(el) => {
-          el.playbackRate = 0.75;
+          // The Safari MP4 is already slowed in the file; only the WebM needs
+          // JS retiming (Chrome/Firefox handle a non-1 rate smoothly).
+          el.playbackRate = isSafari ? 1 : 0.75;
         }}
       />
       {/* Safari: darkening layer that adds the saturated indigo top. */}
