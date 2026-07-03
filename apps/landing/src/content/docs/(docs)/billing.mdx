@@ -46,6 +46,19 @@ Pipes with `billing_mode="on_success"` are billed when at least one of their out
 as `completed`. This indicates a successful result. If all output fields of a pipe are marked as `no_result`, the pipe is not billed.
 See <AppLink linkType="fieldStatus">field status</AppLink> for more info.
 
+## AI pipe billing
+
+AI pipes like `prompt:run@1`, `email:write@1`, and `message:write@1` are billed by token usage,
+not at a flat price per run.
+
+- Input and output tokens are billed separately, in blocks of 100 tokens.
+- Each model tier (`google-low`, `openai-high`, `anthropic-high`) has its own credit price per block.
+- `agent:run@1` bills the tokens of every agent step, plus a fee per tool call.
+
+Short prompts with short answers cost a fraction of a credit. Long prompts over large
+fields (for example a full profile object) cost more. The pipe catalog shows a cost
+estimate for every AI pipe.
+
 ## Search billing
 
 Searches are billed per successful result or per search.

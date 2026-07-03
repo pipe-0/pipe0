@@ -14,13 +14,13 @@ A single-provider pipe runs on one third-party service (e.g. [LeadMagic](https:/
 
 A waterfall pipe tries providers in order. The first one that returns data wins; the rest are skipped.
 
-Only the provider that returns a result is billed — `no_result` is free.
+Only the provider that returns a result is billed. A `no_result` costs nothing.
 
 Waterfalls boost coverage at the cost of latency: each provider attempted adds a round-trip.
 
 #### Choosing waterfall providers
 
-Set `config.providers` to an array of `{ provider: <PROVIDER_NAME> }`. Providers run in array order — index `0` first. Remove an entry to skip it, reorder to change priority. Omit `config.providers` to use the default order.
+Set `config.providers` to an array of `{ provider: <PROVIDER_NAME> }`. Providers run in array order, index `0` first. Remove an entry to skip it, reorder to change priority. Omit `config.providers` to use the default order.
 
 
 ## Field mode
@@ -89,7 +89,7 @@ fetch('https://api.pipe0.com/v1/pipes/run', {
 
 ### Field mode: `config`
 
-You declare inputs and outputs as part of the pipe's `config` — the pipe doesn't know them ahead of time.
+You declare inputs and outputs as part of the pipe's `config`. The pipe doesn't know them ahead of time.
 
 #### Templates
 
@@ -110,9 +110,9 @@ Templates use a whitelisted subset of [Liquid](https://liquidjs.com) for input r
 | `{{ field }}` | Required input. Pipe fails if missing. |
 | `{{ field \| default: "" }}` | Optional input. The editor inserts new tags this way. |
 | `{{ user.email }}` | Dotted access. Only the head (`user`) is tracked as a dependency. |
-| `{% if email %}{{ email }}{% endif %}` | Presence guard — also marks `email` as optional. |
+| `{% if email %}{{ email }}{% endif %}` | Presence guard. Also marks `email` as optional. |
 
-A field referenced anywhere without a guard becomes required. Only bare `{% if x %}` and `x != nil` / `x == nil` count as guards — compound conditions like `{% if a or b %}` do not.
+A field referenced anywhere without a guard becomes required. Only bare `{% if x %}` and `x != nil` / `x == nil` count as guards; compound conditions like `{% if a or b %}` do not.
 
 **Secrets and constants**
 
@@ -157,7 +157,7 @@ In prompt-style fields, declare model outputs with `{% output %}`:
 | `format` | no | E.g. `"email"`, `"url"`. |
 | `schema` | no | Key into `json_schemas`; used with `type: "json"`. |
 
-`{% output %}` is only valid in fields that support it (e.g. prompt inputs) — using it elsewhere fails at save time.
+`{% output %}` is only valid in fields that support it (e.g. prompt inputs). Using it elsewhere fails at save time.
 
 #### Template example
 
@@ -267,11 +267,13 @@ How to compare. Allowed operators depend on `property` and `field.type`:
 
 | Property | Type    | Operators |
 | :---     | :---    | :---      |
-| value    | string  | `eq`, `neq`, `contains` |
+| value    | string  | `eq`, `neq`, `contains`, `matches` |
 | value    | date    | `eq`, `neq`, `lt`, `lte`, `gt`, `gte`, `contains` |
 | value    | number  | `eq`, `neq`, `lt`, `lte`, `gt`, `gte`, `contains` |
 | value    | boolean | `eq`, `neq` |
 | status   | any     | `eq`, `neq` |
+
+`matches` tests the value against a case-sensitive regular expression, for example `^Tom`.
 
 #### `condition.value`
 

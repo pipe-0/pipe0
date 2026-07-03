@@ -168,7 +168,7 @@ first pipe's required inputs must be satisfiable from these fields (or from `fie
 ```
 
 Examples: `company:identity@3`, `people:email:waterfall@1`, `email:send:resend@1`,
-`person:name:split@1`. Action pipes read hierarchically, e.g. `sheet:row:append@1`.
+`person:name:split@1`. Action pipes read hierarchically, e.g. `row:append:sheet@1`.
 
 - A shipped pipe version **never changes**. Improvements ship as a **new version**
   (`@2`, `@3`), not by mutating the old one. So `company:identity@2` and `company:identity@3`
@@ -302,6 +302,15 @@ credit cost. Billing modes vary:
 A **waterfall** pipe (it tries multiple providers in sequence until one succeeds) only bills
 for the providers it actually consumed. Pipes that don't call a paid provider (pure
 transforms like `person:name:split@1`, `fields:merge@1`) cost little or nothing.
+
+**AI pipes are billed by token usage**, not at a flat price per run. This applies to every
+pipe with a `model` field (`prompt:run@1`, `email:write@1`, `message:write@1`, `agent:run@1`,
+and AI effects such as `rows:filter:prompt@1`). Input and output tokens are metered separately
+in blocks of 100 tokens, priced per model tier. The `model` field accepts the stable tier IDs
+`google-low`, `openai-high`, and `anthropic-high` — the old model-name values
+(`gemini-flash-latest`, `openai-gpt-latest`, `openai-gpt-mini-latest`, `anthropic-opus-latest`)
+are removed and fail validation. `agent:run@1` additionally bills a fee per tool call. When
+estimating AI pipe cost, frame it as token-dependent and point to the catalog's estimate.
 
 When estimating cost for a user: sum, per record, the credit cost of the billable operations
 each pipe is expected to incur (respecting `onSuccess` semantics and waterfall short-circuiting).

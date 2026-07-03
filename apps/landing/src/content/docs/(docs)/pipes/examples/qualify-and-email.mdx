@@ -23,7 +23,7 @@ export const qualifyAndEmailPayload = {
     {
       pipe_id: "prompt:run@1",
       config: {
-        model: "gemini-flash-latest",
+        model: "google-low",
         prompt: {
           template: `
 You are qualifying a person against our Ideal Customer Profile (ICP).
@@ -68,8 +68,9 @@ benefit from data enrichment (sales intelligence, prospecting, lead generation).
         },
       },
       config: {
-        model: "gemini-flash-latest",
+        model: "google-low",
         persona: "sales",
+        signature: "Jane from pipe0",
         template: `
 Write a short, friendly outbound email introducing pipe0, an enrichment framework that helps
 teams add data enrichment into their own products and go-to-market workflows.
@@ -98,9 +99,9 @@ Keep it under 120 words and end with a soft call to action to book a quick call.
       },
       connector: {
         strategy: "first",
-        connections: [{ type: "vault", connection: "<ADD_YOUR_GMAIL_CONNECTION>" }],
+        connections: [{ type: "vault", connection: "gmail_abcd123" }],
       },
-      // To, Subject and Body are templated — reference the upstream fields.
+      // To, subject, and body are templated. Reference the upstream fields.
       config: { to: "{{ work_email }}", subject: "{{ email_subject }}", body: "{{ email_body }}" },
     },
   ],
@@ -116,6 +117,7 @@ A few things worth calling out:
 - **`email:write@1`** produces `email_subject` and `email_body`; the send pipe wires them into its
   templated `subject` and `body` config fields.
 - **`email:send:gmail@1`** needs a Gmail connection from your vault. Replace
-  `<ADD_YOUR_GMAIL_CONNECTION>` with your connection ID (see [Connections](/docs/connections)).
+  `gmail_abcd123` with your connection ID, copied exactly as the vault lists it
+  (see [Connections](/docs/connections)).
 - Swap `email:send:gmail@1` for `email:send:resend@1` if you send through Resend instead. That pipe
   also takes a `from` address.

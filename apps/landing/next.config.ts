@@ -57,6 +57,19 @@ const nextConfig: NextConfig = {
         destination: "/docs/search-catalog/:path*",
         permanent: true,
       },
+      // Pipe renames (catalog 0.5.x): sheet:row:* became row:*:sheet.
+      // Colons are escaped in `source` (path-to-regexp param marker) and
+      // percent-encoded in `destination` (its validator rejects escapes).
+      {
+        source: "/docs/pipe-catalog/sheet\\:row\\:append/:version*",
+        destination: "/docs/pipe-catalog/row%3Aappend%3Asheet/:version*",
+        permanent: true,
+      },
+      {
+        source: "/docs/pipe-catalog/sheet\\:row\\:expandappend/:version*",
+        destination: "/docs/pipe-catalog/row%3Aexpandappend%3Asheet/:version*",
+        permanent: true,
+      },
     ];
   },
 };

@@ -27,7 +27,7 @@ const res = await fetch("https://api.pipe0.com/v1/search/run/sync", {
             config: {
                 limit: 25,
                 filters: {
-                    current_job_titles: ["Software Engineer"]
+                    current_job_titles: { include: ["Software Engineer"] }
                 }
             }
         }
@@ -82,7 +82,7 @@ while (nextPage) {
 
 ## How it works
 
-The `next_page` object is a complete, ready-to-use search payload. The API carries forward your entire search configuration — `search_id`, filters, limit — and updates only the internal pagination state. You don't need to manage cursors or page numbers yourself.
+The `next_page` object is a complete, ready-to-use search payload. The API carries forward your entire search configuration (`search_id`, filters, limit) and updates only the internal pagination state. You don't need to manage cursors or page numbers yourself.
 
 ## Async search
 

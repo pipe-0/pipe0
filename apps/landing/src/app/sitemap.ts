@@ -36,6 +36,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.8,
     },
+    {
+      url: url("/tools/lemlist-api-key-encoder"),
+      changeFrequency: "monthly",
+      priority: 0.6,
+    },
     ...docPages,
     ...blogPages,
   ];

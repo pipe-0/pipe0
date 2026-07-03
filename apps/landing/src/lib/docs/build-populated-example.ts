@@ -60,6 +60,44 @@ function csvBasename(url: string | undefined): string | undefined {
   return last && last.endsWith(".csv") ? last : undefined;
 }
 
+/**
+ * The payload a catalog page renders (the pipe's snippet payload or the
+ * search's snippet payload) is the best source of example values: it is
+ * curated and validated. Field paths like `config.filters.locations` resolve
+ * against it directly.
+ */
+export type ExamplePayload = Record<string, unknown>;
+
+function getValueAtPath(
+  payload: ExamplePayload | undefined,
+  path: string,
+): unknown {
+  if (!payload) return undefined;
+  let cursor: unknown = payload;
+  for (const part of path.split(".")) {
+    if (typeof cursor !== "object" || cursor === null) return undefined;
+    cursor = (cursor as Record<string, unknown>)[part];
+  }
+  return cursor;
+}
+
+/**
+ * Default payloads contain empty shells like `""`, `[]`, or
+ * `{ include: [], exclude: [] }`. Those teach nothing, so only prefer a
+ * payload value when at least one of its leaves carries content.
+ * `false` and `0` count as content.
+ */
+function isMeaningfulExampleValue(value: unknown): boolean {
+  if (value === undefined || value === null || value === "") return false;
+  if (Array.isArray(value)) return value.some(isMeaningfulExampleValue);
+  if (typeof value === "object") {
+    return Object.values(value as Record<string, unknown>).some(
+      isMeaningfulExampleValue,
+    );
+  }
+  return true;
+}
+
 function pickStaticValues(
   options: readonly StaticOption[] | undefined,
   count: number,
@@ -79,6 +117,11 @@ function getOptionsDef(
     return field.optionsDef as { type: string; file?: string };
   }
   return undefined;
+}
+
+function fieldHint(field: GeneratedInputMeta, fallback: string): string {
+  if ("label" in field && field.label) return String(field.label).toLowerCase();
+  return fallback;
 }
 
 function placeholderFor(
@@ -119,10 +162,16 @@ function deriveIncludeExcludeValues(field: GeneratedInputMeta): string[] {
     }
   }
 
-  return [placeholderFor(field, "value")];
+  return [placeholderFor(field, fieldHint(field, "value"))];
 }
 
-export function exampleValueForField(field: GeneratedInputMeta): unknown {
+export function exampleValueForField(
+  field: GeneratedInputMeta,
+  payload?: ExamplePayload,
+): unknown {
+  const fromPayload = getValueAtPath(payload, field.path);
+  if (isMeaningfulExampleValue(fromPayload)) return fromPayload;
+
   const direct = FALLBACK_BY_PATH[field.path];
   if (direct !== undefined) return direct;
 
@@ -158,11 +207,32 @@ export function exampleValueForField(field: GeneratedInputMeta): unknown {
     return true;
   }
 
-  if (inputGuards.text_input(field) || inputGuards.textarea_input(field)) {
+  if (
+    inputGuards.text_input(field) ||
+    inputGuards.textarea_input(field) ||
+    inputGuards.tagged_text_input(field)
+  ) {
     if ("placeholder" in field && field.placeholder) {
       return String(field.placeholder);
     }
     return placeholderFor(field, "text");
+  }
+
+  if (inputGuards.template_input(field) || inputGuards.prompt_input(field)) {
+    // Templates use the Liquid subset: {{ field }} refs and, for prompts,
+    // {% output %} declarations. Show the syntax, not a bare placeholder.
+    const firstInput =
+      "inputFields" in field && Array.isArray(field.inputFields)
+        ? field.inputFields.find(
+            (f: { resolvedName?: string }) =>
+              f.resolvedName && f.resolvedName !== "id",
+          )?.resolvedName
+        : undefined;
+    const ref = firstInput ?? "name";
+    if (inputGuards.prompt_input(field)) {
+      return `Summarize what we know about {{ ${ref} }}. {% output summary, type: "string", description: "A one-line summary" %}`;
+    }
+    return `Write a short note about {{ ${ref} }}.`;
   }
 
   if (inputGuards.select_input(field)) {
@@ -185,8 +255,61 @@ export function exampleValueForField(field: GeneratedInputMeta): unknown {
     return [placeholderFor(field, "option")];
   }
 
-  if (inputGuards.ordered_multi_create_input(field) || inputGuards.multi_create_input(field)) {
-    return [placeholderFor(field, "value")];
+  if (
+    inputGuards.ordered_multi_create_input(field) ||
+    inputGuards.multi_create_input(field) ||
+    inputGuards.tagged_ordered_multi_create_input(field)
+  ) {
+    return [placeholderFor(field, fieldHint(field, "value"))];
+  }
+
+  if (inputGuards.min_max_int_input(field)) {
+    const f = field as GeneratedInputMetaMap["min_max_int_input"];
+    return { min: f.min ?? 0, max: f.max ?? 100 };
+  }
+
+  if (inputGuards.loose_object_input(field)) {
+    const f = field as GeneratedInputMetaMap["loose_object_input"];
+    const key = ("keyPlaceholder" in f && f.keyPlaceholder) || "key";
+    const value = ("valuePlaceholder" in f && f.valuePlaceholder) || "value";
+    return { [String(key)]: String(value) };
+  }
+
+  if (inputGuards.fields_select_input(field)) {
+    const f = field as GeneratedInputMetaMap["fields_select_input"];
+    const min = ("minItems" in f && f.minItems) || 1;
+    const names =
+      Array.isArray(f.options) && f.options.length > 0
+        ? f.options.slice(0, Math.max(1, Number(min))).map((o) => o.value)
+        : ["field_name"];
+    return names.map((field_name) => ({ field_name }));
+  }
+
+  if (inputGuards.condition_block_input(field)) {
+    const f = field as GeneratedInputMetaMap["condition_block_input"];
+    const fieldName =
+      ("fieldNamePlaceholder" in f && f.fieldNamePlaceholder) || "email";
+    return {
+      logic: "and",
+      conditions: [
+        {
+          property: "value",
+          field_name: String(fieldName),
+          operator: "eq",
+          value: `{{ ${fieldName} }}`,
+        },
+      ],
+    };
+  }
+
+  if (inputGuards.context_select_input(field)) {
+    const def = getOptionsDef(field) as
+      | { requires?: { connection?: string } }
+      | undefined;
+    const connection = def?.requires?.connection;
+    return connection
+      ? `<id from your ${connection} account>`
+      : `<provider-resolved value>`;
   }
 
   if (inputGuards.int_input(field) || inputGuards.number_input(field)) {
@@ -226,16 +349,23 @@ export function exampleValueForField(field: GeneratedInputMeta): unknown {
   }
 
   if (inputGuards.providers_input(field)) {
-    return [{ provider: "value" }];
+    // Options carry the pipe's real provider order.
+    if ("options" in field && Array.isArray(field.options)) {
+      const providers = (field.options as StaticOption[])
+        .slice(0, 2)
+        .map((o) => ({ provider: o.value }));
+      if (providers.length > 0) return providers;
+    }
+    return [{ provider: "<provider>" }];
   }
 
   if (inputGuards.connector_input(field)) {
-    return {
-      strategy: "first",
-      connections: [
-        { type: "vault", connection: "provider_connection_id" },
-      ],
-    };
+    // A made-up connection string fails the vault format validation, so keep
+    // the fallback shape empty. Catalog pages inject a provider-prefixed
+    // example via the payload when the pipe accepts user connections.
+    const mode = "connectorMode" in field ? field.connectorMode : undefined;
+    if (mode === "disabled") return null;
+    return { strategy: "first", connections: [] };
   }
 
   if (inputGuards.pipes_run_if_input(field)) {
@@ -260,10 +390,11 @@ export function exampleValueForField(field: GeneratedInputMeta): unknown {
 
 export function generateFieldExampleSnippet(
   field: GeneratedInputMeta,
+  payload?: ExamplePayload,
 ): string {
   const pathParts = field.path.split(".");
   const key = pathParts[pathParts.length - 1];
-  const value = exampleValueForField(field);
+  const value = exampleValueForField(field, payload);
   const valueJson = JSON.stringify(value, null, 2)
     .split("\n")
     .map((line, idx) => (idx === 0 ? line : `  ${line}`))
@@ -286,7 +417,7 @@ function setDeep(target: Record<string, unknown>, path: string, value: unknown) 
 
 export function buildPopulatedExample(
   formConfig: FormSection[],
-  options: { includeOptional?: boolean } = {},
+  options: { includeOptional?: boolean; payload?: ExamplePayload } = {},
 ): Record<string, unknown> {
   const includeOptional = options.includeOptional ?? true;
   const out: Record<string, unknown> = {};
@@ -296,7 +427,7 @@ export function buildPopulatedExample(
       for (const field of group.fields) {
         const required = "required" in field && field.required;
         if (!required && !includeOptional) continue;
-        setDeep(out, field.path, exampleValueForField(field));
+        setDeep(out, field.path, exampleValueForField(field, options.payload));
       }
     }
   }

@@ -9,12 +9,12 @@ This example posts a Slack alert when a new user signs up and matches your ideal
 
 The pipeline runs in one request:
 
-1. `email:iswork@1` — is the signup using a work email?
-2. `company:domain:workemail@1` — resolve the company domain (only for work emails).
-3. `company:overview@3` — enrich the company.
-4. `prompt:run@1` — score the company against our ICP.
-5. `message:write@1` — draft the alert (only for ICP matches).
-6. `message:send:slack@1` — post the drafted message to Slack.
+1. `email:iswork@1`: is the signup using a work email?
+2. `company:domain:workemail@1`: resolve the company domain (only for work emails).
+3. `company:overview@3`: enrich the company.
+4. `prompt:run@1`: score the company against our ICP.
+5. `message:write@1`: draft the alert (only for ICP matches).
+6. `message:send:slack@1`: post the drafted message to Slack.
 
 export const signupAlertPayload = {
   config: { environment: "production" },
@@ -31,14 +31,14 @@ export const signupAlertPayload = {
           ],
         },
       },
-      // The pipe expects a `work_email` field — point it at the signup `email`.
+      // The pipe expects a `work_email` field. Point it at the signup `email`.
       config: { input_fields: { work_email: { alias: "email" } } },
     },
     { pipe_id: "company:overview@3" },
     {
       pipe_id: "prompt:run@1",
       config: {
-        model: "gemini-flash-latest",
+        model: "google-low",
         prompt: {
           template: `
 Your task is to determine if the user's current employer aligns with the ideal customer profile for our business, pipe0.
@@ -84,7 +84,7 @@ Estimated revenue: {{ estimated_revenue | default: "" }}
         },
       },
       config: {
-        model: "gemini-flash-latest",
+        model: "google-low",
         template: `
 Notify the pipe0 team that a high value customer signed up to the platform.
 
@@ -108,10 +108,10 @@ Reason why it is a high value customer: {{ reason | default: "" }}
       },
       connector: {
         strategy: "first",
-        connections: [{ type: "vault", connection: "<ADD_YOUR_CONNECTION>" }],
+        connections: [{ type: "vault", connection: "slack_abcd123" }],
       },
       // `message:write@1` stored its output in the `message` field.
-      config: { channel_id: "<ADD_SLACK_CHANNEL_ID>", message: "{{ message }}" },
+      config: { channel_id: "C0123456789", message: "{{ message }}" },
     },
   ],
   input: [{ id: 1, name: "<NAME>", email: "<EMAIL>" }],
@@ -119,5 +119,5 @@ Reason why it is a high value customer: {{ reason | default: "" }}
 
 <RequestExample kind="pipes" payload={signupAlertPayload} />
 
-Replace `<ADD_YOUR_CONNECTION>` with your Slack vault connection ID and `<ADD_SLACK_CHANNEL_ID>`
-with the target channel (see [Connections](/docs/connections)).
+Replace `slack_abcd123` with your Slack vault connection ID, copied exactly as the vault lists it,
+and `C0123456789` with the target channel ID (see [Connections](/docs/connections)).

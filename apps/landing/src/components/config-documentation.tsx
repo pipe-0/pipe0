@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/tooltip";
 import {
   buildPopulatedExample,
+  ExamplePayload,
   generateFieldExampleSnippet,
   optionsDefSummary,
 } from "@/lib/docs/build-populated-example";
@@ -29,6 +30,8 @@ import {
   inputGuards,
   RECORD_FIELD_FORMATS,
   RECORD_FIELD_TYPES,
+  RUN_IF_OPERATOR_LABELS,
+  RUN_IF_VALUE_OPERATORS,
 } from "@pipe0/base";
 import {
   Activity,
@@ -115,6 +118,7 @@ function FieldIcon({
     case "int_input":
     case "number_input":
     case "exact_range_input":
+    case "min_max_int_input":
       return <Hash className={className} />;
     case "date_range_input":
       return <Calendar className={className} />;
@@ -123,7 +127,22 @@ function FieldIcon({
       return <ToggleLeft className={className} />;
     case "text_input":
     case "textarea_input":
+    case "tagged_text_input":
+    case "template_input":
       return <Type className={className} />;
+    case "prompt_input":
+      return <Sparkles className={className} />;
+    case "condition_block_input":
+      return <Filter className={className} />;
+    case "loose_object_input":
+    case "json_schema_input":
+      return <Braces className={className} />;
+    case "fields_select_input":
+    case "context_select_input":
+    case "multi_create_input":
+    case "ordered_multi_create_input":
+    case "tagged_ordered_multi_create_input":
+      return <List className={className} />;
     default:
       return <FileText className={className} />;
   }
@@ -237,12 +256,43 @@ function getConstraintInfo(field: GeneratedInputMeta): string[] {
     }
   }
 
+  if (inputGuards.min_max_int_input(field)) {
+    if (field.min !== undefined && field.max !== undefined) {
+      constraints.push(`${field.min}-${field.max}`);
+    }
+  }
+
   if (
     inputGuards.include_exclude_input(field) ||
     inputGuards.include_exclude_select_input(field)
   ) {
     if (field.maxItems) {
       constraints.push(`max: ${field.maxItems} items`);
+    }
+  }
+
+  if (
+    inputGuards.multi_create_input(field) ||
+    inputGuards.ordered_multi_create_input(field) ||
+    inputGuards.tagged_ordered_multi_create_input(field)
+  ) {
+    if ("minItems" in field && field.minItems) {
+      constraints.push(`min: ${field.minItems} items`);
+    }
+    if ("maxItems" in field && field.maxItems) {
+      constraints.push(`max: ${field.maxItems} items`);
+    }
+  }
+
+  if (inputGuards.fields_select_input(field)) {
+    if ("minItems" in field && field.minItems) {
+      constraints.push(`min: ${field.minItems} fields`);
+    }
+  }
+
+  if (inputGuards.loose_object_input(field)) {
+    if ("maxKeys" in field && field.maxKeys) {
+      constraints.push(`max: ${field.maxKeys} keys`);
     }
   }
 
@@ -413,16 +463,28 @@ const DATE_OPERATOR_INFO = [
   { symbol: "lte", description: "On or before" },
 ];
 
+const CONDITION_OPERATOR_INFO = RUN_IF_VALUE_OPERATORS.map((symbol) => ({
+  symbol,
+  description: RUN_IF_OPERATOR_LABELS[symbol] ?? symbol,
+}));
+
 function OperatorsSection({ field }: { field: GeneratedInputMeta }) {
+  const isCondition =
+    inputGuards.condition_block_input(field) ||
+    inputGuards.pipes_run_if_input(field);
+
   if (
     !inputGuards.exact_range_input(field) &&
-    !inputGuards.date_range_input(field)
+    !inputGuards.date_range_input(field) &&
+    !isCondition
   )
     return null;
 
-  const operators = inputGuards.date_range_input(field)
-    ? DATE_OPERATOR_INFO
-    : OPERATOR_INFO;
+  const operators = isCondition
+    ? CONDITION_OPERATOR_INFO
+    : inputGuards.date_range_input(field)
+      ? DATE_OPERATOR_INFO
+      : OPERATOR_INFO;
 
   return (
     <div>
@@ -448,8 +510,14 @@ function OperatorsSection({ field }: { field: GeneratedInputMeta }) {
   );
 }
 
-function FieldDocumentation({ field }: { field: GeneratedInputMeta }) {
-  const codeExample = generateFieldExampleSnippet(field);
+function FieldDocumentation({
+  field,
+  examplePayload,
+}: {
+  field: GeneratedInputMeta;
+  examplePayload?: ExamplePayload;
+}) {
+  const codeExample = generateFieldExampleSnippet(field, examplePayload);
   const sourceSummary = optionsDefSummary(field);
 
   return (
@@ -592,7 +660,13 @@ function FieldAnchorButton({
   );
 }
 
-function FieldAccordionItem({ field }: { field: GeneratedInputMeta }) {
+function FieldAccordionItem({
+  field,
+  examplePayload,
+}: {
+  field: GeneratedInputMeta;
+  examplePayload?: ExamplePayload;
+}) {
   const constraints = getConstraintInfo(field);
   const hasRequired = "required" in field && field.required;
 
@@ -635,7 +709,7 @@ function FieldAccordionItem({ field }: { field: GeneratedInputMeta }) {
         </div>
       </AccordionTrigger>
       <AccordionContent className="pl-6 pb-4">
-        <FieldDocumentation field={field} />
+        <FieldDocumentation field={field} examplePayload={examplePayload} />
       </AccordionContent>
     </AccordionItem>
   );
@@ -645,6 +719,12 @@ interface FilterDocumentationProps {
   formConfig: FormSection[];
   searchable?: boolean;
   exampleFilename?: string;
+  /**
+   * The payload the page is documenting (a pipe's snippet payload or a
+   * search's snippet payload). Field examples prefer the real value found at
+   * each field's path over a synthetic one.
+   */
+  examplePayload?: ExamplePayload;
 }
 
 type FilteredGroup = {
@@ -717,9 +797,11 @@ function buildFilteredSections(
 function GroupBlock({
   group,
   forceOpenFieldPaths,
+  examplePayload,
 }: {
   group: FilteredGroup;
   forceOpenFieldPaths: Set<string>;
+  examplePayload?: ExamplePayload;
 }) {
   const [userOpenItems, setUserOpenItems] = useState<string[] | null>(null);
 
@@ -762,7 +844,11 @@ function GroupBlock({
         className="px-3"
       >
         {group.fields.map((field) => (
-          <FieldAccordionItem key={field.path} field={field} />
+          <FieldAccordionItem
+            key={field.path}
+            field={field}
+            examplePayload={examplePayload}
+          />
         ))}
       </Accordion>
     </div>
@@ -773,6 +859,7 @@ export function PayloadDocumenation({
   formConfig,
   searchable,
   exampleFilename,
+  examplePayload,
 }: FilterDocumentationProps) {
   const [query, setQuery] = useState("");
   const [hashField, setHashField] = useState<string | null>(null);
@@ -829,12 +916,16 @@ export function PayloadDocumenation({
   }, [hashField]);
 
   const handleCopyAll = useCallback(() => {
-    const populated = buildPopulatedExample(formConfig);
+    const populated = buildPopulatedExample(formConfig, {
+      payload: examplePayload,
+    });
     copyToClipboard(JSON.stringify(populated, null, 2));
-  }, [formConfig]);
+  }, [formConfig, examplePayload]);
 
   const handleDownload = useCallback(() => {
-    const populated = buildPopulatedExample(formConfig);
+    const populated = buildPopulatedExample(formConfig, {
+      payload: examplePayload,
+    });
     const blob = new Blob([JSON.stringify(populated, null, 2)], {
       type: "application/json",
     });
@@ -846,7 +937,7 @@ export function PayloadDocumenation({
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
-  }, [formConfig, exampleFilename]);
+  }, [formConfig, exampleFilename, examplePayload]);
 
   return (
     <div className="space-y-4">
@@ -910,6 +1001,7 @@ export function PayloadDocumenation({
                     key={group.groupPath}
                     group={group}
                     forceOpenFieldPaths={forceOpenFieldPaths}
+                    examplePayload={examplePayload}
                   />
                 ))}
               </div>

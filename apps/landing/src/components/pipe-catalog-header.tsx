@@ -197,26 +197,50 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
       const versionEntry = getPipeEntry(v.pipeId);
       return {
         displayValue: `@${v.pipeId.split("@")[1]}`,
-        link: versionEntry.docPath.replace(
-          "/resources/pipe-catalog",
-          "/docs/pipe-catalog",
-        ),
+        link: versionEntry.docPath,
         isDeprecated: !!versionEntry.lifecycle?.deprecatedOn,
       };
     }) ?? [];
 
+  // The curated snippet payload doubles as the source of example values in
+  // the config reference below.
+  const snippetRequest = pipesSnippetCatalog[pipeId]?.[0];
+  const snippetPayload = snippetRequest?.pipes?.[0];
+
+  // Snippets ship without connections. When the pipe accepts user
+  // connections, show a valid provider-prefixed vault string in the config
+  // reference instead of an empty connector.
+  const exampleProvider = pipeEntry.allowedUserConnectionProviders?.[0];
+  const snippetConnections = snippetPayload
+    ? (snippetPayload as { connector?: { connections?: unknown[] } | null })
+        .connector?.connections
+    : undefined;
+  const configExamplePayload = !snippetPayload
+    ? undefined
+    : !exampleProvider || (snippetConnections && snippetConnections.length > 0)
+      ? snippetPayload
+      : {
+          ...snippetPayload,
+          connector: {
+            strategy: "first",
+            connections: [
+              { type: "vault", connection: `${exampleProvider}_abcd123` },
+            ],
+          },
+        };
+
   const formConfig = useMemo(() => {
+    if (!snippetPayload) return null;
     try {
-      const payload = pipesSnippetCatalog[pipeId][0].pipes[0];
       const validationContext = validatePipesOrError({
         config: {
           environment: "production",
         },
-        pipes: [payload],
-        field_annotations: getFieldAnnotations(payload),
+        pipes: [snippetPayload],
+        field_annotations: getFieldAnnotations(snippetPayload),
       });
       return getPipePayloadFormConfig({
-        pipePayload: payload,
+        pipePayload: snippetPayload,
         validationContext,
         store: { field_options: {} },
       });
@@ -224,7 +248,7 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
       console.log(err);
       return null;
     }
-  }, [pipeId]);
+  }, [snippetPayload]);
 
   const [openItems, setOpenItems] = useState<string[]>(DEFAULT_OPEN_ITEMS);
 
@@ -551,21 +575,23 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
         )}
 
         {/* Code examples */}
-        <AccordionItem value="code-examples">
-          <AccordionTrigger>
-            <SectionTriggerLabel
-              label="Code examples"
-              hint="POST /v1/pipes/run"
-            />
-          </AccordionTrigger>
-          <AccordionContent className="pl-6">
-            <ApiRequestCodeExample
-              oas={pipesMiniSpec}
-              operation={pipesMiniSpec.operation("/v1/pipes/run", "post")}
-              harData={{ body: pipesSnippetCatalog[pipeId][0] }}
-            />
-          </AccordionContent>
-        </AccordionItem>
+        {snippetRequest && (
+          <AccordionItem value="code-examples">
+            <AccordionTrigger>
+              <SectionTriggerLabel
+                label="Code examples"
+                hint="POST /v1/pipes/run"
+              />
+            </AccordionTrigger>
+            <AccordionContent className="pl-6">
+              <ApiRequestCodeExample
+                oas={pipesMiniSpec}
+                operation={pipesMiniSpec.operation("/v1/pipes/run", "post")}
+                harData={{ body: snippetRequest }}
+              />
+            </AccordionContent>
+          </AccordionItem>
+        )}
 
         {/* Config reference */}
         {formConfig && (
@@ -580,6 +606,7 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
               <PayloadDocumenation
                 formConfig={formConfig}
                 searchable
+                examplePayload={configExamplePayload}
                 exampleFilename={`${pipeId.replace(/[@:]/g, "-")}-config-example`}
               />
             </AccordionContent>

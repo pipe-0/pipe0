@@ -23,7 +23,7 @@ const result = await fetch("https://api.pipe0.com/v1/search/run", {
             config: {
                 limit: 100,
                 filters: {
-                    current_job_titles: ["Software Engineer", "Developer"]
+                    current_job_titles: { include: ["Software Engineer", "Developer"] }
                 }
             }
         },
@@ -77,7 +77,7 @@ The result will look something like this:
 	"next_page": {
 		"config": {
 			"filters": {
-				"current_job_titles": ["Software Engineer", "Developer"]
+				"current_job_titles": { "include": ["Software Engineer", "Developer"], "exclude": [] }
 			},
 			"pagination": {
 				"limit": 100,
@@ -139,7 +139,7 @@ const res = await fetch("https://api.pipe0.com/v1/search/run/sync", {
             config: {
                 limit: 25,
                 filters: {
-                    current_job_titles: ["Software Engineer"]
+                    current_job_titles: { include: ["Software Engineer"] }
                 }
             }
         }

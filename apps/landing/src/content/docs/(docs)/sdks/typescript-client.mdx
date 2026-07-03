@@ -61,7 +61,7 @@ const result = await pipe0.pipes.pipe({
     {
       pipe_id: "prompt:run@1",
       config: {
-        model: "gemini-flash-latest",
+        model: "google-low",
         prompt: {
           template: `
             Profile: {{ profile }}
@@ -82,15 +82,21 @@ const result = await pipe0.pipes.pipe({
           ],
         },
       },
-      config: { channel: "#new-leads" },
+      connector: {
+        strategy: "first",
+        connections: [{ type: "vault", connection: "slack_abcd123" }],
+      },
+      config: { channel_id: "C0123456789", message: "New ICP match: {{ reasoning }}" },
     },
   ],
-  input: [{ id: "1", email: "jane@acme.com" }],
+  input: [{ id: "1", profile_url: "https://www.linkedin.com/in/jane-doe" }],
 });
 ```
 
-Note `run_if` — the Slack pipe only runs when the previous step marked
+Note `run_if`: the Slack pipe only runs when the previous step marked
 `icp_fit` true. Conditional execution is part of the typed payload.
+`message:send:slack@1` sends through your own Slack workspace, so it needs a
+vault connection ID like `slack_abcd123` (see [Connections](/docs/connections)).
 
 ### Large inputs: `pipeInBatches`
 
@@ -155,8 +161,8 @@ const result = await pipe0.searches.search({
     config: {
       limit: 25,
       filters: {
-        current_job_titles: ["Head of RevOps"],
-        locations: ["San Francisco", "New York"],
+        current_job_titles: { include: ["Head of RevOps"] },
+        locations: { include: ["San Francisco", "New York"] },
       },
     },
   },
@@ -205,7 +211,7 @@ try {
   await pipe0.pipes.pipe({ /* … */ });
 } catch (err) {
   if (err instanceof Pipe0TimeoutError) {
-    // Polling exceeded pollingTimeoutMs — err.runId is still valid,
+    // Polling exceeded pollingTimeoutMs. err.runId is still valid,
     // call pipes.check(err.runId) later.
   } else if (err instanceof Pipe0TaskError) {
     // The API returned a task-level error.

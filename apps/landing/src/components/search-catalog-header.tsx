@@ -75,6 +75,32 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
     | string
     | undefined;
 
+  // The curated snippet payload is the code example body and the source of
+  // example values in the config reference below.
+  const snippetPayload = searchSnippetCatalog[searchId]?.[0];
+
+  // Snippets ship without connections. When the search accepts user
+  // connections, show a valid provider-prefixed vault string in the config
+  // reference instead of an empty connector.
+  const snippetConnections = snippetPayload
+    ? (snippetPayload as { connector?: { connections?: unknown[] } | null })
+        .connector?.connections
+    : undefined;
+  const configExamplePayload = !snippetPayload
+    ? undefined
+    : !searchEntry.allowsUserConnection ||
+        (snippetConnections && snippetConnections.length > 0)
+      ? snippetPayload
+      : {
+          ...snippetPayload,
+          connector: {
+            strategy: "first",
+            connections: [
+              { type: "vault", connection: `${searchEntry.provider}_abcd123` },
+            ],
+          },
+        };
+
   const formConfig = useMemo(() => {
     try {
       const config = getSearchPayloadFormConfig({
@@ -99,10 +125,7 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
           const versionEntry = getSearchEntry(v.searchId);
           return {
             displayValue: `@${v.searchId.split("@")[1]}`,
-            link: versionEntry.docPath.replace(
-              "/resources/search-catalog",
-              "/docs/search/search-catalog",
-            ),
+            link: versionEntry.docPath,
             isDeprecated: !!(versionEntry.lifecycle as any)?.deprecatedOn,
           };
         })}
@@ -266,7 +289,7 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
         <ApiRequestCodeExample
           oas={searchMiniSpec}
           operation={searchMiniSpec.operation("/v1/search/run", "post")}
-          harData={{ body: { search: searchSnippetCatalog[searchId][0] } }}
+          harData={{ body: { search: snippetPayload } }}
         />
       </div>
 
@@ -279,6 +302,7 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
                 <PayloadDocumenation
                   formConfig={formConfig}
                   searchable
+                  examplePayload={configExamplePayload}
                   exampleFilename={`${searchId.replace(/[@:]/g, "-")}-config-example`}
                 />
               </AccordionContent>
