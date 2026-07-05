@@ -103,18 +103,33 @@ If you're building a system that requires auto-top-ups to remain operational at 
 
 ## High-usage billing
 
-With high-usage billing you can opt into discounted per-unit pricing.
+High-usage billing lowers the per-operation credit price of high-traffic pipes and searches. You enroll an eligible operation into a discount tier, and every run of that operation bills at the lower price.
 
-Check your plan features to see if your plan offers a high-usage quota.
+In the <AppLink linkType="pipeCatalog">pipe catalog</AppLink> and <AppLink linkType="searchCatalog">search catalog</AppLink>, eligible operations show a "high volume from" price next to their standard cost. Open the price to see the full tier breakdown.
+
+### What qualifies
+
+High-usage billing only changes the price of operations that run on a <AppLink linkType="connections">managed connection</AppLink>, where pipe0 supplies the provider key. Operations on your own connection are billed separately and never use tiers.
+
+An operation qualifies when its standard price is at least `0.1` credits and the catalog lists discount tiers for it. Near-free operations do not qualify.
+
+One operation can sit behind several pipes and searches. When you enroll it, every pipe and search that bills under that operation gets the lower price.
+
+### Tiers
+
+An eligible operation has up to three tiers: level 1, level 2, and level 3. Each level is cheaper than the one before it, so level 3 gives the lowest price. The catalog cost table lists the exact price for each level.
+
+### Capacity and slots
+
+Each paid plan includes a high-volume capacity, a fixed number of slots you can spend across all your enrollments. A deeper tier costs more slots. If an enrollment would push you past your capacity, pipe0 rejects the change. To free up slots, move an enrollment to a lower tier or remove it. Your plan features list your capacity.
 
 ### 30-day lock
 
-To prevent abuse, users can only change their high-usage selection every 30 days.
-
+Each enrollment is locked for 30 days from the day you set it. While it is locked you can move up to a cheaper tier if you have the capacity, but you cannot move down or unenroll. Changing the tier starts the 30 days again.
 
 ### Enrollment
 
-To enroll in high-usage billing for a specific pipe go to `dashboard` -> `billing` -> `High usage billing`.
+To enroll, go to `dashboard` -> `billing` -> `High usage billing` and choose a tier for the operation you want to discount.
 
 ### Custom discount levels
 

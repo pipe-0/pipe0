@@ -32,7 +32,8 @@ import {
 import { appInfo } from "@/lib/const";
 import { SearchEntryMap } from "@/lib/get-searches";
 import { getSearchDocsURI } from "@/lib/search/get-search-docs-uri";
-import { cn, copyToClipboard } from "@/lib/utils";
+import { hasHighVolume, lowestManagedCredit } from "@/lib/pricing/high-volume";
+import { cn, copyToClipboard, formatCredits } from "@/lib/utils";
 import {
   getDefaultSearchOutputFields,
   getSearchEntry,
@@ -46,7 +47,6 @@ import {
 } from "@pipe0/base";
 import {
   AvatarGroup,
-  PricingBadge,
   type SearchCardData,
   SearchCatalog,
   SearchCatalogActiveFilters,
@@ -74,8 +74,17 @@ import { type ComponentType, type ReactNode, useMemo } from "react";
 const FEATURED_SEARCHES_IDS = [] satisfies SearchId[];
 const FEATURED_SEARCHES_ID_SET = new Set<string>(FEATURED_SEARCHES_IDS);
 
-function getSearchCost(entry: SearchCatalogTableData): number {
-  return entry.cost.credits?.default || 0;
+function getSearchCost(entry: SearchCatalogTableData): {
+  lowest: number;
+  isDiscounted: boolean;
+} {
+  const credits = entry.cost.credits;
+  const base = credits?.default ?? 0;
+  if (!credits || !hasHighVolume(credits)) {
+    return { lowest: base, isDiscounted: false };
+  }
+  const lowest = lowestManagedCredit(credits);
+  return { lowest, isDiscounted: lowest < base };
 }
 
 function getSearchUnit(entry: SearchCatalogTableData): string {
@@ -345,13 +354,20 @@ function DocsActiveFiltersStrip({
 const SearchCard = ({ tableEntry }: { tableEntry: SearchCatalogTableData }) => {
   const searchId = tableEntry.searchId;
   const isNew = (tableEntry.tags as string[]).includes("new");
-  const cost = getSearchCost(tableEntry);
+  const { lowest: cost, isDiscounted } = getSearchCost(tableEntry);
 
   return (
     <Link href={getSearchDocsURI(searchId)}>
       <Card className="flex flex-col justify-stretch border-input hover:border-primary/50 transition-colors relative h-full min-h-[230px]">
         <span className="absolute right-3 top-3 inline-flex gap-1 text-muted-foreground text-xs items-center">
-          {cost ? <PricingBadge credits={cost} /> : "Free"}
+          {cost ? (
+            <span>
+              {isDiscounted ? "from " : ""}
+              {formatCredits(cost)} cr
+            </span>
+          ) : (
+            "Free"
+          )}
           {cost ? (
             <span className="text-muted-foreground/70">
               / {getSearchUnit(tableEntry)}
@@ -535,7 +551,7 @@ function GroupedList({ cards }: { cards: ReadonlyArray<SearchCardData> }) {
             <div>
               {entries.map((card) => {
                 const entry = card.entry;
-                const credits = getSearchCost(entry);
+                const { lowest: credits, isDiscounted } = getSearchCost(entry);
                 const isNew = (entry.tags as string[]).includes("new");
                 const outputFields: CatalogFieldList =
                   getDefaultSearchOutputFields(card.searchId).map((name) => ({
@@ -551,6 +567,7 @@ function GroupedList({ cards }: { cards: ReadonlyArray<SearchCardData> }) {
                     providers={[card.provider]}
                     outputFields={outputFields}
                     credits={credits}
+                    priceFrom={isDiscounted}
                     billableUnit={getSearchUnit(entry)}
                     isNew={isNew}
                   />

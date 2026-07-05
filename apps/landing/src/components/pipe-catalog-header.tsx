@@ -8,11 +8,9 @@ import { HeaderVideoSection } from "@/components/features/docs/header-video-sect
 import { PipeFormPreview } from "@/components/features/docs/pipe-form-preview";
 import { BandCard } from "@/components/features/pipe-catalog/band-card";
 import { CategoryBadge } from "@/components/features/pipe-catalog/category-badge";
-import {
-  ProviderStack,
-  ProviderTile,
-} from "@/components/features/pipe-catalog/catalog-list-row";
+import { ProviderTile } from "@/components/features/pipe-catalog/catalog-list-row";
 import { FieldRow } from "@/components/features/pipe-catalog/field-row";
+import { HighVolumePriceCell } from "@/components/high-volume-price";
 import { TextLink } from "@/components/text-link";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -22,7 +20,10 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { getPipeStartingPrice } from "@/lib/pipes/get-pipe-starting-price";
+import {
+  getPipeLowestPrice,
+  getPipeStartingPrice,
+} from "@/lib/pipes/get-pipe-starting-price";
 import { pipesMiniSpec } from "@/lib/pipes/snippet-catalog";
 import { videoCatalog } from "@/lib/pipes/video-catalog";
 import { cn, copyToClipboard, formatCredits } from "@/lib/utils";
@@ -49,7 +50,7 @@ import {
   sortPipeCatalogByBasePipe,
   validatePipesOrError,
 } from "@pipe0/base";
-import { PricingBadge } from "@pipe0/react";
+import { AvatarGroup } from "@pipe0/react";
 import {
   Accordion,
   AccordionContent,
@@ -186,6 +187,7 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
   const defaultProviders = getDefaultPipeProviders(pipeId);
   const billableEntries = Object.entries(pipeEntry.billableOperations);
   const startingPrice = getPipeStartingPrice(pipeId);
+  const { lowest: lowestPrice } = getPipeLowestPrice(pipeId);
   const category = (pipeEntry.categories?.[0] ?? null) as PipeCategory | null;
 
   const video = videoCatalog[pipeId as keyof typeof videoCatalog] as
@@ -333,7 +335,7 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
           {startingPrice ? (
             <span className="inline-flex items-center gap-1.5">
               <span>from</span>
-              <PricingBadge credits={startingPrice} />
+              <span>{formatCredits(lowestPrice)} cr</span>
               <span>/ result</span>
             </span>
           ) : (
@@ -342,7 +344,7 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
 
           {defaultProviders.length > 0 && (
             <span className="inline-flex items-center gap-1.5">
-              <ProviderStack providers={defaultProviders} />
+              <AvatarGroup providers={defaultProviders} size="sm" />
               <span>
                 {defaultProviders.length} provider
                 {defaultProviders.length === 1 ? "" : "s"}
@@ -747,18 +749,7 @@ function ProviderTable({ entries }: { entries: [string, unknown][] }) {
                 {connections.join(", ")}
               </div>
               <div className="text-right tabular-nums">
-                {def.credits === null ? (
-                  <span className="text-muted-foreground">n/a</span>
-                ) : (
-                  <>
-                    <span>{formatCredits(def.credits.default) || "Free"}</span>
-                    {def.credits !== null && (
-                      <span className="text-muted-foreground ml-1">
-                        credits
-                      </span>
-                    )}
-                  </>
-                )}
+                <HighVolumePriceCell credits={def.credits} unit="credits" />
               </div>
             </div>
           );

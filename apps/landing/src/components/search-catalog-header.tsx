@@ -8,6 +8,7 @@ import { CatalogHeader } from "@/components/features/docs/docs-layout";
 import { BandCard } from "@/components/features/pipe-catalog/band-card";
 import { FieldRow } from "@/components/features/pipe-catalog/field-row";
 import { Info } from "@/components/info";
+import { HighVolumePriceCell } from "@/components/high-volume-price";
 import { InlineDocsBadge } from "@/components/inline-docs-badge";
 import {
   Accordion,
@@ -26,7 +27,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { docsLinkPaths } from "@pipe0/doc-links";
-import { formatCredits } from "@/lib/utils";
 import {
   FieldName,
   getDefaultSearchOutputFields,
@@ -178,10 +178,10 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
                   </div>
                 </TableCell>
                 <TableCell>
-                  <p>
-                    {searchEntry.cost.credits?.default ? formatCredits(searchEntry.cost.credits.default) : "Free"}{" "}
-                    credits
-                  </p>
+                  <HighVolumePriceCell
+                    credits={searchEntry.cost.credits ?? null}
+                    unit="credits"
+                  />
                   <p className="max-w-37.5">
                     <small className="text-muted-foreground">
                       {searchEntry.cost.mode === "per_page" &&

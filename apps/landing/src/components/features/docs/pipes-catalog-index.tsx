@@ -33,8 +33,8 @@ import {
 import { appInfo } from "@/lib/const";
 import { PIPE_CATEGORY_COLORS } from "@/lib/pipes/category-colors";
 import { getPipeDocsURI } from "@/lib/pipes/get-pipe-docs-uri";
-import { getPipeStartingPrice } from "@/lib/pipes/get-pipe-starting-price";
-import { cn, copyToClipboard } from "@/lib/utils";
+import { getPipeLowestPrice } from "@/lib/pipes/get-pipe-starting-price";
+import { cn, copyToClipboard, formatCredits } from "@/lib/utils";
 import {
   getDefaultOutputFields,
   getDefaultPipeProviders,
@@ -60,7 +60,6 @@ import {
   PipeCatalogOutputFieldFilter,
   PipeCatalogProviderFilter,
   PipeCatalogSearchFilter,
-  PricingBadge,
   usePipeCatalogContext,
   usePipeCatalogTable,
 } from "@pipe0/react";
@@ -386,8 +385,8 @@ const PipeCard = ({
 }) => {
   const { addColumnFilter } = usePipeCatalogContext();
   const pipeId = tableEntry.pipeId;
-  const pipeStartingPrice = useMemo(
-    () => getPipeStartingPrice(pipeId),
+  const { lowest: pipeStartingPrice, isDiscounted } = useMemo(
+    () => getPipeLowestPrice(pipeId),
     [pipeId],
   );
 
@@ -399,7 +398,10 @@ const PipeCard = ({
       <Card className="flex flex-col justify-stretch border-input hover:border-primary/50 transition-colors relative h-full min-h-[230px]">
         <span className="absolute right-3 top-3 inline-flex gap-1 text-muted-foreground text-xs items-center">
           {pipeStartingPrice ? (
-            <PricingBadge credits={pipeStartingPrice} />
+            <span>
+              {isDiscounted ? "from " : ""}
+              {formatCredits(pipeStartingPrice)} cr
+            </span>
           ) : (
             "Free"
           )}
@@ -635,7 +637,9 @@ function GroupedList({ cards }: { cards: ReadonlyArray<PipeCardData> }) {
               {entries.map((card) => {
                 const entry = card.entry;
                 const providers = getDefaultPipeProviders(card.pipeId);
-                const credits = getPipeStartingPrice(card.pipeId);
+                const { lowest: credits, isDiscounted } = getPipeLowestPrice(
+                  card.pipeId,
+                );
                 const isNew = (entry.tags as string[]).includes("new");
                 const inputFields: CatalogFieldList =
                   entry.inputFieldMode === "static"
@@ -656,6 +660,7 @@ function GroupedList({ cards }: { cards: ReadonlyArray<PipeCardData> }) {
                     inputFields={inputFields}
                     outputFields={outputFields}
                     credits={credits}
+                    priceFrom={isDiscounted}
                     isNew={isNew}
                     isDeprecated={!!entry.lifecycle?.deprecatedOn}
                   />

@@ -8,9 +8,9 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { cn, copyToClipboard } from "@/lib/utils";
+import { cn, copyToClipboard, formatCredits } from "@/lib/utils";
 import { type ProviderName, providerCatalog } from "@pipe0/base";
-import { AvatarGroup, PricingBadge } from "@pipe0/react";
+import { AvatarGroup } from "@pipe0/react";
 import { ArrowRight, Copy } from "lucide-react";
 import Link from "next/link";
 
@@ -30,6 +30,8 @@ type CatalogListRowProps = {
   inputFields?: CatalogFieldList;
   outputFields?: CatalogFieldList | string[];
   credits: number;
+  /** When true, prefix the credit figure with "from" — it's a high-volume floor. */
+  priceFrom?: boolean;
   billableUnit?: string;
   isNew?: boolean;
   isDeprecated?: boolean;
@@ -198,6 +200,7 @@ export function CatalogListRow({
   inputFields,
   outputFields,
   credits,
+  priceFrom,
   billableUnit,
   isNew,
   isDeprecated,
@@ -261,7 +264,10 @@ export function CatalogListRow({
       <div className="hidden sm:flex flex-col items-end gap-1 shrink-0 text-right">
         <div className="inline-flex items-center gap-1 text-xs text-muted-foreground">
           {credits ? (
-            <PricingBadge credits={credits} />
+            <span className="text-xs text-muted-foreground">
+              {priceFrom ? "from " : ""}
+              {formatCredits(credits)} cr
+            </span>
           ) : (
             <span className="text-xs text-muted-foreground">Free</span>
           )}
