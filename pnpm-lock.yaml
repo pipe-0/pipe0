@@ -7,8 +7,8 @@ settings:
 catalogs:
   default:
     '@pipe0/base':
-      specifier: 0.5.7
-      version: 0.5.7
+      specifier: 0.5.8
+      version: 0.5.8
     '@pipe0/client':
       specifier: 0.1.15
       version: 0.1.15
@@ -67,7 +67,7 @@ importers:
         version: 16.1.6(@mdx-js/loader@3.1.0(acorn@8.15.0))(@mdx-js/react@3.1.0(@types/react@19.2.14)(react@19.2.4))
       '@pipe0/base':
         specifier: 'catalog:'
-        version: 0.5.7(zod@4.1.12)
+        version: 0.5.8(zod@4.1.12)
       '@pipe0/client':
         specifier: 'catalog:'
         version: 0.1.15
@@ -2334,11 +2334,6 @@ packages:
   '@pipe0/base@0.0.12':
     resolution: {integrity: sha512-MC+6UIy3GrzKOIdpJd1oH6Hih9xbZ9//W8S8hYTyDadUkehkXTvOL6Tac2L2rVgz6ArNev2IphAQGle7zgYCyA==}
 
-  '@pipe0/base@0.5.7':
-    resolution: {integrity: sha512-PBF/jax7LnfolDl/sAu/L7VsdexDYMqNCCVyGm9ipduVgYzb97PJBi093iw2DFMyKpyLXTAS4mFFClJ/lwLWQQ==}
-    peerDependencies:
-      zod: ^4.0.0
-
   '@pipe0/base@0.5.8':
     resolution: {integrity: sha512-PVXGDSydZdHYuiYaeCe/BkXSIYeiWt8LryEgNRtuRE9F9D4wegTud8ufR936ylcsuhixLkKomS1rPYPErV4DTQ==}
     peerDependencies:
@@ -2346,9 +2341,6 @@ packages:
 
   '@pipe0/client@0.0.36':
     resolution: {integrity: sha512-Mad3vzwPNkmKCEjqiEy1SuMFYJvRgTJbRRQhkIgIUmMDdLNwNuZUxJ97wn1ysRON9HDzzLF7X5vxsmtxFlUhkw==}
-
-  '@pipe0/client@0.1.14':
-    resolution: {integrity: sha512-h79w82qsSljOTb6EExUWqe5i5i+La3EcjVQJJzhCKaSwn2OtGFDkr7cmNk33ooGdZWjm2GeFyOEiigNrFYWFiA==}
 
   '@pipe0/client@0.1.15':
     resolution: {integrity: sha512-VXNUFLz9jl5XHzTJkklU2MAPZqY+S0Jnqk7YYtdUESYikvIDg7IS6FbmT76Ma3ffGsQTrJ57nNeOmAw0srjoPg==}
@@ -9947,22 +9939,6 @@ snapshots:
       xxhash-wasm: 1.1.0
       zod: 4.1.12
 
-  '@pipe0/base@0.5.7(zod@4.1.12)':
-    dependencies:
-      '@asteasolutions/zod-to-openapi': 8.1.0(zod@4.1.12)
-      '@pipe0/client': 0.1.14
-      ajv: 8.17.1
-      date-fns: 4.1.0
-      immer: 10.2.0
-      json-schema-traverse: 1.0.0
-      json-schema-typed: 8.0.2
-      liquidjs: 10.25.7
-      lodash: 4.17.21
-      openapi-fetch: 0.15.0
-      tldts: 7.0.19
-      xxhash-wasm: 1.1.0
-      zod: 4.1.12
-
   '@pipe0/base@0.5.8(zod@4.1.12)':
     dependencies:
       '@asteasolutions/zod-to-openapi': 8.1.0(zod@4.1.12)
@@ -9980,10 +9956,6 @@ snapshots:
       zod: 4.1.12
 
   '@pipe0/client@0.0.36':
-    dependencies:
-      openapi-fetch: 0.15.0
-
-  '@pipe0/client@0.1.14':
     dependencies:
       openapi-fetch: 0.15.0
 
