@@ -7,8 +7,8 @@ packages:
 catalog:
   "@asteasolutions/zod-to-openapi": "8.1.0"
   "@pipe0/base": "0.5.7"
-  "@pipe0/react": "0.2.7"
-  "@pipe0/client": "0.1.14"
+  "@pipe0/react": "0.2.8"
+  "@pipe0/client": "0.1.15"
   "eslint": "^9.30.1"
   "typescript-eslint": "^8.36.0"
   "typescript": "^5.8.0"
