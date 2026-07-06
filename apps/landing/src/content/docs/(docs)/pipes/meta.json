@@ -2,7 +2,11 @@
   "pages": [
     "index",
     "[Pipe Catalog](/docs/pipe-catalog)",
-    "examples",
-    "advanced"
+    "concepts",
+    "templates",
+    "run-if",
+    "inputs",
+    "request-payload",
+    "response-object"
   ]
 }

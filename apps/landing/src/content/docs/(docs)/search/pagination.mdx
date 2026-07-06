@@ -1,10 +1,8 @@
 ---
 title: Pagination
-description: How pagination works in the pipe0 Search API
-date: 2026-03-08
+description: Fetch every page of a search result by passing next_page back as the search payload.
+date: 2026-07-06
 ---
-
-## Overview
 
 The Search API abstracts different provider pagination strategies behind a single interface.
 Every search response includes a `next_page` field. Pass it as the `search` payload to fetch the next page.

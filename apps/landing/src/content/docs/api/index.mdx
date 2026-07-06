@@ -1,15 +1,13 @@
 ---
 title: API Reference
-description: REST endpoints for Pipe0, grouped by product. Each endpoint shows request/response schemas with an interactive playground.
+description: REST endpoints for pipe0, grouped by product. Each endpoint shows request and response schemas with an interactive playground.
 ---
 
 Pick a category from the sidebar to browse endpoints, or jump straight to a common operation.
 
-Pipe and search operations have complex requests and responses designed for automated SDK generation.
-
 <Cards>
-  <Card icon={<Zap />} title="Run a pipe" description="Enrich records asynchronously via POST /v1/pipes/run." href="/docs/api/pipes/run" />
-  <Card icon={<Search />} title="Run a search" description="Query a dataset with filters via POST /v1/search/run." href="/docs/api/search/run" />
+  <Card icon={<Zap />} title="Run pipes" description="Enrich records via POST /v1/pipes/run/sync." href="/docs/api/pipes/run-sync" />
+  <Card icon={<Search />} title="Run a search" description="Query a dataset with filters via POST /v1/search/run/sync." href="/docs/api/search/run-sync" />
 </Cards>
 
 ## Authentication
@@ -18,4 +16,4 @@ All endpoints require a bearer token. See <AppLink linkType="authentication">Aut
 
 ## OpenAPI specification
 
-Generate a typed client from our OpenAPI spec: [https://api.pipe0.com/openapi](https://api.pipe0.com/openapi)
+The full schema is published at [https://api.pipe0.com/openapi](https://api.pipe0.com/openapi). Use it to generate a typed client, or use the prebuilt [TypeScript client](/docs/sdks/typescript-client).

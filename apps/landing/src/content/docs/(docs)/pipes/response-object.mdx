@@ -1,26 +1,23 @@
 ---
-title: Response Object
-category: Concepts
-priority: 2
-description: The response object is the enriched data you receive after your request, along with metadata.
-date: 2025-06-02
-isPublished: true
+title: Response object
+description: The response object contains your enriched records, along with metadata about the run.
+date: 2026-07-06
 ---
 
-The following API operations return a response of type `PipesResponse`.
+The following API operations return a response of type `PipesResponse`:
 
-- `POST https://api.pipe0.com/v1/pipes/run` (used to run the pipeline)
-- `GET https://api.pipe0.com/v1/pipes/check/{run_id}` (used to check the processing state)
-- `POST https://api.pipe0.com/v1/pipes/run/sync` (used to run the pipeline synchronously)
+- `POST https://api.pipe0.com/v1/pipes/run` (create an enrichment task)
+- `GET https://api.pipe0.com/v1/pipes/check/{run_id}` (check the processing state)
+- `POST https://api.pipe0.com/v1/pipes/run/sync` (create an enrichment task and return the result)
 
 Responses are designed for building rich data tables like [Clay](https://clay.com), node-based workflow
 builders like [Zapier](https://zapier.com), and plain automation code (think [n8n](https://n8n.io) as code).
 
-By default, responses contain enriched data only. Enable <AppLink linkType="widgets"> widgets</AppLink> and 
-<AppLink linkType="fieldDefinitions"> field definitions</AppLink> for additional metadata e.g. which providers were used in a waterfall.
+By default, responses contain enriched data only. Enable <AppLink linkType="widgets">widgets</AppLink> and
+<AppLink linkType="fieldDefinitions">field definitions</AppLink> for additional metadata, for example which providers were used in a waterfall.
 
 ## The raw response object
- 
+
 <Accordions>
 <Accordion title="Full response">
 
@@ -88,7 +85,7 @@ By default, responses contain enriched data only. Enable <AppLink linkType="widg
 
 ### id
 
-This is the task `id`. During and after processing you can use this id to look up 
+The task `id`. During and after processing you can use this id to look up
 your processing result. We store tasks for up to three days after processing is completed.
 
 ### status
@@ -101,24 +98,24 @@ Your request has been validated and an enrichment task has been created. Process
 
 #### Status 'processing'
 
-Your request has been validated and processing has begun. During processing, the status of your record 
+Your request has been validated and processing has begun. During processing, the status of your record
 fields is continuously updated.
 
 #### Status 'completed'
 
-Processing has finished without global errors. Individual fields still may have failed to process.
+Processing has finished without global errors. Individual fields may still have failed to process.
 
 #### Status 'failed'
 
-Pipeline validation or processing has failed. See the global <AppLink linkType="globalErrors">`errors` property</AppLink> for more information on why 
+Pipeline validation or processing has failed. See the global <AppLink linkType="globalErrors">`errors` property</AppLink> for more information on why
 the failure occurred.
 
 ### order
 
 We transform the list of input data into an object called <AppLink linkType="records">`records`</AppLink>. The `records` object has keys
-that match the `ids` of your input data. However, the order of your input data is not preserved in the `records` object.
+that match the `ids` of your input data, but it does not preserve the order of your input.
 
-To preserve the original order of your input data we create the `order` property. An ordered list of input data `ids`.
+The `order` property preserves it for you: an ordered list of input data `ids`.
 
 ### field_definitions
 
@@ -127,9 +124,9 @@ Metadata for all fields that exist in your <AppLink linkType="pipeline">pipeline
 Think of each input object as a row of a table. If input data are the rows, then `field_definitions`
 are the columns.
 
-The `field_definitions` object contains all fields that 
+The `field_definitions` object contains all fields that
 exist in your pipeline. This includes pipe output fields and fields derived from <AppLink linkType="inputObject">input objects</AppLink>.
-`field_definitions` is an object. The keys contain field names and the values field properties.
+The keys are field names, the values field properties.
 
 
 <Accordions>
@@ -173,9 +170,9 @@ exist in your pipeline. This includes pipe output fields and fields derived from
 
 ### errors
 
-Global task errors. If your response contains errors at the top level, your task failed. Use this 
-error array to understand why your task failed. Aside from the top-level response, individual fields
-can fail too. In that case, the field will contain a local error.
+Global task errors. If your response contains errors at the top level, your task failed. Use this
+error array to understand why. Individual fields
+can fail too; in that case, the field contains a local error.
 
 ### records
 
@@ -190,55 +187,54 @@ The `id` you provided in your input object.
 If your original request contained an `input` array of the shape `[{id: 1, foo: "bar"}, {id: 2, "bar": "baz"}]`,
 all output `records` will have the fields `id`, `foo`, and `bar`.
 
-Notice that the fields are normalized. All output records have the same fields. If an input object contains 
+The fields are normalized: all output records have the same fields. If any input object contains
 a property, it is added to all output records.
 
-In addition to fields derived from input objects, the `record.fields` property contains pipe output fields too.
+In addition to fields derived from input objects, `record.fields` contains pipe output fields.
 
 It is guaranteed that `field_definitions` and `record.fields` have the same keys.
 
 #### record.field.value
 
-The value of the field. If the value was provided as part of your input data it is copied over. If the 
+The value of the field. If the value was provided as part of your input data it is copied over. If the
 value was generated from an enrichment operation, it is added.
 
 #### record.field.status
 
 The status of the field. Possible values are `completed`, `failed`, `pending`, `queued`, `processing`, `skipped`, or `no_result`.
-The `status` is `no_result` if processing is completed without yielding a meaningful 
-result. The status is `failed` if the pipe failed due to errors. The status is `skipped` if processing was skipped due to an unmet condition
+The status is `no_result` if processing completed without yielding a meaningful
+result, `failed` if the pipe failed due to errors, and `skipped` if processing was skipped due to an unmet condition
 or missing input.
 
 #### record.field.type
 
 The type of the provided or generated value. Possible values are `string`, `number`, `boolean`, `json`, or `unknown`.
-The type will be `unknown` if the field was derived from input data but no input object provided a value **and**
+The type is `unknown` if the field was derived from input data but no input object provided a value **and**
 the field is not an output field of a pipe.
 
 #### record.field.reason
 
-Is guaranteed to exist if the field status is `failed` or `no_result`. Is of type `null | {code: string; summary: string; message: string}`.
-Will contain additional information about pipe failure.
+Guaranteed to exist if the field status is `failed` or `no_result`. Of type `null | {code: string; summary: string; message: string}`.
+Contains additional information about pipe failure.
 
 
 #### record.field.claimed_by
 
 Each field is assigned to an entity that is responsible for resolving it. Resolvers can be input data or pipes.
-A pipe will "claim" each field it is responsible for. However, just because a pipe claims a field does not mean it will
-resolve it.
-If your input object already contains a valid value, the field will be claimed by a pipe but resolved by `input`.
+A pipe "claims" each field it is responsible for. A pipe claiming a field does not mean it will
+resolve it:
+if your input object already contains a valid value, the field is claimed by a pipe but resolved by `input`.
 
 Use this field to render fields as columns ordered by pipe.
 
 #### record.field.resolved_by
 
-Is guaranteed to exist if the status of the field is `completed`. Is guaranteed to be `null` if the status is not 
-`completed`. The `resolved_by` field informs if a field was processed by a pipe or copied over from input data.
+Guaranteed to exist if the status of the field is `completed`, and guaranteed to be `null` otherwise. The `resolved_by` field tells you whether a field was processed by a pipe or copied over from input data.
 
 #### record.field.meta
 
-Contains `metadata` about the field processing. In the case of waterfall enrichments, you can find information about
-all the providers that were tried in this field.
+Contains metadata about the field processing. For waterfall enrichments, this includes
+all the providers that were tried for this field.
 
 #### record.field.ui
 

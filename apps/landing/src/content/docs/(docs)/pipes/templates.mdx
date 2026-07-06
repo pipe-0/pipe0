@@ -1,0 +1,108 @@
+---
+title: Templates
+description: Reference record fields and declare outputs in text fields, using a whitelisted subset of Liquid.
+date: 2026-07-06
+---
+
+Some pipe config fields take free-form text that reads from your records: an LLM prompt, an email body, a Slack message. These fields use templates. A template references input fields with `{{ field }}` tags and, in pipes that support it, declares new output fields with `{% output %}` tags.
+
+Not every template supports outputs. [prompt:run@1](/docs/pipe-catalog/prompt:run/1) requires both input and output tags. [email:write@1](/docs/pipe-catalog/email:write/1) supports only input tags.
+
+## Tag syntax
+
+Templates use a whitelisted subset of [Liquid](https://liquidjs.com) for input refs, secrets, constants, control flow, and output declarations.
+
+### Input refs
+
+| Form | Meaning |
+| :--- | :--- |
+| `{{ field }}` | Required input. Pipe fails if missing. |
+| `{{ field \| default: "" }}` | Optional input. The editor inserts new tags this way. |
+| `{{ user.email }}` | Dotted access. Only the head (`user`) is tracked as a dependency. |
+| `{% if email %}{{ email }}{% endif %}` | Presence guard. Also marks `email` as optional. |
+
+A field referenced anywhere without a guard becomes required. Only bare `{% if x %}` and `x != nil` / `x == nil` count as guards; compound conditions like `{% if a or b %}` do not.
+
+### Secrets and constants
+
+```liquid
+Authorization: Bearer {{ SECRETS.API_KEY }}
+Promo code: {{ CONSTANTS.PROMO }}
+```
+
+- Keys must match `^[A-Z][A-Z0-9_]*$`.
+- Lowercase (`{{ secrets.x }}`) is treated as a regular input ref.
+- Missing secrets and constants throw at render time.
+- Secret values are not re-parsed as Liquid.
+
+### Control flow
+
+Allowed: `if`, `elsif`, `else`, `unless`, `for`, `break`, `continue`. Max `for` nesting is 3. `forloop.index`, `forloop.first`, and the other loop variables are available.
+
+### Filters (whitelist)
+
+`json`, `escape`, `escape_once`, `default`, `upcase`, `downcase`, `size`, `join`, `first`, `last`, `replace`, `truncate`, `strip`, `newline_to_br`, `url_encode`. Anything else throws at render time.
+
+### Not allowed
+
+`{% assign %}`, `{% capture %}`, `{% include %}`, `{% case %}`, `{% cycle %}`, arithmetic and date filters, and other standard Liquid features. Disallowed tags fail at parse time.
+
+## Output declarations
+
+In prompt-style fields, declare model outputs with `{% output %}`:
+
+```liquid
+{% output summary, type: "string", description: "One-line summary." %}
+{% output score, type: "number", description: "Confidence from 0 to 100.", required: false %}
+{% output details, type: "json", schema: "ProductDetails", description: "Full product spec." %}
+```
+
+| Arg | Required | Notes |
+| :--- | :--- | :--- |
+| `name` | yes | First positional. `^[a-zA-Z_][a-zA-Z0-9_]*$`. |
+| `type` | yes | `"string"`, `"number"`, `"boolean"`, `"json"`, etc. |
+| `description` | yes | Shown to the model. |
+| `required` | no | `true` / `false`. Defaults to `true`. |
+| `format` | no | For example `"email"` or `"url"`. |
+| `schema` | no | Key into `json_schemas`; used with `type: "json"`. |
+
+`{% output %}` is only valid in fields that support it (for example prompt inputs). Using it elsewhere fails at save time.
+
+## Template example
+
+```json title="Prompt config with output declarations"
+{
+  "prompt": {
+    "template": "Determine if {{ company_name }} is a good customer for my magic wand 🪄 business. {% output reason, type: \"json\", schema: \"reason\", description: \"Explain why the customer is a good prospect\" %} {% output is_good_customer, type: \"boolean\", description: \"Overall fit assessment\" %}",
+    "json_schemas": {
+      "reason": {
+        "type": "object",
+        "properties": {
+          "reason": {
+            "type": "string",
+            "description": "A summary of why the customer is or isn't a good prospect."
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+## Migration from the old syntax
+
+The previous `{{ input ... }}` / `{{ secret ... }}` / `{{ output ... }}` / `<tag>...</tag>` syntax does not auto-migrate.
+
+| Old | New |
+| :--- | :--- |
+| `{{ input field }}` | `{{ field }}` (required) or `{{ field \| default: "" }}` (optional) |
+| `{{ secret api_key }}` | `{{ SECRETS.API_KEY }}` |
+| `{{ output X type="string" description="…" }}` | `{% output X, type: "string", description: "…" %}` |
+| `<tag>…</tag>` blocks | rewrite as `{{ … }}` refs and Liquid control flow |
+
+## Next steps
+
+<Cards>
+  <Card icon={<Mail />} title="Qualify & email" description="Templates driving an AI prompt, an email draft, and a send in one request." href="/docs/examples/qualify-and-email" />
+  <Card icon={<GitBranch />} title="Conditional runs" description="Run a pipe only for records that match conditions." href="/docs/pipes/run-if" />
+</Cards>

@@ -40,7 +40,7 @@ export async function getSearchEntryMap(): Promise<SearchEntryMap> {
       return {
         searchId,
         version: getSearchVersion(searchId),
-        route: `/docs/search/search-catalog/${entry.baseSearch}/${getSearchVersion(searchId)}`,
+        route: `/docs/search-catalog/${entry.baseSearch}/${getSearchVersion(searchId)}`,
       };
     });
 

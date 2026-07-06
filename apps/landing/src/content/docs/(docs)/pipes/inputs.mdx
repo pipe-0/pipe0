@@ -1,19 +1,14 @@
 ---
 title: Inputs
-description: Pipe0 cleans and sanitizes your input data. It handles missing object keys and may heal common errors.
-date: 2025-03-07
+description: pipe0 cleans your input data before processing. It fixes common format errors and handles missing fields per record instead of failing the task.
+date: 2026-07-06
 ---
+
+Input data is rarely clean. pipe0 sanitizes every input object before processing: it fixes common format errors, regenerates invalid values where it can, and handles missing fields per record instead of failing the whole task.
 
 ## Input sanitation
 
-Data enrichment systems ingest user-provided data from sources like:
-
-- CRMs
-- ATSs
-- Web forms
-
-User-provided data can contain mistakes or be invalid. Pipe0 has a robust sanitation layer to clean
-and regenerate data.
+Enrichment input usually comes from CRMs, ATSs, or web forms, and carries the mistakes users typed into them.
 
 ### Cleanup
 
@@ -60,7 +55,7 @@ In our example, `"company_domain": "not today"` is not a valid domain.
 Because `company_domain` is an <AppLink linkType="outputField">output field</AppLink> of `company:identity@3`,
 we can find the correct value.
 
-During processing, `company:identity@3` detects that `company_domain` is of invalid format 
+During processing, `company:identity@3` detects that `company_domain` is of invalid format
 and replaces it with the correct value.
 
 The result may look like this:
@@ -80,13 +75,11 @@ Valid input values are not regenerated. Instead, they are copied from the `input
 
 ### Incomplete data
 
-It is common for input data to be incomplete.
-
-Failing the entire task because one input object cannot be processed is impractical and annoying.
+Input data is often incomplete. Failing the entire task because one input object cannot be processed would be impractical, so validation works per record.
 
 #### Partially missing input fields
 
-If we find **at least one input object** that can be processed, pipeline validation will pass.
+If at least one input object can be processed, pipeline validation passes.
 
 Take the following request payload:
 
@@ -111,7 +104,7 @@ Take the following request payload:
 }
 ```
 
-The pipe `company:identity@3` requires the input field `company_name` which is not present
+The pipe `company:identity@3` requires the input field `company_name`, which is not present
 in record `id=2`. In this case:
 
 - Pipeline validation passes.
@@ -142,23 +135,19 @@ Another example:
 }
 ```
 
-No input object has the required field `company_name`. The request will fail during request validation.
-
-The entire task will fail before processing starts.
+No input object has the required field `company_name`. The request fails during request validation, before processing starts.
 
 #### Never fail a task
 
-In practice, dealing with failing tasks can be annoying. If you don't want to deal 
-with failing tasks, there's an escape hatch: If you define the expected input fields and set them to `null`, pipeline validation will
-pass. The task will not fail. Instead, only individual fields fail.
+If you don't want to handle failing tasks, there's an escape hatch: define the expected input fields and set them to `null`. Pipeline validation passes, the task never fails, and only individual fields fail instead.
 
 ## Input expansion
 
 <Callout>
-Input expansion is an advanced concept that you can safely ignore if you don't plan to use pipe0 for complex UIs.
+Input expansion is an advanced concept. You only need it when building rich UIs on top of pipe0.
 </Callout>
 
-When you enrich data with pipe0 you transform your "input objects" into output records. An input object may look like this:
+When you enrich data with pipe0 you transform your input objects into output records. An input object may look like this:
 
 ```json
 {
@@ -166,15 +155,14 @@ When you enrich data with pipe0 you transform your "input objects" into output r
     "name": "Tom Schmidt"
 }
 ```
+
 Some interactions require you to reprocess previously processed fields. For this, it is common to transform your output records
-back to `input objects`. By doing so, previous processing information is lost. This includes metadata like 
-the result of a waterfall, UI widgets, etc.
+back to input objects. By doing so, previous processing information is lost. This includes metadata like
+the result of a waterfall or UI widgets.
 
-If you pass a plain value to the API, it will always be marked as `resolved_by:input`.
+If you pass a plain value to the API, it is always marked as `resolved_by: input`.
 
-Instead of passing your input as a plain value, there is another way: Input expansion.
-
-You can pass your inputs fully or partially expanded (as the field value of the response object).
+Input expansion is the alternative: pass your inputs fully or partially expanded, as the field value shape of the response object.
 
 ```json title="Expanded input field"
 {
@@ -192,5 +180,4 @@ You can pass your inputs fully or partially expanded (as the field value of the 
 }
 ```
 
-Expanding inputs gives control but shifts the responsibility of providing valid input states to you.
-
+Expanding inputs gives you control but shifts the responsibility of providing valid input states to you.

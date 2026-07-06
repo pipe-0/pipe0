@@ -2,17 +2,16 @@ import {
   type InferMetaType,
   type InferPageType,
   loader,
-  multiple,
 } from "fumadocs-core/source";
 import { lucideIconsPlugin } from "fumadocs-core/source/lucide-icons";
-import { openapiPlugin } from "fumadocs-openapi/server";
+import { openapi } from "./openapi";
 import { toFumadocsSource } from "fumadocs-mdx/runtime/server";
 import { catalogIconPlugin } from "./catalog-sidebar-plugin";
 import {
   blog as blogPosts,
   docs,
   legal as legalPages,
-} from "fumadocs-mdx:collections/server";
+} from "collections/server";
 import { createPipeCatalogSource } from "./pipe-catalog-source";
 import { createSearchCatalogSource } from "./search-catalog-source";
 
@@ -25,15 +24,17 @@ export function getPageImage(page: InferPageType<typeof source>) {
 }
 
 // See https://fumadocs.dev/docs/headless/source-api for more info
-export const source = loader({
-  baseUrl: "/docs",
-  source: multiple({
+export const source = loader(
+  {
     docs: docs.toFumadocsSource(),
     pipes: createPipeCatalogSource(),
     searches: createSearchCatalogSource(),
-  }),
-  plugins: [lucideIconsPlugin(), openapiPlugin(), catalogIconPlugin()],
-});
+  },
+  {
+    baseUrl: "/docs",
+    plugins: [lucideIconsPlugin(), openapi.loaderPlugin(), catalogIconPlugin()],
+  },
+);
 
 export const blog = loader(toFumadocsSource(blogPosts, []), {
   baseUrl: "/blog",

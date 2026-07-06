@@ -202,14 +202,14 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
                 depend on the data source, so they aren&apos;t known ahead of
                 time. Enable{" "}
                 <Link
-                  href="/docs/search/advanced/search-request-payload#configfield_definitionsenabled"
+                  href="/docs/search/request-payload#configfield_definitionsenabled"
                   className="underline text-primary"
                 >
                   <code>config.field_definitions.enabled</code>
                 </Link>{" "}
                 to receive the columns alongside your results in the response{" "}
                 <Link
-                  href="/docs/search/advanced/search-response-object#field_definitions"
+                  href="/docs/search/response-object#field_definitions"
                   className="underline text-primary"
                 >
                   <code>field_definitions</code>

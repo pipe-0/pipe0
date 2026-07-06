@@ -1,11 +1,10 @@
 import path from "node:path";
-import { NextConfig } from "next";
+import type { NextConfig } from "next";
 import { createMDX } from "fumadocs-mdx/next";
 
-/** @type {import('next').NextConfig} */
 const nextConfig: NextConfig = {
   turbopack: {
-    root: path.resolve(__dirname, "../.."),
+    root: path.resolve(import.meta.dirname, "../.."),
   },
   // The Ask AI route reads ask-ai-instructions.md at runtime via
   // readFileSync(new URL(...)). NFT usually traces that automatically, but force
@@ -57,6 +56,53 @@ const nextConfig: NextConfig = {
         destination: "/docs/search-catalog/:path*",
         permanent: true,
       },
+      // Docs restructure (2026-07): flattened pipes/search folders, examples
+      // promoted to a top-level section.
+      {
+        source: "/docs/pipes/advanced/pipes-concepts",
+        destination: "/docs/pipes/concepts",
+        permanent: true,
+      },
+      {
+        source: "/docs/pipes/advanced/pipes-inputs",
+        destination: "/docs/pipes/inputs",
+        permanent: true,
+      },
+      {
+        source: "/docs/pipes/advanced/pipes-request-payload",
+        destination: "/docs/pipes/request-payload",
+        permanent: true,
+      },
+      {
+        source: "/docs/pipes/advanced/pipes-response-object",
+        destination: "/docs/pipes/response-object",
+        permanent: true,
+      },
+      {
+        source: "/docs/pipes/examples/:slug*",
+        destination: "/docs/examples/:slug*",
+        permanent: true,
+      },
+      {
+        source: "/docs/search/examples/:slug*",
+        destination: "/docs/examples/:slug*",
+        permanent: true,
+      },
+      {
+        source: "/docs/search/advanced/pagination",
+        destination: "/docs/search/pagination",
+        permanent: true,
+      },
+      {
+        source: "/docs/search/advanced/search-request-payload",
+        destination: "/docs/search/request-payload",
+        permanent: true,
+      },
+      {
+        source: "/docs/search/advanced/search-response-object",
+        destination: "/docs/search/response-object",
+        permanent: true,
+      },
       // Pipe renames (catalog 0.5.x): sheet:row:* became row:*:sheet.
       // Colons are escaped in `source` (path-to-regexp param marker) and
       // percent-encoded in `destination` (its validator rejects escapes).
@@ -73,69 +119,6 @@ const nextConfig: NextConfig = {
     ];
   },
 };
-
-const DEFAULT_PROPERTY_PROPS = {
-  type: "Property",
-  kind: "init",
-  method: false,
-  shorthand: false,
-  computed: false,
-};
-
-// @ts-expect-error -- fixme
-function isExportNode(node, varName: string) {
-  if (node.type !== "mdxjsEsm") return false;
-  const [n] = node.data.estree.body;
-
-  if (n.type !== "ExportNamedDeclaration") return false;
-
-  const name = n.declaration?.declarations?.[0].id.name;
-  if (!name) return false;
-
-  return name === varName;
-}
-
-// @ts-expect-error -- fixme
-export function createAstObject(obj) {
-  return {
-    type: "ObjectExpression",
-    properties: Object.entries(obj).map(([key, value]) => ({
-      ...DEFAULT_PROPERTY_PROPS,
-      key: { type: "Identifier", name: key },
-      value:
-        value && typeof value === "object" ? value : { type: "Literal", value },
-    })),
-  };
-}
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const rehypeOpenGraphImage = () => (ast: any) => {
-  // @ts-expect-error -- fixme
-  const frontMatterNode = ast.children.find((node) =>
-    isExportNode(node, "metadata"),
-  );
-  if (!frontMatterNode) {
-    return;
-  }
-  const { properties } =
-    frontMatterNode.data.estree.body[0].declaration.declarations[0].init;
-  // @ts-expect-error -- fixme
-  const title = properties.find((o) => o.key.value === "title")?.value.value;
-  if (!title) {
-    return;
-  }
-  const [prop] = createAstObject({
-    openGraph: createAstObject({
-      images: `https://pipe0.com/og?title=${title}`,
-    }),
-  }).properties;
-  properties.push(prop);
-};
-
-const plugins = [];
-if (process.env.NODE_ENV === "production") {
-  plugins.push(rehypeOpenGraphImage);
-}
 
 const curriedConfig = createMDX({});
 

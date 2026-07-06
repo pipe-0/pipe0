@@ -1,5 +1,7 @@
-import type { BaseLayoutProps } from "fumadocs-ui/layouts/shared";
-import { LinkItemType } from "fumadocs-ui/utils/link-item";
+import type {
+  BaseLayoutProps,
+  LinkItemType,
+} from "fumadocs-ui/layouts/shared";
 import { AlbumIcon, BookOpen } from "lucide-react";
 import { LogoRawSmall } from "@/components/logo";
 

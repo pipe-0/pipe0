@@ -3,49 +3,49 @@ export const BASE_URL = "https://pipe0.com";
 export const docsLinkPaths = {
   // Core concepts
   docs: `/docs/`,
-  pipeConfig: `/docs/pipes/advanced/pipes-request-payload#config`,
-  inputSanitation: `/docs/pipes/advanced/pipes-inputs#input-sanitation`,
-  fieldStatus: `/docs/pipes/advanced/pipes-response-object#status`,
-  templateTags: `/docs/pipes/advanced/pipes-concepts#tag-syntax`,
-  fieldMode: `/docs/pipes/advanced/pipes-concepts#field-mode`,
-  outputFieldToggle: `/docs/pipes/advanced/pipes-concepts#disable-outputs`,
-  fieldModeConfig: `/docs/pipes/advanced/pipes-concepts#field-mode-config`,
+  pipeConfig: `/docs/pipes/request-payload#config`,
+  inputSanitation: `/docs/pipes/inputs#input-sanitation`,
+  fieldStatus: `/docs/pipes/response-object#status`,
+  templateTags: `/docs/pipes/templates#tag-syntax`,
+  fieldMode: `/docs/pipes/concepts#field-mode`,
+  outputFieldToggle: `/docs/pipes/concepts#disable-outputs`,
+  fieldModeConfig: `/docs/pipes/concepts#field-mode-config`,
   openAPI: `/docs/api#openapi-specification`,
   catalogs: `/docs/`,
   mcp: "/docs/sdks/mcp",
-  async: `/docs/pipes#getting-the-task-result`,
-  sync: `/docs/pipes#getting-the-result-without-polling`,
-  waterfallPipes: `/docs/pipes/advanced/pipes-concepts#waterfall-pipes`,
-  globalErrors: `/docs/pipes/advanced/pipes-response-object#errors`,
-  records: `/docs/pipes/advanced/pipes-response-object#records`,
-  pipeline: `/docs/pipes/advanced/pipes-concepts#run-if`,
+  async: `/docs/concepts#sync-vs-async`,
+  sync: `/docs/concepts#sync-vs-async`,
+  waterfallPipes: `/docs/pipes/concepts#waterfall-pipes`,
+  globalErrors: `/docs/pipes/response-object#errors`,
+  records: `/docs/pipes/response-object#records`,
+  pipeline: `/docs/pipes/run-if`,
 
   // Input / Output
-  inputExpansion: `/docs/pipes/advanced/pipes-inputs#input-expansion`,
-  inputObject: `/docs/pipes/advanced/pipes-request-payload#input`,
-  inputField: `/docs/pipes/advanced/pipes-request-payload#inputfieldname`,
-  outputField: `/docs/pipes/advanced/pipes-response-object#recordfields`,
+  inputExpansion: `/docs/pipes/inputs#input-expansion`,
+  inputObject: `/docs/pipes/request-payload#input`,
+  inputField: `/docs/pipes/request-payload#inputfieldname`,
+  outputField: `/docs/pipes/response-object#recordfields`,
 
   // Connections & Auth
   connections: `/docs/connections`,
   authentication: `/docs/authentication`,
 
   // Configuration
-  widgets: `/docs/pipes/advanced/pipes-request-payload#configwidgetsenabled`,
-  fieldDefinitions: `/docs/pipes/advanced/pipes-request-payload#configfield_definitionsenabled`,
+  widgets: `/docs/pipes/request-payload#configwidgetsenabled`,
+  fieldDefinitions: `/docs/pipes/request-payload#configfield_definitionsenabled`,
 
   // Pipes
-  pipe: `/docs/pipes/advanced/pipes-request-payload#pipes`,
-  testMode: `/docs/pipes/advanced/pipes-request-payload#configenvironment`,
+  pipe: `/docs/pipes/request-payload#pipes`,
+  testMode: `/docs/concepts#sandbox-and-production`,
   pipesQuickstart: `/docs/pipes`,
-  pipelineRequest: `/docs/pipes/advanced/pipes-request-payload`,
-  pipelineResponse: `/docs/pipes/advanced/pipes-response-object`,
+  pipelineRequest: `/docs/pipes/request-payload`,
+  pipelineResponse: `/docs/pipes/response-object`,
   pipeCatalog: `/docs/pipe-catalog`,
-  record: `/docs/pipes/advanced/pipes-response-object#records`,
+  record: `/docs/pipes/response-object#records`,
 
   // Search
   searchCatalog: `/docs/search-catalog`,
-  pagination: `/docs/search/advanced/pagination`,
+  pagination: `/docs/search/pagination`,
 
   // Billing
   billing: `/docs/billing`,
@@ -57,7 +57,7 @@ export const docsLinkPaths = {
   elementsReact: `/docs/sdks/form-ui`,
 
   // Examples
-  dough: "/docs/pipes/examples/dough",
+  dough: "/docs/examples/dough",
 
   // API endpoints
   apiReference: '/docs/api',
