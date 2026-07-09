@@ -488,19 +488,48 @@ function Featured({ searchEntryMap }: { searchEntryMap: SearchEntryMap }) {
   );
 }
 
+// Single catalog row, shared by the grouped browse view and the flat
+// search/filter results view so both render identically.
+function CatalogRow({ card }: { card: SearchCardData }) {
+  const entry = card.entry;
+  const { lowest: credits, isDiscounted } = getSearchCost(entry);
+  const isNew = (entry.tags as string[]).includes("new");
+  const outputFields: CatalogFieldList = getDefaultSearchOutputFields(
+    card.searchId,
+  ).map((name) => ({ name }));
+  return (
+    <CatalogListRow
+      href={getSearchDocsURI(card.searchId)}
+      label={card.label}
+      entryId={card.searchId}
+      description={card.description}
+      providers={[card.provider]}
+      outputFields={outputFields}
+      credits={credits}
+      priceFrom={isDiscounted}
+      billableUnit={getSearchUnit(entry)}
+      isNew={isNew}
+    />
+  );
+}
+
 function GroupedList({ cards }: { cards: ReadonlyArray<SearchCardData> }) {
   const { category, globalFilterInput, table } = useSearchCatalogContext();
-  const featuredShown =
-    category === null &&
-    globalFilterInput === "" &&
-    table.getState().columnFilters.length === 0;
+  const columnFilters = table.getState().columnFilters;
+  // When a search query, category, or column filter is active, the hook has
+  // already scored and ordered `cards` by relevance. Re-bucketing them by
+  // category here scatters the top hits under unrelated headers, so we render
+  // a single flat list in the given order whenever a filter is active and only
+  // fall back to the category-grouped browse view when nothing is set.
+  const isFiltering =
+    category !== null || globalFilterInput !== "" || columnFilters.length > 0;
 
   const visible = useMemo(
     () =>
-      featuredShown
-        ? cards.filter((c) => !FEATURED_SEARCHES_ID_SET.has(c.searchId))
-        : cards,
-    [cards, featuredShown],
+      isFiltering
+        ? cards
+        : cards.filter((c) => !FEATURED_SEARCHES_ID_SET.has(c.searchId)),
+    [cards, isFiltering],
   );
 
   // Each search is placed in the first matching category (deprecated last).
@@ -523,15 +552,32 @@ function GroupedList({ cards }: { cards: ReadonlyArray<SearchCardData> }) {
       }
       if (entries.length > 0) groups.push({ category: cat.id, entries });
     }
+    // Anything that didn't match a known category joins the "companies" group.
+    // Merge into the existing group rather than pushing a second one, which
+    // previously rendered a duplicate "Find Companies" heading.
     const leftovers = visible.filter((c) => !seen.has(c.searchId));
     if (leftovers.length > 0) {
-      groups.push({
-        category: "companies" as SearchCategory,
-        entries: leftovers,
-      });
+      const companiesGroup = groups.find((g) => g.category === "companies");
+      if (companiesGroup) companiesGroup.entries.push(...leftovers);
+      else
+        groups.push({
+          category: "companies" as SearchCategory,
+          entries: leftovers,
+        });
     }
     return groups;
   }, [visible]);
+
+  // While searching or filtering, preserve relevance order as one flat list.
+  if (isFiltering) {
+    return (
+      <div>
+        {visible.map((card) => (
+          <CatalogRow key={card.searchId} card={card} />
+        ))}
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -549,30 +595,9 @@ function GroupedList({ cards }: { cards: ReadonlyArray<SearchCardData> }) {
               </span>
             </div>
             <div>
-              {entries.map((card) => {
-                const entry = card.entry;
-                const { lowest: credits, isDiscounted } = getSearchCost(entry);
-                const isNew = (entry.tags as string[]).includes("new");
-                const outputFields: CatalogFieldList =
-                  getDefaultSearchOutputFields(card.searchId).map((name) => ({
-                    name,
-                  }));
-                return (
-                  <CatalogListRow
-                    key={card.searchId}
-                    href={getSearchDocsURI(card.searchId)}
-                    label={card.label}
-                    entryId={card.searchId}
-                    description={card.description}
-                    providers={[card.provider]}
-                    outputFields={outputFields}
-                    credits={credits}
-                    priceFrom={isDiscounted}
-                    billableUnit={getSearchUnit(entry)}
-                    isNew={isNew}
-                  />
-                );
-              })}
+              {entries.map((card) => (
+                <CatalogRow key={card.searchId} card={card} />
+              ))}
             </div>
           </section>
         );

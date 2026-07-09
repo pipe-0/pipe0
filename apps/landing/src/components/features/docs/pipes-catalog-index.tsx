@@ -573,22 +573,56 @@ function Featured() {
   );
 }
 
+// Single catalog row, shared by the grouped browse view and the flat
+// search/filter results view so both render identically.
+function CatalogRow({ card }: { card: PipeCardData }) {
+  const entry = card.entry;
+  const providers = getDefaultPipeProviders(card.pipeId);
+  const { lowest: credits, isDiscounted } = getPipeLowestPrice(card.pipeId);
+  const isNew = (entry.tags as string[]).includes("new");
+  const inputFields: CatalogFieldList =
+    entry.inputFieldMode === "static"
+      ? getInputFieldsWithRequired(entry.defaultInputRequirement)
+      : "dynamic";
+  const outputFields: CatalogFieldList =
+    entry.outputFieldMode === "static"
+      ? getDefaultOutputFields(entry).map((name) => ({ name }))
+      : "dynamic";
+  return (
+    <CatalogListRow
+      href={getPipeDocsURI(card.pipeId)}
+      label={card.label}
+      entryId={card.pipeId}
+      description={card.description}
+      providers={providers}
+      inputFields={inputFields}
+      outputFields={outputFields}
+      credits={credits}
+      priceFrom={isDiscounted}
+      isNew={isNew}
+      isDeprecated={!!entry.lifecycle?.deprecatedOn}
+    />
+  );
+}
+
 function GroupedList({ cards }: { cards: ReadonlyArray<PipeCardData> }) {
   const { category, globalFilterInput, table } = usePipeCatalogContext();
-  // Featured pipes render in the section above only when no filter is active.
-  // When a filter is active, surface them inside the grouped list so they
-  // don't disappear from the catalog entirely.
-  const featuredShown =
-    category === null &&
-    globalFilterInput === "" &&
-    table.getState().columnFilters.length === 0;
+  const columnFilters = table.getState().columnFilters;
+  // When a search query, category, or column filter is active, the hook has
+  // already scored and ordered `cards` by relevance. Re-bucketing them by
+  // category here scatters the top hits under unrelated headers, so we render
+  // a single flat list in the given order whenever a filter is active and only
+  // fall back to the category-grouped browse view when nothing is set.
+  const isFiltering =
+    category !== null || globalFilterInput !== "" || columnFilters.length > 0;
 
+  // Featured pipes render in the section above only in the browse view.
   const visible = useMemo(
     () =>
-      featuredShown
-        ? cards.filter((c) => !FEATURED_PIPE_ID_SET.has(c.pipeId))
-        : cards,
-    [cards, featuredShown],
+      isFiltering
+        ? cards
+        : cards.filter((c) => !FEATURED_PIPE_ID_SET.has(c.pipeId)),
+    [cards, isFiltering],
   );
 
   // Each pipe is placed in the first matching category (deprecated last).
@@ -610,13 +644,29 @@ function GroupedList({ cards }: { cards: ReadonlyArray<PipeCardData> }) {
       }
       if (entries.length > 0) groups.push({ category: cat.id, entries });
     }
-    // Anything that didn't match a known category lands under "Other" → tools bucket.
+    // Anything that didn't match a known category joins the "tools" group.
+    // Merge into the existing tools group rather than pushing a second one,
+    // which previously rendered a duplicate "Tools" heading.
     const leftovers = visible.filter((c) => !seen.has(c.pipeId));
     if (leftovers.length > 0) {
-      groups.push({ category: "tools" as PipeCategory, entries: leftovers });
+      const toolsGroup = groups.find((g) => g.category === "tools");
+      if (toolsGroup) toolsGroup.entries.push(...leftovers);
+      else
+        groups.push({ category: "tools" as PipeCategory, entries: leftovers });
     }
     return groups;
   }, [visible]);
+
+  // While searching or filtering, preserve relevance order as one flat list.
+  if (isFiltering) {
+    return (
+      <div>
+        {visible.map((card) => (
+          <CatalogRow key={card.pipeId} card={card} />
+        ))}
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -634,38 +684,9 @@ function GroupedList({ cards }: { cards: ReadonlyArray<PipeCardData> }) {
               </span>
             </div>
             <div>
-              {entries.map((card) => {
-                const entry = card.entry;
-                const providers = getDefaultPipeProviders(card.pipeId);
-                const { lowest: credits, isDiscounted } = getPipeLowestPrice(
-                  card.pipeId,
-                );
-                const isNew = (entry.tags as string[]).includes("new");
-                const inputFields: CatalogFieldList =
-                  entry.inputFieldMode === "static"
-                    ? getInputFieldsWithRequired(entry.defaultInputRequirement)
-                    : "dynamic";
-                const outputFields: CatalogFieldList =
-                  entry.outputFieldMode === "static"
-                    ? getDefaultOutputFields(entry).map((name) => ({ name }))
-                    : "dynamic";
-                return (
-                  <CatalogListRow
-                    key={card.pipeId}
-                    href={getPipeDocsURI(card.pipeId)}
-                    label={card.label}
-                    entryId={card.pipeId}
-                    description={card.description}
-                    providers={providers}
-                    inputFields={inputFields}
-                    outputFields={outputFields}
-                    credits={credits}
-                    priceFrom={isDiscounted}
-                    isNew={isNew}
-                    isDeprecated={!!entry.lifecycle?.deprecatedOn}
-                  />
-                );
-              })}
+              {entries.map((card) => (
+                <CatalogRow key={card.pipeId} card={card} />
+              ))}
             </div>
           </section>
         );
