@@ -36,7 +36,10 @@ jobs:
           registry-url: https://registry.npmjs.org/
 
       - name: Update npm
-        run: npm install -g npm@latest
+        # Pin to 11.x: npm@latest (12.0.0) has a broken bundled sigstore dep that
+        # breaks OIDC trusted publishing — see https://github.com/npm/cli/issues/9722.
+        # 11.18.0 is >= the 11.5.1 minimum required for trusted publishing.
+        run: npm install -g npm@11.18.0
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
