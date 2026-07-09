@@ -1,12 +1,98 @@
 ---
 title: Quickstart
-description: Pipe0 is a data enrichment and automation framework.
-date: 2025-06-01
+description: Make your first pipe0 request. Find email addresses, phone numbers, and LinkedIn data through the API, the UI, or MCP.
+date: 2026-07-06
 full: true
 icon: Rocket
 ---
 
 <QuickstartCards />
+
+pipe0 is a data enrichment API. You send records (people, companies) and get them back with new fields: email addresses, phone numbers, LinkedIn profiles. Searches create records, pipes enrich them.
+
+If all you need is an email or a phone number, this page is enough. Browse the <AppLink linkType="pipeCatalog">pipe catalog</AppLink> or <AppLink linkType="searchCatalog">search catalog</AppLink>, copy a request, and go.
+
+<Callout>
+You need an API key to run the examples. Create one in the dashboard, see <AppLink linkType="authentication">Authentication</AppLink>. All examples run in `sandbox` mode: mock data, zero credits, no subscription required.
+</Callout>
+
+## Find a work email
+
+Send one record and one pipe. The `person:workemail:waterfall@1` pipe reads `name` and `company_domain` and adds a `work_email` field. You don't configure anything; the pipe knows its inputs and uses the default provider order.
+
+export const enrichPayload = {
+  config: { environment: "sandbox" },
+  pipes: [{ pipe_id: "person:workemail:waterfall@1" }],
+  input: [{ id: "1", name: "Jane Doe", company_domain: "pipe0.com" }],
+};
+
+<RequestExample kind="pipes" payload={enrichPayload} />
+
+The response contains your record with the new field:
+
+```json title="Response (truncated)"
+{
+  "id": "xgvxuqk2771d8t17n60vphu9",
+  "status": "completed",
+  "records": {
+    "1": {
+      "id": "1",
+      "fields": {
+        "work_email": {
+          "type": "string",
+          "value": "jane@pipe0.com",
+          "status": "completed"
+          // ...
+        }
+        // ...
+      }
+    }
+  }
+  // ...
+}
+```
+
+Sandbox values are mock data. Remove `config.environment` (or set it to `"production"`) to run real providers and get real results.
+
+## Search for people
+
+While pipes add fields to records you already have, search creates the records. Use it when you start from a filter ("software engineers in Berlin") instead of a list.
+
+export const searchPayload = {
+  config: { environment: "sandbox" },
+  search: {
+    search_id: "people:profiles:crustdata@2",
+    config: {
+      limit: 25,
+      filters: {
+        current_job_titles: { include: ["Software Engineer"] },
+      },
+    },
+  },
+};
+
+<RequestExample kind="search" payload={searchPayload} />
+
+The `results` array of a search response is a valid `input` for a pipes request, so you can search for people and enrich them in two calls. See [Search then enrich](/docs/examples/search-then-enrich).
+
+## Compose pipes
+
+Stack pipes in one request. Each pipe reads the output of the pipes before it:
+
+export const composePayload = {
+  config: { environment: "sandbox" },
+  pipes: [
+    { pipe_id: "person:name:join@1" },
+    { pipe_id: "person:workemail:waterfall@1" },
+  ],
+  input: [
+    { id: "1", first_name: "Jane", last_name: "Doe", company_name: "Pipe0" },
+  ],
+};
+
+<RequestExample kind="pipes" payload={composePayload} />
+
+The second pipe read `name` even though your input never contained it: `person:name:join@1` created it from `first_name` and `last_name`. Pipes see each other's output. Two pipes can do what one can't.
 
 ## Motivation
 
@@ -15,192 +101,12 @@ When [Ivan Zhao](https://www.linkedin.com/in/ivanhzhao) explains the idea behind
 > Paper is simple enough for a 3-year-old to take out of the drawer and paint on it. Yet it's versatile enough that the bureaucracies of entire countries
 > can run on it.
 
-Pipe0's philosophy is similar.
-
-You can use it as a simple API/UI/MCP to find email addresses, phone numbers, and LinkedIn data. It will only take minutes to set up
-and requires no coding knowledge.
-
-Yet you can build entire experiences similar to Clay & n8n on top of it. Check out the <AppLink linkType="dough">Dough example</AppLink>, a Clay-like table built in ~400 lines of code.
-
-For simple use cases the docs are overkill. Read this page, then jump to the <AppLink linkType="pipeCatalog">pipe</AppLink> or <AppLink linkType="searchCatalog">search</AppLink> catalog.
-
-## Enrich a record with a pipe
-
-This request enriches one input object using the `person:workemail:waterfall@1` pipe. It adds a `work_email` field to your record.
-
-```typescript tab="TypeScript"
-const result = await fetch("https://api.pipe0.com/v1/pipes/run/sync", {
-    method: "POST",
-    headers: {
-        "Authorization": `Bearer ${API_KEY}`,
-        "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-        pipes: [{ pipe_id: "person:workemail:waterfall@1" }],
-        input: [
-            {
-                id: 1,
-                name: "John Doe",
-                company_domain: "pipe0.com"
-            }
-        ]
-    })
-});
-```
-```python tab="Python"
-import requests
-
-headers = { "Authorization": f"Bearer {API_KEY}" }
-payload = {
-    "pipes": [{ "pipe_id": "person:workemail:waterfall@1" }],
-    "input": [
-        {
-            "id": 1,
-            "name": "John Doe",
-            "company_domain": "pipe0.com"
-        }
-    ]
-}
-response = requests.post("https://api.pipe0.com/v1/pipes/run/sync", headers=headers, json=payload)
-```
-
-## Compose pipes
-
-You can stack multiple pipes in one request to build complex workflows where pipes read each other's output.
-
-Here's an example:
-- You start with `input: [{id: "1", first_name: "John", last_name: "Doe", company_name: "Alphabet Inc."}]`
-- Use the `person:name:join@1` pipe to join `first_name` and `last_name` into a new `name` field.
-- Use the `person:workemail:waterfall@1` pipe to read `name` (output of the previous pipe) and `company_name` and find the prospect's email address.
-
-<Accordions>
-<Accordion title="Full example request">
-
-```typescript tab="TypeScript"
-const result = await fetch("https://api.pipe0.com/v1/pipes/run/sync", {
-    method: "POST",
-    headers: {
-        "Authorization": `Bearer ${API_KEY}`,
-        "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-        pipes: [
-            { pipe_id: "person:name:join@1" },
-            { pipe_id: "person:workemail:waterfall@1" }
-        ],
-        input: [
-            {
-                id: "1",
-                first_name: "John",
-                last_name: "Doe",
-                company_name: "Alphabet Inc."
-            }
-        ]
-    })
-});
-```
-
-```python tab="Python"
-import requests
-
-headers = { "Authorization": f"Bearer {API_KEY}" }
-payload = {
-    "pipes": [
-        { "pipe_id": "person:name:join@1" },
-        { "pipe_id": "person:workemail:waterfall@1" }
-    ],
-    "input": [
-        {
-            "id": "1",
-            "first_name": "John",
-            "last_name": "Doe",
-            "company_name": "Alphabet Inc."
-        }
-    ]
-}
-response = requests.post("https://api.pipe0.com/v1/pipes/run/sync", headers=headers, json=payload)
-```
-
-
-```bash tab="cURL"
-curl -X POST "https://api.pipe0.com/v1/pipes/run/sync" \
-  -H "Authorization: Bearer $API_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "pipes": [
-      { "pipe_id": "person:name:join@1" },
-      { "pipe_id": "person:workemail:waterfall@1" }
-    ],
-    "input": [
-      { "id": "1", "first_name": "John", "last_name": "Doe", "company_name": "Alphabet Inc." }
-    ]
-  }'
-```
-
-</Accordion>
-</Accordions>
-
-## Search
-
-While pipes take input objects and add fields to them, `search` creates a list of input objects.
-
-This can be helpful if you're looking for people or companies based on filters.
-
-Here's an example request that fetches a list of people `people:profiles:crustdata@2` using a job-title filter.
-
-```typescript tab="TypeScript"
-const result = await fetch("https://api.pipe0.com/v1/search/run/sync", {
-    method: "POST",
-    headers: {
-        "Authorization": `Bearer ${API_KEY}`,
-        "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-        search: {
-            search_id: "people:profiles:crustdata@2",
-            config: {
-                limit: 25,
-                filters: {
-                    current_job_titles: ["Software Engineer"]
-                }
-            }
-        }
-    })
-});
-```
-
-```python tab="Python"
-import requests
-
-headers = { "Authorization": f"Bearer {API_KEY}" }
-payload = {
-    "search": {
-        "search_id": "people:profiles:crustdata@2",
-        "config": {
-            "limit": 25,
-            "filters": { "current_job_titles": ["Software Engineer"] }
-        }
-    }
-}
-response = requests.post("https://api.pipe0.com/v1/search/run/sync", headers=headers, json=payload)
-```
-
-```bash tab="cURL"
-curl -X POST "https://api.pipe0.com/v1/search/run/sync" \
-  -H "Authorization: Bearer $API_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "search": {
-      "search_id": "people:profiles:crustdata@2",
-      "config": { "limit": 25, "filters": { "current_job_titles": ["Software Engineer"] } }
-    }
-  }'
-```
+pipe0's philosophy is similar. One request finds an email address, and the same primitives are enough to build a Clay-like product. The <AppLink linkType="dough">Data tables example</AppLink> is an interactive enrichment table built in about 400 lines of code.
 
 ## Next steps
 
 <Cards>
   <Card icon={<KeyRound />} title="Authentication" description="Create an API key and make authenticated requests." href="/docs/authentication" />
-  <Card icon={<Code />} title="TypeScript client" description="Typed SDK with batching and polling built in." href="/docs/sdks/typescript-client" />
-  <Card icon={<Mail />} title="Qualify & email" description="Enrich, qualify with AI, and send an email in one request." href="/docs/pipes/examples/qualify-and-email" />
+  <Card icon={<Layers />} title="Core concepts" description="Records, fields, sync vs async, sandbox vs production." href="/docs/concepts" />
+  <Card icon={<Mail />} title="Qualify & email" description="Enrich, qualify with AI, and send an email in one request." href="/docs/examples/qualify-and-email" />
 </Cards>

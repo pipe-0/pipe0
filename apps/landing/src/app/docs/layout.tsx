@@ -27,26 +27,26 @@ export default function Layout({
         ),
       }}
       containerProps={{ className: "docs-layout-container" }}
+      tabs={{
+        transform(option, node) {
+          if (!node.icon) return option;
+
+          return {
+            ...option,
+            // Flat hover in the dropdown rows — no gradient wash.
+            props: { className: "tabs-dd-item" },
+            icon: (
+              <div className="[&_svg]:size-full card-sky-sm flex size-full items-center justify-center rounded-lg border border-white/15 p-1.5 text-white shadow-sm">
+                {node.icon}
+              </div>
+            ),
+          };
+        },
+      }}
       sidebar={{
         defaultOpenLevel: 1,
         components: {
           Item: CatalogAwareSidebarItem,
-        },
-        tabs: {
-          transform(option, node) {
-            if (!node.icon) return option;
-
-            return {
-              ...option,
-              // Flat hover in the dropdown rows — no gradient wash.
-              props: { className: "tabs-dd-item" },
-              icon: (
-                <div className="[&_svg]:size-full card-sky-sm flex size-full items-center justify-center rounded-lg border border-white/15 p-1.5 text-white shadow-sm">
-                  {node.icon}
-                </div>
-              ),
-            };
-          },
         },
       }}
     >

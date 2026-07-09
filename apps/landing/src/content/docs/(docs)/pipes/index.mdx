@@ -1,98 +1,37 @@
 ---
-title: Introduction
-description: Pipes are composable enrichment functions. Use pipes to find email addresses, phone numbers, or trigger automations like Slack messages.
-date: 2025-04-01
+title: Overview
+description: Pipes add fields to your input records. Use them to find email addresses, phone numbers, and profiles, or to trigger actions like Slack messages.
+date: 2026-07-06
 ---
+
+Pipes add fields to your input records: a work email, a phone number, a full company profile. You pick pipes from the <AppLink linkType="pipeCatalog">pipe catalog</AppLink>, send them with your input, and read the new fields off the response.
 
 <YoutubeEmbed href="https://youtube.com/embed/7H7kHJgwSOg" layout="full" />
 
+## Run a pipe
 
-## Making requests
+This request enriches one <AppLink linkType="inputObject">input object</AppLink>. The pipe `person:workemail:waterfall@1` reads `name` and `company_domain` and adds a `work_email` field.
 
-This request enriches one <AppLink linkType="inputObject">input object</AppLink>. The pipe `person:workemail:waterfall@1`
-adds a field called `work_email` to your input objects. You can find all available enrichments in the <AppLink linkType="pipeCatalog">pipe catalog</AppLink>.
+export const runPayload = {
+  pipes: [{ pipe_id: "person:workemail:waterfall@1" }],
+  input: [{ id: "1", name: "Jane Doe", company_domain: "pipe0.com" }],
+};
 
-```typescript tab="TypeScript"
-const result = await fetch("https://api.pipe0.com/v1/pipes/run", {
-    method: "POST",
-    headers: {
-        "Authorization": `Bearer ${API_KEY}`,
-        "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-        pipes: [
-            {
-                pipe_id: "person:workemail:waterfall@1"
-            }
-        ],
-        input: [
-            {
-                id: 1,
-                name: "John Doe",
-                company_domain: "pipe0.com"
-            }
-        ]
-    })
-});
-```
+<RequestExample kind="pipes" payload={runPayload} />
 
-```python tab="Python"
-import requests
-import json
+The response contains one record per input object:
 
-headers = {
-    "Authorization": f"Bearer {API_KEY}",
-}
-payload = {
-    "pipes": [
-        {
-            "pipe_id": "person:workemail:waterfall@1"
-        },
-    ],
-    "input": [
-        {
-            "id": 1,
-            "name": "John Doe",
-            "company_domain": "pipe0.com"
-        }
-    ]
-}
-response = requests.post("https://api.pipe0.com/v1/pipes/run", headers=headers, json=payload)
-```
-
-```bash tab="cURL"
-curl -X POST "https://api.pipe0.com/v1/pipes/run" \
--H "Authorization: Bearer $API_KEY" \
--H "Content-Type: application/json" \
--d '{
-        "pipes": [
-            {
-                "pipe_id": "person:workemail:waterfall@1"
-            }
-        ],
-        "input": [
-            {
-                "id": 1,
-                "name": "John Doe",
-                "company_domain": "pipe0.com"
-            }
-        ]
-    }'
-```
-
-The result will look something like this:
-
-```json title="Response"
+```json title="Response (truncated)"
 {
   "id": "xgvxuqk2771d8t17n60vphu9",
   "status": "completed",
   "records": {
     "1": {
-      "id": 1,
+      "id": "1",
       "fields": {
         "work_email": {
           "type": "string",
-          "value": "john@pipe0.com",
+          "value": "jane@pipe0.com",
           "status": "completed"
           // ...
         }
@@ -104,17 +43,31 @@ The result will look something like this:
 }
 ```
 
-<Callout>
-The response will contain more information than displayed here. Learn how to work with <AppLink linkType="pipelineResponse">response objects</AppLink>.
-</Callout>
+The full response carries more metadata than shown here. See the <AppLink linkType="pipelineResponse">response object</AppLink>.
 
-## Getting the task result
+## Stack pipes
 
-The request to `POST https://api.pipe0.com/v1/pipes/run` will create an enrichment task. 
-To get the result of the task, poll the `GET https://api.pipe0.com/v1/pipes/check/{run_id}` endpoint until the task status is 
-`completed`.
+Stack pipes in one request to build workflows. Each pipe reads the output of the pipes before it:
 
-```typescript tab="TypeScript"
+export const stackPayload = {
+  pipes: [
+    { pipe_id: "person:name:join@1" },
+    { pipe_id: "person:workemail:waterfall@1" },
+  ],
+  input: [
+    { id: "1", first_name: "Jane", last_name: "Doe", company_name: "Pipe0" },
+  ],
+};
+
+<RequestExample kind="pipes" payload={stackPayload} />
+
+`person:name:join@1` creates `name` from `first_name` and `last_name`; the email pipe then reads `name` even though your input never contained it. Add <AppLink linkType="pipeline">`run_if` conditions</AppLink> to run pipes only for records that match, or <AppLink linkType="templateTags">templates</AppLink> to feed record fields into LLM prompts.
+
+## Enrich in bulk
+
+The sync endpoint above waits for the result and suits small batches (fewer than 10 records). For larger inputs, create an async task with `POST /v1/pipes/run` (same payload), then poll `GET /v1/pipes/check/{run_id}` until `status` is `completed`.
+
+```typescript tab="TypeScript" title="Poll for the result"
 const result = await fetch(`https://api.pipe0.com/v1/pipes/check/${runId}`, {
     method: "GET",
     headers: {
@@ -123,7 +76,7 @@ const result = await fetch(`https://api.pipe0.com/v1/pipes/check/${runId}`, {
 });
 ```
 
-```python tab="Python"
+```python tab="Python" title="Poll for the result"
 import requests
 
 headers = {
@@ -132,24 +85,17 @@ headers = {
 response = requests.get(f"https://api.pipe0.com/v1/pipes/check/{run_id}", headers=headers)
 ```
 
-```bash tab="cURL"
+```bash tab="cURL" title="Poll for the result"
 curl -X GET "https://api.pipe0.com/v1/pipes/check/$RUN_ID" \
 -H "Authorization: Bearer $API_KEY"
 ```
 
-## Getting the result without polling
-
-Instead of creating your task with the endpoint `POST https://api.pipe0.com/v1/pipes/run` use the endpoint `POST https://api.pipe0.com/v1/pipes/run/sync`.
-Use the same payload for both endpoints. The `/sync` endpoint will try to return the `completed` result in one round-trip.
-
-Read more about the trade-offs between <AppLink linkType="async">async and sync requests</AppLink>.
+Read more about the trade-offs in <AppLink linkType="async">sync vs async</AppLink>. The [TypeScript client](/docs/sdks/typescript-client) handles batching and polling for you.
 
 ## Next steps
 
 <Cards>
   <Card icon={<Zap />} title="Pipe catalog" description="Every pipe with inputs, outputs, and credit prices." href="/docs/pipe-catalog" />
-  <Card icon={<Braces />} title="Request payload" description="Every property of a pipes request." href="/docs/pipes/advanced/pipes-request-payload" />
-  <Card icon={<GitBranch />} title="Concepts" description="Waterfalls, templates, and conditional execution." href="/docs/pipes/advanced/pipes-concepts" />
+  <Card icon={<GitBranch />} title="Concepts" description="Waterfalls, providers, and field modes." href="/docs/pipes/concepts" />
+  <Card icon={<Braces />} title="Request payload" description="Every property of a pipes request." href="/docs/pipes/request-payload" />
 </Cards>
-
-

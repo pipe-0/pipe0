@@ -1,5 +1,5 @@
 import { Tabs, Tab } from "fumadocs-ui/components/tabs";
-import { DynamicCodeBlock } from "@/components/features/docs/dynamic-code-block";
+import { StaticCodeBlock } from "@/components/features/docs/static-code-block";
 
 /**
  * A request example rendered in three flavours — pipe0 SDK, Python and cURL —
@@ -133,13 +133,13 @@ export function RequestExample({
   return (
     <Tabs items={["pipe0 SDK", "Python", "cURL"]}>
       <Tab value="pipe0 SDK">
-        <DynamicCodeBlock lang="typescript" code={sdk} />
+        <StaticCodeBlock lang="typescript" code={sdk} />
       </Tab>
       <Tab value="Python">
-        <DynamicCodeBlock lang="python" code={python} />
+        <StaticCodeBlock lang="python" code={python} />
       </Tab>
       <Tab value="cURL">
-        <DynamicCodeBlock lang="bash" code={curl} />
+        <StaticCodeBlock lang="bash" code={curl} />
       </Tab>
     </Tabs>
   );
@@ -234,13 +234,13 @@ export function SearchEnrichExample({
   return (
     <Tabs items={["pipe0 SDK", "Python", "cURL"]}>
       <Tab value="pipe0 SDK">
-        <DynamicCodeBlock lang="typescript" code={sdk} />
+        <StaticCodeBlock lang="typescript" code={sdk} />
       </Tab>
       <Tab value="Python">
-        <DynamicCodeBlock lang="python" code={python} />
+        <StaticCodeBlock lang="python" code={python} />
       </Tab>
       <Tab value="cURL">
-        <DynamicCodeBlock lang="bash" code={curl} />
+        <StaticCodeBlock lang="bash" code={curl} />
       </Tab>
     </Tabs>
   );

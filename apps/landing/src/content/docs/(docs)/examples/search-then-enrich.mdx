@@ -1,11 +1,11 @@
 ---
-title: Search then Enrich
-description: Run a people search and pipe the results straight into an enrichment request
+title: Search then enrich
+description: Run a people search and pipe the results straight into an enrichment request.
 date: 2026-06-06
 full: true
 ---
 
-The point of this pattern is that a **search response is already a valid pipe `input`** — you don't
+The point of this pattern is that a search response is already a valid pipe `input`. You don't
 have to reshape anything in between. Search for a list of people, then hand `search.results` directly
 to a pipes request to enrich every row.
 
@@ -40,9 +40,9 @@ export const enrich = {
 
 - The search outputs `name`, `job_title`, `profile_url` and `company_domain` for each person.
 - Passing `search.results` as the pipe `input` works because search results are returned as fully
-  [expanded field values](/docs/pipes/advanced/pipes-inputs) — the API accepts them directly.
+  [expanded field values](/docs/pipes/inputs). The API accepts them directly.
 - The two waterfall pipes read each row's `profile_url` and add `work_email` and `mobile`.
 
-For large result sets, swap `pipes.pipe` for [`pipeInBatches`](/docs/sdks/typescript-client) — it splits
+For large result sets, swap `pipes.pipe` for [`pipeInBatches`](/docs/sdks/typescript-client). It splits
 `search.results` into chunks and runs them with bounded concurrency, so the same code handles 10 rows
 or 10,000.

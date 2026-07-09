@@ -44,7 +44,7 @@ export default async function Image() {
         padding: "0px 128px",
       }}
     >
-      <img src="https://pipe0.com/logo-dark.svg" alt="pipe0 Logo" height="64" />
+      <img src="https://pipe0.com/logo-dark.svg" alt="pipe0 Logo" height={64} />
       <div style={{ color: "white", fontSize: 64, fontFamily: "Inter" }}>
         {element.title}
       </div>

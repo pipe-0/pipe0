@@ -205,11 +205,15 @@
   }
 }
 
+/* Left-pinned docs layout: fumadocs centers the docs grid between two
+   flexible gutters — we pin the sidebar to the viewport edge instead. This
+   mirrors the upstream 5-column template (set as an inline style, hence
+   !important) with the left gutter zeroed; all other columns are verbatim. */
 #nd-docs-layout.docs-layout-container {
   grid-template:
-    "sidebar header toc"
-    "sidebar toc-popover toc"
-    "sidebar main toc" 1fr / var(--fd-sidebar-col)
+    "sidebar sidebar header toc toc"
+    "sidebar sidebar toc-popover toc toc"
+    "sidebar sidebar main toc toc" 1fr / 0 var(--fd-sidebar-col)
     minmax(
       0,
       calc(
@@ -217,14 +221,15 @@
           var(--fd-toc-width)
       )
     )
-    min-content !important;
+    var(--fd-toc-width)
+    minmax(min-content, 1fr) !important;
 }
 
 /* Tighter, more focused docs typography — denser than the fumadocs default.
    Scoped to the docs layout so marketing/blog prose is untouched. */
 #nd-docs-layout .prose {
   font-size: 0.9rem; /* 14.5px */
-  line-height: 1.6;
+  line-height: 1.7;
 }
 /* The `:not(:where(.not-prose, .not-prose *))` guard mirrors how Tailwind's
    typography plugin exempts `not-prose` regions. Without it these hand-written
@@ -232,7 +237,7 @@
    trigger, which is an <h3>; the injected heading margin, trapped by the
    accordion's `overflow:hidden`, inflated the collapsed panel. */
 #nd-docs-layout .prose :where(h2):not(:where(.not-prose, .not-prose *)) {
-  margin-top: 2em;
+  margin-top: 2.6em;
   margin-bottom: 0.5em;
   font-size: 1.4rem;
   font-weight: 600;
@@ -240,15 +245,16 @@
   letter-spacing: -0.014em;
 }
 #nd-docs-layout .prose :where(h3):not(:where(.not-prose, .not-prose *)) {
-  margin-top: 1.5em;
+  margin-top: 1.9em;
   margin-bottom: 0.4em;
-  font-size: 1.075rem;
+  font-size: 1.125rem;
   font-weight: 600;
   line-height: 1.3;
   letter-spacing: -0.008em;
 }
 #nd-docs-layout .prose :where(h4):not(:where(.not-prose, .not-prose *)) {
-  font-size: 0.95rem;
+  margin-top: 1.6em;
+  font-size: 0.9rem;
   font-weight: 600;
   letter-spacing: -0.004em;
 }
@@ -256,23 +262,74 @@
   .prose
   :where(p, ul, ol, blockquote):not(:where(.not-prose, .not-prose *)) {
   margin-top: 0;
-  margin-bottom: 0.8em;
+  margin-bottom: 1em;
 }
 #nd-docs-layout .prose :where(li):not(:where(.not-prose, .not-prose *)) {
   margin-top: 0.15em;
   margin-bottom: 0.15em;
 }
 /* Docs links read as body text, not a blue accent: the default foreground
-   color with an underline in that same color. Fumadocs colors the text with
-   --tw-prose-links (already foreground) but draws the underline in the blue
-   --color-fd-primary — override it to currentColor so the line matches the
-   text in both light and dark mode. Heading anchors ([data-card]) are exempt,
-   as are not-prose components. */
+   color, with the underline dimmed to a hint (full strength on hover) so
+   dense pages don't fill up with heavy black lines. Heading anchors
+   ([data-card]) are exempt, as are not-prose components. */
 #nd-docs-layout
   .prose
   :where(a:not([data-card])):not(:where(.not-prose, .not-prose *)) {
   color: var(--color-fd-foreground);
+  text-decoration-color: color-mix(in oklab, currentColor 35%, transparent);
+  text-underline-offset: 3px;
+  transition: text-decoration-color 150ms ease;
+}
+#nd-docs-layout
+  .prose
+  :where(a:not([data-card])):not(:where(.not-prose, .not-prose *)):hover {
   text-decoration-color: currentColor;
+}
+
+/* Inline code: quiet token, not a chip. Fumadocs boxes every inline code
+   span with a border + background; on token-dense pages (pipe IDs, field
+   names in nearly every sentence) each box is a visual interrupt and the
+   page reads as clutter. Keep only a faint background wash so tokens are
+   scannable without fragmenting the line. Code inside code blocks (pre) and
+   not-prose components is untouched. */
+#nd-docs-layout
+  .prose
+  :where(code):not(:where(.not-prose, .not-prose *)):not(:where(pre *)) {
+  border: none;
+  background: color-mix(in oklab, var(--color-fd-muted) 72%, transparent);
+  padding: 0.16em 0.34em;
+  font-size: 0.875em;
+  border-radius: 4px;
+}
+
+/* Code blocks: flat frame — the border alone is enough separation; the drop
+   shadow made every block pop forward and compete with the text. */
+#nd-docs-layout .prose figure.shiki {
+  box-shadow: none;
+}
+
+/* Steps: fumadocs already draws a connector line (border-s on .fd-steps),
+   but its 32px number circles sit centered on that line with no gap between
+   steps, so the line hides behind the circles and the sequence reads as
+   floating bubbles. Shrink the circles and give each step room so the line
+   shows through, Mixedbread-style. */
+#nd-docs-layout .fd-steps {
+  border-color: var(--color-fd-border);
+}
+#nd-docs-layout .fd-step {
+  padding-bottom: 0.9rem;
+}
+#nd-docs-layout .fd-step:last-child {
+  padding-bottom: 0;
+}
+#nd-docs-layout .fd-step::before {
+  width: 1.5rem;
+  height: 1.5rem;
+  inset-inline-start: -0.75rem;
+  font-size: 0.75rem;
+  color: var(--color-fd-muted-foreground);
+  background-color: var(--color-fd-secondary);
+  box-shadow: 0 0 0 4px var(--color-fd-background);
 }
 
 /* Page title — the top of the hierarchy: clearly larger and heavier than the
@@ -295,11 +352,11 @@
 }
 
 /* Subtle lift for docs cards (Notion-inspired).
-   Scoped with :not(.peer) so it never applies to heading anchor links —
-   fumadocs wraps heading text in <a data-card class="peer">, which otherwise
-   picked up a stray box-shadow on hover. Headings get no effect beyond their
-   appearing link icon. */
-[data-card]:not(.peer) {
+   Scoped with :not([href^="#"]) so it never applies to heading anchor links —
+   fumadocs wraps heading text in <a data-card href="#...">, which otherwise
+   picked up a stray box-shadow that reads as an underline. Headings get no
+   effect beyond their appearing copy-link button. */
+[data-card]:not([href^="#"]) {
   box-shadow:
     0 1px 2px rgba(0, 0, 0, 0.04),
     0 1px 3px rgba(0, 0, 0, 0.06);
@@ -310,35 +367,27 @@
     border-color 150ms ease;
 }
 
-[data-card]:not(.peer):hover {
+[data-card]:not([href^="#"]):hover {
   box-shadow:
     0 2px 4px rgba(0, 0, 0, 0.05),
     0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
-.dark [data-card]:not(.peer) {
+.dark [data-card]:not([href^="#"]) {
   box-shadow:
     0 1px 2px rgba(0, 0, 0, 0.3),
     0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
-.dark [data-card]:not(.peer):hover {
+.dark [data-card]:not([href^="#"]):hover {
   box-shadow:
     0 2px 4px rgba(0, 0, 0, 0.35),
     0 6px 16px rgba(0, 0, 0, 0.35);
 }
 
 /* Soften icon tile inside cards: lighter accent, no heavy shadow */
-.dark [data-card]:not(.peer) > .not-prose:first-child {
+.dark [data-card]:not([href^="#"]) > .not-prose:first-child {
   box-shadow: none;
-}
-
-/* Nested sidebar items: fumadocs draws a vertical tree line (the
-   `before:start-2.5` pseudo) down the folder content. It sat almost flush
-   against the item labels — indent the nested group so the line has a bit of
-   breathing room before the text. */
-#nd-sidebar [class*="before:start-2.5"] {
-  padding-inline-start: 0.625rem;
 }
 
 /* adds labels to the sidebar links */

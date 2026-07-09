@@ -51,7 +51,7 @@ record.fields.first_name.value; // "John"
 record.fields.last_name.value; // "Doe"
 ```
 
-### Chain pipes (enrich → LLM → send)
+### Chain pipes
 
 ```ts
 const result = await pipe0.pipes.pipe({
@@ -93,7 +93,7 @@ const result = await pipe0.pipes.pipe({
 });
 ```
 
-Note `run_if`: the Slack pipe only runs when the previous step marked
+The [`run_if`](/docs/pipes/run-if) means the Slack pipe only runs when the previous step marked
 `icp_fit` true. Conditional execution is part of the typed payload.
 `message:send:slack@1` sends through your own Slack workspace, so it needs a
 vault connection ID like `slack_abcd123` (see [Connections](/docs/connections)).
@@ -231,7 +231,7 @@ setTimeout(() => controller.abort(), 30_000);
 await pipe0.pipes.pipe(payload, { signal: controller.signal });
 ```
 
-## See also
+## Next steps
 
 <Cards>
   <Card icon={<Zap />} title="Pipe catalog" description="Every pipe_id and its config shape." href="/docs/pipe-catalog" />

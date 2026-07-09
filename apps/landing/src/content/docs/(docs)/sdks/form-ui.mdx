@@ -4,9 +4,9 @@ description: React components for rendering pipe0 forms and catalog pickers.
 date: 2026-05-10
 ---
 
-`@pipe0/react` ships two headless libraries: **form rendering** and **catalog**.
-Both follow the same pattern — a root component + compound parts + a
-`render={(props, state) => ReactNode}` escape hatch.
+`@pipe0/react` ships two headless libraries: form rendering and catalog.
+Both follow the same pattern: a root component, compound parts, and a
+`render={(props, state) => ReactNode}` override.
 
 ## Install
 
@@ -149,7 +149,7 @@ Adapter kinds include: `text_input`, `textarea_input`, `select_input`,
 `multi_select_input`, `boolean_input`, `int_input`, `number_input`,
 `range_input`, `date_range_input`, `connector_input`, `providers_input`,
 `prompt_input`, `template_input`, `json_schema_input`, `pipes_run_if_input`.
-Only override the kinds you care about — the rest fall through to defaults.
+Only override the kinds you care about; the rest fall through to defaults.
 
 Common class slots: `form`, `section`, `sectionLabel`, `sectionDescription`,
 `group`, `groupHeader`, `groupContent`, `field`, `label`, `description`,
@@ -247,14 +247,14 @@ import { PipeCatalog } from "@pipe0/react";
 <PipeCatalog onSelectPipe={(pipeId) => console.log(pipeId)} />;
 ```
 
-Optional props: `filter` (whitelist/blacklist of pipes or providers — memoize
+Optional props: `filter` (whitelist/blacklist of pipes or providers; memoize
 it), `initialColumnFilters`, `classNames`, `components`.
 
 ### Compound parts
 
 Drive the catalog with `usePipeCatalogTable`. Without children, the root renders
-search filter → category filter → column filters → active filters → list →
-empty by default.
+the search filter, category filter, column filters, active filters, list, and
+empty state, in that order.
 
 | Part | Purpose |
 | --- | --- |
@@ -299,7 +299,7 @@ function PipePicker({ onSelect }) {
 
 ### Render prop
 
-Same `(props, state)` contract as forms — useful when you want to swap a
+Same `(props, state)` contract as forms. Useful when you want to swap a
 filter UI without rebuilding the table logic.
 
 ```tsx
@@ -397,7 +397,7 @@ Derived widgets that read from card context: `CatalogCopyId`,
 
 ### Search variants
 
-`SearchCatalog` and `SearchesCatalog` mirror `PipeCatalog` exactly — paired
+`SearchCatalog` and `SearchesCatalog` mirror `PipeCatalog` exactly: paired
 with `useSearchCatalogTable` / `useSearchesCatalogTable`, using `onSelectSearch`
 / `onSelectSearches`, and reading rows via `useSearchCatalogCard()` /
 `useSearchesCatalogCard()`. Neither exposes `InputFieldFilter` (searches have

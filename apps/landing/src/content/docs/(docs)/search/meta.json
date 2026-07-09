@@ -2,7 +2,8 @@
   "pages": [
     "index",
     "[Search Catalog](/docs/search-catalog)",
-    "examples",
-    "advanced"
+    "pagination",
+    "request-payload",
+    "response-object"
   ]
 }

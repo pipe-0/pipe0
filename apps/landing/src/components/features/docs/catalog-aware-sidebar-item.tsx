@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 
 const NESTED_MATCH_URLS = new Set([
   "/docs/pipe-catalog",
-  "/docs/search/search-catalog",
+  "/docs/search-catalog",
 ]);
 
 function trimTrailingSlash(path: string): string {

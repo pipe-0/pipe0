@@ -1,8 +1,7 @@
 ---
-title: Request Payload
-category: Concepts
-description: The searches payload contains a description of what you want to find. Compose filters and searches to find companies or people.
-date: 2025-06-02
+title: Request payload
+description: The search request payload describes what you want to find. Combine a search with filters to find companies or people.
+date: 2026-07-06
 ---
 
 The following API operations require a request payload of type `SearchRequestPayload`:
@@ -10,7 +9,7 @@ The following API operations require a request payload of type `SearchRequestPay
 - `POST https://api.pipe0.com/v1/search/run` (create a search task)
 - `POST https://api.pipe0.com/v1/search/run/sync` (create a search task and return the result)
 
-<AppLink linkType="async">Learn more</AppLink> about the difference between sync and async operations.
+Both accept the same payload; see <AppLink linkType="async">sync vs async</AppLink> for the trade-offs.
 
 Here's a sample payload:
 
@@ -50,14 +49,14 @@ Execute your request in `sandbox` or `production` <AppLink linkType="testMode">m
 
 #### config.widgets.enabled
 
-Enable/disable widget metadata on result fields. Widgets are part of the [search response](/docs/search/advanced/search-response-object) and are
-often used to visualize results (e.g. provider logos). Defaults to `false`.
+Enable or disable widget metadata on result fields. Widgets are part of the [search response](/docs/search/response-object) and are
+often used to visualize results (for example, provider logos). Defaults to `false`.
 
 #### config.field_definitions.enabled
 
-When `true`, the response includes a top-level [`field_definitions`](/docs/search/advanced/search-response-object#field_definitions) map that
+When `true`, the response includes a top-level [`field_definitions`](/docs/search/response-object#field_definitions) map that
 describes every column the search returns. This is opt-in and works for all searches: static searches derive their columns from the catalog, while
-dynamic searches (e.g. `sheet:rows@1`) supply their columns from the run. Defaults to `false`.
+dynamic searches (for example `sheet:rows@1`) supply their columns from the run. Defaults to `false`.
 
 ### search
 

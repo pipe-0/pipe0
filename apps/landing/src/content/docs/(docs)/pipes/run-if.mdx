@@ -1,0 +1,102 @@
+---
+title: Conditional runs
+description: Use run_if to run a pipe only for records that match conditions.
+date: 2026-07-06
+---
+
+`run_if` runs a pipe only when its conditions match. Use it to gate expensive or irreversible pipes: only email people who passed a qualification step, only enrich records that are missing a value.
+
+Conditions are evaluated per record. A pipe with a `run_if` can run for one record and be `skipped` for the next, within the same request.
+
+This request splits `name` only when it contains `Tom`:
+
+```json title="Request with run_if"
+{
+  "pipes": [
+    {
+      "pipe_id": "person:name:split@1",
+      "run_if": {
+        "action": "run",
+        "when": {
+          "logic": "and",
+          "conditions": [
+            {
+              "field_name": "name",
+              "property": "value",
+              "operator": "contains",
+              "value": "Tom"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "input": [...]
+}
+```
+
+Conditions can also target another pipe's output. The [Qualify & email](/docs/examples/qualify-and-email) example gates a send pipe on the `is_icp_fit` output of an AI prompt pipe.
+
+## Schema
+
+### action
+
+What to do when conditions match. Defaults to `"run"`. Reserved for future expansion.
+
+**Supported:** `run`.
+
+<Callout>
+`run_if` doesn't override other gating. A pipe with missing required inputs is still `skipped` even if its `run_if` matches.
+</Callout>
+
+### when.logic
+
+How to combine conditions.
+
+**Supported:** `and` (all must match), `or` (any matches).
+
+### when.conditions[]
+
+The conditions to evaluate. Each checks a field's value or status; combined with `when.logic`.
+
+### condition.field_name
+
+The field to evaluate. Either an input field or another pipe's output field.
+
+<Callout>
+JSON fields can't be targeted directly. Expand JSON properties into their own fields first.
+</Callout>
+
+### condition.property
+
+Which aspect of the field to compare.
+
+**Supported:** `value` (the field's value), `status` (its resolution status).
+
+### condition.operator
+
+How to compare. Allowed operators depend on `property` and `field.type`:
+
+| Property | Type    | Operators |
+| :---     | :---    | :---      |
+| value    | string  | `eq`, `neq`, `contains`, `matches` |
+| value    | date    | `eq`, `neq`, `lt`, `lte`, `gt`, `gte`, `contains` |
+| value    | number  | `eq`, `neq`, `lt`, `lte`, `gt`, `gte`, `contains` |
+| value    | boolean | `eq`, `neq` |
+| status   | any     | `eq`, `neq` |
+
+`matches` tests the value against a case-sensitive regular expression, for example `^Tom`.
+
+### condition.value
+
+What to compare against.
+
+- For `property: "value"`: a primitive (string, number, boolean, or null).
+- For `property: "status"`: one of `completed`, `no_result`, `failed`, `skipped`.
+
+## Next steps
+
+<Cards>
+  <Card icon={<Mail />} title="Qualify & email" description="run_if gating an email send on an AI verdict." href="/docs/examples/qualify-and-email" />
+  <Card icon={<Bell />} title="Signup alerts" description="run_if gating a Slack alert on an ICP score." href="/docs/examples/signup-alerts" />
+</Cards>

@@ -1,18 +1,18 @@
 ---
-title: Qualify & Email
-description: Enrich a LinkedIn profile, decide if the person is an ICP fit, and email the ones that are
+title: Qualify & email
+description: Enrich a LinkedIn profile, decide if the person is an ICP fit, and email the ones that are.
 date: 2026-06-06
 full: true
 ---
 
 This example takes a list of LinkedIn profile URLs and, in a single request:
 
-1. Enriches the **full LinkedIn profile** for each person (`person:profile:waterfall@1`).
-2. Uses an AI prompt to decide whether they are an **ICP fit** (`prompt:run@1`).
-3. For matches only, resolves a **work email** (`person:workemail:profileurl:waterfall@1`), drafts a
-   **personalized email** (`email:write@1`), and **sends it** (`email:send:gmail@1`).
+1. Enriches the full LinkedIn profile for each person (`person:profile:waterfall@1`).
+2. Uses an AI prompt to decide whether they are an ICP fit (`prompt:run@1`).
+3. For matches only, resolves a work email (`person:workemail:profileurl:waterfall@1`), drafts a
+   personalized email (`email:write@1`), and sends it (`email:send:gmail@1`).
 
-The last three pipes are gated with `run_if`, so non-matches never trigger an enrichment, a draft, or a send.
+The last three pipes are gated with [`run_if`](/docs/pipes/run-if), so non-matches never trigger an enrichment, a draft, or a send.
 
 export const qualifyAndEmailPayload = {
   config: { environment: "production" },
@@ -110,13 +110,13 @@ Keep it under 120 words and end with a soft call to action to book a quick call.
 
 <RequestExample kind="pipes" payload={qualifyAndEmailPayload} />
 
-A few things worth calling out:
+How the pipes connect:
 
-- **`person:profile:waterfall@1`** outputs a `profile` object. The AI prompt and the email writer
+- `person:profile:waterfall@1` outputs a `profile` object. The AI prompt and the email writer
   both reference it with `{{ profile }}`.
-- **`email:write@1`** produces `email_subject` and `email_body`; the send pipe wires them into its
+- `email:write@1` produces `email_subject` and `email_body`; the send pipe wires them into its
   templated `subject` and `body` config fields.
-- **`email:send:gmail@1`** needs a Gmail connection from your vault. Replace
+- `email:send:gmail@1` needs a Gmail connection from your vault. Replace
   `gmail_abcd123` with your connection ID, copied exactly as the vault lists it
   (see [Connections](/docs/connections)).
 - Swap `email:send:gmail@1` for `email:send:resend@1` if you send through Resend instead. That pipe

@@ -8,7 +8,10 @@ import { notFound } from "next/navigation";
 import { getMDXComponents } from "@/mdx-components";
 import type { Metadata } from "next";
 import { createRelativeLink } from "fumadocs-ui/mdx";
+import { openapi } from "@/lib/openapi";
+import { APIPage } from "@/components/api-page";
 import { LLMCopyButton } from "@/components/page-actions";
+import { StraightToc } from "@/components/features/docs/straight-toc";
 import { PipeEntryPage } from "@/components/features/docs/pipe-entry-page";
 import { SearchCatalogIndexPage } from "@/components/features/docs/search-catalog-index-page";
 import { SearchEntryPage } from "@/components/features/docs/search-entry-page";
@@ -49,16 +52,29 @@ export default async function Page(props: PageProps<"/docs/[[...slug]]">) {
   const MDX = (page.data as { body?: typeof page.data.body }).body;
   if (!MDX) notFound();
 
+  // API reference pages embed <APIPage>, a client component that can only
+  // render documents preloaded on the server (declared in the page's
+  // `_openapi.preload` frontmatter).
+  const { preloaded } = data._openapi
+    ? // The loader's page union includes the virtual catalog pages, which
+      // don't carry doc data — but the `_openapi` guard means this branch only
+      // ever sees real docs pages.
+      await openapi.preloadOpenAPIPage(
+        page as Parameters<typeof openapi.preloadOpenAPIPage>[0],
+      )
+    : { preloaded: undefined };
+
   return (
     <DocsPage
       toc={page.data.toc}
       full={page.data.full}
       footer={{ enabled: false }}
+      tableOfContent={{ component: <StraightToc /> }}
     >
-      <DocsTitle>{page.data.title}</DocsTitle>
       {/* Page description is intentionally not rendered in the docs body — it
           is kept for SEO/metadata and card previews only. */}
-      <div className="flex flex-row gap-2 items-center -mt-2">
+      <div className="flex flex-row items-start justify-between gap-4">
+        <DocsTitle>{page.data.title}</DocsTitle>
         <LLMCopyButton markdownUrl={`${page.url}.mdx`} />
       </div>
       <DocsBody>
@@ -66,6 +82,11 @@ export default async function Page(props: PageProps<"/docs/[[...slug]]">) {
           components={getMDXComponents({
             // this allows you to link to other pages with relative file paths
             a: createRelativeLink(source, page),
+            ...(preloaded && {
+              APIPage: (props: React.ComponentProps<typeof APIPage>) => (
+                <APIPage {...props} preloaded={preloaded} />
+              ),
+            }),
           })}
         />
       </DocsBody>

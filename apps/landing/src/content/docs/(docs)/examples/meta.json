@@ -1,0 +1,11 @@
+{
+  "$schema": "../../../../.source/json-schema/docs.meta.json",
+  "pages": [
+    "basic-script-typescript",
+    "basic-search-typescript",
+    "search-then-enrich",
+    "qualify-and-email",
+    "signup-alerts",
+    "dough"
+  ]
+}

@@ -1,12 +1,8 @@
-import { configDefault } from "fumadocs-core/highlight";
-import type { ResolvedShikiConfig } from "fumadocs-core/highlight/config";
+import type { RemarkAutoTypeTableOptions } from "fumadocs-typescript";
 
-export const shikiConfig: ResolvedShikiConfig = {
-  ...configDefault,
-  defaultThemes: {
-    themes: {
-      light: "github-light",
-      dark: "vesper",
-    },
+export const shikiConfig: RemarkAutoTypeTableOptions["shiki"] = {
+  themes: {
+    light: "github-light",
+    dark: "vesper",
   },
 };

@@ -38,7 +38,7 @@ export function ApiRequestCodeExample({
       );
       return code;
     });
-  }, []);
+  }, [oas, operation, harData]);
 
   return (
     <div>

@@ -1,19 +1,16 @@
 ---
-title: Response Object
-category: Concepts
-priority: 2
+title: Response object
 description: The response object contains your search results, along with metadata about your search.
-date: 2025-07-28
-isPublished: true
+date: 2026-07-06
 ---
 
-The following API operations return a response of type `SearchResponse`.
+The following API operations return a response of type `SearchResponse`:
 
 - `POST https://api.pipe0.com/v1/search/run` (create a search task)
 - `GET https://api.pipe0.com/v1/search/check/{run_id}` (check the processing state of a search task)
 - `POST https://api.pipe0.com/v1/search/run/sync` (run a search task synchronously)
 
-<AppLink linkType="async">Learn more</AppLink> about the difference between sync and async operations.
+Both run endpoints accept the same payload; see <AppLink linkType="async">sync vs async</AppLink> for the trade-offs.
 
 ## Full response object
 
@@ -91,7 +88,7 @@ The following API operations return a response of type `SearchResponse`.
 
 ### id
 
-This is the task `id`. You can use this id to look up your processing result during and after processing.
+The task `id`. You can use this id to look up your processing result during and after processing.
 We store tasks for up to 15 days after processing is completed.
 
 ### status
@@ -132,7 +129,7 @@ The type of pagination used. Currently supports `cursor`.
 
 ### next_page
 
-Contains the configuration needed to fetch the next page of results. Use this object as the body of a subsequent request to paginate through results. This field is `null` when there are no more pages.
+Contains the configuration needed to fetch the next page of results. Use this object as the body of a subsequent request to paginate through results. This field is `null` when there are no more pages. See <AppLink linkType="pagination">Pagination</AppLink>.
 
 #### next_page.search_id
 
@@ -144,15 +141,15 @@ The config object pre-filled with the cursor and filters for the next page.
 
 ### field_definitions
 
-A map describing every column the search returns. This field is **only present when you opt in** via
-[`config.field_definitions.enabled`](/docs/search/advanced/search-request-payload#configfield_definitionsenabled) in the request. When omitted from
+A map describing every column the search returns. This field is only present when you opt in via
+[`config.field_definitions.enabled`](/docs/search/request-payload#configfield_definitionsenabled) in the request. When omitted from
 the request (the default), the response contains no `field_definitions` and existing clients are unaffected.
 
-`field_definitions` gives you a uniform, self-describing way to learn a search's columns — for example to build a results table before any rows arrive.
+`field_definitions` gives you a uniform, self-describing way to learn a search's columns, for example to build a results table before any rows arrive.
 It is populated for every search, not just dynamic ones:
 
 - **Static searches** derive their columns from the catalog output fields. The column set is fixed and known ahead of time.
-- **Dynamic searches** (e.g. `sheet:rows@1`) supply their columns from the run. The column set equals the underlying data source (for `sheet:rows@1`,
+- **Dynamic searches** (for example `sheet:rows@1`) supply their columns from the run. The column set equals the underlying data source (for `sheet:rows@1`,
   the sheet's columns) and can vary per run.
 
 The keys are column names and the values describe each column:
@@ -165,10 +162,10 @@ The keys are column names and the values describe each column:
 }
 ```
 
-- `type` — one of `string`, `number`, `boolean`, `json`, or `unknown`.
-- `label` — an optional human-readable column name.
-- `format` — an optional value format hint (e.g. `email`, `url`, `date`).
-- `json_metadata` — for `json` columns, an optional `{ schema, example_value }` descriptor; `null` otherwise.
+- `type`: one of `string`, `number`, `boolean`, `json`, or `unknown`.
+- `label`: an optional human-readable column name.
+- `format`: an optional value format hint (for example `email`, `url`, `date`).
+- `json_metadata`: for `json` columns, an optional `{ schema, example_value }` descriptor; `null` otherwise.
 
 ### results[]
 
@@ -191,17 +188,17 @@ The type of the value. One of `string`, `number`, `boolean`, `json`, or `unknown
 
 #### result.field.format
 
-An optional value format hint (e.g. `email`, `url`), or `null`.
+An optional value format hint (for example `email`, `url`), or `null`.
 
 #### result.field.resolved_by
 
 Provenance of the value: `{ ref, environment, config_hash, input_hash }`. `ref` identifies the operation that produced the value, or `input` for
-values that were not produced by a search or pipe. For dynamic reads like `sheet:rows@1` the provenance is passed through as stored — a cell that was
+values that were not produced by a search or pipe. For dynamic reads like `sheet:rows@1` the provenance is passed through as stored: a cell that was
 originally produced by a pipe keeps that pipe's `ref` (the search is a reader, not the producer).
 
 #### result.field.widgets
 
-Additional metadata used to render the value (e.g. provider logos). See `config.widgets.enabled` in the
+Additional metadata used to render the value (for example provider logos). See `config.widgets.enabled` in the
 <AppLink linkType="pipelineRequest">request payload</AppLink>.
 
 <Callout>

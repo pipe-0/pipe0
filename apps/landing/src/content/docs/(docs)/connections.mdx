@@ -1,33 +1,28 @@
 ---
 title: Connections
-description: Learn how to use connections in pipe0
-date: 2025-08-25
+description: How requests authenticate with external providers, and how to bring your own API keys.
+date: 2026-07-06
 icon: Plug
 ---
 
-Connections determine how your request authenticates with external services. Connections often 
-point to credentials used during a request (for example, an API key).
+Connections determine how your request authenticates with external services. A connection points to the credentials used during a request (for example, an API key).
 
 ## Managed connections
 
-When making <AppLink linkType="authentication">authenticated requests</AppLink>, you're using managed connections by default. You can make 
-requests to providers like Leadmagic, Zerobounce, or Clado without having to buy additional subscriptions. Everything is managed 
-through pipe0.
+<AppLink linkType="authentication">Authenticated requests</AppLink> use managed connections by default. You can call providers like Leadmagic, Zerobounce, or Clado without buying separate subscriptions: pipe0 supplies the credentials and bills credits.
 
-Using pipe0 this way is faster, safer, and less error-prone than using your credentials.
+We recommend managed connections when possible:
 
-Here are a few reasons why we recommend using managed connections when possible.
-
-- We don't know what rate limits to use with your credentials, so we fall back to conservative defaults.
+- We don't know what rate limits apply to your credentials, so with your own keys we fall back to conservative defaults.
 - With your own credentials, you have to manage separate credit balances with third-party providers.
 - With managed connections, you never share sensitive credentials.
 
-Some pipes and searches require you to bring your own connection, like the [email:send:resend@1](/docs/pipe-catalog/email:send:resend/1) pipe.
+Some pipes and searches require your own connection, like the [email:send:resend@1](/docs/pipe-catalog/email:send:resend/1) pipe.
 It requires your own API key. You provide it by storing the key with us and referencing it in your request.
 
 ## Custom connections
 
-Custom connections are API keys/credentials that you own. To use custom connections, share 
+Custom connections are API keys and credentials that you own. To use custom connections, share
 your credentials with pipe0.
 
 We plan to offer different ways to share your API keys with us securely,
@@ -42,7 +37,7 @@ We charge a small platform fee for running pipes and searches via custom connect
 | Standard | 0.05 credits | 0.08 credits |
 | High-usage (>$300/mo spend) | 0.001 credits | 0.002 credits |
 
-High-usage pricing kicks in automatically once your monthly spend exceeds $300 USD. For example, 200k operations at high-usage rates cost ~$6 USD.
+High-usage pricing kicks in automatically once your monthly spend exceeds $300 USD. For example, 200k operations at high-usage rates cost about $6 USD.
 
 ### Vault
 
@@ -111,7 +106,7 @@ The connector object works the same way for search requests.
 
 When pipes use multiple providers, you may want to provide a custom connection for just one provider.
 
-Custom connections can safely target a subset of the available providers. Pipes will correctly use custom connections 
+Custom connections can safely target a subset of the available providers. Pipes use custom connections
 when present, and fall back to managed connections otherwise.
 
 ### The connector object
@@ -142,7 +137,7 @@ A list of referenced connections. Your request will return an error if you refer
 
 #### connections.type
 
-The access mechanism of your connection. 
+The access mechanism of your connection.
 
 **type.vault**: Uses pipe0's vault for storage.
 

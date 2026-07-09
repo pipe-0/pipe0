@@ -47,10 +47,10 @@ export function LLMCopyButton({
   return (
     <Button
       type="button"
-      variant="ctaOutline"
+      variant="link"
       size="sm"
       disabled={isLoading}
-      className="h-7 gap-1.5 rounded-lg px-2.5 text-[13px] font-medium [&_svg]:size-3 [&_svg]:text-muted-foreground"
+      className="mt-1 h-7 shrink-0 gap-1.5 px-0 has-[>svg]:px-0 [&_svg]:size-3.5"
       onClick={onClick}
     >
       {checked ? <Check /> : <Copy />}

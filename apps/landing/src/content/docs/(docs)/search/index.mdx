@@ -1,45 +1,77 @@
 ---
-title: Introduction
-description: Use search to find companies and people using filters. Searching for companies & people is often called "prospecting", "list building" or "sourcing".
-date: 2025-04-01
+title: Overview
+description: Search creates records from filters. Use it to find people and companies, often called prospecting, list building, or sourcing.
+date: 2026-07-06
 ---
 
-The <AppLink linkType="searchCatalog">search catalog</AppLink> lists all available datasets.
+While pipes add fields to records you already have, search creates the records. Use it when you start from a filter ("software engineers in Berlin") instead of a list. The <AppLink linkType="searchCatalog">search catalog</AppLink> lists every dataset and its filters.
 
-## Making requests
+## Run a search
 
-This request fetches a list of people using the [`people:profiles:crustdata@2`](/docs/search-catalog/people:profiles:crustdata/2) dataset.
+This request fetches a list of people from the [`people:profiles:crustdata@2`](/docs/search-catalog/people:profiles:crustdata/2) dataset. Each request takes a single search.
 
-```typescript tab="TypeScript"
-const result = await fetch("https://api.pipe0.com/v1/search/run", {
-    method: "POST",
-    headers: {
-        "Authorization": `Bearer ${API_KEY}`,
-        "Content-Type": "application/json"
+export const searchPayload = {
+  search: {
+    search_id: "people:profiles:crustdata@2",
+    config: {
+      limit: 25,
+      filters: {
+        current_job_titles: { include: ["Software Engineer", "Developer"] },
+      },
     },
-    body: JSON.stringify({
-        search: {
-            search_id: "people:profiles:crustdata@2",
-            config: {
-                limit: 100,
-                filters: {
-                    current_job_titles: { include: ["Software Engineer", "Developer"] }
-                }
-            }
-        },
-    })
-});
+  },
+};
+
+<RequestExample kind="search" payload={searchPayload} />
+
+The response contains one result object per match, with the same field shape pipes use:
+
+```json title="Response (truncated)"
+{
+  "id": "jyg5w5p7unhcufkp8f7z5za8",
+  "status": "completed",
+  "search_id": "people:profiles:crustdata@2",
+  "total_pages": 2764,
+  "next_page": {
+    // pass this as `search` to fetch the next page
+  },
+  "results": [
+    {
+      "name": {
+        "type": "string",
+        "value": "Gayle Pouros",
+        "status": "completed"
+        // ...
+      },
+      "job_title": {
+        "type": "string",
+        "value": "Product Intranet Manager",
+        "status": "completed"
+        // ...
+      }
+    }
+    // ...
+  ]
+}
 ```
 
-You can find the list of available filters per dataset in the <AppLink linkType="searchCatalog">search catalog</AppLink>.
+The full response carries more metadata than shown here. See the [response object](/docs/search/response-object).
 
-## Getting the task result
+## From search to enrichment
 
-The request to `POST https://api.pipe0.com/v1/search/run` will create a search task.
-To get the result of the task, poll the `GET https://api.pipe0.com/v1/search/check/{run_id}` endpoint until the task status is
-`completed`.
+The `results` array is a valid `input` for a pipes request: search for people, then hand the results to pipes to add emails or phone numbers. No reshaping needed, because results come back as <AppLink linkType="inputExpansion">expanded field values</AppLink>.
 
-```typescript tab="TypeScript"
+See the [Search then enrich](/docs/examples/search-then-enrich) example for the full pattern.
+
+## Paginate
+
+Every search response includes a `next_page` field. Pass it as the `search` payload to fetch the next page; when it is `null`, there are no more results. See <AppLink linkType="pagination">Pagination</AppLink> for a full iteration loop.
+
+## Search in bulk
+
+The sync endpoint above waits for the result. Large searches can time out; create an async task with `POST /v1/search/run` (same payload), then poll `GET /v1/search/check/{run_id}` until `status` is `completed`.
+
+```typescript tab="TypeScript" title="Poll for the result"
 const result = await fetch(`https://api.pipe0.com/v1/search/check/${runId}`, {
     method: "GET",
     headers: {
@@ -48,7 +80,7 @@ const result = await fetch(`https://api.pipe0.com/v1/search/check/${runId}`, {
 });
 ```
 
-```python tab="Python"
+```python tab="Python" title="Poll for the result"
 import requests
 
 headers = {
@@ -57,118 +89,17 @@ headers = {
 response = requests.get(f"https://api.pipe0.com/v1/search/check/{run_id}", headers=headers)
 ```
 
-```bash tab="cURL"
+```bash tab="cURL" title="Poll for the result"
 curl -X GET "https://api.pipe0.com/v1/search/check/$RUN_ID" \
 -H "Authorization: Bearer $API_KEY"
 ```
 
-
-The result will look something like this:
-
-```json title="Response"
-{
-	"id": "jyg5w5p7unhcufkp8f7z5za8",
-	"status": "completed",
-	"search_id": "people:profiles:crustdata@2",
-	"organization_id": "v417gjrw51ft55f85ueeqgpt",
-	"errors": [],
-	"total_pages": 2764,
-	"pagination_type": "cursor",
-	"next_page": {
-		"config": {
-			"filters": {
-				"current_job_titles": { "include": ["Software Engineer", "Developer"], "exclude": [] }
-			},
-			"pagination": {
-				"limit": 100,
-				"cursor": "H4sIAMaPrWkC..."
-			},
-			"output_fields": {
-				"name": { "alias": "", "enabled": true },
-				"job_title": { "alias": "", "enabled": true }
-			}
-		},
-		"search_id": "people:profiles:crustdata@2"
-	},
-	"results": [
-		{
-			"name": {
-				"ui": {},
-				"type": "string",
-				"value": "Gayle Pouros",
-				"format": "text",
-				"status": "completed"
-			},
-			"job_title": {
-				"ui": {},
-				"type": "string",
-				"value": "Product Intranet Manager",
-				"format": "text",
-				"status": "completed"
-			}
-		}
-	]
-}
-```
-
-The `results` of a search can be the input for a <AppLink linkType="pipesQuickstart">pipes request</AppLink> (enrichment).
-Under the hood, this uses <AppLink linkType="inputExpansion">input expansion</AppLink>.
-
-## Getting the result without polling
-
-Instead of creating your task with the endpoint `POST https://api.pipe0.com/v1/search/run` use the endpoint `POST https://api.pipe0.com/v1/search/run/sync`.
-Use the same payload for both endpoints. The `/sync` endpoint will try to return the `completed` result in one round-trip.
-
-Read more about the trade-offs between <AppLink linkType="async">async and sync requests</AppLink>.
-
-## Pagination
-
-Search results are paginated. Every search response includes a `next_page` field. Pass it as the `search` payload to fetch the next page. When `next_page` is `null`, there are no more results.
-
-```typescript title="Paginate through results"
-// First request
-const res = await fetch("https://api.pipe0.com/v1/search/run/sync", {
-    method: "POST",
-    headers: {
-        "Authorization": `Bearer ${API_KEY}`,
-        "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-        search: {
-            search_id: "people:profiles:crustdata@2",
-            config: {
-                limit: 25,
-                filters: {
-                    current_job_titles: { include: ["Software Engineer"] }
-                }
-            }
-        }
-    })
-});
-
-const page1 = await res.json();
-
-// To get the next page, pass `next_page` as the `search` field
-if (page1.next_page) {
-    const res2 = await fetch("https://api.pipe0.com/v1/search/run/sync", {
-        method: "POST",
-        headers: {
-            "Authorization": `Bearer ${API_KEY}`,
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            search: page1.next_page
-        })
-    });
-}
-```
-
-For a full iteration loop and more details, see the <AppLink linkType="pagination">pagination guide</AppLink>.
+Read more about the trade-offs in <AppLink linkType="async">sync vs async</AppLink>.
 
 ## Next steps
 
 <Cards>
   <Card icon={<Search />} title="Search catalog" description="Every dataset with filters and credit prices." href="/docs/search-catalog" />
-  <Card icon={<ArrowRightLeft />} title="Search then enrich" description="Pipe search results straight into an enrichment request." href="/docs/pipes/examples/search-then-enrich" />
+  <Card icon={<ArrowRightLeft />} title="Search then enrich" description="Pipe search results straight into an enrichment request." href="/docs/examples/search-then-enrich" />
+  <Card icon={<Braces />} title="Request payload" description="Every property of a search request." href="/docs/search/request-payload" />
 </Cards>
-

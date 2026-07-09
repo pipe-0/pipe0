@@ -1,0 +1,74 @@
+---
+title: Core concepts
+description: The mental model behind every pipe0 request. Records, fields, sync vs async, and sandbox vs production.
+date: 2026-07-06
+icon: Layers
+---
+
+pipe0 has two primitives. Searches create records from filters ("software engineers in Berlin"). Pipes enrich records you already have, adding fields like `work_email` or `mobile`. Every request is one of the two. This page explains the handful of concepts they share.
+
+## Records and fields
+
+You send input objects; pipe0 returns records.
+
+An input object is a plain JSON object with an `id` and the fields you already know:
+
+```json title="Input object"
+{ "id": "1", "name": "Jane Doe", "company_domain": "pipe0.com" }
+```
+
+During processing, each input object becomes a record. Every field of a record carries its value plus processing state:
+
+```json title="Record field"
+"work_email": {
+  "type": "string",
+  "value": "jane@pipe0.com",
+  "status": "completed"
+}
+```
+
+The `status` tells you how the field ended up: `completed` (a value was found), `no_result` (processing finished, nothing was found), `failed` (an error, with a `reason` attached), or `skipped` (a condition or missing input prevented the run). Fields you provided yourself are copied over as `completed`.
+
+The full field shape, including provenance metadata, is documented in the [response object](/docs/pipes/response-object).
+
+## Sync vs async
+
+Every run endpoint comes in two flavors:
+
+| | Endpoint | Behavior |
+|---|---|---|
+| Sync | `POST /v1/pipes/run/sync` | Waits and returns the completed result in one round-trip. |
+| Async | `POST /v1/pipes/run` | Returns a run `id` immediately. Poll `GET /v1/pipes/check/{run_id}` until `status` is `completed`. |
+
+Both accept the same payload. Search has the same pair under `/v1/search/`.
+
+Use sync while developing and for small batches (fewer than 10 records). Use async for large batches or long-running pipes, where a sync request would time out. Poll every 1 to 3 seconds.
+
+## Sandbox and production
+
+`config.environment` selects where your request runs:
+
+- `sandbox` returns mock data and costs nothing. Responses have the same shape as production responses, so you can build and test without a subscription or credits.
+- `production` runs real providers and bills credits. It requires an active subscription.
+
+Requests run in `production` unless you set `sandbox` explicitly:
+
+```json title="Run a request in sandbox"
+{
+  "config": { "environment": "sandbox" },
+  "pipes": [...],
+  "input": [...]
+}
+```
+
+## Credits
+
+Production operations are billed in credits, pipe0's universal currency. Each catalog page lists what an operation costs. Waterfall pipes only bill the provider that returned a result. See <AppLink linkType="billing">Billing</AppLink>.
+
+## Next steps
+
+<Cards>
+  <Card icon={<Zap />} title="Pipes" description="Enrich records with your first pipes request." href="/docs/pipes" />
+  <Card icon={<Search />} title="Search" description="Create records from filters." href="/docs/search" />
+  <Card icon={<CreditCard />} title="Billing" description="How credits and subscriptions work." href="/docs/billing" />
+</Cards>

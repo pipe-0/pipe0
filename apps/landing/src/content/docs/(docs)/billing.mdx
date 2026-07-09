@@ -30,9 +30,9 @@ Pipes can "run" without consuming credits. This is determined by their <AppLink 
 
 ### Billing mode
 
-A property of a pipe is its `billing_mode`.
+Each pipe has a `billing_mode` that determines when a run costs credits.
 
-### billing_mode `always`
+#### billing_mode `always`
 
 Pipes with `billing_mode="always"` are billed on every run. Credits are deducted from your balance regardless of 
 the pipe's result. Even if pipe output fields are marked as `no_result`, credits will be deducted
@@ -40,7 +40,7 @@ from your balance. See <AppLink linkType="fieldStatus">field status</AppLink> fo
 
 Pipes are not billed if the pipe run fails (error state).
 
-### billing_mode `on_success`
+#### billing_mode `on_success`
 
 Pipes with `billing_mode="on_success"` are billed when at least one of their output fields is marked 
 as `completed`. This indicates a successful result. If all output fields of a pipe are marked as `no_result`, the pipe is not billed.
@@ -90,7 +90,7 @@ To purchase one-off credits contact [support@pipe0.com](mailto:support@pipe0.com
 
 ## Credit rollover
 
-For your convenience, you can **hold up to 4x the credit amount** of either your monthly or yearly 
+You can hold up to 4x the credit amount of either your monthly or yearly
 subscription value in your account. Credit balances that exceed this threshold are lost.
 
 During subscription downgrades the credit rollover amount is lowered and the limit of your new subscription applies.
@@ -129,7 +129,7 @@ Each enrollment is locked for 30 days from the day you set it. While it is locke
 
 ### Enrollment
 
-To enroll, go to `dashboard` -> `billing` -> `High usage billing` and choose a tier for the operation you want to discount.
+To enroll, go to "Dashboard" > "Billing" > "High usage billing" and choose a tier for the operation you want to discount.
 
 ### Custom discount levels
 
@@ -137,8 +137,7 @@ We're open to adding custom discounts for customers committing to higher volumes
 
 ## Subscriptions
 
-Subscriptions are managed through [Stripe](https://stripe.com). 
-This ensures a reliable and secure environment for your billing information.
+Subscriptions are managed through [Stripe](https://stripe.com).
 
 You can create, update, and cancel your subscription at any time.
 Navigate to "Dashboard" > "Billing" > "Manage Subscriptions"

@@ -1,25 +1,13 @@
 ---
 title: Authentication
-date: 2025-03-07
+description: Create an API key and send authenticated requests.
+date: 2026-07-06
 icon: KeyRound
 ---
 
-## Making authenticated requests
+Every request to pipe0 needs an API key, sent as a bearer token. A free account is enough for `sandbox` requests; `production` requests also need an active subscription.
 
-All requests to pipe0 require authentication. You need:
-
-- A pipe0 account
-- An active subscription, for requests in `production` mode
-
-<Callout type="warn">
-Don't store API keys in the browser. Connect your browser-based app to pipe0 by
-proxying requests through a secure server or serverless function that can
-[store API keys securely](https://cloud.google.com/docs/authentication/api-keys-best-practices).
-</Callout>
-
-### Create an API Key
-
-API keys can be created through the dashboard.
+## Create an API key
 
 <Steps>
 <Step>
@@ -36,13 +24,29 @@ Click "Create".
 </Step>
 </Steps>
 
-### Send an authenticated request
+## Send an authenticated request
 
-Send your API key as part of the 
-[`Authorization` header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Authentication#the_general_http_authentication_framework).
+Pass the key in the [`Authorization` header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Authentication#the_general_http_authentication_framework):
 
 ```bash title="Authenticated request"
-curl -X POST "https://api.pipe0.com/v1/pipes/run" \
--H "Authorization: Bearer <API_KEY>" \
--H "Content-Type: application/json" 
+curl -X POST "https://api.pipe0.com/v1/pipes/run/sync" \
+  -H "Authorization: Bearer <API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "config": { "environment": "sandbox" },
+    "pipes": [{ "pipe_id": "person:name:split@1" }],
+    "input": [{ "id": "1", "name": "Jane Doe" }]
+  }'
 ```
+
+<Callout type="warn">
+Don't store API keys in the browser. Connect browser-based apps to pipe0 through a server or serverless function that can
+[store keys securely](https://cloud.google.com/docs/authentication/api-keys-best-practices).
+</Callout>
+
+## Next steps
+
+<Cards>
+  <Card icon={<Rocket />} title="Quickstart" description="Make your first request." href="/docs" />
+  <Card icon={<Plug />} title="Connections" description="Use your own provider API keys." href="/docs/connections" />
+</Cards>
