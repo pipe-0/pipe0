@@ -6,7 +6,10 @@ import {
 import { lucideIconsPlugin } from "fumadocs-core/source/lucide-icons";
 import { openapi } from "./openapi";
 import { toFumadocsSource } from "fumadocs-mdx/runtime/server";
-import { catalogIconPlugin } from "./catalog-sidebar-plugin";
+import {
+  catalogEntryTreePlugin,
+  catalogIconPlugin,
+} from "./catalog-sidebar-plugin";
 import {
   blog as blogPosts,
   docs,
@@ -32,7 +35,12 @@ export const source = loader(
   },
   {
     baseUrl: "/docs",
-    plugins: [lucideIconsPlugin(), openapi.loaderPlugin(), catalogIconPlugin()],
+    plugins: [
+      lucideIconsPlugin(),
+      openapi.loaderPlugin(),
+      catalogIconPlugin(),
+      catalogEntryTreePlugin(),
+    ],
   },
 );
 

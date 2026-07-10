@@ -17,7 +17,6 @@ The pipeline runs in one request:
 6. `message:send:slack@1`: post the drafted message to Slack.
 
 export const signupAlertPayload = {
-  config: { environment: "production" },
   pipes: [
     { pipe_id: "email:iswork@1" },
     {

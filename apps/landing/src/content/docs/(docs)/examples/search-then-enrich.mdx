@@ -13,7 +13,6 @@ This example finds senior software-development people, then resolves a work emai
 for each of them.
 
 export const search = {
-  config: { environment: "production" },
   search: {
     search_id: "people:profiles:amplemarket@2",
     config: {
@@ -27,7 +26,6 @@ export const search = {
 };
 
 export const enrich = {
-  config: { environment: "production" },
   pipes: [
     { pipe_id: "person:workemail:profileurl:waterfall@1" },
     { pipe_id: "person:mobile:profileurl:waterfall@1" },

@@ -151,6 +151,22 @@ const DEFAULT_OPEN_ITEMS = [
   "walkthrough",
 ];
 
+// Curated snippets pin config.environment, but production is already the
+// API default; strip it so the rendered code examples stay minimal.
+function toCodeExampleBody({
+  config,
+  ...rest
+}: {
+  config?: object;
+  [key: string]: unknown;
+}) {
+  const cleanConfig: Record<string, unknown> = { ...config };
+  delete cleanConfig.environment;
+  return Object.keys(cleanConfig).length > 0
+    ? { ...rest, config: cleanConfig }
+    : rest;
+}
+
 function SectionTriggerLabel({
   label,
   count,
@@ -589,7 +605,7 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
               <ApiRequestCodeExample
                 oas={pipesMiniSpec}
                 operation={pipesMiniSpec.operation("/v1/pipes/run", "post")}
-                harData={{ body: snippetRequest }}
+                harData={{ body: toCodeExampleBody(snippetRequest) }}
               />
             </AccordionContent>
           </AccordionItem>

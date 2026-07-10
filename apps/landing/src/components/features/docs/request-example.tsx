@@ -7,7 +7,7 @@ import { StaticCodeBlock } from "@/components/features/docs/static-code-block";
  * single-request examples so the three tabs never drift out of sync.
  *
  * @example
- * export const payload = { config: { environment: "production" }, pipes: [...], input: [...] };
+ * export const payload = { pipes: [...], input: [...] };
  * <RequestExample kind="pipes" payload={payload} />
  */
 type RequestKind = "pipes" | "search";
@@ -152,8 +152,8 @@ export function RequestExample({
  * `$RESULTS` in cURL).
  *
  * @example
- * export const search = { config: {...}, search: { search_id: "...", config: {...} } };
- * export const enrich = { config: {...}, pipes: [{ pipe_id: "..." }] };
+ * export const search = { search: { search_id: "...", config: {...} } };
+ * export const enrich = { pipes: [{ pipe_id: "..." }] };
  * <SearchEnrichExample search={search} enrich={enrich} />
  */
 export function SearchEnrichExample({

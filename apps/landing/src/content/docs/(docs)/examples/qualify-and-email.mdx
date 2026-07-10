@@ -15,7 +15,6 @@ This example takes a list of LinkedIn profile URLs and, in a single request:
 The last three pipes are gated with [`run_if`](/docs/pipes/run-if), so non-matches never trigger an enrichment, a draft, or a send.
 
 export const qualifyAndEmailPayload = {
-  config: { environment: "production" },
   pipes: [
     // 1. Enrich the full LinkedIn profile from the profile URL.
     { pipe_id: "person:profile:waterfall@1" },
