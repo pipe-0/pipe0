@@ -1,5 +1,5 @@
 {
-  "packageManager": "pnpm@10.33.2",
+  "packageManager": "pnpm@11.11.0",
   "scripts": {
     "clean:node_modules": "find . -name node_modules -type d -prune -print -exec rm -rf '{}' +",
     "changeset:version": "npx changeset version",
