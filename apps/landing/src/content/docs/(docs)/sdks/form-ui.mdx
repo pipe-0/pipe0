@@ -20,6 +20,8 @@ Import the stylesheet once at the app root:
 import "@pipe0/react/styles";
 ```
 
+The stylesheet is safe to load next to your own Tailwind setup: all classes are prefixed with `pz:` and the CSS reset is scoped to the library's own components, so nothing bleeds into your app. Don't run the library through your own Tailwind pipeline.
+
 ## Form rendering
 
 Renders the configuration form for a single pipe or search.
@@ -131,7 +133,7 @@ const classNames: FormClassNames = {
 };
 
 const adapters: FieldAdapterMap = {
-  text_input: ({ field }) => (
+  text_input: (field) => (
     <input
       value={field.value ?? ""}
       onChange={(e) => field.setValue(e.target.value)}
@@ -163,8 +165,11 @@ Control which sections, groups, and fields render. `null` hides.
 const pipeForm = usePipeForm({
   pipeId,
   publicKey,
-  sectionMap: { connector: null },
-  groupMap: { advanced: { label: "Advanced", defaultExpand: false } },
+  sectionMap: { pipe_io: null },
+  groupMap: {
+    connector: null, // the connector is a group, not a section
+    advanced: { label: "Advanced", defaultExpand: false },
+  },
   pathMap: { "input.raw": null },
 });
 ```
@@ -244,8 +249,10 @@ same shape: `PipeCatalog`, `SearchCatalog`, `SearchesCatalog`.
 ```tsx
 import { PipeCatalog } from "@pipe0/react";
 
-<PipeCatalog onSelectPipe={(pipeId) => console.log(pipeId)} />;
+<PipeCatalog onSelectPipe={(pipe) => console.log(pipe.pipeId)} />;
 ```
+
+The callback receives the full card data (`pipeId`, `label`, `providers`, and more), not the id alone.
 
 Optional props: `filter` (whitelist/blacklist of pipes or providers; memoize
 it), `initialColumnFilters`, `classNames`, `components`.

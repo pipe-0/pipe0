@@ -86,7 +86,7 @@ By default, responses contain enriched data only. Enable <AppLink linkType="widg
 ### id
 
 The task `id`. During and after processing you can use this id to look up
-your processing result. We store tasks for up to three days after processing is completed.
+your processing result with `GET /v1/pipes/check/{run_id}`. Finished tasks are deleted 21 days after they were created.
 
 ### status
 
@@ -137,6 +137,8 @@ The keys are field names, the values field properties.
     "id": {
       "type": "string",
       "label": "id",
+      "format": null,
+      "is_primary_output": false,
       "added_by": {
         "ref": "input",
         "config_hash": null,
@@ -146,6 +148,8 @@ The keys are field names, the values field properties.
     "email": {
       "type": "string",
       "label": "Email",
+      "format": "email",
+      "is_primary_output": false,
       "added_by": {
         "ref": "input",
         "config_hash": null,
@@ -155,9 +159,10 @@ The keys are field names, the values field properties.
     "company_domain": {
       "type": "string",
       "label": "Company Domain",
+      "format": "text",
+      "is_primary_output": true,
       "added_by": {
         "ref": "company:domain:workemail@1",
-        "hash": "e0b8a4ef",
         "config_hash": "x0b5a4ef",
         "pipe_index": 0
       }
@@ -209,13 +214,15 @@ or missing input.
 #### record.field.type
 
 The type of the provided or generated value. Possible values are `string`, `number`, `boolean`, `json`, or `unknown`.
-The type is `unknown` if the field was derived from input data but no input object provided a value **and**
-the field is not an output field of a pipe.
+The type is `unknown` only when pipe0 has nothing to infer it from: the field is not in the field catalog,
+no input object provided a value, and no pipe outputs it. Catalog fields like `name` keep their
+catalog type even when every value is `null`.
 
 #### record.field.reason
 
-Guaranteed to exist if the field status is `failed` or `no_result`. Of type `null | {code: string; summary: string; message: string}`.
-Contains additional information about pipe failure.
+Of type `null | {code: string; summary: string; message: string}`. Non-null whenever the status is
+`failed`, `no_result`, or `skipped`, and tells you why: a provider error, an unmet `run_if` condition
+(`PipeConditionUnmet`), or a missing required input (`RequirementUnmet`).
 
 
 #### record.field.claimed_by
@@ -229,13 +236,19 @@ Use this field to render fields as columns ordered by pipe.
 
 #### record.field.resolved_by
 
-Guaranteed to exist if the status of the field is `completed`, and guaranteed to be `null` otherwise. The `resolved_by` field tells you whether a field was processed by a pipe or copied over from input data.
+Tells you where the field's current state came from. `resolved_by.ref` is one of:
 
-#### record.field.meta
+- a `pipe_id`: the value was produced by that pipe.
+- `"input"`: the value was copied over from your input data.
+- `"system"`: pipe0 set the state, for example when it queues a field for reprocessing or marks it `failed`.
+- `null`: nothing has resolved the field yet.
 
-Contains metadata about the field processing. For waterfall enrichments, this includes
-all the providers that were tried for this field.
+Together with `claimed_by`, this gives you full provenance: a field claimed by a pipe but resolved by `input` means your input already contained a valid value and the pipe did not run for it.
 
-#### record.field.ui
+#### record.field.format
 
-Additional information for rendering the field value.
+A more specific format for the value, or `null`. Examples: `email`, `url`, `profile_url`, `date`, `text`, `int`. Formats drive input sanitation and validation. See <AppLink linkType="inputSanitation">input sanitation</AppLink>.
+
+#### record.field.widgets
+
+Structured metadata for rendering rich UIs, present when you set `config.widgets.enabled` to `true` (default `false`). For waterfall pipes, `widgets.waterfall` lists `attempted_providers`, `available_providers`, and the `successful_provider`, so you can show which provider found the value.

@@ -80,7 +80,11 @@ while (nextPage) {
 
 ## How it works
 
-The `next_page` object is a complete, ready-to-use search payload. The API carries forward your entire search configuration (`search_id`, filters, limit) and updates only the internal pagination state. You don't need to manage cursors or page numbers yourself.
+The `next_page` object is a complete, ready-to-use search payload. The API carries forward your entire search configuration (`search_id`, filters, limit, connector) and updates only the internal pagination state. Providers paginate differently (`cursor` or `page_number`), but `next_page` handles both; you never manage cursors or page numbers yourself.
+
+<Callout type="warn">
+`next_page` replaces only the `search` field of your request. The top-level `config` (`environment`, `widgets`, `field_definitions`) is not carried forward and falls back to its defaults. If your first request ran in `sandbox`, send `config: { environment: "sandbox" }` again with every page, or page two silently runs in `production`.
+</Callout>
 
 ## Async search
 

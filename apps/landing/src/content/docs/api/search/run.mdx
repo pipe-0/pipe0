@@ -9,9 +9,12 @@ _openapi:
   structuredData:
     headings: []
     contents:
-      - content: Use a data source to search for people and company data.
+      - content: >-
+          Use a data source to search for people and company data. Creates a
+          search task; poll the '/check' endpoint until the status becomes
+          'completed' or 'failed'.
 ---
 
-Use a data source to search for people and company data.
+Use a data source to search for people and company data. This endpoint creates a search task and returns immediately with status `pending`; poll the `/check` endpoint until the status becomes `completed` or `failed`.
 
 <APIPage document={"https://api.pipe0.com/openapi"} operations={[{"path":"/v1/search/run","method":"post"}]} />

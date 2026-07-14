@@ -101,7 +101,7 @@ Keep it under 120 words and end with a soft call to action to book a quick call.
         connections: [{ type: "vault", connection: "gmail_abcd123" }],
       },
       // To, subject, and body are templated. Reference the upstream fields.
-      config: { to: "{{ work_email }}", subject: "{{ email_subject }}", body: "{{ email_body }}" },
+      config: { to: "{{ work_email }}", reply_to: null, subject: "{{ email_subject }}", body: "{{ email_body }}" },
     },
   ],
   input: [{ id: 1, profile_url: "https://www.linkedin.com/in/<HANDLE>" }],

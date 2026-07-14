@@ -8,7 +8,7 @@ While pipes add fields to records you already have, search creates the records. 
 
 ## Run a search
 
-This request fetches a list of people from the [`people:profiles:crustdata@2`](/docs/search-catalog/people:profiles:crustdata/2) dataset. Each request takes a single search.
+This request fetches a list of people from the [`people:profiles:crustdata@2`](/docs/search-catalog/people:profiles:crustdata/2) dataset. Each request takes a single search. `limit` sets the page size; use <AppLink linkType="pagination">pagination</AppLink> for more results.
 
 export const searchPayload = {
   search: {
@@ -69,7 +69,7 @@ Every search response includes a `next_page` field. Pass it as the `search` payl
 
 ## Search in bulk
 
-The sync endpoint above waits for the result. Large searches can time out; create an async task with `POST /v1/search/run` (same payload), then poll `GET /v1/search/check/{run_id}` until `status` is `completed`.
+The sync endpoint above waits for the result. If a search takes longer than 3 minutes, the sync endpoint returns `408`; the search keeps running, and the error message carries the run id so you can still poll for the result. For large searches, create an async task with `POST /v1/search/run` (same payload), then poll `GET /v1/search/check/{run_id}` until `status` is `completed` or `failed`.
 
 ```typescript tab="TypeScript" title="Poll for the result"
 const result = await fetch(`https://api.pipe0.com/v1/search/check/${runId}`, {

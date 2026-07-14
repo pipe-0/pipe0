@@ -10,6 +10,7 @@ The following API operations require a request payload of type `PipesRequestPayl
 - `POST https://api.pipe0.com/v1/pipes/run/sync` (create an enrichment task and return the result)
 
 Both accept the same payload; see <AppLink linkType="async">sync vs async</AppLink> for the trade-offs.
+To check a payload without running it, send it to `POST /v1/pipes/validate`: it returns `{"valid": true}` or the exact validation errors, and costs nothing.
 
 Here's a sample payload:
 
@@ -61,21 +62,25 @@ Request-wide configuration. Optional; omit it to use the defaults.
 
 #### config.environment
 
-Execute your request in `sandbox` or `production` <AppLink linkType="testMode">mode</AppLink>. Sandbox returns mock data and costs nothing.
+Execute your request in `sandbox` or `production` <AppLink linkType="testMode">mode</AppLink>. Sandbox returns mock data and costs nothing. Defaults to `production`.
 
 #### config.widgets.enabled
 
 Enable or disable widget metadata. Widgets are part of the <AppLink linkType="pipelineResponse">pipes response</AppLink> and are often used to
-visualize enriched results (for example, provider logos).
+visualize enriched results (for example, provider logos). Defaults to `false`.
 
 #### config.field_definitions.enabled
 
-Enable or disable additional metadata on fields.
+When `true`, the response's top-level `field_definitions` map describes every field in your pipeline. When `false` (the default), the response returns an empty `field_definitions` object.
 
 ### pipes[]
 
-An array of pipes to run, in order, each with an optional configuration. All available pipes are listed in the
+An array of pipes to run, each with an optional configuration. All available pipes are listed in the
 <AppLink linkType="pipeCatalog">pipe catalog</AppLink>.
+
+You don't have to order the array yourself. pipe0 builds a dependency graph from what each pipe reads and
+writes and derives the execution order from it, so a pipe can read the output of any other pipe in the
+request. Circular or unresolvable dependencies fail validation.
 
 #### pipe.pipe_id
 
@@ -84,7 +89,15 @@ The unique identifier of a pipe.
 #### pipe.config
 
 The pipe's config object. Its full shape is documented per pipe in the <AppLink linkType="pipeCatalog">pipe catalog</AppLink>.
-Configuration is optional. If you pass none, the default config is used.
+Configuration is optional. Any keys you leave out are filled in from the pipe's default config, so a partial config only overrides what you set.
+
+#### pipe.run_if
+
+A condition that decides per record whether the pipe runs. See <AppLink linkType="pipeline">run_if conditions</AppLink>.
+
+#### pipe.connector
+
+Choose which connection the pipe authenticates with, for example your own provider API key instead of pipe0's managed one. See <AppLink linkType="connections">Connections</AppLink>.
 
 #### pipe.config.providers
 
@@ -102,7 +115,8 @@ Point an input field of a pipe to a custom field name.
 Example: your records store the company name under `custom_company_name`, but the pipe reads `company_name`. Set
 `"alias": "custom_company_name"` on the `company_name` input field to point the pipe at your field.
 
-The field you point to must have the correct type.
+The field you point to must have the correct type. A wrong type doesn't fail validation; it fails at
+processing time, per record, with a `TypeMismatch` reason on the affected field.
 
 #### pipe.config.output_fields
 
@@ -118,11 +132,11 @@ Enable or disable output fields. The <AppLink linkType="pipeCatalog">pipe catalo
 
 ### input[]
 
-An array of input objects. This is the data you want to enrich.
+An array of input objects. This is the data you want to enrich. A request accepts at most 100 input objects; send larger workloads in chunks.
 
 #### input.id
 
-Each input object must have a unique `id` property. The id can be a `string` or a `number`. IDs can be as simple as `1`, `2`, `3`.
+Each input object's `id` must be unique; duplicate ids fail validation. The id can be a `string` or a `number`, as simple as `1`, `2`, `3`. If you omit it, pipe0 assigns a random UUID, which you'll need to correlate results, so passing your own ids is almost always better.
 
 #### input[number]
 

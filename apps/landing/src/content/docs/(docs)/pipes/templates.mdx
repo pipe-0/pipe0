@@ -6,7 +6,7 @@ date: 2026-07-06
 
 Some pipe config fields take free-form text that reads from your records: an LLM prompt, an email body, a Slack message. These fields use templates. A template references input fields with `{{ field }}` tags and, in pipes that support it, declares new output fields with `{% output %}` tags.
 
-Not every template supports outputs. [prompt:run@1](/docs/pipe-catalog/prompt:run/1) requires both input and output tags. [email:write@1](/docs/pipe-catalog/email:write/1) supports only input tags.
+Not every template supports outputs. [prompt:run@1](/docs/pipe-catalog/prompt:run/1) requires at least one output tag; input tags are optional, so a static prompt with one `{% output %}` is valid. [email:write@1](/docs/pipe-catalog/email:write/1) supports only input tags.
 
 ## Tag syntax
 
@@ -60,10 +60,10 @@ In prompt-style fields, declare model outputs with `{% output %}`:
 | Arg | Required | Notes |
 | :--- | :--- | :--- |
 | `name` | yes | First positional. `^[a-zA-Z_][a-zA-Z0-9_]*$`. |
-| `type` | yes | `"string"`, `"number"`, `"boolean"`, `"json"`, etc. |
+| `type` | yes | `"string"`, `"number"`, `"boolean"`, or `"json"`. Not validated at save time, so typos fail late; stick to these four. |
 | `description` | yes | Shown to the model. |
 | `required` | no | `true` / `false`. Defaults to `true`. |
-| `format` | no | For example `"email"` or `"url"`. |
+| `format` | no | A field format such as `"email"`, `"url"`, `"date"`, `"int"`, or `"markdown"`. |
 | `schema` | no | Key into `json_schemas`; used with `type: "json"`. |
 
 `{% output %}` is only valid in fields that support it (for example prompt inputs). Using it elsewhere fails at save time.

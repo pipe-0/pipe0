@@ -12,9 +12,10 @@ _openapi:
       - content: >-
           Enrich data synchronously. This endpoint waits for the enrichment to
           complete before returning a result. Use with fewer than 10 records.
-          To enrich more data at once use the '/run' endpoint.
+          Returns 408 after 3 minutes; the run continues and can be recovered
+          via the '/check' endpoint.
 ---
 
-Enrich data synchronously. This endpoint waits for the enrichment to complete before returning a result. Use with fewer than 10 records. To enrich more data at once use the `/run` endpoint.
+Enrich data synchronously. This endpoint waits for the enrichment to complete before returning a result. Use with fewer than 10 records; for larger batches prefer the async `/run` endpoint. Like `/run`, it accepts at most 100 input records. If the run takes longer than 3 minutes, the endpoint returns `408` with the run id in the error detail; the run continues, and you can recover the result from the `/check` endpoint.
 
 <APIPage document={"https://api.pipe0.com/openapi"} operations={[{"path":"/v1/pipes/run/sync","method":"post"}]} />

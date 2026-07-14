@@ -10,6 +10,7 @@ The following API operations require a request payload of type `SearchRequestPay
 - `POST https://api.pipe0.com/v1/search/run/sync` (create a search task and return the result)
 
 Both accept the same payload; see <AppLink linkType="async">sync vs async</AppLink> for the trade-offs.
+To check a payload without running it, send it to `POST /v1/search/validate`: it returns `{"valid": true}` or the exact validation errors, and costs nothing.
 
 Here's a sample payload:
 
@@ -69,11 +70,12 @@ The unique identifier of a search. Find available `search_id`s in the <AppLink l
 #### search.config
 
 Search configuration object. The full config object can be found in the <AppLink linkType="searchCatalog">search catalog</AppLink>.
-All searches require at least one filter in `search.config.filters`. Empty filter objects are invalid.
+Prospecting searches (people and company profiles) require at least one filter in `search.config.filters`; an empty filter object is invalid for them.
+Searches that read from a source you already own (CRM contacts, sheets, buckets, databases) take other config and may need no filters at all.
 
 #### search.config.limit
 
-Limit the number of search results. Find the default `limit` in the <AppLink linkType="searchCatalog">search catalog</AppLink>.
+The page size: the maximum number of results per page, not a cap on the total. Each search defines its own default, minimum, and maximum; find them in the <AppLink linkType="searchCatalog">search catalog</AppLink>. Use <AppLink linkType="pagination">pagination</AppLink> to fetch more.
 
 #### search.config.filters
 

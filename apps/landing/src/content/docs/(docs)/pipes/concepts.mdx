@@ -40,7 +40,10 @@ The default provider order and the credit price per provider are listed on each 
 
 ## Field mode
 
-`field_mode` determines the shape of a pipe's <AppLink linkType="pipeConfig">config object</AppLink>.
+The field mode determines the shape of a pipe's <AppLink linkType="pipeConfig">config object</AppLink>.
+It is set per side: a pipe has an input field mode and an output field mode, each `static` or `config`.
+Most pipes use the same mode on both sides, but they can differ: `http:request@1` takes `config`-mode
+inputs (you pick which fields feed the request) and writes `static` outputs.
 
 ### Field mode: `static`
 

@@ -38,18 +38,18 @@ Every run endpoint comes in two flavors:
 | | Endpoint | Behavior |
 |---|---|---|
 | Sync | `POST /v1/pipes/run/sync` | Waits and returns the completed result in one round-trip. |
-| Async | `POST /v1/pipes/run` | Returns a run `id` immediately. Poll `GET /v1/pipes/check/{run_id}` until `status` is `completed`. |
+| Async | `POST /v1/pipes/run` | Returns a run `id` immediately. Poll `GET /v1/pipes/check/{run_id}` until `status` is `completed` or `failed`. |
 
 Both accept the same payload. Search has the same pair under `/v1/search/`.
 
-Use sync while developing and for small batches (fewer than 10 records). Use async for large batches or long-running pipes, where a sync request would time out. Poll every 1 to 3 seconds.
+Use sync while developing and for small batches (fewer than 10 records). Use async for large batches or long-running pipes: a sync request that exceeds 3 minutes returns `408` with the run id in the error message, and the run continues in the background. Poll every 1 to 3 seconds.
 
 ## Sandbox and production
 
 `config.environment` selects where your request runs:
 
 - `sandbox` returns mock data and costs nothing. Responses have the same shape as production responses, so you can build and test without a subscription or credits.
-- `production` runs real providers and bills credits. It requires an active subscription.
+- `production` runs real providers and bills credits. New organizations start with 20 free credits; a subscription keeps them refilled.
 
 Requests run in `production` unless you set `sandbox` explicitly:
 

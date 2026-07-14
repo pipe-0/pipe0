@@ -6,9 +6,9 @@ date: 2026-07-06
 
 `run_if` runs a pipe only when its conditions match. Use it to gate expensive or irreversible pipes: only email people who passed a qualification step, only enrich records that are missing a value.
 
-Conditions are evaluated per record. A pipe with a `run_if` can run for one record and be `skipped` for the next, within the same request.
+Conditions are evaluated per record. A pipe with a `run_if` can run for one record and be `skipped` for the next, within the same request. When a record is skipped, the pipe's output fields on that record get status `skipped` with reason `PipeConditionUnmet`, so you can tell a gated field from a failed one.
 
-This request splits `name` only when it contains `Tom`:
+This request splits `name` only when it contains `Tom` (`contains` is case-insensitive, so `tom` matches too):
 
 ```json title="Request with run_if"
 {
@@ -61,7 +61,7 @@ The conditions to evaluate. Each checks a field's value or status; combined with
 
 ### condition.field_name
 
-The field to evaluate. Either an input field or another pipe's output field.
+The field to evaluate. Either an input field or another pipe's output field. The field must exist in your request; a `field_name` that is neither fails validation with `ConditionTargetFieldNotFound`.
 
 <Callout>
 JSON fields can't be targeted directly. Expand JSON properties into their own fields first.
@@ -75,23 +75,27 @@ Which aspect of the field to compare.
 
 ### condition.operator
 
-How to compare. Allowed operators depend on `property` and `field.type`:
+How to compare. Which operators work depends on `property` and `field.type`:
 
 | Property | Type    | Operators |
 | :---     | :---    | :---      |
 | value    | string  | `eq`, `neq`, `contains`, `matches` |
-| value    | date    | `eq`, `neq`, `lt`, `lte`, `gt`, `gte`, `contains` |
-| value    | number  | `eq`, `neq`, `lt`, `lte`, `gt`, `gte`, `contains` |
+| value    | date    | `eq`, `neq`, `lt`, `lte`, `gt`, `gte`, `matches` |
+| value    | number  | `eq`, `neq`, `lt`, `lte`, `gt`, `gte`, `contains`, `matches` |
 | value    | boolean | `eq`, `neq` |
 | status   | any     | `eq`, `neq` |
 
-`matches` tests the value against a case-sensitive regular expression, for example `^Tom`.
+An unsupported combination (for example `gt` on a string) passes request validation but fails when the condition is evaluated.
+
+`contains` is a case-insensitive substring check. `matches` tests the value against a case-sensitive regular expression, for example `^Tom`; the value is compared in its string form, so it works on numbers and dates too. An invalid regular expression is an evaluation error.
+
+When the target field's value is `null`, only `eq` and `neq` compare against it; every other operator evaluates to false. Gate on `{"operator": "neq", "value": null}` to run a pipe only when a field has a value.
 
 ### condition.value
 
 What to compare against.
 
-- For `property: "value"`: a primitive (string, number, boolean, or null).
+- For `property: "value"`: a primitive (string, number, boolean, or null). Empty strings and objects are rejected at validation.
 - For `property: "status"`: one of `completed`, `no_result`, `failed`, `skipped`.
 
 ## Next steps

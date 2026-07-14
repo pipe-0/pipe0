@@ -25,8 +25,9 @@ It requires your own API key. You provide it by storing the key with us and refe
 Custom connections are API keys and credentials that you own. To use custom connections, share
 your credentials with pipe0.
 
-We plan to offer different ways to share your API keys with us securely,
-but as of today the only available option is [vault](#vault).
+API keys are stored in [vault](#vault). Providers that authenticate with OAuth instead of API keys
+(Slack, Gmail, HubSpot, Salesforce, Attio) are connected through an OAuth flow in the dashboard; the
+resulting connection is referenced in requests the same way.
 
 ### Custom connection billing
 
@@ -35,9 +36,9 @@ We charge a small platform fee for running pipes and searches via custom connect
 | | Pipes | Searches |
 |---|---|---|
 | Standard | 0.05 credits | 0.08 credits |
-| High-usage (>$300/mo spend) | 0.001 credits | 0.002 credits |
+| High-usage plans | 0.001 credits | 0.002 credits |
 
-High-usage pricing kicks in automatically once your monthly spend exceeds $300 USD. For example, 200k operations at high-usage rates cost about $6 USD.
+High-usage rates apply automatically on subscription plans above $300 USD per month. For example, 200k pipe operations at high-usage rates cost about $6 USD.
 
 ### Vault
 
@@ -57,7 +58,7 @@ To add your own connections:
 Log in to your account.
 </Step>
 <Step>
-Navigate to settings/connections.
+Select "Connections" in the sidebar.
 </Step>
 <Step>
 Select the provider and add your key.
@@ -88,6 +89,13 @@ curl -X POST "https://api.pipe0.com/v1/pipes/run" \
               "connection": "resend_abcd123"
             }
           ]
+        },
+        "config": {
+          "from": "jane@pipe0.com",
+          "to": "{{ email }}",
+          "reply_to": null,
+          "subject": "{{ email_subject }}",
+          "body": "{{ email_markdown }}"
         }
       }
     ],

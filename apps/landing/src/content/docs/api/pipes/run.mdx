@@ -11,9 +11,10 @@ _openapi:
     contents:
       - content: >-
           Enrich data asynchronously. Create an enrichment task. Check this task
-          by polling the '/check' endpoint until the status becomes 'completed'.
+          by polling the '/check' endpoint until the status becomes 'completed'
+          or 'failed'. Requests accept at most 100 input records.
 ---
 
-Enrich data asynchronously. Create an enrichment task. Check this task by polling the `/check` endpoint until the status becomes `completed`.
+Enrich data asynchronously. Create an enrichment task. Check this task by polling the `/check` endpoint until the status becomes `completed` or `failed`. Requests accept at most 100 input records; send larger workloads in chunks.
 
 <APIPage document={"https://api.pipe0.com/openapi"} operations={[{"path":"/v1/pipes/run","method":"post"}]} />

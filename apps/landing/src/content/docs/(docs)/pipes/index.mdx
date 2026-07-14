@@ -55,7 +55,7 @@ export const stackPayload = {
     { pipe_id: "person:workemail:waterfall@1" },
   ],
   input: [
-    { id: "1", first_name: "Jane", last_name: "Doe", company_name: "Pipe0" },
+    { id: "1", first_name: "Jane", last_name: "Doe", company_domain: "pipe0.com" },
   ],
 };
 
@@ -65,7 +65,7 @@ export const stackPayload = {
 
 ## Enrich in bulk
 
-The sync endpoint above waits for the result and suits small batches (fewer than 10 records). For larger inputs, create an async task with `POST /v1/pipes/run` (same payload), then poll `GET /v1/pipes/check/{run_id}` until `status` is `completed`.
+The sync endpoint above waits for the result and suits small batches (fewer than 10 records). If a sync run takes longer than 3 minutes, the endpoint returns `408`; the run keeps going, and the error message carries the run id so you can still poll for the result. For larger inputs, create an async task with `POST /v1/pipes/run` (same payload), then poll `GET /v1/pipes/check/{run_id}` until `status` is `completed` or `failed`. Both endpoints accept at most 100 input records per request; send larger workloads in chunks.
 
 ```typescript tab="TypeScript" title="Poll for the result"
 const result = await fetch(`https://api.pipe0.com/v1/pipes/check/${runId}`, {

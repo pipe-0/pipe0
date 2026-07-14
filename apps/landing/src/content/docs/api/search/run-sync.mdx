@@ -11,10 +11,11 @@ _openapi:
     contents:
       - content: >-
           Search for companies and leads synchronously. This endpoint waits for
-          the search to complete before returning a result. For large search
-          requests this endpoint will time out.
+          the search to complete before returning a result. Returns 408 after
+          3 minutes; the search continues and can be recovered via the '/check'
+          endpoint.
 ---
 
-Search for companies and leads synchronously. This endpoint waits for the search to complete before returning a result. For large search requests this endpoint will time out.
+Search for companies and leads synchronously. This endpoint waits for the search to complete before returning a result. If the search takes longer than 3 minutes, the endpoint returns `408` with the run id in the error detail; the search continues, and you can recover the result from the `/check` endpoint.
 
 <APIPage document={"https://api.pipe0.com/openapi"} operations={[{"path":"/v1/search/run/sync","method":"post"}]} />

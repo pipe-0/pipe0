@@ -27,47 +27,59 @@ common errors but will be processed successfully.
       "id": 1,
       "name": "Susi Jui",
       "company_name": "Pipe0",
-      "company_domain": "https://www.pipe0.com/about", // protocol, www and path get stripped
-      "email": "mailto:susi@pipe0.com", // "mailto:" prefix
-      "personal_website_url": "wwwww.susi.com" // wwww instead of www
-    },
-    {
-      "id": 2,
-      "name": "Tom Schmidt",
-      "company_name": "Pipe0",
-      "company_domain": "not today" // invalid: expected a domain
+      "email": "mailto:Susi@pipe0.com", // becomes "susi@pipe0.com"
+      "website_url": "wwww.pipe0.com/" // becomes "https://www.pipe0.com"
     }
   ]
 }
 ```
 
-Here's how we clean this request:
+What gets cleaned depends on the field's `format` in the field catalog:
 
-1. Parse URLs into a consistent format and clean common mistakes
-1. Parse email addresses into a consistent format and clean common mistakes
-1. Fix obvious typos and remove invalid characters
-1. Convert data formats on demand (int to float, float to int, int to string)
+1. URL fields (`url`, `website_url`, `profile_url`): add a missing `https://`, upgrade `http://` to `https://`, fix the `wwww.` typo, remove trailing slashes
+1. Email fields: strip `mailto:`, lowercase, remove characters that are invalid in an email address
+1. Date fields: parse common date formats (`MM/dd/yyyy`, `yyyyMMdd`, and others) into ISO
+1. Number fields: convert between int, float, and string on demand
+
+Fields without a format, like `company_domain` (plain text) or custom fields pipe0 doesn't know, are trimmed and copied as-is.
 
 ### Regeneration
 
-In our example, `"company_domain": "not today"` is not a valid domain.
+When an input value fails its format check **and** a pipe in your request claims that field as an
+<AppLink linkType="outputField">output field</AppLink>, pipe0 doesn't fail the field. It queues it and
+lets the pipe resolve it fresh.
 
-Because `company_domain` is an <AppLink linkType="outputField">output field</AppLink> of `company:identity@3`,
-we can find the correct value.
+```json title="Invalid value on a claimed field"
+{
+  "pipes": [
+    {
+      "pipe_id": "person:workemail:waterfall@1"
+    }
+  ],
+  "input": [
+    {
+      "id": 2,
+      "name": "Tom Schmidt",
+      "company_domain": "pipe0.com",
+      "work_email": "tom@" // fails the email format check
+    }
+  ]
+}
+```
 
-During processing, `company:identity@3` detects that `company_domain` is of invalid format
-and replaces it with the correct value.
-
-The result may look like this:
+`work_email` is an output field of `person:workemail:waterfall@1`, so the pipe replaces the broken value:
 
 ```json title="Healed record"
 {
     "id": 2,
     "name": "Tom Schmidt",
-    "company_name": "Pipe0",
-    "company_domain": "pipe0.com" // healed
+    "company_domain": "pipe0.com",
+    "work_email": "tom@pipe0.com" // healed
 }
 ```
+
+Regeneration only applies to fields with a format. If an invalid value belongs to a field no pipe claims,
+the field is marked `failed` with reason `InvalidValue` instead.
 
 <Callout>
 Valid input values are not regenerated. Instead, they are copied from the `input` to the <AppLink linkType="record">record</AppLink>.
@@ -107,9 +119,9 @@ Take the following request payload:
 The pipe `company:identity@3` requires the input field `company_name`, which is not present
 in record `id=2`. In this case:
 
-- Pipeline validation passes.
+- Pipeline validation passes. Validation checks each pipe's requirement against the union of field names across all input objects, so one record providing `company_name` is enough.
 - Record `id=1` is processed in full.
-- Record `id=2` has failed fields.
+- Record `id=2`'s output fields are marked `skipped` with reason `RequirementUnmet`.
 
 #### No input object has the required input fields
 
@@ -171,13 +183,22 @@ Input expansion is the alternative: pass your inputs fully or partially expanded
       "value": "Tom Schmidt",
       "status": "completed",
       "type": "string",
+      "format": "text",
       "reason": null,
-      "meta": null,
-      "ui": {
-        "severity": "none"
+      "claimed_by": null,
+      "resolved_by": {
+        "ref": "input",
+        "config_hash": null,
+        "input_hash": null,
+        "environment": null
       }
   }
 }
 ```
+
+Expanded fields carry their `resolved_by` fingerprints (`config_hash`, `input_hash`). When you resubmit a
+previous response as input, pipe0 compares those fingerprints against the current request and reprocesses
+only the fields whose pipe config or inputs changed; completed fields with matching fingerprints are copied,
+not recomputed. That makes re-running a partially failed request cheap.
 
 Expanding inputs gives you control but shifts the responsibility of providing valid input states to you.

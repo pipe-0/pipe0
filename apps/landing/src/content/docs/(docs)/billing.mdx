@@ -10,7 +10,10 @@ Our billing system consists of two parts: credits and subscriptions.
 ## Credits
 
 Credits are the universal currency of pipe0. Requests in `production` mode are billed in credits.
-You are never billed if an operation returns an error.
+Every new organization starts with 20 free credits.
+
+Whether an errored operation bills depends on its <AppLink linkType="billingMode">billing mode</AppLink>:
+`onSuccess` operations, which cover most enrichment pipes, never bill on errors or empty results.
 
 Credits let you make requests to third-party services without purchasing subscriptions to these services.
 
@@ -30,20 +33,21 @@ Pipes can "run" without consuming credits. This is determined by their <AppLink 
 
 ### Billing mode
 
-Each pipe has a `billing_mode` that determines when a run costs credits.
+Billing is defined per billable operation, not per pipe. Most pipes carry a single operation, a waterfall
+pipe carries one per provider, and `agent:run@1` stacks token operations and tool-call operations. Each
+operation has a mode, `always` or `onSuccess`, that determines when it costs credits. The catalog shows
+the mode for every pipe.
 
-#### billing_mode `always`
+#### Mode `always`
 
-Pipes with `billing_mode="always"` are billed on every run. Credits are deducted from your balance regardless of 
-the pipe's result. Even if pipe output fields are marked as `no_result`, credits will be deducted
-from your balance. See <AppLink linkType="fieldStatus">field status</AppLink> for more info.
+The operation bills on every attempt, regardless of outcome. Credits are deducted even when the output
+fields are marked `no_result`. Failed calls are not billed. See <AppLink linkType="fieldStatus">field status</AppLink> for more info.
 
-Pipes are not billed if the pipe run fails (error state).
+#### Mode `onSuccess`
 
-#### billing_mode `on_success`
-
-Pipes with `billing_mode="on_success"` are billed when at least one of their output fields is marked 
-as `completed`. This indicates a successful result. If all output fields of a pipe are marked as `no_result`, the pipe is not billed.
+The operation bills only when it produces a result: at least one output field marked `completed`.
+Errors and `no_result` cost nothing. Waterfall providers use this mode, which is why a waterfall
+only bills the provider that returned the value.
 See <AppLink linkType="fieldStatus">field status</AppLink> for more info.
 
 ## AI pipe billing
@@ -61,20 +65,20 @@ estimate for every AI pipe.
 
 ## Search billing
 
-Searches are billed per successful result or per search.
+Searches are billed per result, per page, or per search. The <AppLink linkType="searchCatalog">search catalog</AppLink> lists the mode and cost for every search.
 
-### billing_mode `per_result` 
+### Mode `per_result`
 
 You are billed per search result. If a search request returned 500 entries you are billed 500 times 
 the `cost per result`.
 
-The cost per result can be found in the <AppLink linkType="searchCatalog">search catalog</AppLink>.
+### Mode `per_page`
 
-### billing_mode `per_search` 
+You are billed once per page of results you fetch, regardless of how many entries the page contains.
 
-You are billed per search. If a search request returned 500 entries you are billed only once.
+### Mode `per_search`
 
-The cost per search can be found in the <AppLink linkType="searchCatalog">search catalog</AppLink>.
+You are billed once per search, regardless of how many entries it returns.
 
 ## Insufficient balance
 
@@ -90,8 +94,8 @@ To purchase one-off credits contact [support@pipe0.com](mailto:support@pipe0.com
 
 ## Credit rollover
 
-You can hold up to 4x the credit amount of either your monthly or yearly
-subscription value in your account. Credit balances that exceed this threshold are lost.
+You can hold up to 3x the monthly credit amount of your subscription
+in your account. When a refill would push your balance past this threshold, the excess is lost.
 
 During subscription downgrades the credit rollover amount is lowered and the limit of your new subscription applies.
 

@@ -31,6 +31,12 @@ All options:
 | ----------------------- | ----------------------------- | -------------------------------------------------- |
 | `apiKey`                | `process.env.PIPE0_API_KEY`   | Sent as `Authorization: Bearer …`.                 |
 | `baseUrl`               | `https://api.pipe0.com`       | Override for self-hosted / staging.                |
+| `credentials`           | `include`                     | Fetch credentials mode; `same-origin` when you set a `baseUrl`. |
+| `pollingTimeoutMs`      | `900000` (15 minutes)         | How long `pipe()` / `search()` poll before throwing `Pipe0TimeoutError`. |
+| `minPollingIntervalMs`  | `1000`                        | First polling interval. Backs off exponentially from here. |
+| `maxPollingIntervalMs`  | `3 * minPollingIntervalMs`    | Cap for the backoff.                               |
+| `defaultBatchSize`      | `100`                         | Chunk size for `pipeInBatches` (matches the API's 100-record cap). |
+| `maxConcurrentBatches`  | `5`                           | Parallel requests in `pipeInBatches` and `searchAll`. |
 
 ## Data enrichment (pipes)
 
@@ -144,8 +150,9 @@ const done = await pipe0.pipes.waitUntilComplete(runId, {
 
 ## Running searches
 
-Searches discover new records from external providers (Crustdata, Exa,
-Icypeas, Clado, Leadmagic, …) based on filters.
+Searches discover new records. Sources are prospecting datasets (Crustdata,
+Amplemarket, Parallel) and systems you already own (HubSpot, Salesforce, Attio,
+pipe0 sheets and buckets, Postgres, Databricks).
 
 ### Find people by title and location
 
@@ -173,6 +180,32 @@ for (const row of result.results) {
 Each request accepts a single `search`. See the
 <AppLink linkType="searchCatalog">search catalog</AppLink> for every
 `search_id` and its available filters.
+
+The manual polling trio exists for searches too: `searches.create()`,
+`searches.check(runId)`, and `searches.waitUntilComplete(runId)` mirror their
+pipes counterparts.
+
+### Many pages, many searches: `searchAll`
+
+`searches.searchAll()` runs several searches concurrently, follows each
+response's `next_page` automatically, and merges the rows into one list.
+Use it when one filter set isn't enough, or when you want more than one page
+without writing the pagination loop.
+
+```ts
+const { results, errors } = await pipe0.searches.searchAll({
+  searches: [
+    { search: { search_id: "people:profiles:crustdata@2", config: { /* … */ } } },
+    { search: { search_id: "people:profiles:amplemarket@2", config: { /* … */ } } },
+  ],
+  maxPages: 5, // per search; Infinity fetches until next_page is null
+  dedupeBy: ["profile_url"], // composite keys supported, first match wins
+  stopOnError: false, // collect per-search failures in `errors`
+});
+```
+
+Rows are normalized by default: every row gets the union of all field names
+across every search, with absent fields set to `null`.
 
 ### Combining searches with pipes
 

@@ -24,39 +24,31 @@ Both run endpoints accept the same payload; see <AppLink linkType="async">sync v
 	"total_pages": 2764,
 	"pagination_type": "cursor",
 	"next_page": {
+		"search_id": "people:profiles:crustdata@2",
 		"config": {
 			"filters": {
-				"current_job_titles": ["Software Engineer", "Developer"]
+				"current_job_titles": { "include": ["Software Engineer", "Developer"] }
 			},
-			"pagination": {
-				"limit": 100,
-				"cursor": "H4sIAMaPrWkC..."
-			},
-			"output_fields": {
-				"name": { "alias": "", "enabled": true },
-				"job_title": { "alias": "", "enabled": true },
-				"profile_url": { "alias": "", "enabled": true }
-			}
+			"limit": 100,
+			"cursor": "H4sIAMaPrWkC..."
 		},
-		"search_id": "people:profiles:crustdata@2"
+		"connector": null
 	},
 	"results": [
 		{
 			"name": {
-				"ui": {},
 				"type": "string",
 				"value": "Gayle Pouros",
 				"format": "text",
 				"status": "completed",
 				"resolved_by": {
-					"ref": "people:profiles:crustdata@2",
+					"ref": "input",
 					"environment": "production",
 					"config_hash": "…",
 					"input_hash": "…"
 				}
 			},
 			"job_title": {
-				"ui": {},
 				"type": "string",
 				"value": "Product Intranet Manager",
 				"format": "text",
@@ -65,14 +57,12 @@ Both run endpoints accept the same payload; see <AppLink linkType="async">sync v
 		},
 		{
 			"name": {
-				"ui": {},
 				"type": "string",
 				"value": "Mae Feest",
 				"format": "text",
 				"status": "completed"
 			},
 			"job_title": {
-				"ui": {},
 				"type": "string",
 				"value": "Dynamic Data Liaison",
 				"format": "text",
@@ -88,12 +78,17 @@ Both run endpoints accept the same payload; see <AppLink linkType="async">sync v
 
 ### id
 
-The task `id`. You can use this id to look up your processing result during and after processing.
-We store tasks for up to 15 days after processing is completed.
+The task `id`. You can use this id to look up your processing result during and after processing
+with `GET /v1/search/check/{run_id}`. Finished tasks are deleted 21 days after they were created.
 
 ### status
 
 The status of the response object.
+
+#### Status 'pending'
+
+Your request has been validated and a search task has been created. Processing has not yet begun.
+This is the status `POST /v1/search/run` returns.
 
 #### Status 'processing'
 
@@ -117,15 +112,15 @@ The organization that owns this search task.
 
 ### errors[]
 
-An array of errors. Empty when the search completed successfully. Contains error details when the search has failed.
+An array of errors of the shape `{code, message, path?}`. Empty when the search completed successfully. Contains error details when the search has failed.
 
 ### total_pages
 
-The total number of pages available for this search result.
+The total number of pages available for this search result, or `null`. Computed from the provider's total result count divided by your page `limit`.
 
 ### pagination_type
 
-The type of pagination used. Currently supports `cursor`.
+How the underlying provider paginates: `cursor` or `page_number`, or `null`. You don't need to branch on this; `next_page` handles both. See <AppLink linkType="pagination">Pagination</AppLink>.
 
 ### next_page
 
@@ -137,7 +132,7 @@ The search id to use for the next page request.
 
 #### next_page.config
 
-The config object pre-filled with the cursor and filters for the next page.
+The config object pre-filled with your filters plus the updated `cursor` or `page_number` for the next page. These are plain keys on `config`, the same place you set `limit` in your original request.
 
 ### field_definitions
 
@@ -169,10 +164,11 @@ The keys are column names and the values describe each column:
 
 ### results[]
 
-A list of search results. The fields of each object are normalized across searches. You can use the results as is
+A list of search results. The fields of each object are normalized: every row carries every column, and a
+column the provider didn't return for a row is `null`. You can use the results as is
 or use them as input for a <AppLink linkType="pipelineRequest">pipes request</AppLink>.
 
-Each result is an object keyed by column name. The value of each column is a field object:
+Each result is an object keyed by column name. The value of each column is a field object (or `null`):
 
 #### result.field.value
 
@@ -180,7 +176,9 @@ The value of the field.
 
 #### result.field.status
 
-The status of the field. Possible values include `completed`, `no_result`, and `failed`.
+The status of the field. Fresh search output is always `completed` or `no_result`. Dynamic reads like
+`sheet:rows@1` with `include_metadata: true` pass stored cell statuses through unchanged, so any field
+status can appear: `completed`, `failed`, `pending`, `queued`, `processing`, `skipped`, or `no_result`.
 
 #### result.field.type
 
@@ -192,8 +190,9 @@ An optional value format hint (for example `email`, `url`), or `null`.
 
 #### result.field.resolved_by
 
-Provenance of the value: `{ ref, environment, config_hash, input_hash }`. `ref` identifies the operation that produced the value, or `input` for
-values that were not produced by a search or pipe. For dynamic reads like `sheet:rows@1` the provenance is passed through as stored: a cell that was
+Provenance of the value: `{ ref, environment, config_hash, input_hash }`. A search never writes its own id
+into `ref`. Values a search fetches are stamped `ref: "input"`, because a search mints input records; only
+pipes appear as producers. For dynamic reads like `sheet:rows@1` the provenance is passed through as stored: a cell that was
 originally produced by a pipe keeps that pipe's `ref` (the search is a reader, not the producer).
 
 #### result.field.widgets
@@ -202,9 +201,9 @@ Additional metadata used to render the value (for example provider logos). See `
 <AppLink linkType="pipelineRequest">request payload</AppLink>.
 
 <Callout>
-`widgets` and stored `resolved_by` provenance are only included when the search payload sets `include_metadata: true` **and** the request sets
-`config.widgets.enabled: true`. With `include_metadata: false` (the default for searches that support it, such as `sheet:rows@1`) rows are a
-lightweight, value-only projection.
+Two independent switches shape the rows. The search payload's `include_metadata` (default `false` where supported, such as `sheet:rows@1`) controls
+whether stored `resolved_by` provenance and stored widgets are read at all; without it, rows are a lightweight, value-only projection. The request's
+`config.widgets.enabled` additionally controls whether `widgets` appear in the response. So `widgets` need both switches; `resolved_by` needs only `include_metadata`.
 </Callout>
 
 <Callout>
