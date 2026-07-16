@@ -33,7 +33,6 @@ curl -X POST "https://api.pipe0.com/v1/pipes/run/sync" \
   -H "Authorization: Bearer <API_KEY>" \
   -H "Content-Type: application/json" \
   -d '{
-    "config": { "environment": "sandbox" },
     "pipes": [{ "pipe_id": "person:name:split@1" }],
     "input": [{ "id": "1", "name": "Jane Doe" }]
   }'
