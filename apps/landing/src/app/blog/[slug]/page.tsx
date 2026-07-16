@@ -176,18 +176,23 @@ export default async function BlogPost(props: {
 
 function RelatedCard({ post }: { post: BlogPage }) {
   return (
-    <Link href={post.url} className="group flex flex-col gap-2.5">
+    <Link href={post.url} className="group flex flex-col">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src={postCover(post, 1.6)}
+        src={postCover(post, 2)}
         alt=""
-        className="aspect-[8/5] w-full rounded-lg object-cover ring-1 ring-fd-foreground/10 transition-opacity group-hover:opacity-90"
+        className="aspect-[2/1] w-full rounded-lg object-cover ring-1 ring-fd-foreground/10 transition-opacity group-hover:opacity-90"
       />
-      <p className="font-blog text-[16.5px] font-bold leading-[1.25] text-fd-foreground text-pretty transition-colors group-hover:text-fd-primary">
+      <p className="font-blog mt-3 text-[17px] font-bold leading-[1.25] text-fd-foreground text-pretty transition-colors group-hover:text-fd-primary">
         {post.data.title}
       </p>
+      {post.data.excerpt && (
+        <p className="mt-1 line-clamp-2 text-[13px] leading-normal text-fd-muted-foreground">
+          {post.data.excerpt}
+        </p>
+      )}
       {post.data.date && (
-        <p className="text-[12.5px] text-fd-muted-foreground">
+        <p className="mt-2 text-xs text-fd-muted-foreground">
           {formatDate(post.data.date)}
         </p>
       )}

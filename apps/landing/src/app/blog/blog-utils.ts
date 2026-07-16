@@ -1,11 +1,12 @@
 import { blog, type BlogPage } from "@/lib/source";
 
 /* ---- Generated cover art ----
-   Deterministic SVG derived from the post title: a near-monochrome motif
-   (one of six) with a single indigo accent, matching the light-theme
-   neutral ramp. Highlighted posts get the inverted (dark) variant so
-   editors' picks stand out in the grid. Colors are literal because the
-   SVG ships as a data URI and can't read CSS variables. */
+   Deterministic SVG scene derived from the post title: a saturated paper
+   background, a centered geometric motif, and one or two color accents —
+   every tile distinct while the family stays coherent. Highlighted posts
+   get the single vivid brand-indigo tile so editors' picks stand out.
+   Colors are literal because the SVG ships as a data URI and can't read
+   CSS variables. */
 
 /** FNV-1a — stable across runs so covers never change between builds. */
 function titleHash(s: string) {
@@ -16,6 +17,37 @@ function titleHash(s: string) {
   }
   return h >>> 0;
 }
+
+type CoverPalette = {
+  bg: string;
+  /** Primary drawing color. */
+  ink: string;
+  /** Soft shape fill, one step off the background. */
+  fill: string;
+  /** Primary accent — brand indigo on light tiles. */
+  a1: string;
+  /** Secondary warm accent. */
+  a2: string;
+};
+
+const COVER_PALETTES: CoverPalette[] = [
+  { bg: "#F2EDE1", ink: "#28251D", fill: "#E1D7BE", a1: "#3440E5", a2: "#C9502E" }, // cream
+  { bg: "#F5E4DD", ink: "#2C1E19", fill: "#E9CBC0", a1: "#3440E5", a2: "#B4472A" }, // blush
+  { bg: "#E2EAD8", ink: "#232920", fill: "#CBD9B6", a1: "#3440E5", a2: "#C07A2E" }, // sage
+  { bg: "#DEE9F4", ink: "#1E2631", fill: "#C2D7EA", a1: "#3440E5", a2: "#C9502E" }, // sky
+  { bg: "#F2E3BB", ink: "#2B2412", fill: "#E4CE8C", a1: "#3440E5", a2: "#A8431F" }, // butter
+  { bg: "#B9835F", ink: "#2E1D10", fill: "#D0A683", a1: "#F4EEE1", a2: "#3440E5" }, // terracotta
+  { bg: "#E6E2F2", ink: "#242032", fill: "#CFC8E7", a1: "#3440E5", a2: "#B4472A" }, // lavender
+];
+
+/** Editors' picks — the one vivid tile in the grid, brand indigo. */
+const HIGHLIGHT_PALETTE: CoverPalette = {
+  bg: "#3440E5",
+  ink: "#F2F1E9",
+  fill: "#5560EA",
+  a1: "#F2F1E9",
+  a2: "#F2C94C",
+};
 
 export function generatedCover(
   title: string,
@@ -32,38 +64,34 @@ export function generatedCover(
 
   const W = 900;
   const H = Math.round(900 / ratio);
+  const cx = W / 2;
+  const cy = H / 2;
+  const p = invert
+    ? HIGHLIGHT_PALETTE
+    : COVER_PALETTES[seed % COVER_PALETTES.length];
   const el: string[] = [];
-  const bg = invert ? "#161616" : seed % 2 ? "#FAFAFA" : "#F4F4F4";
-  const ink = invert ? "#D8D8D8" : "#5C5E63";
-  const faint = invert ? "#3D3D3D" : "#DBDBDB";
-  const fill = invert ? "#242424" : "#ECECEC";
-  // Brand indigo — light/dark values of --primary.
-  const A = invert ? "hsl(236 90% 68%)" : "hsl(236 77% 55%)";
 
-  const motif = ["circle", "rings", "cubes", "glyph", "halftone", "rules"][
-    seed % 6
+  // Motif choice decorrelated from the palette choice.
+  const motif = ["orbit", "cubes", "glyph", "halftone", "flow", "sheet"][
+    (seed >>> 3) % 6
   ];
 
-  if (motif === "circle") {
-    const r = H * 0.52;
-    const cx = W * (0.28 + rnd() * 0.44);
-    const cy = rnd() < 0.5 ? H * 0.1 : H * 0.9;
+  if (motif === "orbit") {
+    const r = H * (0.24 + rnd() * 0.1);
+    const discR = r * (0.4 + rnd() * 0.3);
+    const outerR = r * (1.4 + rnd() * 0.35);
+    const th = rnd() * Math.PI * 2;
     el.push(
-      `<circle cx="${cx.toFixed(0)}" cy="${cy.toFixed(0)}" r="${(r * 0.55).toFixed(0)}" fill="${fill}" stroke="none"/>`,
-      `<circle cx="${cx.toFixed(0)}" cy="${cy.toFixed(0)}" r="${r.toFixed(0)}" fill="none" stroke="${ink}" stroke-width="2"/>`,
-      `<circle cx="${(cx * 0.55).toFixed(0)}" cy="${(H - cy).toFixed(0)}" r="${(r * 0.32).toFixed(0)}" fill="none" stroke="${faint}" stroke-width="1.6"/>`,
-      `<circle cx="${(cx + r * 0.71).toFixed(0)}" cy="${(cy + (cy < H / 2 ? r * 0.71 : -r * 0.71)).toFixed(0)}" r="8" fill="${A}"/>`,
+      `<circle cx="${cx}" cy="${cy}" r="${outerR.toFixed(0)}" fill="none" stroke="${p.fill}" stroke-width="3"/>`,
+      `<circle cx="${cx}" cy="${cy}" r="${discR.toFixed(0)}" fill="${p.fill}"/>`,
+      `<circle cx="${cx}" cy="${cy}" r="${r.toFixed(0)}" fill="none" stroke="${p.ink}" stroke-width="3"/>`,
+      `<circle cx="${(cx + r * Math.cos(th)).toFixed(0)}" cy="${(cy + r * Math.sin(th)).toFixed(0)}" r="${(11 + rnd() * 5).toFixed(0)}" fill="${p.a1}"/>`,
+      `<circle cx="${(cx + outerR * Math.cos(th + 2.4)).toFixed(0)}" cy="${(cy + outerR * Math.sin(th + 2.4)).toFixed(0)}" r="7" fill="${p.a2}"/>`,
     );
-  } else if (motif === "rings") {
-    const side = Math.floor(rnd() * 3);
-    const cx = side === 0 ? 0 : side === 1 ? W : W / 2;
-    const cy = side === 2 ? 0 : H / 2 + (rnd() < 0.5 ? -H / 2 : H / 2);
-    const n = 8;
-    const ai = 2 + Math.floor(rnd() * 4);
-    for (let i = 1; i <= n; i++) {
-      const r = i * (Math.max(W, H) / (n * 0.85));
+    if (rnd() < 0.5) {
+      const mth = th + 3.6;
       el.push(
-        `<circle cx="${cx}" cy="${cy}" r="${r.toFixed(1)}" fill="none" stroke="${i === ai ? A : i % 2 ? faint : ink}" stroke-width="${i === ai ? 3 : 1.8}"/>`,
+        `<circle cx="${(cx + outerR * Math.cos(mth)).toFixed(0)}" cy="${(cy + outerR * Math.sin(mth)).toFixed(0)}" r="16" fill="none" stroke="${p.ink}" stroke-width="2.5"/>`,
       );
     }
   } else if (motif === "cubes") {
@@ -72,36 +100,40 @@ export function generatedCover(
       y: number,
       w: number,
       hh: number,
-      ft: string,
-      fl: string,
-      fr: string,
-      st: string,
+      top: string,
+      accent: boolean,
     ) => {
-      const p = (d: string, f: string) =>
-        `<path d="${d}" fill="${f}" stroke="${st}" stroke-width="1.5" stroke-linejoin="round"/>`;
+      const path = (d: string, fill: string, opacity?: number) =>
+        `<path d="${d}" fill="${fill}"${opacity ? ` fill-opacity="${opacity}"` : ""} stroke="${p.ink}" stroke-width="2.5" stroke-linejoin="round"/>`;
       return (
-        p(`M${x} ${y} l${w} ${-w / 2} l${w} ${w / 2} l${-w} ${w / 2} z`, ft) +
-        p(`M${x} ${y} l${w} ${w / 2} v${hh} l${-w} ${-w / 2} z`, fl) +
-        p(`M${x + w} ${y + w / 2} l${w} ${-w / 2} v${hh} l${-w} ${w / 2} z`, fr)
+        path(`M${x} ${y} l${w} ${-w / 2} l${w} ${w / 2} l${-w} ${w / 2} z`, top) +
+        path(
+          `M${x} ${y} l${w} ${w / 2} v${hh} l${-w} ${-w / 2} z`,
+          accent ? p.a1 : p.ink,
+          accent ? 0.55 : 0.22,
+        ) +
+        path(
+          `M${x + w} ${y + w / 2} l${w} ${-w / 2} v${hh} l${-w} ${w / 2} z`,
+          accent ? p.a1 : p.ink,
+          accent ? 0.3 : 0.1,
+        )
       );
     };
-    const n = 5 + Math.floor(rnd() * 4);
+    const n = 5;
     for (let i = 0; i < n; i++) {
-      const w = 30 + rnd() * 28;
-      const hh = w * (0.8 + rnd() * 0.5);
-      const x = W * 0.16 + rnd() * W * 0.6;
-      const y = H * 0.2 + rnd() * H * 0.55;
-      const isA = i === n - 1;
+      const w = H * (0.11 + rnd() * 0.05);
+      const hh = w * (0.9 + rnd() * 0.4);
+      const x = cx - w + (rnd() - 0.5) * W * 0.34;
+      const y = cy - hh / 2 + (rnd() - 0.5) * H * 0.42;
+      const accent = i === n - 1;
       el.push(
         cube(
           +x.toFixed(0),
           +y.toFixed(0),
           +w.toFixed(0),
           +hh.toFixed(0),
-          isA ? A : invert ? "#2E2E2E" : "#F4F4F4",
-          fill,
-          invert ? "#1D1D1D" : "#E2E2E2",
-          isA ? A : ink,
+          accent ? p.a1 : p.fill,
+          accent,
         ),
       );
     }
@@ -110,50 +142,83 @@ export function generatedCover(
     const ch = chars[Math.floor(rnd() * chars.length)];
     const rot = (rnd() * 14 - 7).toFixed(1);
     el.push(
-      `<text x="${W / 2}" y="${H * 0.56}" text-anchor="middle" dominant-baseline="middle" font-family="Georgia, 'Times New Roman', serif" font-style="italic" font-size="${(H * 0.88).toFixed(0)}" fill="${fill}" stroke="${ink}" stroke-width="2.5" transform="rotate(${rot} ${W / 2} ${H / 2})">${ch}</text>`,
-      `<circle cx="${(W * (0.72 + rnd() * 0.14)).toFixed(0)}" cy="${(H * (0.16 + rnd() * 0.14)).toFixed(0)}" r="9" fill="${A}"/>`,
+      `<text x="${cx}" y="${(H * 0.56).toFixed(0)}" text-anchor="middle" dominant-baseline="middle" font-family="Georgia, 'Times New Roman', serif" font-style="italic" font-size="${(H * 0.85).toFixed(0)}" fill="${p.fill}" stroke="${p.ink}" stroke-width="2.5" transform="rotate(${rot} ${cx} ${cy})">${ch}</text>`,
+      `<circle cx="${(cx + H * (0.42 + rnd() * 0.1)).toFixed(0)}" cy="${(H * (0.2 + rnd() * 0.12)).toFixed(0)}" r="12" fill="${p.a2}"/>`,
+      `<circle cx="${(cx - H * (0.46 + rnd() * 0.08)).toFixed(0)}" cy="${(H * (0.68 + rnd() * 0.12)).toFixed(0)}" r="8" fill="${p.a1}"/>`,
     );
   } else if (motif === "halftone") {
-    const corner = [
-      [0, 0],
-      [W, 0],
-      [0, H],
-      [W, H],
-    ][Math.floor(rnd() * 4)];
-    const D = Math.hypot(W, H);
-    for (let y = 26; y < H; y += 36)
-      for (let x = 26; x < W; x += 36) {
-        const d = Math.hypot(x - corner[0], y - corner[1]);
-        const r = 7.5 * (1 - d / D) - 0.8;
-        if (r > 0.6)
-          el.push(
-            `<circle cx="${x}" cy="${y}" r="${r.toFixed(1)}" fill="${ink}"/>`,
-          );
+    const accentRing = 2;
+    const accentAt = Math.floor(rnd() * accentRing * 6);
+    for (let k = 0; k <= 6; k++) {
+      const rad = k * H * 0.062;
+      const count = k === 0 ? 1 : k * 6;
+      const r = 8.5 * (1 - k / 7.5);
+      for (let j = 0; j < count; j++) {
+        const ang = (j * Math.PI * 2) / count + k * 0.35;
+        const x = cx + rad * Math.cos(ang);
+        const y = cy + rad * Math.sin(ang);
+        const isAccent = k === accentRing && j === accentAt;
+        el.push(
+          `<circle cx="${x.toFixed(0)}" cy="${y.toFixed(0)}" r="${(isAccent ? r + 3 : r).toFixed(1)}" fill="${isAccent ? p.a2 : p.ink}"/>`,
+        );
       }
+    }
     el.push(
-      `<circle cx="${(W * 0.72).toFixed(0)}" cy="${(H * 0.7).toFixed(0)}" r="8" fill="${A}"/>`,
+      `<circle cx="${cx}" cy="${cy}" r="${(H * 0.44).toFixed(0)}" fill="none" stroke="${p.fill}" stroke-width="3"/>`,
     );
-  } else {
-    const n = 8 + Math.floor(rnd() * 4);
+  } else if (motif === "flow") {
+    const n = 3 + Math.floor(rnd() * 3);
+    const span = W * (0.5 + rnd() * 0.16);
+    const g = span / (n - 1);
+    const r = H * (0.075 + rnd() * 0.03);
+    const accIdx = Math.floor(rnd() * n);
+    const tilt = (rnd() - 0.5) * H * 0.3;
+    const yAt = (i: number) => cy - tilt / 2 + (tilt / (n - 1)) * i;
+    el.push(
+      `<line x1="${(cx - span / 2).toFixed(0)}" y1="${yAt(0).toFixed(0)}" x2="${(cx + span / 2).toFixed(0)}" y2="${yAt(n - 1).toFixed(0)}" stroke="${p.ink}" stroke-width="3"/>`,
+    );
     for (let i = 0; i < n; i++) {
-      const y = H * 0.14 + ((H * 0.72) / n) * i + rnd() * 8;
-      const heavy = rnd() < 0.22;
+      const x = cx - span / 2 + i * g;
       el.push(
-        `<line x1="70" y1="${y.toFixed(0)}" x2="${W - 70}" y2="${y.toFixed(0)}" stroke="${heavy ? ink : faint}" stroke-width="${heavy ? 2.4 : 1.5}"/>`,
+        i === accIdx
+          ? `<circle cx="${x.toFixed(0)}" cy="${yAt(i).toFixed(0)}" r="${r.toFixed(0)}" fill="${p.a1}"/>`
+          : `<circle cx="${x.toFixed(0)}" cy="${yAt(i).toFixed(0)}" r="${r.toFixed(0)}" fill="${p.bg}" stroke="${p.ink}" stroke-width="3"/>`,
       );
     }
-    const cx = W * (0.25 + rnd() * 0.5);
     el.push(
-      `<circle cx="${cx.toFixed(0)}" cy="${(H / 2).toFixed(0)}" r="${(H * 0.24).toFixed(0)}" fill="none" stroke="${ink}" stroke-width="2"/>`,
-      `<line x1="70" y1="${(H * 0.895).toFixed(0)}" x2="${W - 70}" y2="${(H * 0.895).toFixed(0)}" stroke="${A}" stroke-width="2.6"/>`,
+      `<circle cx="${(cx + span / 2 + r).toFixed(0)}" cy="${(yAt(n - 1) - r * 1.7).toFixed(0)}" r="7" fill="${p.a2}"/>`,
     );
+  } else {
+    // sheet — a miniature grid with a header row and two accent cells
+    const cols = 3 + Math.floor(rnd() * 2);
+    const rows = 3;
+    const cw = W * (cols === 3 ? 0.15 : 0.115);
+    const chh = H * 0.16;
+    const gap = 10;
+    const x0 = cx - (cols * cw + (cols - 1) * gap) / 2;
+    const y0 = cy - (rows * chh + (rows - 1) * gap) / 2;
+    const acc1 = [1 + Math.floor(rnd() * 2), Math.floor(rnd() * cols)];
+    const acc2 = [
+      1 + Math.floor(rnd() * 2),
+      (acc1[1] + 1 + Math.floor(rnd() * (cols - 1))) % cols,
+    ];
+    for (let rI = 0; rI < rows; rI++) {
+      for (let c = 0; c < cols; c++) {
+        const isA1 = rI === acc1[0] && c === acc1[1];
+        const isA2 = !isA1 && rI === acc2[0] && c === acc2[1];
+        const fill = isA1 ? p.a1 : isA2 ? p.a2 : rI === 0 ? p.fill : p.bg;
+        el.push(
+          `<rect x="${(x0 + c * (cw + gap)).toFixed(0)}" y="${(y0 + rI * (chh + gap)).toFixed(0)}" width="${cw.toFixed(0)}" height="${chh.toFixed(0)}" rx="10" fill="${fill}"${isA1 || isA2 ? "" : ` stroke="${p.ink}" stroke-width="2.5"`}/>`,
+        );
+      }
+    }
   }
 
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}"><rect width="${W}" height="${H}" fill="${bg}"/>${el.join("")}</svg>`;
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}"><rect width="${W}" height="${H}" fill="${p.bg}"/>${el.join("")}</svg>`;
   return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
 }
 
-/** Cover for a post — highlighted posts get the inverted (dark) variant. */
+/** Cover for a post — highlighted posts get the vivid brand-indigo tile. */
 export function postCover(post: BlogPage, ratio: number): string {
   return generatedCover(post.data.title, {
     ratio,
