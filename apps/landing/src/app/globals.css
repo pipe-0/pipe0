@@ -205,6 +205,20 @@
   }
 }
 
+/* iOS Safari lifts a long-pressed link onto a white preview platter and
+   offers a context menu — the wrong affordance for links styled as buttons.
+   Suppress the callout (and the tap flash) on button-shaped links and on
+   the buttons themselves; plain content links keep the native behavior. */
+a:has(> [data-slot="button"]) {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+a:has(> [data-slot="button"]),
+[data-slot="button"] {
+  -webkit-tap-highlight-color: transparent;
+}
+
 /* Left-pinned docs layout: fumadocs centers the docs grid between two
    flexible gutters — we pin the sidebar to the viewport edge instead. This
    mirrors the upstream 5-column template (set as an inline style, hence
