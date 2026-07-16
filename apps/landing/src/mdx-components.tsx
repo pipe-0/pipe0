@@ -13,6 +13,7 @@ import { Step, Steps } from "fumadocs-ui/components/steps";
 import * as icons from "lucide-react";
 import { YoutubeEmbed } from "@/components/features/mdx/youtube-embed";
 
+//test
 declare global {
   type MDXProvidedComponents = ReturnType<typeof getMDXComponents>;
 }
