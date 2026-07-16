@@ -143,6 +143,10 @@ export const blog = defineCollections({
     date: z.iso.date().or(z.date()),
     excerpt: z.string().optional(),
     tags: z.array(z.string()).optional(),
+    /** Editorial section — the index nav groups posts by this. */
+    category: z.enum(["Thinking", "Engineering", "Sales data"]),
+    /** Editors' pick — featured on the index with an inverted cover. */
+    highlight: z.boolean().optional(),
   }),
   async: true,
   async mdxOptions(environment) {

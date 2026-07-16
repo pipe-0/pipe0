@@ -1,4 +1,4 @@
-# pipe0-landing
+# @pipe0/landing
 
 ## 0.1.7
 

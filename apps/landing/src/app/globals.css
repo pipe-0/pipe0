@@ -108,6 +108,8 @@
   /* Marketing redesign families (see landing section below) */
   --font-display: var(--font-poppins);
   --font-body: var(--font-hanken);
+  /* Blog serif — Newsreader carries all blog display + body type */
+  --font-blog: var(--font-newsreader), Georgia, serif;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -409,6 +411,45 @@ a:has(> [data-slot="button"]),
   @apply dark:after:border-blue-200/30 dark:after:bg-blue-900/30 dark:after:text-blue-200;
   &:after {
     @apply ms-1.5 rounded-full border border-blue-200 bg-blue-100 px-1.5 text-xs font-bold text-blue-900 content-["New"];
+  }
+}
+
+/* ============================================================
+   Blog — newspaper-style article typography
+   Scoped to `.blog-prose` (the MDX body on /blog/[slug]), layered
+   over fumadocs' prose defaults: serif body in Newsreader, a drop
+   cap on the opening paragraph, and a pull-quote blockquote.
+   ============================================================ */
+.blog-prose {
+  font-family: var(--font-newsreader), Georgia, serif;
+  font-size: 17.5px;
+  line-height: 1.75;
+}
+.blog-prose :is(h2, h3, h4) {
+  font-family: var(--font-newsreader), Georgia, serif;
+  letter-spacing: -0.005em;
+}
+.blog-prose > p:first-child::first-letter {
+  float: left;
+  padding: 6px 10px 0 0;
+  font-size: 58px;
+  font-weight: 700;
+  line-height: 0.82;
+  color: var(--foreground);
+}
+.blog-prose blockquote {
+  border-left: 2px solid var(--primary);
+  padding-left: 24px;
+  font-style: italic;
+  font-size: 23px;
+  font-weight: 400;
+  line-height: 1.4;
+  color: var(--foreground);
+}
+.blog-prose blockquote p {
+  &::before,
+  &::after {
+    content: none;
   }
 }
 

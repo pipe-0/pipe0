@@ -1,5 +1,4 @@
 import AppLink from "@/components/app-link";
-import { BlogBanner } from "@/components/blog-banner";
 import { SandboxPreview } from "@/components/features/docs/sandbox-preview";
 import { RequestExample, SearchEnrichExample } from "@/components/features/docs/request-example";
 import { QuickstartCards } from "@/components/features/docs/quickstart-cards";
@@ -22,7 +21,6 @@ export const mdxComponents: MDXComponents = {};
 
 export const themeMdxComponents = {
   AppLink: AppLink,
-  BlogBanner: BlogBanner,
   SandboxPreview: SandboxPreview,
   RequestExample,
   SearchEnrichExample,

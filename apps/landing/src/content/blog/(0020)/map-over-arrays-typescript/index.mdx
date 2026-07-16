@@ -2,6 +2,7 @@
 title: Map Over Array Types In TypeScript
 description: Learn how to create mapped types from array types in TypeScript
 date: 2025-05-25
+category: Engineering
 tags:
     - TypeScript
 excerpt: "Most TypeScript developers know how to create mapped types from object based types. But you can do the same for array-based types."
@@ -99,6 +100,3 @@ const ids = ["a", "b"] as const;
 
 type AllKeys = Prettify<keyof typeof ids>; // List all keys -> Not just members
 ```
-
-<BlogBanner />
-

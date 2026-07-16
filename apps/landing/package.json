@@ -1,5 +1,5 @@
 {
-  "name": "pipe0-landing",
+  "name": "@pipe0/landing",
   "version": "0.1.7",
   "private": true,
   "scripts": {

@@ -1,6 +1,7 @@
 ---
 title: "To Bundle or Not to Bundle Your TypeScript Types"
 date: 2025-04-14
+category: Engineering
 tags:
     - TypeScript
 excerpt: "Learn when bundling your TypeScript types makes sense"
@@ -8,8 +9,6 @@ authors:
     - name: Florian
       title: Founder
 ---
-
-![image](/media/blog/202504014-1.jpg)
 
 Even for experienced TypeScript engineers, the difference between "bundled" and "unbundled" types 
 can be confusing. Digging into this topic can help you create better libraries and consume 3rd-party libraries better.
@@ -84,5 +83,3 @@ adds less complexity to your build setup. For multi-entry libraries, TypeScript 
 as long as they match your exports paths.
 
 If you bundle types and have multiple entry points, consider bundling per entry point with tools like rollup-plugin-dts to maintain modularity.
-
-<BlogBanner />
