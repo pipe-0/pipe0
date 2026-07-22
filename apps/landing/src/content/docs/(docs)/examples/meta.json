@@ -5,7 +5,6 @@
     "basic-search-typescript",
     "search-then-enrich",
     "qualify-and-email",
-    "signup-alerts",
-    "dough"
+    "signup-alerts"
   ]
 }

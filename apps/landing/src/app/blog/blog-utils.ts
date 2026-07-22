@@ -265,12 +265,16 @@ export function formatDate(date: string | Date) {
   });
 }
 
+/** Published posts, newest first. Drafts never leave the repo. */
 export function sortedPosts(): BlogPage[] {
-  return [...blog.getPages()].sort(
-    (a, b) =>
-      new Date(b.data.date ?? 0).getTime() -
-      new Date(a.data.date ?? 0).getTime(),
-  );
+  return blog
+    .getPages()
+    .filter((p) => p.data.draft !== true)
+    .sort(
+      (a, b) =>
+        new Date(b.data.date ?? 0).getTime() -
+        new Date(a.data.date ?? 0).getTime(),
+    );
 }
 
 /** Related reading — editors' picks far outweigh topical overlap; newest wins ties. */

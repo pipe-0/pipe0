@@ -1,0 +1,172 @@
+---
+title: Building an Effective User Enrichment Engine
+description: "Three tables, one rule: a lead is a person times an employer — not a person"
+date: 2026-07-18
+category: Engineering
+draft: true
+tags:
+    - Enrichment
+    - PLG
+    - GTM Engineering
+excerpt: "Most enrichment schemas collapse a person into one row with one job title — and silently destroy lead information. Here is the three-table architecture that keeps every (person × employer) pair as its own lead, and keeps itself fresh."
+authors:
+    - name: Florian
+      title: Founder
+---
+
+Here is a signup that broke our first enrichment system:
+
+Jane signs up with `jane@gmail.com`. Her LinkedIn says she's **CTO at Acme** — and also
+**advisor at Beta Corp**, and she still lists a **board seat at Gamma**. Beta Corp is a
+customer of ours. Acme is a prospect we've been trying to crack for a year.
+
+A conventional enrichment schema — one row per user, one `job_title` column — has to pick.
+Whatever the provider guesses as her "primary" title wins, the other two employers evaporate,
+and with them the single most interesting fact in this signup: *someone connected to a
+current customer just signed up, and she runs engineering at a target account.*
+
+That's the actual problem with user enrichment, and it's a schema problem, not a data
+problem. **A lead is not a person. A lead is a person × an employer.** The moment you accept
+that, the architecture follows: three tables, each doing one job.
+
+## Table 1: `enriched_users` — one row per signup, forever
+
+Your application pushes three columns the moment someone registers: `user_id` (your id — it
+becomes the join key for everything), `name`, `email`. Nothing is ever deleted from this
+table; enriched or not, it's your census.
+
+Everything else on it is machinery. The full standardized profile as one JSON column. Flat
+columns extracted from it — primary title, seniority, primary employer domain — because
+schedules and filters need flat values to reason about. And the operational state that makes
+the system self-maintaining: when enrichment was last *attempted*, when it last *succeeded*,
+how often it has failed.
+
+| user_id | email | primary_seniority | last_attempted_at | error_count |
+|---|---|---|---|---|
+| u_481 | jane@gmail.com | c_suite | 2026-07-18 | 0 |
+| u_482 | tom@beta.co | ic | 2026-07-18 | 0 |
+| u_483 | bounce@old.io | — | 2026-07-11 | 3 |
+
+Row three matters as much as row one: a signup we *couldn't* enrich stays visible, with its
+failure count, instead of vanishing into a retry queue somewhere.
+
+## Table 2: `enriched_user_experiences` — the explosion
+
+The profile's employment history — current **and** past — explodes into its own table, one
+row per experience, each carrying the `user_id` it came from. Jane becomes five rows, not
+one:
+
+| user_id | company | title | is_current | in_crm |
+|---|---|---|---|---|
+| u_481 | Acme | CTO | true | true |
+| u_481 | Beta Corp | Advisor | true | true |
+| u_481 | Gamma | Board Member | true | false |
+| u_481 | Delta Inc | VP Engineering | false | true |
+| u_481 | Epsilon | Senior Engineer | false | false |
+
+This is where the schema stops lying. Nothing was collapsed, nothing was guessed. And because
+*past* experiences are rows too, questions that are impossible in a one-row world become
+`WHERE` clauses: *"which signups used to work at a current customer?"* is `is_current = false
+AND in_crm = true`. Row four — Jane's old VP role at Delta, a customer — is a warm intro
+sitting in plain sight.
+
+Each row then enriches independently: match the employer's domain against the CRM, pull the
+account owner, whatever your routing needs. Enrichment that would have been fought over by
+one row now happens per employer.
+
+## Table 3: `user_profiles` — one lead per (person × current employer)
+
+The distilled table: only successfully enriched users, only current experiences, only rows
+that pass your bar (for us: the employer exists in the CRM). Jane appears **twice** — and
+that's the feature, not a bug to dedupe away:
+
+| user_id | name | company | title | is_primary_employer | profile_matches_signup_email | signup_email_type |
+|---|---|---|---|---|---|---|
+| u_481 | Jane | Acme | CTO | true | false | personal_email |
+| u_481 | Jane | Beta Corp | Advisor | false | false | personal_email |
+| u_482 | Tom | Beta Corp | Data Engineer | true | true | work_email |
+
+Two employers, two leads, zero information lost. The three flags on the right are what make
+the table consumable without re-deriving anything:
+
+- **`is_primary_employer`** — which of a person's rows is their main gig. Route and score
+  that one; treat the others as relationship context.
+- **`profile_matches_signup_email`** — does the signup email's domain equal *this row's*
+  employer domain. Tom signed up with `tom@beta.co` and this row is Beta Corp: he signed up
+  *as* Beta Corp. That's the highest-intent row in the table — the person used this
+  employer's identity to enter your product.
+- **`signup_email_type`** — `work_email` or `personal_email`. Jane's gmail signup tells you
+  nothing about *which* hat she was wearing; Tom's work email tells you exactly. Downstream
+  scoring should trust the two kinds differently.
+
+All three are cheap to compute and impossible to reconstruct later if you didn't keep the
+signup email's facts flowing through the pipeline. Which brings us to the workflow.
+
+## The workflow
+
+On the driver table, per row, in order:
+
+1. **Classify the signup email** (work vs personal) and **extract its domain**. Two
+   deterministic steps against the one fact the user gave you.
+2. **Reverse email lookup** — email in, full standardized profile out, in one call.
+3. **Flatten the signals** — primary title, seniority, employer domain, and the experiences
+   array pulled out of the profile JSON into flat columns.
+4. **Stamp and count** — write the attempt timestamp; on failure, increment a durable error
+   counter; on success, record the success time. (Durable meaning: stored *outside* the row,
+   so a re-run can't wipe its own bookkeeping.)
+5. **Dedupe on discovered identity** — claim the profile URL. Two signups with different
+   emails that resolve to the same human stop here; one human never becomes two sets of
+   downstream rows.
+6. **Delete downstream, then explode** — remove this user's old rows in tables 2 and 3, then
+   fan the experiences array out into table 2, carrying `user_id`, `name`, and the
+   signup-email facts onto every exploded row.
+
+On the experiences table: flatten each experience (including the provider's
+primary-employer flag), compare employer domain against the signup email's domain, match the
+employer against the CRM — then append the qualifying current rows into `user_profiles` with
+all three flags riding along.
+
+The ordering in step 6 is load-bearing: deletes sit *after* enrichment in the chain, so a
+failed or empty refresh never reaches them. **Replacement happens only on success; failure
+degrades to "slightly stale," never to "gone."** That single rule is the difference between
+a system you trust and one you babysit.
+
+## Keeping it alive
+
+Enrichment rots. The engine re-checks its own answers on a cadence that reads the data it
+maintains:
+
+| Row state | Re-enrich after |
+|---|---|
+| Manager and above | 3 months |
+| Individual contributor | 9 months |
+| Failed (fewer than 3 failures) | 7 days |
+| No result found | 3 months |
+
+Seniority drives urgency — senior people's moves matter more and happen more consequentially
+— which is exactly why seniority had to be a flat column on the driver table: the scheduler
+filters on it. Failures retry quickly but are capped by the durable counter; a permanently
+dead row stops costing money after three strikes. And every successful refresh flows through
+the same delete-then-explode replacement, so tables 2 and 3 are always a projection of the
+latest good data.
+
+## The payoff
+
+One schema decision — experiences as rows, profiles as (person × employer) — and everything
+downstream gets simpler: no lossy "primary title" guessing, no lead information destroyed at
+write time, warm-intro queries as plain filters, and per-row flags that tell every consumer
+exactly how to read what they're looking at.
+
+We've folded this architecture into [pipe0](https://pipe0.com) as a playbook — the agent
+knows it as *Application user enrichment* and assembles all three tables, the workflow, and
+the freshness schedules from one prompt:
+
+> *"We push every new product signup into a sheet with user_id, name, and email. Set up user
+> enrichment that keeps itself fresh: LinkedIn profile from the email, one row per work
+> experience in its own sheet, match each employer against our CRM, and a user_profiles
+> sheet of current roles — flagging each profile with the primary employer and whether the
+> signup email belongs to it."*
+
+But the architecture is tool-agnostic. However you build it: three tables, explode the
+experiences, never collapse a person into one lead — and never let a failed refresh delete
+what a successful one wrote.

@@ -56,9 +56,6 @@ export const docsLinkPaths = {
   // SDKs
   elementsReact: `/docs/sdks/form-ui`,
 
-  // Examples
-  dough: "/docs/examples/dough",
-
   // API endpoints
   apiReference: '/docs/api',
 } as const;

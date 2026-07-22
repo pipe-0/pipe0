@@ -14,11 +14,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.5,
   }));
 
-  const blogPages = blog.getPages().map((page) => ({
-    url: url(page.url),
-    changeFrequency: "monthly" as const,
-    priority: 0.4,
-  }));
+  const blogPages = blog
+    .getPages()
+    .filter((page) => page.data.draft !== true)
+    .map((page) => ({
+      url: url(page.url),
+      changeFrequency: "monthly" as const,
+      priority: 0.4,
+    }));
 
   return [
     {

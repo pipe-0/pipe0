@@ -147,6 +147,11 @@ export const blog = defineCollections({
     category: z.enum(["Thinking", "Engineering", "Sales data"]),
     /** Editors' pick — featured on the index with an inverted cover. */
     highlight: z.boolean().optional(),
+    /**
+     * Unpublished draft — excluded from the index, related reading, the
+     * sitemap, and direct URLs (404). Remove the flag to publish.
+     */
+    draft: z.boolean().optional(),
   }),
   async: true,
   async mdxOptions(environment) {

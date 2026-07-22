@@ -31,7 +31,9 @@ export default async function BlogPost(props: {
 }) {
   const { slug } = await props.params;
   const page = blog.getPage([slug]);
-  if (!page) notFound();
+  // Drafts 404 like missing pages — dynamicParams would otherwise render them
+  // on demand even though generateStaticParams skips them.
+  if (!page || page.data.draft === true) notFound();
 
   const { body: Mdx } = await page.data.load();
   const minutes = await readingTime(page.absolutePath);
@@ -408,9 +410,12 @@ async function readingTime(absolutePath?: string): Promise<number | null> {
 }
 
 export function generateStaticParams() {
-  return blog.getPages().map((page) => ({
-    slug: page.slugs[0],
-  }));
+  return blog
+    .getPages()
+    .filter((page) => page.data.draft !== true)
+    .map((page) => ({
+      slug: page.slugs[0],
+    }));
 }
 
 export async function generateMetadata(props: {
@@ -418,7 +423,7 @@ export async function generateMetadata(props: {
 }): Promise<Metadata> {
   const { slug } = await props.params;
   const page = blog.getPage([slug]);
-  if (!page) notFound();
+  if (!page || page.data.draft === true) notFound();
 
   return {
     title: page.data.title,
