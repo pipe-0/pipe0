@@ -1,5 +1,11 @@
 # @pipe0/doc-links
 
+## 0.0.8
+
+### Patch Changes
+
+- [`db9baa9`](https://github.com/pipe-0/pipe0/commit/db9baa99f30d18075802d9e1423f8f872668d90b) Thanks [@florianmartens](https://github.com/florianmartens)! - Remove the dough example link path; the data tables example page was removed from the docs.
+
 ## 0.0.7
 
 ### Patch Changes
