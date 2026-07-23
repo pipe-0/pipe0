@@ -1,0 +1,43 @@
+---
+title: Reports
+description: Build versioned reports from sheet data with metric, chart, and data table components. Snapshots freeze the data; email delivery ships it.
+date: 2026-07-22
+icon: BarChart3
+---
+
+A report is a document built from a sheet: metrics, charts, tables, and prose, frozen at the moment it was generated. Where a sheet answers "what is the data", a report answers "what did the data say on Monday", and keeps answering it even after the sheet moves on.
+
+## What goes in a report
+
+Reports compose five components:
+
+| Component | What it shows |
+|---|---|
+| Metric | One number with a label, like "412 qualified leads". |
+| Stats | A row of related metrics. |
+| Chart | Bar, line, area, or pie over sheet data. |
+| Data table | Rows with optional inline bars, dot scales, and rank-by sorting. |
+| Callout | A highlighted note in the narrative. |
+
+Each component snapshots up to 500 rows from the sheet. Reports cite, sheets store. A report is meant to carry the summary and link back to the sheet for the full data.
+
+{/* Screenshot: a rendered report with metric, chart, and table. /media/docs/sheets/reports-example.png */}
+
+## Versions freeze the story
+
+Regenerating a report creates a new version. Old versions keep their frozen data, so "the numbers we reported last week" is a version you can open, not an argument. This is the same point-in-time discipline sheets apply to rows, applied to reporting.
+
+## Deliver by email
+
+A report chain can end with email delivery to up to 20 recipients. Combined with a schedule, that is a self-updating weekly report: rebuild from the sheet, freeze the new version, send it. Nobody pastes numbers into a document on Friday afternoon.
+
+## Author with an agent
+
+Reports are generated, not hand-assembled. Describe what you want ("a report on this quarter's pipeline by industry, with a chart of leads per week") to the in-app agent or any connected agent, and it builds the components from the sheet. See [Work with AI agents](/docs/sheets/ai-agents).
+
+## Next steps
+
+<Cards>
+  <Card icon={<Clock />} title="Schedule runs" description="Regenerate and deliver reports on a cron." href="/docs/sheets/schedules" />
+  <Card icon={<Grid3x3 />} title="Pipe0 Sheets" description="Back to the Sheets overview." href="/docs/sheets" />
+</Cards>

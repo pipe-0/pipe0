@@ -14,8 +14,10 @@ import Link from "next/link";
 import { PostByline, PostFeed, type FeedPost } from "./page.client";
 
 export const metadata: Metadata = {
-  title: "Blog",
-  description: "Latest posts from the pipe0 blog",
+  title: "Blog — Data Enrichment & Sales Automation",
+  description:
+    "Guides on data enrichment, finding and validating emails, Clay alternatives, and engineering notes from the pipe0 team.",
+  alternates: { canonical: "/blog" },
 };
 
 function toFeedPost(post: BlogPage, ratio: number): FeedPost {

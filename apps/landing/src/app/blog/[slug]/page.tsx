@@ -5,6 +5,7 @@ import {
   relatedPosts,
 } from "@/app/blog/blog-utils";
 import CalButton from "@/components/cal-button";
+import { JsonLd } from "@/components/seo/json-ld";
 import { LogoRawSmall } from "@/components/logo";
 import { buttonVariants } from "@/components/ui/button";
 import { appInfo } from "@/lib/const";
@@ -45,22 +46,24 @@ export default async function BlogPost(props: {
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "BlogPosting",
-            headline: page.data.title,
-            description: lede,
-            articleSection: page.data.category,
-            datePublished: page.data.date,
-            author: authors.map((a) => ({
-              "@type": "Person",
-              name: a.name,
-              jobTitle: a.title,
-            })),
-          }),
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "BlogPosting",
+          headline: page.data.title,
+          description: lede,
+          articleSection: page.data.category,
+          datePublished: page.data.date,
+          dateModified: page.data.date,
+          url: shareUrl,
+          mainEntityOfPage: shareUrl,
+          image: `${getBaseUrl()}/opengraph-image`,
+          author: authors.map((a) => ({
+            "@type": "Person",
+            name: a.name,
+            jobTitle: a.title,
+          })),
+          publisher: { "@id": "https://pipe0.com/#organization" },
         }}
       />
 
@@ -428,8 +431,12 @@ export async function generateMetadata(props: {
   return {
     title: page.data.title,
     description: page.data.description ?? page.data.excerpt,
+    alternates: {
+      canonical: page.data.canonicalUrl ?? page.url,
+    },
     openGraph: {
       type: "article",
+      url: page.url,
       title: page.data.title,
       description: page.data.description ?? page.data.excerpt,
       publishedTime: page.data.date
@@ -437,6 +444,9 @@ export async function generateMetadata(props: {
         : undefined,
       section: page.data.category,
       authors: page.data.authors?.map((a) => a.name),
+      // Post covers are generated data-URI SVGs, which social scrapers reject.
+      images: ["/opengraph-image"],
     },
+    twitter: { card: "summary_large_image" },
   };
 }

@@ -45,12 +45,20 @@ export function CtaButtons({ className }: { className?: string }) {
 export function CtaPanel({
   title,
   subtitle,
+  reveal = true,
 }: {
   title: ReactNode;
   subtitle?: ReactNode;
+  /** Pass false on pages that don't mount ScrollReveal or don't animate. */
+  reveal?: boolean;
 }) {
   return (
-    <div className="rv rounded-[18px] border border-[var(--panel-edge)] bg-[var(--panel)] px-6 py-20 text-center sm:py-24">
+    <div
+      className={cn(
+        reveal && "rv",
+        "rounded-[18px] border border-[var(--panel-edge)] bg-[var(--panel)] px-6 py-20 text-center sm:py-24",
+      )}
+    >
       <h2 className="text-[clamp(28px,3.4vw,42px)] font-semibold leading-[1.12] tracking-[-0.022em] text-foreground">
         {title}
       </h2>

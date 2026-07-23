@@ -1,0 +1,44 @@
+---
+title: Pipe0 Sheets
+description: A data enrichment spreadsheet where columns run pipes over rows. The no-code Clay alternative for sales automation and GTM teams, built on the pipe0 API.
+date: 2026-07-22
+icon: Grid3x3
+---
+
+A sheet is a spreadsheet-like workspace where columns run pipes over rows. It is the no-code surface for the same primitives the pipe0 API exposes: searches create records, pipes enrich them, effects clean them up. If you can describe an enrichment job, you can run it in a sheet without writing code.
+
+## What a sheet does
+
+You bring rows in with a CSV import or a search ("Heads of Marketing at robotics companies in Europe"). You add pipe columns from the <AppLink linkType="pipeCatalog">pipe catalog</AppLink> to fill in work emails, phone numbers, company data, or the output of an AI prompt. You clean the result up with effects like deduplication, then export a CSV or write rows back to your CRM.
+
+Every cell carries a status, so you always see which rows are done, which found nothing, and which are still waiting on an input. Running a sheet again only recomputes cells that are stale. A finished sheet costs nothing to re-run.
+
+## The same engine as the API
+
+Everything a sheet does is a pipe, a search, or an effect. The columns you add are the same pipes developers call through the [API](/docs), with the same providers, the same waterfall behavior, and the same credit prices. Start in a sheet and move to the API later, or let both run against the same data. Nothing is exclusive to either surface.
+
+The reverse also holds: jobs that don't need state at all run stateless, and a stateless run can still append its result into a sheet. See [When you don't need a sheet](/docs/sheets/stateless).
+
+## Migrate Clay tables to pipe0 sheets
+
+You can fully replace your clay tables with pipe0 sheets. The differences between pipe0 and clay are factual, not philosophical:
+
+- A sheet holds up to 2 million rows.
+- Point-in-time recovery is built in: undo, restore points, and time travel over an append-only history.
+- The whole engine is available over a public API and over MCP, so AI agents like Claude Code and ChatGPT can operate your sheets.
+- Runs, reports, and refreshes can be put on a cron schedule.
+
+To migrate a clay table to pipe0 sheets you have to convert it to a .csv and import it into pipe0. Since clay tables are not portable to different systems
+you have to recreate the enrichments. For this you can ask "Sculptor" to describe your table and paste that description directly into pipe0's agent interface.
+
+## Where sheets live
+
+Sheets belong to projects, and projects belong to your organization and teams. A sheet keeps an organization-wide unique name, so moving it between projects never breaks references to it. When teammates open the same sheet you see them working in it live.
+
+## Next steps
+
+<Cards>
+  <Card icon={<Rocket />} title="Build your first sheet" description="Create a sheet, search for rows, enrich them, and export a CSV." href="/docs/sheets/quickstart" />
+  <Card icon={<Layers />} title="How a sheet runs" description="Columns, cell statuses, and why re-runs are free." href="/docs/sheets/concepts" />
+  <Card icon={<Bot />} title="Work with AI agents" description="Let Claude Code or ChatGPT operate your sheets over MCP." href="/docs/sheets/ai-agents" />
+</Cards>

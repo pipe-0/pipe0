@@ -1,0 +1,70 @@
+---
+title: Import rows and run searches
+description: Add rows from a CSV import or a search. Pull from prospecting sources like Crustdata and from HubSpot, Salesforce, Attio, Postgres, or Databricks.
+date: 2026-07-22
+icon: Import
+---
+
+Rows arrive in a sheet two ways. Import a CSV when you already have the list. Run a search when you don't. Both fill input columns that pipe columns can read.
+
+## Import a CSV
+
+Upload a CSV and map its columns to canonical field names like `name`, `company_domain`, or `linkedin_url`. Canonical names matter because pipes find their inputs by field name. A pipe that needs `company_domain` will not read a column called `website`, so map at import time rather than renaming later.
+
+Imported rows land as input columns. If the sheet already has pipe columns, the new rows show `pending` cells, and the next run fills them.
+
+## Run a search
+
+A search creates rows from filters. Describe who you want ("Heads of Marketing at robotics companies in Europe"), pick a source, set a limit, and run. One row per result, with the source's fields as input columns.
+
+Sources fall into two groups:
+
+- **Prospecting datasets** for people and companies you don't know yet: Amplemarket, Crustdata, and Parallel, which accepts a natural-language description.
+- **Systems you already run**: HubSpot, Salesforce, and Attio objects, Postgres and Databricks queries, Luma event guests, and Google Calendar events.
+
+Browse the full list in the <AppLink linkType="searchCatalog">search catalog</AppLink>.
+
+Searches into your own systems make a sheet a working surface for CRM data. Pull contacts from HubSpot, enrich them, and write the results back. The write-back is a pipe, covered in [Export and CRM sync](/docs/sheets/export).
+
+## Add rows over the API
+
+Sheets accept rows from outside pipe0 too. The `row:append:sheet@1` pipe appends its input record to a sheet, so anything that can make an HTTP request can feed a sheet: a signup webhook, a backend job, a script.
+
+export const appendPayload = {
+  pipes: [
+    {
+      pipe_id: "row:append:sheet@1",
+      connector: {
+        strategy: "first",
+        connections: [{ type: "vault", connection: "pipe0_123" }],
+      },
+      config: {
+        project: "gtm",
+        sheet: "inbound-signups",
+        write_fields: [{ field_name: "name" }, { field_name: "email" }],
+      },
+    },
+  ],
+  input: [{ id: "1", name: "Jane Doe", email: "jane@pipe0.com" }],
+};
+
+<RequestExample kind="pipes" payload={appendPayload} />
+
+The destination is addressed by project and sheet slug, and `write_fields` lists exactly the columns the destination consumes. By default the destination sheet runs its own pipes over the new row on arrival, so appending a signup means the sheet enriches it without anyone opening the app. The pipe needs a pipe0 <AppLink linkType="connections">connection</AppLink>.
+
+Appends are not idempotent. Sending the same request twice adds the row twice; deduplicate with an effect or gate the request upstream. If a workflow only sometimes needs a sheet, see [When you don't need a sheet](/docs/sheets/stateless).
+
+## Search again without fear
+
+Running the same search twice does not duplicate work you paid for. Deduplication runs as an effect, so repeated pulls converge instead of piling up. That behavior is covered in [Clean up rows with effects](/docs/sheets/clean-up).
+
+<Callout>
+A single search run adds at most 1,000,000 rows. Set the limit lower than the maximum while you tune filters; you can always run again.
+</Callout>
+
+## Next steps
+
+<Cards>
+  <Card icon={<Zap />} title="Enrich rows" description="Add pipe columns over the rows you brought in." href="/docs/sheets/enrich" />
+  <Card icon={<Eraser />} title="Clean up rows" description="Deduplicate and filter with effects." href="/docs/sheets/clean-up" />
+</Cards>

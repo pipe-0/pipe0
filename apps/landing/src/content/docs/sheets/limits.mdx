@@ -1,0 +1,23 @@
+---
+title: Limits and scale
+description: A sheet holds up to 2 million rows. How virtualized rendering, batched background runs, and cold storage keep large sheets responsive.
+date: 2026-07-22
+icon: Gauge
+---
+
+Sheets are built for lists that outgrow a spreadsheet. This page states the limits and explains what keeps a large sheet usable.
+
+## Limits
+
+| Limit | Value |
+|---|---|
+| Rows per sheet | 2,000,000 |
+| Rows a single search run can add | 1,000,000 |
+| Unique-row stop threshold for a search run | 100,000 |
+| Snapshot rows per report component | 500 |
+
+## What large sheets cost
+
+Row count does not bill by itself. Credits are consumed when pipes and searches produce results, and re-running a finished sheet consumes nothing. A scheduled run over a sheet where every cell is current is free. See <AppLink linkType="billingMode">billing</AppLink> for how operations price.
+
+If you need more than a sheet holds, split by segment or use the [API](/docs) to stream records through pipes without storing them at all.

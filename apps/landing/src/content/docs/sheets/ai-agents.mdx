@@ -1,0 +1,55 @@
+---
+title: Work with AI agents
+description: Let Claude Code, ChatGPT, or Cursor run your sheets through the pipe0 MCP server. 37 tools cover searches, enrichment, schedules, and reports.
+date: 2026-07-22
+icon: Bot
+---
+
+Any MCP client can operate your sheets: Claude Code, Claude Desktop, claude.ai, ChatGPT, Cursor, Codex. The agent gets the same engine you use in the app, through 37 tools that cover the full loop from creating a sheet to scheduling its refresh. Connection setup lives in the <AppLink linkType="mcp">MCP server guide</AppLink>; this page covers what a connected agent can do with a sheet.
+
+## What an agent can do
+
+The tool surface mirrors the product. An agent can discover pipes and searches, validate a program before running it, create sheets, read rows and schemas, run effects, verify outcomes, build reports, and manage schedules. Billable operations ask for confirmation first, so an agent cannot spend credits silently.
+
+A single prompt can carry a whole workflow:
+
+```text title="One instruction to Claude Code"
+Find 50 Heads of Marketing at robotics companies in Europe,
+enrich them with work emails, drop everyone without one,
+and email me a summary report every Monday.
+```
+
+The agent turns that into a sheet with a search, an enrichment column, a filter, and two schedules. You can open the sheet at any point and see exactly what it declared, because the agent works with the same columns, statuses, and history you do.
+
+## Write data into a sheet from an MCP client
+
+Everything an agent writes goes through `run_effects`, the same declared mutations you run in the app. Records the agent already holds (from your conversation, a CSV, another tool) land with `rows:add@1`. Records it needs to find come in with `search:run@1`. Columns are declared with `pipe:add@1` and computed with `rows:enrich@1`. A typical session reads like this:
+
+```text title="Tool sequence for the prompt above"
+create_sheet     -> "eu-robotics-marketing"
+validate_effects -> chain checks out against the sheet schema
+run_effects      -> [search:run@1, pipe:add@1, rows:enrich@1]
+verify_outcome   -> work_email: 41 completed, 9 no_result
+```
+
+The agent validates before it runs, the billable step asks you to confirm, and `verify_outcome` reads the real cell statuses afterward. Because the write path is the effect system, everything an agent writes is in the sheet history and covered by [point-in-time recovery](/docs/sheets/recovery), exactly like a human edit.
+
+## Why sheets suit agents
+
+Agents make mistakes, and sheets are built for actors that need to check their work:
+
+- Validation catches a broken program before it runs, so the agent fixes its plan instead of burning credits.
+- Cell statuses distinguish "the data doesn't exist" (`no_result`) from "the wiring is wrong" (`skipped`) from "something broke" (`failed`). The agent reads the distribution after a run and reacts to the right problem.
+- Re-running is free and safe, so an agent repairing a partial failure cannot damage completed work.
+- Every mutation lands in the history, and [point-in-time recovery](/docs/sheets/recovery) undoes anything an agent should not have done.
+
+## Develop against the sandbox
+
+Point an agent at the sandbox environment while you build a workflow. Providers are mocked and nothing bills, so the agent can iterate on the program shape for free. Switch to production when the columns are right.
+
+## Next steps
+
+<Cards>
+  <Card icon={<Terminal />} title="MCP server setup" description="Connect Claude Code, ChatGPT, Cursor, and others over OAuth." href="/docs/sdks/mcp" />
+  <Card icon={<Clock />} title="Schedule runs" description="What agents set up when you ask for 'every Monday'." href="/docs/sheets/schedules" />
+</Cards>

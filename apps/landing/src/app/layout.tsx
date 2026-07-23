@@ -11,6 +11,11 @@ import {
 } from "next/font/google";
 import { getBaseUrl } from "@/lib/utils";
 import { AskAiProvider } from "@/components/ai/ask-ai-provider";
+import {
+  JsonLd,
+  organizationJsonLd,
+  webSiteJsonLd,
+} from "@/components/seo/json-ld";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -53,9 +58,19 @@ const newsreader = Newsreader({
 
 export const metadata: Metadata = {
   metadataBase: new URL(getBaseUrl()),
-  title: "The data enrichment framework",
+  title: {
+    template: "%s | pipe0",
+    default: "pipe0 — Data Enrichment API & Sales Automation Platform",
+  },
   description:
-    "Combine 50+ data providers into custom pipelines for lead and company enrichment. Add search for business emails, company details, and much more. Connect related enrichments with AI and waterfalls. Add Clay-like functionality to your application with ease.",
+    "Data enrichment API plus a Clay-alternative spreadsheet. Combine 50+ providers to find emails, enrich people and companies, and automate sales workflows — via API, Sheets, or MCP.",
+  openGraph: {
+    siteName: "pipe0",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+  },
 };
 
 export default function RootLayout({
@@ -68,6 +83,8 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${instrumentSerif.variable} ${hankenGrotesk.variable} ${poppins.variable} ${newsreader.variable} antialiased`}
       >
+        <JsonLd data={organizationJsonLd()} />
+        <JsonLd data={webSiteJsonLd()} />
         <AskAiProvider>{children}</AskAiProvider>
         <Analytics />
         <Toaster />

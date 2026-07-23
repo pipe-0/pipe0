@@ -8,7 +8,21 @@ import { Footer } from "@/components/footer";
 import { AskAiButton } from "@/components/ai/ask-ai-button";
 import { Header } from "@/components/header";
 import { CtaButtons, CtaPanel, Section } from "@/components/marketing";
+import { createMetadata } from "@/lib/metadata";
+import {
+  JsonLd,
+  softwareApplicationJsonLd,
+} from "@/components/seo/json-ld";
 import Image from 'next/image'
+
+const homeDescription =
+  "Data enrichment API plus a Clay-alternative spreadsheet. Combine 50+ providers to find emails, enrich people and companies, and automate sales workflows — via API, Sheets, or MCP.";
+
+// Title is omitted so the root default applies verbatim (no template suffix).
+export const metadata = createMetadata({
+  description: homeDescription,
+  path: "/",
+});
 
 const trustedLogos = [
   {
@@ -56,6 +70,9 @@ const useCases = [
 export default function Home() {
   return (
     <div className="landing min-h-screen bg-background">
+      <JsonLd
+        data={softwareApplicationJsonLd({ description: homeDescription })}
+      />
       <Header page="product" />
       <ScrollReveal />
       <AnimationPauser />

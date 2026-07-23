@@ -4,6 +4,15 @@ import { AskAiButton } from "@/components/ai/ask-ai-button";
 import { Header } from "@/components/header";
 import { CtaPanel, Section } from "@/components/marketing";
 import { PricingCard } from "@/components/pricing-card";
+import { createMetadata } from "@/lib/metadata";
+import { JsonLd, faqJsonLd } from "@/components/seo/json-ld";
+
+export const metadata = createMetadata({
+  title: "Pricing — Pay-as-you-go Credits",
+  description:
+    "Simple usage-based pricing for pipe0. Buy credits and pay only for the enrichments you run. Every plan includes the full platform, API, and Sheets. Start free with 20 credits.",
+  path: "/pricing",
+});
 
 const faqs = [
   {
@@ -23,6 +32,7 @@ const faqs = [
 export default function Pricing() {
   return (
     <div className="landing min-h-screen bg-background">
+      <JsonLd data={faqJsonLd(faqs)} />
       <Header page="pricing" />
       <ScrollReveal />
 
