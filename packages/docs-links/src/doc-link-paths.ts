@@ -53,6 +53,13 @@ export const docsLinkPaths = {
   searchBilling: `/docs/billing#search-billing`,
   highUsageBilling: `/docs/billing#high-usage-billing`,
 
+  // Sheets
+  sheets: `/docs/sheets`,
+  sheetsQuickstart: `/docs/sheets/quickstart`,
+  sheetsAgents: `/docs/sheets/ai-agents`,
+  sheetsRecovery: `/docs/sheets/recovery`,
+  sheetsLimits: `/docs/sheets/limits`,
+
   // SDKs
   elementsReact: `/docs/sdks/form-ui`,
 

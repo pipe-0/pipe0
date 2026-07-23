@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
 import { Section } from "@/components/marketing";
+import { JsonLd, faqJsonLd } from "@/components/seo/json-ld";
 import { LemlistEncoder } from "./encoder";
 
 const title = "Lemlist API Key Encoder — Free Online Tool";
@@ -49,6 +50,7 @@ const faqs = [
 export default function LemlistApiKeyEncoderPage() {
   return (
     <div className="landing min-h-screen bg-background">
+      <JsonLd data={faqJsonLd(faqs)} />
       <Header page="product" />
 
       {/* ===== Hero ===== */}

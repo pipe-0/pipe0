@@ -1,0 +1,48 @@
+---
+title: How a sheet runs
+description: Columns declare pipes, cells carry statuses, and a run only recomputes stale cells. The mental model behind every sheet.
+date: 2026-07-22
+icon: Layers
+---
+
+A sheet is a program you can read. The columns declare what should be true for every row, and running the sheet makes it true. Once you know how cells track their own state, everything else about Sheets follows.
+
+## Columns declare the work
+
+A sheet has two kinds of columns. Input columns hold the data you brought: `name`, `company_domain`, a LinkedIn URL from a CSV. Pipe columns are produced by pipes and declare a fact to compute for every row, like "this person's work email". Together the pipe columns are the sheet's program. Add a column and the program grows. Remove one and it shrinks.
+
+Pipes read each other's output in a sheet exactly as they do in the API. A column that joins `first_name` and `last_name` into `name` feeds the column that finds a work email. You declare the whole chain up front, even if some rows can't feed every pipe yet.
+
+## Cells carry a status
+
+Every cell in a pipe column knows where it stands:
+
+| Status | Meaning |
+|---|---|
+| `pending` | Declared but never computed. |
+| `queued` | Waiting for a worker. |
+| `processing` | Running now. |
+| `completed` | Computed, value present. |
+| `no_result` | Providers ran and found nothing. |
+| `skipped` | An input was missing or a condition excluded the row. |
+| `failed` | Something broke. Re-running retries it. |
+
+The distinction matters when you read an outcome. `no_result` means the data doesn't exist with the providers you used. `skipped` means the row never qualified, usually because an upstream column is still empty. `failed` means the machinery had a problem. Each asks for a different reaction.
+
+## Runs reconcile, they don't recompute
+
+A cell is stale when it was never computed, when it failed, when its inputs changed, or when the pipe's configuration changed. A run finds the stale cells in its scope and computes only those. Correct cells are never touched.
+
+This gives you three properties for free:
+
+- Re-running a finished sheet costs nothing.
+- A partial failure is repaired by running again. Successes stay put.
+- A `skipped` cell fills itself in on a later run once its upstream columns have values.
+
+One run can target one cell, one column, a selection of rows, or the whole sheet. It is the same operation at different scopes, so repairing one cell and backfilling a million rows use the same button.
+
+## Every change is an effect
+
+Anything that mutates a sheet, from a run to a deduplication to a CSV import, is an effect. Effects are recorded in an append-only history, which is why a sheet can be undone and restored to earlier points. See [Undo and point-in-time recovery](/docs/sheets/recovery).
+
+For simple enrichment jobs, this page is all the theory you need. Browse the <AppLink linkType="pipeCatalog">pipe catalog</AppLink> to see what your columns can compute.

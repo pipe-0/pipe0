@@ -1,0 +1,63 @@
+---
+title: Data Enrichment in Claude Code with the pipe0 MCP Server
+date: 2026-07-22
+category: Sales data
+tags:
+    - data enrichment
+    - MCP
+    - AI agents
+excerpt: "Connect a data enrichment MCP server to Claude Code and let the agent build prospect lists, find work emails, and schedule refreshes from one prompt."
+authors:
+    - name: Florian
+      title: Founder
+---
+
+Sales automation is becoming something you describe rather than something you click together. With an MCP server for data enrichment, Claude Code (or ChatGPT, or Cursor) can search for prospects, enrich them across 50+ providers, write the results into a sheet, and put the whole thing on a schedule. One prompt, no glue code.
+
+This post shows the workflow with [pipe0](https://pipe0.com), our data enrichment MCP server. It works the same in any MCP client.
+
+## Connect the server
+
+```bash title="Claude Code"
+claude mcp add --transport http pipe0 https://api.pipe0.com/v1/mcp
+```
+
+Claude Code opens the OAuth sign-in on first use. No API key handling; the [MCP server docs](/docs/sdks/mcp) cover ChatGPT, Cursor, and other clients.
+
+## One prompt, one working list
+
+Here is a real session:
+
+```text title="Prompt"
+Find 50 Head of Marketing prospects at robotics companies in Europe,
+enrich them with work emails, and drop everyone without one.
+```
+
+Watching the agent work is the interesting part. It does not guess at payloads. It calls `list_searches` to pick a prospecting source, `get_search_schema` for the exact filter shape, and `validate_pipes` before anything runs. Then it creates a sheet, runs the search, adds a work email column (a waterfall across several providers that only bills the one that returns a result), and filters the misses.
+
+The result is not a wall of JSON in a chat window. It is a [sheet](/docs/sheets): every cell carries a status, the run history shows what the agent did, and [point-in-time recovery](/docs/sheets/recovery) can undo anything it should not have done.
+
+## Why an MCP server beats pasting CSVs into chat
+
+A chat model with a CSV in its context window will happily hallucinate an email address. An agent with enrichment tools cannot: the data comes from providers, and every value lands with provenance and a status (`completed`, `no_result`, `failed`). The agent reads that distribution with `verify_outcome` and reacts to the right problem instead of declaring victory.
+
+Two more properties do real work here. Billable operations require confirmation, so an agent cannot spend credits silently. And runs are reconciliation, not recomputation: when an agent re-runs a sheet to repair three failed cells, the 497 completed ones are untouched and unbilled.
+
+## Schedule it and walk away
+
+The same tool surface manages schedules:
+
+```text title="Prompt"
+Refresh this search every Monday at 8am Berlin time and
+email me a report of new prospects.
+```
+
+That becomes a cron schedule on the sheet plus a versioned, emailed [report](/docs/sheets/reports). The agent set it up, but it runs without the agent.
+
+## Develop in the sandbox
+
+Point the agent at the sandbox environment while you iterate: providers are mocked and nothing bills, so the tenth attempt at a workflow costs the same as the first. Details in the [AI agents guide](/docs/sheets/ai-agents).
+
+## Try it
+
+The first 20 credits are free, no card required. Connect the server, ask for a list you actually need this week, and check the sheet it builds.

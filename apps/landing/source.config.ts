@@ -152,6 +152,11 @@ export const blog = defineCollections({
      * sitemap, and direct URLs (404). Remove the flag to publish.
      */
     draft: z.boolean().optional(),
+    /**
+     * Canonical URL override — point near-duplicate posts at the canonical
+     * one so they don't compete in search.
+     */
+    canonicalUrl: z.string().optional(),
   }),
   async: true,
   async mdxOptions(environment) {

@@ -1,0 +1,38 @@
+---
+title: Clean up rows with effects
+description: Deduplicate rows and filter them with a prompt. Effects preview a diff before applying, and every effect shows up in the sheet history.
+date: 2026-07-22
+icon: Eraser
+---
+
+Pipes work on one row at a time. Effects transform the set of rows as a whole: deduplicate, filter, remove empties, copy to another sheet. Every effect previews its changes as a diff before anything is applied, so you see what a clean-up will do before it does it.
+
+## Deduplicate
+
+Repeated searches and overlapping imports create duplicates. The dedupe effect collapses them by the fields you pick, for example `linkedin_url` or `work_email`. Preview shows which rows merge and which survive. Apply, and the history records exactly what happened.
+
+## Filter with a prompt
+
+The prompt filter narrows rows with plain language: "keep only companies that build hardware" or "remove agencies and consultancies". It reads the row's fields, including everything your pipe columns added.
+
+This completes the funnel that runs through most sheet work. Search broadly, enrich with qualifying signals, filter down to the list you act on. The filter is cheap because the qualification already happened in the columns.
+
+## Other clean-up effects
+
+| Effect | What it does |
+|---|---|
+| Remove empty rows | Drops rows where selected columns found nothing. |
+| Duplicate rows | Copies selected rows, for example to fork a test segment. |
+| Copy to sheet | Moves qualified rows into another sheet. |
+| Reset | Clears computed cells so the program runs fresh. |
+
+## Undo is always there
+
+An effect that went wrong is not a disaster. Every effect lands in the append-only history, and you can undo it or restore the sheet to a point before it ran. See [Undo and point-in-time recovery](/docs/sheets/recovery).
+
+## Next steps
+
+<Cards>
+  <Card icon={<Send />} title="Export and CRM sync" description="Ship the cleaned list to a CSV or your CRM." href="/docs/sheets/export" />
+  <Card icon={<History />} title="Undo and recovery" description="Restore points and time travel." href="/docs/sheets/recovery" />
+</Cards>

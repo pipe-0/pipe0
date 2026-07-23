@@ -1,0 +1,35 @@
+---
+title: Schedule runs
+description: Run enrichment and report delivery on a cron schedule with timezone support. Drip through large sheets with window scheduling.
+date: 2026-07-22
+icon: Clock
+---
+
+A schedule runs a chain of effects on a cron expression, in your timezone, with daylight saving handled for you. Anything you can run by hand can run on a schedule: refresh a search, enrich new rows, regenerate a report and email it.
+
+## Schedule a sheet chain
+
+A weekly prospect refresh is one schedule with two steps: run the search, then enrich the rows. New rows arrive with `pending` cells, the enrichment fills them, and rows that were already complete are untouched. Reconciliation is what makes schedules safe. A schedule that fires against a finished sheet does nothing and bills nothing.
+
+If a previous scheduled run is still in flight when the next fire comes due, the schedule waits instead of piling runs on top of each other.
+
+## Drip through a large sheet
+
+Give the enrichment step a window selection, for example 500 rows per fire, and the schedule drips through the sheet. Completed rows leave the work set on their own, so consecutive fires take disjoint windows without a stored cursor. The data is the cursor.
+
+Use a drip when you want to spread provider costs over a month, respect a downstream rate limit, or feed an outreach tool a steady trickle instead of a flood.
+
+## Schedule a report
+
+Report chains regenerate a report from its sheet and deliver it by email, on the same cron machinery. "Every Monday at 8am, rebuild the pipeline report and send it to the team" is one schedule. See [Reports](/docs/sheets/reports).
+
+## Manage schedules from anywhere
+
+Schedules are part of the same surface agents use, so you can create and pause them in the app, or ask a connected agent to do it. "Enrich 500 rows every night at 2am" is a one-sentence instruction to Claude Code. See [Work with AI agents](/docs/sheets/ai-agents).
+
+## Next steps
+
+<Cards>
+  <Card icon={<BarChart3 />} title="Reports" description="Versioned reports with charts, delivered by email." href="/docs/sheets/reports" />
+  <Card icon={<Gauge />} title="Limits and scale" description="What large scheduled sheets can and cannot do." href="/docs/sheets/limits" />
+</Cards>

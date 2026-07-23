@@ -25,9 +25,9 @@ export default async function Image() {
   );
 
   const element: OgElement = {
-    title: "Add data enrichment to your application. Fast.",
+    title: "Data enrichment by API, spreadsheet, or agent.",
     description:
-      "Enrich people and company data in infinite ways with one mighty API. Powered by AI.",
+      "Find emails, enrich people and companies, and automate sales workflows with 50+ providers.",
   };
 
   return new ImageResponse(

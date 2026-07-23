@@ -1,0 +1,44 @@
+---
+title: When you don't need a sheet
+description: pipe0 runs stateless too. One-shot API calls and MCP runs for enrich-on-signup, agent lookups, and actions, and how they hand off to a sheet.
+date: 2026-07-22
+icon: Waypoints
+---
+
+Not every enrichment needs a table. The same engine that powers Sheets runs stateless: send records, get them back enriched, keep nothing. This page tells you which mode fits which job, because picking wrong costs you either bookkeeping you didn't need or history you wish you had.
+
+## Stateless runs
+
+A stateless run is one request. `POST /v1/pipes/run/sync` takes records and pipes and returns the enriched records. Over MCP, `run_pipes_oneshot` does the same for up to 80 records per call. Nothing is stored, nothing converges, there is no second run.
+
+Stateless fits jobs that are complete the moment they return:
+
+- Enrich a signup while the webhook that delivered it is still open.
+- An agent answering "find this person's work email" once, mid conversation.
+- Qualify one inbound lead and route it.
+- Fire an action (a Slack message, a CRM update) where the pipe run is the whole point.
+
+## Sheets
+
+A sheet is the stateful mode: rows persist, cells carry statuses, runs reconcile instead of recompute, and every change lands in a history with [point-in-time recovery](/docs/sheets/recovery). You want a sheet when the job has a lifecycle: a list that grows, a run that can partially fail and needs repair, a schedule that fires weekly, teammates who look at the same data.
+
+## Rule of thumb
+
+| If the job is | Use |
+|---|---|
+| One record, one answer, right now | A stateless run |
+| A side effect (message, CRM write) with no list to keep | A stateless run |
+| A list you will re-run, repair, or refresh | A sheet |
+| Something on a schedule | A sheet |
+| Something a teammate needs to see or undo | A sheet |
+
+## Handing off from stateless to a sheet
+
+The two modes compose. The `row:append:sheet@1` pipe lets a stateless run deposit its record into a sheet, and the destination sheet's own pipes run over the new row on arrival. A signup webhook can stay a single stateless call while the sheet quietly accumulates every signup, enriched and ready for the weekly review. The wiring is on [Import rows and run searches](/docs/sheets/add-rows#add-rows-over-the-api).
+
+## Next steps
+
+<Cards>
+  <Card icon={<Import />} title="Import rows and run searches" description="Every way rows arrive in a sheet, including over the API." href="/docs/sheets/add-rows" />
+  <Card icon={<Layers />} title="How a sheet runs" description="What the stateful mode buys you: statuses and reconciliation." href="/docs/sheets/concepts" />
+</Cards>

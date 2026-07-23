@@ -1,0 +1,26 @@
+{
+  "$schema": "../../../../.source/json-schema/docs.meta.json",
+  "root": true,
+  "title": "Sheets",
+  "description": "The no-code enrichment spreadsheet",
+  "icon": "Grid3x3",
+  "pages": [
+    "---Getting started---",
+    "index",
+    "quickstart",
+    "concepts",
+    "stateless",
+    "---Rows and data---",
+    "add-rows",
+    "enrich",
+    "clean-up",
+    "export",
+    "---Automation---",
+    "schedules",
+    "reports",
+    "ai-agents",
+    "---Recovery and limits---",
+    "recovery",
+    "limits"
+  ]
+}

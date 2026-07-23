@@ -1,0 +1,41 @@
+---
+title: Undo and point-in-time recovery
+description: Every sheet change is an effect in an append-only history. Create restore points, travel back to them, and undo mistakes without losing rows.
+date: 2026-07-22
+icon: History
+---
+
+Nothing you do to a sheet is unrecoverable. Every mutation is an effect in an append-only history, and the sheet's past versions stay frozen behind the current one. This page covers the three recovery moves: undo, restore points, and time travel.
+
+## The history records everything
+
+Open a sheet's history and you see every effect that ever ran: who or what triggered it (a person, a schedule, an agent), what it changed, and when. The history is append-only. Recovery never rewrites the past; it copies a past state forward.
+
+## Undo a change
+
+A destructive effect seals the sheet's current version before it applies, so the state before the change is preserved automatically. Undo copies that frozen version's rows forward into a new current version. Rows keep their stable identity across the copy, so references to a row survive an undo.
+
+## Create a restore point
+
+Before a risky operation, create a restore point. It marks the current state as a named moment you can return to. Restore points cost nothing to create because sealing a version is the sheet's normal bookkeeping, not a data copy.
+
+Agents and schedules can create restore points too, so "snapshot before every scheduled refresh" is one instruction, not a habit you have to keep.
+
+## Travel back
+
+Restoring copies a chosen point's rows into a new current version and leaves the point itself immutable. You can restore, look around, and restore again to a different point. Nothing is consumed by looking.
+
+{/* Screenshot: sheet history with a restore point selected. /media/docs/sheets/recovery-history.png */}
+
+Time travel composes with everything else in Sheets. An agent that ran a bad filter, a schedule that imported a malformed CSV, a teammate who deleted a column: each is one restore away from undone.
+
+<Callout>
+Concurrent edits cannot corrupt a restore. Every run records the sheet version it validated against and is refused if the sheet moved on in the meantime.
+</Callout>
+
+## Next steps
+
+<Cards>
+  <Card icon={<Layers />} title="How a sheet runs" description="Versions and effects, from the beginning." href="/docs/sheets/concepts" />
+  <Card icon={<Gauge />} title="Limits and scale" description="What recovery costs at a million rows." href="/docs/sheets/limits" />
+</Cards>

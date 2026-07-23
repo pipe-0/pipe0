@@ -1,0 +1,35 @@
+---
+title: Export and CRM sync
+description: Export a sheet to CSV or write enriched rows back to HubSpot, Salesforce, or Attio. Finish a partial CRM write safely with adopt.
+date: 2026-07-22
+icon: Send
+---
+
+Enriched rows leave a sheet two ways: as a file, or as writes into another system. Both respect cell statuses, so you always know what has shipped.
+
+## Export a CSV
+
+The export effect streams your selected rows to a CSV and hands you a download link. Exports work at any size the sheet supports, so a million-row export is a normal operation, not a special request.
+
+## Write back to your CRM
+
+Writing to an outside system is a pipe column, the same as any enrichment. `object:update:hubspot`, `record:update:salesforce`, and `record:update:attio` each take a row's fields and update the matching CRM record. The cell records the outcome per row: `completed` rows are in the CRM, `failed` rows are not, and you can see which is which at a glance.
+
+The same pattern covers outreach and messaging: enroll a lead in lemlist or Amplemarket, send a Slack message, send or draft an email through Gmail or Resend. Anything with a `POST` endpoint is reachable through the generic `http:request@1` pipe. Browse the Actions and Integrations categories in the <AppLink linkType="pipeCatalog">pipe catalog</AppLink>.
+
+## Finish a partial write with adopt
+
+External writes are not free to repeat. If a CRM sync fails halfway, re-running the failed cells is right, but re-running the completed ones would write twice.
+
+Sheets solve this with two distinct moves. Re-run recomputes a cell. Adopt accepts the value a cell already has as current, without running anything. To finish a partial CRM write: adopt the cells that succeeded, re-run the ones that failed. The sheet converges without a single duplicate write.
+
+<Callout type="warn">
+Test external writes in the sandbox environment first. Sandbox runs mock providers and never touch your CRM.
+</Callout>
+
+## Next steps
+
+<Cards>
+  <Card icon={<Clock />} title="Schedule runs" description="Sync your CRM on a schedule instead of by hand." href="/docs/sheets/schedules" />
+  <Card icon={<Bot />} title="Work with AI agents" description="Let an agent run the export for you." href="/docs/sheets/ai-agents" />
+</Cards>

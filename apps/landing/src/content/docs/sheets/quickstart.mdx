@@ -1,0 +1,62 @@
+---
+title: Build your first sheet
+description: Create a sheet, add rows with a search, enrich them with a pipe column, and export a CSV. Five minutes, no code.
+date: 2026-07-22
+icon: Rocket
+---
+
+By the end of this page you will have a sheet full of prospects, each row enriched with a work email, exported as a CSV. You need a pipe0 account. New accounts start in the sandbox environment, where providers are mocked and nothing bills, so you can practice the whole flow for free.
+
+<Steps>
+<Step>
+
+### Create a sheet
+
+Open the [app](https://app.pipe0.com) and create a sheet inside a project. An empty sheet has no columns yet. Columns appear when you import data or add pipes.
+
+</Step>
+<Step>
+
+### Add rows with a search
+
+Run a search to fill the sheet with records you don't have yet, for example software engineers in Berlin. Pick a source from the <AppLink linkType="searchCatalog">search catalog</AppLink>, set your filters, and set a result limit. The search creates one row per person, with input columns like `name` and `company_domain`.
+
+If you already have a list, import a CSV instead. See [Import rows and run searches](/docs/sheets/add-rows).
+
+</Step>
+<Step>
+
+### Add a pipe column
+
+Add the pipe `person:workemail:waterfall@1` as a column. The pipe knows it needs `name` and `company_domain` and maps them to your existing columns. You don't configure anything else.
+
+{/* Screenshot: adding a pipe column. /media/docs/sheets/quickstart-add-pipe.png */}
+
+</Step>
+<Step>
+
+### Run the sheet
+
+Run it. Cells move through `queued` and `processing` to `completed` or `no_result`. A `completed` cell holds the found email. A `no_result` cell means the providers had nothing for that person, and you were not billed for a result you didn't get.
+
+{/* Screenshot: a run in progress with mixed cell statuses. /media/docs/sheets/quickstart-run.png */}
+
+</Step>
+<Step>
+
+### Export a CSV
+
+Export the sheet. You get a download link for a CSV with every column, ready for your CRM or outreach tool.
+
+</Step>
+</Steps>
+
+Run the sheet again. Nothing recomputes and nothing bills, because every cell is already current. A run only touches stale cells: new rows, failed cells, or cells whose inputs changed. That is what makes sheets safe to re-run and cheap to keep fresh.
+
+## Next steps
+
+<Cards>
+  <Card icon={<Layers />} title="How a sheet runs" description="Cell statuses and reconciliation, explained." href="/docs/sheets/concepts" />
+  <Card icon={<Import />} title="Import rows and run searches" description="CSV imports and every search source." href="/docs/sheets/add-rows" />
+  <Card icon={<Zap />} title="Enrich rows" description="Compose pipe columns and gate them with conditions." href="/docs/sheets/enrich" />
+</Cards>

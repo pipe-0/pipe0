@@ -825,6 +825,12 @@ a:has(> [data-slot="button"]),
 .tabs-dd-item {
   background-image: none;
 }
+/* The switcher popover ships translucent (bg-fd-popover/60 + blur), which
+   lets the selected sidebar row shine through — make it opaque. */
+[data-radix-popper-content-wrapper] > :has(.tabs-dd-item) {
+  background-color: var(--color-fd-popover);
+  backdrop-filter: none;
+}
 .tabs-dd-item:hover {
   background-color: var(--color-fd-accent);
   background-image: none;
@@ -862,12 +868,14 @@ a:has(> [data-slot="button"]),
    dark-mode primary's brighter sky-blue doesn't wash it out. Sits a touch
    darker than the light-mode primary so it reads as a rich indigo on the
    near-black sidebar rather than a glowing blue. */
-.btn-glossy-indigo {
+.btn-glossy-indigo,
+#nd-nav a[data-active="true"] {
   --primary: hsl(235, 80%, 50%);
 }
 
 /* Glassy CTA buttons — inner reflection, vertical gradient, darker edge. */
-.btn-glossy {
+.btn-glossy,
+#nd-nav a[data-active="true"] {
   background: linear-gradient(
     180deg,
     color-mix(in oklab, var(--primary), #ffffff 16%) 0%,
@@ -879,7 +887,8 @@ a:has(> [data-slot="button"]),
     inset 0 -1px 0 rgba(0, 0, 0, 0.12),
     0 1px 2px rgba(14, 17, 23, 0.2);
 }
-.btn-glossy:hover {
+.btn-glossy:hover,
+#nd-nav a[data-active="true"]:hover {
   background: linear-gradient(
     180deg,
     color-mix(in oklab, var(--primary), #000000 4%) 0%,
@@ -955,4 +964,15 @@ a:has(> [data-slot="button"]),
     opacity: 1;
     transform: none;
   }
+}
+
+/* Fumadocs top nav: the active link ("Documentation" / "Blog") wears the same
+   glossy-indigo pill as the active sidebar item. Fill, border color, and gloss
+   come from the shared .btn-glossy/.btn-glossy-indigo rules above; this adds
+   only what the nav <a> lacks compared to the sidebar item. */
+#nd-nav a[data-active="true"] {
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 0.5rem;
+  color: #fff;
 }

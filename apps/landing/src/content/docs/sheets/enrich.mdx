@@ -1,0 +1,39 @@
+---
+title: Enrich rows
+description: Add pipe columns that fill in work emails and phone numbers for every row. Waterfall pipes bill only the provider that returned a result.
+date: 2026-07-22
+icon: Zap
+---
+
+A pipe column computes one fact for every row. This page ramps from one column to a composed program with conditions, which is most of what a sales automation workflow needs.
+
+## Add one pipe column
+
+Add `person:workemail:waterfall@1` to a sheet whose rows have `name` and `company_domain`. The pipe declares its input requirement and maps it to your columns automatically. Run, and every row gets a `work_email` cell.
+
+You configured nothing. The pipe uses its default provider order, and because it is a waterfall, it tries providers in order and stops at the first hit. You pay for the provider that returned the result, not for the ones that came up empty.
+
+{/* Screenshot: run-scope selection (cell, column, sheet). /media/docs/sheets/enrich-run-scope.png */}
+
+## Compose columns
+
+Add a second pipe column that reads the first. A common chain: `person:name:split@1` turns `name` into `first_name` for a greeting, or `prompt:run@1` writes a one-line opener from the company's description. Pipes see each other's output in a sheet exactly as they do in the API, so the chain declares itself. Rows missing an upstream value show `skipped` until the upstream column fills, then a later run picks them up.
+
+The lesson from the diff: you never told the second pipe where its input comes from. It found the column by field name.
+
+## Gate a column with a condition
+
+Give a pipe column a `run_if` condition to exclude rows: only find phone numbers where `work_email` is `completed`, or only run the expensive provider where `company_size` is greater than 200. Excluded rows show `skipped`, cost nothing, and re-qualify automatically when their data changes.
+
+This is the qualification funnel in column form. Search broadly, enrich with the signals that matter, and let conditions keep the expensive pipes narrow.
+
+## Take control when you need it
+
+Every pipe column exposes the same configuration as the API: reorder or remove providers, alias output fields, or authenticate with <AppLink linkType="connections">your own provider keys</AppLink>. The defaults are right for most columns, and the <AppLink linkType="pipeCatalog">pipe catalog</AppLink> documents each option where you need it.
+
+## Next steps
+
+<Cards>
+  <Card icon={<Eraser />} title="Clean up rows" description="Deduplicate and filter the enriched set." href="/docs/sheets/clean-up" />
+  <Card icon={<Clock />} title="Schedule runs" description="Keep the sheet fresh on a cron schedule." href="/docs/sheets/schedules" />
+</Cards>
