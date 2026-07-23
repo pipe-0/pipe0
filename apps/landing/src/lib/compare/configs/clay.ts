@@ -27,8 +27,8 @@ export const clayConfig: CompareConfig = {
           },
           {
             feature: "AI agents over MCP",
-            pipe0: { v: "yes", note: "Supports every MCP server" },
-            competitor: { v: "no", note: "Complex CLI available on some plans" },
+            pipe0: { v: "yes", note: "any MCP client, 100+ enrichments for agents" },
+            competitor: { v: "yes", note: "Clay MCP for Claude, ChatGPT, Codex" },
           },
           {
             feature: "Stateless enrichment",
@@ -82,7 +82,7 @@ export const clayConfig: CompareConfig = {
     cards: [
       {
         title: "One engine, three surfaces",
-        body: "Everything a pipe0 sheet does is also a REST API and an MCP server. Build a spreadsheet, or ship the same enrichment inside your agent or product. Clay's engine is only reachable through its table UI.",
+        body: "Everything a pipe0 sheet does is also a REST API and an MCP server, and data moves freely between agent runs and sheets. Build a spreadsheet, or ship the same enrichment inside your agent or product. Clay ships an MCP for reps, but its engine has no public API.",
         link: { label: "Read the Sheets docs", href: "/docs/sheets" },
       },
       {
@@ -92,7 +92,7 @@ export const clayConfig: CompareConfig = {
       },
       {
         title: "Agents run the sheet",
-        body: "Claude Code or ChatGPT connects over OAuth and gets 50+ tools: create sheets, run enrichment, build reports, manage schedules. You watch the same cells fill in the table and take over anytime; every agent action lands in the shared history with undo.",
+        body: "Claude Code or ChatGPT connects over OAuth and gets 100+ enrichments and searches: create sheets, run enrichment, build reports, manage schedules. You watch the same cells fill in the table and take over anytime; every agent action lands in the shared history with undo.",
         link: { label: "Work with AI agents", href: "/docs/sheets/ai-agents" },
       },
     ],
@@ -122,7 +122,7 @@ export const clayConfig: CompareConfig = {
     },
     {
       q: "Can Claude Code or ChatGPT use pipe0?",
-      a: "Yes. pipe0 ships an MCP server with 37 tools. Any MCP client, including Claude Code, Claude Desktop, ChatGPT, Cursor, and Codex, connects over OAuth and can create sheets, run enrichments, build reports, and manage schedules.",
+      a: "Yes. pipe0 ships an MCP server that puts 100+ enrichments and searches in front of agents. Any MCP client, including Claude Code, Claude Desktop, ChatGPT, Cursor, and Codex, connects over OAuth and can create sheets, run enrichments, build reports, and manage schedules.",
     },
     {
       q: "How many rows can a pipe0 sheet hold?",
@@ -136,6 +136,7 @@ export const clayConfig: CompareConfig = {
   related: [
     { label: "Clay alternatives", href: "/blog/clay-alternatives" },
     { label: "Does Clay have an API?", href: "/blog/clay-api" },
+    { label: "Best MCP servers for GTM", href: "/blog/best-mcp-servers-gtm" },
     { label: "Pipe0 Sheets docs", href: "/docs/sheets" },
   ],
   cta: {

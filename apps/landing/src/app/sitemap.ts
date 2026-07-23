@@ -1,4 +1,9 @@
 import type { MetadataRoute } from "next";
+import {
+  categorySlug,
+  sortedPosts,
+  usedCategories,
+} from "@/app/blog/blog-utils";
 import { compareConfigs } from "@/lib/compare/registry";
 import { source, blog, legal } from "@/lib/source";
 import { getBaseUrl } from "@/lib/utils";
@@ -32,6 +37,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly" as const,
       priority: 0.4,
       lastModified: new Date(page.data.date),
+    }));
+
+  // The default (first) category is the /blog index itself and canonicalizes
+  // there, so only the remaining categories get their own sitemap entries.
+  const blogCategoryPages = usedCategories(sortedPosts())
+    .slice(1)
+    .map((category) => ({
+      url: url(`/blog/category/${categorySlug(category)}`),
+      changeFrequency: "weekly" as const,
+      priority: 0.5,
     }));
 
   const legalPages = legal.getPages().map((page) => ({
@@ -78,6 +93,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     ...docPages,
     ...blogPages,
+    ...blogCategoryPages,
     ...legalPages,
   ];
 }

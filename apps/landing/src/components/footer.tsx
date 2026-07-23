@@ -61,6 +61,10 @@ const footerColumns: FooterGroup[][] = [
         { label: "ZoomInfo alternatives", href: "/blog/zoominfo-alternatives" },
         { label: "Does Clay have an API?", href: "/blog/clay-api" },
         {
+          label: "Best MCP servers for GTM",
+          href: "/blog/best-mcp-servers-gtm",
+        },
+        {
           label: "Enrichment for Claude Code",
           href: "/blog/data-enrichment-claude-code",
         },

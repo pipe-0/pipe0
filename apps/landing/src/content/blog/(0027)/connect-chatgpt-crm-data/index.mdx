@@ -1,0 +1,64 @@
+---
+title: Connect ChatGPT to Your CRM Data with MCP
+date: 2026-07-23
+category: Sales data
+tags:
+    - MCP
+    - AI agents
+    - CRM
+excerpt: "Give ChatGPT real access to HubSpot, Salesforce, or Attio contacts: pull them, enrich them across 50+ providers, and write the results back. No code."
+authors:
+    - name: Florian
+      title: Founder
+---
+
+
+Connecting ChatGPT to your CRM through an MCP server can give your sales team super powers. And you can go even further: You can give every rep the tools to enrich, analyze, and create automations from that data. This is what we'll be exploring in this blog post.
+
+This guide connects ChatGPT to [pipe0](https://pipe0.com), which reads from HubSpot, Salesforce, and Attio and gives your agent 100+ enrichments and searches to choose from. No coding skills required.
+
+## Connect the server
+
+<Steps>
+<Step>
+In ChatGPT, open **Settings > Plugins**, select the **MCPs** tab, and choose **Connect to a custom MCP**.
+</Step>
+<Step>
+Enter a name, for example `pipe0`. Set the type to **Streamable HTTP** and the URL to `https://api.pipe0.com/v1/mcp`. Leave the bearer token and header fields empty.
+</Step>
+<Step>
+Click **Save**, then sign in to pipe0 and approve access.
+</Step>
+</Steps>
+
+Connect your CRM in pipe0 (HubSpot, Salesforce, and Attio are supported). Connectint your CRM to pipe0 will give ChatGPT access as soon as you connect the MCP server.
+
+## Pull contacts from your CRM
+
+```text title="Prompt"
+Pull my HubSpot contacts created in the last 90 days into a sheet.
+```
+
+ChatGPT runs a CRM search and lands the contacts in a [sheet](/docs/sheets): one row per contact, live from HubSpot rather than from an export. Sheets hold up to 2M records, so "all contacts" is also a fine request.
+
+## Enrich what your CRM is missing
+
+```text title="Prompt"
+Find work emails and job titles for everyone missing them.
+```
+
+The agent adds enrichment columns that run as waterfalls: several providers tried in order, only the one that returns a result gets billed, and a contact nobody can enrich shows `no_result` and costs nothing. Before anything runs, ChatGPT asks you to confirm, because billable operations on pipe0 always require confirmation. An agent cannot spend your credits silently.
+
+## Write it back
+
+```text title="Prompt"
+Update these contacts in HubSpot with the new emails and titles.
+```
+
+This action writes the updates conteacts back to Hubspot.
+
+## Practice where mistakes are free
+
+Worried about letting an agent near your CRM? Reasonable. Start in the sandbox environment: providers are mocked, nothing bills, and nothing writes to your real CRM. The workflow is identical, so you can rehearse the whole loop, then switch to production when it behaves.
+
+Setup details for other clients (Claude, Cursor, Codex) are in the [MCP server docs](/docs/sdks/mcp).

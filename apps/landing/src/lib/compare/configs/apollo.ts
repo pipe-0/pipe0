@@ -37,7 +37,10 @@ export const apolloConfig: CompareConfig = {
           },
           {
             feature: "AI agents over MCP",
-            pipe0: { v: "yes", note: "Claude Code, ChatGPT, Cursor, 37 tools" },
+            pipe0: {
+              v: "yes",
+              note: "100+ enrichments and searches for agents",
+            },
             competitor: { v: "no" },
           },
         ],
@@ -145,7 +148,7 @@ export const apolloConfig: CompareConfig = {
   ],
   related: [
     { label: "pipe0 vs Clay", href: "/compare/pipe0-vs-clay" },
-    { label: "Clay alternatives", href: "/blog/clay-alternatives" },
+    { label: "Best MCP servers for GTM", href: "/blog/best-mcp-servers-gtm" },
     { label: "ZoomInfo alternatives", href: "/blog/zoominfo-alternatives" },
   ],
   cta: {

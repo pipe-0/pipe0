@@ -1,0 +1,66 @@
+---
+title: "Claude Code for Sales Prospecting: A Workflow, Start to Finish"
+date: 2026-07-23
+category: Sales data
+tags:
+    - MCP
+    - AI agents
+    - prospecting
+excerpt: "A Claude Code session that builds a 50-prospect list with verified work emails."
+authors:
+    - name: Florian
+      title: Founder
+---
+
+There are many guides on prompting Claude Code to be a sales assistant. This is not one of them. This is a real workflow, tool calls included, that ends with a sheet of 50 Heads of Engineering at U.S. robotics companies, enriched with work emails, on a weekly refresh schedule.
+
+The setup is one command. Claude Code connects to [pipe0](https://pipe0.com)'s MCP server. By connecting to pipe0 Claude Code receives 100+ enrichment tools.
+
+```bash title="Connect"
+claude mcp add --transport http pipe0 https://api.pipe0.com/v1/mcp
+```
+
+Claude Code opens the OAuth sign-in on first use. Follow the instructions.
+
+## The prompt
+
+```text title="The whole instruction"
+Let's find 50 Head of Engineering prospects of robotics companies in the U.S. Store the results in a pipe0 sheet.
+```
+
+That is the entire input.
+
+## What the agent actually does
+
+From here, Claude Code uses pipe0 to build a workflow. The sequence of tools is roughly this:
+
+```text title="Tool sequence"
+list_searches     -> picks a prospecting source for people
+get_search_schema -> fetches the exact filter shape for the search
+create_sheet      -> "us-robotics-engineering"
+validate_effects  -> the chain checks out against the sheet schema
+run_effects       -> [search:run, pipe:add (work email waterfall), rows:enrich]
+verify_outcome    -> reads the real cell statuses when the run finishes
+```
+
+## The result is a sheet, not a wall of JSON
+
+The output lands in a [sheet](/docs/sheets). Sheets are a UI you can use to visualise your results. You can use your agent to read from and write to a sheet.
+
+If you prefer to recieve your data as JSON or CSV and don't want a sheet to be created you can simply omit the sheet creation from your prompt.
+
+{/* Screenshot: the enriched sheet with mixed cell statuses. /media/blog/claude-code-prospecting-sheet.png */}
+
+## Qualify and schedule
+
+Two follow-up prompts finish the job:
+
+```text title="Narrow the list"
+Drop everyone without a work email.
+```
+
+```text title="Keep it fresh"
+Refresh this search every Monday at 8am Berlin time and email me a report of new prospects.
+```
+
+The first runs a filter effect. The second becomes a cron schedule plus a versioned, emailed report. The schedule runs without the agent, and because a run only recomputes stale cells, a week with no new prospects costs nothing.

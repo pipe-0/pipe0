@@ -6,15 +6,15 @@ tags:
     - data enrichment
     - MCP
     - AI agents
-excerpt: "Connect a data enrichment MCP server to Claude Code and let the agent build prospect lists, find work emails, and schedule refreshes from one prompt."
+excerpt: "Connect a data enrichment MCP server to Claude Code and let the agent build prospect lists, find work emails, and schedule refreshes."
 authors:
     - name: Florian
       title: Founder
 ---
 
-Sales automation is becoming something you describe rather than something you click together. With an MCP server for data enrichment, Claude Code (or ChatGPT, or Cursor) can search for prospects, enrich them across 50+ providers, write the results into a sheet, and put the whole thing on a schedule. One prompt, no glue code.
+Sales automation is becoming something you describe. Gone are the days of using complex UIs. Agents like claude code can use MCP servers for data enrichment, prospecting, CRM enrichment, lead routing, and intent signal detection.
 
-This post shows the workflow with [pipe0](https://pipe0.com), our data enrichment MCP server. It works the same in any MCP client.
+This post demonstrates how to do data enrichment with [pipe0](https://pipe0.com), our data enrichment MCP server, and Claude Code. It works the same in any MCP client.
 
 ## Connect the server
 
@@ -26,22 +26,28 @@ Claude Code opens the OAuth sign-in on first use. No API key handling; the [MCP 
 
 ## One prompt, one working list
 
-Here is a real session:
+Here is a real workflow that is now possible:
 
 ```text title="Prompt"
-Find 50 Head of Marketing prospects at robotics companies in Europe,
-enrich them with work emails, and drop everyone without one.
+Find 50 Head of Engineering prospects at robotics companies in the U.S.,
+enrich them with work emails, and drop every prospect where the email enrichment finds no result.
 ```
 
-Watching the agent work is the interesting part. It does not guess at payloads. It calls `list_searches` to pick a prospecting source, `get_search_schema` for the exact filter shape, and `validate_pipes` before anything runs. Then it creates a sheet, runs the search, adds a work email column (a waterfall across several providers that only bills the one that returns a result), and filters the misses.
+While you watch the agent, you may notice a few interesting things. The agent does not guess the payloads. It calls `list_searches` to pick a prospecting source, `get_search_schema` for the exact filter shape, and `validate_pipes` before anything runs. Then it fetches the list, runs the search, adds a work email enrichment (a waterfall across several providers that only bills the one that returns a result), and filters the misses.
 
-The result is not a wall of JSON in a chat window. It is a [sheet](/docs/sheets): every cell carries a status, the run history shows what the agent did, and [point-in-time recovery](/docs/sheets/recovery) can undo anything it should not have done.
+If you run as is, the result is either JSON or a CSV file. Try adding
+
+```text title="Prompt"
+Add the results to a sheet.
+```
+
+... to your prompt.
+
+The result will now be written to a pipe0 [sheet](/docs/sheets).
 
 ## Why an MCP server beats pasting CSVs into chat
 
-A chat model with a CSV in its context window will happily hallucinate an email address. An agent with enrichment tools cannot: the data comes from providers, and every value lands with provenance and a status (`completed`, `no_result`, `failed`). The agent reads that distribution with `verify_outcome` and reacts to the right problem instead of declaring victory.
-
-Two more properties do real work here. Billable operations require confirmation, so an agent cannot spend credits silently. And runs are reconciliation, not recomputation: when an agent re-runs a sheet to repair three failed cells, the 497 completed ones are untouched and unbilled.
+A chat model with a CSV in its context window will happily hallucinate an email address. An agent with enrichment tools cannot.
 
 ## Schedule it and walk away
 
@@ -52,12 +58,8 @@ Refresh this search every Monday at 8am Berlin time and
 email me a report of new prospects.
 ```
 
-That becomes a cron schedule on the sheet plus a versioned, emailed [report](/docs/sheets/reports). The agent set it up, but it runs without the agent.
-
-## Develop in the sandbox
-
-Point the agent at the sandbox environment while you iterate: providers are mocked and nothing bills, so the tenth attempt at a workflow costs the same as the first. Details in the [AI agents guide](/docs/sheets/ai-agents).
+That becomes a cron schedule on the pipe0 sheet plus a versioned, emailed [report](/docs/sheets/reports). The agent set it up, but it runs without the agent.
 
 ## Try it
 
-The first 20 credits are free, no card required. Connect the server, ask for a list you actually need this week, and check the sheet it builds.
+For more examples read [Claude Code for sales prospecting](/blog/claude-code-sales-prospecting); to see what else you could connect, browse [the best MCP servers for GTM teams](/blog/best-mcp-servers-gtm).

@@ -125,7 +125,7 @@ export const zoominfoConfig: CompareConfig = {
   ],
   related: [
     { label: "ZoomInfo alternatives", href: "/blog/zoominfo-alternatives" },
-    { label: "pipe0 vs Apollo", href: "/compare/pipe0-vs-apollo" },
+    { label: "Best MCP servers for GTM", href: "/blog/best-mcp-servers-gtm" },
     { label: "pipe0 vs Clay", href: "/compare/pipe0-vs-clay" },
   ],
   cta: {

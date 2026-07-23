@@ -27,6 +27,15 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       {
+        // Category filters used to be /blog?category=<slug>; they now live at
+        // static paths so /blog itself can prerender. The named capture
+        // consumes the query param so it doesn't trail along.
+        source: "/blog",
+        has: [{ type: "query", key: "category", value: "(?<category>.+)" }],
+        destination: "/blog/category/:category",
+        permanent: false,
+      },
+      {
         source: "/docs/pipes/pipes-catalog",
         destination: "/docs/pipe-catalog",
         permanent: true,
