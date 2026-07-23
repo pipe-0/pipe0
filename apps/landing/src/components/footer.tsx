@@ -57,6 +57,11 @@ const footerColumns: FooterGroup[][] = [
         { label: "pipe0 vs Clay", href: "/compare/pipe0-vs-clay" },
         { label: "pipe0 vs Apollo", href: "/compare/pipe0-vs-apollo" },
         { label: "pipe0 vs ZoomInfo", href: "/compare/pipe0-vs-zoominfo" },
+        { label: "pipe0 vs FullEnrich", href: "/compare/pipe0-vs-fullenrich" },
+        {
+          label: "Best waterfall enrichment tools",
+          href: "/blog/best-waterfall-enrichment-tools",
+        },
         { label: "Clay alternatives", href: "/blog/clay-alternatives" },
         { label: "ZoomInfo alternatives", href: "/blog/zoominfo-alternatives" },
         { label: "Does Clay have an API?", href: "/blog/clay-api" },

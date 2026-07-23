@@ -1,0 +1,55 @@
+---
+title: What Is Waterfall Enrichment?
+date: 2026-07-23
+category: Sales data
+tags:
+    - data enrichment
+    - waterfalls
+excerpt: "Waterfall enrichment queries several data providers in order and stops at the first hit. We explain how it works, how billing works, and when you need it."
+authors:
+    - name: Florian
+      title: Founder
+---
+
+Waterfall enrichment means querying several data providers in sequence. You ask provider A for a work email. If A has nothing, you ask provider B. Then C. The waterfall stops at the first provider that returns a result.
+
+In this blog post, we explain why this became the standard way to enrich sales data, and what to look for in a waterfall tool.
+
+## Why one provider is not enough
+
+Every data provider is strong in some segment and weak in others. One has good US tech coverage. Another is better for European SMBs. A third finds mobile numbers but not emails.
+
+If you rely on a single provider, your find rate is that provider's find rate. With a waterfall, your find rate is the combined rate of every provider in the chain. In practice this is the difference between finding 50% of your emails and finding 80%.
+
+## How a waterfall runs
+
+A simple email waterfall looks like this:
+
+| Step | Provider | Result | Billed |
+|---|---|---|---|
+| 1 | Provider A | nothing | no |
+| 2 | Provider B | nothing | no |
+| 3 | Provider C | jane@acme.com | yes |
+
+Good waterfall tools only bill the provider that returned the result. Failed lookups cost nothing. This matters more than the sticker price: a tool that charges per attempt gets expensive fast on hard lists.
+
+## More providers is not automatically better
+
+Waterfall vendors like to advertise source counts. 15 sources, 20 sources, more.
+
+We think this is the wrong metric. Chaining many low-end providers makes waterfalls slower and does not add much coverage, because cheap providers tend to resell the same data. What moves coverage is adding providers with unique datasets.
+
+At [pipe0](https://pipe0.com) we curate instead of chain: a provider only joins a waterfall when it proves it adds unique coverage, and we negotiate custom rates with providers that have proven datasets. The result is better coverage from fewer, better providers, and faster waterfalls.
+
+## What to look for in a waterfall tool
+
+🧾 Billing on success only. You should never pay for a lookup that found nothing. <br />
+🔀 Control over the chain. You should be able to see and reorder the providers. <br />
+✅ Verification built in. An email that bounces is worse than no email. <br />
+🔑 Your own keys. If you already pay a provider, you should be able to plug it in. <br />
+
+## Waterfalls at pipe0
+
+pipe0 runs waterfall pipes for work emails, personal emails, phone numbers, and company data. You can run them from a [sheet](/docs/sheets), through the [API](/docs), or let an AI agent run them via [MCP](/docs/sdks/mcp). The [pipe catalog](/docs/pipe-catalog) lists every waterfall and the providers inside it.
+
+For a comparison of the waterfall tools on the market, read [The Best Waterfall Enrichment Tools](/blog/best-waterfall-enrichment-tools).
