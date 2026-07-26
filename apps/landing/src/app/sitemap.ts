@@ -67,6 +67,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
     },
     {
+      url: url("/integrations/slack"),
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    {
+      url: url("/support"),
+      changeFrequency: "yearly",
+      priority: 0.5,
+    },
+    {
       url: url("/blog"),
       changeFrequency: "weekly",
       priority: 0.8,

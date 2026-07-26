@@ -1,0 +1,69 @@
+---
+title: What Is an Agent Turn?
+date: 2026-07-25
+category: Engineering
+tags:
+    - AI agents
+    - LLMs
+excerpt: "An agent turn is everything that happens between a user message and the agent's reply. We explain turns, steps, and why the difference matters when you build with agents."
+authors:
+    - name: Florian
+      title: Founder
+---
+
+## What is an agent turn
+
+An agent turn is everything that happens between a user message and the agent's reply.
+
+That sounds trivial, and for a plain chatbot it is. You send "hello", the model answers, the turn is over. One turn, one model call.
+
+Agents are different. Ask an agent to "find 50 prospects and enrich them with work emails" and it will call a search tool, read the result, call an enrichment tool, 
+read that result, maybe fix a mistake, and only then answer you. All of that is still one turn. The turn ends when the agent stops calling tools and hands control back to you.
+
+## A turn is not one model call
+
+Inside a turn, the agent runs a loop. Each pass through the loop is usually called a step:
+
+```javascript filename="agent-loop.js"
+let messages = [userMessage];
+
+while (true) {
+  const response = await llm.complete(messages);
+
+  if (response.toolCalls.length === 0) {
+    return response.text; // turn is over
+  }
+
+  for (const call of response.toolCalls) {
+    const result = await runTool(call);
+    messages.push(result); // the model sees this in the next step
+  }
+}
+```
+
+One turn can contain one step or fifty. The model decides when it is done, which is why agent frameworks put a cap on steps per turn. Without a cap, a confused agent loops forever.
+
+Every step appends messages. The context grows with each tool result, so a long turn is also an expensive turn.
+
+## Turn, step, conversation
+
+| Term | What it is |
+|---|---|
+| Step | One model call, plus the tool calls it requested |
+| Turn | All steps between a user message and the agent's reply |
+| Conversation | All turns in a thread |
+
+Different frameworks use different words for the same thing. The Vercel AI SDK calls steps "steps" and marks them with `step-start` parts in the message stream. Some agent APIs say "iterations". The concept is the same everywhere.
+
+## Why the difference matters
+
+💰 Billing. You pay per token, and a turn bills every step inside it. A one-question turn can cost fifty times more than another one-question turn. <br />
+⏱️ Limits. Step caps and timeouts apply per turn. If your agent hits them, the work inside the turn is what you need to shrink. <br />
+🖥️ UI. While a turn runs, the user sees nothing unless you stream the steps. Showing tool calls as they happen is what makes an agent feel alive. <br />
+✋ Interruptions. A user message that arrives mid-turn either waits for the turn to finish or gets injected into the loop. You have to pick one.
+
+## Turns in practice
+
+The pipe0 agent is a normal example of this loop. One user message like "find 50 Head of Engineering prospects at robotics companies" becomes a turn with several steps: pick a search, fetch its schema, validate the payload, create a sheet, run the enrichment. The reply comes after the last tool result, and the whole turn is visible as tool calls in the thread.
+
+If you want to watch turns run against real tools, connect an MCP server to Claude Code and give it a task. We wrote up a full session in [Claude Code for sales prospecting](/blog/claude-code-sales-prospecting).

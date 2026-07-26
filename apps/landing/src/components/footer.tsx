@@ -36,6 +36,7 @@ const footerColumns: FooterGroup[][] = [
       heading: "Product",
       links: [
         { label: "Pipe0 Sheets", href: "/docs/sheets" },
+        { label: "Slack integration", href: "/integrations/slack" },
         { label: "Pricing", href: "/pricing" },
         { label: "Sign up", href: appInfo.links.signupUrl, nofollow: true },
         { label: "Login", href: appInfo.links.loginUrl, nofollow: true },
@@ -46,6 +47,7 @@ const footerColumns: FooterGroup[][] = [
       links: [
         { label: "Blog", href: "/blog" },
         { label: "About", href: "/resources/legal/imprint" },
+        { label: "Support", href: "/support" },
         { label: "Contact", href: `mailto:${appInfo.emails.support}` },
       ],
     },
@@ -78,7 +80,7 @@ const footerColumns: FooterGroup[][] = [
     {
       heading: "Legal",
       links: [
-        { label: "Privacy", href: "/resources/legal/privacy-policy/20250404" },
+        { label: "Privacy", href: "/resources/legal/privacy-policy/20260724" },
         { label: "Terms", href: "/resources/legal/terms-of-service/20250404" },
       ],
     },

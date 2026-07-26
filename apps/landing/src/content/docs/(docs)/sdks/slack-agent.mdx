@@ -1,0 +1,56 @@
+---
+title: Slack Agent
+description: Mention @pipe0 in Slack to search, enrich, and run workflows from a channel or a direct message.
+date: 2026-07-26
+---
+
+Mention `@pipe0` in Slack and the agent answers in the thread. It runs the same searches, pipes, and effects you use in the dashboard. Requests run on your pipe0 account, with your connections and your credits.
+
+<Callout>
+  Your workspace needs the pipe0 app. Any organization member can install it from the
+  [Slack integration page](/integrations/slack).
+</Callout>
+
+## Link your account
+
+The agent needs to know which pipe0 user you are. You link once, in about a minute.
+
+<Steps>
+<Step>
+Mention `@pipe0` in a channel the app is in, or send it a direct message.
+</Step>
+<Step>
+The bot replies with a **Connect your pipe0 account** link. In channels this reply is visible only to you.
+</Step>
+<Step>
+Sign in to pipe0 and click **Link account**. The bot confirms the link in a direct message.
+</Step>
+</Steps>
+
+From then on every mention runs as you. You can see and remove the link under **Account settings** in the dashboard.
+
+## Ask for things
+
+Write to the agent the way you would write to a colleague:
+
+```txt title="In a channel"
+@pipe0 find the work email for Jane Doe at pipe0.com
+```
+
+```txt title="As a direct message"
+Build a list of heads of sales at German fintech companies and put it in a sheet.
+```
+
+The agent posts a status message right away and edits it while it works. When it finishes, the same message becomes the answer. Reply in the thread to keep going: the agent remembers the conversation, so "now find their phone numbers" works without repeating who "they" are.
+
+## How requests run
+
+The Slack agent acts without confirmation prompts. It picks the pipes, runs them, and reports what it did. Two guardrails stay on: operations above the runaway-scale limit stop and ask you to continue in the dashboard, and your organization's billing limits apply as always.
+
+Each Slack thread is a saved conversation on your pipe0 account. Open the dashboard to see what a conversation created, from sheets to schedules.
+
+## Disable the agent for your organization
+
+Organization admins can switch the assistant off under **Organization settings** in the dashboard. The agent then ignores mentions and direct messages for the whole organization. Posting to Slack from sheets and workflows keeps working.
+
+For what the agent can run, browse the <AppLink linkType="pipeCatalog">pipe catalog</AppLink> and <AppLink linkType="searchCatalog">search catalog</AppLink>. To connect an agent of your own instead, see the [MCP server](/docs/sdks/mcp).

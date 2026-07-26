@@ -148,6 +148,12 @@ export const blog = defineCollections({
     /** Editors' pick — featured on the index with an inverted cover. */
     highlight: z.boolean().optional(),
     /**
+     * Cover image path under /public (e.g. /media/blog/20260726-1.jpg).
+     * Shown as the post hero and on index/related cards; posts without
+     * one fall back to the generated SVG tile (cards only, no hero).
+     */
+    cover: z.string().optional(),
+    /**
      * Unpublished draft — excluded from the index, related reading, the
      * sitemap, and direct URLs (404). Remove the flag to publish.
      */
