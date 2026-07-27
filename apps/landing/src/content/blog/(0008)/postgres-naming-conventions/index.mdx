@@ -50,7 +50,7 @@ to your schema. The object type is already stored in PostgreSQL.
 PostgeSQL requires you add add names to indexes and constraints. Here, you should use a prefix. Use the prefix `idx_` followed by 
 the table and column e.g. `idx_users_email`. Prefixes are useful for unique constraints, too.
 
-Consider the prefix `uniq_ (e.g. `uniq_users_email`). Adding these prefixes to indexes and constraints helps you to spot them
+Consider the prefix `uniq_` (e.g. `uniq_users_email`). Adding these prefixes to indexes and constraints helps you to spot them
 in the output of the `\d` command or when debugging queries with `EXPLAIN`. You should also 
 consider a suffix for indexes (e.g., idx_users_email_btree) when using non-default methods like GIN or BRIN.
 

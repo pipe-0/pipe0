@@ -218,8 +218,10 @@ export function generatedCover(
   return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
 }
 
-/** Cover for a post — highlighted posts get the vivid brand-indigo tile. */
+/** Cover for a post — a real cover image when the frontmatter names one,
+ *  otherwise a generated tile (vivid brand-indigo for highlighted posts). */
 export function postCover(post: BlogPage, ratio: number): string {
+  if (post.data.cover) return post.data.cover;
   return generatedCover(post.data.title, {
     ratio,
     invert: post.data.highlight === true,

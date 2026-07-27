@@ -1,5 +1,5 @@
 import {
-  authorInitials,
+  categorySlug,
   formatDate,
   postCover,
   relatedPosts,
@@ -57,7 +57,7 @@ export default async function BlogPost(props: {
           dateModified: page.data.date,
           url: shareUrl,
           mainEntityOfPage: shareUrl,
-          image: `${getBaseUrl()}/opengraph-image`,
+          image: `${getBaseUrl()}${page.data.cover ?? "/opengraph-image"}`,
           author: authors.map((a) => ({
             "@type": "Person",
             name: a.name,
@@ -86,7 +86,7 @@ export default async function BlogPost(props: {
           />
         </aside>
 
-        <article className="mx-auto min-w-0 max-w-[680px] flex-1">
+        <article className="min-w-0 flex-1">
           {/* Mobile bar — the rail's actions, folded into one row */}
           <div className="mb-6 flex items-center gap-1.5 md:hidden">
             <Link
@@ -103,65 +103,68 @@ export default async function BlogPost(props: {
             />
           </div>
 
-          <header>
-            <h1 className="font-blog text-[30px] font-bold leading-[1.12] tracking-[-0.01em] text-fd-foreground text-pretty sm:text-[40px]">
+          {/* Centered header — kicker, headline, lede, byline. Media in the
+              body breaks out wider than the text, so the header sets the
+              text measure. */}
+          <header className="mx-auto max-w-[680px] text-center">
+            <p className="text-[13px] text-fd-muted-foreground">
+              {page.data.date && (
+                <time dateTime={new Date(page.data.date).toISOString()}>
+                  {formatDate(page.data.date)}
+                </time>
+              )}
+              {page.data.category && (
+                <>
+                  {" · "}
+                  <Link
+                    href={`/blog/category/${categorySlug(page.data.category)}`}
+                    className="transition-colors hover:text-fd-foreground"
+                  >
+                    {page.data.category}
+                  </Link>
+                </>
+              )}
+              {minutes !== null && <> · {minutes} min read</>}
+            </p>
+
+            <h1 className="font-blog mt-4 text-[34px] font-semibold leading-[1.1] tracking-[-0.02em] text-fd-foreground text-pretty sm:text-[44px]">
               {page.data.title}
             </h1>
 
             {lede && (
-              <p className="font-blog mt-4 text-[17px] leading-[1.45] text-fd-muted-foreground text-pretty sm:text-[20px]">
+              <p className="font-blog mt-5 text-[16px] leading-[1.5] text-fd-muted-foreground text-pretty sm:text-[18px]">
                 {lede}
               </p>
             )}
 
-            {/* Byline — author identity left, date · reading time right */}
-            <div className="mt-7 flex flex-wrap items-center gap-x-3 gap-y-2 border-t border-fd-border pt-4">
-              <span className="grid size-[34px] shrink-0 place-items-center rounded-full bg-fd-muted text-xs font-semibold text-fd-muted-foreground">
-                {author ? authorInitials(author.name) : "p0"}
-              </span>
-              <div className="flex flex-col gap-px">
-                <span className="text-[13px] font-semibold leading-tight text-fd-foreground">
-                  {author
-                    ? authors.map((a) => a.name).join(", ")
-                    : "The pipe0 team"}
-                </span>
-                {author?.title && (
-                  <span className="text-xs leading-tight text-fd-muted-foreground">
-                    {author.title}, pipe0
-                  </span>
-                )}
-              </div>
-              <span className="ml-auto text-[12.5px] whitespace-nowrap text-fd-muted-foreground">
-                {page.data.date && (
-                  <time dateTime={new Date(page.data.date).toISOString()}>
-                    {formatDate(page.data.date)}
-                  </time>
-                )}
-                {minutes !== null && <> &nbsp;·&nbsp; {minutes} min read</>}
-              </span>
-            </div>
+            <p className="mt-6 text-[13px] text-fd-muted-foreground">
+              {author
+                ? authors
+                    .map((a) => (a.title ? `${a.name}, ${a.title}` : a.name))
+                    .join(" · ")
+                : "The pipe0 team"}
+            </p>
           </header>
 
-          <figure className="mt-7">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={postCover(page, 2)}
-              alt=""
-              className="aspect-[2/1] w-full rounded-xl object-cover ring-1 ring-fd-foreground/10"
-            />
-            <figcaption className="mt-2 text-xs text-fd-muted-foreground">
-              Cover art generated from the post title.
-            </figcaption>
-          </figure>
+          {page.data.cover && (
+            <figure className="mt-10 sm:mt-12">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={page.data.cover}
+                alt=""
+                className="w-full object-cover"
+              />
+            </figure>
+          )}
 
-          <div className="prose blog-prose mt-10 min-w-0">
+          <div className="prose blog-prose mt-12 min-w-0 sm:mt-16">
             <Mdx components={getMDXComponents({})} />
           </div>
 
           {/* Keep reading */}
           {related.length > 0 && (
             <footer className="mt-16">
-              <h2 className="font-blog text-[23px] font-bold tracking-[-0.005em] text-fd-foreground">
+              <h2 className="font-blog text-[22px] font-semibold tracking-[-0.015em] text-fd-foreground">
                 Keep reading
               </h2>
               <div className="mt-5 grid grid-cols-1 gap-6 sm:grid-cols-2">
@@ -186,9 +189,9 @@ function RelatedCard({ post }: { post: BlogPage }) {
       <img
         src={postCover(post, 2)}
         alt=""
-        className="aspect-[2/1] w-full rounded-lg object-cover ring-1 ring-fd-foreground/10 transition-opacity group-hover:opacity-90"
+        className="aspect-[2/1] w-full object-cover transition-opacity group-hover:opacity-90"
       />
-      <p className="font-blog mt-3 text-[17px] font-bold leading-[1.25] text-fd-foreground text-pretty transition-colors group-hover:text-fd-primary">
+      <p className="font-blog mt-3 text-[17px] font-semibold leading-[1.25] text-fd-foreground text-pretty transition-colors group-hover:text-fd-primary">
         {post.data.title}
       </p>
       {post.data.excerpt && (
@@ -444,8 +447,10 @@ export async function generateMetadata(props: {
         : undefined,
       section: page.data.category,
       authors: page.data.authors?.map((a) => a.name),
-      // Post covers are generated data-URI SVGs, which social scrapers reject.
-      images: ["/opengraph-image"],
+      // Real cover when the post has one; the generated data-URI SVG
+      // fallback is rejected by social scrapers, so those posts use the
+      // site-wide OG image instead.
+      images: [page.data.cover ?? "/opengraph-image"],
     },
     twitter: { card: "summary_large_image" },
   };

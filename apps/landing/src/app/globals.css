@@ -108,8 +108,8 @@
   /* Marketing redesign families (see landing section below) */
   --font-display: var(--font-poppins);
   --font-body: var(--font-hanken);
-  /* Blog serif — Newsreader carries all blog display + body type */
-  --font-blog: var(--font-newsreader), Georgia, serif;
+  /* Blog sans — Hanken carries all blog display + body type */
+  --font-blog: var(--font-hanken), "Helvetica Neue", Helvetica, sans-serif;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -415,36 +415,61 @@ a:has(> [data-slot="button"]),
 }
 
 /* ============================================================
-   Blog — newspaper-style article typography
+   Blog — article typography
    Scoped to `.blog-prose` (the MDX body on /blog/[slug]), layered
-   over fumadocs' prose defaults: serif body in Newsreader, a drop
-   cap on the opening paragraph, and a pull-quote blockquote.
+   over fumadocs' prose defaults: sans body on a narrow measure,
+   media/code/tables breaking out to the full article width, and
+   chapter-scale spacing before each section heading.
    ============================================================ */
 .blog-prose {
-  font-family: var(--font-newsreader), Georgia, serif;
-  font-size: 17.5px;
-  line-height: 1.75;
+  max-width: none;
+  font-family: var(--font-blog);
+  font-size: 17px;
+  line-height: 1.7;
+}
+/* Text sits on a ~680px measure; media spans the whole article. */
+.blog-prose > * {
+  max-width: 42.5rem;
+  margin-inline: auto;
+}
+.blog-prose > :is(figure, pre, table, iframe, video),
+.blog-prose > p:has(> img:only-child) {
+  max-width: 100%;
 }
 .blog-prose :is(h2, h3, h4) {
-  font-family: var(--font-newsreader), Georgia, serif;
-  letter-spacing: -0.005em;
+  font-family: var(--font-blog);
+  letter-spacing: -0.015em;
 }
-.blog-prose > p:first-child::first-letter {
-  float: left;
-  padding: 6px 10px 0 0;
-  font-size: 58px;
-  font-weight: 700;
-  line-height: 0.82;
-  color: var(--foreground);
+.blog-prose p {
+  margin-top: 0.85em;
+  margin-bottom: 0.85em;
+}
+.blog-prose h2 {
+  margin-top: 84px;
+  font-size: 23px;
+  font-weight: 600;
+}
+.blog-prose h3 {
+  margin-top: 48px;
+  font-size: 18px;
+  font-weight: 600;
+}
+.blog-prose :is(img, video) {
+  width: 100%;
+  border-radius: 0;
+}
+.blog-prose figcaption {
+  margin-top: 10px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--muted-foreground);
 }
 .blog-prose blockquote {
-  border-left: 2px solid var(--primary);
+  border-left: 2px solid var(--border);
   padding-left: 24px;
-  font-style: italic;
-  font-size: 23px;
+  font-style: normal;
   font-weight: 400;
-  line-height: 1.4;
-  color: var(--foreground);
+  color: var(--muted-foreground);
 }
 .blog-prose blockquote p {
   &::before,
