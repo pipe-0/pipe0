@@ -99,8 +99,14 @@ function generatePipeMarkdown(pipeId: PipeId): string {
     lines.push("");
   }
 
-  // Billable Operations
-  const billableOps = Object.entries(entry.billableOperations);
+  // Billable Operations — deprecated providers keep their billing
+  // definitions for stored payloads but are never offered or billed.
+  const billableOps = Object.entries(entry.billableOperations).filter(
+    ([, opDef]) =>
+      !(entry.deprecatedProviders as readonly string[]).includes(
+        (opDef as { provider: string }).provider,
+      ),
+  );
   if (billableOps.length > 0) {
     lines.push("## Billing");
     lines.push("");
