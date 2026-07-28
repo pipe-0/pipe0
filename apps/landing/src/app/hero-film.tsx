@@ -224,7 +224,7 @@ const PROVIDERS = {
    its provider mark and a run control, with the field key — not a prose label
    — on the row beneath it. The first tab is the input column and reads as
    selected. A "+ New empty row" foot closes the table. */
-const SHEET = { x: 80, y: 82, w: 1040, tabH: 38, fieldH: 34, rowH: 38, footH: 36 };
+const SHEET = { x: 80, y: 68, w: 1040, tabH: 38, fieldH: 34, rowH: 38, footH: 36 };
 const SEL_W = 36;
 const FIELDS = [
   { tab: "Input", key: "company_name", w: 236, input: true },
@@ -346,43 +346,64 @@ function Sheet({ frame }: { frame: number }) {
         left: SHEET.x,
         top: SHEET.y,
         width: SHEET.w,
-        background: C.card,
-        border: `1px solid ${C.line}`,
-        borderRadius: 10,
-        boxShadow: SHADOW,
-        overflow: "hidden",
+        /* One shadow for the whole silhouette, tabs included. A box-shadow on
+           each part would trace two rectangles and give away that the tabs are
+           separate; drop-shadow follows the actual outline, which is what
+           makes the folder read as one moulded object. */
+        filter: "drop-shadow(0 18px 34px rgba(18,24,74,0.22)) drop-shadow(0 3px 8px rgba(18,24,74,0.10))",
       }}
     >
-      {/* Pipe tabs */}
+      {/* A frosted tray the folder sits in. Only visible in the gaps between
+          the tabs and as a lip around the edges, but that is enough to read as
+          an enclosure rather than tabs floating loose on the panel. It is also
+          the outermost shape, so the wrapper's drop-shadow now traces the tray
+          instead of the folder's stepped outline. */}
+      <div
+        aria-hidden
+        style={{
+          position: "absolute",
+          /* Tight to the folder — a wide lip read as a second card rather
+             than an enclosure. */
+          inset: -6,
+          borderRadius: 14,
+          /* Darker than the panel, not lighter. A white tint on an already
+             light-blue background has almost nothing to contrast against; a
+             muted indigo recedes and lets the white folder sit *in* it. */
+          background: "rgba(22,28,74,0.24)",
+          border: "1px solid rgba(255,255,255,0.14)",
+          backdropFilter: "blur(16px) saturate(120%)",
+          WebkitBackdropFilter: "blur(16px) saturate(120%)",
+        }}
+      />
+
+      {/* Folder tabs. The row itself is transparent — the tray's frost shows
+          between the tabs and to the right of the last one, exactly as the
+          app's own background does. */}
       <div
         style={{
+          position: "relative",
           display: "grid",
           gridTemplateColumns: grid,
           height: SHEET.tabH,
-          background: "#F3F4F7",
         }}
       >
-        <span style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <svg width={12} height={12} viewBox="0 0 16 16" fill="none" aria-hidden>
-            <path d="M2 8.5L6 12L14 4" stroke={C.faint} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </span>
+        <span />
         {FIELDS.map((f) => (
           <span
             key={f.key}
             style={{
+              justifySelf: "start",
               display: "flex",
               alignItems: "center",
               gap: 8,
+              height: "100%",
               padding: "0 14px",
-              margin: f.input ? "0" : undefined,
-              background: f.input ? C.card : "transparent",
-              borderTopLeftRadius: f.input ? 8 : 0,
-              borderTopRightRadius: f.input ? 8 : 0,
-              borderRight: f.input ? `1px solid ${C.line}` : "none",
+              background: C.card,
+              borderRadius: "9px 9px 0 0",
               fontSize: 14.5,
               fontWeight: 500,
               color: C.ink,
+              whiteSpace: "nowrap",
             }}
           >
             {f.provider && (
@@ -408,92 +429,102 @@ function Sheet({ frame }: { frame: number }) {
         ))}
       </div>
 
-      {/* Field keys */}
+      {/* Body */}
       <div
         style={{
-          display: "grid",
-          gridTemplateColumns: grid,
-          height: SHEET.fieldH,
-          background: "#FAFBFC",
-          borderTop: `1px solid ${C.line}`,
-          borderBottom: `1px solid ${C.line}`,
+          position: "relative",
+          background: C.card,
+          borderRadius: 10,
+          overflow: "hidden",
         }}
       >
-        <span />
-        {FIELDS.map((f, i) => (
-          <span
-            key={f.key}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 7,
-              padding: "0 14px",
-              borderLeft: i === 0 ? "none" : `1px solid ${C.lineSoft}`,
-              fontSize: 14,
-              color: C.faint,
-            }}
-          >
-            <TypeIcon />
-            {f.key}
-          </span>
-        ))}
-      </div>
-
-      {ROWS.map((row, i) => (
         <div
-          key={row.company}
           style={{
             display: "grid",
             gridTemplateColumns: grid,
-            height: SHEET.rowH,
-            borderBottom: `1px solid ${C.lineSoft}`,
+            height: SHEET.fieldH,
+            borderBottom: `1px solid ${C.line}`,
           }}
         >
           <span style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <span
-              style={{
-                width: 13,
-                height: 13,
-                borderRadius: 3,
-                border: `1.4px solid ${C.line}`,
-              }}
-            />
+            <svg width={12} height={12} viewBox="0 0 16 16" fill="none" aria-hidden>
+              <path d="M2 8.5L6 12L14 4" stroke={C.faint} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
           </span>
-          {[
-            <span key="c" style={{ fontSize: 14.5, color: C.ink }}>{row.company}</span>,
-            <Cell key="v" frame={frame} at={VP_AT(i)} value={row.vp} />,
-            <Cell key="e" frame={frame} at={EMAIL_AT(i)} value={row.email} figures />,
-            <Cell key="m" frame={frame} at={MOBILE_AT(i)} value={row.mobile} figures />,
-          ].map((child, j) => (
+          {FIELDS.map((f, i) => (
             <span
-              key={j}
+              key={f.key}
               style={{
                 display: "flex",
                 alignItems: "center",
+                gap: 7,
                 padding: "0 14px",
-                borderLeft: j === 0 ? "none" : `1px solid ${C.lineSoft}`,
-                overflow: "hidden",
+                borderLeft: i === 0 ? "none" : `1px solid ${C.lineSoft}`,
+                fontSize: 14,
+                color: C.faint,
               }}
             >
-              {child}
+              <TypeIcon />
+              {f.key}
             </span>
           ))}
         </div>
-      ))}
 
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: 7,
-          height: SHEET.footH,
-          padding: "0 14px",
-          background: "#FAFBFC",
-          fontSize: 14,
-          color: C.muted,
-        }}
-      >
-        <span style={{ fontSize: 15 }}>+</span> New empty row
+        {ROWS.map((row, i) => (
+          <div
+            key={row.company}
+            style={{
+              display: "grid",
+              gridTemplateColumns: grid,
+              height: SHEET.rowH,
+              borderBottom: `1px solid ${C.lineSoft}`,
+            }}
+          >
+            <span style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <span
+                style={{
+                  width: 13,
+                  height: 13,
+                  borderRadius: 3,
+                  border: `1.4px solid ${C.line}`,
+                }}
+              />
+            </span>
+            {[
+              <span key="c" style={{ fontSize: 14.5, color: C.ink }}>{row.company}</span>,
+              <Cell key="v" frame={frame} at={VP_AT(i)} value={row.vp} />,
+              <Cell key="e" frame={frame} at={EMAIL_AT(i)} value={row.email} figures />,
+              <Cell key="m" frame={frame} at={MOBILE_AT(i)} value={row.mobile} figures />,
+            ].map((child, j) => (
+              <span
+                key={j}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  padding: "0 14px",
+                  borderLeft: j === 0 ? "none" : `1px solid ${C.lineSoft}`,
+                  overflow: "hidden",
+                }}
+              >
+                {child}
+              </span>
+            ))}
+          </div>
+        ))}
+
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 7,
+            height: SHEET.footH,
+            padding: "0 14px",
+            fontSize: 14,
+            color: C.muted,
+          }}
+        >
+          <span style={{ fontSize: 15 }}>+</span> New empty row
+        </div>
       </div>
     </div>
   );

@@ -800,11 +800,12 @@ a:has(> [data-slot="button"]),
 .hero-scene {
   aspect-ratio: 12 / 5;
   position: relative;
-  /* The inner box is a fixed 1200px and only *looks* smaller — scale does not
-     change layout — so it is taken out of flow below and clipped here.
-     Without this it sets the parent's min-content width and the scene stops
-     fitting its column. Clipping also gives the camera a frame to crop to. */
-  overflow: hidden;
+  /* Deliberately NOT overflow:hidden. The inner box is a fixed 1200px that
+     only *looks* smaller (scale does not change layout), but it is taken out
+     of flow below, so nothing here needs clipping to size correctly — and
+     clipping cut the product cards' shadows off dead straight at the frame
+     edge, drawing a hard line across the panel. The scene's content all sits
+     inside 1200x500; only its shadows spill, which is what they should do. */
 }
 .hero-scene-inner {
   position: absolute;
