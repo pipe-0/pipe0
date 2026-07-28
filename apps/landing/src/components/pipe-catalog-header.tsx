@@ -201,7 +201,14 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
   const defaultOutputFields = getDefaultOutputFields(pipeEntry);
   const pipeVersions = pipesByBasePipes[pipeEntry.basePipe];
   const defaultProviders = getDefaultPipeProviders(pipeId);
-  const billableEntries = Object.entries(pipeEntry.billableOperations);
+  // Deprecated providers keep their billing definitions (stored payloads
+  // still reference them) but are never offered or billed — hide them.
+  const billableEntries = Object.entries(pipeEntry.billableOperations).filter(
+    ([, def]) =>
+      !(pipeEntry.deprecatedProviders as readonly string[]).includes(
+        (def as BillableOperationDef).provider,
+      ),
+  );
   const startingPrice = getPipeStartingPrice(pipeId);
   const { lowest: lowestPrice } = getPipeLowestPrice(pipeId);
   const category = (pipeEntry.categories?.[0] ?? null) as PipeCategory | null;
