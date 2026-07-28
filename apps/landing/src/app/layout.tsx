@@ -52,10 +52,10 @@ export const metadata: Metadata = {
   metadataBase: new URL(getBaseUrl()),
   title: {
     template: "%s | pipe0",
-    default: "pipe0 — Build Revenue Systems at Any Scale",
+    default: "pipe0 | Revenue Systems That Make Sense",
   },
   description:
-    "With pipe0, technical and non-technical users build agentic revenue systems at any scale. Morning briefings, always-on plays, signal engines, CRM enrichment, lead routing, and the infrastructure underneath. One set of primitives, for all use-cases.",
+    "With pipe0, technical and non-technical users build revenue systems at any scale. Morning briefings, always-on plays, signal engines, CRM enrichment, lead routing, and the infrastructure underneath. Replace tools like Clay, n8n, Hightouch, and Polytomic.",
   openGraph: {
     siteName: "pipe0",
     type: "website",
