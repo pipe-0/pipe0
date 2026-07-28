@@ -22,13 +22,16 @@ export async function GET() {
   lines.push("# pipe0");
   lines.push("");
   lines.push(
-    "> pipe0 is a data enrichment platform with two surfaces on one engine: a developer API and Sheets, a Clay-style spreadsheet UI with tables that hold 2M records, scheduled workflows and reports, and point-in-time recovery. Combine 50+ data providers to find and validate emails, enrich people and companies, and automate sales workflows — from code, from a sheet, or through MCP from agents like Claude Code, ChatGPT, and Cursor.",
+    "> pipe0 builds revenue systems at any scale, on one engine with three layers. For a rep's day-to-day: a Slack bot (@pipe0) that researches accounts, finds contact data, and prepares meeting briefs. For revenue systems: Sheets, a Clay-style spreadsheet UI with tables that hold 2M records, plus schedules, reports and point-in-time recovery, so any list becomes an always-on play. For infrastructure: a developer API and an MCP server for signal engines, lead routing and CRM sync, reachable from agents like Claude Code, ChatGPT and Cursor. Two primitives underlie all of it — searches find records, pipes enrich them — composed over 50+ data providers to find and validate emails, enrich people and companies, and automate sales workflows.",
   );
   lines.push("");
   lines.push("## Product");
   lines.push("");
   lines.push(
-    "- [pipe0](https://pipe0.com): Data enrichment API and Clay-alternative spreadsheet for sales automation",
+    "- [pipe0](https://pipe0.com): Revenue systems at any scale — Slack copilot, always-on plays, and enrichment infrastructure",
+  );
+  lines.push(
+    "- [Enrichment & search API](https://pipe0.com/enrichment-api): One call across 50+ providers and 1B+ profiles, built to sit inside your own product",
   );
   lines.push(
     "- [Pricing](https://pipe0.com/pricing): Usage-based credits, free tier, no credit card required",

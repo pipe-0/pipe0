@@ -6,7 +6,6 @@ import {
   Geist_Mono,
   Hanken_Grotesk,
   Instrument_Serif,
-  Newsreader,
   Poppins,
 } from "next/font/google";
 import { getBaseUrl } from "@/lib/utils";
@@ -35,8 +34,8 @@ const instrumentSerif = Instrument_Serif({
   style: ["normal", "italic"],
 });
 
-// Marketing redesign fonts — Hanken Grotesk (body), Poppins (display
-// headings) and Newsreader (the italic-serif highlight gesture).
+// Marketing fonts — Hanken Grotesk (body) and Poppins (display headings).
+// One voice per role: headlines never mix two families.
 const hankenGrotesk = Hanken_Grotesk({
   variable: "--font-hanken",
   subsets: ["latin"],
@@ -49,21 +48,14 @@ const poppins = Poppins({
   weight: ["500", "600", "700"],
 });
 
-const newsreader = Newsreader({
-  variable: "--font-newsreader",
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  style: ["normal", "italic"],
-});
-
 export const metadata: Metadata = {
   metadataBase: new URL(getBaseUrl()),
   title: {
     template: "%s | pipe0",
-    default: "pipe0 — Data Enrichment API & Sales Automation Platform",
+    default: "pipe0 — Build Revenue Systems at Any Scale",
   },
   description:
-    "Data enrichment API plus a Clay-alternative spreadsheet. Combine 50+ providers to find emails, enrich people and companies, and automate sales workflows — via API, Sheets, or MCP.",
+    "With pipe0, technical and non-technical users build agentic revenue systems at any scale. Morning briefings, always-on plays, signal engines, CRM enrichment, lead routing, and the infrastructure underneath. One set of primitives, for all use-cases.",
   openGraph: {
     siteName: "pipe0",
     type: "website",
@@ -81,7 +73,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${instrumentSerif.variable} ${hankenGrotesk.variable} ${poppins.variable} ${newsreader.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${instrumentSerif.variable} ${hankenGrotesk.variable} ${poppins.variable} antialiased`}
       >
         <JsonLd data={organizationJsonLd()} />
         <JsonLd data={webSiteJsonLd()} />

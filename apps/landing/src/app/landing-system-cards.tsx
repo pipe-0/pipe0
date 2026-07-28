@@ -1,99 +1,43 @@
-import { InViewVideo } from "@/components/in-view-video";
-import { providerCatalog } from "@pipe0/base";
+"use client";
 
-/* Provider rows for the "Compose enrichments" marquee. */
-const marqueeRowA = [
-  "openai",
-  "anthropic",
-  "slack",
-  "gmail",
-  "perplexity",
-  "googlemaps",
-  "postgres",
-] as const;
-const marqueeRowB = [
-  "databricks",
-  "hunter",
-  "firecrawl",
-  "exa",
-  "resend",
-  "gemini",
-  "crustdata",
-] as const;
+import { useCallback, useEffect, useRef, useState } from "react";
 
-function ProviderTile({ id }: { id: string }) {
-  const provider = providerCatalog[id as keyof typeof providerCatalog];
-  if (!provider?.logoUrl) return null;
+/* ---- Card visuals ----
+
+   The stage is the same calm surface as the closing CTA panel — `--panel`
+   behind a `--panel-edge` hairline — so the product UI is the only saturated
+   thing in the section. No `.card-sky`, and no `.stage-glossy`: that gloss is
+   a reflection read, which needs a dark or saturated fill under it and turns
+   milky on a light grey one.
+
+   These two do not use <InViewVideo>. Playback is sequenced by the grid below
+   (one observer, one owner), and InViewVideo's own observer would fight it by
+   playing whatever is on screen. */
+
+type MediaProps = {
+  videoRef: (el: HTMLVideoElement | null) => void;
+  onEnded: () => void;
+};
+
+/* Shared player attributes. No `loop` — the sequencer needs `ended` to fire —
+   and no `autoPlay`, since the grid decides who plays. `auto` because a demo
+   that starts buffering only when its turn arrives stalls the handoff. */
+const playerProps = {
+  muted: true,
+  playsInline: true,
+  preload: "auto",
+} as const;
+
+function FindVisual({ videoRef, onEnded }: MediaProps) {
   return (
-    <span className="grid size-13 shrink-0 place-items-center rounded-[12px] border border-[#1c2333]/10 bg-white shadow-[0_1px_2px_rgba(14,17,23,0.06)]">
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={provider.logoUrl}
-        alt={provider.label}
-        loading="lazy"
-        className="size-7 object-contain"
-      />
-    </span>
-  );
-}
-
-function MarqueeRow({
-  ids,
-  reverse,
-  duration,
-}: {
-  ids: readonly string[];
-  reverse?: boolean;
-  duration: string;
-}) {
-  return (
-    <div
-      className="flex w-max"
-      style={
-        {
-          "--duration": duration,
-          "--gap": "14px",
-          gap: "var(--gap)",
-        } as React.CSSProperties
-      }
-    >
-      {[0, 1].map((copy) => (
-        <div
-          key={copy}
-          aria-hidden={copy === 1}
-          className={
-            "animate-marquee flex shrink-0 gap-[var(--gap)]" +
-            (reverse ? " [animation-direction:reverse]" : "")
-          }
-        >
-          {ids.map((id) => (
-            <ProviderTile key={`${copy}-${id}`} id={id} />
-          ))}
-        </div>
-      ))}
-    </div>
-  );
-}
-
-/* ---- Card visuals ---- */
-
-function FindVisual() {
-  return (
-    <div className="relative flex h-full items-center justify-center overflow-hidden px-6">
-      {/* Shared animated indigo background */}
-      <div className="card-sky absolute inset-0" aria-hidden />
-      <div
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-linear-to-t from-black/25 to-transparent"
-        aria-hidden
-      />
+    <div className="relative flex h-full items-center justify-center px-6">
       {/* Search demo, centered in a floating frame */}
-      <div className="relative w-full max-w-75 overflow-hidden rounded-[12px] border border-white/20 bg-white shadow-[0_24px_60px_rgba(0,0,0,0.4)]">
-        <InViewVideo
+      <div className="relative w-full max-w-[360px] overflow-hidden rounded-[12px] border border-[#1c2333]/10 bg-white shadow-[0_1px_2px_rgba(14,17,23,0.05),0_14px_36px_rgba(28,35,80,0.10)]">
+        <video
+          {...playerProps}
+          ref={videoRef}
+          onEnded={onEnded}
           className="block h-auto w-full"
-          loop
-          muted
-          playsInline
-          preload="metadata"
           src="/media/website/search-demo.webm"
         />
       </div>
@@ -101,66 +45,24 @@ function FindVisual() {
   );
 }
 
-function ComposeVisual() {
+function ComposeVisual({ videoRef, onEnded }: MediaProps) {
   return (
-    <div className="relative flex h-full flex-col justify-center gap-3.5 overflow-hidden">
-      {/* Shared animated indigo background */}
-      <div className="card-sky absolute inset-0" aria-hidden />
-      <div className="relative flex flex-col gap-3.5">
-        <MarqueeRow ids={marqueeRowA} duration="30s" />
-        <MarqueeRow ids={marqueeRowB} duration="38s" reverse />
-        <MarqueeRow ids={[...marqueeRowB].reverse()} duration="26s" />
-      </div>
-      {/* Dark edge scrims so the marquee fades into the indigo, like the hero */}
-      <div
-        className="pointer-events-none absolute inset-y-0 left-0 w-24 bg-linear-to-r from-[#11163f] to-transparent"
-        aria-hidden
-      />
-      <div
-        className="pointer-events-none absolute inset-y-0 right-0 w-24 bg-linear-to-l from-[#11163f] to-transparent"
-        aria-hidden
-      />
-      {/* Static foreground — the composed pipe */}
-      <div className="pointer-events-none absolute inset-0 grid place-items-center">
-        <div className="rounded-[12px] border border-[#1c2333]/10 bg-white/92 px-4 py-3 shadow-[0_12px_32px_rgba(28,35,80,0.16)] backdrop-blur-sm">
-          <p className="mb-1.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-[#5b6478]">
-            One pipe
-          </p>
-          <p className="font-mono text-[11.5px] leading-relaxed text-[#2b3350]">
-            work_email → <span className="text-[#2c37a4]">verify</span> →
-            company_data
-          </p>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function ActionVisual() {
-  return (
-    <div className="relative flex h-full items-center justify-center overflow-hidden px-6">
-      {/* Shared animated indigo background */}
-      <div className="card-sky absolute inset-0" aria-hidden />
-      <div
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/40 to-transparent"
-        aria-hidden
-      />
+    <div className="relative flex h-full items-center justify-center px-6">
       {/* The demo plays inside a floating frame */}
-      <div className="relative w-full max-w-[300px] overflow-hidden rounded-[12px] border border-white/14 bg-white shadow-[0_24px_60px_rgba(0,0,0,0.45)]">
+      <div className="relative w-full max-w-[340px] overflow-hidden rounded-[12px] border border-[#1c2333]/10 bg-white shadow-[0_1px_2px_rgba(14,17,23,0.05),0_14px_36px_rgba(28,35,80,0.10)]">
         <div className="flex items-center gap-1.5 border-b border-[#1c2333]/8 bg-[#f7f9fc] px-3 py-2">
           <span className="size-2 rounded-full bg-[#1c2333]/15" />
           <span className="size-2 rounded-full bg-[#1c2333]/15" />
           <span className="size-2 rounded-full bg-[#1c2333]/15" />
           <span className="ml-1.5 text-[10px] font-medium text-[#5b6478]">
-            pipe0 · Actions
+            pipe0 · Enrichments
           </span>
         </div>
-        <InViewVideo
+        <video
+          {...playerProps}
+          ref={videoRef}
+          onEnded={onEnded}
           className="block aspect-[16/10] w-full object-cover object-top"
-          loop
-          muted
-          playsInline
-          preload="metadata"
           src="/media/website/provider-demo.webm"
         />
       </div>
@@ -173,44 +75,111 @@ function ActionVisual() {
 const cards = [
   {
     title: "Find who you're looking for",
-    copy: "Search people and companies across every provider in a single query.",
-    visual: <FindVisual />,
+    copy: "One query runs across multiple datasets at once, not one provider at a time. Curated premium sources instead of a long chain of low-end ones — great coverage, and faster results.",
+    Visual: FindVisual,
   },
   {
-    title: "Compose enrichments & integrate",
+    title: "Compose enrichments",
     copy: "Stack hundreds of enrichments like work email, verification, and company data. Connect CRM, ATS, survey, and sequencing tools without writing code.",
-    visual: <ComposeVisual />,
-  },
-  {
-    title: "Take action",
-    copy: "Send emails, Slack, and Discord messages. Take action with the tools your users love.",
-    visual: <ActionVisual />,
+    Visual: ComposeVisual,
   },
 ];
 
+/** Beat of stillness between one demo finishing and the next starting. */
+const HANDOFF_MS = 1000;
+
 export function LandingSystemCards() {
+  const [turn, setTurn] = useState(0);
+  const [inView, setInView] = useState(false);
+  const gridRef = useRef<HTMLDivElement>(null);
+  const videos = useRef<(HTMLVideoElement | null)[]>([]);
+  const handoff = useRef<ReturnType<typeof setTimeout> | null>(null);
+  /* `ended` is read in a callback that must not be re-created per turn, so the
+     active index is mirrored into a ref. */
+  const turnRef = useRef(0);
+
+  useEffect(() => {
+    turnRef.current = turn;
+  }, [turn]);
+
+  /* One observer for the whole section — nothing decodes off screen, which is
+     the same reason <InViewVideo> exists. */
+  useEffect(() => {
+    const el = gridRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => setInView(entry.isIntersecting),
+      { threshold: 0 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  /* Play the demo whose turn it is from the top. Keyed on `turn` alone, so
+     scrolling away and back resumes where it left off rather than restarting. */
+  useEffect(() => {
+    const v = videos.current[turn];
+    if (v) v.currentTime = 0;
+  }, [turn]);
+
+  useEffect(() => {
+    videos.current.forEach((v, i) => {
+      if (!v) return;
+      if (i === turn && inView) {
+        // Rejects if interrupted; muted inline playback is always allowed.
+        void v.play().catch(() => {});
+      } else {
+        v.pause();
+      }
+    });
+  }, [turn, inView]);
+
+  useEffect(
+    () => () => {
+      if (handoff.current) clearTimeout(handoff.current);
+    },
+    [],
+  );
+
+  const handleEnded = useCallback((i: number) => {
+    // A paused-then-resumed demo can emit a stale `ended`; only the card whose
+    // turn it actually is may pass the baton.
+    if (i !== turnRef.current) return;
+    if (handoff.current) clearTimeout(handoff.current);
+    handoff.current = setTimeout(() => {
+      setTurn((t) => (t + 1) % cards.length);
+    }, HANDOFF_MS);
+  }, []);
+
   return (
-    <div className="mt-12 grid gap-x-5 gap-y-6 sm:grid-cols-2 sm:gap-y-10 lg:grid-cols-3 lg:gap-x-8">
+    <div
+      ref={gridRef}
+      className="mt-12 grid gap-x-5 gap-y-10 sm:grid-cols-2 lg:gap-x-8"
+    >
       {cards.map((card, i) => (
         <div
           key={card.title}
-          /* On mobile each card is a self-contained box — border, wash and
-             padding bind the image to its own text so the next card's image
-             never reads as belonging to the copy above it. On sm+ the layout
-             is already unambiguous, so the box treatment is removed. */
-          className="rv min-w-0 rounded-[20px] border border-border bg-card/40 p-2.5 sm:rounded-none sm:border-0 sm:bg-transparent sm:p-0"
-          style={{ ["--rv-delay" as string]: `${i * 80}ms` }}
+          className="min-w-0"
         >
-          {/* At lg the row is wider than before, so the image switches from a
-              fixed height to the aspect ratio it had pre-widening (~387×280)
-              and grows taller with the card instead of flattening out. */}
-          <div className="stage-glossy relative mb-4 h-[260px] min-w-0 overflow-hidden rounded-[16px] border sm:h-[280px] lg:h-auto lg:aspect-[387/280]">
-            {card.visual}
+          {/* The bordered panel binds each image to its own copy, so the
+              mobile-only box that used to wrap image and text together is no
+              longer needed — it would just read as a border inside a border.
+
+              Two-up rather than three, so each card is wide enough for a
+              landscape stage; the old 387/280 ratio would run ~450px tall at
+              this width. */}
+          <div className="relative mb-4 h-[260px] min-w-0 overflow-hidden rounded-[16px] border border-[var(--panel-edge)] bg-[var(--panel)] sm:h-[300px] lg:h-auto lg:aspect-[16/10]">
+            <card.Visual
+              videoRef={(el) => {
+                videos.current[i] = el;
+              }}
+              onEnded={() => handleEnded(i)}
+            />
           </div>
-          <h3 className="mb-1.5 px-1.5 text-[16px] font-semibold tracking-[-0.01em] text-foreground sm:px-0">
+          <h3 className="mb-1.5 text-[16px] font-semibold tracking-[-0.01em] text-foreground">
             {card.title}
           </h3>
-          <p className="max-w-[480px] px-1.5 pb-1 text-sm leading-relaxed text-muted-foreground sm:px-0 sm:pb-0">
+          <p className="max-w-[560px] text-sm leading-relaxed text-muted-foreground">
             {card.copy}
           </p>
         </div>

@@ -25,9 +25,9 @@ export default async function Image() {
   );
 
   const element: OgElement = {
-    title: "Data enrichment by API, spreadsheet, or agent.",
+    title: "Revenue systems, at any scale.",
     description:
-      "Find emails, enrich people and companies, and automate sales workflows with 50+ providers.",
+      "A Slack copilot for reps, always-on plays for the team, and the enrichment and routing infrastructure underneath.",
   };
 
   return new ImageResponse(

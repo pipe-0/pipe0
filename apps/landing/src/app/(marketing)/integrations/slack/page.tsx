@@ -1,4 +1,3 @@
-import { ScrollReveal } from "@/app/scroll-reveal";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
 import { Section } from "@/components/marketing";
@@ -59,7 +58,6 @@ export default function SlackIntegration() {
         ])}
       />
       <Header page="product" />
-      <ScrollReveal />
 
       {/* ===== Hero ===== */}
       <section className="mx-auto max-w-384 px-3 sm:px-6">
@@ -67,7 +65,7 @@ export default function SlackIntegration() {
           <div className="card-sky absolute inset-0" aria-hidden />
           <div className="relative z-10 px-5 pb-16 pt-14 text-center sm:px-10 sm:pb-24 sm:pt-20">
             <h1 className="mx-auto max-w-2xl text-[clamp(34px,4.5vw,52px)] font-semibold leading-[1.08] tracking-[-0.025em] text-white">
-              pipe0 for <span className="hl">Slack</span>.
+              pipe0 for Slack.
             </h1>
             <p className="mx-auto mt-5 max-w-[600px] text-[17px] leading-relaxed text-white/75 sm:text-[18px]">
               Post enrichment results into channels, turn channel members into
@@ -104,7 +102,7 @@ export default function SlackIntegration() {
       {/* ===== What it does ===== */}
       <Section className="mt-24">
         <h2 className="mb-10 text-center text-[clamp(24px,2.6vw,32px)] font-semibold tracking-[-0.02em] text-foreground">
-          What the integration <span className="hl">does</span>.
+          What it does.
         </h2>
         <div className="mx-auto grid max-w-4xl gap-6 sm:grid-cols-2">
           {features.map((f) => (
@@ -119,7 +117,7 @@ export default function SlackIntegration() {
       {/* ===== How it works ===== */}
       <Section className="mt-24">
         <h2 className="mb-10 text-center text-[clamp(24px,2.6vw,32px)] font-semibold tracking-[-0.02em] text-foreground">
-          How it <span className="hl">works</span>.
+          How it works.
         </h2>
         <div className="mx-auto max-w-3xl">
           {steps.map((s, i) => (

@@ -40,7 +40,7 @@ export function webSiteJsonLd() {
     "@context": "https://schema.org",
     "@type": "WebSite",
     name: "pipe0",
-    alternateName: "pipe0 data enrichment API",
+    alternateName: "pipe0 revenue systems platform",
     url: getBaseUrl(),
     publisher: { "@id": ORG_ID },
   };

@@ -62,6 +62,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1,
     },
     {
+      url: url("/enrichment-api"),
+      changeFrequency: "monthly",
+      priority: 0.9,
+    },
+    {
       url: url("/pricing"),
       changeFrequency: "monthly",
       priority: 0.8,
