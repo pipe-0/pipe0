@@ -95,19 +95,15 @@ export function CtaPanel({
   title,
   subtitle,
   note,
-  reveal = true,
 }: {
   title: ReactNode;
   subtitle?: ReactNode;
   /** Fine print under the buttons — terms, not pitch. */
   note?: ReactNode;
-  /** Pass false on pages that don't mount ScrollReveal or don't animate. */
-  reveal?: boolean;
 }) {
   return (
     <div
       className={cn(
-        reveal && "rv",
         "rounded-[18px] border border-[var(--panel-edge)] bg-[var(--panel)] px-7 py-16 sm:px-12 sm:py-20",
       )}
     >

@@ -4,7 +4,6 @@ import { HeroGlobe } from "@/app/hero-globe";
 import { LandingSpotlight } from "@/app/landing-spotlight";
 import { LandingStatement } from "@/app/landing-statement";
 import { LandingSystemCards } from "@/app/landing-system-cards";
-import { ScrollReveal } from "@/app/scroll-reveal";
 import { Footer } from "@/components/footer";
 import { AskAiButton } from "@/components/ai/ask-ai-button";
 import { Header } from "@/components/header";
@@ -94,7 +93,6 @@ export default function Home() {
         data={softwareApplicationJsonLd({ description: homeDescription })}
       />
       <Header page="product" />
-      <ScrollReveal />
       <AnimationPauser />
 
       {/* ===== Hero — a compact copy block, then a media panel wider than it.
@@ -196,7 +194,7 @@ export default function Home() {
       {/* ===== The stack this collapses — orientation for anyone already
               paying six invoices for the same job. ===== */}
       <Section className="pt-12 sm:pt-16">
-        <div className="rv flex flex-col items-center gap-5 text-center">
+        <div className="flex flex-col items-center gap-5 text-center">
           <span className="text-[12px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
             One system instead of
           </span>
@@ -227,7 +225,7 @@ export default function Home() {
 
       {/* ===== Spotlight — the three layers of a revenue org ===== */}
       <Section className="pt-14 sm:pt-24">
-        <div className="rv">
+        <div >
           <LandingSpotlight />
         </div>
       </Section>
@@ -236,7 +234,7 @@ export default function Home() {
               cards share the standard content width, matching the sections
               above and below. ===== */}
       <Section className="pt-24">
-        <div className="rv mx-auto max-w-165 text-center">
+        <div className="mx-auto max-w-165 text-center">
           <h2 className="text-[clamp(28px,3vw,38px)] font-semibold leading-tight tracking-[-0.02em] text-foreground">
             Simple things stay simple. Complex things become possible.
           </h2>
@@ -249,7 +247,7 @@ export default function Home() {
 
       {/* ===== Proof — three numbers, no chart ===== */}
       <Section className="pt-24 sm:pt-32">
-        <div className="rv grid gap-10 border-t border-border pt-12 sm:grid-cols-3 sm:gap-8">
+        <div className="grid gap-10 border-t border-border pt-12 sm:grid-cols-3 sm:gap-8">
           {stats.map((stat) => (
             <div key={stat.figure}>
               <div className="text-[clamp(38px,4.4vw,54px)] font-semibold leading-none tracking-[-0.03em] text-foreground">

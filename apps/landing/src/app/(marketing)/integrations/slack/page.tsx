@@ -1,4 +1,3 @@
-import { ScrollReveal } from "@/app/scroll-reveal";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
 import { Section } from "@/components/marketing";
@@ -59,7 +58,6 @@ export default function SlackIntegration() {
         ])}
       />
       <Header page="product" />
-      <ScrollReveal />
 
       {/* ===== Hero ===== */}
       <section className="mx-auto max-w-384 px-3 sm:px-6">

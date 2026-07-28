@@ -159,8 +159,7 @@ export function LandingSystemCards() {
       {cards.map((card, i) => (
         <div
           key={card.title}
-          className="rv min-w-0"
-          style={{ ["--rv-delay" as string]: `${i * 80}ms` }}
+          className="min-w-0"
         >
           {/* The bordered panel binds each image to its own copy, so the
               mobile-only box that used to wrap image and text together is no

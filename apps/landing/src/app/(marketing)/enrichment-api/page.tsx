@@ -152,7 +152,7 @@ export default function EnrichmentApiPage() {
           <SectionHeading
             as="h1"
             title="Enrichment and search API."
-            subtitle="One call reaches 1B+ profiles across 50+ providers. Composable enough to sit underneath a CRM."
+            subtitle="Composable enough to sit underneath a CRM."
           />
           <div className="mt-7 flex flex-wrap items-center gap-3">
             <Link href="/docs">
@@ -347,7 +347,6 @@ export default function EnrichmentApiPage() {
         <CtaPanel
           title="Build on it for free."
           note="The first 20 credits are on us. No credit card required."
-          reveal={false}
         />
       </Section>
 

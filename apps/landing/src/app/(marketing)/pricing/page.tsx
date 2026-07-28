@@ -1,4 +1,3 @@
-import { ScrollReveal } from "@/app/scroll-reveal";
 import { Footer } from "@/components/footer";
 import { AskAiButton } from "@/components/ai/ask-ai-button";
 import { Header } from "@/components/header";
@@ -34,7 +33,6 @@ export default function Pricing() {
     <div className="landing min-h-screen bg-background">
       <JsonLd data={faqJsonLd(faqs)} />
       <Header page="pricing" />
-      <ScrollReveal />
 
       {/* ===== Hero panel — header + plans over the dark-alley scene ===== */}
       <section className="mx-auto max-w-384 px-3 sm:px-6">

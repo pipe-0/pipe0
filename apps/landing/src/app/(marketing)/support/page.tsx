@@ -1,4 +1,3 @@
-import { ScrollReveal } from "@/app/scroll-reveal";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
 import { Section } from "@/components/marketing";
@@ -43,7 +42,6 @@ export default function Support() {
   return (
     <div className="landing min-h-screen bg-background">
       <Header page="product" />
-      <ScrollReveal />
 
       <Section className="mt-20">
         <h1 className="mb-4 text-center text-[clamp(30px,3.6vw,44px)] font-semibold tracking-[-0.02em] text-foreground">

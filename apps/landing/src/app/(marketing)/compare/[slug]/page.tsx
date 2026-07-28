@@ -145,7 +145,6 @@ export default async function ComparePage(props: {
         <CtaPanel
           title={config.cta.title}
           subtitle={config.cta.subtitle}
-          reveal={false}
         />
       </Section>
 
