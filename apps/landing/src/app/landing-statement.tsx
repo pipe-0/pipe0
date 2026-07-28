@@ -14,24 +14,28 @@ import { useRef } from "react";
    Each word lifts from a muted wash to the full foreground as it scrolls
    through the middle of the viewport. The "pipe0" token resolves to the
    inline wordmark. */
-// "Leading sales tools build on our API to add clay-like enrichment to their applications. Sales organizations execute their entire go-to-market stack with our pipe0 tables and workflows.";
-const STATEMENT = "Leading sales tools build on our API to add clay-like enrichment to their applications. Sales organizations execute their entire go-to-market stack with pipe0 tables and workflows.";
+const STATEMENT = "Every layer of pipe0 is built from the same primitives. Searches find records. Pipes enrich them. That is the whole system. Small enough to fit in a Slack message, deep enough to run your entire pipeline.";
 
 const WORDS = STATEMENT.split(" ");
 
 export function LandingStatement() {
   const targetRef = useRef<HTMLDivElement>(null);
   const reduced = useReducedMotion();
+  /* The section is pinned while the words light up, then the page carries on
+     — the usual scroll-hijack shape, done with sticky rather than by taking
+     over the scroll: the outer element is tall, the inner one sticks to the
+     viewport, and progress is measured across the tall one. Nothing has to
+     preventDefault, so trackpad momentum, keyboard paging and reduced-motion
+     all keep working. */
   const { scrollYProgress } = useScroll({
     target: targetRef,
-    // Reveal spans the run from the paragraph entering the lower third to
-    // it settling in the upper-middle of the viewport.
-    offset: ["start 0.85", "end 0.55"],
+    offset: ["start start", "end end"],
   });
 
   return (
-    <div ref={targetRef} className="mx-auto max-w-280">
-      <p className="flex flex-wrap justify-center gap-x-[0.26em] gap-y-[0.1em] text-center text-[clamp(25px,3.4vw,48px)] font-semibold leading-[1.22] tracking-[-0.02em]">
+    <div ref={targetRef} className="relative h-[175vh] sm:h-[230vh]">
+      <div className="sticky top-0 flex h-svh flex-col items-center justify-center">
+      <p className="mx-auto flex max-w-280 flex-wrap justify-center gap-x-[0.26em] gap-y-[0.1em] text-center text-[clamp(25px,3.4vw,48px)] font-semibold leading-[1.22] tracking-[-0.02em]">
         {WORDS.map((word, i) => {
           const start = i / WORDS.length;
           const end = start + 1 / WORDS.length;
@@ -49,8 +53,9 @@ export function LandingStatement() {
         })}
       </p>
       <p className="mt-10 text-center text-md font-medium text-muted-foreground sm:mt-12">
-        Built in <b className="font-serif italic">San Francisco</b> and <b className="font-serif italic">Berlin</b> 📍
+        Built in <b className="font-semibold">San Francisco</b> and <b className="font-semibold">Berlin</b> 📍
       </p>
+      </div>
     </div>
   );
 }

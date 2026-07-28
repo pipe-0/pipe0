@@ -493,13 +493,6 @@ a:has(> [data-slot="button"]),
 }
 
 /* The single serif-italic highlight gesture (hero + CTA only). */
-.hl {
-  font-family: var(--font-newsreader), Georgia, serif;
-  font-style: italic;
-  font-weight: 500;
-  letter-spacing: -0.008em;
-}
-
 /* Hero panel gloss — the same reflection language as .btn-glossy:
    a crisp top highlight, a darker bottom edge, and a faint sheen,
    layered above the scene as a non-interactive overlay. The spotlight
@@ -716,20 +709,68 @@ a:has(> [data-slot="button"]),
 
 /* Top shadow — a gentle darkening at the very top, echoing the
    trusted-by scrim at the foot of the scene. */
-.hero-top-scrim {
-  background: linear-gradient(
-    180deg,
-    rgba(10, 14, 50, 0.28) 0%,
-    rgba(10, 14, 50, 0.1) 45%,
-    rgba(10, 14, 50, 0) 100%
-  );
+/* ---- Product materials, ported from apps/dash/src/index.css ----
+
+   The hero scene shows pipe0's own surfaces, so it uses pipe0's own materials
+   rather than a lookalike. Both apps define --primary/--background/--foreground
+   identically, so these port verbatim. Keep them in step with dash.
+
+   The idea in .p0-glass is that plasticity lives only at the edges: a
+   near-white fill, a light-catching gradient border done with
+   padding-box/border-box, and one inset reflection — no face gradient. */
+.p0-glass {
+  border: 1px solid transparent;
+  background:
+    linear-gradient(
+        180deg,
+        var(--background),
+        color-mix(in srgb, var(--foreground) 2%, var(--background))
+      )
+      padding-box,
+    linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--foreground) 10%, transparent),
+        color-mix(in srgb, var(--foreground) 24%, transparent)
+      )
+      border-box;
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, #fff 90%, transparent),
+    0 1px 2px color-mix(in srgb, var(--foreground) 7%, transparent);
 }
 
-/* Safari only. The globe video is opaque with the sky's base color (#bfd7fa)
-   baked in, because Safari can't decode the WebM's alpha. The hero panel is set
-   to that same #bfd7fa (.hero-panel-flat) so the video's edge is invisible, and
-   this layer just *darkens* the top into the saturated indigo — a single indigo
-   hue fading out via alpha, so there are no opaque color blocks and no seam. */
+/* The primary material does carry a face gradient, plus a hairline edge in
+   the primary hue rather than a neutral border. */
+.p0-primary-glass {
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--primary) 86%, #fff),
+    color-mix(in srgb, var(--primary) 94%, #000)
+  );
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.32),
+    0 0 0 0.5px color-mix(in srgb, var(--primary) 72%, #000),
+    0 1px 2px color-mix(in srgb, var(--primary) 40%, transparent);
+}
+
+/* The agent composer: an indigo-edged glass field. The colour lives in the
+   border gradient; the fill only barely tints toward it. */
+.p0-composer {
+  border: 1px solid transparent;
+  background:
+    linear-gradient(180deg, var(--background), hsl(236 40% 98.6%)) padding-box,
+    linear-gradient(180deg, hsl(236 90% 85%), hsl(236 77% 55% / 0.8)) border-box;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 1px 2px rgba(17, 17, 17, 0.08),
+    0 10px 24px -12px rgba(17, 17, 17, 0.25);
+}
+
+/* Safari only, for the mobile hero globe. Safari cannot decode the WebM's
+   VP9 alpha (it paints transparent areas black), so it gets an opaque video
+   with the sky's base colour (#bfd7fa) baked in. The panel is set to that
+   same colour (.hero-panel-flat) so the video's edge is invisible, and this
+   layer puts the saturated indigo back over the top — one hue fading out via
+   alpha, so there are no opaque bands and no seam. */
 .hero-safari-sky {
   background: linear-gradient(
     180deg,
@@ -739,10 +780,56 @@ a:has(> [data-slot="button"]),
     rgba(44, 55, 164, 0) 56%
   );
 }
-/* Flat sky base for Safari — same color the video bakes in. */
 .hero-panel-flat {
   background: #bfd7fa;
 }
+
+/* Hero film scene.
+
+   The animation is authored in a fixed 1200x500 coordinate space and scaled
+   to whatever width it is given, so every position inside it is a plain
+   number. Container query units do the scaling with no JS and no resize
+   observer; the wrapper reserves the height via aspect-ratio so nothing
+   reflows when the scene mounts.
+
+   Note what is NOT here any more: the film used to be a video carrying a
+   baked copy of the sky, which meant a band element, two feather masks, and a
+   gradient that had to be re-derived by hand every time the hero layout moved
+   the film inside the panel. The scene is transparent DOM now, so it renders
+   correctly on any background and none of that machinery is needed. */
+.hero-scene {
+  aspect-ratio: 12 / 5;
+  position: relative;
+  /* The inner box is a fixed 1200px and only *looks* smaller — scale does not
+     change layout — so it is taken out of flow below and clipped here.
+     Without this it sets the parent's min-content width and the scene stops
+     fitting its column. Clipping also gives the camera a frame to crop to. */
+  overflow: hidden;
+}
+.hero-scene-inner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1200px;
+  height: 500px;
+  transform-origin: top left;
+  /* --hero-scale is set from a ResizeObserver in hero-film.tsx. It is not
+     calc(100cqi / 1200): that divides a length by a number, which yields a
+     length, and `scale` only accepts a unitless number — so the declaration
+     is simply dropped and the scene renders at its full 1200px. */
+  scale: var(--hero-scale, 1);
+  font-family: var(--font-body), "Helvetica Neue", Helvetica, sans-serif;
+}
+
+.hero-top-scrim {
+  background: linear-gradient(
+    180deg,
+    rgba(10, 14, 50, 0.28) 0%,
+    rgba(10, 14, 50, 0.1) 45%,
+    rgba(10, 14, 50, 0) 100%
+  );
+}
+
 @media (prefers-reduced-motion: reduce) {
   .hero-sky,
   .hero-sky::before,

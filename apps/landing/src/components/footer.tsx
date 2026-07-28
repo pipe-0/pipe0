@@ -33,8 +33,10 @@ const footerColumns: FooterGroup[][] = [
   ],
   [
     {
-      heading: "Product",
+      heading: "Products",
       links: [
+        { label: "Revenue systems", href: "/" },
+        { label: "Enrichment & search API", href: "/enrichment-api" },
         { label: "Pipe0 Sheets", href: "/docs/sheets" },
         { label: "Slack integration", href: "/integrations/slack" },
         { label: "Pricing", href: "/pricing" },
@@ -168,16 +170,16 @@ function FooterAnchor({
 
 export function Footer() {
   return (
-    <footer className="landing mt-16 px-5 sm:px-10">
-      <div className="mx-auto max-w-[1280px]">
-        <div className="grid grid-cols-2 gap-x-8 gap-y-12 border-b border-border pb-12 md:grid-cols-[1.4fr_1fr_1fr_1.1fr]">
+    <footer className="landing mt-16 px-5 sm:px-6">
+      <div className="mx-auto max-w-330">
+        <div className="grid grid-cols-1 gap-x-8 gap-y-10 border-b border-border pb-12 sm:grid-cols-2 md:grid-cols-[1.4fr_1fr_1fr_1.1fr]">
           {/* Brand */}
-          <div className="col-span-2 flex flex-col gap-4 md:col-span-1">
+          <div className="flex flex-col gap-4 sm:col-span-2 md:col-span-1">
             <Link href="/" className="inline-flex">
               <LogoRaw />
             </Link>
             <p className="max-w-[240px] text-sm leading-relaxed text-muted-foreground">
-              Data enrichment by API, spreadsheet, or agent.
+              Revenue systems, at any scale.
             </p>
             <ul className="mt-1 space-y-2.5">
               {socialLinks.map((social) => (

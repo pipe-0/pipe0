@@ -56,7 +56,7 @@ export default function LemlistApiKeyEncoderPage() {
       {/* ===== Hero ===== */}
       <Section className="pt-16 text-center sm:pt-24">
         <h1 className="mx-auto max-w-2xl text-[clamp(34px,4.5vw,52px)] font-semibold leading-[1.08] tracking-[-0.025em] text-foreground">
-          Lemlist API Key <span className="hl">Encoder</span>.
+          Lemlist API Key Encoder.
         </h1>
         <p className="mx-auto mt-5 max-w-[560px] text-[17px] leading-relaxed text-muted-foreground sm:text-[18px]">
           Paste your Lemlist API key to get the base64-encoded value for HTTP
@@ -113,7 +113,7 @@ export default function LemlistApiKeyEncoderPage() {
       {/* ===== FAQ ===== */}
       <Section className="mt-20">
         <h2 className="mb-8 text-center text-[clamp(24px,2.6vw,32px)] font-semibold tracking-[-0.02em] text-foreground">
-          Frequently asked <span className="hl">questions</span>.
+          Frequently asked questions.
         </h2>
         <div className="mx-auto max-w-2xl">
           {faqs.map((faq) => (

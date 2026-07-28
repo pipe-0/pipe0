@@ -50,7 +50,7 @@ export default function Pricing() {
 
           <div className="relative z-10 px-5 pb-36 pt-14 text-center sm:px-10 sm:pb-56 sm:pt-20">
             <h1 className="mx-auto max-w-2xl text-[clamp(34px,4.5vw,52px)] font-semibold leading-[1.08] tracking-[-0.025em] text-white">
-              Simple, <span className="hl">transparent</span> pricing.
+              Pay for what you run.
             </h1>
             <p className="mx-auto mt-5 max-w-[560px] text-[17px] leading-relaxed text-white/75 sm:text-[18px]">
               Pay only for what you run. Pick a credit volume to get started —
@@ -72,7 +72,7 @@ export default function Pricing() {
       {/* ===== FAQ ===== */}
       <Section className="mt-24">
         <h2 className="mb-8 text-center text-[clamp(24px,2.6vw,32px)] font-semibold tracking-[-0.02em] text-foreground">
-          Frequently asked <span className="hl">questions</span>.
+          Questions.
         </h2>
         <div className="mx-auto max-w-3xl">
           {faqs.map((faq) => (
@@ -93,10 +93,10 @@ export default function Pricing() {
         <CtaPanel
           title={
             <>
-              Start for <span className="hl">free</span>.
+              Start for free.
             </>
           }
-          subtitle="The first 20 credits are on us. No credit card required."
+          note="The first 20 credits are on us. No credit card required."
         />
       </Section>
 

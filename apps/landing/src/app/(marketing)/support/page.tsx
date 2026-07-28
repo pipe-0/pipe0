@@ -47,7 +47,7 @@ export default function Support() {
 
       <Section className="mt-20">
         <h1 className="mb-4 text-center text-[clamp(30px,3.6vw,44px)] font-semibold tracking-[-0.02em] text-foreground">
-          How can we <span className="hl">help</span>?
+          How can we help?
         </h1>
         <p className="mx-auto mb-14 max-w-xl text-center text-[15px] leading-relaxed text-muted-foreground">
           Whatever you&apos;re running into — setup, billing, integrations, or
