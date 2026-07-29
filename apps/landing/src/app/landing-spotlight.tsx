@@ -127,12 +127,15 @@ export function LandingSpotlight() {
               onClick={() => setActive(i)}
               className="group cursor-pointer text-left"
             >
+              {/* 2px rather than a hairline: at 1px the selected measure was
+                  the same weight as the three it had to be picked out from,
+                  and only its colour carried the state. */}
               <span
                 aria-hidden
                 className={cn(
-                  "block h-px w-full transition-colors duration-700 ease-out",
+                  "block h-0.5 w-full transition-colors duration-700 ease-out",
                   isActive
-                    ? "bg-foreground"
+                    ? "bg-primary"
                     : "bg-border group-hover:bg-foreground/40",
                 )}
               />

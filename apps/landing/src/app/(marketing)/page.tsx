@@ -147,8 +147,16 @@ export default function Home() {
           <div className="hero-panel border relative flex min-h-[520px] w-full flex-col overflow-hidden rounded-[18px] sm:min-h-[calc(min(100vw-3.5rem,1694px)/1.78)]">
             {/* One sky again. The film is transparent DOM now, so nothing has
                 to match a baked gradient and the panel can go back to a single
-                animated layer. */}
-            <div className="hero-sky pointer-events-none absolute inset-0 z-0" aria-hidden />
+                animated layer.
+
+                Dropped below `sm`, where the globe's baked-in sky and
+                `.hero-panel-flat` cover it completely: two full-bleed gradient
+                layers drifting forever underneath an opaque video is pure
+                compositor cost, and on a phone it is the video that pays. */}
+            <div
+              className="hero-sky pointer-events-none absolute inset-0 z-0 max-sm:hidden"
+              aria-hidden
+            />
 
             {/* Phones get the globe, desktops the product scene. The scene is
                 a wide, detailed shot — at phone width its type stops being
@@ -163,8 +171,12 @@ export default function Home() {
             {/* On phones the CTAs sit high, in clear sky, with the spacer
                 *after* them — pushed to the bottom they landed right on the
                 globe's horizon. On desktop the film already absorbs the
-                slack, so both of these are inert there. */}
-            <div className="relative z-10 px-5 pt-14 sm:pt-0">
+                slack, so both of these are inert there.
+
+                `pt-9` matches the `pb-9` under the logo row below, so the
+                panel holds the same margin above its first element as below
+                its last. */}
+            <div className="relative z-10 px-5 pt-9 sm:pt-0">
               <CtaButtons />
             </div>
             <div className="flex-1 sm:hidden" aria-hidden />

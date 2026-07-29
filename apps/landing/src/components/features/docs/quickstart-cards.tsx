@@ -19,14 +19,14 @@ export function QuickstartCards() {
         icon={<Zap className="size-4" />}
         title="Pipe Catalog"
         description="Enrich individual rows or perform row-based actions."
-        media={<DemoVideo src="/media/website/pipe-catalog-demo.webm" />}
+        media={<DemoVideo src="/media/website/pipe-catalog-demo.mp4" />}
       />
       <QuickstartCard
         href="/docs/search-catalog"
         icon={<Search className="size-4" />}
         title="Search Catalog"
         description="Create rows by searching for people, companies, or data."
-        media={<DemoVideo src="/media/website/search-demo.webm" />}
+        media={<DemoVideo src="/media/website/search-demo.mp4" />}
       />
       <QuickstartCard
         href="/docs/api"

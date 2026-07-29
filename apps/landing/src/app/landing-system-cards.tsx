@@ -10,25 +10,39 @@ import { useCallback, useEffect, useRef, useState } from "react";
    a reflection read, which needs a dark or saturated fill under it and turns
    milky on a light grey one.
 
-   These two do not use <InViewVideo>. Playback is sequenced by the grid below
-   (one observer, one owner), and InViewVideo's own observer would fight it by
-   playing whatever is on screen. */
+   These two do not use <InViewVideo>. Playback is owned by the grid below,
+   which has to decide between sequencing and per-card play, and InViewVideo's
+   own observer would fight it by playing whatever is on screen. */
 
 type MediaProps = {
   videoRef: (el: HTMLVideoElement | null) => void;
   onEnded: () => void;
+  loop: boolean;
 };
 
-/* Shared player attributes. No `loop` — the sequencer needs `ended` to fire —
-   and no `autoPlay`, since the grid decides who plays. `auto` because a demo
-   that starts buffering only when its turn arrives stalls the handoff. */
+/* Shared player attributes.
+
+   H.264/MP4, not the VP9 WebM these used to point at. iOS has no hardware VP9
+   decoder, so Safari software-decoded every frame: the demo took seconds to
+   appear and juddered once it did. H.264 is hardware-decoded on every phone
+   worth caring about, and the transcode also dropped the silent Opus track
+   both files were carrying.
+
+   `poster` so the frame is filled the moment the card paints rather than when
+   the video is ready, and `preload="metadata"` rather than `auto` so a phone
+   does not pull both demos down before either is on screen — the MP4s are
+   written +faststart, so playback begins as soon as play() is called.
+
+   No `autoPlay`: the grid decides who plays. `loop` is passed per card,
+   because the sequencer needs `ended` to fire and a looping video never
+   emits it. */
 const playerProps = {
   muted: true,
   playsInline: true,
-  preload: "auto",
+  preload: "metadata",
 } as const;
 
-function FindVisual({ videoRef, onEnded }: MediaProps) {
+function FindVisual({ videoRef, onEnded, loop }: MediaProps) {
   return (
     <div className="relative flex h-full items-center justify-center px-6">
       {/* Search demo, centered in a floating frame */}
@@ -37,15 +51,22 @@ function FindVisual({ videoRef, onEnded }: MediaProps) {
           {...playerProps}
           ref={videoRef}
           onEnded={onEnded}
+          loop={loop}
+          poster="/media/website/search-demo-poster.jpg"
+          /* Intrinsic size so the frame holds its height before metadata
+             arrives — without it `h-auto` starts at zero and the card's
+             contents jump once the poster decodes. */
+          width={770}
+          height={556}
           className="block h-auto w-full"
-          src="/media/website/search-demo.webm"
+          src="/media/website/search-demo.mp4"
         />
       </div>
     </div>
   );
 }
 
-function ComposeVisual({ videoRef, onEnded }: MediaProps) {
+function ComposeVisual({ videoRef, onEnded, loop }: MediaProps) {
   return (
     <div className="relative flex h-full items-center justify-center px-6">
       {/* The demo plays inside a floating frame */}
@@ -62,8 +83,10 @@ function ComposeVisual({ videoRef, onEnded }: MediaProps) {
           {...playerProps}
           ref={videoRef}
           onEnded={onEnded}
+          loop={loop}
+          poster="/media/website/provider-demo-poster.jpg"
           className="block aspect-[16/10] w-full object-cover object-top"
-          src="/media/website/provider-demo.webm"
+          src="/media/website/provider-demo.mp4"
         />
       </div>
     </div>
@@ -88,10 +111,21 @@ const cards = [
 /** Beat of stillness between one demo finishing and the next starting. */
 const HANDOFF_MS = 1000;
 
+/* Above this the cards sit side by side, where playing one demo at a time
+   reads as a composed pair rather than two things competing. Below it they are
+   stacked and hardly ever both on screen, so passing a baton between them is
+   actively wrong: the card you are looking at waits on one you have already
+   scrolled past, which is why a phone could sit on a still frame for ten
+   seconds. Stacked cards each play for themselves, and loop. */
+const SIDE_BY_SIDE = "(min-width: 640px)";
+
 export function LandingSystemCards() {
   const [turn, setTurn] = useState(0);
-  const [inView, setInView] = useState(false);
-  const gridRef = useRef<HTMLDivElement>(null);
+  /* Per card rather than one flag for the grid: which cards are on screen is
+     exactly the question the stacked case needs answered. */
+  const [inView, setInView] = useState<boolean[]>(() => cards.map(() => false));
+  const [sequenced, setSequenced] = useState(false);
+  const hosts = useRef<(HTMLDivElement | null)[]>([]);
   const videos = useRef<(HTMLVideoElement | null)[]>([]);
   const handoff = useRef<ReturnType<typeof setTimeout> | null>(null);
   /* `ended` is read in a callback that must not be re-created per turn, so the
@@ -102,37 +136,63 @@ export function LandingSystemCards() {
     turnRef.current = turn;
   }, [turn]);
 
-  /* One observer for the whole section — nothing decodes off screen, which is
-     the same reason <InViewVideo> exists. */
   useEffect(() => {
-    const el = gridRef.current;
-    if (!el) return;
+    const mq = window.matchMedia(SIDE_BY_SIDE);
+    const update = () => setSequenced(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
+
+  /* One observer for the whole section, one entry per card — nothing decodes
+     off screen, which is the same reason <InViewVideo> exists. */
+  useEffect(() => {
+    const els = hosts.current.filter((el): el is HTMLDivElement => !!el);
+    if (!els.length) return;
     const io = new IntersectionObserver(
-      ([entry]) => setInView(entry.isIntersecting),
-      { threshold: 0 },
+      (entries) => {
+        setInView((prev) => {
+          let next = prev;
+          for (const entry of entries) {
+            // Indexed against `hosts`, not the filtered list, so a card whose
+            // ref has not landed yet cannot shift the others' indices.
+            const i = hosts.current.indexOf(entry.target as HTMLDivElement);
+            if (i < 0 || prev[i] === entry.isIntersecting) continue;
+            if (next === prev) next = [...prev];
+            next[i] = entry.isIntersecting;
+          }
+          return next;
+        });
+      },
+      { threshold: 0.25 },
     );
-    io.observe(el);
+    els.forEach((el) => io.observe(el));
     return () => io.disconnect();
   }, []);
 
-  /* Play the demo whose turn it is from the top. Keyed on `turn` alone, so
-     scrolling away and back resumes where it left off rather than restarting. */
+  /* Sequenced play starts each demo from the top. Keyed on `turn` alone, so
+     scrolling away and back resumes where it left off rather than restarting.
+     Stacked cards are never rewound — a looping demo you scroll back to should
+     carry on, not snap to frame zero. */
   useEffect(() => {
+    if (!sequenced) return;
     const v = videos.current[turn];
     if (v) v.currentTime = 0;
-  }, [turn]);
+  }, [turn, sequenced]);
 
   useEffect(() => {
+    const anyInView = inView.some(Boolean);
     videos.current.forEach((v, i) => {
       if (!v) return;
-      if (i === turn && inView) {
+      const wanted = sequenced ? i === turn && anyInView : inView[i];
+      if (wanted) {
         // Rejects if interrupted; muted inline playback is always allowed.
         void v.play().catch(() => {});
       } else {
         v.pause();
       }
     });
-  }, [turn, inView]);
+  }, [turn, inView, sequenced]);
 
   useEffect(
     () => () => {
@@ -152,13 +212,13 @@ export function LandingSystemCards() {
   }, []);
 
   return (
-    <div
-      ref={gridRef}
-      className="mt-12 grid gap-x-5 gap-y-10 sm:grid-cols-2 lg:gap-x-8"
-    >
+    <div className="mt-12 grid gap-x-5 gap-y-10 sm:grid-cols-2 lg:gap-x-8">
       {cards.map((card, i) => (
         <div
           key={card.title}
+          ref={(el) => {
+            hosts.current[i] = el;
+          }}
           className="min-w-0"
         >
           {/* The bordered panel binds each image to its own copy, so the
@@ -174,6 +234,7 @@ export function LandingSystemCards() {
                 videos.current[i] = el;
               }}
               onEnded={() => handleEnded(i)}
+              loop={!sequenced}
             />
           </div>
           <h3 className="mb-1.5 text-[16px] font-semibold tracking-[-0.01em] text-foreground">

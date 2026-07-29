@@ -140,8 +140,8 @@ export default async function BlogPost(props: {
             <p className="mt-6 text-[13px] text-fd-muted-foreground">
               {author
                 ? authors
-                    .map((a) => (a.title ? `${a.name}, ${a.title}` : a.name))
-                    .join(" · ")
+                  .map((a) => (a.title ? `${a.name}, ${a.title}` : a.name))
+                  .join(" · ")
                 : "The pipe0 team"}
             </p>
           </header>
@@ -216,11 +216,10 @@ function BlogCta() {
       <div className="mx-auto w-full max-w-(--fd-layout-width) px-4 py-12 text-center md:py-14">
         <div className="rounded-2xl bg-fd-muted px-5 pt-12 pb-8 sm:px-10 sm:pt-14">
           <h2 className="font-blog text-[24px] font-bold leading-[1.2] tracking-[-0.005em] text-fd-foreground text-pretty sm:text-[30px]">
-            Clay-like data enrichment for your apps &amp; agents.{" "}
-            <span className="italic">Fast.</span>
+            Next-gen enrichment &amp; search.
           </h2>
           <p className="mt-2.5 text-[14.5px] text-fd-muted-foreground">
-            Stack pipes on a sheet and run them over every row.
+            Build revenue systems that scale. For humans, agents, and apps. Replace tools like Clay, n8n, Hightouch, etc.
           </p>
 
           <MiniSheet />
