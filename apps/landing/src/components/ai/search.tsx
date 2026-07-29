@@ -347,6 +347,47 @@ export function AISearchTrigger({
   );
 }
 
+/**
+ * Mirror the visual viewport into `--vv-top` / `--vv-height` while the panel is
+ * open.
+ *
+ * A `position: fixed` box is laid out against the *layout* viewport, and iOS
+ * Safari does not shrink the layout viewport when the software keyboard opens —
+ * only the visual viewport moves. So a panel pinned to `inset-y-4` keeps its
+ * full height, the keyboard is drawn over the bottom of it, and the input the
+ * keyboard was opened for is the exact thing it covers.
+ *
+ * `interactive-widget=resizes-content` (see app/layout.tsx) fixes this properly
+ * on Chrome for Android by shrinking the layout viewport. Safari ignores it, so
+ * below `lg` the panel sizes itself off these two properties instead. Reading
+ * `offsetTop` as well as `height` matters: iOS scrolls the visual viewport up
+ * to reveal a focused field, and without it the panel would stay behind.
+ */
+function useVisualViewportBounds(active: boolean) {
+  useEffect(() => {
+    const vv = window.visualViewport;
+    if (!active || !vv) return;
+
+    const root = document.documentElement;
+    const apply = () => {
+      root.style.setProperty('--vv-top', `${vv.offsetTop}px`);
+      root.style.setProperty('--vv-height', `${vv.height}px`);
+    };
+    apply();
+
+    vv.addEventListener('resize', apply);
+    vv.addEventListener('scroll', apply);
+    return () => {
+      vv.removeEventListener('resize', apply);
+      vv.removeEventListener('scroll', apply);
+      // Cleared rather than left behind, so the fallbacks in the class list
+      // take over again once the panel closes.
+      root.style.removeProperty('--vv-top');
+      root.style.removeProperty('--vv-height');
+    };
+  }, [active]);
+}
+
 export function AISearchPanel({
   variant = 'docked',
 }: {
@@ -359,6 +400,7 @@ export function AISearchPanel({
 }) {
   const { open, setOpen } = useAISearchContext();
   useHotKey();
+  useVisualViewportBounds(open);
 
   return (
     <>
@@ -396,7 +438,17 @@ export function AISearchPanel({
         <div
           className={cn(
             'overflow-hidden bg-fd-card text-fd-card-foreground [--ai-chat-width:400px] 2xl:[--ai-chat-width:460px]',
-            'max-lg:fixed max-lg:inset-x-2 max-lg:inset-y-4 max-lg:border max-lg:rounded-2xl max-lg:shadow-xl',
+            // Below `lg` the panel is laid out against the visual viewport
+            // rather than pinned with `inset-y-4`, so the keyboard cannot cover
+            // the input (see useVisualViewportBounds). The fallbacks are the
+            // old behaviour, for engines without `visualViewport`. The bottom
+            // also clears the home indicator.
+            'max-lg:fixed max-lg:inset-x-2 max-lg:border max-lg:rounded-2xl max-lg:shadow-xl',
+            // Underscores rather than a bare `-`: CSS `calc()` needs whitespace
+            // around its operators, and spelling that out here does not depend
+            // on Tailwind choosing to insert it.
+            'max-lg:top-[calc(var(--vv-top,0px)_+_1rem)]',
+            'max-lg:h-[calc(var(--vv-height,100dvh)_-_2rem_-_env(safe-area-inset-bottom,0px))]',
             variant === 'docked'
               ? 'z-30 lg:sticky lg:top-0 lg:h-dvh lg:border-s lg:ms-auto lg:in-[#nd-docs-layout]:[grid-area:toc] lg:in-[#nd-notebook-layout]:row-span-full lg:in-[#nd-notebook-layout]:col-start-5'
               : 'z-[60] lg:fixed lg:inset-y-0 lg:right-0 lg:h-dvh lg:w-(--ai-chat-width) lg:border-l lg:shadow-xl',

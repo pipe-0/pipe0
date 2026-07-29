@@ -1,6 +1,6 @@
 import { Toaster } from "@/components/ui/toaster";
 import { Analytics } from "@vercel/analytics/react";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import {
   Geist,
   Geist_Mono,
@@ -63,6 +63,22 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
   },
+};
+
+/**
+ * Next's default is `width=device-width, initial-scale=1`; this restates it and
+ * adds one thing.
+ *
+ * `interactive-widget=resizes-content` makes the software keyboard shrink the
+ * *layout* viewport rather than float over it, so a `position: fixed` panel —
+ * the Ask AI chat — keeps its input above the keyboard instead of behind it.
+ * Chrome for Android honours this; Safari ignores it, which is why the chat
+ * panel also tracks `window.visualViewport` directly (see components/ai/search).
+ */
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  interactiveWidget: "resizes-content",
 };
 
 export default function RootLayout({

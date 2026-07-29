@@ -1,0 +1,107 @@
+---
+title: High-Volume Data Enrichment Without Breaking the Bank
+date: 2026-07-29
+category: Sales data
+tags:
+    - data enrichment
+    - waterfalls
+    - pricing
+excerpt: "Running data enrichment at scale has many challenges. Rate limits and cost are the two biggest ones. Both can be solved."
+authors:
+    - name: Florian
+      title: Founder
+---
+
+Data enrichment is often done over a small dataset. You isolate a few hundred users, 
+find their email addresses, and some information about their company. For this kind
+of enrichment, meta providers like [Clay](https://clay.com) shine.
+
+The situation is different as things get larger.
+
+Suddenly, you have to worry about the overall throughput and rate limit of your system. Additionally,
+cost becomes a major concern.
+
+## Why credits stop working at volume
+
+Meta providers like Clay sell one currency: a credit. This credit has a certain value. 
+Let's say it is around 3 ct. for a USD 149 / mo subscription and 1 ct. for a USD 999 / mo 
+subscription.
+
+Industry practice is to charge a lower price per credit the more you spend.
+
+However, meta-providers sell you credits without knowing what you will spend them on. You may
+spend all your credits on email lookups. Or you may spend all your credits on ChatGPT tokens.
+
+However, both of these assets scale very differently. When buying directly from a 
+provider, it is common that the price for an email lookup falls by 10-20x. This depends 
+on the volume that you purchase.
+
+AI tokens, on the other hand, do not fall in price the more you purchase. Here, the price 
+stays fixed. It does not matter if you purchase 1 token or 1 trillion from OpenAI.
+
+This is a classic forecasting problem. To not lose money on customers, 
+meta providers tend to overcharge by 12-15x for emails and phone numbers. They do 
+this just in case you spend your credits on an asset that scales badly.
+
+Since almost everyone in the meta provider industry follows this exact playbook.
+Users have few places to go other than to the providers directly.
+
+This prompts large companies and agencies to purchase licenses 
+with data vendors directly and use self-managed API keys.
+
+Meta providers like Clay reacted to this change with a pretty drastic cost increase 
+for users who use Clay this way. Instead of fixing the underlying problem, they drastically
+increased the cost of performing an operation with your own API key.
+
+![Horizontal bar chart of the price reduction available at volume for eight
+pipe0 operations, from 65 percent on a LeadMagic work-email lookup down to
+zero for LLM tokens, against a reference line marking the six percent
+discount available on the credit itself](/media/blog/20260729-1.svg)
+
+The logic explains why single-purpose vendors like FullEnrich work.
+
+With a product that is focused on contact enrichment only, they can model their product
+to follow the volume-based discount strategy of the providers.
+
+## Bringing your own key does not make things better
+
+When reading the argument above, it's easy to think that this problem can be solved by
+making it easy for users to bring their own API keys.
+
+This is a valid assumption and the strategy of platforms like n8n.
+
+But managed keys have several advantages. They:
+
+- are more reliable and have higher rate limits
+- run into fewer issues because they are isolated
+– prevent you from having to manage X credit balances
+– make more providers available to your
+
+And these are just the disadvantages when using your own keys on platforms like pipe0 
+or Clay. If you choose to build the entire orchestration yourself, you have to think about 
+conventional programming problems: normalizing rate limits, provider responses, dealing
+with outages, etc.
+
+So, how can you make use of the advantages of meta providers while being charged fairly?
+
+## Discount the operation, not the currency
+
+We've come up with a unique pricing strategy that discounts the operation, not the currency.
+
+The cost of a credit stays linear. It is roughly 3 ct. / credit.
+
+Instead of cheaper credits, you receive more high-volume slots with more spend.
+
+For operations that reduce in cost with volume (e.g., email lookups) we offer discount brackets.
+
+For operations that don't reduce in cost (e.g., AI tokens), we do NOT offer discount brackets.
+
+Conceptually, this is 1:1 the same as purchasing a custom API key at a higher tier from a provider
+directly.
+
+If you're performing operations at a high volume, like finding email addresses or phone numbers, opt for 
+a lower price. You can change your enrollment once a month or configure `auto-mode` where pipe0
+optimizes your enrollments based on historical usage.
+
+With this billing scheme, pipe0 users operate 10-12x more cost-effectively compared to Clay. The cost per enrichment
+remains competitive with self-managed API keys. All while maintaining the benefits of a meta provider.
