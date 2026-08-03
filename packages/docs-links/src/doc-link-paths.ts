@@ -3,6 +3,7 @@ export const BASE_URL = "https://pipe0.com";
 export const docsLinkPaths = {
   // Core concepts
   docs: `/docs/`,
+  rateLimits: `/docs/rate-limits`,
   pipeConfig: `/docs/pipes/request-payload#config`,
   inputSanitation: `/docs/pipes/inputs#input-sanitation`,
   fieldStatus: `/docs/pipes/response-object#status`,

@@ -37,6 +37,30 @@ All options:
 | `maxPollingIntervalMs`  | `3 * minPollingIntervalMs`    | Cap for the backoff.                               |
 | `defaultBatchSize`      | `100`                         | Chunk size for `pipeInBatches` (matches the API's 100-record cap). |
 | `maxConcurrentBatches`  | `5`                           | Parallel requests in `pipeInBatches` and `searchAll`. |
+| `autoRetry429`          | `true`                        | Absorb [rate-limit](/docs/rate-limits) 429s automatically (see below). |
+| `retryAfterCapMs`       | `30000`                       | Upper bound on a single `Retry-After` wait. |
+| `rateLimitMaxWaitMs`    | `120000` (2 minutes)          | Total wait budget for `org-rate-limited` retries per request. |
+| `queueFullMaxWaitMs`    | `900000` (15 minutes)         | Total wait budget for `queue-limit-exceeded` retries per create. |
+| `priorityFloor`         | `2`                           | Worst [task priority](/docs/rate-limits) `pipeInBatches` voluntarily submits at. |
+| `pacingProbeMs`         | `15000`                       | Re-probe delay when batch submission is capacity-blocked with nothing in flight. |
+| `cancelOnAbort`         | `true`                        | Aborting also cancels still-pending runs server-side. |
+| `onCapacity`            | —                             | Called with a capacity snapshot whenever fresh `X-P*-Capacity` headers are seen. |
+
+### Rate limits: handled for you
+
+pipe0's API [never rejects correct clients](/docs/rate-limits) — work is accepted and
+scheduled by task priority. The SDK implements the whole contract so you usually don't have
+to think about it:
+
+- **429s are retried automatically.** `org-rate-limited` waits out the server's `Retry-After`;
+  `queue-limit-exceeded` (the queued-record hard ceiling) backoff-retries the create. Only an
+  exhausted wait budget throws `Pipe0RateLimitError`.
+- **`pipeInBatches` paces itself.** The rolling pool submits the next batch only when the
+  capacity headers say it would still be admitted at `priorityFloor` or better, so large jobs
+  don't sink themselves into the slow lane.
+- **Aborting cancels server-side.** When your `AbortSignal` fires, still-pending runs are
+  canceled remotely and their records return to your capacity instantly.
+- **Live capacity is exposed** via `pipe0.capacity` and the `onCapacity` callback.
 
 ## Data enrichment (pipes)
 
@@ -146,6 +170,11 @@ const status = await pipe0.pipes.check(runId);
 const done = await pipe0.pipes.waitUntilComplete(runId, {
   onPoll: (response) => console.log(response.status),
 });
+
+// Cancel a run that is still queued — its records return to your
+// organization's capacity immediately. Throws Pipe0ServerError with
+// status 409 once the run is already processing or finished.
+const canceled = await pipe0.pipes.cancel(runId);
 ```
 
 ## Running searches
@@ -229,8 +258,10 @@ The client throws typed errors you can discriminate on:
 import {
   Pipe0TimeoutError,
   Pipe0AbortError,
+  Pipe0CanceledError,
   Pipe0TaskError,
   Pipe0ServerError,
+  Pipe0RateLimitError,
   Pipe0BatchError,
 } from "@pipe0/client";
 
@@ -243,13 +274,20 @@ try {
   } else if (err instanceof Pipe0TaskError) {
     // The API returned a task-level error.
     console.error(err.responseBody);
+  } else if (err instanceof Pipe0RateLimitError) {
+    // The automatic 429 handling exhausted its wait budget.
+    console.error(err.problemType, err.attempts);
+  } else if (err instanceof Pipe0CanceledError) {
+    // The run was canceled server-side (subclass of Pipe0AbortError).
   } else if (err instanceof Pipe0ServerError) {
-    // Non-2xx response.
+    // Any other non-2xx response — err.status / err.problemType are set.
   }
 }
 ```
 
-Cancellation uses standard `AbortController`:
+Cancellation uses standard `AbortController`. By default an abort also cancels
+still-pending runs server-side so their records return to your capacity
+immediately (`cancelOnAbort: false` restores client-only aborts):
 
 ```ts
 const controller = new AbortController();

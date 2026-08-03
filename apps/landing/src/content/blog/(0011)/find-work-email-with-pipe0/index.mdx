@@ -38,7 +38,7 @@ const result = await fetch("https://api.pipe0.com/v1/pipes/run", {
     "Content-Type": "application/json",
   },
   body: JSON.stringify({
-    pipes: [{ pipe_id: "people:workemail:waterfall@1", providers: ["findymail", "dropcontact"] }],
+    pipes: [{ pipe_id: "people:workemail:waterfall@1", providers: ["leadmagic", "prospeo", "amplemarket", "hunter"] }],
     input: [{id, first_name: "<FIRST_NAME>", last_name: "<LAST_NAME>", company_website_url: "<COMPANY_URL>"}]
   })
 });
@@ -57,7 +57,7 @@ curl -X POST "https://api.pipe0.com/v1/pipes/run" \
 -H "Authorization: Bearer <API_KEY>" \
 -H "Content-Type: application/json" \
 -d '{
-    "pipes": [{ "pipe_id": "people:workemail:waterfall@1",  providers: ["findymail", "dropcontact"] }],
+    "pipes": [{ "pipe_id": "people:workemail:waterfall@1",  "providers": ["leadmagic", "prospeo", "amplemarket", "hunter"] }],
     "input": [{"id": 1, "first_name": "<FIRST_NAME>", "last_name": "<LAST_NAME>", "company_website_url": "<COMPANY_URL>"}]
 }'
 ```

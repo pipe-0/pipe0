@@ -1,0 +1,84 @@
+---
+title: Rate limits
+description: pipe0's error-free rate limiting — runs are always accepted and prioritized by how much work you have queued. How task priorities, capacity headers, cancellation, and the two safety limits work.
+date: 2026-08-02
+icon: Gauge
+---
+
+Unlike conventional APIs, pipe0 does not reject your requests when you submit
+them quickly. In fact, **a correctly implemented client never sees a rate-limit error**. Work is
+always accepted and scheduled by **task priority**.
+
+## How task priorities work
+
+When you send a request, it is classified and given a priority (Priority 1, 2, 3). What priority
+your work is assigned depends on how much of your work is currently being processed and your subscription tier.
+
+Priority only matters when our systems are busy. In that case, Priority 1 work is processed first,
+then Priority 2, then Priority 3.
+
+The table below shows your _capacity_ per priority level. Capacity is 
+measured in **records**: a pipes run counts its input records, and a search counts as 1 record.
+
+### Capacity per plan
+
+| Plan | Priority 1 capacity | Priority 2 capacity | Total (all plans) |
+| --- | --- | --- | --- |
+| Free | 20 records | 200 | 100,000 |
+| Starter | 50 | 500 | 100,000 |
+| Basic | 150 | 1,500 | 100,000 |
+| Business | 320 | 3,200 | 100,000 |
+| Professional | 600 | 6,000 | 100,000 |
+
+Upgrading buys fast-lane capacity; the total you may queue is identical on every plan.
+
+## Priority headers
+
+Run-creating endpoints (`/v1/pipes/run`, `/v1/pipes/run/sync`, `/v1/search/run`,
+`/v1/search/run/sync`) return your organization's state on every response.
+
+| Header | Meaning |
+| --- | --- |
+| `X-Task-Priority` | The priority this run was admitted at (1–3) |
+| `X-P1-Capacity` | Records you can still submit and be admitted at priority 1 |
+| `X-P2-Capacity` | Records you can still submit and be admitted at priority 2 or better |
+| `X-P3-Capacity` | Records you can still submit at all — at 0, submissions are rejected |
+
+Each capacity is the remaining room in that priority window.
+
+**The client contract in one sentence:** watch `X-Task-Priority` (or equivalently, whether
+`X-P1-Capacity` has reached 0); when your runs stop being priority 1, slow your submission
+loop down (a `sleep` is enough); when `X-P2-Capacity` reaches 0, stop and let runs finish.
+Implement that and you will never see an error.
+
+## Canceling queued runs
+
+You can remove still-queued work — your own runs only, and only while they are `pending`:
+
+```
+POST /v1/pipes/cancel/{run_id}
+POST /v1/search/cancel/{run_id}
+```
+
+A successful cancel returns the run with `status: "canceled"` and returns its records to your
+capacity **immediately**.
+
+## The two errors that remain
+
+Both are bug detectors, not part of normal operation:
+
+1. **`429` with `type: "queue-limit-exceeded"`** — your organization reached 100,000 queued
+   records (`X-P3-Capacity: 0`). You ignored three escalating priority signals to get here.
+2. **`429` with `type: "org-rate-limited"`** — you exceeded 2,000 requests/minute, which almost always means a `while(true)` loop polling without backoff.
+   This one carries `Retry-After`; honor it.
+
+## Best practices
+
+- **Batch records per request** — one `/v1/pipes/run` accepts up to 100 records. Batching is
+  rewarded twice: fewer requests, and your capacity drains no faster either way.
+- **Pace on the headers, not on guesses.** React to `X-Task-Priority` / `X-P1-Capacity` on
+  responses you already receive; there's nothing extra to poll for.
+- **Poll `/check` with backoff** (1–3s is plenty; back off further for long runs).
+- **Sync endpoints under backlog:** `/run/sync` waits up to 3 minutes; a priority-2/3 run may
+  not finish inside that window and returns `408` with the run id — switch to polling the
+  async check endpoint. If your runs are routinely Priority 2 or 3, prefer the async endpoints.

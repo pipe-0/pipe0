@@ -1,0 +1,76 @@
+---
+title: Clay.com API Documentation
+date: 2026-08-03
+category: Engineering
+tags:
+    - Clay
+    - API
+excerpt: "Clay.com recently released their API, but the API documentation is not linked from their website. Find the clay.com API documentation."
+authors:
+    - name: Florian
+      title: Founder
+---
+
+In June 2026, [Clay](https://clay.com) released a public API. The documentation is
+genuinely hard to find. It is not linked from their homepage, and it does not live with
+the rest of the Clay docs.
+
+Here it is:
+
+**[developers.clay.com](https://developers.clay.com/)**
+
+That is the answer to the question. The rest of this post is about what is actually in
+there, because "Clay has an API" and "Clay's API does what you expect" are not the same.
+
+## What is in the Clay API
+
+Clay's public API is small. Thirteen operations, three of them beta, one of them Enterprise
+only.
+
+They fall into three groups.
+
+**Routines** run Clay logic: enrichment, research, scoring, or whatever else your team has
+packaged up.
+
+**Search** queries Clay's GTM database for people and companies.
+
+**Tables** is an endpoint to control your Clay tables. This endpoint is Enterprise only.
+
+## Why Clay's API is not a real enrichment API
+
+In sales technology, technical terms are often used loosely. When it comes to APIs, it's
+worth digging deeper to understand why the Clay API might not behave the way
+you expect.
+
+### Stateless enrichment APIs
+
+A stateless enrichment API can be used to find data. You send an email address and the API responds with a phone number.
+
+If you send the same email address again, you receive the same phone number. In the
+background, your request does not create anything. Your request is forwarded to a database that either 
+has your data or does not.
+
+Stateless APIs are the industry standard.
+
+### Stateful enrichment APIs (Clay's approach)
+
+Clay's API does not work this way. Instead, routines (Clay's enrichment functions) are things you create before you can send your data.
+
+Enrichment only works if you've created and stored a procedure within Clay. After you have done so, you can invoke this procedure.
+
+This is the same mental model as: Create Clay table > run Clay table.
+
+### Is this bad design?
+
+No. But it's usually not what people ask for when they prompt "Does Clay have an API?".
+
+Clay is built around tables, cells, and functions. Its API is a faithful representation of this model.
+
+Instead of giving you or your agent the same enrichment capabilities as Clay, you are handed a remote control.
+
+## Alternatives to Clay's API
+
+At [pipe0](https://pipe0.com), we created a new data model to power Clay-like enrichment *and* offer a real API.
+Our API works fully stateless while also being able to power Clay-like tables with millions of rows.
+
+Connecting your agent to pipe0 will not give it a remote control but real enrichment capabilities.
