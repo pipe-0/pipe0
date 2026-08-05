@@ -1,5 +1,12 @@
 # @pipe0/landing
 
+## 0.1.9
+
+### Patch Changes
+
+- Updated dependencies [[`4dd6ab3`](https://github.com/pipe-0/pipe0/commit/4dd6ab3059ded7e90f3f0829c7f8163e47c193bc)]:
+  - @pipe0/doc-links@0.0.9
+
 ## 0.1.8
 
 ### Patch Changes
