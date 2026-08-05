@@ -1,5 +1,6 @@
 import { Footer } from "@/components/footer";
 import { AskAiButton } from "@/components/ai/ask-ai-button";
+import CalButton from "@/components/cal-button";
 import { Header } from "@/components/header";
 import { CtaPanel, Section } from "@/components/marketing";
 import { PricingCard } from "@/components/pricing-card";
@@ -65,6 +66,25 @@ export default function Pricing() {
       {/* ===== Plans — overlapping the foot of the hero panel ===== */}
       <Section className="relative z-10 -mt-28 sm:-mt-44">
         <PricingCard />
+
+        {/* Enterprise — same container and gap as the grid above, so it reads
+            as the last row of the plans. Calm panel surface rather than the
+            cards' lifted white, since it sits off the dark hero panel and is
+            an aside to the four priced volumes, not a fifth one. */}
+        <div className="mt-3.5 flex flex-col gap-5 rounded-[14px] border border-[var(--panel-edge)] bg-[var(--panel)] p-6 sm:flex-row sm:items-center sm:justify-between sm:gap-8 sm:p-7">
+          <div>
+            <h2 className="text-lg font-semibold tracking-[-0.01em] text-foreground">
+              Enterprise.
+            </h2>
+            <p className="mt-1.5 max-w-[560px] text-sm leading-relaxed text-muted-foreground">
+              Higher volumes, custom terms, and dedicated support. Tell us what
+              you run and we&apos;ll put a plan together.
+            </p>
+          </div>
+          <CalButton variant="cta" className="w-full shrink-0 sm:w-auto">
+            Book a call
+          </CalButton>
+        </div>
       </Section>
 
       {/* ===== FAQ ===== */}
