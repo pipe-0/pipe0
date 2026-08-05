@@ -18,9 +18,12 @@ import { appInfo } from "@/lib/const";
 import { products } from "@/lib/products";
 import { cn } from "@/lib/utils";
 
-type Page = "product" | "blog" | "documentation" | "pricing";
+type Page = "product" | "api" | "blog" | "documentation" | "pricing";
 
 const navigationItems: { href: string; label: string; page: Page }[] = [
+  /* API leads: a large share of visitors arrive looking for an enrichment
+     API, and the Products dropdown was the only path to it. */
+  { href: "/enrichment-api", label: "API", page: "api" },
   { href: "/blog", label: "Blog", page: "blog" },
   { href: "/docs", label: "Docs", page: "documentation" },
   { href: "/pricing", label: "Pricing", page: "pricing" },

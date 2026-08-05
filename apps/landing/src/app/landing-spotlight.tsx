@@ -54,15 +54,20 @@ const surfaces: Surface[] = [
     tab: "API",
     title: "Send your requests.",
     copy: "Compose providers, actions and conditions into pipes, then ship enrichment inside your own product.",
-    href: "/docs/api",
-    linkLabel: "API reference",
+    href: "/enrichment-api",
+    linkLabel: "Enrichment API",
   },
 ];
 
 const CYCLE_MS = 10000;
 
+/* The section opens on the API pane: developers are the audience most likely
+   to bounce before the rotation reaches them. The cycle continues from here,
+   so the other three still get their turn. */
+const INITIAL = surfaces.findIndex((s) => s.key === "api");
+
 export function LandingSpotlight() {
-  const [active, setActive] = useState(0);
+  const [active, setActive] = useState(INITIAL);
   const [reduced, setReduced] = useState(false);
 
   useEffect(() => {
@@ -88,7 +93,7 @@ export function LandingSpotlight() {
      showed two panes at once, and the incoming translate made the block
      appear to shift; both read as a wobble. `shown` lags `active` by exactly
      the fade-out, so the caption swaps with its own preview. */
-  const [shown, setShown] = useState(0);
+  const [shown, setShown] = useState(INITIAL);
   const [visible, setVisible] = useState(true);
 
   useEffect(() => {

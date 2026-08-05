@@ -1,22 +1,30 @@
 import { AnimationPauser } from "@/app/animation-pauser";
 import { HeroFilm } from "@/app/hero-film";
 import { HeroGlobe } from "@/app/hero-globe";
+import { LandingReplaces } from "@/app/landing-replaces";
 import { LandingSpotlight } from "@/app/landing-spotlight";
 import { LandingStatement } from "@/app/landing-statement";
 import { LandingSystemCards } from "@/app/landing-system-cards";
 import { Footer } from "@/components/footer";
 import { AskAiButton } from "@/components/ai/ask-ai-button";
 import { Header } from "@/components/header";
-import { CtaButtons, CtaPanel, Section } from "@/components/marketing";
+import { Button } from "@/components/ui/button";
+import {
+  CtaButtons,
+  CtaPanel,
+  Section,
+  SectionHeading,
+} from "@/components/marketing";
 import { createMetadata } from "@/lib/metadata";
 import {
   JsonLd,
   softwareApplicationJsonLd,
 } from "@/components/seo/json-ld";
 import Image from 'next/image'
+import Link from "next/link";
 
 const homeDescription =
-  "pipe0 builds revenue systems at any scale: a Slack copilot for reps, always-on plays for the team, and the enrichment and routing infrastructure underneath. One set of primitives, from a single question to a signal engine.";
+  "pipe0 builds revenue systems at any scale: a Slack copilot for reps, always-on plays for the team, and the enrichment API and routing infrastructure underneath. One set of primitives, from a single question to a signal engine.";
 
 // Title is omitted so the root default applies verbatim (no template suffix).
 export const metadata = createMetadata({
@@ -56,16 +64,13 @@ const trustedLogos = [
   },
 ];
 
-/* The stack pipe0 collapses. Named in plain text rather than logos — these
-   are other companies' marks, and the point is the line item on the invoice,
-   not the brand. */
-const replaces = [
-  "Clay",
-  "n8n",
-  "Hightouch",
-  "Polytomic",
-  "Lusha",
-  "BetterContact",
+/* Coding agents in the API router strip. Logos rather than names here —
+   unlike the "replaces" row below, the point IS instant recognition: a
+   developer should clock "this works with my agent" before reading a word. */
+const agentLogos = [
+  { src: "/media/website/logos/agent-cursor.svg", alt: "Cursor" },
+  { src: "/media/website/logos/agent-openai.svg", alt: "OpenAI Codex" },
+  { src: "/media/website/logos/agent-claude.svg", alt: "Claude Code" },
 ];
 
 const stats = [
@@ -203,36 +208,56 @@ export default function Home() {
         </section>
       </div>
 
-      {/* ===== The stack this collapses — orientation for anyone already
-              paying six invoices for the same job. ===== */}
-      <Section className="pt-12 sm:pt-16">
-        <div className="flex flex-col items-center gap-5 text-center">
-          <span className="text-[12px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
-            One system instead of
-          </span>
-          <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-2 sm:gap-x-5">
-            {replaces.map((name, i) => (
-              <span key={name} className="flex items-center gap-3 sm:gap-5">
-                {i > 0 && (
-                  <span aria-hidden className="text-border">
-                    ·
-                  </span>
-                )}
-                <span className="text-[19px] font-medium tracking-[-0.015em] text-foreground/70 sm:text-[22px]">
-                  {name}
+      {/* ===== Router — a good share of visitors arrive looking for an
+              enrichment API, and the hero deliberately doesn't carry that
+              story. One line in the first screen lets them self-select
+              without diluting the copy above. ===== */}
+      <Section className="pt-6 sm:pt-8">
+        <Link
+          href="/enrichment-api"
+          className="group flex flex-wrap items-center justify-between gap-x-6 gap-y-1.5 rounded-[14px] border border-[var(--panel-edge)] bg-[var(--panel)] px-5 py-2.5"
+        >
+          <span className="flex items-center gap-3.5">
+            {/* Overlapping agent marks — decorative; the copy carries the
+                meaning. White chips so the logos read in dark mode too, with
+                a panel-colored ring separating each from the one beneath. */}
+            <span aria-hidden className="flex shrink-0 -space-x-3">
+              {agentLogos.map((logo) => (
+                <span
+                  key={logo.alt}
+                  className="flex size-9 items-center justify-center rounded-full border border-[#1c2333]/10 bg-white ring-2 ring-[var(--panel)]"
+                >
+                  <Image
+                    src={logo.src}
+                    alt=""
+                    width={16}
+                    height={16}
+                    className="size-4"
+                  />
                 </span>
-              </span>
-            ))}
-          </div>
-          <p className="max-w-140 text-sm text-muted-foreground">
-            Enrichment, automation, and sync.
-          </p>
-        </div>
+              ))}
+            </span>
+            <span className="text-sm text-muted-foreground">
+              Looking for an API? Add Clay-like enrichment to any product or
+              agent. Fast.
+            </span>
+          </span>
+          <span className="text-sm font-medium text-foreground transition-opacity group-hover:opacity-70">
+            Enrichment API →
+          </span>
+        </Link>
       </Section>
 
       {/* ===== Statement — what pipe0 is, revealed word-by-word on scroll ===== */}
       <Section>
         <LandingStatement />
+      </Section>
+
+      {/* ===== The stack this collapses — the statement makes the claim,
+              this row shows the invoices it retires. Left-aligned to the
+              shared container like every other section heading. ===== */}
+      <Section className="pt-8 sm:pt-12">
+        <LandingReplaces />
       </Section>
 
       {/* ===== Spotlight — the three layers of a revenue org ===== */}
@@ -256,6 +281,7 @@ export default function Home() {
       <Section>
         <LandingSystemCards />
       </Section>
+
 
       {/* ===== Proof — three numbers, no chart ===== */}
       <Section className="pt-24 sm:pt-32">
