@@ -1,5 +1,11 @@
 # @pipe0/doc-links
 
+## 0.0.9
+
+### Patch Changes
+
+- [`4dd6ab3`](https://github.com/pipe-0/pipe0/commit/4dd6ab3059ded7e90f3f0829c7f8163e47c193bc) Thanks [@florianmartens](https://github.com/florianmartens)! - Add rate limits to docs links
+
 ## 0.0.8
 
 ### Patch Changes
