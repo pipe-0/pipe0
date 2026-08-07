@@ -93,13 +93,67 @@ function ComposeVisual({ videoRef, onEnded, loop }: MediaProps) {
   );
 }
 
+function VolumeVisual({ videoRef, onEnded, loop }: MediaProps) {
+  return (
+    <div className="relative flex h-full items-center justify-center px-6">
+      {/* Cost-vs-volume chart, centered in a floating frame */}
+      <div className="relative w-full max-w-[360px] overflow-hidden rounded-[12px] border border-[#1c2333]/10 bg-white shadow-[0_1px_2px_rgba(14,17,23,0.05),0_14px_36px_rgba(28,35,80,0.10)]">
+        <video
+          {...playerProps}
+          ref={videoRef}
+          onEnded={onEnded}
+          loop={loop}
+          poster="/media/website/volume-demo-poster.jpg"
+          width={770}
+          height={556}
+          className="block h-auto w-full"
+          src="/media/website/volume-demo.mp4"
+        />
+      </div>
+    </div>
+  );
+}
+
+function AgenticVisual({ videoRef, onEnded, loop }: MediaProps) {
+  return (
+    <div className="relative flex h-full items-center justify-center px-6">
+      {/* Prompt-to-done agent run, centered in a floating frame */}
+      <div className="relative w-full max-w-[360px] overflow-hidden rounded-[12px] border border-[#1c2333]/10 bg-white shadow-[0_1px_2px_rgba(14,17,23,0.05),0_14px_36px_rgba(28,35,80,0.10)]">
+        <video
+          {...playerProps}
+          ref={videoRef}
+          onEnded={onEnded}
+          loop={loop}
+          poster="/media/website/agentic-demo-poster.jpg"
+          width={770}
+          height={556}
+          className="block h-auto w-full"
+          src="/media/website/agentic-demo.mp4"
+        />
+      </div>
+    </div>
+  );
+}
+
 /* ---- The grid ---- */
 
+/* Ordered as a checkerboard: each grid row pairs one product-window demo
+   with one conceptual card, so neither row reads as the odd one out. */
 const cards = [
   {
     title: "Find who you're looking for",
     copy: "One query runs across multiple datasets at once, not one provider at a time. Curated premium sources instead of a long chain of low-end ones — great coverage, and faster results.",
     Visual: FindVisual,
+  },
+  {
+    title: "Leading coverage, 5x cheaper",
+    copy: "3–10x more cost efficient than traditional tools, with dedicated high-volume pricing that holds at scale. Built for teams that run enrichment and automation at volume.",
+    Visual: VolumeVisual,
+  },
+  {
+    title: "Skip the learning curve",
+    copy: "Not just for engineers. Describe what you want in plain language, and the agent does the work. Fine-tune manually.",
+    Visual: AgenticVisual,
   },
   {
     title: "Compose enrichments",
@@ -187,7 +241,7 @@ export function LandingSystemCards() {
       const wanted = sequenced ? i === turn && anyInView : inView[i];
       if (wanted) {
         // Rejects if interrupted; muted inline playback is always allowed.
-        void v.play().catch(() => {});
+        void v.play().catch(() => { });
       } else {
         v.pause();
       }

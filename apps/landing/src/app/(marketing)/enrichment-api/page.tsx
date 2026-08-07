@@ -143,7 +143,7 @@ export default function EnrichmentApiPage() {
   return (
     <div className="landing min-h-screen bg-background">
       <JsonLd data={softwareApplicationJsonLd({ description })} />
-      <Header page="product" />
+      <Header page="api" />
 
       {/* ===== Hero — same shape as the homepage: copy at the shared
               container width, then a wider panel. ===== */}
