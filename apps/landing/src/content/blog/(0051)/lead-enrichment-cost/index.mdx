@@ -1,0 +1,169 @@
+---
+title: What Does Lead Enrichment Actually Cost?
+date: 2026-08-10
+category: Sales data
+tags:
+    - data enrichment
+excerpt: "From $0.005 per email to $155,000 a year: the real unit
+    economics of lead enrichment across the four pricing models, with
+    contract data vendors do not publish."
+draft: true
+authors:
+    - name: Florian
+      title: Founder
+---
+
+{/*
+SEARCH INTENT: "how much does lead enrichment cost for enterprise
+use?" pos 2 with zero content, plus overlap with the pay-per-use
+cluster. Budget owner trying to model spend against vendors that hide
+pricing.
+
+THE RESEARCH FINDING THAT FRAMES THE POST: no enterprise vendor
+(ZoomInfo, Breeze Intelligence, Cognism, Lusha) publishes per-record
+pricing at any volume. The workaround is triangulation: Vendr
+contract medians + published self-serve rate cards + credit math.
+Giving readers that method is worth more than any single number.
+
+VERIFIED NUMBERS TO BUILD ON:
+- Contract medians (Vendr, dated): ZoomInfo $33,500 (n=1,569, range
+  $7,200-$155,280, avg discount 21.8%; a different Vendr snapshot
+  says $54k — show both with dates, teach snapshot skepticism);
+  Cognism $36,000; Apollo $19,000; Lusha $15,999; LeadIQ $26,400.
+- Self-serve per-unit anchors: PDL $0.28/person record; Hunter PAYG
+  $0.05 → $0.0056/credit by volume; Icypeas $0.019 → $0.005;
+  FullEnrich flat $0.055/email, $0.55/mobile; LeadMagic mobile
+  ~$0.10; ZeroBounce validation $0.0195 → $0.0032; MillionVerifier
+  ~$0.0015-0.0045. Breeze Intelligence ~$0.45/credit at entry,
+  no rollover.
+- The traps that inflate effective cost: attempt-billing at real
+  hit rates (49-72% single-source), expiring credits (Hunter,
+  Apollo, Breeze monthly; UpLead "use it or lose it" in ToS;
+  Icypeas never expires), overage premiums (Clay top-ups +30%;
+  ZoomInfo overage $0.60/credit), renewal escalators (ZoomInfo
+  10-20% reported), seat minimums (ZoomInfo 3-seat), and the
+  iteration tax (Clay Actions, no sandbox).
+- Decay math for the recurring-cost argument: 2.1%/mo (~22.5%/yr)
+  B2B decay (MarketingSherpa via HubSpot); ~30% annual job
+  changes. Enrichment is opex, not capex; model it as such.
+
+CONCEPT STACK:
+L1: the unit problem (per what? seat, credit, record, success)
+L2: the four models with verified anchors
+L3: the effective-cost formula (hit rates + expiry + overages)
+L4: the enterprise answer (triangulation method + worked scenario)
+L5: how teams actually cut cost 3-10x (waterfall + success billing
+    + BYO keys)
+
+PIPE0 HANDOFF: L5, with the exact claims (3-10x vs tabular tools,
+~7x vs waterfall providers, mechanism = curation + success billing).
+Link high-volume-data-enrichment as the sibling post.
+*/}
+
+## Nobody sells enrichment in the same unit
+
+- Open with the unit problem, because it is why every "pricing
+  guide" disappoints: vendors price per seat (ZoomInfo, LeadIQ),
+  per credit (Clay, FullEnrich, Apollo), per record (PDL), or per
+  success (waterfall APIs), and those units are not convertible
+  without knowing your hit rate and volume. The post's promise:
+  convert everything to cost per delivered field, the only unit
+  a budget can be built on.
+- The one-sentence enterprise finding: no enterprise vendor
+  publishes per-record pricing at any volume, so enterprise
+  numbers below come from contract-intelligence data (Vendr) and
+  arithmetic, both shown.
+
+## The four models, with real anchors
+
+- Seat licenses: ZoomInfo median contract $33,500/yr (1,569
+  tracked deals, range $7,200-$155,280, average negotiated
+  discount ~22%; a different snapshot reports a $54k median,
+  which is a lesson in dating your sources); Cognism $36,000;
+  Lusha $15,999; LeadIQ $26,400 plus its de facto Sales
+  Navigator dependency. Seats price people, not usage; a
+  five-person team pays five times for the same dataset.
+- Credits: the workbench and finder model. Anchors: FullEnrich
+  publishes the cleanest card ($0.055 per found email, $0.55 per
+  found mobile at Pro); Apollo and Hunter bundle credits into
+  tiers with monthly expiry; Clay splits Data Credits from
+  Actions and charges a 30% premium on mid-cycle top-ups.
+- Per-record APIs: People Data Labs at $0.28 per person record
+  (bills on match), $0.10 per company record; Hunter's
+  pay-as-you-go slides from $0.05 to $0.0056 per credit by
+  volume; Icypeas from $0.019 to $0.005 with credits that never
+  expire.
+- Per-success waterfalls: billing fires only when a provider
+  delivers; misses are free. This is the model where quoted
+  price equals effective price, which is the entire reason to
+  care about the distinction the next section formalizes.
+
+## Effective cost: the formula vendors hope you skip
+
+- The formula, plainly: effective cost per delivered field =
+  (money spent) / (records actually delivered), and the three
+  things that drive it apart from list price are hit rate,
+  expiry, and overages.
+- Hit rate: single-source live find rates cluster 49-72% in
+  published tests. Under attempt-billing at a 60% hit rate, a
+  $0.05 lookup really costs $0.083 per delivered email. Under
+  success-billing it costs $0.05. Same list price, 66% apart.
+- Expiry: monthly-expiring credits are a use-it-or-lose-it
+  discount to the vendor. UpLead's ToS says "use it or lose it"
+  verbatim; Breeze Intelligence credits reset monthly; Hunter
+  and Apollo expire monthly; Icypeas never expires. For seasonal
+  pipelines, expiry can be a 20-40% effective surcharge; model
+  your actual monthly variance against it.
+- Overages and escalators: Clay top-ups +30%; ZoomInfo overage
+  credits at $0.60 falling to $0.20 only past 2.5M; reported
+  renewal uplifts of 10-20% on auto-renewing enterprise
+  contracts with 60-day notice windows. Put renewal dates on
+  the calendar the day you sign; that sentence is worth the
+  post.
+
+## So what does enterprise lead enrichment cost?
+
+- Answer the query with the method plus a worked scenario.
+  Method: take the Vendr median for the shortlist vendor, apply
+  the ~22% negotiation norm, add modules you actually need, then
+  divide by honest annual delivered-record volume to get the
+  per-record truth. Most teams doing this for the first time
+  find their database contract prices out between $0.50 and $2+
+  per actually-used record; the silence around that number is
+  why vendors do not publish it.
+- The worked scenario, concrete: 50,000 contacts enriched per
+  quarter with email plus mobile. Price it three ways with the
+  anchors above: an enterprise database contract (median-based),
+  a credit workbench (rate-card based, iteration included), and
+  a success-billed waterfall. Show the arithmetic in a table;
+  let the spread speak. [Numbers to be computed from this
+  post's anchors at writing time; keep every input cited.]
+- The recurring-cost coda with the decay math: B2B data decays
+  ~2.1% per month (~22.5% a year), and about 30% of
+  professionals change jobs annually, so enrichment is not a
+  one-time purchase but a refresh flow. Annualize accordingly;
+  a "cheap" one-time bulk buy that rots is the most expensive
+  option on a two-year horizon. Link the Pipedrive post's
+  refresh cadence guidance and high-volume-data-enrichment for
+  the scale techniques.
+
+## How teams actually cut this 3-10x
+
+- The three levers, mechanism named for each: waterfalls (pay
+  the best-fit provider per record instead of the union of
+  subscriptions; coverage compounds while cost does not);
+  success billing (align spend with delivered value; misses
+  free); bring-your-own keys (keep negotiated provider rates
+  while renting orchestration).
+- [pipe0 →] the exact claims, with the disclosure sentence:
+  pipe0 combines all three levers: curated waterfalls across
+  50+ providers billed only on success, BYO API keys on any
+  plan, from $49/mo with social pricing that stays cost
+  efficient at high volume. In our pricing comparisons this
+  comes out 3-10x more cost efficient than traditional tabular
+  tools and roughly 7x as cost effective as traditional
+  waterfall providers; run your own list against the 20 free
+  credits and check the math yourself.
+- End on the budgeting rule, no summary: price everything in
+  cost per delivered field, dated; any vendor who cannot quote
+  that unit is telling you the answer.

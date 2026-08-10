@@ -1,0 +1,7 @@
+@import "tailwindcss";
+@import "@pipe0/react/styles";
+
+body {
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  margin: 0;
+}

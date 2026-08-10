@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="420" viewBox="0 0 900 420" role="img">
+<rect x="0.5" y="0.5" width="899" height="419" rx="12" fill="#ffffff" stroke="#e7e7e4" />
+<text x="28" y="40" font-family="Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="20" font-weight="600" fill="#101014" text-anchor="start">One lookup, falling through providers</text>
+<text x="28" y="64" font-family="Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13.5" font-weight="400" fill="#57565a" text-anchor="start">The waterfall stops at the first provider that returns a result, then verifies it</text>
+<rect x="40" y="96" width="200" height="58" rx="8" fill="#ffffff" stroke="#dcdcd8" />
+<text x="56" y="120" font-family="Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="600" fill="#101014" text-anchor="start">Provider 1</text>
+<text x="56" y="139" font-family="Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#8a8a90" text-anchor="start">no result &#183; not billed</text>
+<path d="M140 154 V225 H171" fill="none" stroke="#6f6e74" stroke-width="1.5" />
+<polygon points="180,225 171,220 171,230" fill="#6f6e74" />
+<rect x="180" y="196" width="200" height="58" rx="8" fill="#ffffff" stroke="#dcdcd8" />
+<text x="196" y="220" font-family="Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="600" fill="#101014" text-anchor="start">Provider 2</text>
+<text x="196" y="239" font-family="Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#8a8a90" text-anchor="start">no result &#183; not billed</text>
+<path d="M280 254 V325 H311" fill="none" stroke="#6f6e74" stroke-width="1.5" />
+<polygon points="320,325 311,320 311,330" fill="#6f6e74" />
+<rect x="320" y="296" width="224" height="58" rx="8" fill="#3440e5" />
+<text x="336" y="320" font-family="Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="600" fill="#ffffff" text-anchor="start">Provider 3</text>
+<text x="336" y="339" font-family="Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#ffffff" opacity="0.8" text-anchor="start">returns a result &#183; billed</text>
+<text x="320" y="379" font-family="Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="600" fill="#3440e5" text-anchor="start">You pay this provider only.</text>
+<path d="M544 325 H571" fill="none" stroke="#6f6e74" stroke-width="1.5" />
+<polygon points="580,325 571,320 571,330" fill="#6f6e74" />
+<rect x="580" y="296" width="170" height="58" rx="8" fill="#ffffff" stroke="#dcdcd8" />
+<text x="596" y="320" font-family="Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="600" fill="#101014" text-anchor="start">Verification</text>
+<text x="596" y="339" font-family="Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#8a8a90" text-anchor="start">e.g. ZeroBounce</text>
+<path d="M750 325 H769" fill="none" stroke="#6f6e74" stroke-width="1.5" />
+<polygon points="778,325 769,320 769,330" fill="#6f6e74" />
+<rect x="778" y="304" width="84" height="42" rx="21" fill="#ffffff" stroke="#3440e5" />
+<text x="820" y="330" font-family="Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#3440e5" text-anchor="middle">kept</text>
+<path d="M665 354 V385" fill="none" stroke="#6f6e74" stroke-width="1.5" />
+<polygon points="665,394 660,385 670,385" fill="#6f6e74" />
+<text x="665" y="412" font-family="Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#8a8a90" text-anchor="middle">invalid: discarded, the waterfall continues</text>
+</svg>

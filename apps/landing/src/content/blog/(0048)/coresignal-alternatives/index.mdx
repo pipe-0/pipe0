@@ -1,0 +1,182 @@
+---
+title: CoreSignal Alternatives for B2B Data
+date: 2026-08-10
+category: Sales data
+tags:
+    - data enrichment
+excerpt: "Coresignal publishes real prices, which is rare; its rivals
+    mostly do not, which is the finding. The bulk-vs-per-record math, the
+    post-Proxycurl legal ground, and where each vendor honestly fits."
+draft: true
+authors:
+    - name: Florian
+      title: Founder
+---
+
+{/*
+SEARCH INTENT: "coresignal alternatives" 2 impressions pos 3. Low
+volume, high-value searcher: data/ML engineers and product teams
+buying bulk B2B data, budgets in five figures.
+
+READER PSYCHOLOGY: Not the SDR buyer. They think in coverage, refresh
+cadence, delivery formats, licensing. The mistake half are making:
+buying bulk rows when they need per-record answers (or vice versa).
+Surface that split early; it is the honest pipe0 boundary too (pipe0
+serves per-record, not bulk).
+
+RESEARCH RECEIPTS:
+- Coresignal (verified same-day on their site): 70M+ companies,
+  895M+ employees, 468M+ jobs; "4.5B+ records" headline vs ~1.4B sum
+  of entity counts (historical snapshots inflate the headline — say
+  so); Base/Clean/Multi-source tiers; API tiers $49-$5,000/mo with
+  credit costs (jobs 1 credit, Base 10, Multi-source 20); bulk
+  datasets from ~$1,000/mo, per-record rates quote-only; resale and
+  derived-works terms NOT public (gated behind a signed agreement);
+  ships its own MCP server.
+- Alternatives-content rot, citable: Explorium's comparison page
+  calls the $49 tier "Starter" (real name Mini), prices Pro at ~$800
+  (real: $499), and misstates the trial (real: 2,000 credits, 7
+  days). Name the pattern, not to dunk but to teach source-checking.
+- Bulk vs per-record worked math (verified prices): 50k multi-source
+  enrichments = 1M credits = the $1,500/mo Premium tier = $0.03/rec;
+  Base = $0.015/rec; Bright Data bulk floor $250/100k (~$0.0025/rec);
+  PDL Pro $0.28/rec (10-20x Coresignal's implied per-record).
+- Legal landscape: hiQ (public scraping ≠ CFAA, but hiQ died on
+  contract/tort, $500k judgment); LinkedIn v. Proxycurl filed Jan 24,
+  2025, Proxycurl shut down July 2025 at ~$10M ARR. NOTE ONE
+  CONTRADICTION: another research pass found nubela.co's Proxycurl
+  pricing page still live and selling PAYG credits in Aug 2026 —
+  almost certainly a stale page on a dead product; verify before
+  mentioning Proxycurl as anything but a cautionary tale.
+- PDL historical color: the 2019 Troy Hunt writeup of 622M emails
+  exposed from a PDL-sourced dataset (not a PDL system breach) — the
+  canonical example of why redistribution terms matter.
+- Practitioner price signal: Show HN founder quoting "$800/mo from
+  Coresignal for job data" as the reason they built a competitor.
+
+CONCEPT STACK:
+L1: rows vs answers (the purchase-shape split)
+L2: what Coresignal actually is, with its real numbers
+L3: the evaluation axes (incl. the licensing questions nobody prints)
+L4: the alternatives with verified facts
+L5: the worked economics (bulk vs per-record crossover)
+L6: the legal ground post-Proxycurl
+L7: when you do not need bulk at all (pipe0, scoped)
+*/}
+
+## Rows or answers: know which you are buying
+
+- The organizing split: raw-data vendors sell the dataset (millions
+  of rows, files or firehose APIs, licensed); enrichment tools sell
+  answers about records you name. Bulk is expensive upfront and
+  cheap per row; per-record is cheap to start and priced per answer.
+  Buying the wrong shape is the five-figure mistake this post
+  prevents; the worked math below makes the crossover concrete.
+
+## What Coresignal actually is
+
+- The verified profile: 70M+ company records, 895M+ employee
+  records, 468M+ job postings, collected since 2016, in three
+  processing tiers (Base raw, Clean deduped, Multi-source merged);
+  refresh daily to monthly by dataset; delivery as files (JSON,
+  JSONL, CSV, Parquet), cloud-bucket push, or API; a founding
+  member of the Ethical Web Data Collection Initiative.
+- Two honest readings of its own numbers, offered as method: the
+  "4.5B+ records" headline is roughly triple the sum of its entity
+  counts, because it counts historical snapshots; and a competitor
+  comparison claims records for smaller companies "can be 3-4
+  months old at point of access" [third-party claim, label it].
+  Neither is damning; both are why you evaluate on a sample keyed
+  to YOUR universe, not the vendor's demo slice.
+- The genuinely rare thing, credit it: Coresignal publishes its
+  API price list, $49/mo (2,500 credits) to $5,000/mo (10M),
+  with per-record credit costs (jobs 1, Base 10, Multi-source 20).
+  Most of this category is quote-only; published prices are worth
+  something by themselves.
+
+## The axes that decide a bulk purchase
+
+- The rubric: entity coverage and geography; refresh cadence AND
+  freshness distribution (average age hides the tail); sourcing
+  method and compliance posture; delivery format; and licensing,
+  the one that bites. Two specific license questions to ask in
+  writing: can we redistribute derived works, and what happens to
+  the data at contract end. Coresignal's public terms cover only
+  its website content; the actual data license is a signed
+  agreement, which is normal, but it means nothing you read on the
+  site answers those two questions.
+- Why licensing deserves its own paragraph: the canonical cautionary
+  tale is the 2019 exposure of 622M email addresses traced to a
+  People Data Labs-sourced dataset sitting on someone's unsecured
+  server. Not PDL's breach, and that is exactly the point: once
+  rows leave the vendor, the license and your handling are the only
+  controls left.
+
+## The alternatives, with verified facts
+
+- Crustdata: the freshness play; 1B+ profiles claimed in a
+  live-searchable index, real-time positioning, an official MCP
+  server, YC-backed and growing fast; no public dollar pricing
+  (credit costs are published, the price of a credit is not). Best
+  when recency beats bulk scale; link the crustdata-mcp post.
+- People Data Labs: per-record APIs with published entry pricing
+  ($98/mo, ~$0.28 per person record; company records ~$0.10),
+  mature licensing motion, bulk feeds by contract. Best for
+  embedding data in products at moderate volume.
+- Bright Data: dataset marketplace with the clearest public bulk
+  unit price found ($250 minimum for ~100k records, around
+  $0.0025/record); you take on more of the operational and
+  compliance burden. Best for one-off large slices.
+- OpenCorporates and registry data: the compliance-first choice for
+  legal-entity ground truth (from £2,250/yr); narrow fields, high
+  defensibility.
+- Note the pattern in this category's content while citing it: the
+  ranking "Coresignal alternatives" pages are mostly competitors
+  reviewing each other, and the most detailed one gets Coresignal's
+  tier names, prices, and trial terms all wrong against the live
+  page. Check every number on the vendor's own site, including
+  ours.
+
+## The worked economics
+
+- The crossover math with verified prices, for 50,000 specific
+  records: per-record via Coresignal's API, Multi-source tier,
+  costs 1M credits, which is the $1,500/mo Premium plan, so
+  $0.03/record ($0.015 on Base). PDL at published Pro rates would
+  be ~$0.28/record, 10-20x more, though real 50k contracts
+  negotiate down. A Bright Data bulk slice prices around $0.0025/
+  record with a $250 floor, but you inherit refresh forever.
+- The rule that falls out: below ~100k records of a defined
+  universe, per-record APIs win on total cost of ownership once
+  refresh labor is priced in; at millions of rows for model
+  training or market-wide analytics, bulk wins and nothing else is
+  close. Price both shapes for your actual query pattern; the
+  arithmetic usually decides.
+
+## The legal ground, briefly
+
+- The two cases that define the category, factually: hiQ v.
+  LinkedIn established that scraping public data is not a CFAA
+  violation, and hiQ still lost the war on contract and tort
+  claims, ending in a $500,000 judgment. LinkedIn sued Proxycurl
+  in January 2025 over alleged fake-account collection; Proxycurl
+  shut down that July at roughly $10M ARR. Buyer's takeaway: the
+  risk lives in sourcing methods, so prefer vendors that document
+  public-only collection and answer sourcing questions in writing.
+  Coresignal's EWDCI membership and published exclusions (no data
+  behind logins) are the right kind of signal; verify equivalents
+  from any alternative.
+
+## When you do not need bulk data at all
+
+- The reframe made concrete: if the job is "answer questions about
+  the 50k accounts in our CRM" rather than "model the whole
+  market," licensing a 900M-row dataset buys 99.99% waste plus a
+  refresh treadmill.
+- [pipe0 →] scoped honestly: for the per-record case, pipe0 runs
+  waterfall enrichment across 50+ curated providers (Crustdata
+  among them), billed per successful result from $49/mo, with
+  sheets, API, and MCP as the surfaces. For the bulk case (model
+  training, market-wide analytics), buy bulk; that is what it is
+  for, and pipe0 is not that tool. End on the purchasing
+  heuristic, nothing more.

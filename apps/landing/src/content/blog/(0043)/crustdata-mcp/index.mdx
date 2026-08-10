@@ -1,0 +1,153 @@
+---
+title: How to Use Crustdata Through MCP
+date: 2026-08-10
+category: Sales data
+tags:
+    - data enrichment
+    - MCP
+excerpt: "Crustdata ships an official MCP server, whatever the connector
+    directories tell you. The two ways to wire its real-time data into an
+    agent, the rate limits that shape the choice, and where the legal
+    ground sits after Proxycurl."
+draft: true
+authors:
+    - name: Florian
+      title: Founder
+---
+
+{/*
+SEARCH INTENT: "crustdata mcp" 4 impressions pos 9.8. A builder
+mid-project wanting Crustdata callable from Claude. Zero tolerance for
+marketing.
+
+RESEARCH FINDINGS THAT MAKE THE POST:
+- Crustdata HAS an official MCP server: mcp.crustdata.com/mcp
+  (streamable-http), OAuth one-click for Claude/Cursor/VS Code, API
+  key for Codex/others, keys at app.crustdata.com/api-keys. Merge.dev
+  publicly claims "Crustdata doesn't offer an official MCP server" —
+  factually wrong, citable correction, and exactly why this post
+  exists.
+- API facts: versioned (x-api-version 2025-11-01), Bearer auth;
+  enrich capped at 25 records/request; batch async up to 10,000
+  records (contacts 300), results as gzipped JSONL with links valid 5
+  days; rate limits 15/min enrich, 30/min search, 10/min web; company
+  enrich = 2 credits (+2 for technographics); autocomplete and web
+  search free; NO public dollar pricing (contact sales); live web
+  endpoints are enterprise-only.
+- Company: YC F24, $6M seed (YC, A Capital, General Catalyst, SV
+  Angel, Phosphor) closed ~Nov 2025; revenue $770K to $4M+ in seven
+  months; 1B+ people / 60M+ companies claimed; customers include YC
+  itself and agent.ai. Garry Tan: "Crustdata will be the gateway to
+  the internet for agentic apps."
+- Legal context (readers evaluating LinkedIn-derived data ask):
+  hiQ v. LinkedIn ended with scraping public data ≠ CFAA violation
+  (9th Cir. 2022) BUT hiQ still died via contract/tort claims ($500k
+  consent judgment, Dec 2022); LinkedIn sued Proxycurl Jan 24, 2025
+  (fake-account allegations) and Proxycurl shut down July 2025 at
+  ~$10M ARR. Crustdata openly markets a "Proxycurl alternative" page.
+  Present as factual risk landscape, no legal advice, no disparaging.
+
+CONCEPT STACK:
+L1: what Crustdata is (real-time positioning, verified numbers)
+L2: the correction: yes there is an official MCP server, setup
+L3: what shapes the direct path: limits, credits, enterprise gates
+L4: path two: Crustdata inside pipe0 (composability argument)
+L5: the legal ground, factually
+L6: worked example + when each path wins
+
+PIPE0 HANDOFFS: path two, with the honest boundary (Crustdata-only
+workloads or existing contracts go direct).
+*/}
+
+## Crustdata in thirty seconds
+
+- What it is, with its own numbers labeled as claims: a B2B data API
+  positioned on freshness, claiming 1B+ person profiles and 60M+
+  companies in a live-searchable index, with signals (hiring,
+  funding, headcount, posts) "timestamped within minutes to hours"
+  rather than served from quarterly snapshots. YC Fall 2024, $6M
+  seed, revenue reportedly $770K to $4M+ in seven months, and
+  customers that matter for credibility: Y Combinator itself and
+  agent.ai.
+- Why agents specifically care, two sentences: an agent deciding
+  whether to reach out today needs current title and company, not
+  last quarter's. Real-time lookup APIs exist for the moment of use,
+  and agent workflows are all moment of use; Garry Tan's "gateway to
+  the internet for agentic apps" line is the thesis in one quote.
+
+## Yes, there is an official MCP server
+
+- Lead with the correction because directories get it wrong:
+  Merge.dev's connector page states Crustdata offers no official MCP
+  server; Crustdata's own domain says otherwise. The official server
+  lives at mcp.crustdata.com (streamable-http endpoint /mcp), with
+  one-click OAuth setup for Claude, Claude Code (claude mcp add),
+  Cursor, and VS Code, and API-key setup for other clients; keys
+  come from app.crustdata.com/api-keys. Their GitHub org also ships
+  MIT-licensed Claude skills (crustdata/skills) built on the same
+  APIs.
+- The trap this illustrates, one sentence: MCP directories and
+  connector marketplaces lag vendors by months in both directions,
+  listing dead servers and missing live ones; verify on the
+  vendor's domain.
+
+## What shapes the direct path
+
+- The mechanics a builder needs before choosing: enrichment calls
+  cap at 25 records per request, with async batch jobs up to 10,000
+  records returning gzipped JSONL via links valid five days; rate
+  limits run 15/min on enrich, 30/min on search, 10/min on live web
+  endpoints; company enrichment costs 2 credits (plus 2 for
+  technographics); autocomplete and web search are free.
+- The two gates to know about: there is no public dollar pricing
+  (credit tiers are contact-sales), and the live web endpoints are
+  enterprise-plan-only. Neither is disqualifying; both belong in
+  the estimate before you commit an agent workflow to the direct
+  path.
+- When direct is right, stated fairly: Crustdata-only workloads, an
+  existing contract, or endpoints a meta provider does not surface
+  (posts, watcher, live web).
+
+## Path two: Crustdata inside pipe0
+
+- The factual pitch: pipe0 already exposes Crustdata as pipes and
+  searches (people:profiles:crustdata, company:identity:crustdata,
+  person:posts:content:crustdata), so one auth and one MCP server
+  put Crustdata in the same toolset as work-email waterfalls,
+  ZeroBounce validation, and CRM writes.
+- The composability argument is the substance: a Crustdata profile
+  search feeding a waterfall, then validation, then a Salesforce
+  update is one agent conversation on one server, versus four
+  integrations on the direct path. And billing is per successful
+  result with published credit costs, versus contact-sales pricing.
+- Keep the exclusivity wording exact: pipe0 carries premium
+  providers like Crustdata and Amplemarket, and is the only meta
+  provider allowed to offer Amplemarket data.
+
+## The legal ground, factually
+
+- Readers evaluating LinkedIn-derived data deserve the map, stated
+  without editorializing: the Ninth Circuit held (hiQ v. LinkedIn,
+  reaffirmed 2022) that scraping public data does not violate the
+  CFAA, but hiQ itself ended in a $500,000 consent judgment on
+  contract and tort claims. LinkedIn sued Proxycurl in January 2025
+  over alleged fake-account scraping; Proxycurl shut down that July
+  at roughly $10M ARR. The live risk in this category is contract
+  and fraud theories, not anti-hacking law.
+- What a buyer does with that, one practical line: ask any
+  LinkedIn-adjacent vendor how it sources (public-only collection
+  and compliance posture are the questions that mattered in both
+  cases), and prefer vendors who answer in writing. Crustdata
+  positions itself openly for displaced Proxycurl customers; the
+  diligence question is the same for every vendor in the category.
+
+## A worked example, then the boundary
+
+- Script the demo end to end: ask Claude Code to find profiles
+  matching an ICP via the Crustdata search, pull recent posts for
+  the top matches, waterfall work emails, validate, push qualified
+  rows to the CRM. Short annotated transcript: the prompt, the
+  tools chosen, statuses on the cells.
+- Close on the boundary line, one sentence each: go direct when
+  Crustdata is the whole stack; go through the meta provider when
+  Crustdata is one ingredient in a pipeline. Nothing after that.

@@ -1,0 +1,180 @@
+---
+title: ZeroBounce Status Codes, Explained
+date: 2026-08-10
+category: Engineering
+tags:
+    - data enrichment
+excerpt: "Every ZeroBounce status and sub-status with a send, suppress, or
+    retest verdict, the quality-score bounce table nobody connects to
+    policy, and the billing nuance: only unknowns are free."
+draft: true
+authors:
+    - name: Florian
+      title: Founder
+---
+
+{/*
+SEARCH INTENT: "zerobounce status codes" pos 11, "zerobounce
+documentation" pos 50. Dev/ops mid-integration, scanning for their
+status value. They return repeatedly; this is a reference page.
+
+WHAT RANKING PAGES LACK (verified by survey): none give a decision
+table keyed to status + sub_status + quality score; none explain the
+valid/accept_all vs standalone catch-all split; none connect
+ZeroBounce's own QS-to-bounce-rate table to a send policy; none state
+the billing nuance (only unknown is free; catch-all bills); none map
+statuses against Gmail/Yahoo's 2024 spam-rate ceilings. All five gaps
+are this post's structure.
+
+FORMAT: table first, prose on the hard cases after, policies at the
+end. Keep ZeroBounce's exact identifier strings in backticks; readers
+grep for them.
+
+CONCEPT STACK:
+L1: the four checks a validation runs (statuses = where it stopped)
+L2: the complete reference table with verdicts
+L3: the hard cases: catch-all (with the QS table), unknown, role-based
+L4: spam traps (Spamhaus mechanics, what validators can't promise)
+L5: policy recipes tied to Gmail/Yahoo thresholds
+L6: validating as a pipeline stage (pipe0)
+
+PIPE0 HANDOFF: final section only: people:email:validate:zerobounce
+pipe, run_if gating downstream sends on status, link existing posts.
+*/}
+
+## What a validation actually checks
+
+- Four checks in order, one line each: syntax (shaped like an email),
+  domain (DNS has MX records), mailbox (SMTP conversation asks the
+  server if the box exists), reputation (known trap, complainer, or
+  disposable). Each status is the pipeline reporting where it stopped;
+  teach that once and the table stops being arbitrary.
+- One structural fact worth stating early because it confuses
+  everyone: `accept_all` appears as a sub-status of `valid`, while
+  `catch-all` is its own top-level status. ZeroBounce resolves some
+  catch-all domains to confident answers and leaves the rest in the
+  ambiguous bucket; their docs never state the dividing rule. Knowing
+  both exist saves readers an afternoon of confusion.
+
+## The reference table
+
+- Full table from the current v2 docs, exact identifiers, one verdict
+  column (send / suppress / depends, with the condition):
+- `valid` (expected bounce under 2%): send. Sub-statuses worth notes:
+  `gold` (high-engagement recipients), `alternate` (likely secondary
+  inbox), `alias_address` (forwarder, delivers but person-matching is
+  weaker), `role_based_accept_all`, `ai_agent_mailbox` (a 2026-era
+  addition: the inbox is managed by an AI agent, deliverable but
+  possibly never read by a human; worth a sentence, no other article
+  covers it).
+- `invalid`: suppress, never retry. Sub-statuses: `mailbox_not_found`,
+  `failed_syntax_check`, `possible_typo` (check `did_you_mean` before
+  discarding), `no_dns_entries`, `mailbox_quota_exceeded`,
+  `does_not_accept_mail`, `unroutable_ip_address`.
+- `spamtrap`: suppress, and audit how it entered your list (section
+  below). `abuse`: known complainer; suppress for outbound even
+  though it would deliver, because complaints outrank bounces in
+  provider scoring.
+- `do_not_mail`: depends by sub-status. `disposable` and `toxic`:
+  suppress always. `role_based` (info@, support@): suppress for cold
+  outreach, acceptable for transactional. `global_suppression`,
+  `possible_trap`, `mx_forward`: suppress for outbound.
+- `catch-all` and `unknown`: the hard cases, own sections below.
+- Billing nuance, stated in the table's intro because no ranking page
+  states it: only `unknown` results and duplicates are free (credited
+  back). A `catch-all`, `spamtrap`, or `do_not_mail` result consumes a
+  credit; it is a definitive classification, just not a sendable one.
+
+## catch-all: use their own bounce table
+
+- The mechanism in two sentences: the server accepts mail for any
+  address, so mailbox existence cannot be confirmed by SMTP; common at
+  security-conscious companies, which are often exactly the accounts
+  you want. Scale: ZeroBounce reports more than 9% of the 11B+
+  addresses it processed in 2025 came back catch-all, and rates above
+  30% are normal in enterprise B2B lists.
+- The most useful artifact in ZeroBounce's docs, reproduced: their AI
+  quality score (0-10) maps to average catch-all bounce rates:
+  QS 0 = 40% expected bounce, QS 4 = 20%, QS 5 = 7%, QS 8 = 3.5%,
+  QS 10 = 1.3%. This is the segmentation policy hiding in plain
+  sight: treat catch-all + QS >= 8 as near-valid, QS 5-7 as
+  secondary-domain-only, QS 4 and below as suppress. Nobody in the ranking
+  results connects this table to a policy; doing so is the post.
+- Honest limits, from an independent test worth citing: Allegrow ran
+  fictional names (hermione.granger@) against real employees at the
+  same catch-all domains and both returned `valid`/`accept_all`, and
+  measured a 33.1% false-positive rate on ZeroBounce's Verify+
+  resolution of fictional addresses. No validator solves catch-all;
+  the score manages risk, it does not remove it.
+
+## unknown: free, and usually worth one retry
+
+- What it means: the server did not answer cleanly (`greylisted`,
+  `timeout_exceeded`, `antispam_system`, `mail_server_temporary_error`
+  and friends). You were not charged; unknowns are credited back.
+- The right move: revalidate after 24-72 hours. No first-party
+  percentage exists for how many resolve on retry [ZeroBounce does
+  not publish one; a self-interested vendor study claims roughly a
+  third of risky/catch-all segments reclassify on re-verification;
+  label it as directional]. Greylisting in particular is designed to
+  clear on the second attempt.
+
+## Role-based addresses, quantified
+
+- The 2026 BounceZero study numbers (vendor-run, label as such) make
+  the policy concrete: role-based addresses bounced at 52.1% vs 11.5%
+  for personal addresses, with a 17x spread inside the category:
+  contact@ 3.3% valid, info@ 13.4%, admin@ 40.6%, hr@ 57.1%. If you
+  send to role addresses at all, send to contact@ tiers, never hr@.
+
+## Spam traps: what a validator can and cannot promise
+
+- Spamhaus's own taxonomy, compressed: pristine traps (addresses that
+  never belonged to a person, seeded to catch scrapers), recycled
+  traps (real addresses that hard-bounced 12+ months, then silently
+  reactivated as traps), typo-domain traps, live traps. Their stated
+  position: "spamtraps are never revealed by their owners", so no
+  validator can promise complete detection; a trap hit is evidence of
+  a list-hygiene problem, not bad luck.
+- Consequences, sourced: pristine hits can trigger immediate
+  Spamhaus SBL listing; recycled hits erode reputation gradually.
+  The one preventable class is typo traps, which real-time syntax
+  and `possible_typo` checks catch.
+
+## Two policy recipes
+
+- Cold outbound: send `valid` only; `catch-all` only with QS >= 8 and
+  only from an isolated secondary domain; everything else suppressed.
+  The ceiling you are managing: Gmail's 2024 bulk-sender rules demand
+  a spam rate below 0.10% and treat 0.30% as the hard line; Yahoo's
+  line is 0.3%. One bad catch-all batch can spend that entire budget.
+- Transactional and product email: `valid` plus `role_based` plus
+  `catch-all` are fine; the user gave you the address, and the
+  deliverability risk profile is theirs. Suppress only `invalid`,
+  `disposable`, and traps.
+- One sentence on why they differ: outbound is judged by receiving
+  servers on your worst sends; product email is judged on user
+  intent.
+
+## If you use a different validator
+
+- The mapping table, because teams switch tools and the vocabulary
+  shifts: ZeroBounce `status`/`sub_status` = NeverBounce
+  `result`/`flags` = MillionVerifier `result`/`subresult` = Emailable
+  `state`/`reason`. Good = valid / valid / ok / deliverable;
+  accept-all = catch-all / catchall / catch_all / accept_all;
+  indeterminate = unknown everywhere. Refund-for-unknown is industry
+  standard (Emailable states it verbatim), so never accept a
+  validator that bills unknowns.
+
+## Validating as a pipeline stage
+
+- The manual loop (CSV up, wait, download, filter, repeat) breaks at
+  exactly the moment validation matters: continuously, on data that
+  arrives enriched from somewhere else.
+- [pipe0 →] three sentences: pipe0 runs ZeroBounce as a pipe
+  (people:email:validate:zerobounce), so validation is a stage after
+  any email-finding waterfall and before any send or CRM write, with
+  run_if gating downstream steps on the status the validator
+  returned. Link the two existing ZeroBounce posts for setup. A
+  reference page ends at its last fact.

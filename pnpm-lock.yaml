@@ -357,6 +357,49 @@ importers:
         specifier: ^6.3.5
         version: 6.3.5(@types/node@22.19.17)(jiti@2.7.0)(lightningcss@1.32.0)(yaml@2.8.1)
 
+  examples/typescript/dough:
+    dependencies:
+      '@pipe0/base':
+        specifier: 0.0.12
+        version: 0.0.12
+      '@pipe0/client':
+        specifier: 0.0.36
+        version: 0.0.36
+      '@pipe0/react':
+        specifier: 0.0.12
+        version: 0.0.12(932cd6464724db151774802bb1b01be3)
+      '@tanstack/react-table':
+        specifier: ^8.21.3
+        version: 8.21.3(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      react:
+        specifier: ^19.0.0
+        version: 19.2.7
+      react-dom:
+        specifier: ^19.0.0
+        version: 19.2.7(react@19.2.7)
+    devDependencies:
+      '@tailwindcss/vite':
+        specifier: ^4.2.4
+        version: 4.2.4(vite@6.3.5(@types/node@22.19.17)(jiti@2.7.0)(lightningcss@1.32.0)(yaml@2.8.1))
+      '@types/react':
+        specifier: ^19.0.8
+        version: 19.2.14
+      '@types/react-dom':
+        specifier: ^19.0.3
+        version: 19.2.3(@types/react@19.2.14)
+      '@vitejs/plugin-react':
+        specifier: ^4.3.4
+        version: 4.7.0(vite@6.3.5(@types/node@22.19.17)(jiti@2.7.0)(lightningcss@1.32.0)(yaml@2.8.1))
+      tailwindcss:
+        specifier: ^4.1.11
+        version: 4.3.2
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+      vite:
+        specifier: ^6.3.5
+        version: 6.3.5(@types/node@22.19.17)(jiti@2.7.0)(lightningcss@1.32.0)(yaml@2.8.1)
+
   packages/docs-links:
     devDependencies:
       rimraf:
@@ -2307,6 +2350,32 @@ packages:
 
   '@pipe0/client@1.0.6':
     resolution: {integrity: sha512-u3MOxgPZgGpL5B3p7r9Gtk/pZbq/ytFMNLSGwFpOpdB8vjGsrTC48zAI6aYNOCd91GYSRPM4iRwGkpI3H0R3ng==}
+
+  '@pipe0/react@0.0.12':
+    resolution: {integrity: sha512-COuw557GX8wwzVOjBQuhrouEyNFELewjl2SIUdpSPM9ktnxmeuDZOrH93L9ADIBlqS32dgdqMEGYLKoylRyiCg==}
+    engines: {node: '>=18.0.0'}
+    peerDependencies:
+      '@dnd-kit/core': ^6.0.0
+      '@dnd-kit/sortable': ^10.0.0
+      '@dnd-kit/utilities': ^3.0.0
+      '@floating-ui/react': ^0.26.0 || ^0.27.0
+      '@hookform/resolvers': ^5.0.0
+      '@tanstack/react-table': ^8.0.0
+      '@tiptap/pm': ^2.12.0 || ^3.0.0
+      '@tiptap/react': ^2.12.0 || ^3.0.0
+      '@tiptap/starter-kit': ^2.12.0 || ^3.0.0
+      '@tiptap/suggestion': ^2.12.0 || ^3.0.0
+      '@types/react': ^18.0.0 || ^19.0.0
+      '@types/react-dom': ^18.0.0 || ^19.0.0
+      react: ^18.0.0 || ^19.0.0
+      react-dom: ^18.0.0 || ^19.0.0
+      react-hook-form: ^7.0.0
+      zod: ^4.0.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      '@types/react-dom':
+        optional: true
 
   '@pipe0/react@1.0.6':
     resolution: {integrity: sha512-/h/zqZLH11g2Ia8/D77TUYEkFPApsBvP9/r9MGTmQfyBEozmeVvqKuqYHTaoyYGBZvkPX2K0XhNHfP2g9PmsQQ==}
@@ -9795,6 +9864,40 @@ snapshots:
   '@pipe0/client@1.0.6':
     dependencies:
       openapi-fetch: 0.15.0
+
+  '@pipe0/react@0.0.12(932cd6464724db151774802bb1b01be3)':
+    dependencies:
+      '@base-ui/react': 1.6.0(@date-fns/tz@1.4.1)(@types/react@19.2.14)(date-fns@4.1.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@dnd-kit/core': 6.3.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@dnd-kit/sortable': 10.0.0(@dnd-kit/core@6.3.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react@19.2.7)
+      '@dnd-kit/utilities': 3.2.2(react@19.2.7)
+      '@floating-ui/react': 0.27.19(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@hookform/resolvers': 5.2.2(react-hook-form@7.71.1(react@19.2.7))
+      '@pipe0/base': 0.0.12
+      '@radix-ui/react-slot': 1.3.0(@types/react@19.2.14)(react@19.2.7)
+      '@tanstack/match-sorter-utils': 8.19.4
+      '@tanstack/react-table': 8.21.3(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@tiptap/pm': 3.27.1
+      '@tiptap/react': 3.27.1(@floating-ui/dom@1.7.6)(@tiptap/core@3.27.1(@tiptap/pm@3.27.1))(@tiptap/pm@3.27.1)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@tiptap/starter-kit': 3.27.1
+      '@tiptap/suggestion': 3.27.1(@floating-ui/dom@1.7.6)(@tiptap/core@3.27.1(@tiptap/pm@3.27.1))(@tiptap/pm@3.27.1)
+      class-variance-authority: 0.7.1
+      clsx: 2.1.1
+      cmdk: 1.1.1(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      jsonata: 2.1.0
+      lucide-react: 0.475.0(react@19.2.7)
+      react: 19.2.7
+      react-dom: 19.2.7(react@19.2.7)
+      react-hook-form: 7.71.1(react@19.2.7)
+      swr: 2.4.1(react@19.2.7)
+      tailwind-merge: 3.4.0
+      zod: 4.4.3
+    optionalDependencies:
+      '@types/react': 19.2.14
+      '@types/react-dom': 19.2.3(@types/react@19.2.14)
+    transitivePeerDependencies:
+      - '@date-fns/tz'
+      - date-fns
 
   '@pipe0/react@1.0.6(@base-ui/react@1.6.0(@date-fns/tz@1.4.1)(@types/react@19.2.14)(date-fns@4.1.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@floating-ui/dom@1.7.6)(@tiptap/core@3.27.1(@tiptap/pm@3.27.1))(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(zod@4.1.12)':
     dependencies:

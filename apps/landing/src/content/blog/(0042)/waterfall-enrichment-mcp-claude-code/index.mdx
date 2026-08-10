@@ -1,0 +1,151 @@
+---
+title: Waterfall Enrichment in Claude Code with an MCP Server
+date: 2026-08-10
+category: Sales data
+tags:
+    - data enrichment
+    - MCP
+    - AI agents
+excerpt: "Most enrichment MCP servers wrap one provider, so a miss is a
+    dead end. A verified map of which servers actually cascade, why
+    server-side waterfalls beat agent-orchestrated retries, and the exact
+    Claude Code setup."
+draft: true
+authors:
+    - name: Florian
+      title: Founder
+---
+
+{/*
+SEARCH INTENT: "which mcp servers support waterfall enrichment logic?"
+pos 6.3, "how do i set up waterfall enrichment using an mcp server
+inside claude code?" pos 4. AI-assistant-shaped queries; answer each
+verbatim as a heading with the answer in sentence one.
+
+RESEARCH BASIS (45+ sources, every vendor's MCP status individually
+verified): the market's 7 ranking "best MCP servers for GTM" articles
+are all vendor-published, five rank themselves #1, only one discloses
+the conflict, and none map which servers actually cascade. That map is
+this post's core asset.
+
+THE VERIFIED MAP: server-side multi-provider waterfall = Clay (200+
+vendors claim), pipe0 (waterfall pipes with named providers, verified
+from live schema), Cleanlist (15+ sources), SyncGTM (7 named
+providers), and FullEnrich (its integrations page lists a live MCP
+server; one research pass missed it, so double-check before
+publishing). Single-provider (miss = dead end): Hunter (NOTE: its
+local MCP repo is ARCHIVED, replaced by a remote server; articles
+still link the dead one), ZoomInfo (skills plugin), Lusha, LeadMagic
+(19 tools), Crustdata, Coresignal, Exa, Firecrawl, Apify (marketplace
+gateway). NO official MCP despite what articles imply: Apollo
+(community wrappers only, verified against their GitHub org and 404
+docs pages), People Data Labs, Findymail. Explorium markets "50+
+sources" but describes pre-harmonized data, not a live cascade —
+classify carefully.
+
+READER: already sold on Claude Code; wants the recipe plus cost
+control. Cost-anxiety facts: no vendor implements a protocol-level
+"confirm before spend"; controls that DO exist: pay-on-success
+billing (pipe0), free dry-run validation (pipe0 validate_pipes),
+balance-check tools (LeadMagic get_credits), refund-on-bad-result
+(Firecrawl), client-side oauth.scopes pinning, and Claude Code's
+25k-token output cap per MCP response.
+
+CONCEPT STACK:
+L1: the two ideas and why they compose
+L2: which servers cascade (the verified answer)
+L3: server-side cascade vs agent-orchestrated retries (4 concrete
+    differences)
+L4: exact setup in Claude Code
+L5: an annotated run + cost control
+L6: one-off to production
+*/}
+
+## Why agents and waterfalls compose
+
+- One paragraph per concept, linking the existing deep dives: a
+  waterfall tries providers in order until one returns a verified
+  result; MCP is how agents discover and call tools, including paid
+  data tools. The thesis: agents are good at judgment (who to
+  enrich, what a miss means) and bad at being data providers;
+  waterfalls are the opposite. Wire them together and the agent
+  stops hallucinating contact data and starts orchestrating
+  verified lookups.
+
+## Which MCP servers support waterfall enrichment logic?
+
+- Answer in the first sentence: most enrichment MCP servers wrap a
+  single provider, so a miss is a dead end; only a handful cascade
+  across providers server-side, and as of August 2026 the verified
+  list is Clay, pipe0, Cleanlist, SyncGTM, and FullEnrich.
+- The single-provider roster, so readers can classify what they
+  find: Hunter (note: the widely-linked local repo is archived,
+  replaced by a remote server; several ranking articles still point
+  at the dead one), ZoomInfo (a skills plugin over its own
+  database), Lusha, LeadMagic, Crustdata, Coresignal, Exa,
+  Firecrawl, Apify. All useful; none falls through to a second
+  vendor on a miss.
+- The corrections that earn trust, stated with evidence: [CAUTION:
+  two research passes disagreed on Apollo: one found no official
+  MCP (org repos empty, docs page 404), the other found an
+  apollo-mcp-plugin repo and hosted mcp.apollo.io in beta. Verify
+  live before publishing either claim.] And claims that "50+
+  sources" equals a waterfall deserve scrutiny:
+  pre-merged datasets answer from one blended index; a cascade
+  retries live on a miss. Different failure behavior, same
+  marketing words.
+- Why server-side matters at the agent layer, four concrete
+  differences: one tool call instead of N (each MCP response also
+  counts against Claude Code's 25,000-token output cap); one billed
+  unit instead of per-vendor charges for every retry; one response
+  schema instead of the model normalizing each vendor's shape
+  turn by turn; one client-side timeout instead of N sequential
+  ones.
+- [pipe0 →] the concrete example, from the live tool schema rather
+  than marketing: pipe0's waterfall pipes are named as such
+  (person:workemail:waterfall, person:mobile:profileurl:waterfall,
+  company:funding:waterfall), each declaring its providers
+  (leadmagic, prospeo, amplemarket, hunter, crustdata) and priced
+  per row on success. The cascade is inspectable before you run it.
+
+## How do I set it up in Claude Code?
+
+- The exact current commands, because every ranking article skips
+  them: `claude mcp add --transport http <name> <url>` for remote
+  servers; scopes local, project (.mcp.json, checked into git), or
+  user; OAuth via /mcp in-session or `claude mcp login <name>`;
+  entries with a url require an explicit type field. Link
+  Anthropic's MCP docs as the canonical reference.
+- Then the pipe0-specific step, mirroring data-enrichment-claude-
+  code so instructions stay consistent (link it for depth), and the
+  verification move: run claude mcp list and confirm the tools
+  appear.
+
+## An annotated run
+
+- A transcript-shaped example: "find work emails for these eight
+  people, verify before returning." Show the agent choosing the
+  waterfall pipe, cells resolving with statuses, and no_result as
+  an answer rather than an error.
+- The cost-control section, addressing the real anxiety with the
+  real facts: no MCP server on the market implements a hard
+  confirm-before-spend prompt in the protocol today, so spend
+  control is structural, and the structures that exist are:
+  pay-on-success billing (a miss across the whole cascade costs
+  nothing), free dry-run validation before a run spends anything,
+  scoped API keys, and the fact that a run only fills unresolved
+  cells so re-runs never double-charge. State what pipe0 implements
+  of these plainly; mention Firecrawl's refund-feedback tool and
+  LeadMagic's balance-check tool as the other patterns in the wild.
+
+## From chat to production
+
+- The growth path in four steps: ad hoc runs in chat; sheets when
+  results need state the agent can return to; schedules when it
+  should happen without you; the API when it ships inside your
+  product. Everything the MCP server does is the same engine as
+  the sheets and REST API, so nothing is rebuilt between steps.
+- End with a three-sentence build the reader can start tonight: a
+  nightly schedule that enriches yesterday's signups through the
+  waterfall, validates emails, writes the sheet, and posts misses
+  to Slack. Link the signup-alerts example. Stop there.

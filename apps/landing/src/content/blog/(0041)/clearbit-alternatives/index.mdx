@@ -1,0 +1,168 @@
+---
+title: Clearbit Alternatives After the HubSpot Acquisition
+date: 2026-08-10
+category: Sales data
+tags:
+    - data enrichment
+excerpt: "Clearbit was five products, and HubSpot sunset them on five
+    different schedules, ending with the Logo API on December 8, 2025. Your
+    replacement depends on which Clearbit you were actually using."
+draft: true
+authors:
+    - name: Florian
+      title: Founder
+---
+
+{/*
+SEARCH INTENT: "free alternative to clearbit reddit" pos 1.5, "clearbit
+connect alternative reddit" pos 2. We rank top-2 with zero content.
+Evergreen: displaced users keep searching.
+
+READER PSYCHOLOGY: Refugees, not shoppers. Something they relied on
+(often free) was taken away on a schedule they half-followed. They want
+the exact timeline, their specific product's replacement, and honest
+free-tier numbers. Competing articles get the dates wrong BY EXACTLY ONE
+YEAR (skrapp says acquired Dec 2024, actual Nov 2023; derrick-app says
+Logo API died Dec 2024, actual Dec 8, 2025), and the business-tool
+articles never cover the Logo API story while the dev blogs never cover
+enrichment. Covering both, with verified dates, is the whole win.
+
+NARRATIVE GIFT FROM RESEARCH: in the Nov 2023 HN announcement thread,
+a commenter asked "curious to see... if the Clearbit API will remain
+open for others to use." Every fear in that thread came true on
+schedule. No retrospective article uses this. Open with it.
+
+CONCEPT STACK:
+L1: the verified timeline (the reference section people bookmark)
+L2: Clearbit was five products; which did you use?
+L3: per-product replacement paths with real prices and free tiers
+L4: migration notes (field schema mapping, what silently breaks)
+
+PIPE0 HANDOFFS: (1) enrichment-API path (waterfall vs single source,
+$49/mo usage-based, link user-enrichment-engine post); (2) logo path via
+company:match:logodev pipe (Logo.dev is HubSpot's own recommended
+replacement, and we ship it as a pipe); (3) honest free-tier table.
+*/}
+
+## The prediction in the comments
+
+- Open with the HN scene, dated: November 1, 2023, HubSpot announces
+  the acquisition; in the thread a developer asks whether "the Clearbit
+  API will remain open for others to use"
+  (news.ycombinator.com/item?id=38097724). Clearbit's CEO promised "no
+  interruption of service... for as long as is practical for the new
+  combined business." Then walk the reader through what "practical"
+  turned out to mean, date by date.
+- The verified timeline, as a table (this is the bookmarkable asset;
+  every competing article gets at least one of these dates wrong, some
+  by exactly a year):
+  Nov 1, 2023 acquisition announced. Dec 4, 2023 closed (reported
+  ~$150M, never confirmed in HubSpot's IR releases). Sept 18, 2024
+  Breeze Intelligence launches at INBOUND. April 30, 2025 the free
+  tools die: Clearbit Connect, free platform, weekly visitor report.
+  Sept 9, 2025 the Autocomplete API's logo field starts returning
+  null. Dec 8, 2025 logo.clearbit.com shuts down for good.
+- Current state, verified by visiting: clearbit.com/pricing no longer
+  shows prices, only "Clearbit has joined HubSpot"; the legacy login
+  still works for existing contracts; no new signups.
+
+## Which Clearbit did you use?
+
+- The organizing insight: "Clearbit" was five products with five
+  sunset schedules, and a replacement for one is useless for another.
+  Enrichment API (email/domain in, attributes out). Reveal (IP to
+  company). Connect (free Gmail extension, 10 reveals/month).
+  Logo API (the free favicon-of-the-web embedded in thousands of
+  apps). Prospector (search).
+- One line on why every "top 10 Clearbit alternatives" listicle
+  disappoints: it answers for the Enrichment API only, and usually
+  with year-off dates.
+
+## If you used the Enrichment API
+
+- What Breeze Intelligence actually is now: HubSpot-only add-on,
+  ~200M profiles, credits that reset monthly with no rollover.
+  Exchange rate from HubSpot's own rate sheet: 100 Breeze credits =
+  3,000 HubSpot credits, overage $0.010 per HubSpot credit.
+  Third-party estimates of a comparable-volume move land 30-60%
+  above old standalone Clearbit cost [estimates converge but are not
+  first-party; label them]. If you are all-in on HubSpot, it is the
+  path of least resistance; if you are not a HubSpot customer, it is
+  not for you at all.
+- Standalone replacements with real prices: People Data Labs (free
+  100 lookups/mo; Pro $98/mo, ~$0.28 per enrichment). Apollo API
+  (credit-based, entry tiers ~$49-119/user/mo). Both single-dataset:
+  one provider's coverage, one provider's miss rate.
+- [pipe0 →] the like-for-like paragraph: same call shape (email or
+  domain in, enriched fields out) but backed by a waterfall of 50+
+  curated providers instead of one dataset, billed only when a
+  provider returns a result, from $49/mo with 20 free credits. For
+  the beloved enrich-on-signup use case specifically, link
+  "Building an Effective User Enrichment Engine", which is that
+  workflow end to end.
+
+## If you used Reveal
+
+- Reveal's capability folded into Breeze's intent features,
+  HubSpot-only; community feedback reports fewer identified
+  companies than old Clearbit [competitor-sourced claim via
+  vector.co; label it].
+- Standalone visitor-ID replacements with entry prices: Dealfront
+  (from ~€99/mo annual), Snitcher (from $49/mo), RB2B (free tier
+  150 resolutions/mo, US person-level; note its free plan lost
+  contact-level resolution in January 2026), Vector (from $399/mo).
+  Link the RB2B alternatives post for the full mechanism-and-GDPR
+  treatment instead of duplicating it here.
+
+## If you used Connect (the free one)
+
+- What you actually had: 10 free reveals a month inside Gmail. The
+  honest free-tier replacement table, exact numbers: Hunter free
+  50 credits/mo (1 credit per found email, 0.5 per verification);
+  Apollo trial 50 credits + 5 mobile; Icypeas 50 signup credits,
+  then Basic $19/mo for 1,000 credits, and unused Icypeas credits
+  roll over with no expiration, which none of the others offer.
+- Say the quiet part about free tiers once, dryly: the reader has
+  just watched a free product die; every free tier here is a
+  loss-leader with the same life expectancy risk. Structure for
+  replaceability (own your data exports) rather than loyalty.
+
+## If you used the Logo API
+
+- The section no business article writes and every developer needs:
+  logo.clearbit.com served logos into thousands of apps via one img
+  tag. HubSpot announced the sunset March 18, 2025, bots filed
+  warning issues across GitHub that April, and the endpoint died
+  December 8, 2025, a week later than first scheduled.
+- HubSpot's own recommended migration, with the exact snippet they
+  published: swap logo.clearbit.com/:domain for
+  img.logo.dev/:domain?token=..., attribution required on Logo.dev's
+  free tier. [Logo.dev's current free-tier request cap has
+  conflicting reports (10k vs 500k/mo); verify on logo.dev before
+  publishing.]
+- The post-shutdown gold rush, with links: Hunter shipped a free
+  no-signup drop-in (`logos.hunter.io/{domain}`), brand.dev and
+  apistemic launched free endpoints on Show HN. Brandfetch's free
+  tier reportedly covers up to 500k requests/mo [snippet-sourced;
+  verify].
+- [pipe0 →] one line, scoped: if you want logos inside an enrichment
+  flow rather than as a separate vendor, pipe0 ships a Logo.dev-
+  backed matching pipe (company:match:logodev).
+
+## Migration notes
+
+- The field-mapping table: Clearbit's schema became a de facto
+  standard, so map explicitly: person.name.givenName,
+  person.employment.title / .seniority / .role, company.domain,
+  company.category.sector / .industry / .subIndustry,
+  company.metrics.employees / .estimatedAnnualRevenue,
+  company.geo.*, company.tech. Note the schema-version trap: older
+  integrations read the flat company.tags, newer ones the
+  category object; replacement vendors mirror one or the other, so
+  check which your code consumes before switching.
+- What silently breaks, from the research: cached logo URLs (the img
+  tags fail quietly, not loudly), Autocomplete latency budgets,
+  free-tier rate limits that differ from Clearbit's, and any
+  compliance review that assumed Clearbit's consent basis.
+- End on the one-sentence lesson, no summary: build against data
+  vendors as if they can be acquired, because the good ones are.

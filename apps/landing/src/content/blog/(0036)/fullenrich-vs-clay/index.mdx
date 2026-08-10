@@ -1,0 +1,128 @@
+---
+title: FullEnrich vs Clay for Waterfall Enrichment
+date: 2026-08-10
+category: Sales data
+tags:
+    - data enrichment
+    - sales automation
+excerpt: "Clay and FullEnrich are two of the most popular meta providers in
+    data enrichment. A verified work email costs $0.055 on FullEnrich, flat.
+    On Clay it costs somewhere between $0.06 and $0.25."
+draft: false
+authors:
+    - name: Florian
+      title: Founder
+---
+
+FullEnrich and Clay come up in most conversations about data enrichment.
+Both find email addresses and phone numbers, and both are _meta providers_.
+
+## What is a meta provider?
+
+To find phone numbers and email addresses, you need access to a large
+database of contacts. There are two ways to get that access: own the
+database, or resell access to someone else's. Traditional data providers
+sell their own data; meta providers resell access.
+
+## Why meta providers
+
+Being a meta provider comes with several advantages. The biggest is the
+ability to chain multiple datasets into waterfalls. Waterfalls increase
+coverage without meaningfully increasing cost, because you are normally
+billed only for successfully resolved requests.
+
+A waterfall tries provider 1 first. If provider 1 does not have the
+result, the request moves to provider 2, and so on until a provider
+returns a result.
+
+![Waterfall enrichment flow: a lookup falls through provider 1 and
+provider 2 without results and without cost, provider 3 returns a result
+and is the only provider billed, and the result then passes a
+verification step where it is kept or discarded](/media/blog/20260810-1.svg)
+
+The motion has another advantage. Even when a provider returns a result,
+you can add a verification step on top. You can validate the email
+address with a provider like ZeroBounce, or check a phone number for
+common markers of a false entry.
+
+If validation fails, the result is discarded.
+
+Clay and FullEnrich both use this exact strategy to find contact data. In
+fact, FullEnrich is one of Clay's listed providers. If you purchase a
+Clay license, you get access to FullEnrich too.
+
+## Comparing on cost
+
+A phone number through FullEnrich-inside-Clay costs roughly 95¢.
+The same number directly from FullEnrich costs an average of 55¢
+(👉🏽 a phone number on [pipe0](https://pipe0.com) costs an average
+of 8¢).
+
+Don't expect the FullEnrich you reach through Clay to match the native
+product 1:1, either. FullEnrich's own platform runs 20+ providers per
+waterfall. Clay's native waterfall runs roughly 14 providers, of which
+FullEnrich is only one. It is common practice to sell meta providers
+like Clay a slimmer version of your waterfall.
+
+Even reaching FullEnrich on Clay with your own API key now incurs
+costs, after Clay's 2026 pricing change that
+[introduced actions](https://university.clay.com/docs/actions-data-credits).
+
+Here is how the list prices break down, using each vendor's published
+plans and per-enrichment rates:
+
+| | FullEnrich | Clay | pipe0 |
+| --- | --- | --- | --- |
+| Entry plan | $29/mo, 500 credits | $167/mo, 3,000 data credits + 15,000 actions | $49/mo, 1,600 credits |
+| Top self-serve plan | $55/mo, 1,000 credits | $446/mo, 6,000 data credits + 40,000 actions | $999/mo, 34,000 credits |
+| Price per credit | 5.5–5.8¢ | from 5¢, plus actions | 2.9–3.1¢ |
+| Work email, on success | 1 credit ≈ 5.5¢ | ~2–5 credits ≈ 10–25¢ | 0.5 credits ≈ 1.6¢ |
+| Mobile number, on success | 10 credits ≈ 55¢ | ≈ 95¢ via FullEnrich-inside-Clay | 3 credits ≈ 9¢ |
+
+Prices come from each vendor's pricing page and docs as of August 2026.
+Clay publishes no flat rate card; costs display in-product, and Clay's
+own waterfall guide prices individual provider lookups at 20¢ to $1.00.
+The pipe0 numbers are pipe-catalog list prices; high-volume billing
+lowers them further. On this math, pipe0 comes out roughly 7x as cost
+effective. All three tools have free tiers, so run the same 50 rows
+through each and check.
+
+## Stacking margins
+
+The chain of providers now looks roughly like this:
+
+1. B2B data provider
+2. Meta provider
+3. A meta provider inside a meta provider (FullEnrich inside Clay)
+
+This is the triple-margin pattern, and it bloats the cost per
+enrichment. With meta providers, you generally trade cost for coverage.
+Maintaining a large waterfall yourself is a genuinely annoying problem
+that carries a cost category of its own. Purchasing many individual
+providers, stitching them together, and working with rate limits and
+various provider credit balances is hard and expensive.
+
+Meta providers know this and charge accordingly.
+
+## Clay goes beyond enrichment
+
+Clay is more than a meta provider. It is a full automation framework
+that lets you perform actions like sending emails or Slack messages and
+lets you define logic around the data you retrieve.
+
+## Should you use either?
+
+At [pipe0](https://pipe0.com) we spend a lot of time benchmarking
+enrichment providers, comparing their performance, and discussing rates.
+We have also built enrichment systems at companies like Cursor and
+Cloudflare.
+
+We find it difficult to recommend either platform. The margin charged
+per enrichment is still 4-5x where it should be.
+
+That said, for low-volume enrichment where accuracy matters, you can
+consider FullEnrich. If your use case goes beyond retrieving email
+addresses and phone numbers, consider Clay.
+
+We also want to encourage you to try pipe0: a fairer margin profile and higher 
+coverage and accuracy.

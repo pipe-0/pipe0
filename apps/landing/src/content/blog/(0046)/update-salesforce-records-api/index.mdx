@@ -1,0 +1,157 @@
+---
+title: "Update Salesforce Records via API: Easy Guide"
+date: 2026-08-10
+category: Engineering
+tags:
+    - sales automation
+excerpt: "The PATCH call is one line on API v67.0. The afternoon goes to
+    auth that Salesforce is actively retiring, field security, row locks,
+    and picking the right bulk surface. Verified against the Summer '26
+    docs."
+draft: true
+authors:
+    - name: Florian
+      title: Founder
+---
+
+{/*
+SEARCH INTENT: "salesforce update record" 6 impressions pos 15.7. Mixed
+audience: devs wanting the call now, ops wanting the no-code path. Fits
+the "via API: Easy Guide" series.
+
+RESEARCH BASIS: verified against 30+ official developer.salesforce.com
+and help.salesforce.com pages, current as of API v67.0 (Summer '26).
+The six ranking tutorials share the same gaps, confirmed by survey:
+none mention field-level security, none mention UNABLE_TO_LOCK_ROW,
+none show Composite/Collections (they loop single PATCHes and burn API
+allocations), and their auth guidance points at the username-password
+flow Salesforce is retiring in Winter '27. Those four gaps are the
+post's structure.
+
+LOAD-BEARING CURRENT-STATE FACTS MOST CONTENT MISSES:
+- Username-password OAuth flow: mandatory Release Update removes it at
+  each org's Winter '27 upgrade; already blocked by default in new
+  orgs as of mid-2026.
+- Creating NEW Connected Apps is disabled by default since Spring '26;
+  External Client Apps are the successor. A 2026 tutorial telling you
+  to "create a Connected App" is already stale.
+- Upsert response codes are version-gated: 200 on update for v46.0+,
+  204 before that.
+- One flagged-lower-confidence item: the FIELD_CUSTOM_VALIDATION_
+  EXCEPTION verbatim description wobbled across doc fetches;
+  spot-check before publishing verbatim.
+
+CONCEPT STACK:
+L1: the primitive (exact call, v67.0)
+L2: auth in 2026 (what to use, what is being retired, with dates)
+L3: the failure modes in the order hit (FLS, validation, locks, limits)
+L4: upsert via external ID (the pattern that deletes lookup code)
+L5: scaling surfaces with exact limits (Collections, Composite, Bulk)
+L6: the enrichment context (pipe0 pipes, run_if)
+
+PIPE0 HANDOFF: final section only.
+*/}
+
+## The call itself
+
+- Lead with the working example on the current version: PATCH
+  https://yourdomain.my.salesforce.com/services/data/v67.0/sobjects/
+  `Contact/{id}` with a JSON body of just the fields to change.
+  Success is 204 No Content with an empty body; say so explicitly
+  because everyone expects a body and assumes failure.
+- Two supporting details with real value: clients that cannot send
+  PATCH can POST with ?_HttpMethod=PATCH, and every record type
+  (standard or custom __c object) shares this exact URL shape, so
+  one pattern covers the whole org.
+- Version note in one line: v67.0 is Summer '26; three releases a
+  year bump the number, and behavior is version-gated (upsert codes
+  below), so pin deliberately.
+
+## Auth in 2026: what to use and what is dying
+
+- The current server-to-server answer: OAuth client credentials flow
+  (available since Spring '23) against an External Client App, run
+  as a dedicated integration user (the "Minimum Access - API Only
+  Integrations" profile plus the API Integration permission set
+  license, one integration user per system).
+- The two retirements every old tutorial trips over, with dates:
+  the username-password flow is a mandatory Release Update that
+  enforces at each org's Winter '27 upgrade and is already blocked
+  by default in newly created orgs; and creating new Connected Apps
+  is disabled by default since Spring '26, with External Client
+  Apps as the successor. If a guide says "create a Connected App
+  and use the password grant", it is describing the platform of
+  2022.
+- Practical tip that saves an hour: get a token in curl against a
+  sandbox first, and note sandbox hosts differ
+  (yourcompany--sandboxname.sandbox.my.salesforce.com).
+
+## The errors you will meet, in order
+
+- FIELD_INTEGRITY_EXCEPTION / INVALID_FIELD: usually field-level
+  security; the integration user cannot see the field. Fix in the
+  permission set, not in code. None of the ranking tutorials
+  mention FLS at all, which is why this error surprises everyone.
+- FIELD_CUSTOM_VALIDATION_EXCEPTION: an admin's validation rule
+  fired. The documented bypass pattern: create a custom permission
+  (e.g. Bypass_Validation), reference it in the rule as
+  NOT($Permission.Bypass_Validation), and grant it to the
+  integration user only. Salesforce's own help documents this
+  pattern; cite it so readers can defend it to their admins.
+- UNABLE_TO_LOCK_ROW: the production classic. A record lock is held
+  up to 10 seconds before timeout; common causes are concurrent
+  DML, triggers, and Master-Detail parent contention. Documented
+  mitigations: sort bulk batches by parent ID, reduce batch sizes,
+  run serial mode. No tutorial covers this; it is the difference
+  between a demo and a pipeline.
+- CANNOT_UPDATE_CONVERTED_LEAD and ENTITY_IS_LOCKED (approval
+  processes): one line each, they exist and are by design.
+- REQUEST_LIMIT_EXCEEDED with the actual math: daily allocation is
+  100,000 calls plus 1,000 per full license (an Enterprise org with
+  15 licenses gets 115,000); Developer orgs get a flat 15,000.
+  Looping single-record PATCHes is how integrations hit this; the
+  next section is the fix.
+
+## Upsert: the pattern that deletes your lookup code
+
+- The insight: PATCH on an external ID field
+  (/sobjects/Contact/External_Key__c/abc123) creates or updates in
+  one call. No query-then-branch. Response codes are the detail
+  worth printing: 201 when it created, 200 with a created:false
+  body when it updated (API v46.0+; older versions return 204),
+  300 when multiple records match the key (no write happens).
+- Two footnotes from the docs that save real debugging: updateOnly
+  =true forces update-only semantics, and email-shaped external ID
+  values can produce spurious 404s from TLD parsing, so prefer
+  opaque keys.
+- For the cautious: If-Unmodified-Since gives you optimistic
+  concurrency (412 if the record changed since your timestamp),
+  though not on every object.
+
+## Volume: pick the right surface, with the real limits
+
+- The decision table, exact numbers from the docs: sObject
+  Collections for up to 200 records per call (one API call,
+  allOrNone defaults to false); Composite for up to 25 chained
+  subrequests where later steps reference earlier results;
+  Composite Graph for transactional trees up to 500 nodes; Bulk
+  API 2.0 for big jobs (150MB CSV per job, 150M records per
+  rolling 24 hours, job states Open, UploadComplete, InProgress,
+  JobComplete or Failed, results kept 7 days).
+- The threshold guidance, stated with its caveat: Salesforce's own
+  docs draw the Bulk line around 2,000 records for queries; for
+  writes the same order of magnitude is the sensible default,
+  though the docs never state it explicitly for writes.
+
+## Updating as the end of an enrichment pipeline
+
+- Reframe in two sentences: nobody updates Salesforce for sport;
+  the update is step three of enrich, match, write back, and the
+  matching step is where hand-rolled sync code rots.
+- [pipe0 →] the declarative version, three sentences: pipe0's
+  record:update:salesforce pipe handles the write, match pipes
+  (account:match:salesforce, opportunity:match:salesforce) handle
+  the which-record question, and run_if gates the write on upstream
+  results (only update when the email validated). Link the pipe
+  catalog pages. The reader who wanted code already has it; this
+  is for the one who just realized they are building a pipeline.

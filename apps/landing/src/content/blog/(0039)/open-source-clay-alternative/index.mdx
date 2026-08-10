@@ -1,0 +1,134 @@
+---
+title: Open-Source Clay Alternatives for Teams That Want Control
+date: 2026-08-10
+category: Sales data
+tags:
+    - data enrichment
+    - sales automation
+excerpt: "We audited every repo claiming to be an open-source Clay alternative. What actually exists, what
+    control you really want, and honest ways to get it."
+draft: false
+authors:
+    - name: Florian
+      title: Founder
+---
+
+[Clay](https://clay.com) is a popular provider for enrichment services, founded
+in 2017 by Kareem Amin and Varun Anand in New York City.
+
+It is one of the most used tools in today's GTM. Unfortunately, it also
+pops up as a big line item in GTM budgets.
+
+Open source has proven to be an effective path to lower costs; encourages community, auditability, and
+self-hosting.
+
+We audited every repo claiming to be an open-source Clay alternative and
+break it down in this blog post. We go over what actually exists, what
+control you may want, and how to get it.
+
+| Repo | Stars | What it actually is |
+| --- | --- | --- |
+| [YALC](https://github.com/Othmane-Khadri/YALC-the-GTM-operating-system) | 277 | A CLI campaign orchestrator built on seven paid provider APIs. No spreadsheet UI. |
+| [beton-ai](https://github.com/getbeton/beton-ai) | 72 | The one real spreadsheet-UI attempt. Its README now says "deprecated and no longer maintained." |
+| [enrichment-kit](https://github.com/masteranime/enrichment-kit) | 33 | An npm CLI that chains waterfalls across your own provider keys. |
+| [opengtm](https://github.com/buildingopen/opengtm) | 17 | A single-contributor burst of commits, quiet since April 2026. |
+| [toflow-mcp](https://github.com/toflow-ai/toflow-mcp) | 4 | An MCP server for a hosted workspace, not a Clay clone. |
+| [openkiln](https://github.com/OrbiSearch/openkiln) | 3 | An agentic GTM CLI experiment. |
+| [openenrich](https://github.com/openenrich/openenrich) | 2 | A local waterfall engine experiment, built in a single day. |
+
+## Why open-source Clay alternatives fail
+
+Most of these projects are small, unfinished, or abandoned. As of today, there is
+not a single serious open-source contender to Clay.
+
+The reason is structural. As a meta provider, Clay's moat is two
+hundred negotiated commercial data relationships, and data licenses
+cannot be open-sourced by a third party.
+
+No matter how feature-complete
+the open-source alternative turns out to be, you, the end user, have to
+purchase many third-party licenses.
+
+And your journey would not end after purchasing a license. You'd be
+responsible for managing contracts, making sure you don't run out of
+credits, and staying inside rate limits. You'd also have to negotiate
+enterprise access with many of these vendors.
+
+It's hard to imagine how this setup could lead to any kind of cost
+saving.
+
+In the near future, this may change slightly through providers like
+[Moltsets](https://moltsets.com/) that make unlimited contact data
+available at cheap rates. But even then, contact data is just a small
+part of the overall integration stack.
+
+## What it would take
+
+To make an open-source version of Clay work, you need access to a meta
+API: one API that combines many providers behind a common interface.
+At that point, you can build an open-source UI on top of it.
+
+Providers that offer such an API are [pipe0](https://pipe0.com),
+Deepline, or Explorium.
+
+But building a Clay-like UI on top of such an API leads to less
+differentiation from Clay than you might expect. The open-source work
+now serves merely as a UI layer.
+
+An example is
+[this folder in our public repo](https://github.com/pipe-0/pipe0/tree/main/examples/typescript/dough)
+that we've called Dough (a reference to Clay). The folder contains a
+rich, Clay-like table in roughly 300 lines of code: a UI layer.
+
+Given an API and a UI library from a provider, this is all it takes to
+build an "open source" Clay alternative: 300 lines of code.
+
+## Arguments for open source and why they fail
+
+Here are the common arguments in favor of an open-source Clay
+alternative, and how each holds up:
+
+| Argument | The hope | What actually happens |
+| --- | --- | --- |
+| Self-hosting | Your data stays on your servers | You can host the UI layer, but every enrichment still forwards your data to the providers |
+| Cost | No license fee, lower bill | Purchasing dozens of individual provider licenses costs more than the Clay bill |
+| Compliance | Easier audits | A self-hosted UI layer adds no compliance benefit; one vendor is easier to audit than thirty |
+| Control | Change and configure anything | You control the UI layer, not the data layer |
+
+## The control you want
+
+A common shortcoming of Clay is the lack of portability and control.
+Clay recently released a very basic version of its
+[API](https://developers.clay.com) and MCP server. This version still
+does not let you use Clay-like enrichment outside of Clay. What you get
+is a remote control for your Clay workspace, not enrichment you can
+take elsewhere.
+
+When people ask for an open-source Clay alternative, they often want
+the ability to:
+
+- Run data enrichment everywhere and own the data
+- Have an API and MCP server
+- Embed enrichment into other interfaces, like Slack
+- Get fair pricing that is not 6-10x the cost of purchasing from
+  providers directly
+
+This is why we built [pipe0](https://pipe0.com) after building software
+systems at companies like Cursor and Cloudflare: to give you the
+ability to automate your GTM processes at a fair cost.
+
+## The dark horse: n8n
+
+[n8n](https://n8n.io) is a general-purpose automation framework that is
+open source. It has a large community, a billion-dollar valuation, and
+roughly 200,000 GitHub stars.
+
+In many ways, it might be the most serious contender to a full,
+open-source Clay.
+
+However, n8n is much more comparable to Zapier than to Clay. It is
+general purpose, you bring your own provider connections, and for data
+enrichment it plays the same role as the UI layer discussed above. One
+detail worth knowing before you build on it: n8n is fair-code, not open
+source in the OSI sense. Its Sustainable Use license is free for
+internal use but restricts commercial redistribution.

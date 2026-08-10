@@ -1,0 +1,176 @@
+---
+title: Clay Alternatives for Agencies
+date: 2026-08-10
+category: Sales data
+tags:
+    - data enrichment
+    - sales automation
+excerpt: "Clay's March 2026 repricing deleted the $349 tier agencies ran
+    on, and its own memo explains why. The margin math for multi-client
+    enrichment, and what to run instead."
+draft: true
+authors:
+    - name: Florian
+      title: Founder
+---
+
+{/*
+SEARCH INTENT: ~12 impressions of long-tail, largely AI-assistant
+shaped ("top clay alternatives for agencies frustrated with action
+credit pricing", "...clay's move toward enterprise pricing", "clay
+alternatives with cli access" pos 2.5, "cost-effective alternatives to
+clay that are usage-based" pos 1). We rank pos 1-16 with no page.
+
+READER PSYCHOLOGY: Agency operators think in margin. Enrichment spend
+is COGS against retainers, multiplied by client count. The March 2026
+repricing is THE event this audience is searching about, and the
+research gives us receipts nobody else uses: Clay's own public pricing
+memo. Acknowledge the frustration by quoting the primary source, never
+by editorializing (positioning rule: state facts, let readers
+conclude).
+
+RESEARCH RECEIPTS TO USE:
+- March 11, 2026: Explorer tier ($349/mo, the agency favorite)
+  eliminated; three self-serve tiers collapsed to two (Launch $185,
+  Growth $495); legacy plans frozen, switch window closed Apr 10.
+- The memo's own words: change is "intentionally revenue and profit
+  negative" short-term; a "2022 mispricing decision"; Pro "had been
+  losing money... for years".
+- Two-currency model: Data Credits + Actions; every workflow step,
+  AI prompt, and HTTP call burns Actions; top-ups +30% premium.
+- No sandbox: iteration burns live credits; secondhand reports of
+  $800-1,000 burned in a learning week; 4-6 weeks to productivity;
+  28% of negative G2 reviews cite learning curve [secondhand, flag].
+- Community critique: the "90% of users never hit limits" framing
+  vs agency operators consuming ~75% of Actions monthly (Adewale
+  analysis). 96% of agency-model GTM practitioners use Clay
+  (reachly.co) — the segment IS the community.
+- Clay's July 9, 2026 public API/CLI/MCP launch is available on all
+  plans — answers the "cli access" queries with a real yes for Clay
+  too; be fair about it.
+- RESEARCH GAP flagged by agent: no verified primary quotes on
+  multi-client workspace mechanics; pull 2-3 agency-owner threads
+  manually before publishing.
+
+CONCEPT STACK:
+L1: why agencies feel enrichment pricing first (N-client
+    multiplication + the iteration tax)
+L2: what March 2026 changed, from the primary source
+L3: the agency requirements rubric
+L4: alternatives scored against the rubric (Clay included, fairly)
+L5: the margin model, worked with real prices
+L6: migration without dropping a client
+
+PIPE0 HANDOFFS: rubric walk-through (usage-based, BYO keys, API on
+every plan, social pricing at volume) and the margin model (3-10x
+claim with mechanism).
+*/}
+
+## Why agencies hit this wall first
+
+- The multiplication argument: an in-house team runs one workspace
+  and one bill; an agency runs N of everything, and platform pricing
+  rarely pools across clients. Cost grows linearly with wins while
+  retainers do not.
+- The iteration tax, now structural: Clay meters Actions on every
+  workflow step, AI prompt, and HTTP call, with no sandbox mode, so
+  building and debugging a client workflow costs the same currency as
+  running it. In-house teams amortize that across a year; agencies
+  rebuild per client. Secondhand practitioner reports describe
+  $800-1,000 burned in a single learning week [label as
+  review-aggregated; primary G2 text was not directly verifiable].
+- The segment's weight, from the one number available: 96% of
+  agency-model GTM practitioners use Clay. The community that made
+  the product big is the one most exposed to its pricing.
+
+## What actually changed in March 2026
+
+- The facts, from Clay's own published memo and pricing page, no
+  editorializing needed: on March 11, 2026 the $349 Explorer tier
+  (the standard agency choice) was eliminated; self-serve collapsed
+  to Launch ($185/mo, 15,000 Actions + 3,000 Data Credits, 50k-row
+  tables) and Growth ($495/mo, 40,000 + 6,000, unlimited rows);
+  existing customers could stay on legacy plans but the window to
+  switch between them closed April 10; mid-cycle top-ups carry a 30%
+  premium (down from 50%).
+- Quote the memo directly, because a vendor publishing its own margin
+  admissions is rare and the transparency deserves credit even when
+  the outcome hurts: the change is "intentionally revenue and profit
+  negative" short-term, correcting a "2022 mispricing decision", and
+  the Pro tier "had been losing money... for years."
+- The framing gap the community identified: Clay's "90% of users
+  never hit limits" reassurance is about median users; agency
+  operators are the tail consuming most of the Actions. Both
+  statements are true; only one describes you.
+- Fairness note that also answers the "cli access" searches: Clay's
+  July 2026 API, CLI, and MCP launch is available on every plan
+  including legacy, with no extra credit tax. The automation gap that
+  drove some agency searches has narrowed; the pricing structure has
+  not.
+
+## What an agency stack actually requires
+
+- The rubric the rest of the post scores against, five requirements:
+  per-client isolation without per-client platform fees; portable
+  workflow templates (build once, deploy N times); usage-based COGS
+  you can invoice through; API/CLI access so delivery can be
+  automated; data portability at offboarding (the client owns their
+  list).
+- One sentence on why this differs from in-house needs: agencies
+  resell the output, so unit cost and repeatability outrank UI
+  polish.
+
+## The alternatives, scored
+
+- Clay with discipline (stay, but operate differently): template
+  libraries, credit budgets per client, BYO API keys where possible
+  (connecting your own provider keys drops that step's Data Credit
+  cost to zero, per Clay's FAQ), legacy plan if you still hold one.
+  Honest verdict: viable for agencies whose clients pay for Clay
+  seats directly; the iteration tax remains.
+- FullEnrich for pure contact-data agencies: $29-55/mo, flat rate
+  card ($0.055/verified email, $0.55/mobile at Pro), unlimited
+  seats. No workflow layer; link the fullenrich-vs-clay post.
+- DIY on n8n plus provider APIs: real for engineering-heavy shops;
+  link the open-source post for the true cost accounting.
+- [pipe0 →] pipe0 against the rubric, factually: usage-based billing
+  that charges only the provider that returned a result (from
+  $49/mo, 20 free credits); 3-10x more cost efficient than
+  traditional tabular tools, with social pricing that stays cost
+  efficient at volume; bring your own API keys and use the API on
+  any plan; the whole engine is scriptable (REST, TypeScript SDK,
+  MCP), which is the terminal-native delivery the queries describe;
+  sheets to 2M rows with point-in-time recovery, so a client
+  deliverable survives a bad run. Disclosure sentence as always.
+
+## The margin model
+
+- Build the worked example agencies will screenshot. Assumptions on
+  screen: 8 clients, 5,000 net-new contacts per client per month,
+  work email + mobile waterfall, realistic hit rates.
+- Price it three ways with the verified numbers: Clay (Growth tier
+  plus both currencies; note honestly that per-enrichment credit
+  costs vary by routed provider, cite Clay's own worked waterfall
+  example of $0.20-1.00 per lookup), FullEnrich (flat card), pipe0
+  (usage-based, success-billed). Show effective per-client COGS and
+  margin on a standard retainer under each.
+- Include the line item vendors never model: iteration. Estimate
+  build-and-debug runs as a percentage of production volume (20% is
+  conservative) and show what that costs where testing burns live
+  credits versus where re-running a finished sheet is free.
+
+## Migrating without dropping a client
+
+- Sequence: pilot the new stack on one internal or lowest-risk
+  client; export tables to CSV; map each workflow column to its
+  equivalent pipe; run both stacks in parallel for one cycle on the
+  same list; compare coverage and cost per delivered record; then
+  move the book.
+- Name the true switching cost so the advice stays credible:
+  rebuilt templates, retrained operators, two to four weeks of
+  parallel running. An agency that switches for price alone and
+  skips the parallel run trades a pricing problem for a delivery
+  problem.
+- End on the operator's line: agencies do not need a cheaper
+  workbench, they need enrichment priced like infrastructure,
+  because on their P&L that is what it is.

@@ -1,0 +1,215 @@
+---
+title: The Best SDR APIs for Lead Generation (2026)
+date: 2026-08-10
+category: Sales data
+tags:
+    - data enrichment
+    - sales automation
+    - AI agents
+excerpt: "Verified pricing for 18 lead-gen APIs, the short honest answer
+    to who really offers pay-per-use, and the coverage-versus-accuracy
+    numbers the vendor listicles leave out."
+draft: true
+authors:
+    - name: Florian
+      title: Founder
+---
+
+{/*
+SEARCH INTENT: ~20 impressions, already top-10 with no content: "what
+are the top sdr apis for lead generation?" (8.6), "which apis offer
+pay-per-use pricing for prospect data" (5.5), "best llm search api
+provider for lead generation" (8.0). Q&A format: query as heading,
+answer in sentence one. Best intent fit on the whole gap list.
+
+RESEARCH BASIS: 25+ vendor pricing/docs pages fetched same-day; 8
+ranking articles surveyed (7 of 8 vendor-published, every one ranks
+itself #1 or top tier, none disclose it — say so once, early).
+
+HARD ANSWERS THE RESEARCH SETTLED:
+- True pay-per-use for PROSPECT data barely exists. The one strict
+  example historically (Proxycurl) was shut down by a LinkedIn
+  lawsuit in July 2025, and its pricing page was STILL LIVE selling
+  credit packs a year later — warn readers off it explicitly. For
+  VERIFICATION, ZeroBounce and MillionVerifier are genuine PAYG
+  (credit blocks, no subscription, never expire). Hunter has a
+  genuine PAYG calculator ($0.05/credit at 1k down to ~$0.006 at
+  1M). Everything else is soft-PAYG (self-serve monthly, cancel
+  anytime) or sales-gated (Wiza, ContactOut, Kaspr, Crustdata).
+- Single-source live hit rates cluster 49-72% across published
+  tests (Findymail 49.2% live test, FullEnrich's own baseline 53%,
+  Hunter ~72%, Apollo 78% in one test). The best independent-ish
+  waterfall number: a 14-tool, 5,000-contact test where the
+  waterfall product won coverage at 87.1% vs 71.2% for the best
+  single source, BUT with a 4.0% false-positive rate vs 0.5-0.9%
+  for the accurate specialists. Coverage and accuracy are a
+  TRADEOFF, quantified — no listicle says this.
+- Mobile is structurally worse than email everywhere: US tech
+  55-75%, EU 15-35%, LATAM/APAC often <20%; in one same-sample
+  test Apollo hit 78% email vs 41% mobile.
+- Two vendor-run Apollo-vs-ZoomInfo benchmarks CONTRADICT each
+  other on bounce rates (22%/16% vs 13.3%/15.3%) — single
+  benchmarks are noise; say so.
+- MCP: 13 of 18 vendors checked ship official MCP servers; only 1
+  of 8 ranking articles mentions MCP at all. NOTE: my two research
+  passes disagreed on Apollo's official MCP (one found
+  apollo-mcp-plugin + mcp.apollo.io, one found nothing) — verify
+  manually before printing Apollo's MCP status.
+- Enterprise per-record pricing at 50k-1M volume is published by NO
+  enterprise vendor (ZoomInfo, Breeze, Cognism, Lusha). The
+  opacity is the finding; Vendr medians are the workaround
+  ($33.5k ZoomInfo, $19k Apollo, $36k Cognism, $16k Lusha).
+
+CONCEPT STACK:
+L1: "SDR API" = four families (+ signals)
+L2: how they charge (the four billing models, with the traps)
+L3: pay-per-use, answered definitively
+L4: the list by family, verified prices, one gotcha each
+L5: hit-rate reality (coverage vs accuracy, mobile, waterfalls)
+L6: agents/MCP as the new client
+
+PIPE0 HANDOFFS: (1) meta-provider family entry with disclosure;
+(2) waterfall economics in L5; (3) MCP close.
+*/}
+
+## What are the top SDR APIs for lead generation?
+
+- Answer in the first sentence: it depends which of four jobs you
+  are hiring for, and the best API for each job in 2026 is listed
+  below with its verified price. The four families: company data,
+  person/contact data, search and discovery, and verification;
+  signals (job changes, funding, visitors) are the emerging fifth.
+- One honest sentence about this content category before the list:
+  seven of the eight articles ranking for this query are published
+  by vendors who rank themselves first without disclosure. Every
+  number here comes from the vendor's live pricing page or docs,
+  fetched and dated, and where sources contradict each other the
+  contradiction is shown.
+
+## How these APIs charge (read before any pricing page)
+
+- The four models, each with its trap. Per-request: you pay on
+  misses too; fine at high hit rates, expensive for mobiles.
+  Per-match (pay-on-success): the honest comparison unit is cost
+  per delivered field; ask every vendor for it. Credits: prepaid
+  abstraction over either; the two questions that matter are does
+  a miss consume them and do they expire (Hunter and Apollo
+  credits expire monthly; Icypeas credits never do; that
+  difference is invisible on pricing pages and real at renewal).
+  Contract-gated: no public price, sales call, annual minimum.
+- The free-tier reality check no listicle prints: 50-100 free
+  credits a month is one afternoon of SDR volume. Free tiers
+  answer "does the API work", never "what will this cost".
+
+## Which APIs offer pay-per-use pricing for prospect data?
+
+- The direct answer, because the query deserves one: almost none,
+  and the one famous strict example is dead. For contact and
+  prospect data, the market is soft pay-per-use at best:
+  self-serve monthly plans you can cancel (Prospeo, Icypeas,
+  Findymail, LeadMagic, FullEnrich, Datagma), which is
+  contract-free but not usage-only. Hunter is the honorable
+  exception with a real pay-as-you-go calculator ($0.05 per
+  search credit at 1,000, sliding to under a cent at a million).
+- The cautionary tale, told plainly: Proxycurl, the category's
+  true pay-per-use vendor, shut down in July 2025 after a
+  LinkedIn lawsuit, and its pricing page was still live and
+  selling credit packs a year later. If a blog sends you there,
+  the blog is stale.
+- Verification IS genuinely pay-per-use: ZeroBounce and
+  MillionVerifier both sell non-expiring credit blocks with no
+  subscription (and at 100k validations the spread is real:
+  $649 vs $149).
+- [pipe0 →] where pipe0 sits in this taxonomy, one paragraph
+  with the standing disclosure: usage-based credits from $49/mo,
+  billing only the provider that returned a result, 20 free
+  credits without a card. Not a strict no-subscription PAYG, and
+  this post just defined the difference, so say it: the $49
+  floor buys the waterfall, the sheets, and the MCP server; the
+  variable cost behaves like pay-per-success.
+
+## The list, by family
+
+- Person/contact APIs: People Data Labs (free 100 records/mo; Pro
+  $98/mo, $0.28/record; bills only on match) for embedding at
+  scale; Apollo (Basic $49, Professional $99; API depth gated by
+  plan; the famous free tier's fair use is 10,000 credits/mo with
+  a verified domain) as the budget all-rounder, gotcha: credit
+  fair-use math and master-key gating; Prospeo, Icypeas,
+  Findymail, LeadMagic as the finder specialists (all
+  success-billed; LeadMagic's 5-credit mobile ≈ $0.10 is the
+  cheapest published mobile rate; link the Prospeo and Icypeas
+  deep-dive guides).
+- Company data: PDL company API ($0.10/record), Crustdata
+  (real-time; credit costs are published but dollar prices are
+  sales-gated, and "transparent units, opaque price" is worth one
+  dry sentence), Coresignal (published tiers $49-$5,000/mo; link
+  the coresignal post).
+- Search and discovery, answering the "best llm search api"
+  query directly: Exa is the LLM-native search API ($7 per 1,000
+  searches; Websets, its entity-list product, prices ~$0.005 per
+  high-confidence result on Core), built for "find companies
+  matching a description" rather than filter queries. Gotcha:
+  rate limits on the advanced endpoints are unpublished.
+- Verification: ZeroBounce (from $0.0032-0.0195/validation by
+  volume) and MillionVerifier (roughly 4-7x cheaper at equal
+  volume on list price); both PAYG; link the ZeroBounce
+  status-codes reference.
+- Enterprise contract tier, priced by Vendr medians since none
+  publish rates: ZoomInfo $33,500, Cognism $36,000, Apollo
+  $19,000, Lusha $15,999. The one-sentence finding: no enterprise
+  vendor publishes per-record pricing at any volume, which is
+  why this list leads with the self-serve APIs.
+
+## The hit-rate section every listicle skips
+
+- Single-source reality, from published tests rather than vendor
+  claims: live-lookup find rates cluster between roughly 49% and
+  72% (Findymail measured 49.2% on a live test; Hunter ~72%;
+  Apollo 78% in one 1,000-lead test). Any vendor claiming 95%+
+  coverage is quoting accuracy-of-delivered-records, a different
+  metric; the conflation is the oldest trick in this category.
+- The waterfall tradeoff, quantified by the best available test
+  (14 tools, 5,000 contacts, ~36% catch-all): the waterfall
+  product won raw coverage at 87.1% versus 71.2% for the best
+  single source, but carried a 4.0% false-positive rate versus
+  0.5-0.9% for the accurate specialists. Coverage compounds;
+  so does risk, unless validation runs behind the cascade. That
+  is the design argument for waterfall-plus-verification as one
+  pipeline, and it is exactly how pipe0 chains find and
+  validate pipes; one sentence, then on.
+- Mobile numbers are structurally worse everywhere, with ranges
+  worth printing: US tech buyers 55-75% match, EU 15-35%,
+  LATAM/APAC often under 20%; in one same-sample test Apollo
+  found 78% of emails but 41% of mobiles. Budget mobile
+  coverage expectations accordingly, whatever the vendor page
+  says.
+- And the humility paragraph that builds trust: two vendor-run
+  Apollo-vs-ZoomInfo benchmarks disagree even on which platform
+  bounces less. Single benchmarks are noise; the only number
+  that matters is the one you measure on your own 200-row
+  sample, which the free tiers above exist to produce.
+
+## The new client is an agent
+
+- The stat that dates every older listicle: 13 of the 18 vendors
+  checked now ship an official MCP server (Hunter's is free on
+  all plans; Prospeo's and Icypeas's launched with zero
+  third-party coverage; ZoomInfo's requires enterprise
+  entitlements), yet only one of the eight ranking articles
+  mentions MCP at all [verify Apollo's official MCP status
+  manually; research passes conflicted].
+- What changes when the client is an agent, three sentences:
+  billing models matter more (an agent retrying across
+  per-request APIs burns money silently; success-billed
+  waterfalls cap the damage), response schemas matter more (an
+  agent normalizing five vendors' shapes wastes tokens), and
+  server-side cascades beat agent-side retries on both. Link
+  the waterfall-MCP post for the full argument.
+- [pipe0 →] close: pipe0's MCP server puts the whole stack
+  (search, waterfall enrichment, validation, CRM writes) behind
+  one toolset with per-success billing; link the Claude Code
+  prospecting walkthrough. End on the observation that the SDR
+  API category is quietly becoming the agent-tool category, and
+  the vendors above that published clean MCP servers early are
+  the ones that noticed.

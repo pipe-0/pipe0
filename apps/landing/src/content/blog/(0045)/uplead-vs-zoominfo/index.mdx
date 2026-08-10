@@ -1,0 +1,170 @@
+---
+title: UpLead vs ZoomInfo
+date: 2026-08-10
+category: Sales data
+tags:
+    - data enrichment
+    - sales automation
+excerpt: "UpLead's famous 95% guarantee appears nowhere in its contract, and
+    ZoomInfo's price appears nowhere in public. What the fine print and real
+    contract data actually say about each."
+draft: true
+authors:
+    - name: Florian
+      title: Founder
+---
+
+{/*
+SEARCH INTENT: "uplead vs zoominfo" both directions plus the legacy
+cluster (rainking vs zoominfo, ~25 impressions total). SMB/mid-market
+buyer who found UpLead as "the affordable ZoomInfo" and fears buying
+cheap twice.
+
+READER PSYCHOLOGY: They have read the 95%-guarantee marketing and the
+"$15k minimum" scare posts and trust neither. The two decoding moves
+that make this post definitive: (1) the guarantee is a billing mechanic,
+not a warranty — the ToS explicitly disclaims all accuracy guarantees in
+capital letters, and "you get the credit back" really means "the SMTP
+check failed so you were never charged"; (2) accuracy and coverage are
+different axes, UpLead publishes the first and nobody, including UpLead,
+publishes the second. A reader who absorbs those two points can evaluate
+ANY database vendor, which is what industry-defining means here.
+
+CONCEPT STACK:
+L1: same category (database), opposite go-to-market
+L2: the real prices (published tiers vs Vendr contract data)
+L3: the guarantee decoded (mechanism, ToS, scope limits)
+L4: accuracy vs coverage: the axis nobody measures
+L5: the RainKing/DiscoverOrg lineage aside (legacy query catcher)
+L6: decision + when neither (waterfall coverage argument)
+
+PIPE0 HANDOFFS: (1) the coverage section: a database's undisclosed
+hit rate is exactly what waterfalls fix; (2) closing decision line.
+*/}
+
+## Same category, opposite selling motion
+
+- Both are B2B contact databases, so unlike Clay vs ZoomInfo this is a
+  legitimate like-for-like (link the clay-vs-zoominfo post for the
+  category map).
+- The split is the buying motion. UpLead: self-serve signup, published
+  prices, month-to-month available, 7-day trial with 5 credits.
+  ZoomInfo: sales-led, quote-only, annual contracts; its pricing page
+  is not even fetchable without a session. One of these vendors lets
+  you know the cost before a call; that difference is worth naming as
+  a real feature.
+
+## The real prices
+
+- UpLead, from the live pricing page: Essentials $99/mo for 170
+  credits, Plus $199/mo for 400 credits, ~25% off annual ($74/$149),
+  Professional custom and annual-only. Extra credits $0.60 each on
+  Essentials, ~$0.50 on Plus. One credit unlocks one contact or
+  company; re-downloading an unlocked record is free.
+- The ToS details that function as price increases, quoted so readers
+  do not learn them at renewal: credits do not roll over ("use it or
+  lose it" is the contract's own language), all fees are
+  non-refundable, annual plans need 60 days' cancellation notice.
+  Reviewers on three platforms independently report auto-renewal
+  charges without notification, against the help center's claim of a
+  clean process; flag the gap and link both.
+- ZoomInfo, from buyer-reported data since no list price exists:
+  median contract $33,500/yr, observed range $7,200 to $155,000+,
+  entry commonly ~$15,000, auto-renewals carrying 5-10% escalators
+  plus credit-overage fees (Vendr data via hackingdemand.com; note
+  the provenance honestly, it is the best available, not official).
+  ZoomInfo's own UpLead comparison page now claims "free to start,
+  consumption-based", which contradicts every third-party contract
+  floor; likely a new self-serve tier [verify what that tier actually
+  includes before publishing].
+- The per-record floor comparison that matters at SMB scale: UpLead
+  Essentials works out to ~$0.58 per unlocked contact ($99/170).
+  Against a $15,000 entry contract, that is the whole argument for
+  self-serve at low volume; the argument flips only when you consume
+  ZoomInfo's gated extras (org charts, intent, Chorus).
+
+## The 95% guarantee, decoded
+
+- The finding, stated plainly: there is no guarantee document. The
+  /guarantee and /data-accuracy-guarantee URLs 404; the phrase lives
+  only in marketing pages. The Terms and Conditions say the opposite,
+  in capitals: UpLead "MAKES NO EXPRESS, IMPLIED OR STATUTORY
+  REPRESENTATIONS, WARRANTIES, OR GUARANTEES... RELATING TO THE...
+  ACCURACY OR COMPLETENESS OF ANY INFORMATION." No refund clause for
+  bad data exists in the contract.
+- What the "guarantee" actually is: a billing mechanic. At the moment
+  you unlock a contact, UpLead runs a live SMTP check. Invalid: you
+  are never charged (there is no refund because there was no
+  purchase). Valid or Accept-All: charged and delivered. It is a good
+  mechanic, and materially more honest than batch-verified databases;
+  it is just not a warranty, and the distinction matters.
+- Scope limits readers should know: the check covers deliverability
+  at export time only (B2B data decays an estimated 20-30% per year,
+  so a list bought in January is not 95% anything by June); phone
+  numbers are excluded entirely, with multiple independent reviewers
+  converging on 55-65% phone accuracy [no first-party figure exists;
+  mark as reviewer-reported]; strongest in North America.
+- The one field test in circulation, with provenance caveat: a
+  500-contact bounce test (cited via prospeo.io, original was a
+  Reddit experiment) measured UpLead at 4.1% hard bounces, Apollo
+  6.8%, ZoomInfo 9.2%. Directionally, the export-time check earns
+  its keep; 4.1% bounce is roughly consistent with the 95% claim.
+
+## Accuracy is published; coverage is not
+
+- Teach the distinction in two sentences: accuracy is "of the records
+  delivered, how many are right". Coverage is "of the people you
+  actually looked for, how many exist in the database at all". A
+  vendor can be 95% accurate and find only half your list; the axes
+  are independent, and only one of them is marketed.
+- The evidence that coverage is UpLead's real constraint, all from
+  named reviews: the database leans on LinkedIn presence, so people
+  without profiles are nearly unfindable; niche-vertical searches
+  return "a lot less leads than expected"; "niche leads with mobile
+  don't really exist"; limited direct dials versus ZoomInfo. No
+  coverage percentage exists from any source, including UpLead.
+- ZoomInfo's counterpart problem: its scale claims are unfalsifiable
+  in the other direction. Its own comparison page says 500M contacts;
+  Artisan says 260M; RB2B says 600M; Cognism says 174M emails. A 3.4x
+  spread across sources describing the same database is not a rounding
+  disagreement, it is the absence of a defined methodology. Say so.
+- [pipe0 →] the structural point this sets up, one paragraph: a
+  database's undisclosed miss rate is exactly the problem waterfall
+  enrichment exists to fix. Cascading curated providers makes coverage
+  the union of many datasets, and with per-success billing a miss
+  costs nothing. pipe0 runs 50+ curated providers behind sheets, an
+  API, and MCP, from $49/mo; we publish no find rate on principle,
+  because the honest number depends on your list. Test on your own
+   50 rows, which both UpLead's trial and pipe0's 20 free credits
+  allow. Link what-is-waterfall-enrichment.
+
+## If you got here searching RainKing or DiscoverOrg
+
+- The lineage, dates verified: RainKing and DiscoverOrg were both
+  founded in 2007 and competed head-on in sales intelligence.
+  DiscoverOrg acquired RainKing on August 28, 2017 (RainKing's 2016
+  revenue: $33.9M). DiscoverOrg then bought Zoom Information in
+  February 2019 and rebranded the combined company as ZoomInfo on
+  September 10, 2019, seven months later. IPO June 2020 at $21,
+  first trade opened at $40. The ticker changed from ZI to GTM in
+  May 2025.
+- The takeaway for the searcher: any article comparing RainKing to
+  ZoomInfo is comparing a company to itself, five acquisitions late.
+  Dataset lineage matters less than current refresh practice; ask
+  when the record you care about was last verified, whoever you buy
+  from.
+
+## The decision
+
+- Under a few thousand unlocks a month, US-centric, want to start
+  today: UpLead. Watch the no-rollover clause, calendar the renewal
+  notice, and treat phone numbers as unverified regardless of the
+  email guarantee.
+- Territory planning, org charts, intent, conversation intelligence,
+  procurement in the loop: ZoomInfo, negotiated from the ~22%
+  discount norm off first quote, with the escalator clause read
+  before signing.
+- Neither is wrong; they are priced for different volumes of the
+  same job. The third option is not buying a database at all: pay
+  per delivered record across many databases. That is the waterfall
+  post's territory; end with the link, no summary.

@@ -1,0 +1,165 @@
+---
+title: Data Enrichment for Pipedrive
+date: 2026-08-10
+category: Sales data
+tags:
+    - data enrichment
+    - sales automation
+excerpt: "Pipedrive's native enrichment gives you 100 credits a month and
+    two docs pages that disagree about who supplies the data. What the
+    native feature, the marketplace, and the API each actually deliver."
+draft: true
+authors:
+    - name: Florian
+      title: Founder
+---
+
+{/*
+SEARCH INTENT: "clay data enrichment for pipedrive" pos 54, "zoominfo
+data enrichment for pipedrive" pos 82. SMB ops person asking "what
+actually writes enriched data into my Pipedrive fields, today."
+
+RESEARCH CORRECTION: the original premise ("Pipedrive is underserved by
+big vendors") is FALSE. Clay (native since Sept 2022), ZoomInfo, Apollo
+(bidirectional), Lusha, Surfe, Kaspr, and lemlist all ship first-party
+Pipedrive connectors. The honest and more useful story: the real axes
+are extension-capture vs bulk sync, per-seat vs pooled-credit pricing,
+and the API mechanics every listicle skips (hash-keyed custom fields,
+webhooks v2, token budgets, exact-match dedupe). Those mechanics gaps
+are confirmed absent from every ranking article surveyed.
+
+EXCLUSIVE FINDING (nobody else has this): Pipedrive's support KB
+(updated March 23, 2026) says native Data Enrichment is powered by
+Surfe; its marketing page still says RightBound, whose own site now
+banners that RightBound is joining Gong. Pipedrive switched providers
+and forgot a page. Lead the native-feature section with it.
+
+READER PSYCHOLOGY: Pragmatic, price-aware, mostly non-engineers, with
+one exception: the person automating this. Serve both: verdicts and
+prices up top, mechanics deeper down. Answer the two searched queries
+("does Clay/ZoomInfo do Pipedrive?") directly with the verified yes.
+
+CONCEPT STACK:
+L1: what enrichment means on Pipedrive's objects (persons, orgs,
+    custom fields), and the native feature decoded
+L2: the integration reality table (the searched-for answer)
+L3: the two real axes: capture vs bulk, per-seat vs pooled
+L4: the mechanics section (hash keys, webhooks, limits, dedupe)
+L5: the always-enriched setup, and refresh cadence with decay data
+
+PIPE0 HANDOFFS: (1) pooled-credit/waterfall contrast to per-seat
+extension tools; (2) the webhook-driven pipeline in L5. [VERIFY how to
+present pipe0+Pipedrive: no native pipedrive pipe exists in the catalog
+today (attio/salesforce/hubspot do); the honest mechanism is webhook in,
+enrich, write back via Pipedrive REST or http:request pipe. Do not
+overclaim a native integration.]
+*/}
+
+## Pipedrive's native enrichment, decoded
+
+- Open with the finding: Pipedrive's support article (updated March 23,
+  2026) says its Data Enrichment feature is "powered by Surfe"; its
+  marketing page says "powered by RightBound", a company whose own
+  website now announces it is joining Gong. Two official pages, two
+  different data suppliers. The practical takeaway for the reader: the
+  native feature's data source changed recently, so test it on your own
+  records before trusting old reviews of it (and the old Smart Contact
+  Data feature reviews describe a retired product; it was replaced
+  around August 2025).
+- What the native feature actually gives you, exact numbers from the
+  support docs: Premium plan, 100 credits/month, organizations only
+  (person enrichment needs a paid add-on); Ultimate, 500 credits/month
+  for both. Costs: 1 credit per organization, 2 per email, 5 per phone.
+  It fills only empty fields, never overwrites, single-record oriented.
+- The honest sizing: 500 credits buys 100 phone enrichments a month at
+  best. For a 5,000-contact database this is a top-up feature, not an
+  enrichment strategy. Say so without disparaging; it is priced as a
+  convenience.
+
+## Does Clay work with Pipedrive? ZoomInfo? (yes, and)
+
+- Answer the searched queries in one verified table. Clay: native
+  integration since September 2022, create/lookup/update on persons and
+  organizations, using your own Pipedrive API credentials. ZoomInfo:
+  native first-party integration with export preferences and field
+  mapping (their integration guide PDF documents setup). Apollo: native
+  and bidirectional, real-time sync both directions. Lusha: native
+  OAuth push with an explicit overwrite toggle. Surfe and Kaspr:
+  extension-based capture. lemlist: native sequencer sync.
+- Then the reframe that makes the post better than the query: "is
+  there an integration" is the wrong question, because everyone has
+  one. The right questions are which mechanism and which pricing
+  model, next section.
+
+## The two axes that actually differ
+
+- Axis one, capture vs bulk. Extension tools (Surfe $39-79/seat/mo,
+  Kaspr $49-79/seat/mo) enrich one profile at a time as a rep browses
+  LinkedIn; perfect for net-new prospecting, useless for cleaning the
+  4,000 records already in the CRM. Bulk tools (Clay, Apollo, Lusha,
+  ZoomInfo) sync at database scale.
+- Axis two, per-seat vs pooled volume. Extension pricing scales with
+  headcount whether or not anyone enriches; pooled-credit tools scale
+  with volume. Worked contrast with real numbers: a 4-person team on
+  Kaspr Business pays $316/mo regardless of usage; pooled alternatives
+  price the records, not the people (e.g. Cleanlist markets $79/mo for
+  1,500 pooled credits explicitly against Apollo's per-seat tiers).
+- Detail worth passing on: Surfe's own cascade chains Apollo,
+  RocketReach, Dropcontact, Hunter, and People Data Labs and claims a
+  93% find rate; waterfalls are how everyone serious does coverage
+  now, whatever they call it. Link what-is-waterfall-enrichment.
+- [pipe0 →] the pooled, waterfall-native option: pipe0 runs 50+
+  curated providers behind sheets and an API, usage-based from
+  $49/mo, billing only the provider that returned a result. No
+  per-seat math. For Pipedrive specifically the write-back runs over
+  Pipedrive's REST API [per the verified integration-status note in
+  the comment block; do not claim a native connector].
+
+## The mechanics every listicle skips
+
+- Position the section explicitly: none of the ranking articles
+  explain the four things that actually break Pipedrive enrichment
+  projects. Cover each in three or four sentences.
+- Custom-field hash keys: every custom field is addressed by a
+  40-character account-specific hash, not its label. The same "ICP
+  Score" field has a different key in every Pipedrive account, so
+  copied field mappings break silently. Where to find the hash:
+  Data fields, three-dot menu, "Copy API key". In API v2, custom
+  fields moved into a nested custom_fields object; monetary values
+  nest as value-plus-currency objects.
+- Webhooks v2 (default since March 17, 2025): subscribe to
+  create.person or change.organization, wildcard supported; payload
+  carries data (current state) and previous (changed fields), which
+  is exactly what an enrich-on-create pipeline needs; retries at
+  3, 30, and 150 seconds, then bans after repeated failures; cap of
+  40 webhooks per user.
+- Rate limits are a daily token budget, not just a per-second cap:
+  30,000 base tokens times a plan multiplier (Lite 1x through
+  Ultimate 7x) times seats, shared company-wide, reset daily. A list
+  fetch costs 20 tokens, an update 10 (5 on v2 endpoints), a search
+  40. Bulk-enriching 10,000 records naively can exhaust a small
+  plan's budget in an afternoon; batch, cache, and prefer v2.
+- Dedupe is exact-match only: a person duplicates only on same name
+  plus same email, phone, or organization; organizations on same
+  name plus same address. An enrichment tool pushing "Acme Inc"
+  against your "Acme" creates a twin, not a merge. Normalize names
+  before write-back or match on Pipedrive record IDs, never on
+  names.
+
+## The always-enriched setup, and why refresh matters
+
+- The reference pipeline, concretely: webhook fires on create.person,
+  enrichment runs (waterfall for email/phone/firmographics), results
+  PATCH back into the record's custom fields, misses get flagged to a
+  Slack channel. New records arrive enriched without anyone clicking.
+  [pipe0 →] link the signup-alerts example workflow as the template
+  for exactly this shape, plus schedules for the refresh cycle.
+- Close with the decay numbers that justify scheduled refresh, all
+  attributed: B2B contact data decays about 2.1% per month, ~22.5%
+  per year (MarketingSherpa via HubSpot's decay explainer), with
+  tech-sector databases decaying fastest (vendor studies put the
+  range up to 35-70% annually); roughly 30% of professionals change
+  jobs each year. Apollo's own recommended cadence is a reasonable
+  default to quote: enrich on creation, re-verify active records
+  monthly, full-database pass quarterly. A CRM enriched once is a
+  CRM decaying quietly; end on that.
