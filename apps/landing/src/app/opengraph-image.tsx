@@ -3,7 +3,7 @@ import { ImageResponse } from "next/og";
 import { join } from "path";
 
 export const runtime = "nodejs";
-export const alt = "pipe0 — Operate your Revenue Factory";
+export const alt = "pipe0 — Operate a Revenue Factory";
 export const size = {
   width: 1200,
   height: 630,
