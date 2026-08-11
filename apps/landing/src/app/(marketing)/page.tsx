@@ -24,7 +24,7 @@ import Image from 'next/image'
 import Link from "next/link";
 
 const homeDescription =
-  "pipe0 builds revenue systems at any scale: a Slack copilot for reps, always-on plays for the team, and the enrichment API and routing infrastructure underneath. One set of primitives, from a single question to a signal engine.";
+  "Operate a revenue factory with pipe0: Replace tools like Clay, Hightouch, and n8n with agentic Revenue Factories that operate at any scale.";
 
 // Title is omitted so the root default applies verbatim (no template suffix).
 export const metadata = createMetadata({
@@ -127,8 +127,7 @@ export default function Home() {
           <div className="text-[clamp(22px,2.45vw,31px)] font-medium leading-[1.36] tracking-[-0.018em]">
             <h1 className="text-foreground">Operate a Revenue Factory</h1>
             <p className="text-muted-foreground">
-              From morning briefings to the signal engine behind your
-              pipeline.
+              Prompt growth ideas into plays. From morning briefings to signal engines.
             </p>
           </div>
         </Section>

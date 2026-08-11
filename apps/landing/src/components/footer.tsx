@@ -179,7 +179,7 @@ export function Footer() {
               <LogoRaw />
             </Link>
             <p className="max-w-[240px] text-sm leading-relaxed text-muted-foreground">
-              Revenue systems, at any scale.
+              Operate a Revenue Factory.
             </p>
             <ul className="mt-1 space-y-2.5">
               {socialLinks.map((social) => (

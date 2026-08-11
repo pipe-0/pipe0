@@ -52,7 +52,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(getBaseUrl()),
   title: {
     template: "%s | pipe0",
-    default: "pipe0 | Revenue Systems That Make Sense",
+    default: "pipe0 | Automate you Company's growth. Fast.",
   },
   description:
     "With pipe0, technical and non-technical users build revenue systems at any scale. Morning briefings, always-on plays, signal engines, CRM enrichment, lead routing, and the infrastructure underneath. Replace tools like Clay, n8n, Hightouch, and Polytomic.",
