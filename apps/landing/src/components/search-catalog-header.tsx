@@ -9,6 +9,7 @@ import { BandCard } from "@/components/features/pipe-catalog/band-card";
 import { FieldRow } from "@/components/features/pipe-catalog/field-row";
 import { Info } from "@/components/info";
 import { HighVolumePriceCell } from "@/components/high-volume-price";
+import { effectiveCredits } from "@/lib/pricing/effective-credits";
 import { InlineDocsBadge } from "@/components/inline-docs-badge";
 import {
   Accordion,
@@ -179,7 +180,7 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
                 </TableCell>
                 <TableCell>
                   <HighVolumePriceCell
-                    credits={searchEntry.cost.credits ?? null}
+                    credits={effectiveCredits(searchEntry.cost)}
                     unit="credits"
                   />
                   <p className="max-w-37.5">

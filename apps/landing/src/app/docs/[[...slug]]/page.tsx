@@ -195,7 +195,7 @@ export async function generateMetadata(
       `Run ${data._pipeId} via the pipe0 data enrichment API or in Sheets.`,
     );
   } else if (data._virtualType === "search-entry" && data._searchId) {
-    title = `${stripIdSuffix(page.data.title, data._searchId)} search`;
+    title = stripIdSuffix(page.data.title, data._searchId);
     description = withCatalogSuffix(
       description,
       `Run ${data._searchId} via the pipe0 data enrichment API or in Sheets.`,

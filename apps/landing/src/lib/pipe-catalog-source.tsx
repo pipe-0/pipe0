@@ -11,6 +11,10 @@ import {
   providerCatalog,
   requirementToInputFields,
 } from "@pipe0/base";
+import {
+  effectiveCredits,
+  isPlatformPaid,
+} from "@/lib/pricing/effective-credits";
 
 interface PipeCatalogPageData {
   title: string;
@@ -112,8 +116,15 @@ function generatePipeMarkdown(pipeId: PipeId): string {
     lines.push("");
     for (const [opName, opDef] of billableOps) {
       const provider = (providerCatalog as any)[opDef.provider];
+      // `credits` is a tier OBJECT (or null for BYO ops — platform-paid ones
+      // carry their price in `userConnectionCredits` instead); read the
+      // effective per-unit default, never interpolate the raw value.
+      const perUnit = effectiveCredits(opDef)?.default;
+      const platformPaidSuffix = isPlatformPaid(opDef)
+        ? ", billed on your own connection"
+        : "";
       lines.push(
-        `- ${opName}: ${provider?.label || opDef.provider}, ${opDef.credits ?? 0} credits per operation (${opDef.mode})`,
+        `- ${opName}: ${provider?.label || opDef.provider}, ${perUnit ?? 0} credits per operation (${opDef.mode})${platformPaidSuffix}`,
       );
     }
     lines.push("");

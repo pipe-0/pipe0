@@ -11,6 +11,7 @@ import { CategoryBadge } from "@/components/features/pipe-catalog/category-badge
 import { ProviderTile } from "@/components/features/pipe-catalog/catalog-list-row";
 import { FieldRow } from "@/components/features/pipe-catalog/field-row";
 import { HighVolumePriceCell } from "@/components/high-volume-price";
+import { effectiveCredits } from "@/lib/pricing/effective-credits";
 import { TextLink } from "@/components/text-link";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -772,7 +773,7 @@ function ProviderTable({ entries }: { entries: [string, unknown][] }) {
                 {connections.join(", ")}
               </div>
               <div className="text-right tabular-nums">
-                <HighVolumePriceCell credits={def.credits} unit="credits" />
+                <HighVolumePriceCell credits={effectiveCredits(def)} unit="credits" />
               </div>
             </div>
           );

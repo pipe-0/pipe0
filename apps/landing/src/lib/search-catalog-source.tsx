@@ -9,6 +9,10 @@ import {
   searchCatalog,
   SearchId,
 } from "@pipe0/base";
+import {
+  effectiveCredits,
+  isPlatformPaid,
+} from "@/lib/pricing/effective-credits";
 
 interface SearchCatalogPageData {
   title: string;
@@ -59,18 +63,24 @@ function generateSearchMarkdown(searchId: SearchId): string {
     lines.push("");
   }
 
-  // Cost
+  // Cost. Platform-paid entries (e.g. X) have `credits: null` but a real
+  // per-unit price in `userConnectionCredits` — never read `credits.default`
+  // directly here.
   lines.push("## Pricing");
   lines.push("");
+  const perUnit = effectiveCredits(entry.cost)?.default;
+  const platformPaidSuffix = isPlatformPaid(entry.cost)
+    ? " (billed on your own connection)"
+    : "";
   if (entry.cost.mode === "per_result") {
     lines.push(`- Billing mode: Per Result`);
-    lines.push(`- Cost: ${entry.cost.credits.default} credits per result`);
+    lines.push(`- Cost: ${perUnit ?? 0} credits per result${platformPaidSuffix}`);
   } else if (entry.cost.mode === "per_search") {
     lines.push(`- Billing mode: Per Search`);
-    lines.push(`- Cost: ${entry.cost.credits.default} credits per search`);
+    lines.push(`- Cost: ${perUnit ?? 0} credits per search${platformPaidSuffix}`);
   } else if (entry.cost.mode === "per_page") {
     lines.push(`- Billing mode: Per Page`);
-    lines.push(`- Cost: ${entry.cost.credits.default} credits per page`);
+    lines.push(`- Cost: ${perUnit ?? 0} credits per page${platformPaidSuffix}`);
   }
   lines.push("");
 
