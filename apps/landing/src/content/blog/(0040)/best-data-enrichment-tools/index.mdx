@@ -1,163 +1,210 @@
 ---
 title: The Best Data Enrichment Tools in 2026, by Category
-date: 2026-08-10
+date: 2026-08-12
 category: Sales data
 tags:
     - data enrichment
-excerpt: "Eight categories of enrichment tools, one verified pick per
-    category with its real price and its real gotcha, and a way to tell
-    which category you are shopping in before a vendor decides for you."
-draft: true
+excerpt: "Data enrichment tools find people and contact data. More than 400 providers exist today. Finding the right one is a challenging problem."
+draft: false
 authors:
     - name: Florian
       title: Founder
 ---
 
-{/*
-SEARCH INTENT: "best data enrichment tools reddit" 9 impressions at
-pos 3; "data enrichment providers" 4 at pos 66. The reddit modifier
-signals distrust of listicle spam; the winning register is
-practitioner-with-receipts. This post is the HUB: every category pick
-links to the dedicated deep-dive post in this batch. Internal links
-are the architecture.
 
-RESEARCH POSTURE: every price below was verified on the vendor's live
-page during this batch's research (dated Aug 2026); every gotcha is
-sourced. No pick without a gotcha, including ours.
+Data enrichment has become one of the core disciplines in sales and growth.
+Many of today's systems depend on it:
 
-CATEGORY FACTS TO USE (all verified in sibling posts' research):
-- Databases: ZoomInfo median $33,500 contract (Vendr n=1,569), NRR
-  90%, renewal complaint record; Apollo $49-99/user/mo, fair-use
-  caps.
-- Workbench: Clay March 2026 repricing (Launch $185, two currencies,
-  memo admissions) AND its July 2026 public API/CLI/MCP — the "no
-  API" gotcha is DEAD; do not repeat it. New gotcha: two-currency
-  cost model + no sandbox + learning curve.
-- Waterfall specialist: FullEnrich $29-55/mo, published 1/3/10
-  credit card, catch-all billing caveat.
-- Single-source APIs: PDL $0.28/record; Hunter free 50/mo + true
-  PAYG calculator.
-- Raw data: Coresignal publishes tiers ($49-5,000/mo); Crustdata
-  real-time, price-opaque.
-- Verification: ZeroBounce ($649/100k) vs MillionVerifier ($149/100k)
-  4-7x list-price spread; both true PAYG, credits never expire.
-- Visitor ID: RB2B free 150 resolutions (company-level), Dealfront
-  free tier; match-rate physics 30-60%.
-- Meta provider: pipe0, standing claims + disclosure.
-- Agent shift stat: 13 of 18 vendors checked ship official MCP
-  servers; 7 of 8 ranking listicles are vendor-published and rank
-  themselves #1.
+- Prospecting new leads and finding their contact data
+- CRM enrichment
+- Signal engines
+- Building sales automations
 
-CONCEPT STACK:
-L1: enrichment in one sentence, then the taxonomy as a map
-L2: one verified pick per category, price + gotcha + deep-dive link
-L3: which category you are actually shopping in (3 sorting questions)
-L4: stack patterns; the agent-native shift
-*/}
+In data enrichment, we differentiate between two types of systems.
 
-## Enrichment in one sentence, then the map
+## B2B contact data
 
-- Define without ceremony: you have a record (a signup, a lead, a
-  company) and enrichment adds the fields you are missing (email,
-  phone, size, funding, tech stack). One sentence, then the map.
-- Name the trust problem this post answers, once: seven of the
-  eight articles ranking for this query are published by a vendor
-  in the list, and each ranks itself first without disclosure. We
-  build pipe0, it appears in one category below with the same
-  disclosure sentence we always use, and every price here was
-  checked against the vendor's live page in August 2026.
-- The taxonomy, eight categories defined by what each optimizes
-  for: databases (own one dataset), workbenches (orchestrate many
-  providers in a UI), waterfall specialists (contact coverage via
-  cascading), single-source APIs (one job, developer-priced), raw
-  data vendors (bulk rows for data teams), verification (keep what
-  you have sendable), visitor identification (turn traffic into
-  records), meta providers (many providers behind one API, sheet,
-  and MCP server).
-- Two sentences on why categories exist: no vendor can own the
-  best data, the best orchestration, and the best developer
-  access simultaneously; each category is a bet on which layer
-  matters. Categories fail differently, which is what the gotchas
-  below encode.
+B2B contact data providers are simple databases returning email addresses
+and phone numbers. Sometimes these systems work with a single database.
+Other times they run the same lookup through several providers in sequence
+until one of them hits. That motion is called _waterfall enrichment_.
 
-## One verified pick per category
+### Best B2B contact data providers
 
-- Databases: ZoomInfo for US enterprise depth (org charts, direct
-  dials, intent). Real cost: median contract $33,500/yr across
-  1,569 tracked purchases, 3-seat minimum, 60-day renewal notice.
-  Gotcha: the renewal record (BBB complaints, reported 10-20%
-  uplifts). Budget pick: Apollo at $49-99/user/mo; gotcha:
-  fair-use caps and plan-gated API depth. Deep dives:
-  clay-vs-zoominfo, uplead-vs-zoominfo, leadiq-vs-zoominfo.
-- Workbench: Clay, the category's ecosystem leader since 2017, and
-  as of July 2026 it ships a public API, CLI, and MCP on all
-  plans, so the old "no API" knock is dead; retire it. Gotcha,
-  current: the March 2026 two-currency repricing ($185/mo floor,
-  Data Credits plus Actions, 30% top-up premium, no sandbox, and
-  a learning curve practitioners measure in weeks). Deep dives:
-  fullenrich-vs-clay, clay-alternatives-for-agencies, and the
-  existing clay-alternatives post.
-- Waterfall specialist: FullEnrich; the cleanest published rate
-  card in the category ($0.055 per found email, $0.55 per found
-  mobile at Pro, unlimited seats). Gotcha: "verified or it's
-  free" bills catch-alls as found, and their own docs rate
-  unresolved catch-alls up to ~40% bounce risk. Deep dive:
-  fullenrich-vs-clay.
-- Single-source APIs: People Data Labs for scale ($0.28/person
-  record, bills on match only); Hunter for simplicity (free 50
-  credits/mo and a genuine pay-as-you-go calculator, $0.05 down
-  to $0.0056 per credit). Gotcha for the class: one dataset means
-  one hit rate; published live tests cluster 49-72%. Deep dives:
-  icypeas-api-guide, prospeo-api-guide, best-sdr-apis.
-- Raw data: Coresignal, credited for publishing real prices
-  ($49-$5,000/mo tiers) in a quote-only category. Gotcha: bulk
-  rows are not answers; the license terms that matter are not on
-  the website. Deep dive: coresignal-alternatives.
-- Verification: ZeroBounce for the deepest status taxonomy and
-  first-party quality-score data; gotcha: at list price it runs
-  4-7x MillionVerifier at equal volume ($649 vs $149 per 100k),
-  so volume buyers should quote both. Both are true pay-per-use
-  with non-expiring credits. Deep dive: zerobounce-status-codes.
-- Visitor identification: RB2B for US person-level (free tier,
-  150 resolutions/mo, company-level); Dealfront for EU
-  company-level. Gotcha for the class: reverse-IP match rates run
-  30-60% and no vendor escapes the physics; person-level is
-  US-only for legal reasons, not roadmap ones. Deep dives:
-  rb2b-alternatives, zoominfo-websights-alternatives.
-- [pipe0 →] Meta provider: pipe0, with the disclosure. What earns
-  the pick: Clay-like sheets (2M rows, point-in-time recovery),
-  a first-class API, and an MCP server on one engine; curated
-  waterfalls across 50+ providers billed only on success; from
-  $49/mo, 20 free credits, BYO keys on any plan; 3-10x more cost
-  efficient than traditional tabular tools. Gotcha, honestly:
-  a younger ecosystem than Clay's, and no proprietary dataset,
-  so ZoomInfo-style org charts and intent are not here. Deep
-  dive: /compare/pipe0-vs-clay.
+#### Surfe – waterfall enrichments made in Europe
 
-## Which category are you actually shopping in
+![Surfe pricing page in August 2026: Free, Essential at 29 euros, and Pro
+at 69 euros per user per month, each with yearly credit
+quotas](/media/blog/20260812-3.jpg)
 
-- Three sorting questions, one paragraph each. Volume: hundreds
-  (any UI works), tens of thousands (unit economics dominate;
-  read the cost guide), millions (raw data or meta API).
-  Interface: humans in a UI, code against an API, or agents over
-  MCP. Data need: contact info, firmographics, signals, or
-  hygiene; most stacks need two, which is why the categories
-  compose.
-- The common mis-buy, named from the research: paying workbench
-  prices when the need was a waterfall (orchestration you never
-  use), or entering a $25k database contract for one bundled
-  feature (the WebSights pattern). Link both posts.
+[Surfe](https://www.surfe.com) is a B2B data provider similar to FullEnrich.
 
-## How the categories stack, and who the buyer is becoming
+- Starting price: €29/user/month billed annually (€39 monthly); free plan
+  available
+- Work email: €0.07 per found email
+- Mobile number: €0.36 per found mobile
 
-- Three reference stacks, one line each: SMB manual (Apollo +
-  MillionVerifier); ops-heavy (workbench or pipe0 sheets +
-  verification + CRM sync); agent-native (discovery + waterfall +
-  validation behind one MCP server, agent decides scope; link
-  claude-code-sales-prospecting and the waterfall-MCP post).
-- Close on the shift with the stat, not a summary: 13 of the 18
-  vendors checked in this research now ship an official MCP
-  server, and the ranking listicles mention it approximately
-  never. The buyer of enrichment is becoming an agent; the
-  categories that price and package for that buyer first are the
-  ones this page will be rewritten around next year.
+Pros:
+
+- Unlimited email validation on every plan, including the free one
+- The GDPR-compliant lookup mode is a real answer for EU teams
+– Good coverage for emails and phone numbers
+
+Cons:
+
+- Per-seat pricing
+
+#### FullEnrich – waterfall enrichments
+
+![FullEnrich pricing page starting at USD 55
+per month](/media/blog/20260812-2.jpg)
+
+[FullEnrich](https://fullenrich.com) is the specialist: a waterfall of 20+
+vendors that finds emails and mobile numbers, and nothing else.
+One credit buys a found work email, ten credits for a found mobile. Failed lookups cost nothing.
+
+- Starts at $29/month for 500 credits (free trial with 50 credits)
+- Work email: $0.055 per found email
+- Mobile number: $0.55 per found mobile
+
+Pros:
+
+- Published, predictable per-unit prices; unlimited seats share one pool
+- Credits roll over 3 months on monthly billing, 12 on annual
+- Particularly strong on phones, with US and Canada ownership validation
+
+Cons:
+
+- Catch-all emails are billed as found, and unresolved catch-alls carry
+  real bounce risk
+- Emails and phones only; everything else needs a second tool
+- Expensive for what it does
+
+#### LeadMagic – affordable contact data
+
+![LeadMagic pricing page in August 2026. Starts at USD 49.99 per month](/media/blog/20260812-4.jpg)
+
+[LeadMagic](https://leadmagic.io) is an API-first enrichment layer with 18 REST
+endpoints.
+
+- Starting price: $49.99/month for 2,000 credits (100 free credits, no
+  card)
+- Work email: $0.025 per found email
+- Mobile number: $0.125 per found mobile
+
+Pros:
+
+- The cheapest published mobile rate in this list, falling to about $0.04
+  at the top tier
+- Credits roll over on Essential and up, banked to twice the monthly
+  allocation
+
+Cons:
+
+- Coverage is thin for both emails and phone numbers
+– No state-of-the-art user interface
+
+## Data orchestrators
+
+A more interesting category, however, is tools that not only allow you to
+fetch contact data but let you perform enrichment, actions, and logic.
+
+These tools allow you to search, enrich, and qualify in one motion.
+
+_Here's an example_: You start by searching for a list of every CEO in New York City.
+The list contains 10,000 prospects. Then you use enrichment to fetch their
+LinkedIn profile. Next, you exclude CEOs who don't work for a tech
+company.
+
+The list shrinks to 5,000 users. Next, you fetch the most
+recent LinkedIn posts of every user on this list. If they have posted about
+AI, you qualify them. For every qualified CEO, you fetch their
+phone number and add them to a sequence.
+
+### Best data orchestrators
+
+#### pipe0 – 50+ providers with one interface
+
+![pipe0 pricing page start at $49 per month. The cheapest and most powerful orchestrator in this list.](/media/blog/20260812-1.jpg)
+
+[Pipe0](https://pipe0.com) is a modern, AI-first data enrichment platform with great coverage and leading 
+cost efficiency.
+
+It is the only tool in this category with a full API and an MCP server. Its tables can hold
+up to 2M records. Conveniently, tables in pipe0 can be point-in-time restored. A features 
+that is missing in comparable tools.
+
+Data moves freely between the MCP server, the API, and sheets, so agents and humans work on
+the same rows. Everything can be scheduled and turned into automations.
+
+- Starting price: $49/month for 1,600 credits
+- Work email: $0.02 per found email
+- Mobile number: $0.08 per found mobile
+
+Pros:
+
+- 3-10x more cost-efficient than traditional tabular tools
+- Bring your own API keys and use the API on any plan
+- Sheets, API, and MCP are one engine, not three bolted-together products
+
+Cons:
+
+- Fewer templates and smaller community
+- No native sequencer; it integrates with the common ones instead
+
+#### Clay – Revenue system orchestration
+
+![Clay pricing page in August 2026 starting at $167 per month](/media/blog/20260812-5.jpg)
+
+[Clay](https://clay.com) has defined this category since 2017: a
+spreadsheet where every column can call one of 150+ data providers, an AI
+research agent in Claygent, and, since July 2026, a public API, CLI, and
+MCP server on all plans. The March 2026 repricing split billing into two
+currencies, actions for orchestration and data credits for purchased data,
+and that split is the main thing to understand before you buy.
+
+- Starting price: free plan; paid from $167/month billed annually ($185
+  monthly)
+- Work email: $0.25 per found email through a waterfall
+- Mobile number: $0.75 per found mobile
+
+Pros:
+
+- The largest provider marketplace and largest community
+- The free plan includes unlimited seats
+
+Cons:
+
+- Two currencies plus a 30% top-up premium make costs hard to forecast
+- Actions expire monthly and don't roll over
+- Extreme prices
+- Practitioners measure the learning curve in weeks
+- No working AI agent (Sculptor has not worked for us, ever)
+– Many features hidden behind enterprise plans
+
+#### Cargo – node-based enrichment
+
+![Cargo pricing page in August 2026 starting at 165$ / mo](/media/blog/20260812-6.jpg)
+
+[Cargo](https://www.getcargo.ai) sits closest to the data warehouse: a
+node-based workflow builder with AI agents for research, qualification, and
+SDR work, on top of 100+ integrations. You wire sources, enrichments, and
+actions into graphs, and the agents run inside them.
+
+- Starting price: From $165/month for 1,500 credits
+- Work email: $0.16 per found email
+- Mobile number: $0.65 per found mobile
+
+Pros:
+
+- No feature gating: agents, workflows, and SSO on every tier
+- Top-ups and overage at plan rates, with no premium
+- Orchestration steps are moderately priced, at 1 credit per 100 steps
+
+Cons:
+
+- Three billing meters (enrichment, orchestration, storage) to forecast
+– Many workarounds because the code data model does not scale
+- Around 15-20 data providers, compared to Clay's 150+
+- Almost no public reviews to sanity-check quality against
+- High prices
