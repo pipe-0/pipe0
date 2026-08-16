@@ -43,6 +43,10 @@ Don't store API keys in the browser. Connect browser-based apps to pipe0 through
 [store keys securely](https://cloud.google.com/docs/authentication/api-keys-best-practices).
 </Callout>
 
+## Public keys
+
+One pipe0 endpoint takes a different key. <AppLink linkType="autocomplete">Autocomplete</AppLink> resolves the values a config field accepts, and it runs on a `pk_` public key that authorizes nothing. That key is safe in a browser. Your API key is not.
+
 ## Next steps
 
 <Cards>

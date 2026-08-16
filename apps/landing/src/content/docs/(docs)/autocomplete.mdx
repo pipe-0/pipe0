@@ -1,0 +1,74 @@
+---
+title: Autocomplete
+description: Resolve the values a config field accepts.
+date: 2026-08-16
+icon: ListFilter
+---
+
+Many search and pipe config fields accept fixed options or supply suggestions.
+
+It is safe to call the autocomplete API from a browser, **instead of your API key it uses a separate public key**.
+
+## Create a public key
+
+<Steps>
+<Step>
+Log in to your account.
+</Step>
+<Step>
+Select "Organization" in the sidebar.
+</Step>
+<Step>
+Scroll to the "Public keys" section.
+</Step>
+<Step>
+Click "Add". You can hold two public keys per organization.
+</Step>
+</Steps>
+
+## Autocomplete requests
+
+Send the source key and the text the user has typed so far.
+
+```bash title="Resolve a location"
+curl https://autocomplete.pipe0.com/v1/complete \
+  -H "Authorization: Bearer $PIPE0_PUBLIC_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"source":"locations","query":"berl","limit":3}'
+```
+
+```json title="Response"
+{
+  "results": [
+    { "value": "Berlin, Germany", "label": "Berlin, Germany", "widgets": { "emoji": { "char": "🇩🇪" } } },
+    { "value": "Berlin, Berlin, Germany", "label": "Berlin, Berlin, Germany", "widgets": { "emoji": { "char": "🇩🇪" } } },
+    { "value": "Berlin Metropolitan Area", "label": "Berlin Metropolitan Area", "widgets": { "emoji": { "char": "🇩🇪" } } }
+  ]
+}
+```
+
+## Widgets
+
+Put `value` into the config field and show `label` to the user. `widgets` is optional display data for the option, and a result may carry none. Each key is one widget. Ignore keys you do not recognise, since sources gain widgets over time.
+
+| Widget | Shape | What it carries |
+|---|---|---|
+| `emoji` | `{ "char": "🇩🇪" }` | A pictogram for the option, such as a country flag or a role symbol. |
+| `logo_url` | `{ "url": "https://…", "alt": "…" }` | An image for the option, such as a company logo. |
+| `icon` | `{ "key": "briefcase" }` | An icon name from pipe0's set. |
+| `provider_logo` | `{ "provider": "crustdata" }` | The logo of the provider behind the option. |
+
+`emoji` is the widget most sources carry today. Render what is present and fall back to `label` on its own.
+
+## Find the source for a field
+
+Every config field that accepts autocomplete says so on its catalog page. Open a pipe or a search in the <AppLink linkType="searchCatalog">catalog</AppLink>, expand "Config reference", and expand the field. Fields marked "Autocomplete" name their source key and show the request that resolves them.
+
+An empty query is the fastest way to see what a source holds.
+
+## Next steps
+
+<Cards>
+  <Card icon={<Search />} title="Search catalog" description="Find the fields you want to resolve." href="/docs/search-catalog" />
+  <Card icon={<LayoutTemplate />} title="Form UI" description="Drop in a form that resolves values for you." href="/docs/sdks/form-ui" />
+</Cards>

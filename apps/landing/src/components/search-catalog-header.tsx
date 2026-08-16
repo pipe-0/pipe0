@@ -304,7 +304,6 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
                   formConfig={formConfig}
                   searchable
                   examplePayload={configExamplePayload}
-                  exampleFilename={`${searchId.replace(/[@:]/g, "-")}-config-example`}
                 />
               </AccordionContent>
             </AccordionItem>

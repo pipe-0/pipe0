@@ -30,6 +30,7 @@ export const docsLinkPaths = {
   // Connections & Auth
   connections: `/docs/connections`,
   authentication: `/docs/authentication`,
+  autocomplete: `/docs/autocomplete`,
 
   // Configuration
   widgets: `/docs/pipes/request-payload#configwidgetsenabled`,

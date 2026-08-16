@@ -1,6 +1,8 @@
 "use client";
 
 import { OptionsSection } from "@/components/config-documentation-options-section";
+import { DynamicCodeBlock } from "@/components/features/docs/dynamic-code-block";
+import { TextLink } from "@/components/text-link";
 import {
   Accordion,
   AccordionContent,
@@ -16,12 +18,15 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import {
+  autocompleteExampleQuery,
+  autocompleteSourceFor,
   buildPopulatedExample,
   ExamplePayload,
   generateFieldExampleSnippet,
   optionsDefSummary,
 } from "@/lib/docs/build-populated-example";
 import { copyToClipboard } from "@/lib/utils";
+import { docsLinkPaths } from "@pipe0/doc-links";
 import {
   FormSection,
   GeneratedInputMeta,
@@ -50,8 +55,6 @@ import {
   Code,
   Contact,
   Copy,
-  Download,
-  ExternalLink,
   Factory,
   FileText,
   Filter,
@@ -307,9 +310,9 @@ function NumericConfig({
   field,
 }: {
   field:
-    | GeneratedInputMetaMap["number_input"]
-    | GeneratedInputMetaMap["int_input"]
-    | GeneratedInputMetaMap["range_input"];
+  | GeneratedInputMetaMap["number_input"]
+  | GeneratedInputMetaMap["int_input"]
+  | GeneratedInputMetaMap["range_input"];
 }) {
   return (
     <ConfigSectionWrapper>
@@ -386,15 +389,28 @@ function ConfigSectionWrapper({ children }: PropsWithChildren) {
   );
 }
 
-function ConfigurationSection({ field }: { field: GeneratedInputMeta }) {
+/**
+ * Item counts and the like. `NumericConfig` and friends cover the numeric,
+ * date and text bounds; this catches what they don't — list sizes, key caps,
+ * multi-select — which used to sit in the accordion header.
+ */
+function ConstraintsConfig({ field }: { field: GeneratedInputMeta }) {
+  const constraints = getConstraintInfo(field);
+  if (constraints.length === 0) return null;
   return (
-    <>
-      {isNumericField(field) && <NumericConfig field={field} />}
-      {inputGuards.date_range_input(field) && <DateRangeConfig field={field} />}
-      {inputGuards.text_input(field) &&
-        (field.minLength || field.maxLength) && <TextConfig field={field} />}
-    </>
+    <ConfigSectionWrapper>
+      <div className="text-muted-foreground">{constraints.join(", ")}</div>
+    </ConfigSectionWrapper>
   );
+}
+
+function ConfigurationSection({ field }: { field: GeneratedInputMeta }) {
+  if (isNumericField(field)) return <NumericConfig field={field} />;
+  if (inputGuards.date_range_input(field))
+    return <DateRangeConfig field={field} />;
+  if (inputGuards.text_input(field) && (field.minLength || field.maxLength))
+    return <TextConfig field={field} />;
+  return <ConstraintsConfig field={field} />;
 }
 
 function ReferencesSection({ field }: { field: GeneratedInputMeta }) {
@@ -407,10 +423,8 @@ function ReferencesSection({ field }: { field: GeneratedInputMeta }) {
     <div className="flex gap-3 flex-wrap">
       {showFieldFormatOptions && (
         <div className="flex-1">
-          <h4 className="text-sm font-medium text-gray-900 mb-3">
-            Field Format options
-          </h4>
-          <div className="max-h-32 overflow-y-auto border border-gray-200 rounded-lg p-3">
+          <h4 className="text-sm font-medium mb-3">Field Format options</h4>
+          <div className="max-h-32 overflow-y-auto border rounded-lg p-3">
             <div className="flex flex-wrap gap-1.5">
               {RECORD_FIELD_FORMATS.map((format, idx) => (
                 <Badge
@@ -427,10 +441,8 @@ function ReferencesSection({ field }: { field: GeneratedInputMeta }) {
       )}
       {showTypeOptions && (
         <div className="flex-1">
-          <h4 className="text-sm font-medium text-gray-900 mb-3">
-            Field type options
-          </h4>
-          <div className="max-h-32 overflow-y-auto border border-gray-200 rounded-lg p-3">
+          <h4 className="text-sm font-medium mb-3">Field type options</h4>
+          <div className="max-h-32 overflow-y-auto border rounded-lg p-3">
             <div className="flex flex-wrap gap-1.5">
               {RECORD_FIELD_TYPES.map((type, idx) => (
                 <Badge
@@ -493,7 +505,7 @@ function OperatorsSection({ field }: { field: GeneratedInputMeta }) {
         <div className="grid grid-cols-2 gap-3 text-sm">
           {operators.map(({ symbol, description }) => (
             <div key={symbol} className="flex items-center gap-2">
-              <code className="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono">
+              <code className="bg-muted px-1.5 py-0.5 rounded text-xs font-mono">
                 {symbol}
               </code>
               <span className="text-muted-foreground">{description}</span>
@@ -510,6 +522,61 @@ function OperatorsSection({ field }: { field: GeneratedInputMeta }) {
   );
 }
 
+/**
+ * The request that resolves this field's values. Every source kind — the
+ * pre-indexed static lists, the CSV-backed vocabularies, and the ones a
+ * provider answers live — is reachable through the same proxy, so the key is
+ * all a reader needs to fetch the same options the form shows.
+ */
+function AutocompleteRequest({
+  sourceKey,
+  query,
+  constrained,
+}: {
+  sourceKey: string;
+  query: string;
+  constrained: boolean;
+}) {
+  const body = JSON.stringify({ source: sourceKey, query, limit: 20 });
+  const code = [
+    "curl https://autocomplete.pipe0.com/v1/complete \\",
+    '  -H "Authorization: Bearer $PIPE0_PUBLIC_KEY" \\',
+    '  -H "Content-Type: application/json" \\',
+    `  -d '${body}'`,
+  ].join("\n");
+
+  return (
+    <div>
+      <h4 className="text-sm font-medium mb-1">
+        Autocomplete{" "}
+        <span className="font-normal text-muted-foreground">
+          ({constrained ? "Options" : "Optional suggestions"})
+        </span>
+      </h4>
+      <p className="text-xs text-muted-foreground mb-3">
+        {constrained ? (
+          <>
+            The field accepts only values from the{" "}
+            <code className="font-mono">{sourceKey}</code> source.
+          </>
+        ) : (
+          <>
+            Suggestions come from the{" "}
+            <code className="font-mono">{sourceKey}</code> source. The field
+            also accepts values that are not listed there.
+          </>
+        )}{" "}
+        Resolve them with your{" "}
+        <TextLink href={docsLinkPaths.autocomplete}>public key</TextLink>.
+      </p>
+      <DynamicCodeBlock lang="bash" code={code} />
+      <p className="text-xs text-muted-foreground mt-2">
+        Returns <code className="font-mono">{`{ "results": [{ "value", "label" }] }`}</code>.
+      </p>
+    </div>
+  );
+}
+
 function FieldDocumentation({
   field,
   examplePayload,
@@ -519,6 +586,7 @@ function FieldDocumentation({
 }) {
   const codeExample = generateFieldExampleSnippet(field, examplePayload);
   const sourceSummary = optionsDefSummary(field);
+  const source = autocompleteSourceFor(field);
 
   return (
     <div className="space-y-6">
@@ -531,21 +599,8 @@ function FieldDocumentation({
       )}
 
       <div>
-        <div className="flex items-center justify-between mb-3">
-          <h4 className="text-sm font-medium">Example</h4>
-          <Button
-            size="icon"
-            variant="ghost"
-            className="size-7"
-            aria-label="Copy example"
-            onClick={() => copyToClipboard(codeExample)}
-          >
-            <Copy className="size-3.5" />
-          </Button>
-        </div>
-        <pre className="border rounded-lg p-4 text-sm overflow-x-auto bg-muted/30">
-          <code>{codeExample}</code>
-        </pre>
+        <h4 className="text-sm font-medium mb-3">Example</h4>
+        <DynamicCodeBlock lang="json" code={codeExample} />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -557,9 +612,9 @@ function FieldDocumentation({
                 ? field.options
                 : sourceSummary?.kind === "static"
                   ? sourceSummary.options.map((o) => ({
-                      value: o.value,
-                      label: o.label ?? o.value,
-                    }))
+                    value: o.value,
+                    label: o.label ?? o.value,
+                  }))
                   : undefined
             }
             suggestions={
@@ -567,49 +622,22 @@ function FieldDocumentation({
                 ? field.suggestions
                 : undefined
             }
-            optionsDef={sourceSummary}
           />
           <OperatorsSection field={field} />
         </div>
       </div>
+
+      {source && (
+        <AutocompleteRequest
+          sourceKey={source.key}
+          query={autocompleteExampleQuery(field, examplePayload)}
+          constrained={source.constrained}
+        />
+      )}
+
       <ReferencesSection field={field} />
     </div>
   );
-}
-
-function SourceBadge({ field }: { field: GeneratedInputMeta }) {
-  const summary = optionsDefSummary(field);
-  if (!summary) return null;
-
-  if (summary.kind === "csv") {
-    return (
-      <a
-        href={summary.url}
-        target="_blank"
-        rel="noreferrer"
-        onClick={(e) => e.stopPropagation()}
-        className="hidden md:inline-flex items-center gap-1 text-[10px] text-blue-600 hover:underline"
-      >
-        {summary.file}
-        <ExternalLink className="size-2.5" />
-      </a>
-    );
-  }
-  if (summary.kind === "provider") {
-    return (
-      <span className="hidden md:inline text-[10px] text-muted-foreground">
-        provider-driven
-      </span>
-    );
-  }
-  if (summary.kind === "static" && summary.count > 0) {
-    return (
-      <span className="hidden md:inline text-[10px] text-muted-foreground">
-        {summary.count} values
-      </span>
-    );
-  }
-  return null;
 }
 
 function FieldAnchorButton({
@@ -667,16 +695,22 @@ function FieldAccordionItem({
   field: GeneratedInputMeta;
   examplePayload?: ExamplePayload;
 }) {
-  const constraints = getConstraintInfo(field);
   const hasRequired = "required" in field && field.required;
+  const hasAutocomplete = Boolean(autocompleteSourceFor(field));
 
   return (
     <AccordionItem
       value={field.path}
       id={field.path}
-      className="scroll-mt-24 group"
+      className="scroll-mt-24 group border-b-0 mb-1 last:mb-0"
     >
-      <AccordionTrigger>
+      {/*
+        The group card sits at `bg-card/40`, so a translucent muted tint on the
+        trigger lands within a couple of percent of it and reads as flat. Full
+        `bg-muted` plus a border gives the row an edge against the card in both
+        themes.
+      */}
+      <AccordionTrigger className="px-3 py-2 rounded-md border border-border bg-muted hover:bg-foreground/10 data-[state=open]:bg-foreground/10">
         <div className="flex items-center justify-between w-full gap-2 min-w-0">
           <div className="flex items-center gap-2 min-w-0">
             <FieldIcon
@@ -687,28 +721,26 @@ function FieldAccordionItem({
             <FieldAnchorButton fieldPath={field.path} />
           </div>
           <div className="flex items-center gap-1.5 shrink-0">
-            {constraints.length > 0 && (
-              <span className="text-[10px] text-muted-foreground hidden md:inline">
-                {constraints.join(", ")}
-              </span>
+            {hasAutocomplete && (
+              <Badge
+                variant="secondary"
+                className="text-[10px] font-normal px-1.5 py-0"
+              >
+                Autocomplete
+              </Badge>
             )}
-            <SourceBadge field={field} />
-            <Badge
-              variant="outline"
-              className="text-[10px] font-mono px-1.5 py-0"
-            >
-              {field.type.replace(/_/g, " ")}
-            </Badge>
-            <Badge
-              variant={hasRequired ? "default" : "secondary"}
-              className="text-[10px] uppercase tracking-wide px-1.5 py-0"
-            >
-              {hasRequired ? "required" : "optional"}
-            </Badge>
+            {hasRequired && (
+              <Badge
+                variant="default"
+                className="text-[10px] font-normal px-1.5 py-0"
+              >
+                Required
+              </Badge>
+            )}
           </div>
         </div>
       </AccordionTrigger>
-      <AccordionContent className="pl-6 pb-4">
+      <AccordionContent className="px-2.5 pt-4 pb-6">
         <FieldDocumentation field={field} examplePayload={examplePayload} />
       </AccordionContent>
     </AccordionItem>
@@ -718,7 +750,6 @@ function FieldAccordionItem({
 interface FilterDocumentationProps {
   formConfig: FormSection[];
   searchable?: boolean;
-  exampleFilename?: string;
   /**
    * The payload the page is documenting (a pipe's snippet payload or a
    * search's snippet payload). Field examples prefer the real value found at
@@ -778,7 +809,7 @@ function buildFilteredSections(
         label: group.label,
         description: group.description,
         iconKey: group.iconKey,
-        defaultExpand: false,
+        defaultExpand: group.defaultExpand ?? false,
         fields,
       });
     }
@@ -858,7 +889,6 @@ function GroupBlock({
 export function PayloadDocumenation({
   formConfig,
   searchable,
-  exampleFilename,
   examplePayload,
 }: FilterDocumentationProps) {
   const [query, setQuery] = useState("");
@@ -921,23 +951,6 @@ export function PayloadDocumenation({
     });
     copyToClipboard(JSON.stringify(populated, null, 2));
   }, [formConfig, examplePayload]);
-
-  const handleDownload = useCallback(() => {
-    const populated = buildPopulatedExample(formConfig, {
-      payload: examplePayload,
-    });
-    const blob = new Blob([JSON.stringify(populated, null, 2)], {
-      type: "application/json",
-    });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `${exampleFilename ?? "config-example"}.json`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  }, [formConfig, exampleFilename, examplePayload]);
 
   return (
     <div className="space-y-4">

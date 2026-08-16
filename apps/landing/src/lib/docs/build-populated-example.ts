@@ -106,15 +106,33 @@ function pickStaticValues(
   return options.slice(0, count).map((o) => o.value);
 }
 
-function getOptionsDef(
-  field: GeneratedInputMeta,
-): { type: string; file?: string } | undefined {
+type RawOptionsDef = { type: string; file?: string; sourceKey?: string };
+
+function getOptionsDef(field: GeneratedInputMeta): RawOptionsDef | undefined {
   if (
     "optionsDef" in field &&
     field.optionsDef &&
     typeof field.optionsDef === "object"
   ) {
-    return field.optionsDef as { type: string; file?: string };
+    return field.optionsDef as RawOptionsDef;
+  }
+  return undefined;
+}
+
+/**
+ * Free-text fields hang their autocomplete off `suggestionsDef` rather than
+ * `optionsDef` — the picker suggests, it does not constrain. Both resolve
+ * through the same proxy, so both should document the request.
+ */
+function getSuggestionsDef(
+  field: GeneratedInputMeta,
+): RawOptionsDef | undefined {
+  if (
+    "suggestionsDef" in field &&
+    field.suggestionsDef &&
+    typeof field.suggestionsDef === "object"
+  ) {
+    return field.suggestionsDef as RawOptionsDef;
   }
   return undefined;
 }
@@ -435,16 +453,6 @@ export function buildPopulatedExample(
   return out;
 }
 
-export function csvFilenameForField(
-  field: GeneratedInputMeta,
-): { file: string; url: string } | undefined {
-  const def = getOptionsDef(field);
-  if (def?.type !== "csv" || !def.file) return undefined;
-  const file = csvBasename(def.file);
-  if (!file) return undefined;
-  return { file, url: def.file };
-}
-
 export function optionsDefSummary(
   field: GeneratedInputMeta,
 ):
@@ -468,6 +476,79 @@ export function optionsDefSummary(
       ? (raw as { value: string; label?: string }[])
       : [];
     return { kind: "static", count: options.length, options };
+  }
+  return undefined;
+}
+
+/**
+ * The autocomplete source behind a field, if it has one. `sourceKey` arrived
+ * in `@pipe0/base` 1.0.16; until the catalog pin catches up, defs built by an
+ * older release have no key and the field documents no request.
+ *
+ * `constrained` separates the two kinds of autocomplete a field can carry. An
+ * `optionsDef` is the vocabulary: the field takes nothing else. A
+ * `suggestionsDef` only proposes, and the field still accepts free text. Both
+ * defs must be checked rather than short-circuited on the first that exists,
+ * because `property_list_input` carries a connection-scoped `optionsDef` (no
+ * source key) alongside an autocomplete-backed `suggestionsDef`.
+ */
+export function autocompleteSourceFor(
+  field: GeneratedInputMeta,
+): { key: string; kind: string; constrained: boolean } | undefined {
+  const options = getOptionsDef(field);
+  if (options?.sourceKey) {
+    return { key: options.sourceKey, kind: options.type, constrained: true };
+  }
+  const suggestions = getSuggestionsDef(field);
+  if (suggestions?.sourceKey) {
+    return {
+      key: suggestions.sourceKey,
+      kind: suggestions.type,
+      constrained: false,
+    };
+  }
+  return undefined;
+}
+
+/**
+ * A query worth showing in the field's example request.
+ *
+ * A prefix taken from the field's own example demonstrates the matching, so
+ * prefer that for the large vocabularies. Static sources get an empty query
+ * instead: they are short closed lists where seeing the whole vocabulary
+ * teaches more, and their values are sometimes codes (`USA`) matched by label
+ * (`United States`), so a query derived from the value can return nothing.
+ */
+export function autocompleteExampleQuery(
+  field: GeneratedInputMeta,
+  payload?: ExamplePayload,
+): string {
+  if (autocompleteSourceFor(field)?.kind === "static") return "";
+  const firstString = findFirstString(exampleValueForField(field, payload));
+  if (!firstString) return "";
+  // Synthesized placeholders like `<provider-resolved value>` describe the
+  // field instead of exemplifying it, so they make poor queries.
+  if (firstString.startsWith("<")) return "";
+  const word = firstString.trim().split(/\s+/)[0] ?? "";
+  const cleaned = word.replace(/[^\p{L}\p{N}.-]/gu, "");
+  if (cleaned.length < 4) return cleaned.toLowerCase();
+  return cleaned.slice(0, 5).toLowerCase();
+}
+
+function findFirstString(value: unknown): string | undefined {
+  if (typeof value === "string") return value || undefined;
+  if (Array.isArray(value)) {
+    for (const entry of value) {
+      const found = findFirstString(entry);
+      if (found) return found;
+    }
+    return undefined;
+  }
+  if (value && typeof value === "object") {
+    for (const entry of Object.values(value)) {
+      const found = findFirstString(entry);
+      if (found) return found;
+    }
   }
   return undefined;
 }

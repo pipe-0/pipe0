@@ -8,6 +8,7 @@
     "---Getting Started---",
     "index",
     "authentication",
+    "autocomplete",
     "rate-limits",
     "concepts",
     "---Pipes---",

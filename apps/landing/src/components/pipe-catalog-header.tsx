@@ -633,7 +633,6 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
                 formConfig={formConfig}
                 searchable
                 examplePayload={configExamplePayload}
-                exampleFilename={`${pipeId.replace(/[@:]/g, "-")}-config-example`}
               />
             </AccordionContent>
           </AccordionItem>
@@ -715,7 +714,7 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
 function ProviderTable({ entries }: { entries: [string, unknown][] }) {
   return (
     <div className="rounded-md border border-border overflow-hidden">
-      <div className="grid grid-cols-[minmax(0,1fr)_140px_140px_120px] items-center gap-4 px-3 py-2 text-[11px] font-medium uppercase tracking-wide text-muted-foreground bg-muted/40 border-b border-border">
+      <div className="grid grid-cols-[minmax(0,1fr)_140px_140px_120px] items-center gap-4 px-3 py-2 text-[11px] font-medium tracking-wide text-muted-foreground bg-muted/40 border-b border-border">
         <span>Provider</span>
         <span>Billing Mode</span>
         <span>Connection</span>

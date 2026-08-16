@@ -142,7 +142,7 @@ function FieldPillRow({
   if (fields === "dynamic") {
     return (
       <div className="inline-flex items-center gap-1 min-w-0">
-        <span className="text-[10px] font-medium text-muted-foreground/80 uppercase tracking-wide">
+        <span className="text-[10px] font-medium text-muted-foreground/80 tracking-wide">
           {label}
         </span>
         <span className="inline-flex items-center font-mono text-[11px] px-1.5 py-0.5 rounded bg-primary/10 text-primary whitespace-nowrap italic">
@@ -158,7 +158,7 @@ function FieldPillRow({
 
   return (
     <div className="inline-flex items-center gap-1 min-w-0">
-      <span className="text-[10px] font-medium text-muted-foreground/80 uppercase tracking-wide">
+      <span className="text-[10px] font-medium text-muted-foreground/80 tracking-wide">
         {label}
       </span>
       {visible.map((f) => (
