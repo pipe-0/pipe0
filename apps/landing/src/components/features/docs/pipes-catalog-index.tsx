@@ -34,10 +34,10 @@ import { appInfo } from "@/lib/const";
 import { PIPE_CATEGORY_COLORS } from "@/lib/pipes/category-colors";
 import { getPipeDocsURI } from "@/lib/pipes/get-pipe-docs-uri";
 import { getPipeLowestPrice } from "@/lib/pipes/get-pipe-starting-price";
+import { getPipeProvidersInWaterfallOrder } from "@/lib/pipes/provider-order";
 import { cn, copyToClipboard, formatCredits } from "@/lib/utils";
 import {
   getDefaultOutputFields,
-  getDefaultPipeProviders,
   getPipeVersion,
   pipeCatalog,
   PipeCatalogEntry,
@@ -391,7 +391,7 @@ const PipeCard = ({
   );
 
   const isNew = (tableEntry.tags as string[]).includes("new");
-  const providers = getDefaultPipeProviders(pipeId);
+  const providers = getPipeProvidersInWaterfallOrder(pipeId);
 
   return (
     <Link href={getPipeDocsURI(pipeId)}>
@@ -577,7 +577,7 @@ function Featured() {
 // search/filter results view so both render identically.
 function CatalogRow({ card }: { card: PipeCardData }) {
   const entry = card.entry;
-  const providers = getDefaultPipeProviders(card.pipeId);
+  const providers = getPipeProvidersInWaterfallOrder(card.pipeId);
   const { lowest: credits, isDiscounted } = getPipeLowestPrice(card.pipeId);
   const isNew = (entry.tags as string[]).includes("new");
   const inputFields: CatalogFieldList =

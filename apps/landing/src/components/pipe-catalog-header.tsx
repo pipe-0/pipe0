@@ -25,6 +25,10 @@ import {
   getPipeLowestPrice,
   getPipeStartingPrice,
 } from "@/lib/pipes/get-pipe-starting-price";
+import {
+  getPipeProvidersInWaterfallOrder,
+  sortByWaterfallOrder,
+} from "@/lib/pipes/provider-order";
 import { pipesMiniSpec } from "@/lib/pipes/snippet-catalog";
 import { videoCatalog } from "@/lib/pipes/video-catalog";
 import { cn, copyToClipboard, formatCredits } from "@/lib/utils";
@@ -35,7 +39,6 @@ import {
   FieldAnnotationsType,
   FieldName,
   getDefaultOutputFields,
-  getDefaultPipeProviders,
   getField,
   getPipeDefaultPayload,
   getPipeEntry,
@@ -201,14 +204,18 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
   const defaultPayload = getPipeDefaultPayload(pipeId);
   const defaultOutputFields = getDefaultOutputFields(pipeEntry);
   const pipeVersions = pipesByBasePipes[pipeEntry.basePipe];
-  const defaultProviders = getDefaultPipeProviders(pipeId);
+  const defaultProviders = getPipeProvidersInWaterfallOrder(pipeId);
   // Deprecated providers keep their billing definitions (stored payloads
   // still reference them) but are never offered or billed — hide them.
-  const billableEntries = Object.entries(pipeEntry.billableOperations).filter(
-    ([, def]) =>
-      !(pipeEntry.deprecatedProviders as readonly string[]).includes(
-        (def as BillableOperationDef).provider,
-      ),
+  const billableEntries = sortByWaterfallOrder(
+    pipeId,
+    Object.entries(pipeEntry.billableOperations).filter(
+      ([, def]) =>
+        !(pipeEntry.deprecatedProviders as readonly string[]).includes(
+          (def as BillableOperationDef).provider,
+        ),
+    ),
+    ([, def]) => (def as BillableOperationDef).provider,
   );
   const startingPrice = getPipeStartingPrice(pipeId);
   const { lowest: lowestPrice } = getPipeLowestPrice(pipeId);

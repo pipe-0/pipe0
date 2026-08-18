@@ -1,7 +1,6 @@
 import type { Source, VirtualFile } from "fumadocs-core/source";
 import {
   getDefaultOutputFields,
-  getDefaultPipeProviders,
   getField,
   getPipeDefaultPayload,
   getPipeEntry,
@@ -15,6 +14,10 @@ import {
   effectiveCredits,
   isPlatformPaid,
 } from "@/lib/pricing/effective-credits";
+import {
+  getPipeProvidersInWaterfallOrder,
+  sortByWaterfallOrder,
+} from "@/lib/pipes/provider-order";
 
 interface PipeCatalogPageData {
   title: string;
@@ -90,7 +93,7 @@ function generatePipeMarkdown(pipeId: PipeId): string {
   }
 
   // Providers
-  const providers = getDefaultPipeProviders(pipeId);
+  const providers = getPipeProvidersInWaterfallOrder(pipeId);
   if (providers.length > 0) {
     lines.push("## Providers");
     lines.push("");
@@ -105,11 +108,15 @@ function generatePipeMarkdown(pipeId: PipeId): string {
 
   // Billable Operations — deprecated providers keep their billing
   // definitions for stored payloads but are never offered or billed.
-  const billableOps = Object.entries(entry.billableOperations).filter(
-    ([, opDef]) =>
-      !(entry.deprecatedProviders as readonly string[]).includes(
-        (opDef as { provider: string }).provider,
-      ),
+  const billableOps = sortByWaterfallOrder(
+    pipeId,
+    Object.entries(entry.billableOperations).filter(
+      ([, opDef]) =>
+        !(entry.deprecatedProviders as readonly string[]).includes(
+          (opDef as { provider: string }).provider,
+        ),
+    ),
+    ([, opDef]) => (opDef as { provider: string }).provider,
   );
   if (billableOps.length > 0) {
     lines.push("## Billing");
@@ -210,7 +217,7 @@ function generatePipeStructuredData(pipeId: PipeId) {
   }
 
   // Providers
-  const providers = getDefaultPipeProviders(pipeId);
+  const providers = getPipeProvidersInWaterfallOrder(pipeId);
   for (const providerName of providers) {
     const provider = providerCatalog[providerName];
     if (provider) {

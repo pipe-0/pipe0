@@ -24,7 +24,7 @@ import Image from 'next/image'
 import Link from "next/link";
 
 const homeDescription =
-  "Operate a revenue factory with pipe0: Replace tools like Clay, Hightouch, and n8n with agentic Revenue Factories that operate at any scale.";
+  "Replace tools like Clay, Hightouch, FullEnrich, Lusha, and n8n. Find phone numbers and email addresses; people and company search; waterfall enrichment.";
 
 // Title is omitted so the root default applies verbatim (no template suffix).
 export const metadata = createMetadata({
