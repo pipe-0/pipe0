@@ -10,6 +10,11 @@ import { FieldRow } from "@/components/features/pipe-catalog/field-row";
 import { Info } from "@/components/info";
 import { HighVolumePriceCell } from "@/components/high-volume-price";
 import { effectiveCredits } from "@/lib/pricing/effective-credits";
+import {
+  isUsageMeteredSearch,
+  USAGE_METERED_LABEL,
+} from "@/lib/pricing/usage-metered";
+import { ProviderTable } from "@/components/features/pipe-catalog/provider-table";
 import { InlineDocsBadge } from "@/components/inline-docs-badge";
 import {
   Accordion,
@@ -67,6 +72,12 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
 
   const defaultSearchPayload = getSearchDefaultPayload(searchId);
   const providerEntry = providerCatalog[searchEntry.provider];
+
+  // Usage-metered searches bill their own operations as they run, so the flat
+  // `cost.credits` is 0 and is display metadata only. Everything price-shaped
+  // below branches on this rather than printing that 0 as a real price.
+  const usageMetered = isUsageMeteredSearch(searchEntry);
+  const billableEntries = Object.entries(searchEntry.billableOperations ?? {});
 
   let connections = [];
   if (searchEntry.hasManagedConnection) connections.push("Managed");
@@ -141,11 +152,13 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
                 <TableHead>Credentials</TableHead>
                 <TableHead>
                   <div className="flex gap-2 items-center">
-                    {searchEntry.cost.mode === "per_result"
-                      ? "Cost per result"
-                      : searchEntry.cost.mode === "per_search"
-                        ? "Cost per search"
-                        : "Cost per page"}
+                    {usageMetered
+                      ? "Cost"
+                      : searchEntry.cost.mode === "per_result"
+                        ? "Cost per result"
+                        : searchEntry.cost.mode === "per_search"
+                          ? "Cost per search"
+                          : "Cost per page"}
                     <InlineDocsBadge href={docsLinkPaths.searchBilling} />
                   </div>
                 </TableHead>
@@ -169,9 +182,11 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
                   </div>
                 </TableCell>
                 <TableCell>
-                  {searchEntry.cost.mode === "per_result"
-                    ? "Per Result"
-                    : "Per Search"}
+                  {usageMetered
+                    ? "Usage"
+                    : searchEntry.cost.mode === "per_result"
+                      ? "Per Result"
+                      : "Per Search"}
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center gap-2">
@@ -179,14 +194,20 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
                   </div>
                 </TableCell>
                 <TableCell>
-                  <HighVolumePriceCell
-                    credits={effectiveCredits(searchEntry.cost)}
-                    unit="credits"
-                  />
+                  {usageMetered ? (
+                    <div>{USAGE_METERED_LABEL}</div>
+                  ) : (
+                    <HighVolumePriceCell
+                      credits={effectiveCredits(searchEntry.cost)}
+                      unit="credits"
+                    />
+                  )}
                   <p className="max-w-37.5">
                     <small className="text-muted-foreground">
-                      {searchEntry.cost.mode === "per_page" &&
-                        "1 page = 100 records; 200 results = 2 pages"}
+                      {usageMetered
+                        ? searchEntry.cost.info
+                        : searchEntry.cost.mode === "per_page" &&
+                          "1 page = 100 records; 200 results = 2 pages"}
                     </small>
                   </p>
                 </TableCell>
@@ -194,10 +215,30 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
             </TableBody>
           </Table>
         </div>
+        {usageMetered && billableEntries.length > 0 && (
+          <div>
+            <h3 className="text-2xl mb-3 pb-2 border-b">Billing</h3>
+            <p className="text-sm text-muted-foreground mb-3">
+              Every operation this search can bill while it runs. Model token
+              rates are charged per 100-token block; the rest are charged per
+              call. Hover a price for its unit.
+            </p>
+            <ProviderTable entries={billableEntries} />
+          </div>
+        )}
         <div>
           <h3 className="text-2xl mb-3 pb-2 border-b">Output Fields</h3>
           <div className="space-y-3">
-            {searchEntry.outputFieldMode === "dynamic" ? (
+            {searchEntry.outputFieldMode === "config" ? (
+              <Callout type="info" title="You define the output fields">
+                This search&apos;s columns come from its own config, not from
+                the catalog: every{" "}
+                <code>{"{% output name, type: \"string\" %}"}</code> tag you
+                declare in the prompt becomes one column on every row returned.
+                The catalog therefore lists none — see the config reference
+                below for the tag syntax.
+              </Callout>
+            ) : searchEntry.outputFieldMode === "dynamic" ? (
               <Callout type="info" title="Dynamic output fields">
                 This search&apos;s output columns are determined at run time and
                 depend on the data source, so they aren&apos;t known ahead of

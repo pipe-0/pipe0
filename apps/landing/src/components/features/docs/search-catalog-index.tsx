@@ -33,6 +33,10 @@ import { appInfo } from "@/lib/const";
 import { SearchEntryMap } from "@/lib/get-searches";
 import { getSearchDocsURI } from "@/lib/search/get-search-docs-uri";
 import { hasHighVolume, lowestManagedCredit } from "@/lib/pricing/high-volume";
+import {
+  isUsageMeteredSearch,
+  USAGE_METERED_LABEL,
+} from "@/lib/pricing/usage-metered";
 import { cn, copyToClipboard, formatCredits } from "@/lib/utils";
 import {
   getDefaultSearchOutputFields,
@@ -69,6 +73,7 @@ import {
   X,
 } from "lucide-react";
 import Link from "next/link";
+import { useIntentPrefetch } from "@/hooks/use-intent-prefetch";
 import { type ComponentType, type ReactNode, useMemo } from "react";
 
 const FEATURED_SEARCHES_IDS = [] satisfies SearchId[];
@@ -355,24 +360,36 @@ const SearchCard = ({ tableEntry }: { tableEntry: SearchCatalogTableData }) => {
   const searchId = tableEntry.searchId;
   const isNew = (tableEntry.tags as string[]).includes("new");
   const { lowest: cost, isDiscounted } = getSearchCost(tableEntry);
+  const href = getSearchDocsURI(searchId);
+  const intentPrefetch = useIntentPrefetch(href);
 
   return (
-    <Link href={getSearchDocsURI(searchId)}>
+    <Link href={href} {...intentPrefetch}>
       <Card className="flex flex-col justify-stretch border-input hover:border-primary/50 transition-colors relative h-full min-h-[230px]">
         <span className="absolute right-3 top-3 inline-flex gap-1 text-muted-foreground text-xs items-center">
-          {cost ? (
-            <span>
-              {isDiscounted ? "from " : ""}
-              {formatCredits(cost)} cr
-            </span>
+          {/* A usage-metered search prices variable work (model tokens, per-call
+              provider tools), so `cost.credits.default` is 0 and reading it here
+              printed "Free" for a search that bills real credits. There is no
+              single per-unit number to show — the detail page breaks it down. */}
+          {isUsageMeteredSearch(tableEntry) ? (
+            <span>{USAGE_METERED_LABEL}</span>
           ) : (
-            "Free"
+            <>
+              {cost ? (
+                <span>
+                  {isDiscounted ? "from " : ""}
+                  {formatCredits(cost)} cr
+                </span>
+              ) : (
+                "Free"
+              )}
+              {cost ? (
+                <span className="text-muted-foreground/70">
+                  / {getSearchUnit(tableEntry)}
+                </span>
+              ) : null}
+            </>
           )}
-          {cost ? (
-            <span className="text-muted-foreground/70">
-              / {getSearchUnit(tableEntry)}
-            </span>
-          ) : null}
         </span>
         <CardHeader className="pb-1.5">
           <div className="flex items-start gap-3">
@@ -506,6 +523,9 @@ function CatalogRow({ card }: { card: SearchCardData }) {
       providers={[card.provider]}
       outputFields={outputFields}
       credits={credits}
+      priceLabel={
+        isUsageMeteredSearch(entry) ? USAGE_METERED_LABEL : undefined
+      }
       priceFrom={isDiscounted}
       billableUnit={getSearchUnit(entry)}
       isNew={isNew}

@@ -9,6 +9,7 @@ import { PipeFormPreview } from "@/components/features/docs/pipe-form-preview";
 import { BandCard } from "@/components/features/pipe-catalog/band-card";
 import { CategoryBadge } from "@/components/features/pipe-catalog/category-badge";
 import { ProviderTile } from "@/components/features/pipe-catalog/catalog-list-row";
+import { ProviderTable } from "@/components/features/pipe-catalog/provider-table";
 import { FieldRow } from "@/components/features/pipe-catalog/field-row";
 import { HighVolumePriceCell } from "@/components/high-volume-price";
 import { effectiveCredits } from "@/lib/pricing/effective-credits";
@@ -714,77 +715,6 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
           </AccordionContent>
         </AccordionItem>
       </Accordion>
-    </div>
-  );
-}
-
-function ProviderTable({ entries }: { entries: [string, unknown][] }) {
-  return (
-    <div className="rounded-md border border-border overflow-hidden">
-      <div className="grid grid-cols-[minmax(0,1fr)_140px_140px_120px] items-center gap-4 px-3 py-2 text-[11px] font-medium tracking-wide text-muted-foreground bg-muted/40 border-b border-border">
-        <span>Provider</span>
-        <span>Billing Mode</span>
-        <span>Connection</span>
-        <span className="text-right">Cost</span>
-      </div>
-      <div className="divide-y divide-border">
-        {entries.map(([billableOperation, billableOperationDef]) => {
-          const def = billableOperationDef as BillableOperationDef;
-          const provider = providerCatalog[def.provider];
-
-          const connections: string[] = [];
-          if (provider.hasManagedConnections) connections.push("Managed");
-          if (provider.allowsUserConnections) connections.push("User");
-
-          return (
-            <div
-              key={billableOperation}
-              className="grid grid-cols-[minmax(0,1fr)_140px_140px_120px] items-center gap-4 px-3 py-2 text-sm hover:bg-muted/30 transition-colors"
-            >
-              <div className="flex items-center gap-2 min-w-0">
-                <Avatar className="size-7 rounded-md">
-                  <AvatarImage
-                    src={provider.logoUrl}
-                    alt={`${provider.label} logo`}
-                  />
-                  <AvatarFallback className="rounded-md text-[10px]">
-                    {provider.label.slice(0, 2)}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="min-w-0">
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <div className="font-medium leading-tight cursor-default truncate">
-                        {provider.label}
-                      </div>
-                    </TooltipTrigger>
-                    <TooltipContent>{provider.description}</TooltipContent>
-                  </Tooltip>
-                  <div
-                    className="font-mono text-[11px] text-muted-foreground truncate"
-                    title={billableOperation}
-                  >
-                    {billableOperation}
-                  </div>
-                </div>
-              </div>
-              <div className="text-muted-foreground">
-                {def.mode === "onSuccess"
-                  ? "On Success"
-                  : def.mode === "always"
-                    ? "Always"
-                    : "n/a"}
-              </div>
-              <div className="text-muted-foreground">
-                {connections.join(", ")}
-              </div>
-              <div className="text-right tabular-nums">
-                <HighVolumePriceCell credits={effectiveCredits(def)} unit="credits" />
-              </div>
-            </div>
-          );
-        })}
-      </div>
     </div>
   );
 }

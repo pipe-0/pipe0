@@ -13,6 +13,7 @@ import {
   effectiveCredits,
   isPlatformPaid,
 } from "@/lib/pricing/effective-credits";
+import { isUsageMeteredSearch } from "@/lib/pricing/usage-metered";
 
 interface SearchCatalogPageData {
   title: string;
@@ -72,7 +73,21 @@ function generateSearchMarkdown(searchId: SearchId): string {
   const platformPaidSuffix = isPlatformPaid(entry.cost)
     ? " (billed on your own connection)"
     : "";
-  if (entry.cost.mode === "per_result") {
+  // Usage-metered: `cost.credits.default` is 0 display metadata, so the
+  // per-unit branches below would publish "0 credits per search" for a search
+  // that bills real credits. The operations ARE the price.
+  if (isUsageMeteredSearch(entry)) {
+    lines.push(`- Billing mode: Usage`);
+    if (entry.cost.info) lines.push(`- Cost: ${entry.cost.info}`);
+    for (const [operation, def] of Object.entries(
+      entry.billableOperations ?? {},
+    )) {
+      const credits = effectiveCredits(def)?.default;
+      if (credits == null) continue;
+      const note = (def as { note?: string }).note;
+      lines.push(`  - \`${operation}\`: ${credits} credits${note ? ` — ${note}` : ""}`);
+    }
+  } else if (entry.cost.mode === "per_result") {
     lines.push(`- Billing mode: Per Result`);
     lines.push(`- Cost: ${perUnit ?? 0} credits per result${platformPaidSuffix}`);
   } else if (entry.cost.mode === "per_search") {

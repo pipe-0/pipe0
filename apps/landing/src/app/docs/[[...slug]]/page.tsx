@@ -170,6 +170,11 @@ export default async function Page(props: PageProps<"/docs/[[...slug]]">) {
   );
 }
 
+// Every param is enumerated by generateStaticParams, so there is nothing to
+// render on demand. Pinning this keeps unknown paths on the 404 route instead
+// of waking a function for them.
+export const dynamicParams = false;
+
 export async function generateStaticParams() {
   return source.generateParams();
 }

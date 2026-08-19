@@ -4,6 +4,11 @@ import { notFound } from "next/navigation";
 
 export const revalidate = false;
 
+// Every param is enumerated by generateStaticParams, so there is nothing to
+// render on demand. Pinning this keeps unknown paths on the 404 route instead
+// of waking a function for them.
+export const dynamicParams = false;
+
 export async function GET(
   _req: Request,
   { params }: RouteContext<"/llms.mdx/docs/[[...slug]]">,

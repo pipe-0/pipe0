@@ -21,6 +21,11 @@ export default async function LegalPage(props: {
   );
 }
 
+// Every param is enumerated by generateStaticParams, so there is nothing to
+// render on demand. Pinning this keeps unknown paths on the 404 route instead
+// of waking a function for them.
+export const dynamicParams = false;
+
 export function generateStaticParams() {
   return legal.getPages().map((page) => ({
     slug: page.slugs,

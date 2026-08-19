@@ -73,6 +73,7 @@ import {
   X,
 } from "lucide-react";
 import Link from "next/link";
+import { useIntentPrefetch } from "@/hooks/use-intent-prefetch";
 import { type ComponentType, type ReactNode, useMemo } from "react";
 
 const dateFormatter = new Intl.DateTimeFormat("en-US", {
@@ -392,9 +393,11 @@ const PipeCard = ({
 
   const isNew = (tableEntry.tags as string[]).includes("new");
   const providers = getPipeProvidersInWaterfallOrder(pipeId);
+  const href = getPipeDocsURI(pipeId);
+  const intentPrefetch = useIntentPrefetch(href);
 
   return (
-    <Link href={getPipeDocsURI(pipeId)}>
+    <Link href={href} {...intentPrefetch}>
       <Card className="flex flex-col justify-stretch border-input hover:border-primary/50 transition-colors relative h-full min-h-[230px]">
         <span className="absolute right-3 top-3 inline-flex gap-1 text-muted-foreground text-xs items-center">
           {pipeStartingPrice ? (
