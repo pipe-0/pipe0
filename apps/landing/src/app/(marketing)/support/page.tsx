@@ -7,7 +7,7 @@ import { createMetadata } from "@/lib/metadata";
 export const metadata = createMetadata({
   title: "Support",
   description:
-    "Get help with pipe0: email support with a two-business-day response commitment, community Discord, GitHub discussions, and documentation.",
+    "Get help with pipe0: email support with a two-business-day response commitment, community Discord, GitHub Discussions, and documentation.",
   path: "/support",
 });
 
@@ -32,7 +32,7 @@ const channels = [
   },
   {
     title: "Feature requests",
-    body: "Missing a pipe, search, or integration? Request it on GitHub discussions.",
+    body: "Missing a pipe, search, or integration? Request it on GitHub Discussions.",
     linkLabel: "Open a discussion",
     href: appInfo.links.requestPipe,
   },

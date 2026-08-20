@@ -19,7 +19,7 @@ You configured nothing. The pipe uses its default provider order, and because it
 
 Add a second pipe column that reads the first. A common chain: `person:name:split@1` turns `name` into `first_name` for a greeting, or `prompt:run@1` writes a one-line opener from the company's description. Pipes see each other's output in a sheet exactly as they do in the API, so the chain declares itself. Rows missing an upstream value show `skipped` until the upstream column fills, then a later run picks them up.
 
-The lesson from the diff: you never told the second pipe where its input comes from. It found the column by field name.
+Note what you did not have to do: you never told the second pipe where its input comes from. It found the column by field name.
 
 ## Gate a column with a condition
 

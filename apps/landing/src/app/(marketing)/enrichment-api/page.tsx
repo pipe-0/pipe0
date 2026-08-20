@@ -254,7 +254,7 @@ export default function EnrichmentApiPage() {
       <Section className="pt-20 sm:pt-28">
         <SectionHeading
           title="Curation, not chaining."
-          subtitle="We only add providers when they contribute enrichment-coverage. Waterfalls stay short, fast, and reliable."
+          subtitle="We only add providers when they contribute enrichment coverage. Waterfalls stay short, fast, and reliable."
         />
         <div className="mt-10 overflow-hidden rounded-[18px] border border-[var(--panel-edge)] bg-[var(--panel)] px-6 py-10 sm:px-10">
           <div className="flex flex-wrap justify-center gap-3">

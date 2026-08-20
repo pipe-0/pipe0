@@ -55,7 +55,7 @@ export default function EmailForm() {
       toast({
         title: "Success",
         description:
-          "We received your request and will be in touch within the next hours.",
+          "We received your request and will be in touch in the next few hours.",
       });
     } catch (e) {
       console.error(e);

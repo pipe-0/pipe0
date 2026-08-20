@@ -1,5 +1,5 @@
 ---
-title: Distributive Generics and "never" in Typescript
+title: Distributive Generics and "never" in TypeScript
 date: 2025-04-07
 category: Engineering
 excerpt: Learn about the `never` type in distributive types
@@ -26,7 +26,7 @@ Skip to the examples if you are familiar with both.
 
 ## The `never` type
 
-There are many ways to think about Typescript's type system. One common way to think about types is as mathematical sets.
+There are many ways to think about TypeScript's type system. One common way to think about types is as mathematical sets.
 While this sounds intimidating, it's not too bad if you know a bit of TypeScript already.
 
 It's important to remember that types can be more or less specific.
@@ -80,7 +80,7 @@ TypeScript will treat every type as a union. Simple types like `string` are trea
 ToArray<string> | ToArray<number>; // think of it this way
 ```
 
-## The never types behaves weirdly
+## The never type behaves weirdly
 
 Let's test our new knowledge of distributive conditional types. What do you expect `Result1` and `Result2` to be?
 

@@ -35,6 +35,18 @@ const nextConfig: NextConfig = {
         destination: "/blog/category/:category",
         permanent: false,
       },
+      // Blog slugs corrected (2026-08): both paths shipped with a typo in
+      // the folder name, so the old URLs stay redirected.
+      {
+        source: "/blog/the-history-of-slob",
+        destination: "/blog/the-history-of-slop",
+        permanent: true,
+      },
+      {
+        source: "/blog/nextra-use-blog-and-docs-them",
+        destination: "/blog/nextra-use-blog-and-docs-theme",
+        permanent: true,
+      },
       {
         source: "/docs/pipes/pipes-catalog",
         destination: "/docs/pipe-catalog",

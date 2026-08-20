@@ -55,10 +55,10 @@ export function ThemeSwitcher() {
 A common browser problem that we want to avoid is a visual flicker. This is where our app is first rendered
 in dark mode and then switches to light mode.
 
-Since React executes hooks during hydration, this flicker is usually to fast to notice. If you see a flicker, 
+Since React executes hooks during hydration, this flicker is usually too fast to notice. If you see a flicker, 
 there are two options to make this even faster:
 
-1. In react, use `useLayoutEffect` to execute before pait
+1. In React, use `useLayoutEffect` to execute before paint
 2. Inject the script right into the `<head />` tag of your browser
 
 You can check the result on our homepage. We're using this exact component to switch the theme when you're

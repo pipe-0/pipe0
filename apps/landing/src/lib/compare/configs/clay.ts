@@ -32,7 +32,7 @@ export const clayConfig: CompareConfig = {
           },
           {
             feature: "Stateless enrichment",
-            pipe0: { v: "yes", note: "Yes, perform every enrichment in a sheet of stateless" },
+            pipe0: { v: "yes", note: "perform every enrichment in a sheet or stateless" },
             competitor: { v: "no", note: "Creates stateful tables for everything" },
           },
         ],

@@ -112,7 +112,7 @@ export const zoominfoConfig: CompareConfig = {
     },
     {
       q: "How much does ZoomInfo cost compared to pipe0?",
-      a: "ZoomInfo sells annual contracts that are orders of magitude more expensive than pipe0. pipe0 is usage-based from $49/mo.",
+      a: "ZoomInfo sells annual contracts that are orders of magnitude more expensive than pipe0. pipe0 is usage-based from $49/mo.",
     },
     {
       q: "Does pipe0 have better data than ZoomInfo?",

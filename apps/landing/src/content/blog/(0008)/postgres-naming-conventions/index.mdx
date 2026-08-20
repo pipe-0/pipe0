@@ -2,7 +2,7 @@
 title: PostgreSQL Naming Conventions for Intermediate Users
 date: 2025-04-08
 category: Engineering
-excerpt: Learn how to design consistent data models in PosgreSQL by leveraging naming conventions
+excerpt: Learn how to design consistent data models in PostgreSQL by leveraging naming conventions
 tags:
     - Postgres
 authors:
@@ -10,7 +10,7 @@ authors:
       title: Founder
 ---
 
-When designing database schemas adhering to naming conventions has pactial benefits. It contributes 
+When designing database schemas, adhering to naming conventions has practical benefits. It contributes 
 to schema clarity, query efficiency, and better collaboration.
 
 Also, you don't look like you don't know what you are doing 🙆🏼‍♂️.
@@ -27,13 +27,13 @@ everything to avoid this. Use "user_permissions" instead of "UserPermissions".
 ### Stick to snake_case
 
 Name tables, columns, and other objects using the snake_case format. The underscore helps with readability
-in complex schemas and multi-word names. Snake case is a wildly accepted standard in PostgreSQL communities
+in complex schemas and multi-word names. Snake case is a widely accepted standard in PostgreSQL communities
 and will make your schema intuitive to use.
 
 ### Use plural form for table names
 
-Tables that store collections of entities (e.g. a list of users) should be named in the plural form. Instead, 
-of naming your user table `user` use the plural form `users`. This naming convention matches the declarative 
+Tables that store collections of entities (e.g. a list of users) should be named in the plural form. Instead 
+of naming your user table `user`, use the plural form `users`. This naming convention matches the declarative 
 structure of SQL queries: `SELECT ALL USERS FROM TABLE ...`.
 
 ### Use singular form for column names
@@ -47,7 +47,7 @@ to your schema. The object type is already stored in PostgreSQL.
 
 ### Indexes and constraints
 
-PostgeSQL requires you add add names to indexes and constraints. Here, you should use a prefix. Use the prefix `idx_` followed by 
+PostgreSQL requires you to add names to indexes and constraints. Here, you should use a prefix. Use the prefix `idx_` followed by 
 the table and column e.g. `idx_users_email`. Prefixes are useful for unique constraints, too.
 
 Consider the prefix `uniq_` (e.g. `uniq_users_email`). Adding these prefixes to indexes and constraints helps you to spot them

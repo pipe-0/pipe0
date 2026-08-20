@@ -38,13 +38,13 @@ Most MCP servers let an agent look things up: Contacts from a CRM, or outreach s
 
 pipe0 lets an agent run entire workflows: search for prospects, enrich them through waterfalls, write the results into a sheet.
 
-Two things separate it from everything else on this list. First, agents work stateless or stateful, and data moves freely between one-off requests that stay in the conversation and UI tables that you can inspect and tweak.
+One thing separates it from everything else on this list: agents work stateless or stateful, and data moves freely between one-off requests that stay in the conversation and UI tables that you can inspect and tweak.
 
 Connects to any MCP client over OAuth. Setup is in the [MCP server docs](/docs/sdks/mcp); the [Claude Code walkthrough](/blog/claude-code-sales-prospecting) shows a full session.
 
 ## Clay MCP: best if your ops team already runs Clay
 
-Clay released its MCP server at [clay.com/mcp](https://clay.com/mcp) for Claude, ChatGPT, and Codex. The server can search Clay's database, enrich contacts, run pre-built Functions, and push contacts to Salesforce and sequencers. Rather than a first-class stateless MCP server, Clay shipped a remote control for their platform. The MCP server is available on higher tier plans only. If your team's enrichment logic already lives in Clay tables, this is the natural place connect your agent.
+Clay released its MCP server at [clay.com/mcp](https://clay.com/mcp) for Claude, ChatGPT, and Codex. The server can search Clay's database, enrich contacts, run pre-built Functions, and push contacts to Salesforce and sequencers. Rather than a first-class stateless MCP server, Clay shipped a remote control for their platform. The MCP server is available on higher tier plans only. If your team's enrichment logic already lives in Clay tables, this is the natural place to connect your agent.
 
 ## Apollo MCP: best free entry to a big B2B database
 
@@ -52,7 +52,7 @@ Apollo's first-party server ([docs](https://docs.apollo.io/docs/apollo-mcp)) is 
 
 ## ZoomInfo GTM.AI: best for enterprise contract customers
 
-ZoomInfo launched GTM.AI in June 2026 as its agent-native integration: company search, contact discovery, enrichment, and intent signals `mcp.zoominfo.com/mcp`. If your company already pays for ZoomInfo, this puts the database inside Claude, ChatGPT, and Copilot.
+ZoomInfo launched GTM.AI in June 2026 as its agent-native integration: company search, contact discovery, enrichment, and intent signals at `mcp.zoominfo.com/mcp`. If your company already pays for ZoomInfo, this puts the database inside Claude, ChatGPT, and Copilot.
 
 ## Amplemarket: best all-in-one outreach MCP
 

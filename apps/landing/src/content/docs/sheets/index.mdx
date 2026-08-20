@@ -21,14 +21,14 @@ The reverse also holds: jobs that don't need state at all run stateless, and a s
 
 ## Migrate Clay tables to pipe0 sheets
 
-You can fully replace your clay tables with pipe0 sheets. The differences between pipe0 and clay are factual, not philosophical:
+You can fully replace your Clay tables with pipe0 sheets. The differences between pipe0 and Clay are factual, not philosophical:
 
 - A sheet holds up to 2 million rows.
 - Point-in-time recovery is built in: undo, restore points, and time travel over an append-only history.
 - The whole engine is available over a public API and over MCP, so AI agents like Claude Code and ChatGPT can operate your sheets.
 - Runs, reports, and refreshes can be put on a cron schedule.
 
-To migrate a clay table to pipe0 sheets you have to convert it to a .csv and import it into pipe0. Since clay tables are not portable to different systems
+To migrate a Clay table to pipe0 sheets, you have to convert it to a CSV and import it into pipe0. Since Clay tables are not portable to different systems,
 you have to recreate the enrichments. For this you can ask "Sculptor" to describe your table and paste that description directly into pipe0's agent interface.
 
 ## Where sheets live

@@ -10,7 +10,7 @@ authors:
 ---
 
 Choosing an auth provider is a serious matter. Making a bad choice may compromise the security 
-of your application, your data, and your user's data. Making the right choice seems unfairly complicated 
+of your application, your data, and your users' data. Making the right choice seems unfairly complicated 
 within the JavaScript ecosystem where tools are reinvented at record speed.
 
 Historically, choosing tools maintained by large companies provides little safeguarding 
@@ -19,7 +19,7 @@ against this spinning flywheel.
 When it comes to auth providers we can choose between three options:
 
 1. Implement your own authentication logic
-2. Choose a third-party auth platform like [auth0](https://auth0.com), or clerk (https://clerk.com)
+2. Choose a third-party auth platform like [auth0](https://auth0.com), or [clerk](https://clerk.com)
 3. Use an authentication library like [better-auth](https://better-auth.com) or [passport](https://passportjs.com)
 
 At [pipe0](https://pipe0.com) we believe in owning our own user table. A vision that aligns with 
@@ -28,7 +28,7 @@ authentication libraries like [better-auth](https://better-auth.com) and [auth.j
 Additionally, we want to develop in a containerless fashion allowing our entire app to spin up
 without the use of docker, or [docker](https://docker.com) compose.
 
-Out authentication is currently powered by better auth. our implementation, we weren't able to 
+Our authentication is currently powered by better auth. Before our implementation, we weren't able to 
 find balanced reviews of the library that point out where better-auth shines or falls short.
 
 In this post, we want to walk you through some of the points we found.
@@ -37,12 +37,12 @@ In this post, we want to walk you through some of the points we found.
 
 Better auth has many strengths:
 
-### Fast set up
+### Fast setup
 
 Integrating better-auth into your application is fast. On the backend, they have guides to walk you 
 through the setup with [hono](https://hono.dev), [express](https://expressjs.com/), 
 [Elysia](https://elysiajs.com/), and [Nitro](https://nitro.build/). Even if 
-you are using a different backend framework, it is easy to integrate better-auth to it.
+you are using a different backend framework, it is easy to integrate better-auth with it.
 
 The frontend client also supports all common frameworks like [react](https://react.dev/), or [svelte](https://svelte.dev/).
 
@@ -54,7 +54,7 @@ magic link auth. In fact, it is the most extensive plugin ecosystem we've seen.
 ### Database Adapters
 
 Better auth manages your database migrations through database adapters. For this better-auth can either 
-directly connect to your database or plug into an ORM-like [drizzle](https://orm.drizzle.team/) or [prisma](https://www.prisma.io/).
+directly connect to your database or plug into an ORM like [drizzle](https://orm.drizzle.team/) or [prisma](https://www.prisma.io/).
 
 ### Support for OIDC and SSO
 
@@ -105,9 +105,5 @@ We love that he speaks through his work but would love to see him
 communicate more openly with the community and build trust. He is also the only 
 collaborator on the npm package giving him full control over the release process.
 
-The npm package also does not have any [provanance](https://docs.npmjs.com/viewing-package-provenance) 
+The npm package also does not have any [provenance](https://docs.npmjs.com/viewing-package-provenance) 
 information - which is not uncommon or concerning in itself.
-
-### Slow TypeScript Experience
-
-In our testing integrating better auth

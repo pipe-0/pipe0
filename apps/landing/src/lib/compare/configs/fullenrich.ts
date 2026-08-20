@@ -101,7 +101,7 @@ export const fullenrichConfig: CompareConfig = {
       },
       {
         title: "A waterfall you can see and control",
-        body: "Every pipe0 waterfall shows its providers. Reorder them, remove them, or plug in your own API keys for providers you already pay. The chain is your configuration, not a black box.",
+        body: "Every pipe0 waterfall shows its providers. Reorder them, remove them, or plug in your own API keys for providers you already pay for. The chain is your configuration, not a black box.",
         link: {
           label: "What is waterfall enrichment?",
           href: "/blog/what-is-waterfall-enrichment",

@@ -77,8 +77,8 @@ valid entry point listed in the `exports` property.
 In many ways, defining a root entry point with the `exports` property for `.` makes your library behave like it is bundled - even if it is not.
 This is because the `exports` property hides internal APIs the same way bundling does.
 
-When using the `exports` property, you might think there’s a stronger to use bundled types, since you're emulating the behavior 
-of a bundled library. However, even when using the `exports` property, having **unbundled types should still be your default since it 
+When using the `exports` property, you might think there’s a stronger case to use bundled types, since you're emulating the behavior 
+of a bundled library. However, even when using the `exports` property, having **unbundled types should still be your default**, since it 
 adds less complexity to your build setup. For multi-entry libraries, TypeScript can resolve unbundled types (e.g., dist/utils.d.ts for lib/utils)
 as long as they match your exports paths.
 
