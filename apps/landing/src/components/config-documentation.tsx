@@ -205,7 +205,7 @@ function GroupIcon({
       return <Activity className={className} />;
     case "boxes":
       return <Boxes className={className} />;
-    case "cometition":
+    case "competition":
       return <Swords className={className} />;
     case "bolt":
       return <Bolt className={className} />;

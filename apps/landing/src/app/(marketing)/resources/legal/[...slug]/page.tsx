@@ -13,7 +13,7 @@ export default async function LegalPage(props: {
   const { body: Mdx } = await page.data.load();
 
   return (
-    <article className="mx-auto flex w-full max-w-[720px] flex-col px-6 py-16 md:py-20">
+    <article className="legal-document mx-auto flex w-full max-w-[720px] flex-col px-6 py-16 md:py-20">
       <div className="prose min-w-0 flex-1">
         <Mdx components={getMDXComponents({})} />
       </div>

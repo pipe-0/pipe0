@@ -170,14 +170,14 @@ export default function SlackIntegration() {
               (or removing the app from Slack) deletes the token. See the{" "}
               <a
                 className="underline underline-offset-4"
-                href="/resources/legal/privacy-policy/20260724"
+                href="/resources/legal/privacy-policy"
               >
                 privacy policy
               </a>{" "}
               and{" "}
               <a
                 className="underline underline-offset-4"
-                href="/resources/legal/terms-of-service/20250404"
+                href="/resources/legal/terms-of-service"
               >
                 terms of service
               </a>

@@ -14,7 +14,7 @@ import { useRef } from "react";
    Each word lifts from a muted wash to the full foreground as it scrolls
    through the middle of the viewport. The "pipe0" token resolves to the
    inline wordmark. */
-const STATEMENT = "Every layer of pipe0 is built from the same primitives. Searches find records. Pipes enrich them. That is the whole system. Small enough to fit in a Slack message, deep enough to run your entire pipeline.";
+const STATEMENT = "Every layer of pipe0 is built from the same primitives. Searches find people. Pipes enrich them. That is the whole system. Small enough to fit in a Slack message, deep enough to run your entire pipeline.";
 
 const WORDS = STATEMENT.split(" ");
 
@@ -35,26 +35,26 @@ export function LandingStatement() {
   return (
     <div ref={targetRef} className="relative h-[175vh] sm:h-[230vh]">
       <div className="sticky top-0 flex h-svh flex-col items-center justify-center">
-      <p className="mx-auto flex max-w-280 flex-wrap justify-center gap-x-[0.26em] gap-y-[0.1em] text-center text-[clamp(25px,3.4vw,48px)] font-semibold leading-[1.22] tracking-[-0.02em]">
-        {WORDS.map((word, i) => {
-          const start = i / WORDS.length;
-          const end = start + 1 / WORDS.length;
-          return (
-            <Word
-              key={`${word}-${i}`}
-              progress={scrollYProgress}
-              range={[start, end]}
-              logo={word === "pipe0"}
-              reduced={!!reduced}
-            >
-              {word}
-            </Word>
-          );
-        })}
-      </p>
-      <p className="mt-10 text-center text-md font-medium text-muted-foreground sm:mt-12">
-        Built in <b className="font-semibold">San Francisco</b> and <b className="font-semibold">Berlin</b> 📍
-      </p>
+        <p className="mx-auto flex max-w-280 flex-wrap justify-center gap-x-[0.26em] gap-y-[0.1em] text-center text-[clamp(25px,3.4vw,48px)] font-semibold leading-[1.22] tracking-[-0.02em]">
+          {WORDS.map((word, i) => {
+            const start = i / WORDS.length;
+            const end = start + 1 / WORDS.length;
+            return (
+              <Word
+                key={`${word}-${i}`}
+                progress={scrollYProgress}
+                range={[start, end]}
+                logo={word === "pipe0"}
+                reduced={!!reduced}
+              >
+                {word}
+              </Word>
+            );
+          })}
+        </p>
+        <p className="mt-10 text-center text-md font-medium text-muted-foreground sm:mt-12">
+          Built in <b className="font-semibold">San Francisco</b> and <b className="font-semibold">Berlin</b> 📍
+        </p>
       </div>
     </div>
   );

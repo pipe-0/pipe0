@@ -125,9 +125,9 @@ export default function Home() {
             the headline matches the one the panel leaves below it. */}
         <Section className="py-[clamp(12px,2.1svh,28px)]">
           <div className="text-[clamp(22px,2.45vw,31px)] font-medium leading-[1.36] tracking-[-0.018em]">
-            <h1 className="text-foreground">Run a Revenue Factory</h1>
+            <h1 className="text-foreground">Sell more by automating… well, <i>everything</i>.</h1>
             <p className="text-muted-foreground">
-              Describe any growth idea. Prompt it into reality.
+              One friendly interface and API to create revenue systems in plain English.
             </p>
           </div>
         </Section>

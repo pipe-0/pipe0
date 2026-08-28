@@ -1073,3 +1073,51 @@ a:has(> [data-slot="button"]),
   border-radius: 0.5rem;
   color: #fff;
 }
+
+/* Print: legal documents. Procurement teams print the DPA and the terms to
+   PDF and file them, so print has to yield the document alone — no sticky nav,
+   no reading column sized for a screen, and no bare "/resources/..." hrefs
+   where someone reading on paper needs a URL they can actually type. Scoped to
+   `.legal-document`, which only the legal route sets. */
+@media print {
+  body:has(.legal-document) #nd-nav {
+    display: none;
+  }
+
+  .legal-document {
+    max-width: none;
+    padding: 0;
+  }
+
+  .legal-document .prose {
+    max-width: none;
+    color: #000;
+  }
+
+  /* A printed link is unclickable, so spell the target out. External links
+     already read as URLs; only internal ones need expanding. */
+  .legal-document .prose a[href^="/"]::after {
+    content: " (pipe0.com" attr(href) ")";
+    font-size: 0.85em;
+    word-break: break-all;
+  }
+
+  /* Don't strand a clause heading at the foot of a page, and don't split a
+     sub-processor table or an indemnity bullet across two. */
+  .legal-document .prose h1,
+  .legal-document .prose h2,
+  .legal-document .prose h3 {
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+
+  .legal-document .prose table,
+  .legal-document .prose li {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  @page {
+    margin: 18mm 16mm;
+  }
+}
