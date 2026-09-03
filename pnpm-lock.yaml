@@ -7,11 +7,11 @@ settings:
 catalogs:
   default:
     '@pipe0/base':
-      specifier: 1.0.25
-      version: 1.0.25
+      specifier: 1.0.26
+      version: 1.0.26
     '@pipe0/client':
-      specifier: 1.0.25
-      version: 1.0.25
+      specifier: 1.0.26
+      version: 1.0.26
     '@pipe0/react':
       specifier: 1.0.25
       version: 1.0.25
@@ -67,10 +67,10 @@ importers:
         version: 16.2.10(@mdx-js/loader@3.1.0(acorn@8.15.0))(@mdx-js/react@3.1.0(@types/react@19.2.14)(react@19.2.7))
       '@pipe0/base':
         specifier: 'catalog:'
-        version: 1.0.25(zod@4.1.12)
+        version: 1.0.26(zod@4.1.12)
       '@pipe0/client':
         specifier: 'catalog:'
-        version: 1.0.25
+        version: 1.0.26
       '@pipe0/doc-links':
         specifier: workspace:*
         version: link:../../packages/docs-links
@@ -2345,11 +2345,19 @@ packages:
     peerDependencies:
       zod: ^4.0.0
 
+  '@pipe0/base@1.0.26':
+    resolution: {integrity: sha512-AUalaZkTCrn6iJO12gdoR7HVYaL07MAUR+4ce5WxJKYWzcXBN5YzU6Al4cSZ/BuZ+fTLYbIeaVDiImYhVQBryA==}
+    peerDependencies:
+      zod: ^4.0.0
+
   '@pipe0/client@0.0.36':
     resolution: {integrity: sha512-Mad3vzwPNkmKCEjqiEy1SuMFYJvRgTJbRRQhkIgIUmMDdLNwNuZUxJ97wn1ysRON9HDzzLF7X5vxsmtxFlUhkw==}
 
   '@pipe0/client@1.0.25':
     resolution: {integrity: sha512-xZOld1i9BkzEWgmn0WQY0NVy8JNBeLUH2Ck1Q8MROlpCyCQRdWtiV/zr6kUBvylKVB5Laa0zLqPS3Ga3YKYl6w==}
+
+  '@pipe0/client@1.0.26':
+    resolution: {integrity: sha512-HVGHTD9FKey0kHI2bC/w/z3ZPbWD8K8pN94t+k+bw6/HAM/Hrfk1rXFyjMfM9nL1zDkk5VNpW0ZwUGSZpOf4ow==}
 
   '@pipe0/react@0.0.12':
     resolution: {integrity: sha512-COuw557GX8wwzVOjBQuhrouEyNFELewjl2SIUdpSPM9ktnxmeuDZOrH93L9ADIBlqS32dgdqMEGYLKoylRyiCg==}
@@ -9864,11 +9872,31 @@ snapshots:
       xxhash-wasm: 1.1.0
       zod: 4.1.12
 
+  '@pipe0/base@1.0.26(zod@4.1.12)':
+    dependencies:
+      '@asteasolutions/zod-to-openapi': 8.1.0(zod@4.1.12)
+      '@pipe0/client': 1.0.26
+      ajv: 8.17.1
+      date-fns: 4.1.0
+      immer: 10.2.0
+      json-schema-traverse: 1.0.0
+      json-schema-typed: 8.0.2
+      liquidjs: 10.25.7
+      lodash: 4.17.21
+      openapi-fetch: 0.15.0
+      tldts: 7.0.19
+      xxhash-wasm: 1.1.0
+      zod: 4.1.12
+
   '@pipe0/client@0.0.36':
     dependencies:
       openapi-fetch: 0.15.0
 
   '@pipe0/client@1.0.25':
+    dependencies:
+      openapi-fetch: 0.15.0
+
+  '@pipe0/client@1.0.26':
     dependencies:
       openapi-fetch: 0.15.0
 
