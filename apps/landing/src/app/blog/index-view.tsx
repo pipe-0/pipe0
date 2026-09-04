@@ -1,5 +1,4 @@
 import {
-  authorInitials,
   categorySlug,
   formatDate,
   postCover,
@@ -20,10 +19,9 @@ function toFeedPost(post: BlogPage, ratio: number): FeedPost {
     excerpt: post.data.excerpt,
     cover: postCover(post, ratio),
     authorName: author?.name ?? "pipe0 team",
-    initials: author ? authorInitials(author.name) : "p0",
     authorMeta:
       [
-        author?.title ? `${author.title}, pipe0` : null,
+        author?.title ?? null,
         post.data.date ? formatDate(post.data.date) : null,
       ]
         .filter(Boolean)

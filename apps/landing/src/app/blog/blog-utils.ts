@@ -228,17 +228,6 @@ export function postCover(post: BlogPage, ratio: number): string {
   });
 }
 
-/* ---- Author helpers ---- */
-
-export function authorInitials(name: string) {
-  return name
-    .split(/\s+/)
-    .map((w) => w[0])
-    .slice(0, 2)
-    .join("")
-    .toUpperCase();
-}
-
 /* ---- Post + category helpers ---- */
 
 /** Editorial sections in display order — Thinking leads. */

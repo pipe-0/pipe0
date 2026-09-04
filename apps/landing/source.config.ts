@@ -154,6 +154,17 @@ export const blog = defineCollections({
      */
     cover: z.string().optional(),
     /**
+     * One to three sentences shown in a TL;DR card between the cover and
+     * the body. Also emitted as the BlogPosting `abstract` for answer
+     * engines. Omit on posts that don't have one; nothing renders.
+     */
+    tldr: z.string().optional(),
+    /**
+     * Frequently asked questions rendered after the body and emitted as
+     * FAQPage structured data. Omit on posts that don't have any.
+     */
+    faq: z.array(z.object({ q: z.string(), a: z.string() })).optional(),
+    /**
      * Unpublished draft — excluded from the index, related reading, the
      * sitemap, and direct URLs (404). Remove the flag to publish.
      */

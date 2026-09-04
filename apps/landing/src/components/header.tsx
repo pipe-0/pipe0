@@ -20,10 +20,9 @@ import { cn } from "@/lib/utils";
 
 type Page = "product" | "api" | "blog" | "documentation" | "pricing";
 
+/* The API lives in the Products menu; a second top-level entry for it read
+   as a duplicate. */
 const navigationItems: { href: string; label: string; page: Page }[] = [
-  /* API leads: a large share of visitors arrive looking for an enrichment
-     API, and the Products dropdown was the only path to it. */
-  { href: "/enrichment-api", label: "API", page: "api" },
   { href: "/blog", label: "Blog", page: "blog" },
   { href: "/docs", label: "Docs", page: "documentation" },
   { href: "/pricing", label: "Pricing", page: "pricing" },
@@ -132,7 +131,8 @@ export function Header({ page }: { page: Page }) {
 
         {/* Desktop: everything grouped right with an even rhythm */}
         <nav className="hidden items-center gap-7 text-sm font-medium text-muted-foreground md:flex">
-          <ProductsMenu active={page === "product"} />
+          {/* The API page is one of the two products, so it lights the menu. */}
+          <ProductsMenu active={page === "product" || page === "api"} />
           {navigationItems.map((item) => (
             <Link
               key={item.href}

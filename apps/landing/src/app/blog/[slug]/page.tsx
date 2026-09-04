@@ -5,9 +5,10 @@ import {
   relatedPosts,
 } from "@/app/blog/blog-utils";
 import CalButton from "@/components/cal-button";
-import { JsonLd } from "@/components/seo/json-ld";
+import { JsonLd, faqJsonLd } from "@/components/seo/json-ld";
 import { LogoRawSmall } from "@/components/logo";
 import { buttonVariants } from "@/components/ui/button";
+import { authorAvatar } from "@/lib/authors";
 import { appInfo } from "@/lib/const";
 import { blog, type BlogPage } from "@/lib/source";
 import { cn, getBaseUrl } from "@/lib/utils";
@@ -25,7 +26,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import fs from "node:fs/promises";
-import { ShareActions } from "./page.client";
+import { AuthorAvatar } from "../author-avatar";
+import { ShareActions, SummarizeActions } from "./page.client";
 
 export default async function BlogPost(props: {
   params: Promise<{ slug: string }>;
@@ -43,6 +45,10 @@ export default async function BlogPost(props: {
   const author = authors[0];
   const related = relatedPosts(page, 2);
   const shareUrl = `${getBaseUrl()}${page.url}`;
+  // Both are opt-in per post; older posts don't carry them and render as
+  // before.
+  const tldr = page.data.tldr;
+  const faq = page.data.faq ?? [];
 
   return (
     <>
@@ -52,6 +58,7 @@ export default async function BlogPost(props: {
           "@type": "BlogPosting",
           headline: page.data.title,
           description: lede,
+          ...(tldr && { abstract: tldr }),
           articleSection: page.data.category,
           datePublished: page.data.date,
           dateModified: page.data.date,
@@ -62,10 +69,12 @@ export default async function BlogPost(props: {
             "@type": "Person",
             name: a.name,
             jobTitle: a.title,
+            ...(authorAvatar(a.name) && { image: authorAvatar(a.name) }),
           })),
           publisher: { "@id": "https://pipe0.com/#organization" },
         }}
       />
+      {faq.length > 0 && <JsonLd data={faqJsonLd(faq)} />}
 
       <main className="mx-auto flex w-full max-w-[980px] items-start gap-11 px-5 pt-8 sm:px-8 md:pt-11">
         {/* Share rail — back to the index, then the share actions */}
@@ -137,13 +146,34 @@ export default async function BlogPost(props: {
               </p>
             )}
 
-            <p className="mt-6 text-[13px] text-fd-muted-foreground">
-              {author
-                ? authors
-                  .map((a) => (a.title ? `${a.name}, ${a.title}` : a.name))
-                  .join(" · ")
-                : "The pipe0 team"}
-            </p>
+            {/* Byline — avatars overlap when a post has several authors */}
+            <div className="mt-6 flex items-center justify-center gap-2.5 text-[13px] text-fd-muted-foreground">
+              {author ? (
+                <>
+                  <span className="flex shrink-0 -space-x-1.5">
+                    {authors.map((a) => (
+                      <AuthorAvatar
+                        key={a.name}
+                        name={a.name}
+                        className="ring-2 ring-fd-background"
+                      />
+                    ))}
+                  </span>
+                  <span>
+                    {authors
+                      .map((a) => (a.title ? `${a.name}, ${a.title}` : a.name))
+                      .join(" · ")}
+                  </span>
+                </>
+              ) : (
+                <>
+                  <AuthorAvatar name="pipe0" />
+                  <span>The pipe0 team</span>
+                </>
+              )}
+            </div>
+
+            <SummarizeActions url={shareUrl} className="mt-3 justify-center" />
           </header>
 
           {page.data.cover && (
@@ -157,9 +187,57 @@ export default async function BlogPost(props: {
             </figure>
           )}
 
+          {/* TL;DR — the post in three sentences, on the text measure. Same
+              muted panel as the closing CTA so it reads as an aside, not as
+              the first paragraph. */}
+          {tldr && (
+            <aside
+              aria-label="TL;DR"
+              className="mx-auto mt-10 max-w-[680px] rounded-2xl bg-fd-muted px-6 py-6 sm:mt-12 sm:px-8 sm:py-7"
+            >
+              <p className="text-[12px] font-medium uppercase tracking-[0.1em] text-fd-muted-foreground">
+                TL;DR
+              </p>
+              <p className="font-blog mt-3 text-[18px] leading-[1.45] text-fd-foreground text-pretty sm:text-[20px]">
+                {tldr}
+              </p>
+            </aside>
+          )}
+
           <div className="prose blog-prose mt-12 min-w-0 sm:mt-16">
             <Mdx components={getMDXComponents({})} />
           </div>
+
+          {/* FAQ — always expanded (the pricing page's pattern) so every
+              answer is in the HTML for crawlers, not behind a toggle. */}
+          {faq.length > 0 && (
+            <section
+              aria-labelledby="post-faq"
+              className="mx-auto mt-16 max-w-[680px]"
+            >
+              <h2
+                id="post-faq"
+                className="font-blog text-[22px] font-semibold tracking-[-0.015em] text-fd-foreground"
+              >
+                Frequently asked questions
+              </h2>
+              <div className="mt-2">
+                {faq.map((item) => (
+                  <div
+                    key={item.q}
+                    className="border-b border-fd-border py-5 last:border-b-0"
+                  >
+                    <h3 className="font-blog text-[16px] font-semibold leading-snug text-fd-foreground">
+                      {item.q}
+                    </h3>
+                    <p className="mt-2 text-[15px] leading-[1.65] text-fd-muted-foreground">
+                      {item.a}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
 
           {/* Keep reading */}
           {related.length > 0 && (

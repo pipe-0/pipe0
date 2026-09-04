@@ -4,6 +4,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useState } from "react";
+import { AuthorAvatar } from "./author-avatar";
 
 /** Serialized card data — computed server-side, rendered client-side. */
 export type FeedPost = {
@@ -12,9 +13,9 @@ export type FeedPost = {
   excerpt?: string;
   /** Generated cover as a data URI. */
   cover: string;
+  /** Looked up against the managed author list for the avatar. */
   authorName: string;
-  initials: string;
-  /** "Founder, pipe0 · Apr 8, 2025" */
+  /** "Founder · Apr 8, 2025" */
   authorMeta?: string;
 };
 
@@ -81,9 +82,7 @@ export function PostByline({
 }) {
   return (
     <div className={cn("flex items-center gap-2.5", className)}>
-      <span className="grid size-7 shrink-0 place-items-center rounded-full bg-fd-muted text-[10px] font-semibold text-fd-muted-foreground">
-        {post.initials}
-      </span>
+      <AuthorAvatar name={post.authorName} />
       <div className="flex min-w-0 flex-col">
         <span className="text-[13px] leading-snug font-medium text-fd-foreground">
           {post.authorName}
