@@ -46,10 +46,12 @@ classify carefully.
 READER: already sold on Claude Code; wants the recipe plus cost
 control. Cost-anxiety facts: no vendor implements a protocol-level
 "confirm before spend"; controls that DO exist: pay-on-success
-billing (pipe0), free dry-run validation (pipe0 validate_pipes),
-balance-check tools (LeadMagic get_credits), refund-on-bad-result
-(Firecrawl), client-side oauth.scopes pinning, and Claude Code's
-25k-token output cap per MCP response.
+billing (pipe0), inline validation that refuses a malformed run
+before it bills (pipe0; the separate validate_pipes dry-run tool
+was removed in MCP server 2.1.0, so do not cite it), balance-check
+tools (LeadMagic get_credits), refund-on-bad-result (Firecrawl),
+client-side oauth.scopes pinning, and Claude Code's 25k-token
+output cap per MCP response.
 
 CONCEPT STACK:
 L1: the two ideas and why they compose
@@ -132,11 +134,13 @@ L6: one-off to production
   confirm-before-spend prompt in the protocol today, so spend
   control is structural, and the structures that exist are:
   pay-on-success billing (a miss across the whole cascade costs
-  nothing), free dry-run validation before a run spends anything,
-  scoped API keys, and the fact that a run only fills unresolved
-  cells so re-runs never double-charge. State what pipe0 implements
-  of these plainly; mention Firecrawl's refund-feedback tool and
-  LeadMagic's balance-check tool as the other patterns in the wild.
+  nothing), inline validation that refuses a malformed run before
+  it spends anything (there is no separate dry-run tool; the run
+  is the check), scoped API keys, and the fact that a run only
+  fills unresolved cells so re-runs never double-charge. State what
+  pipe0 implements of these plainly; mention Firecrawl's
+  refund-feedback tool and LeadMagic's balance-check tool as the
+  other patterns in the wild.
 
 ## From chat to production
 

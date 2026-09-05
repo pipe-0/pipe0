@@ -108,11 +108,12 @@ The client discovers the OAuth endpoints from the server and starts the sign-in 
 
 The server exposes the full pipe0 surface, grouped by what an agent does with it:
 
-- **Discover**: browse the catalogs and their schemas (`list_pipes`, `list_searches`, `list_effects`, `get_pipe_schema`, `get_search_schema`, `get_effect_schema`, `get_guide`, `get_provider_context`, `autocomplete_field`).
+- **Discover**: browse the catalogs and their schemas (`list_pipes`, `list_searches`, `list_effects`, `list_playbooks`, `get_pipe_schema`, `get_search_schema`, `get_effect_schema`, `get_playbook`, `get_guide`, `get_provider_context`, `autocomplete_field`).
 - **Account resources**: list what your organization already has (`list_connections`, `list_secrets`, `list_sheets`, `list_buckets`, `list_schedules`).
-- **Validate**: dry-run a payload before spending credits (`validate_pipes`, `validate_search`, `validate_effects`).
+- **Validate**: every run tool checks its payload before anything runs. An unknown key, a wrong shape, or a filter value the provider does not recognize comes back as a named error, and nothing is billed. `validate_effects` previews a sheet chain without committing it.
 - **Run**: execute searches, enrichments, and effects, and track them (`run_pipes_oneshot`, `run_search_oneshot`, `run_effects`, `check_run_status`, `wait_for_run`, `cancel_effect_run`, `verify_outcome`).
-- **Sheets**: create and read enrichment sheets (`create_sheet`, `get_sheet_schema`, `get_sheet_rows`, `get_field_values`, `check_pipe_fit`, `get_recent_effects`). See [what agents do with sheets](/docs/sheets/ai-agents).
+- **Sheets**: create and read enrichment sheets (`create_sheet`, `get_sheet_schema`, `get_sheet_rows`, `get_field_values`, `get_recent_effects`). To see which pipes fit a result, call `list_pipes` with the `run_id`; each pipe comes back as runnable or with the fields it still needs. See [what agents do with sheets](/docs/sheets/ai-agents).
+- **Reports**: create and read versioned report documents that sit next to your sheets (`create_report`, `read_report`). Report content is written through `run_effects`.
 - **Schedules**: automate recurring runs (`create_schedule`, `update_schedule`, `delete_schedule`).
 
 Tools that spend credits or mutate data ask for confirmation on the first call; the agent retries with `confirm: true` to proceed.

@@ -33,7 +33,7 @@ Find 50 Head of Engineering prospects at robotics companies in the U.S.,
 enrich them with work emails, and drop every prospect where the email enrichment finds no result.
 ```
 
-While you watch the agent, you may notice a few interesting things. The agent does not guess the payloads. It calls `list_searches` to pick a prospecting source, `get_search_schema` for the exact filter shape, and `validate_pipes` before anything runs. Then it fetches the list, runs the search, adds a work email enrichment (a waterfall across several providers that only bills the one that returns a result), and filters the misses.
+While you watch the agent, you may notice a few interesting things. The agent does not guess the payloads. It calls `list_searches` to pick a prospecting source and `get_search_schema` for the exact filter shape. The run itself checks the payload before anything is billed: an unknown filter key or a value the provider does not recognize comes back as a named error, and the agent fixes it and resends. Then it fetches the list, runs the search, adds a work email enrichment (a waterfall across several providers that only bills the one that returns a result), and filters the misses.
 
 If you run as is, the result is either JSON or a CSV file. Try adding
 
