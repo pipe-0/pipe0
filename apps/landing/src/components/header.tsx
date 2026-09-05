@@ -18,12 +18,11 @@ import { appInfo } from "@/lib/const";
 import { products } from "@/lib/products";
 import { cn } from "@/lib/utils";
 
-type Page = "product" | "api" | "blog" | "documentation" | "pricing";
+type Page = "product" | "api" | "documentation" | "pricing";
 
 /* The API lives in the Products menu; a second top-level entry for it read
    as a duplicate. */
 const navigationItems: { href: string; label: string; page: Page }[] = [
-  { href: "/blog", label: "Blog", page: "blog" },
   { href: "/docs", label: "Docs", page: "documentation" },
   { href: "/pricing", label: "Pricing", page: "pricing" },
 ];
