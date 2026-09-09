@@ -1,0 +1,134 @@
+---
+title: What Is Waterfall Enrichment?
+date: 2026-09-09
+category: Sales data
+tags:
+    - data enrichment
+    - sales automation
+excerpt: "Waterfall enrichment describes the practice of chaining together enrichment providers to increase coverage."
+draft: false
+cover: /media/blog/20260909-1.png
+faq:
+    - q: "What is waterfall enrichment?"
+      a: "Waterfall enrichment is the practice of chaining multiple B2B data providers together. A request goes to the first provider, and if it does not find the data, the request falls through to the next one. The goal is to find an email address or phone number that a single provider would have missed."
+    - q: "Does waterfall enrichment improve data accuracy?"
+      a: "No. Waterfalls increase coverage, not accuracy. A waterfall finds values that a single provider would not, but it does not check whether those values are correct. Accuracy has to be measured separately by benchmarking each provider in the chain."
+    - q: "Does chaining more providers together cost more?"
+      a: "Usually not. Most B2B data providers only charge for an email address or phone number when it is found, so a provider that returns nothing costs nothing. What grows is the round-trip time, since every additional provider in the chain adds to how long you may have to wait."
+    - q: "What is an embedded waterfall?"
+      a: "An embedded waterfall is a waterfall that a single provider manages for you and charges a flat fee for each resolved value. Providers such as Surfe, FullEnrich, and BetterContact offer this. Prices are typically 30 to 100 cents per phone number and 8 to 30 cents per work email."
+    - q: "How do I know if a provider belongs in my waterfall?"
+      a: "Benchmark it. A provider belongs in a waterfall if it contributes a meaningful amount of exclusive data that the other providers in the chain do not have, and if the data it returns is accurate. Many providers resell the same underlying dataset, so chaining them adds waiting time without adding coverage."
+authors:
+    - name: Florian
+      title: Founder
+---
+
+If you are active within the context of B2B data, you have heard the term
+_waterfall enrichment_. But what is it, and how has it become the industry
+standard?
+
+Working with B2B data is challenging. Lead databases are incomplete, serve
+wrong data, or trap users with unexpected price hikes. For years now, it has
+become increasingly easy to become a B2B data provider.
+
+Scraping providers like Bright Data, Coresignal, or Crustdata offer their data
+as resellable data bricks. New providers purchase one or more of these data
+bricks, add their own brand and marketing on top, and call themselves a data
+provider.
+
+Consumers are left to derive strategies to turn unreliable systems into the
+fuel that powers their GTM operations.
+
+One of these strategies is to chain multiple providers together in the hope
+that if the first provider won't find the data, the second will.
+
+## Waterfall
+
+Waterfalls make use of the way B2B data providers bill. Most providers will
+only charge for an email address or phone number if it is found. No result. No
+charge.
+
+This is an open invitation to chain many providers together without
+meaningfully increasing the cost. All we drive up is the round-trip time. The
+more providers we ask, the longer we may need to wait.
+
+Waterfalls come in different flavors, and different providers sell them at
+different price points.
+
+This blog post aims to serve as your map to navigate the market, so you can
+make an informed buying decision.
+
+## Waterfall schemas
+
+### The perfect waterfall
+
+Only a few providers scrape the data themselves. It is much more common to
+purchase enrichment data from a vendor that purchased it from another vendor.
+
+But that raises the question of redundancy.
+
+If you chain vendors A and B, but both resell dataset C, your waterfall is
+pointless. Both providers ask provider C.
+
+A perfect waterfall chains _n_ providers together. In this chain, every
+provider contributes a meaningful amount of exclusive data to your waterfall.
+
+Building such a waterfall requires careful benchmarking. Something that almost
+no provider in the wider enrichment industry does.
+
+### The foul waterfall
+
+If a perfect waterfall is a chain of _n_ providers where each provider adds
+meaningful exclusive data to the waterfall, a foul waterfall is a waterfall
+that chains an absurd number of providers with overlapping datasets together.
+This waterfall will waste a lot of your time, but you'll hardly gain anything
+by chaining these providers.
+
+## Waterfall offerings
+
+### The embedded waterfall
+
+Over the last few years, several providers have specialized in providing
+waterfalls. A few notable mentions are Surfe, FullEnrich, and BetterContact.
+
+The providers will manage a waterfall for you and charge a flat fee for each
+resolved value. Typically, this is anywhere from 30¢ to 100¢ per phone number
+and 8¢ to 30¢ per work email.
+
+Typically, these providers all follow the same playbook. They resolve contact
+information from a LinkedIn URL. Before calling the first provider, they
+resolve the LinkedIn profile of the user, retrieve their profession and
+location, and, based on this data, adjust the final waterfall.
+
+### The frontloaded embedded waterfall
+
+This strategy is a cost optimization over the embedded waterfall. Here, we're
+placing a fast and cheap provider before an embedded waterfall. This provider
+is often part of the embedded waterfall itself. By placing it before an
+embedded waterfall, we don't gain accuracy or coverage. Instead, we save
+roughly 75% of the cost for the 60% of values that are easy to resolve. Only
+for our hardest-to-resolve values do we call the most expensive embedded
+waterfall.
+
+## How to evaluate waterfalls
+
+We've previously written an entire [blog post]() about how to evaluate data
+enrichment providers.
+
+The core challenge when doing so is to create and run benchmarks that tell you
+whether:
+
+- A provider contributes meaningful unique data to your waterfalls
+- The data that a provider returns is accurate
+
+## What waterfalls cannot do
+
+A common misconception is that waterfalls increase accuracy. This is not true,
+or at least it is a more complex assessment.
+
+Generally, waterfalls are a way to increase coverage, not accuracy.
+
+## Share notes with us
+
+If you're looking for a new waterfall provider, contact us to get access to our [benchmarking data](https://pipe0.com).

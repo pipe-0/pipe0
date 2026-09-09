@@ -50,12 +50,37 @@ type PipeCatalogSource = Source<{
   metaData: PipeCatalogMetaData;
 }>;
 
+/**
+ * The deprecation facts an agent must see before anything else. The HTML page
+ * renders an alert from the same `lifecycle`; the markdown (llms-full.txt, the
+ * `.mdx` route, the llms.txt index line) is the only copy agents read.
+ */
+function getPipeDeprecation(entry: ReturnType<typeof getPipeEntry>) {
+  const deprecatedOn = entry.lifecycle?.deprecatedOn;
+  if (!deprecatedOn) return null;
+  const replacedBy = entry.lifecycle?.replacedBy ?? null;
+  const successor = replacedBy
+    ? `Use ${replacedBy} instead: https://pipe0.com${getPipeEntry(replacedBy).docPath}`
+    : "It has no direct replacement";
+  return {
+    deprecatedOn,
+    replacedBy,
+    summary: `Deprecated since ${deprecatedOn}. ${successor}.`,
+    notice: `**Deprecated since ${deprecatedOn}. Do not use this pipe in new work.** ${successor}. It keeps running only for sheets and integrations that already use it and can be removed without notice.`,
+  };
+}
+
 function generatePipeMarkdown(pipeId: PipeId): string {
   const entry = getPipeEntry(pipeId);
   const lines: string[] = [];
 
   lines.push(`# ${entry.label} (${pipeId})`);
   lines.push("");
+  const deprecation = getPipeDeprecation(entry);
+  if (deprecation) {
+    lines.push(`> ${deprecation.notice}`);
+    lines.push("");
+  }
   lines.push(entry.description);
   lines.push("");
 
@@ -137,6 +162,19 @@ function generatePipeMarkdown(pipeId: PipeId): string {
     lines.push("");
   }
 
+  // A deprecated pipe gets no runnable example: an agent that skims to the
+  // code block would copy the very id the notice tells it not to use.
+  if (deprecation) {
+    lines.push("## Code Example");
+    lines.push("");
+    lines.push(
+      deprecation.replacedBy
+        ? `Not provided for a deprecated pipe. See the ${deprecation.replacedBy} page for a current example.`
+        : "Not provided for a deprecated pipe.",
+    );
+    return lines.join("\n");
+  }
+
   // Code Example
   lines.push("## Code Example");
   lines.push("");
@@ -183,7 +221,12 @@ function generatePipeStructuredData(pipeId: PipeId) {
   headings.push({ id: "providers", content: "Providers" });
   headings.push({ id: "billing", content: "Billing" });
 
-  // Add description as searchable content
+  // Add description as searchable content; a deprecated pipe says so first,
+  // which is what lets Ask AI confirm a pipe's lifecycle before naming it.
+  const deprecation = getPipeDeprecation(entry);
+  if (deprecation) {
+    contents.push({ heading: "", content: `${entry.label} (${pipeId}). ${deprecation.summary}` });
+  }
   contents.push({
     heading: "",
     content: `${entry.label}. ${entry.description}`,
@@ -272,6 +315,7 @@ export function createPipeCatalogSource(): PipeCatalogSource {
 
     const markdown = generatePipeMarkdown(pipeId);
     const structuredData = generatePipeStructuredData(pipeId);
+    const deprecation = getPipeDeprecation(entry);
 
     files.push({
       type: "page",
@@ -279,7 +323,9 @@ export function createPipeCatalogSource(): PipeCatalogSource {
       slugs: ["pipe-catalog", basePipe, String(version)],
       data: {
         title: `${entry.label} (${pipeId})`,
-        description: entry.description,
+        description: deprecation
+          ? `${deprecation.summary} ${entry.description}`
+          : entry.description,
         full: true,
         structuredData,
         _isVirtual: true,

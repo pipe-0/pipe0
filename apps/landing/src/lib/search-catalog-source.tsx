@@ -46,12 +46,33 @@ type SearchCatalogSource = Source<{
   metaData: SearchCatalogMetaData;
 }>;
 
+/** Same contract as the pipe catalog: the markdown is the copy agents read. */
+function getSearchDeprecation(entry: ReturnType<typeof getSearchEntry>) {
+  const deprecatedOn = entry.lifecycle?.deprecatedOn;
+  if (!deprecatedOn) return null;
+  const replacedBy = entry.lifecycle?.replacedBy ?? null;
+  const successor = replacedBy
+    ? `Use ${replacedBy} instead: https://pipe0.com${getSearchEntry(replacedBy).docPath}`
+    : "It has no direct replacement";
+  return {
+    deprecatedOn,
+    replacedBy,
+    summary: `Deprecated since ${deprecatedOn}. ${successor}.`,
+    notice: `**Deprecated since ${deprecatedOn}. Do not use this search in new work.** ${successor}. It keeps running only for sheets and integrations that already use it and can be removed without notice.`,
+  };
+}
+
 function generateSearchMarkdown(searchId: SearchId): string {
   const entry = getSearchEntry(searchId);
   const lines: string[] = [];
 
   lines.push(`# ${entry.label} (${searchId})`);
   lines.push("");
+  const deprecation = getSearchDeprecation(entry);
+  if (deprecation) {
+    lines.push(`> ${deprecation.notice}`);
+    lines.push("");
+  }
   lines.push(entry.description);
   lines.push("");
 
@@ -113,6 +134,19 @@ function generateSearchMarkdown(searchId: SearchId): string {
     lines.push("");
   }
 
+  // No runnable example for a deprecated search — the code block is what an
+  // agent copies, so it must not carry the id the notice warns against.
+  if (deprecation) {
+    lines.push("## Code Example");
+    lines.push("");
+    lines.push(
+      deprecation.replacedBy
+        ? `Not provided for a deprecated search. See the ${deprecation.replacedBy} page for a current example.`
+        : "Not provided for a deprecated search.",
+    );
+    return lines.join("\n");
+  }
+
   // Code Example
   lines.push("## Code Example");
   lines.push("");
@@ -156,6 +190,13 @@ function generateSearchStructuredData(searchId: SearchId) {
   headings.push({ id: "output-fields", content: "Output Fields" });
 
   // Add description as searchable content
+  const deprecation = getSearchDeprecation(entry);
+  if (deprecation) {
+    contents.push({
+      heading: "",
+      content: `${entry.label} (${searchId}). ${deprecation.summary}`,
+    });
+  }
   contents.push({
     heading: "",
     content: `${entry.label}. ${entry.description}`,
@@ -226,6 +267,7 @@ export function createSearchCatalogSource(): SearchCatalogSource {
 
     const markdown = generateSearchMarkdown(searchId);
     const structuredData = generateSearchStructuredData(searchId);
+    const deprecation = getSearchDeprecation(entry);
 
     files.push({
       type: "page",
@@ -233,7 +275,9 @@ export function createSearchCatalogSource(): SearchCatalogSource {
       slugs: ["search-catalog", baseSearch, String(version)],
       data: {
         title: `${entry.label} (${searchId})`,
-        description: entry.description,
+        description: deprecation
+          ? `${deprecation.summary} ${entry.description}`
+          : entry.description,
         structuredData,
         _isVirtual: true,
         _virtualType: "search-entry",
