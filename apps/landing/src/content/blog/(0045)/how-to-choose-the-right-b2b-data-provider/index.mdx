@@ -1,0 +1,157 @@
+---
+title: How to Choose the Right Data Enrichment Vendor in 2027
+date: 2026-09-09
+category: Sales data
+tags:
+    - data enrichment
+    - sales automation
+excerpt: "17 of 20 providers we've looked at claim to have the best data. So, how do you choose a data enrichment vendor that is right for you? We lay out a benchmarking architecture that has served us well at pipe0."
+draft: false
+cover: /media/blog/20260909-2.png
+faq:
+    - q: "How do I evaluate a B2B data enrichment vendor?"
+      a: "Benchmark it rather than trusting the marketing. Vendors compete on four dimensions: coverage, accuracy, cost, and speed. Two more matter over time: how stable their API is and whether they maintain their dataset, since datasets drift fast. Run a representative sample of your own records through each vendor and measure."
+    - q: "Why do all data vendors claim to have the best data?"
+      a: "Because most of them are not the source of their own data. Many vendors resell datasets at a premium."
+    - q: "How large should a benchmarking dataset be?"
+      a: "A good sample size is 1000 records. In practice, results rarely change after the first 100 or so."
+    - q: "How do you measure the accuracy of enrichment data?"
+      a: "Accuracy is the hardest metric to test. One workable method is agreement between trusted providers: run the same dataset through several vendors, build a grid of how often they agree with each other, and manually inspect every case where they disagree to decide which one is right."
+authors:
+    - name: Florian
+      title: Founder
+---
+
+For this blog post, we looked at 20 B2B data vendors. 17 claimed to have the
+best data. Triple-verified emails, trusted phone numbers. Trust me, bro.
+
+All but two providers in our test were cheap datasets resold at a premium.
+
+In this blog post, we want to lay out our benchmarking infrastructure to
+empower you to evaluate B2B data providers with confidence.
+
+Following this guide will require some work on your part. Feel free to
+[reach out to us](https://pipe0.com). We're happy to share the results of our
+benchmarks with you.
+
+Either way, we encourage you to run your own benchmarks.
+
+## Why do all vendors claim to have the best data?
+
+Vendors have four mechanisms to compete with each other.
+
+- **Coverage**: For how many of your requests is data returned?
+- **Accuracy**: If data is returned, how often is this data true?
+- **Cost**: What is the cost of a successful enrichment?
+- **Speed**: If data is returned, how fast is it returned?
+
+Since there are so few ways in which vendors can differentiate,
+they typically claim superiority in all. After all, vendors are use to not being benchmarked.
+
+And you are used to receiving bad data.
+
+## Why so few vendors have good data
+
+The cost of calling yourself a data provider has fallen in the last years. 
+An entire industry has formed around selling large bricks of static data that providers are allowed to resell.
+
+Less sophisticated providers only add their marketing and logo before taking this data to the market.
+
+In consequence, most data providers source from the same 5-8 standard data sources: 
+Corsignal, Mixrank, BightData, Crustdata, People Data Labs, and a few others.
+
+There are exceptions. Spotting them is hard.
+
+## Lesser known dimensions that matter
+
+Next to the previously listed dimensions there are a few more that matter:
+
+- **Stability**: How stable their service and API is. Unfortunately, most
+  vendors are pretty unreliable.
+- **Permanence**: Datasets drift. Fast. A vendor may have a good dataset when
+  you first benchmark them. If they do not have the muscle to maintain it,
+  their data will drift and deteriorate.
+- **Compliance**: There are various regulations around B2B data. Sourcing data 
+responsibly will protect you and your company.
+
+## Warning signs
+
+Before going through the trouble of benchmarking a provider, here are a few
+warning signs that may help you decide if it is worth benchmarking a
+provider in the first place.
+
+### Embedded waterfall providers with a large number of low-cost providers
+
+[Embedded waterfall providers](/blog/what-is-waterfall-enrichment) are providers that chain multiple providers into a cascade
+to increase the coverage of the enrichment. A few common waterfall enrichment
+providers are FullEnrich, Surfe, and BetterContact.
+
+If you look through their provider list and see a large number of providers
+that commonly appear on the lower end of the price spectrum like Findymail,
+LeadMagic, Icypeas, Prospeo, Lusha, etc., it can be a warning sign.
+
+We've extensively benchmarked these providers and found that their coverage and accuracy
+cannot compete with more established providers. Even worse, we found that almost all cheaper providers source
+from the same datasets and typically overlap by more than 99%.
+
+Chaining multiple of them into a waterfall is pointless. Please believe us. We've tested this over and over so you don't have to.
+
+### Do they have developers on their team that you would trust?
+
+Quickly check their LinkedIn page to see if they have experienced developers
+on their team.
+
+### Book a demo and question them on the quality of their data
+
+If providers get defensive or refuse to give you an honest, balanced
+assessment of their strengths and weaknesses, this is usually a bad sign.
+
+## Setting up benchmarks
+
+### Source a dataset
+
+Curate a dataset that is representative of the enrichment you want to perform.
+Ensure some geographic variety as well as variety in the professions the
+people in your dataset have.
+
+Be aware that most providers source their dataset from LinkedIn. If you're
+trying to enrich a demographic that is not commonly represented on LinkedIn,
+make sure your benchmarking data reflects this.
+
+A good sample size is 1000 records. But after running hundreds of benchmarks,
+we can confidently say that we've never seen a provider improve past what
+we've seen after 100 records or so.
+
+### Dimensions to test
+
+After you've compiled your dataset, create your benchmarks as a visual app or
+as a command line utility. Here is what we recommend you test.
+
+#### Coverage
+
+This is by far the easiest metric to test. You run your dataset through the
+enrichment and see for how many requests data was returned.
+
+#### Accuracy
+
+This is by far the hardest metric to test. At [pipe0](https://pipe0.com) our
+primary metric for accuracy is agreement with trusted providers. For this we
+run the same dataset through different providers. We then build a grid,
+checking how often different providers agree with each other. We log every
+case where they disagree and inspect it manually, trying to determine which
+one is more accurate.
+
+![A sample matrix illustrating how much different providers agree which each other when returning enrichment data.](/media/blog/20260909-2.svg)
+
+#### Latency
+
+A simple stopwatch at the beginning and end of each test.
+
+#### Dataset uniqueness
+
+During your benchmark, one of the most effective metric to measure cost
+performance of a vendor is to run the same dataset through multiple providers 
+and measure how many values were found exclusively by each vendor.
+
+This metric will also help you design custom waterfalls where each vendor 
+has a unique contribution to your overall coverage.

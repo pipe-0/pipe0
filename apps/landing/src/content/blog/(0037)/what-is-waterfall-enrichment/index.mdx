@@ -10,15 +10,15 @@ draft: false
 cover: /media/blog/20260909-1.png
 faq:
     - q: "What is waterfall enrichment?"
-      a: "Waterfall enrichment is the practice of chaining multiple B2B data providers together. A request goes to the first provider, and if it does not find the data, the request falls through to the next one. The goal is to find an email address or phone number that a single provider would have missed."
+      a: "Waterfall enrichment is the practice of chaining multiple B2B data providers together. If the first provider it does not find the data, the next one is tried."
     - q: "Does waterfall enrichment improve data accuracy?"
-      a: "No. Waterfalls increase coverage, not accuracy. A waterfall finds values that a single provider would not, but it does not check whether those values are correct. Accuracy has to be measured separately by benchmarking each provider in the chain."
+      a: "No. Waterfalls increase coverage, not accuracy. You will find more values. But waterfalls don't inherently increase the likelyhood that returned values are correct."
     - q: "Does chaining more providers together cost more?"
-      a: "Usually not. Most B2B data providers only charge for an email address or phone number when it is found, so a provider that returns nothing costs nothing. What grows is the round-trip time, since every additional provider in the chain adds to how long you may have to wait."
+      a: "No. Most B2B data providers charge for data when it is found. A provider that returns nothing costs nothing."
     - q: "What is an embedded waterfall?"
-      a: "An embedded waterfall is a waterfall that a single provider manages for you and charges a flat fee for each resolved value. Providers such as Surfe, FullEnrich, and BetterContact offer this. Prices are typically 30 to 100 cents per phone number and 8 to 30 cents per work email."
+      a: "An embedded waterfall is a waterfall that a single provider manages for you and charges a flat fee for each resolved value. Providers like Surfe, FullEnrich, and BetterContact offer this."
     - q: "How do I know if a provider belongs in my waterfall?"
-      a: "Benchmark it. A provider belongs in a waterfall if it contributes a meaningful amount of exclusive data that the other providers in the chain do not have, and if the data it returns is accurate. Many providers resell the same underlying dataset, so chaining them adds waiting time without adding coverage."
+      a: "Benchmark it. A provider belongs in a waterfall if it contributes a meaningful amount of exclusive data to the chain of your providers."
 authors:
     - name: Florian
       title: Founder
@@ -113,8 +113,9 @@ waterfall.
 
 ## How to evaluate waterfalls
 
-We've previously written an entire [blog post]() about how to evaluate data
-enrichment providers.
+We've previously written an entire
+[blog post](/blog/how-to-choose-the-right-b2b-data-provider) about how to
+evaluate data enrichment providers.
 
 The core challenge when doing so is to create and run benchmarks that tell you
 whether:
@@ -131,4 +132,5 @@ Generally, waterfalls are a way to increase coverage, not accuracy.
 
 ## Share notes with us
 
-If you're looking for a new waterfall provider, contact us to get access to our [benchmarking data](https://pipe0.com).
+If you're looking for a new waterfall provider, contact us to get access to
+our [benchmarking data](https://pipe0.com).

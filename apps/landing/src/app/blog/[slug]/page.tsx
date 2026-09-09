@@ -27,6 +27,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import fs from "node:fs/promises";
 import { AuthorAvatar } from "../author-avatar";
+import { PostFaq } from "../post-faq";
 import { ShareActions, SummarizeActions } from "./page.client";
 
 export default async function BlogPost(props: {
@@ -208,36 +209,7 @@ export default async function BlogPost(props: {
             <Mdx components={getMDXComponents({})} />
           </div>
 
-          {/* FAQ — always expanded (the pricing page's pattern) so every
-              answer is in the HTML for crawlers, not behind a toggle. */}
-          {faq.length > 0 && (
-            <section
-              aria-labelledby="post-faq"
-              className="mx-auto mt-16 max-w-[680px]"
-            >
-              <h2
-                id="post-faq"
-                className="font-blog text-[22px] font-semibold tracking-[-0.015em] text-fd-foreground"
-              >
-                Frequently asked questions
-              </h2>
-              <div className="mt-2">
-                {faq.map((item) => (
-                  <div
-                    key={item.q}
-                    className="border-b border-fd-border py-5 last:border-b-0"
-                  >
-                    <h3 className="font-blog text-[16px] font-semibold leading-snug text-fd-foreground">
-                      {item.q}
-                    </h3>
-                    <p className="mt-2 text-[15px] leading-[1.65] text-fd-muted-foreground">
-                      {item.a}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </section>
-          )}
+          <PostFaq items={faq} />
 
           {/* Keep reading */}
           {related.length > 0 && (
