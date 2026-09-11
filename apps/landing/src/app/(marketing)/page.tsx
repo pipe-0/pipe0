@@ -125,9 +125,9 @@ export default function Home() {
             the headline matches the one the panel leaves below it. */}
         <Section className="py-[clamp(12px,2.1svh,28px)]">
           <div className="text-[clamp(22px,2.45vw,31px)] font-medium leading-[1.36] tracking-[-0.018em]">
-            <h1 className="text-foreground">Bring every GTM idea into reality. Fast.</h1>
+            <h1 className="text-foreground">GTM Automations and Trusted Data</h1>
             <p className="text-muted-foreground">
-              A friendly agent and API to replace your entire stack.
+              Building blocks to power sales workflows for your team, app, or agents
             </p>
           </div>
         </Section>

@@ -14,7 +14,7 @@ import { useRef } from "react";
    Each word lifts from a muted wash to the full foreground as it scrolls
    through the middle of the viewport. The "pipe0" token resolves to the
    inline wordmark. */
-const STATEMENT = "Every layer of pipe0 is built from the same primitives. Searches find people. Pipes enrich them. That is the whole system. Small enough to fit in a Slack message, deep enough to run your entire pipeline.";
+const STATEMENT = "We build B2B data APIs with the highest coverage and accuracy, agents that handle any GTM task, and 🌈 Clay-like tables that scale to millions of rows. We're 5x cheaper than traditional providers and respond to support tickets in minutes. pipe0 is the most powerful B2B tool you've never heard of.";
 
 const WORDS = STATEMENT.split(" ");
 
