@@ -127,7 +127,7 @@ export default function Home() {
           <div className="text-[clamp(22px,2.45vw,31px)] font-medium leading-[1.36] tracking-[-0.018em]">
             <h1 className="text-foreground">GTM Automations and Trusted Data</h1>
             <p className="text-muted-foreground">
-              Building blocks to power sales workflows for your team, app, or agents
+              Tools to power sales workflows for your team, app, or agent
             </p>
           </div>
         </Section>

@@ -1,0 +1,196 @@
+---
+title: Two Deepline Alternatives That We've Tested
+date: 2026-09-11
+category: Sales data
+tags:
+    - data enrichment
+    - sales automation
+excerpt: "We're taking a closer look at Deepline and evaluated it against pipe0 and Landbase. Deepline makes interesting design decisions that don't seem to pay off for the end user. This affects coverage, latency, accuracy, and user experience."
+draft: false
+cover: /media/blog/20260911-1.png
+faq:
+    - q: "What is the difference between a CLI and an MCP server for data enrichment?"
+      a: "A CLI is a program your agent installs on your machine, often in combination with agent skill files. An MCP server installs nothing and works purely over the network. Both mechanisms make functionality available to agents."
+    - q: "Is it safe to let an agent install the Deepline or Landbase CLI?"
+      a: "Both are registered companies in the U.S. with credible company profiles. There is no reason to distrust them."
+    - q: "How fast is Deepline compared to pipe0 and Landbase?"
+      a: "In our test, finding a phone number for a single record took between 2:30 and 4:00 minutes with Deepline. Landbase took 62 seconds on average. Pipe0 resolved a phone number in 17 seconds."
+    - q: "Which Deepline alternative found the most phone numbers?"
+      a: "On our list of 20 records, pipe0 found 18 mobile numbers, Landbase found 13, and Deepline found 12."
+    - q: "What do the Deepline alternatives cost per enrichment?"
+      a: "With pipe0, the average mobile number cost 14 cents and the average work email 4.5 cents. With Landbase, the average mobile number cost 43 cents and the average work email 9 cents."
+authors:
+    - name: Florian
+      title: Founder
+---
+
+With the rise of agents, companies are racing to restructure their
+workflows. One of these workflows is
+[data enrichment](/blog/what-is-data-enrichment).
+
+In this blog post, we want to
+take a look at three providers that make data enrichment available to agents:
+
+We will compare [Deepline](https://deepline.com), [pipe0](https://pipe0.com), and
+[Landbase](https://landbase.com).
+
+## CLIs vs MCPs
+
+To kick things off, we need to talk about the difference between CLIs and
+MCP servers. Both are mechanisms to make functionality available to agents.
+
+A company can choose which mechanism they prefer to make their service
+available to agents and you – the user – can freely accept or reject their choice.
+
+However, it can be revealing to explore why a company chose one mechanism over the other.
+
+On your end, this decision may also be surprisingly impactful.
+
+In our test, pipe0 exposes an MCP server while the other two expose CLIs.
+
+### CLIs
+
+CLIs are installed with an install script. For example, Landbase will direct your agent to
+follow [this script](https://cli.landbase.com/latest/agent-install.txt).
+Deepline has a near identical script for their CLI.
+
+Both scripts tell your agent to download a program onto your machine along with
+skill files.
+
+Downloading a program onto your machine has security implications. You're now
+more vulnerable to supply-chain attacks and need to carefully assess if you
+trust the vendor. Generally, there's no reason to distrust
+Landbase or Deepline. Both are registered companies in the U.S. with credible
+company profiles.
+
+But even the best systems can be compromised. Something to be aware of.
+
+Additionally, CLIs put you in charge of updating them and uninstalling an opaque program installed by an agent is painful.
+Neither Landbase nor Deepline publish documentation on how to uninstall
+their software.
+
+These problems don't exist with MCP servers. Not only that, MCP servers also
+allow you to connect them to agents that don't run on your machine (Cloud
+Agents) like GrokBot, ChatGPT Work, or Claude Cowork.
+
+Historically, companies have chosen CLIs over MCP servers if the functionality
+they expose requires megabytes of handbook text. This is the text the agent needs 
+to read in order to understand how to use the program.
+
+Having use install the handbook is faster than sending it over the wire. But, as you may suspect,
+this is a problem for tools with bloated documentation. Ideally, programs need fewer instructions to operate.
+
+Lastly, CLIs make your program harder to invoke. Both Landbase and Deepline
+default to a non-standard syntax when working with their tools.
+
+```
+/deepline-gtm Find a verified work email for Jane Smith at Stripe
+```
+
+and
+
+```
+landbase-cli "find B2B SaaS companies in New York with 50 to 500 employees"
+```
+
+One forces you to start a prompt with a reference to a skill file. The other 
+is invoked via a CLI command. Both need to be learned.
+
+### MCP servers
+
+MCP servers, on the other hand, have a much cleaner security posture. They
+install nothing on your system and work purely network-based. Most major
+companies have moved to MCP servers instead of CLIs.
+
+Instead of having to use a custom syntax for your agent, you can use a
+standard prompt and your agent will make use of the appropriate MCP server it
+finds. If it doesn't, you can just nudge the agent by instructing it to use a
+specific MCP server.
+
+When talking about the drawbacks of MCP server, people often mention that they 
+bloat the context of your agent since MCP definitions are loaded into your 
+agent session by default.
+
+However, with the improvement of model harnesses, these issues have mostly been 
+resolved and there is little data on degrading agent performance due to MCP server bloat.
+
+## Deepline
+
+Deepline works with a mixture of prebuilt plays and plays you can assemble
+yourself via their UI. After creation you can reference the plays from your
+agent.
+
+Rather than being a traditional data enrichment server, Deepline tends to goe deep
+into analysis.
+
+For example, when we asked Deepline to find a phone number for a person with a
+given LinkedIn URL, the tool surfaced the full LinkedIn profile of the person providing adjacent information before finally
+returning the phone number.
+
+The entire process took anywhere between 2:30 minutes and 4:00 minutes per
+request. Here, we wished that the CLI was a little sharper,
+focusing on our request instead of providing answers to questions we did not
+ask.
+
+Of our list of 20 records, Deepline found 12 phone numbers, which is a decent
+result but the lowest in our test.
+
+However, processing times were long and our interactions felt somewhat
+unergonomic.
+
+What we liked about Deepline is that it added an automatic verification step
+after each enrichment and had the agent reason deeply about the correctness of
+the data.
+
+However, exposing a waterfall with built-in, provider-aware
+verification would have the same effect at a fraction of the cost and time.
+
+We failed to find transparent pricing information on Deepline's docs. Instead, 
+we were only able to assess the cost per enrichment by running it and comparing 
+the start and end balance.
+
+We paid 6.6¢ for a work email and 41¢ for a mobile number.
+
+## Pipe0
+
+Pipe0 provides a more direct interface for enriched data. In a comparison
+between Deepline and pipe0, pipe0 resolved a phone number in 17s instead of
+Deepline's 145s (tested with Fable 5.1, high effort).
+
+<YoutubeEmbed
+  href="https://www.youtube.com/embed/8-XLG74Cgu0"
+  title="Deepline vs. pipe0 speed difference during data enrichment"
+/>
+
+One of the core differences between Deepline and pipe0 is that pipe0 operates
+fully stateless when used via the API.
+
+It provides a large number of small
+blocks that can be assembled freely by agents without interacting with the
+application in any way.
+
+This contrasts Deepline, which comes with a few built-in plays.
+As soon as you need to do an operation that leaves the realm of prebuilt
+plays, the agent needs to create a stateful custom play on the Deepline
+server.
+
+This takes longer and is harder for the agent to reason
+about.
+
+In our test, pipe0 found 18 of 20 phone numbers, which is the highest coverage
+in our test.
+
+The average mobile number cost 14¢ while the average work email cost 4.5¢.
+
+## Landbase
+
+Landbase positions itself more upmarket with its cheapest plans starting at
+$499/mo. Similar to Deepline, Landbase ships a CLI and operates statefully.
+You create datasets on their server and then perform actions on these
+datasets.
+
+Finding a phone number for a single record took 62s on average.
+
+In our test Landbase found 13 of 20 mobile numbers.
+
+The average mobile number cost 43¢ while the average work email cost 9¢.
