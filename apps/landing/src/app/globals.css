@@ -1121,3 +1121,64 @@ a:has(> [data-slot="button"]),
     margin: 18mm 16mm;
   }
 }
+
+/* ---------- Blobs — the little inline bots (landing-blobs.tsx) ----------
+   Two loops on the body (a slow bob and a faster wobble/squash) and one on
+   the eyes (a blink). Negative `--blob-delay` values offset a row so no two
+   move in step. */
+.blob {
+  overflow: visible;
+  transform-box: fill-box;
+  transform-origin: 50% 85%;
+  animation:
+    blob-bob 3.6s ease-in-out infinite,
+    blob-wobble 5.2s ease-in-out infinite;
+  animation-delay: var(--blob-delay, 0s), calc(var(--blob-delay, 0s) * 1.4);
+}
+.blob-eyes {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: blob-blink 4.8s infinite;
+  animation-delay: var(--blob-delay, 0s);
+}
+@keyframes blob-bob {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 -0.08em;
+  }
+}
+@keyframes blob-wobble {
+  0%,
+  100% {
+    transform: rotate(-3deg) scale(1, 1);
+  }
+  30% {
+    transform: rotate(2deg) scale(1.04, 0.96);
+  }
+  60% {
+    transform: rotate(-1deg) scale(0.97, 1.04);
+  }
+  80% {
+    transform: rotate(3deg) scale(1.02, 0.98);
+  }
+}
+@keyframes blob-blink {
+  0%,
+  88%,
+  100% {
+    transform: scaleY(1);
+  }
+  92%,
+  96% {
+    transform: scaleY(0.12);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .blob,
+  .blob-eyes {
+    animation: none;
+  }
+}

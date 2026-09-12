@@ -3,6 +3,7 @@ import { HeroFilm } from "@/app/hero-film";
 import { HeroGlobe } from "@/app/hero-globe";
 import { LandingReplaces } from "@/app/landing-replaces";
 import { LandingSpotlight } from "@/app/landing-spotlight";
+import { BotPill } from "@/app/landing-blobs";
 import { LandingStatement } from "@/app/landing-statement";
 import { LandingSystemCards } from "@/app/landing-system-cards";
 import { Footer } from "@/components/footer";
@@ -125,9 +126,17 @@ export default function Home() {
             the headline matches the one the panel leaves below it. */}
         <Section className="py-[clamp(12px,2.1svh,28px)]">
           <div className="text-[clamp(22px,2.45vw,31px)] font-medium leading-[1.36] tracking-[-0.018em]">
-            <h1 className="text-foreground">Every GTM system – one promt away. </h1>
+            <h1 className="text-foreground">
+              Every GTM system – one prompt away.
+            </h1>
+            {/* One bot per audience, each in a soft primary pill with its
+                word — an angular one for the API, a many-handed one for the
+                agent, a friendly face for the human. See landing-blobs. */}
             <p className="text-muted-foreground">
-              Automation blocks that APIs, Agents and Humans can stick together
+              Automation blocks that{" "}
+              <BotPill kind="diamond" delay={0}>APIs</BotPill>,{" "}
+              <BotPill kind="clover" delay={-1.3}>Agents</BotPill> and{" "}
+              <BotPill kind="round" delay={-2.4}>Humans</BotPill> can use.
             </p>
           </div>
         </Section>

@@ -8,13 +8,25 @@ import {
   type MotionValue,
 } from "motion/react";
 import Image from "next/image";
+import { Blob, type BlobKind, type BlobTone } from "@/app/landing-blobs";
 import { useRef } from "react";
 
 /* The positioning statement — read once, on the way down from the hero.
    Each word lifts from a muted wash to the full foreground as it scrolls
    through the middle of the viewport. The "pipe0" token resolves to the
-   inline wordmark. */
-const STATEMENT = "We build B2B data APIs with the highest coverage and accuracy, agents that handle any GTM task, and 🌈 Clay-like tables that scale to millions of rows. We're 5x cheaper than traditional providers and respond to support tickets in minutes. pipe0 is the most powerful B2B tool you've never heard of.";
+   inline wordmark; `:name` tokens resolve to the little inline bots
+   (see BOTS below). */
+const STATEMENT =
+  "We build B2B data APIs with the highest coverage and accuracy, :clover agents that handle any GTM task, and :rainbow Clay-like tables that scale to millions of rows. We're 5x cheaper than traditional providers :round and respond to support tickets in minutes. :triangle We're the most powerful B2B tool you've never heard of. :cluster";
+
+/* Which bot each token stands for. Tones stay inside the app palette. */
+const BOTS: Record<string, { kind: BlobKind; tone: BlobTone; delay: number }> = {
+  ":clover": { kind: "clover", tone: "green", delay: 0 },
+  ":rainbow": { kind: "rainbow", tone: "amber", delay: -1.1 },
+  ":round": { kind: "round", tone: "sky", delay: -2.2 },
+  ":triangle": { kind: "triangle", tone: "indigo", delay: -0.7 },
+  ":cluster": { kind: "cluster", tone: "indigo", delay: -1.8 },
+};
 
 const WORDS = STATEMENT.split(" ");
 
@@ -45,6 +57,7 @@ export function LandingStatement() {
                 progress={scrollYProgress}
                 range={[start, end]}
                 logo={word === "pipe0"}
+                bot={BOTS[word]}
                 reduced={!!reduced}
               >
                 {word}
@@ -65,16 +78,36 @@ function Word({
   progress,
   range,
   logo,
+  bot,
   reduced,
 }: {
   children: string;
   progress: MotionValue<number>;
   range: [number, number];
   logo: boolean;
+  bot?: { kind: BlobKind; tone: BlobTone; delay: number };
   reduced: boolean;
 }) {
   const opacity = useTransform(progress, range, [0, 1]);
   const style = { opacity: reduced ? 1 : opacity };
+
+  if (bot) {
+    /* Same two-layer trick as the wordmark: a washed-out bot underneath, the
+       full-colour one fading in over it. Both run the same animation with the
+       same delay, so they stay perfectly registered. */
+    return (
+      <span className="relative inline-flex translate-y-[0.1em] items-center">
+        <Blob {...bot} size={1.1} className="opacity-15 grayscale" />
+        <motion.span
+          aria-hidden
+          style={style}
+          className="absolute inset-0 flex items-center"
+        >
+          <Blob {...bot} size={1.1} />
+        </motion.span>
+      </span>
+    );
+  }
 
   if (logo) {
     return (
