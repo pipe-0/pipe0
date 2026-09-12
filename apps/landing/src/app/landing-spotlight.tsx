@@ -3,25 +3,48 @@
 import { SectionHeading } from "@/components/marketing";
 import { PlaceholderAvatar } from "@/components/placeholder-avatar";
 import { cn } from "@/lib/utils";
+import {
+  motion,
+  useMotionValue,
+  useMotionValueEvent,
+  useReducedMotion,
+  useScroll,
+  useTransform,
+} from "motion/react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import {
+  createRef,
+  useCallback,
+  useEffect,
+  useMemo,
+  type ReactNode,
+  type RefObject,
+} from "react";
 
 /**
  * Interfaces — the same engine, reached four ways.
  *
- * Laid out as a row of measures rather than an accordion: a rule, a label and
- * a muted line, with the full-width preview underneath. There is deliberately
- * no progress indicator; the section cycles, but showing a countdown made it
- * read like a carousel demanding attention rather than a set of facts.
+ * Four pages in a folder. Each page is a white panel with a file-folder tab
+ * on its top edge; the tabs sit at four different positions, so as the pages
+ * stack up on scroll every tab stays visible and the row of them reads as
+ * the folder's index. A page sticks just under the header while the next
+ * one scrolls up over it. Done with sticky positioning, not scroll
+ * hijacking: momentum, keyboard paging and reduced motion all keep working.
+ *
+ * Nothing here is new to the site — the page is the standard panel, the tab
+ * is the panel's border and background lifted onto its top edge, and the
+ * heading is the two-tone pair every section uses.
  */
 
 type Surface = {
   key: string;
   tab: string;
   title: string;
+  subtitle: string;
   copy: string;
   href: string;
   linkLabel: string;
+  pane: ReactNode;
 };
 
 const surfaces: Surface[] = [
@@ -29,84 +52,55 @@ const surfaces: Surface[] = [
     key: "agent",
     tab: "UI Agent",
     title: "Ask in the sheet.",
+    subtitle: "The agent builds the columns.",
     copy: "Describe the outcome. The agent picks the searches and pipes, builds the columns, and runs them.",
     href: "/docs/sheets/ai-agents",
     linkLabel: "Agents in Sheets",
+    pane: <AgentPane />,
   },
   {
     key: "mcp",
     tab: "MCP",
     title: "Your own agents.",
-    copy: "Claude Code, Cursor, ChatGPT. The same engine over MCP, with no glue code in between.",
+    subtitle: "Claude Code, Cursor, ChatGPT.",
+    copy: "The same engine over MCP, with no glue code in between. Your agent gets every search and pipe as a tool.",
     href: "/docs/sdks/mcp",
     linkLabel: "MCP server",
+    pane: <McpPane />,
   },
   {
     key: "slack",
     tab: "Slack",
     title: "Bot command.",
-    copy: "@pipe0 researches an account, finds contact data, and reports back where the team already works.",
+    subtitle: "Where the team already works.",
+    copy: "@pipe0 researches an account, finds contact data, and reports back in the channel that asked.",
     href: "/docs/sdks/slack-agent",
     linkLabel: "Slack agent",
+    pane: <SlackPane />,
   },
   {
     key: "api",
     tab: "API",
     title: "Send your requests.",
-    copy: "Compose providers, actions and conditions into pipes, then ship enrichment inside your own product.",
+    subtitle: "Enrichment inside your product.",
+    copy: "Compose providers, actions and conditions into pipes, then ship enrichment behind your own UI.",
     href: "/enrichment-api",
     linkLabel: "Enrichment API",
+    pane: <ApiPane />,
   },
 ];
 
-const CYCLE_MS = 10000;
-
-/* The section opens on the API pane: developers are the audience most likely
-   to bounce before the rotation reaches them. The cycle continues from here,
-   so the other three still get their turn. */
-const INITIAL = surfaces.findIndex((s) => s.key === "api");
+/* Tab geometry. The tabs stand above the page, so the page rests that much
+   further below the header (h-16) than a plain sticky panel would. */
+const TAB_H = 36;
+const STICK_TOP = 64 + 20 + TAB_H;
 
 export function LandingSpotlight() {
-  const [active, setActive] = useState(INITIAL);
-  const [reduced, setReduced] = useState(false);
-
-  useEffect(() => {
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const update = () => setReduced(mq.matches);
-    update();
-    mq.addEventListener("change", update);
-    return () => mq.removeEventListener("change", update);
-  }, []);
-
-  useEffect(() => {
-    if (reduced) return;
-    const t = setTimeout(
-      () => setActive((a) => (a + 1) % surfaces.length),
-      CYCLE_MS,
-    );
-    return () => clearTimeout(t);
-  }, [active, reduced]);
-
-  const panes = [<AgentPane key="a" />, <McpPane key="m" />, <SlackPane key="s" />, <ApiPane key="p" />];
-
-  /* Fade out, swap, fade in — one pane on screen at a time. A crossfade
-     showed two panes at once, and the incoming translate made the block
-     appear to shift; both read as a wobble. `shown` lags `active` by exactly
-     the fade-out, so the caption swaps with its own preview. */
-  const [shown, setShown] = useState(INITIAL);
-  const [visible, setVisible] = useState(true);
-
-  useEffect(() => {
-    if (shown === active) return;
-    // Starting the fade-out is the point of this effect, not a derived value.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setVisible(false);
-    const t = setTimeout(() => {
-      setShown(active);
-      setVisible(true);
-    }, 380);
-    return () => clearTimeout(t);
-  }, [active, shown]);
+  /* One ref per page: a page's tab dims as the *next* page covers it. */
+  const refs = useMemo(
+    () => surfaces.map(() => createRef<HTMLDivElement>()),
+    [],
+  );
 
   return (
     <div>
@@ -115,101 +109,115 @@ export function LandingSpotlight() {
         subtitle="The same primitives for technical and non-technical users."
       />
 
-      {/* Measures — a rule, a label, a muted line. */}
-      <div
-        className="mt-12 grid grid-cols-2 gap-x-6 gap-y-8 lg:grid-cols-4"
-        role="tablist"
-        aria-label="Interfaces"
+      <div className="relative mt-10 sm:mt-12">
+        {surfaces.map((s, i) => (
+          <Page
+            key={s.key}
+            index={i}
+            surface={s}
+            ref={refs[i]}
+            nextRef={refs[i + 1] ?? null}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function Page({
+  index,
+  surface,
+  ref,
+  nextRef,
+}: {
+  index: number;
+  surface: Surface;
+  ref: RefObject<HTMLDivElement | null>;
+  nextRef: RefObject<HTMLDivElement | null> | null;
+}) {
+  const reduced = useReducedMotion();
+
+  /* How much of this page the next one has covered, 0..1, measured from the
+     two boxes rather than derived from scroll position: the cover only
+     starts once this page has stuck, and where that happens depends on the
+     viewport and every page above. Measuring is exact and needs no maths. */
+  const covered = useMotionValue(0);
+  const measure = useCallback(() => {
+    const me = ref.current;
+    const next = nextRef?.current;
+    if (!me || !next) return;
+    const a = me.getBoundingClientRect();
+    const b = next.getBoundingClientRect();
+    covered.set(Math.min(1, Math.max(0, (a.bottom - b.top) / a.height)));
+  }, [ref, nextRef, covered]);
+
+  const { scrollY } = useScroll();
+  useMotionValueEvent(scrollY, "change", measure);
+  useEffect(() => {
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, [measure]);
+
+  /* A covered page's tab drops to the panel grey, so the one open page reads
+     as the front of the folder. The pages themselves stay put: any scale on
+     a covered page would carry its tab with it and break the tab row. */
+  const tabShade = useTransform(covered, [0, 0.6], [0, 1]);
+
+  return (
+    <div ref={ref} className="sticky pb-14" style={{ top: STICK_TOP }}>
+      <article
+        className="relative rounded-[18px] border border-[var(--panel-edge)] bg-background shadow-[0_1px_2px_rgba(14,17,23,0.04),0_18px_44px_rgba(28,35,80,0.08)]"
       >
-        {surfaces.map((s, i) => {
-          const isActive = i === active;
-          return (
-            <button
-              key={s.key}
-              type="button"
-              role="tab"
-              aria-selected={isActive}
-              onClick={() => setActive(i)}
-              className="group cursor-pointer text-left"
-            >
-              {/* 2px rather than a hairline: at 1px the selected measure was
-                  the same weight as the three it had to be picked out from,
-                  and only its colour carried the state. */}
-              <span
-                aria-hidden
-                className={cn(
-                  "block h-0.5 w-full transition-colors duration-700 ease-out",
-                  isActive
-                    ? "bg-primary"
-                    : "bg-border group-hover:bg-foreground/40",
-                )}
-              />
-              <span
-                className={cn(
-                  "mt-4 block text-[17px] font-medium tracking-[-0.01em] transition-colors duration-700 ease-out",
-                  isActive ? "text-foreground" : "text-muted-foreground",
-                )}
-              >
-                {s.tab}
-              </span>
-              <span
-                className={cn(
-                  "mt-1.5 block max-w-[280px] text-sm leading-relaxed transition-colors duration-700 ease-out",
-                  isActive ? "text-muted-foreground" : "text-muted-foreground/60",
-                )}
-              >
-                {s.title}
-              </span>
-            </button>
-          );
-        })}
-      </div>
-
-      {/* Full-width preview on the same muted surface as the rest of the page.
-          Both rows have a reserved height, so nothing reflows when the pane or
-          the caption swaps — the caption lines differ in length and would
-          otherwise change the panel's height mid-fade. */}
-      <div className="mt-10 overflow-hidden rounded-[18px] border border-[var(--panel-edge)] bg-[var(--panel)]">
+        {/* The folder tab. One pixel into the page so the page's top border
+            disappears under it and the two read as a single shape. Four
+            slots across the width, past the rounded corner on the left. */}
         <div
-          className={cn(
-            "flex h-[360px] items-center px-5 [will-change:opacity] transition-opacity ease-[cubic-bezier(0.33,0,0.2,1)] sm:h-[560px] sm:px-10",
-            visible
-              ? "opacity-100 duration-[700ms]"
-              : "opacity-0 duration-[380ms]",
-          )}
+          className="absolute flex items-center rounded-t-[10px] border border-b-0 border-[var(--panel-edge)] bg-background px-2.5 text-[12px] font-medium text-foreground sm:px-4 sm:text-[13px]"
+          style={{
+            height: TAB_H,
+            bottom: "calc(100% - 1px)",
+            left: `calc(18px + ${index} * (100% - 36px) / ${surfaces.length})`,
+            width: `calc((100% - 36px) / ${surfaces.length} - 6px)`,
+          }}
         >
-          {panes[shown]}
+          <span className="relative z-10 truncate">{surface.tab}</span>
+          <motion.span
+            aria-hidden
+            style={{ opacity: reduced ? 0 : tabShade }}
+            className="absolute inset-0 rounded-t-[9px] bg-[var(--panel)]"
+          />
         </div>
 
-        <div className="flex min-h-[120px] flex-col items-start gap-3 border-t border-[var(--panel-edge)] px-5 py-5 sm:min-h-[76px] sm:flex-row sm:items-center sm:gap-3 sm:px-10">
-          <span
-            className={cn(
-              "flex min-w-0 flex-1 flex-col gap-1 [will-change:opacity] transition-opacity ease-[cubic-bezier(0.33,0,0.2,1)] ease-out sm:flex-row sm:items-baseline sm:gap-3",
-              visible
-                ? "opacity-100 duration-[700ms]"
-                : "opacity-0 duration-[380ms]",
-            )}
-          >
-            <span className="text-[15px] font-medium text-foreground">
-              {surfaces[shown].title}
-            </span>
-            <span className="min-w-0 text-sm leading-relaxed text-muted-foreground sm:flex-1">
-              {surfaces[shown].copy}
-            </span>
-          </span>
-          <Link
-            href={surfaces[shown].href}
-            className={cn(
-              "shrink-0 text-sm font-medium text-primary underline-offset-4 [will-change:opacity] transition-opacity ease-[cubic-bezier(0.33,0,0.2,1)] ease-out hover:underline",
-              visible
-                ? "opacity-100 duration-[700ms]"
-                : "opacity-0 duration-[380ms]",
-            )}
-          >
-            {surfaces[shown].linkLabel} &rarr;
-          </Link>
+        {/* minmax(0, …) everywhere: the code previews have an intrinsic width
+            that would otherwise push the column past the page's edge. */}
+        <div className="grid grid-cols-[minmax(0,1fr)] gap-8 p-6 sm:p-10 lg:min-h-[min(72svh,660px)] lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] lg:gap-12">
+          {/* Copy column — the section heading pair, one size down. */}
+          <div className="flex flex-col">
+            <div className="text-[clamp(22px,2.45vw,31px)] font-medium leading-[1.36] tracking-[-0.018em]">
+              <h3 className="text-foreground">{surface.title}</h3>
+              <p className="text-muted-foreground">{surface.subtitle}</p>
+            </div>
+            <p className="mt-5 max-w-[46ch] text-[15px] leading-relaxed text-muted-foreground sm:text-[16px]">
+              {surface.copy}
+            </p>
+            <div className="mt-8 lg:mt-auto lg:pt-10">
+              <Link
+                href={surface.href}
+                className="text-sm font-medium text-primary underline-offset-4 hover:underline"
+              >
+                {surface.linkLabel} <span aria-hidden>&rarr;</span>
+              </Link>
+            </div>
+          </div>
+
+          {/* Preview column — the pane on the same muted inset the section
+              always used for its previews. */}
+          <div className="flex min-w-0 items-center rounded-[14px] border border-[var(--panel-edge)] bg-[var(--panel)] p-4 sm:p-8 [&>*]:min-w-0">
+            {surface.pane}
+          </div>
         </div>
-      </div>
+      </article>
     </div>
   );
 }
