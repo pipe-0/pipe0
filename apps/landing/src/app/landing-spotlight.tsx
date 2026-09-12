@@ -92,7 +92,7 @@ const surfaces: Surface[] = [
 
 /* Tab geometry. The tabs stand above the page, so the page rests that much
    further below the header (h-16) than a plain sticky panel would. */
-const TAB_H = 36;
+const TAB_H = 44;
 const STICK_TOP = 64 + 20 + TAB_H;
 
 export function LandingSpotlight() {
@@ -109,7 +109,20 @@ export function LandingSpotlight() {
         subtitle="The same primitives for technical and non-technical users."
       />
 
-      <div className="relative mt-10 sm:mt-12">
+      {/* The first tab stands TAB_H above the first page, inside this margin,
+          so the tab height is added back to keep the usual gap under the
+          heading.
+
+          Equal-height rows (1fr, sized to the tallest page) so every page is
+          as tall as the tallest: a shorter page parked over a taller one
+          would otherwise leave the taller one's bottom showing beneath it.
+          The last row is the dwell for the final page. */}
+      <div
+        className="relative mt-[calc(2rem+44px)] grid gap-y-14 sm:mt-[calc(3rem+44px)]"
+        style={{
+          gridTemplateRows: `repeat(${surfaces.length}, 1fr) 35svh`,
+        }}
+      >
         {surfaces.map((s, i) => (
           <Page
             key={s.key}
@@ -119,6 +132,11 @@ export function LandingSpotlight() {
             nextRef={refs[i + 1] ?? null}
           />
         ))}
+        {/* The pages stay parked until this wrapper's bottom edge reaches
+            them, so the folder moves on exactly when the wrapper ends. This
+            spacer pushes that end down: the last page reaches its place and
+            rests for this much scroll before everything continues. */}
+        <div aria-hidden />
       </div>
     </div>
   );
@@ -165,27 +183,32 @@ function Page({
   const tabShade = useTransform(covered, [0, 0.6], [0, 1]);
 
   return (
-    <div ref={ref} className="sticky pb-14" style={{ top: STICK_TOP }}>
+    <div ref={ref} className="sticky" style={{ top: STICK_TOP }}>
       <article
-        className="relative rounded-[18px] border border-[var(--panel-edge)] bg-background shadow-[0_1px_2px_rgba(14,17,23,0.04),0_18px_44px_rgba(28,35,80,0.08)]"
+        className={cn(
+          "relative h-full rounded-[18px] border border-[var(--panel-edge)] bg-background shadow-[0_1px_2px_rgba(14,17,23,0.04),0_18px_44px_rgba(28,35,80,0.08)]",
+          index === 0 && "rounded-tl-none",
+        )}
       >
-        {/* The folder tab. One pixel into the page so the page's top border
-            disappears under it and the two read as a single shape. Four
-            slots across the width, past the rounded corner on the left. */}
+        {/* The folder tab. Its bottom edge reaches one pixel into the page,
+            so the page's top border disappears under it and the two read as
+            one shape. Slot 0 is flush with the page's left edge (the -1px
+            puts its border on top of the page's), and that page squares its
+            top-left corner so the tab's side runs straight into the page. */}
         <div
-          className="absolute flex items-center rounded-t-[10px] border border-b-0 border-[var(--panel-edge)] bg-background px-2.5 text-[12px] font-medium text-foreground sm:px-4 sm:text-[13px]"
+          className="absolute flex items-center rounded-t-[12px] border border-b-0 border-[var(--panel-edge)] bg-background px-3 text-[13px] font-medium text-foreground sm:px-5 sm:text-[15px]"
           style={{
             height: TAB_H,
             bottom: "calc(100% - 1px)",
-            left: `calc(18px + ${index} * (100% - 36px) / ${surfaces.length})`,
-            width: `calc((100% - 36px) / ${surfaces.length} - 6px)`,
+            left: `calc(${index} * 100% / ${surfaces.length} - 1px)`,
+            width: `calc(100% / ${surfaces.length} - 8px)`,
           }}
         >
           <span className="relative z-10 truncate">{surface.tab}</span>
           <motion.span
             aria-hidden
             style={{ opacity: reduced ? 0 : tabShade }}
-            className="absolute inset-0 rounded-t-[9px] bg-[var(--panel)]"
+            className="absolute inset-0 rounded-t-[11px] bg-[var(--panel)]"
           />
         </div>
 

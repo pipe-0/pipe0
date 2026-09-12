@@ -1059,7 +1059,9 @@ a:has(> [data-slot="button"]),
 .hero-sky[data-idle]::before,
 .hero-sky[data-idle]::after,
 .card-sky[data-idle]::before,
-.card-sky[data-idle]::after {
+.card-sky[data-idle]::after,
+.blob[data-idle],
+.blob[data-idle] .blob-eyes {
   animation-play-state: paused;
 }
 

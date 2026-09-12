@@ -3,8 +3,8 @@
 import { useEffect } from "react";
 
 /**
- * Pauses the heavy, infinitely-animating decorative gradient layers
- * (`.hero-sky`, `.card-sky`) whenever they scroll out of view, and resumes
+ * Pauses the infinitely-animating decorative layers (`.hero-sky`,
+ * `.card-sky`, and the `.blob` bots) whenever they scroll out of view, and resumes
  * them before they return. Each is a full-bleed, GPU-promoted layer running a
  * never-ending animation; left ticking off-screen they keep the compositor
  * (and the laptop fan) busy for no visible benefit.
@@ -16,7 +16,11 @@ export function AnimationPauser() {
   useEffect(() => {
     if (!("IntersectionObserver" in window)) return;
 
-    const els = document.querySelectorAll<HTMLElement>(".hero-sky, .card-sky");
+    // The bots (.blob) are small, but there are a dozen of them looping
+    // forever; pausing them off-screen is the same win in miniature.
+    const els = document.querySelectorAll<HTMLElement>(
+      ".hero-sky, .card-sky, .blob",
+    );
     if (els.length === 0) return;
 
     const observer = new IntersectionObserver(
