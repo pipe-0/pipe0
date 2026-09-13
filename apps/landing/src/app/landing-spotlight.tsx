@@ -214,7 +214,15 @@ function Page({
 
         {/* minmax(0, …) everywhere: the code previews have an intrinsic width
             that would otherwise push the column past the page's edge. */}
-        <div className="grid grid-cols-[minmax(0,1fr)] gap-8 p-6 sm:p-10 lg:min-h-[min(72svh,660px)] lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] lg:gap-12">
+        {/* Stacked below `lg`, the preview row takes whatever height the copy
+            leaves. Every page is already as tall as the tallest one (the
+            1fr rows above), so this is what makes the blue tile the same
+            size on every page instead of hugging its own preview — a short
+            code block and a tall Slack thread would otherwise give tiles of
+            two different heights, with the leftover page showing beneath
+            the short one. Side by side at `lg` the single row stretches and
+            the rule is moot. */}
+        <div className="grid h-full grid-cols-[minmax(0,1fr)] grid-rows-[auto_minmax(0,1fr)] gap-8 p-6 sm:p-10 lg:min-h-[min(72svh,660px)] lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] lg:grid-rows-none lg:gap-12">
           {/* Copy column — the section heading pair, one size down. */}
           <div className="flex flex-col">
             <div className="text-[clamp(22px,2.45vw,31px)] font-medium leading-[1.36] tracking-[-0.018em]">
@@ -234,10 +242,17 @@ function Page({
             </div>
           </div>
 
-          {/* Preview column — the pane on the same muted inset the section
-              always used for its previews. */}
-          <div className="flex min-w-0 items-center rounded-[14px] border border-[var(--panel-edge)] bg-[var(--panel)] p-4 sm:p-8 [&>*]:min-w-0">
-            {surface.pane}
+          {/* Preview column — the hero panel in small: the same dusk-sky
+              gradient, dark border and top-edge gloss, so the preview sits
+              on the same material the product scene does up top. The sky
+              is its own layer under the pane, exactly as in the hero, so
+              `.hero-panel`'s gloss overlay (::after) stays clipped to the
+              rounded corners and the white card floats above both. */}
+          <div className="hero-panel relative flex min-w-0 items-center overflow-hidden rounded-[14px] border p-4 sm:p-8 [&>*]:min-w-0">
+            <div className="hero-sky pointer-events-none absolute inset-0 z-0" aria-hidden />
+            <div className="relative z-10 flex w-full min-w-0 items-center [&>*]:min-w-0">
+              {surface.pane}
+            </div>
           </div>
         </div>
       </article>

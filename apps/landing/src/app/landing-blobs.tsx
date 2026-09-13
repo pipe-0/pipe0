@@ -22,7 +22,8 @@ export type BlobTone =
   | "amber"
   | "coral"
   | "navy"
-  | "violet";
+  | "violet"
+  | "paper";
 
 /* Kept inside the app's palette: indigo is `--primary`, sky/green are the
    hero film's accents, navy the ink; amber and coral echo `--chart-4` and
@@ -35,10 +36,23 @@ const TONES: Record<BlobTone, string> = {
   coral: "#E56D4C",
   navy: "#2B3350",
   violet: "#7A5CF0",
+  /* Near-white body for bots that sit on a dark indigo ground (the hero
+     pills); pair it with an indigo `ink` so the eyes still read. */
+  paper: "#F4F6FF",
 };
 
 /* Two short slanted ticks. The `eyes` group is what blinks. */
-function Eyes({ x = 50, y = 50, tilt = -12 }: { x?: number; y?: number; tilt?: number }) {
+function Eyes({
+  x = 50,
+  y = 50,
+  tilt = -12,
+  ink = "#fff",
+}: {
+  x?: number;
+  y?: number;
+  tilt?: number;
+  ink?: string;
+}) {
   return (
     /* Position on the outer group, blink on the inner one: a CSS transform
        animation replaces an element's own `transform` attribute, so the two
@@ -46,7 +60,7 @@ function Eyes({ x = 50, y = 50, tilt = -12 }: { x?: number; y?: number; tilt?: n
     <g transform={`translate(${x} ${y}) rotate(${tilt})`}>
       <g
         className="blob-eyes"
-        stroke="#fff"
+        stroke={ink}
         strokeWidth={7}
         strokeLinecap="round"
         opacity={0.95}
@@ -58,14 +72,22 @@ function Eyes({ x = 50, y = 50, tilt = -12 }: { x?: number; y?: number; tilt?: n
   );
 }
 
-function Body({ kind, tone }: { kind: BlobKind; tone: BlobTone }) {
+function Body({
+  kind,
+  tone,
+  ink,
+}: {
+  kind: BlobKind;
+  tone: BlobTone;
+  ink: string;
+}) {
   const fill = TONES[tone];
   switch (kind) {
     case "round":
       return (
         <>
           <circle cx={50} cy={50} r={44} fill={fill} />
-          <Eyes />
+          <Eyes ink={ink} />
         </>
       );
     case "bulb":
@@ -76,8 +98,8 @@ function Body({ kind, tone }: { kind: BlobKind; tone: BlobTone }) {
             fill={fill}
           />
           {/* Cheek highlight, bottom-left. */}
-          <ellipse cx={30} cy={82} rx={11} ry={7} fill="#fff" opacity={0.42} />
-          <Eyes y={48} tilt={-10} />
+          <ellipse cx={30} cy={82} rx={11} ry={7} fill={ink} opacity={0.42} />
+          <Eyes y={48} tilt={-10} ink={ink} />
         </>
       );
     case "clover":
@@ -90,8 +112,8 @@ function Body({ kind, tone }: { kind: BlobKind; tone: BlobTone }) {
             <circle cx={67} cy={67} r={27} />
             <rect x={28} y={28} width={44} height={44} />
           </g>
-          <ellipse cx={30} cy={78} rx={10} ry={6} fill="#fff" opacity={0.42} />
-          <Eyes y={46} tilt={8} />
+          <ellipse cx={30} cy={78} rx={10} ry={6} fill={ink} opacity={0.42} />
+          <Eyes y={46} tilt={8} ink={ink} />
         </>
       );
     case "triangle":
@@ -108,7 +130,7 @@ function Body({ kind, tone }: { kind: BlobKind; tone: BlobTone }) {
           />
           {/* Notification dot — "someone answered". */}
           <circle cx={86} cy={22} r={10} fill={TONES.coral} />
-          <Eyes y={60} tilt={-14} />
+          <Eyes y={60} tilt={-14} ink={ink} />
         </>
       );
     case "diamond":
@@ -123,7 +145,7 @@ function Body({ kind, tone }: { kind: BlobKind; tone: BlobTone }) {
             fill={fill}
             transform="rotate(45 50 50)"
           />
-          <Eyes tilt={-22} />
+          <Eyes tilt={-22} ink={ink} />
         </>
       );
     case "cluster":
@@ -132,7 +154,7 @@ function Body({ kind, tone }: { kind: BlobKind; tone: BlobTone }) {
           <circle cx={62} cy={36} r={23} fill={TONES.green} />
           <circle cx={34} cy={60} r={25} fill={TONES.sky} />
           <circle cx={66} cy={66} r={25} fill={TONES.indigo} />
-          <Eyes x={66} y={68} tilt={-10} />
+          <Eyes x={66} y={68} tilt={-10} ink={ink} />
         </>
       );
     case "rainbow":
@@ -150,7 +172,7 @@ function Body({ kind, tone }: { kind: BlobKind; tone: BlobTone }) {
             <path d="M27 42 Q50 24 73 42" stroke={TONES.green} />
             <path d="M31 50 Q50 34 69 50" stroke={TONES.coral} />
           </g>
-          <Eyes y={62} tilt={-8} />
+          <Eyes y={62} tilt={-8} ink={ink} />
         </>
       );
   }
@@ -164,12 +186,16 @@ export function Blob({
   delay = 0,
   /* Height in em of the surrounding text. */
   size = 1,
+  /* Eye (and cheek highlight) colour. White on the saturated tones; set
+     to an indigo when the body itself is light (`tone="paper"`). */
+  ink = "#fff",
 }: {
   kind: BlobKind;
   tone?: BlobTone;
   className?: string;
   delay?: number;
   size?: number;
+  ink?: string;
 }) {
   return (
     <svg
@@ -185,17 +211,21 @@ export function Blob({
         } as React.CSSProperties
       }
     >
-      <Body kind={kind} tone={tone} />
+      <Body kind={kind} tone={tone} ink={ink} />
     </svg>
   );
 }
 
-/* A word set in a soft primary-tinted pill with a bot on its left — the same
-   tint, edge and ink as the lit spotlight chip, so it stays inside the
-   primary palette. The text
-   inside is the same size as the text around it, so the pill reads as part
-   of the sentence, not a tag stuck on it. `align-middle` centres the pill on
-   the surrounding x-height; the tiny nudge lines the two baselines up. */
+/* A word set in a small glossy indigo pill with a bot on its left. The pill
+   is a miniature of the hero panel below it — the same top-of-sky gradient,
+   the same darker-than-fill border and the same one-pixel highlight along
+   the top edge (see `.bot-pill` in globals.css) — so the two read as one
+   material. White type on the indigo keeps contrast in both themes, and the
+   bot is set in a near-white body with indigo eyes so it stands off the
+   ground instead of sinking into it. The text inside is the same size as
+   the text around it, so the pill reads as part of the sentence, not a tag
+   stuck on it. `align-middle` centres the pill on the surrounding x-height;
+   the tiny nudge lines the two baselines up. */
 export function BotPill({
   kind,
   delay = 0,
@@ -206,8 +236,8 @@ export function BotPill({
   children: string;
 }) {
   return (
-    <span className="inline-flex translate-y-[-0.04em] items-center gap-[0.28em] rounded-full border border-[rgba(61,70,221,0.22)] bg-[var(--accent-soft)] pl-[0.3em] pr-[0.55em] py-[0.06em] align-middle leading-none whitespace-nowrap text-[#2c37a4] dark:border-[rgba(150,170,255,0.28)] dark:text-[#aabbff]">
-      <Blob kind={kind} tone="indigo" size={1.05} delay={delay} />
+    <span className="bot-pill inline-flex translate-y-[-0.04em] items-center gap-[0.28em] rounded-full pl-[0.3em] pr-[0.55em] py-[0.06em] align-middle leading-none whitespace-nowrap">
+      <Blob kind={kind} tone="paper" ink="#2c37a4" size={1.05} delay={delay} />
       <span>{children}</span>
     </span>
   );

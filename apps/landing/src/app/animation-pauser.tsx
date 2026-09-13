@@ -20,9 +20,6 @@ export function AnimationPauser() {
     // forever; pausing them off-screen is the same win in miniature.
     const els = document.querySelectorAll<HTMLElement>(".card-sky, .blob");
     if (els.length === 0) return;
-    // TEMP-PERF-TOGGLE
-    const css = new URLSearchParams(location.search).get("css");
-    if (css) { const st = document.createElement("style"); st.textContent = css; document.head.appendChild(st); }
 
     const observer = new IntersectionObserver(
       (entries) => {
