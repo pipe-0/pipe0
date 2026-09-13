@@ -127,13 +127,13 @@ export default function Home() {
         <Section className="py-[clamp(12px,2.1svh,28px)]">
           <div className="text-[clamp(22px,2.45vw,31px)] font-medium leading-[1.36] tracking-[-0.018em]">
             <h1 className="text-foreground">
-              Every GTM system – one prompt away.
+              Describe the GTM system you need.
             </h1>
             {/* One bot per audience, each in a soft primary pill with its
                 word — an angular one for the API, a many-handed one for the
                 agent, a friendly face for the human. See landing-blobs. */}
             <p className="text-muted-foreground">
-              Automation blocks that{" "}
+              Agents assemble it from blocks that{" "}
               <BotPill kind="diamond" delay={0}>APIs</BotPill>,{" "}
               <BotPill kind="clover" delay={-1.3}>Agents</BotPill> and{" "}
               <BotPill kind="round" delay={-2.4}>Humans</BotPill> can use.
