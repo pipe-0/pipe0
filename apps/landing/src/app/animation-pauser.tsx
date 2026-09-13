@@ -3,8 +3,8 @@
 import { useEffect } from "react";
 
 /**
- * Pauses the infinitely-animating decorative layers (`.hero-sky`,
- * `.card-sky`, and the `.blob` bots) whenever they scroll out of view, and resumes
+ * Pauses the infinitely-animating decorative layers (`.card-sky` and the
+ * `.blob` bots) whenever they scroll out of view, and resumes
  * them before they return. Each is a full-bleed, GPU-promoted layer running a
  * never-ending animation; left ticking off-screen they keep the compositor
  * (and the laptop fan) busy for no visible benefit.
@@ -18,10 +18,11 @@ export function AnimationPauser() {
 
     // The bots (.blob) are small, but there are a dozen of them looping
     // forever; pausing them off-screen is the same win in miniature.
-    const els = document.querySelectorAll<HTMLElement>(
-      ".hero-sky, .card-sky, .blob",
-    );
+    const els = document.querySelectorAll<HTMLElement>(".card-sky, .blob");
     if (els.length === 0) return;
+    // TEMP-PERF-TOGGLE
+    const css = new URLSearchParams(location.search).get("css");
+    if (css) { const st = document.createElement("style"); st.textContent = css; document.head.appendChild(st); }
 
     const observer = new IntersectionObserver(
       (entries) => {

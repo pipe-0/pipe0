@@ -125,7 +125,6 @@ function useFilmFrame(host: React.RefObject<HTMLDivElement | null>) {
     if (reduced.matches) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setStill(true);
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setFrame(STILL_FRAME);
       return;
     }
@@ -137,9 +136,18 @@ function useFilmFrame(host: React.RefObject<HTMLDivElement | null>) {
     let start = 0;
     let visible = false;
 
+    // Whole frames only, and a render only when the frame changes: the
+    // composition is 30fps, so on a 60Hz or 120Hz display most animation
+    // frames would otherwise re-render the scene for a sub-frame difference
+    // nobody can see. Halves the GPU-process cost of the film in Firefox.
+    let last = -1;
     const tick = (now: number) => {
       if (!start) start = now;
-      setFrame((((now - start) / 1000) * FPS) % DURATION);
+      const f = Math.floor(((now - start) / 1000) * FPS) % DURATION;
+      if (f !== last) {
+        last = f;
+        setFrame(f);
+      }
       raf = requestAnimationFrame(tick);
     };
 

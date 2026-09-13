@@ -133,10 +133,10 @@ export default function Home() {
                 word — an angular one for the API, a many-handed one for the
                 agent, a friendly face for the human. See landing-blobs. */}
             <p className="text-muted-foreground">
-              Agents assemble it from blocks that{" "}
-              <BotPill kind="diamond" delay={0}>APIs</BotPill>,{" "}
-              <BotPill kind="clover" delay={-1.3}>Agents</BotPill> and{" "}
-              <BotPill kind="round" delay={-2.4}>Humans</BotPill> can use.
+              Generate it from blocks{" "}
+              <BotPill kind="diamond" delay={0}>APIs</BotPill>{" "}
+              <BotPill kind="clover" delay={-1.3}>Agents</BotPill>{" "}
+              <BotPill kind="round" delay={-2.4}>Humans</BotPill> love.
             </p>
           </div>
         </Section>

@@ -537,10 +537,13 @@ a:has(> [data-slot="button"]),
   );
 }
 
-/* Animated sky — dusk gradient: light blue at the horizon (meeting the
-   scene), turning quickly into the deep brand indigo, with a darker band
-   at the very top so the white hero copy reads cleanly. Light pools keep
-   drifting through for permanent, subtle motion. */
+/* Sky — dusk gradient: light blue at the horizon (meeting the scene),
+   turning quickly into the deep brand indigo, with a darker band at the
+   very top so the white hero copy reads cleanly. Soft light pools sit on
+   top, static. They used to drift on a transform animation; any compositor
+   animation inside the hero makes Firefox redraw the whole panel at the
+   display's refresh rate, which cost ~13% of a core in its GPU process for
+   a motion nobody noticed. */
 .hero-sky {
   background: linear-gradient(
     180deg,
@@ -559,7 +562,6 @@ a:has(> [data-slot="button"]),
   position: absolute;
   inset: -45%;
   pointer-events: none;
-  will-change: transform;
 }
 /* Pools sit low, like light over the water; one faint glow up high. */
 .hero-sky::before {
@@ -579,7 +581,7 @@ a:has(> [data-slot="button"]),
       rgba(120, 140, 255, 0.3) 0%,
       rgba(120, 140, 255, 0) 70%
     );
-  animation: hero-sky-a 19s ease-in-out infinite alternate;
+  transform: translate3d(1%, 1%, 0) scale(1.16);
 }
 .hero-sky::after {
   background:
@@ -598,23 +600,7 @@ a:has(> [data-slot="button"]),
       rgba(150, 170, 255, 0.28) 0%,
       rgba(150, 170, 255, 0) 70%
     );
-  animation: hero-sky-b 27s ease-in-out infinite alternate;
-}
-@keyframes hero-sky-a {
-  0% {
-    transform: translate3d(-9%, -6%, 0) scale(1.05) rotate(-3deg);
-  }
-  100% {
-    transform: translate3d(11%, 8%, 0) scale(1.28) rotate(4deg);
-  }
-}
-@keyframes hero-sky-b {
-  0% {
-    transform: translate3d(10%, 5%, 0) scale(1.24) rotate(3deg);
-  }
-  100% {
-    transform: translate3d(-11%, -7%, 0) scale(1.04) rotate(-4deg);
-  }
+  transform: translate3d(-1%, -1%, 0) scale(1.14);
 }
 .dark .hero-sky {
   background: linear-gradient(
@@ -832,9 +818,6 @@ a:has(> [data-slot="button"]),
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero-sky,
-  .hero-sky::before,
-  .hero-sky::after,
   .card-sky::before,
   .card-sky::after {
     animation: none;
@@ -1052,12 +1035,8 @@ a:has(> [data-slot="button"]),
 }
 
 /* Off-screen pause — the AnimationPauser toggles `data-idle` on these
-   full-bleed animated gradient layers when they leave the viewport, so their
-   never-ending compositor work stops while they're not visible. Covers the
-   element and its two drifting light-pool pseudo-elements. */
-.hero-sky[data-idle],
-.hero-sky[data-idle]::before,
-.hero-sky[data-idle]::after,
+   animated layers when they leave the viewport, so their never-ending
+   compositor work stops while they're not visible. */
 .card-sky[data-idle]::before,
 .card-sky[data-idle]::after,
 .blob[data-idle],
