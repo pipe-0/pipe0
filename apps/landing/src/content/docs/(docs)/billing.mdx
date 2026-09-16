@@ -10,7 +10,8 @@ Our billing system consists of two parts: credits and subscriptions.
 ## Credits
 
 Credits are the universal currency of pipe0. Requests in `production` mode are billed in credits.
-Every new organization starts with 20 free credits.
+Every new organization starts with 20 free credits. After that, you can buy credits one-off
+(see [one-off purchases](#one-off-purchases)) or subscribe to a plan that refills your balance every month.
 
 Whether an errored operation bills depends on its <AppLink linkType="billingMode">billing mode</AppLink>:
 `onSuccess` operations, which cover most enrichment pipes, never bill on errors or empty results.
@@ -87,15 +88,20 @@ for the enrichment performed up to the failure.
 
 ## One-off purchases
 
-You can purchase additional credits at your current subscription price. One-off credits can be purchased by
-users with active subscriptions.
+You can buy credits at any time, with or without a subscription. Go to "Dashboard" > "Billing" and click
+"Buy credits", enter an amount between $10 and $5,000, and pay through Stripe. Credits land in your balance
+within seconds of returning to the dashboard, and the receipt is available from the billing portal.
 
-To purchase one-off credits, contact [support@pipe0.com](mailto:support@pipe0.com).
+One-off credits cost $0.035 per credit ($35 per 1,000 credits), about 15% more than credits included in a
+subscription. They never expire and are not subject to the credit rollover cap.
+
+When you spend credits, subscription credits are used first and purchased credits last.
 
 ## Credit rollover
 
 You can hold up to 3x the monthly credit amount of your subscription
 in your account. When a refill would push your balance past this threshold, the excess is lost.
+Credits you bought outright do not count toward this threshold and are never lost to it.
 
 During subscription downgrades the credit rollover amount is lowered and the limit of your new subscription applies.
 
