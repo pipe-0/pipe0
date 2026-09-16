@@ -59,18 +59,6 @@ const plans: Plan[] = [
       "Lower cost for custom connections",
     ],
   },
-  {
-    price: "999",
-    credits: "34.000",
-    perCredit: "0.029",
-    features: [
-      ...baseFeatures,
-      "1M rows per sheet",
-      "30 high-volume billing slots",
-      "Lower per-invocation cost",
-      "Lower cost for custom connections",
-    ],
-  },
 ];
 
 export function PricingCard() {
@@ -80,7 +68,7 @@ export function PricingCard() {
     <div
       role="radiogroup"
       aria-label="Credit volume"
-      className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-4"
+      className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-3"
     >
       {plans.map((plan) => {
         const isActive = plan.credits === selected.credits;

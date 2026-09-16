@@ -4,8 +4,12 @@ import CalButton from "@/components/cal-button";
 import { Header } from "@/components/header";
 import { CtaPanel, Section } from "@/components/marketing";
 import { PricingCard } from "@/components/pricing-card";
+import { Button } from "@/components/ui/button";
+import { appInfo } from "@/lib/const";
 import { createMetadata } from "@/lib/metadata";
 import { JsonLd, faqJsonLd } from "@/components/seo/json-ld";
+import { Check } from "lucide-react";
+import Link from "next/link";
 
 export const metadata = createMetadata({
   title: "Pricing — Pay-as-you-go Credits",
@@ -24,9 +28,19 @@ const faqs = [
     a: "You're only charged when you successfully execute a pipe or search. Each operation has a different credit price that you can find in the pipe or search catalog.",
   },
   {
+    q: "Do I need a subscription?",
+    a: "No. You can buy credits one-off from the billing section in the dashboard; they never expire. A subscription refills your balance every month at a lower price per credit and raises your usage limits.",
+  },
+  {
     q: "How do I get started?",
     a: "Create an account to try pipe0. Once you're ready to purchase credits, navigate to the billing section in the dashboard.",
   },
+];
+
+const payAsYouGoPoints = [
+  "Buy credits whenever you need them",
+  "Credits never expire",
+  "Full platform, API, and Sheets",
 ];
 
 export default function Pricing() {
@@ -52,12 +66,53 @@ export default function Pricing() {
               Pay for what you run.
             </h1>
             <p className="mx-auto mt-5 max-w-[560px] text-[17px] leading-relaxed text-white/75 sm:text-[18px]">
-              Pay only for what you run. Pick a credit volume to get started —
-              every plan includes the full platform.
+              Start without a subscription and buy credits as you go, or pick a
+              monthly volume for a lower price per credit.
             </p>
 
+            {/* Pay as you go — the default way in, so it lives up here on the
+                panel rather than among the priced plans. Frosted glass over
+                the indigo: a hairline light border, a blurred tint of the
+                scene behind it, and white type, so it belongs to the hero
+                instead of floating on it. Stacks on narrow screens. */}
+            <div className="mx-auto mt-12 max-w-[880px] rounded-[16px] border border-white/20 bg-white/[0.08] p-5 text-left shadow-[inset_0_1px_0_rgba(255,255,255,0.22),0_18px_40px_-20px_rgba(0,0,0,0.55)] backdrop-blur-md sm:p-6">
+              <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between sm:gap-8">
+                <div className="min-w-0">
+                  <h2 className="text-[20px] font-semibold tracking-[-0.01em] text-white">
+                    Pay as you go
+                  </h2>
+                  <p className="mt-1.5 max-w-[520px] text-[14.5px] leading-relaxed text-white/75">
+                    No subscription needed. Every account starts here: add
+                    credits from the dashboard when you need them and pay only
+                    for what you run.
+                  </p>
+                  <ul className="mt-3.5 flex flex-col gap-x-5 gap-y-1.5 text-[13px] text-white/80 sm:flex-row sm:flex-wrap">
+                    {payAsYouGoPoints.map((point) => (
+                      <li key={point} className="flex items-center gap-1.5">
+                        <Check className="size-3.5 shrink-0 text-white/70" />
+                        <span>{point}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <Link
+                  href={appInfo.links.signupUrl}
+                  rel="nofollow"
+                  className="w-full shrink-0 sm:w-auto"
+                >
+                  <Button variant="cta" className="w-full sm:w-auto sm:px-5">
+                    Start for free
+                  </Button>
+                </Link>
+              </div>
+            </div>
+
             <p className="mt-14 text-center text-[clamp(20px,2vw,26px)] font-semibold tracking-[-0.01em] text-white">
-              Select credit volume
+              Or pick a monthly volume
+            </p>
+            <p className="mx-auto mt-2 max-w-[460px] text-[14px] text-white/65">
+              Subscriptions refill your balance every month at a lower price per
+              credit and raise your usage limits.
             </p>
           </div>
         </div>
@@ -67,10 +122,16 @@ export default function Pricing() {
       <Section className="relative z-10 -mt-28 sm:-mt-44">
         <PricingCard />
 
+        {/* The larger volumes are not displayed here; the app's billing page
+            carries the full ladder. One quiet line, not a fourth card. */}
+        <p className="mt-5 text-center text-[13px] text-muted-foreground">
+          Larger monthly plans are available in the app.
+        </p>
+
         {/* Enterprise — same container and gap as the grid above, so it reads
             as the last row of the plans. Calm panel surface rather than the
             cards' lifted white, since it sits off the dark hero panel and is
-            an aside to the four priced volumes, not a fifth one. */}
+            an aside to the priced volumes, not another one. */}
         <div className="mt-3.5 flex flex-col gap-5 rounded-[14px] border border-[var(--panel-edge)] bg-[var(--panel)] p-6 sm:flex-row sm:items-center sm:justify-between sm:gap-8 sm:p-7">
           <div>
             <h2 className="text-lg font-semibold tracking-[-0.01em] text-foreground">
