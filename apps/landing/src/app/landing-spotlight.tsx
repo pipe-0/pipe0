@@ -51,9 +51,9 @@ const surfaces: Surface[] = [
   {
     key: "agent",
     tab: "UI Agent",
-    title: "Ask in the sheet.",
-    subtitle: "The agent builds the columns.",
-    copy: "Describe the outcome. The agent picks the searches and pipes, builds the columns, and runs them.",
+    title: "Find & enrich leads",
+    subtitle: "Smart tables orchestrate your data.",
+    copy: "Combine a smart, infinite spreadsheet with the most powerful GTM agent.",
     href: "/docs/sheets/ai-agents",
     linkLabel: "Agents in Sheets",
     pane: <AgentPane />,
@@ -61,8 +61,8 @@ const surfaces: Surface[] = [
   {
     key: "mcp",
     tab: "MCP",
-    title: "Your own agents.",
-    subtitle: "Claude Code, Cursor, ChatGPT.",
+    title: "Connect Claude, Codex, and Cursor",
+    subtitle: "Data enrichment on every interface",
     copy: "The same engine over MCP, with no glue code in between. Your agent gets every search and pipe as a tool.",
     href: "/docs/sdks/mcp",
     linkLabel: "MCP server",
@@ -81,8 +81,8 @@ const surfaces: Surface[] = [
   {
     key: "api",
     tab: "API",
-    title: "Send your requests.",
-    subtitle: "Enrichment inside your product.",
+    title: "A full, stateless API",
+    subtitle: "Access all of our data inside your own product.",
     copy: "Compose providers, actions and conditions into pipes, then ship enrichment behind your own UI.",
     href: "/enrichment-api",
     linkLabel: "Enrichment API",
@@ -105,8 +105,8 @@ export function LandingSpotlight() {
   return (
     <div>
       <SectionHeading
-        title="One engine. Every interface."
-        subtitle="The same primitives for technical and non-technical users."
+        title="Access 50+ providers with one subscription"
+        subtitle="A replacement for tools like Clay, n8n, and Zapier, at a fraction of the cost."
       />
 
       {/* The first tab stands TAB_H above the first page, inside this margin,

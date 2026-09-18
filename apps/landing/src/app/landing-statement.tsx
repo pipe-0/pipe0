@@ -17,7 +17,7 @@ import { useRef } from "react";
    inline wordmark; `:name` tokens resolve to the little inline bots
    (see BOTS below). */
 const STATEMENT =
-  "We build B2B data APIs with the highest coverage and accuracy, :clover agents that handle any GTM task, and :rainbow Clay-like tables that scale to millions of rows. We're 5x cheaper than traditional providers :round and respond to support tickets in minutes. :triangle We're the most powerful B2B tool you've never heard of. :cluster";
+  "We build contact data APIs with the highest coverage and accuracy, :clover agents that handle any GTM task, and :rainbow Clay-like tables that scale to millions of rows. We're 5x cheaper than traditional providers :round and respond to support tickets in minutes. :triangle We're the most powerful B2B tool you've never heard of. :cluster";
 
 /* Which bot each token stands for. Tones stay inside the app palette. */
 const BOTS: Record<string, { kind: BlobKind; tone: BlobTone; delay: number }> = {
