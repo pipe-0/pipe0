@@ -9,6 +9,7 @@ The following API operations return a response of type `PipesResponse`:
 - `POST https://api.pipe0.com/v1/pipes/run` (create an enrichment task)
 - `GET https://api.pipe0.com/v1/pipes/check/{run_id}` (check the processing state)
 - `POST https://api.pipe0.com/v1/pipes/run/sync` (create an enrichment task and return the result)
+- `POST https://api.pipe0.com/v1/pipes/cancel/{run_id}` (cancel a queued enrichment task)
 
 Responses are designed for building rich data tables like [Clay](https://clay.com), node-based workflow
 builders like [Zapier](https://zapier.com), and plain automation code (think [n8n](https://n8n.io) as code).
@@ -25,6 +26,9 @@ By default, responses contain enriched data only. Enable <AppLink linkType="widg
 {
   "id": "xgvxuqk2771d8t17n60vphu9",
   "status": "completed",
+  "credits": {
+    "spent": 0.5
+  },
   "field_definitions": {},
   "errors": [],
   "order": [
@@ -70,6 +74,24 @@ By default, responses contain enriched data only. Enable <AppLink linkType="widg
             "config_hash": null,
             "environment": null
           }
+        },
+        "work_email": {
+          "type": "string",
+          "value": "jane@pipe0.com",
+          "format": "email",
+          "reason": null,
+          "status": "completed",
+          "widgets": {},
+          "claimed_by": {
+            "ref": "person:workemail:waterfall@1",
+            "config_hash": "x0b5a4ef"
+          },
+          "resolved_by": {
+            "ref": "person:workemail:waterfall@1",
+            "input_hash": "k2m9q1zd",
+            "config_hash": "x0b5a4ef",
+            "environment": "production"
+          }
         }
       }
     }
@@ -109,6 +131,22 @@ Processing has finished without global errors. Individual fields may still have 
 
 Pipeline validation or processing has failed. See the global <AppLink linkType="globalErrors">`errors` property</AppLink> for more information on why
 the failure occurred.
+
+#### Status 'canceled'
+
+You canceled the task with `POST /v1/pipes/cancel/{run_id}` before processing began. See <AppLink linkType="rateLimits">rate limits</AppLink>.
+
+### credits
+
+What the run has cost so far, in credits. `credits.spent` sums every billed operation in the run,
+rounded to 4 decimals. It grows while the status is `processing` and is final once the status is
+`completed`, `failed`, or `canceled`.
+
+`POST /v1/pipes/run` creates the task before anything runs, so its response has no `credits` property.
+Every later read includes it: `check`, `run/sync`, and `cancel`.
+
+Sandbox runs cost nothing, so `spent` is `0`. Runs on a <AppLink linkType="connections">custom connection</AppLink> bill the platform fee, which is included
+here. See <AppLink linkType="billing">Billing</AppLink> for what each operation costs.
 
 ### order
 

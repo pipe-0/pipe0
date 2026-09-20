@@ -21,6 +21,23 @@ Credits let you make requests to third-party services without purchasing subscri
 You can find the credit costs per operation in the <AppLink linkType="pipeCatalog">pipe catalog</AppLink> and 
 <AppLink linkType="searchCatalog">search catalog</AppLink>.
 
+### What a run cost
+
+Every pipes and search response carries a `credits` object, except the create response of `POST /v1/pipes/run`
+and `POST /v1/search/run`, where nothing has run yet. `credits.spent` is what the run has consumed so far,
+summed across every billed operation in it. Read it once from the sync response, or poll `check` while the run is `processing` to watch spend accumulate.
+
+```json title="Credits on a completed run"
+{
+  "id": "xgvxuqk2771d8t17n60vphu9",
+  "status": "completed",
+  "credits": { "spent": 0.5 }
+  // ...
+}
+```
+
+See the <AppLink linkType="pipelineResponse">pipes response object</AppLink> and the [search response object](/docs/search/response-object) for the full shape.
+
 
 ## Pipe billing
 

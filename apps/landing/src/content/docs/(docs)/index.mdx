@@ -27,12 +27,13 @@ export const enrichPayload = {
 
 <RequestExample kind="pipes" payload={enrichPayload} />
 
-The response contains your record with the new field:
+The response contains your record with the new field, and what the run cost:
 
 ```json title="Response (truncated)"
 {
   "id": "xgvxuqk2771d8t17n60vphu9",
   "status": "completed",
+  "credits": { "spent": 0.5 },
   "records": {
     "1": {
       "id": "1",

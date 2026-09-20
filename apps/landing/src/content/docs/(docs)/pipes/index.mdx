@@ -19,12 +19,13 @@ export const runPayload = {
 
 <RequestExample kind="pipes" payload={runPayload} />
 
-The response contains one record per input object:
+The response contains one record per input object. `credits.spent` is what the run cost:
 
 ```json title="Response (truncated)"
 {
   "id": "xgvxuqk2771d8t17n60vphu9",
   "status": "completed",
+  "credits": { "spent": 0.5 },
   "records": {
     "1": {
       "id": "1",

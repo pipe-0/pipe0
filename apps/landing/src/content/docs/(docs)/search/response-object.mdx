@@ -9,6 +9,7 @@ The following API operations return a response of type `SearchResponse`:
 - `POST https://api.pipe0.com/v1/search/run` (create a search task)
 - `GET https://api.pipe0.com/v1/search/check/{run_id}` (check the processing state of a search task)
 - `POST https://api.pipe0.com/v1/search/run/sync` (run a search task synchronously)
+- `POST https://api.pipe0.com/v1/search/cancel/{run_id}` (cancel a queued search task)
 
 Both run endpoints accept the same payload; see <AppLink linkType="async">sync vs async</AppLink> for the trade-offs.
 
@@ -18,6 +19,7 @@ Both run endpoints accept the same payload; see <AppLink linkType="async">sync v
 {
 	"id": "jyg5w5p7unhcufkp8f7z5za8",
 	"status": "completed",
+	"credits": { "spent": 5 },
 	"search_id": "people:profiles:crustdata@2",
 	"organization_id": "v417gjrw51ft55f85ueeqgpt",
 	"errors": [],
@@ -101,6 +103,19 @@ Processing has finished without errors.
 #### Status 'failed'
 
 Processing has failed. See the `errors` array for more information on why the failure occurred.
+
+#### Status 'canceled'
+
+You canceled the task with `POST /v1/search/cancel/{run_id}` before processing began. See <AppLink linkType="rateLimits">rate limits</AppLink>.
+
+### credits
+
+What the search has cost so far, in credits. `credits.spent` is the search's own charge (per page, per result,
+or per search, see <AppLink linkType="billing">Billing</AppLink>), rounded to 4 decimals. Pipes you run on the results
+bill under their own run.
+
+`POST /v1/search/run` creates the task before anything runs, so its response has no `credits` property.
+Every later read includes it: `check`, `run/sync`, and `cancel`. Sandbox searches cost nothing, so `spent` is `0`.
 
 ### search_id
 
