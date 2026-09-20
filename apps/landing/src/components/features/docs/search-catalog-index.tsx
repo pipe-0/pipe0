@@ -472,7 +472,7 @@ function Featured({ searchEntryMap }: { searchEntryMap: SearchEntryMap }) {
   const showFeatured =
     category === null &&
     globalFilterInput === "" &&
-    table.getState().columnFilters.length === 0;
+    table.state.columnFilters.length === 0;
 
   const featuredEntries = useMemo(() => {
     return FEATURED_SEARCHES_IDS.map((searchId) => {
@@ -535,7 +535,7 @@ function CatalogRow({ card }: { card: SearchCardData }) {
 
 function GroupedList({ cards }: { cards: ReadonlyArray<SearchCardData> }) {
   const { category, globalFilterInput, table } = useSearchCatalogContext();
-  const columnFilters = table.getState().columnFilters;
+  const columnFilters = table.state.columnFilters;
   // When a search query, category, or column filter is active, the hook has
   // already scored and ordered `cards` by relevance. Re-bucketing them by
   // category here scatters the top hits under unrelated headers, so we render

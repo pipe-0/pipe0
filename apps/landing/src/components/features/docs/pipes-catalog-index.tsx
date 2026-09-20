@@ -544,7 +544,7 @@ function Featured() {
   const showFeatured =
     category === null &&
     globalFilterInput === "" &&
-    table.getState().columnFilters.length === 0;
+    table.state.columnFilters.length === 0;
 
   const featuredEntries = useMemo(() => {
     return FEATURED_PIPE_IDS.map((pipeId) => {
@@ -610,7 +610,7 @@ function CatalogRow({ card }: { card: PipeCardData }) {
 
 function GroupedList({ cards }: { cards: ReadonlyArray<PipeCardData> }) {
   const { category, globalFilterInput, table } = usePipeCatalogContext();
-  const columnFilters = table.getState().columnFilters;
+  const columnFilters = table.state.columnFilters;
   // When a search query, category, or column filter is active, the hook has
   // already scored and ordered `cards` by relevance. Re-bucketing them by
   // category here scatters the top hits under unrelated headers, so we render
