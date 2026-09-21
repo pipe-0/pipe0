@@ -146,6 +146,19 @@ export const apolloConfig: CompareConfig = {
       a: "For enrichment-driven CRM sync it can: scheduled sheets enrich records and write them back to HubSpot, Salesforce, or Attio without a separate sync tool. It is not a general-purpose warehouse sync platform; Postgres and Databricks connect as sources today.",
     },
   ],
+  media: {
+    heading: "More material.",
+    videos: [
+      {
+        youtubeId: "zFNhJiC2laQ",
+        title: "Clay.com vs pipe0: The Data Enrichment Frontier Has Moved",
+        description:
+          "A seven minute walkthrough of pipe0 next to Clay, the table tool most teams shortlist alongside Apollo. Useful for seeing what an agentic workspace looks like in practice.",
+        uploadDate: "2026-09-21",
+        duration: "PT7M17S",
+      },
+    ],
+  },
   related: [
     { label: "pipe0 vs Clay", href: "/compare/pipe0-vs-clay" },
     { label: "Best MCP servers for GTM", href: "/blog/best-mcp-servers-gtm" },

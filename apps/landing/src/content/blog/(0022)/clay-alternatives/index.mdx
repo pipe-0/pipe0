@@ -31,6 +31,11 @@ Full disclosure up front: we build [pipe0](https://pipe0.com), which appears fir
 
 pipe0 runs the same job as Clay: a spreadsheet where columns run enrichment across 50+ providers in waterfalls, with conditions, CRM write-back, and scheduling. Three differences matter in practice. Sheets hold up to 2 million rows with [point-in-time recovery](/docs/sheets/recovery), so a bad run is undoable. Everything the sheet does is also a [public API](/docs), so the workflow you prototype in a sheet can ship inside your product. And the whole engine speaks MCP, which means [Claude Code, ChatGPT, or Cursor can operate your sheets](/docs/sheets/ai-agents) directly. Waterfall pipes bill only the provider that returned a result. See the full [pipe0 vs Clay](/compare/pipe0-vs-clay) comparison.
 
+<YoutubeEmbed
+  href="https://www.youtube-nocookie.com/embed/zFNhJiC2laQ?rel=0"
+  title="Clay.com vs pipe0: The Data Enrichment Frontier Has Moved"
+/>
+
 ## Apollo.io
 
 Apollo bundles a large contact database, sequencing, a dialer, and enrichment into one per-seat product. If your team wants one tool for finding and emailing prospects, it covers more of the funnel than Clay does. Its enrichment is single-source (Apollo's own database), so data coverage outside the US and outside common titles is weaker than a waterfall across many vendors.

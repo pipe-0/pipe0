@@ -1,0 +1,47 @@
+---
+title: How to Add a Custom MCP Server to Grok Bot
+date: 2026-09-21
+category: Engineering
+excerpt: "Grok Bot has no settings screen for custom MCP servers. You add one by pasting the URL into the chat. Here is the exact exchange, using pipe0 as the server."
+tags:
+    - MCP
+    - Cursor
+    - AI agents
+tldr: "Grok Bot has no config file and no form for a custom MCP server. Paste the server URL into the chat and ask Grok to connect. Grok Bot will show a confirmation card and add the server to your account. If the server needs auth, a sign-in card is displayed in the chat."
+faq:
+    - q: "Where do I add a custom MCP server in Grok Bot?"
+      a: "In the chat. Grok Bot has no settings form for custom MCP servers. Paste the server URL into any bot's chat and ask it to connect the server. The bot shows a confirmation card and registers the server on your account."
+    - q: "How does authentication work for a custom MCP server in Grok Bot?"
+      a: "If the server needs auth, the bot posts a sign-in card in the chat after adding it. For OAuth servers such as pipe0 you approve access there. No API key or token is pasted anywhere."
+    - q: "Are Gork Bot MCP connections global or isolated per bot?"
+      a: "MCP connections are global. Once connected you can access the MCP sever from every bot."
+authors:
+    - name: Florian
+      title: Founder
+---
+
+Figuring out how to connect an MCP server to Grok Bot can be daunting.
+You may navigate to the plugins section or your remote cursor account.
+
+Neither place is correct.
+
+The correct way to connect an MCP sever to Grok Bot is to paste the URL into its chat 
+and let Grok handle the rest.
+
+## Example
+
+Let's say you want to connect the [pipe0](https://pipe0.com) MCP server. Simply 
+go into any bot chat and say:
+
+```txt
+Can you connect this MCP server: https://api.pipe0.com/v1/mcp
+```
+
+The bot works out the rest. It checks the connector catalog, finds nothing,
+and decides to add the URL as a custom remote MCP. It also reads the server's
+auth setup to set up the connection correctly.
+
+![Grok Bot's System chat showing a confirmation card titled "Add the pipe0 connector?" with the remote URL and Add pipe0 and Cancel buttons](/media/blog/20260921-1.png)
+
+After you've followed the instructions, your server should be connected.
+Follow up in the same chat to be sure.

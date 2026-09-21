@@ -146,6 +146,19 @@ export const fullenrichConfig: CompareConfig = {
       a: "Querying several data providers in sequence and stopping at the first one that returns a result. It raises find rates because no single provider covers every segment. Good waterfall tools bill only the provider that delivered.",
     },
   ],
+  media: {
+    heading: "More material.",
+    videos: [
+      {
+        youtubeId: "zFNhJiC2laQ",
+        title: "Clay.com vs pipe0: The Data Enrichment Frontier Has Moved",
+        description:
+          "A seven minute walkthrough of pipe0 next to Clay. It shows the sheet, the waterfalls, and the agent side of the product, which is the part a pure waterfall API does not have.",
+        uploadDate: "2026-09-21",
+        duration: "PT7M17S",
+      },
+    ],
+  },
   related: [
     {
       label: "Best waterfall enrichment tools",

@@ -38,6 +38,22 @@ export type DifferenceCard = {
 };
 
 /**
+ * A YouTube video shown in the "additional material" block. `description`
+ * says what the viewer will see, in one or two sentences, no hype. The
+ * date and duration feed VideoObject structured data; take them from the
+ * video's YouTube page, never guess.
+ */
+export type CompareVideo = {
+  youtubeId: string;
+  title: string;
+  description: string;
+  /** ISO 8601 date, e.g. "2026-09-21". */
+  uploadDate: string;
+  /** ISO 8601 duration, e.g. "PT7M17S". */
+  duration: string;
+};
+
+/**
  * One comparison page. Copy rules:
  * - Headings are plain strings in one typeface; no italic-serif highlight
  *   on comparison pages.
@@ -78,6 +94,12 @@ export type CompareConfig = {
     pickUs: string;
   };
   faqs: { q: string; a: string }[];
+  /**
+   * Supplementary videos, rendered between the verdict panel and the FAQ.
+   * The heading is per page: on the page the video is about, say so
+   * ("Watch the comparison."); elsewhere frame it as extra material.
+   */
+  media?: { heading: string; videos: CompareVideo[] };
   related?: { label: string; href: string }[];
   cta: { title: string; subtitle?: string };
 };

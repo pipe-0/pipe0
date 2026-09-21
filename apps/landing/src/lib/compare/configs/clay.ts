@@ -133,6 +133,19 @@ export const clayConfig: CompareConfig = {
       a: "Yes. Export your Clay table as a CSV and import it into a sheet. Map the columns to canonical field names during import, add the pipe columns you need, and run.",
     },
   ],
+  media: {
+    heading: "Watch the comparison.",
+    videos: [
+      {
+        youtubeId: "zFNhJiC2laQ",
+        title: "Clay.com vs pipe0: The Data Enrichment Frontier Has Moved",
+        description:
+          "A seven minute walkthrough of Clay and pipe0 on the same data enrichment work: where the two tables overlap and where they part ways.",
+        uploadDate: "2026-09-21",
+        duration: "PT7M17S",
+      },
+    ],
+  },
   related: [
     { label: "Clay alternatives", href: "/blog/clay-alternatives" },
     { label: "Does Clay have an API?", href: "/blog/clay-api" },

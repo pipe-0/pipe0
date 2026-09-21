@@ -123,6 +123,19 @@ export const zoominfoConfig: CompareConfig = {
       a: "pipe0 ships an MCP server, so Claude Code, ChatGPT, and Cursor can search, enrich, and schedule work directly. ZoomInfo does not offer an MCP server; its API is an enterprise add-on.",
     },
   ],
+  media: {
+    heading: "More material.",
+    videos: [
+      {
+        youtubeId: "zFNhJiC2laQ",
+        title: "Clay.com vs pipe0: The Data Enrichment Frontier Has Moved",
+        description:
+          "A seven minute walkthrough of pipe0 next to Clay. If you are leaving a database vendor for a workflow tool, this shows the difference in how the work runs.",
+        uploadDate: "2026-09-21",
+        duration: "PT7M17S",
+      },
+    ],
+  },
   related: [
     { label: "ZoomInfo alternatives", href: "/blog/zoominfo-alternatives" },
     { label: "Best MCP servers for GTM", href: "/blog/best-mcp-servers-gtm" },

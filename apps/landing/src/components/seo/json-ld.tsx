@@ -78,6 +78,27 @@ export function faqJsonLd(faqs: { q: string; a: string }[]) {
   };
 }
 
+export function videoJsonLd(video: {
+  youtubeId: string;
+  title: string;
+  description: string;
+  uploadDate: string;
+  duration: string;
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "VideoObject",
+    name: video.title,
+    description: video.description,
+    uploadDate: video.uploadDate,
+    duration: video.duration,
+    thumbnailUrl: `https://i.ytimg.com/vi/${video.youtubeId}/hqdefault.jpg`,
+    contentUrl: `https://www.youtube.com/watch?v=${video.youtubeId}`,
+    embedUrl: `https://www.youtube-nocookie.com/embed/${video.youtubeId}`,
+    publisher: { "@id": ORG_ID },
+  };
+}
+
 export function breadcrumbJsonLd(items: { name: string; url?: string }[]) {
   return {
     "@context": "https://schema.org",

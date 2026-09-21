@@ -5,6 +5,7 @@ import { Fragment } from "react";
 
 import { AskAiButton } from "@/components/ai/ask-ai-button";
 import { CompareTabs } from "@/components/features/compare/compare-tabs";
+import { CompareVideos } from "@/components/features/compare/compare-videos";
 import { DifferenceCards } from "@/components/features/compare/difference-cards";
 import { TheirEdgePanel } from "@/components/features/compare/their-edge-panel";
 import { Footer } from "@/components/footer";
@@ -14,6 +15,7 @@ import {
   JsonLd,
   breadcrumbJsonLd,
   faqJsonLd,
+  videoJsonLd,
 } from "@/components/seo/json-ld";
 import { compareConfigs, getCompareConfig } from "@/lib/compare/registry";
 
@@ -56,6 +58,9 @@ export default async function ComparePage(props: {
   return (
     <div className="landing min-h-screen bg-background">
       <JsonLd data={faqJsonLd(config.faqs)} />
+      {config.media?.videos.map((video) => (
+        <JsonLd key={video.youtubeId} data={videoJsonLd(video)} />
+      ))}
       <JsonLd
         data={breadcrumbJsonLd([
           { name: "pipe0", url: "/" },
@@ -103,8 +108,20 @@ export default async function ComparePage(props: {
         <TheirEdgePanel competitor={config.competitor} {...config.theirEdge} />
       </Section>
 
+      {/* ===== Additional material: narrow ===== */}
+      {config.media && config.media.videos.length > 0 && (
+        <Section className="mt-24">
+          <div className="mx-auto max-w-[920px]">
+            <CompareVideos
+              heading={config.media.heading}
+              videos={config.media.videos}
+            />
+          </div>
+        </Section>
+      )}
+
       {/* ===== Common questions: narrow ===== */}
-      <Section className="mt-16">
+      <Section className="mt-24">
         <div className="mx-auto max-w-[920px]">
           <h2 className="text-[clamp(22px,2.4vw,30px)] font-semibold tracking-[-0.02em] text-foreground">
             Common questions.
