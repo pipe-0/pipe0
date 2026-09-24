@@ -5,6 +5,7 @@ packages:
   - "examples/*/**"
   - "workers/*"
 allowBuilds:
+  core-js: false
   es5-ext: true
   esbuild: true
   msw: true

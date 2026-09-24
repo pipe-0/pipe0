@@ -16,8 +16,10 @@ import { useRef } from "react";
    through the middle of the viewport. The "pipe0" token resolves to the
    inline wordmark; `:name` tokens resolve to the little inline bots
    (see BOTS below). */
+// const STATEMENT =
+//   "We build contact data APIs with the highest coverage and accuracy, :clover agents that handle any GTM task, and :rainbow Clay-like tables that scale to millions of rows. We're 5x cheaper than traditional providers :round and respond to support tickets in minutes. :triangle We're the most powerful B2B tool you've never heard of. :cluster";
 const STATEMENT =
-  "We build contact data APIs with the highest coverage and accuracy, :clover agents that handle any GTM task, and :rainbow Clay-like tables that scale to millions of rows. We're 5x cheaper than traditional providers :round and respond to support tickets in minutes. :triangle We're the most powerful B2B tool you've never heard of. :cluster";
+  "We give small GTM teams the firepower of big ones. pipe0 connects your whole stack to people & company data, intent signals, and sales intelligence for a fifth of what comparable tools charge. :cluster We're the most powerful GTM tool you've never heard of.";
 
 /* Which bot each token stands for. Tones stay inside the app palette. */
 const BOTS: Record<string, { kind: BlobKind; tone: BlobTone; delay: number }> = {
