@@ -68,7 +68,7 @@ export function LandingStatement() {
           })}
         </p>
         <p className="mt-10 text-center text-md font-medium text-muted-foreground sm:mt-12">
-          Built in <b className="font-semibold">San Francisco</b> and <b className="font-semibold">Berlin</b> 📍
+          Built in <b className="font-semibold">San Francisco</b>, Berlin, and <b className="font-semibold">Zurich</b> 📍
         </p>
       </div>
     </div>
