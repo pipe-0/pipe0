@@ -6,6 +6,7 @@ import { LandingSpotlight } from "@/app/landing-spotlight";
 import { BotPill } from "@/app/landing-blobs";
 import { LandingStatement } from "@/app/landing-statement";
 import { LandingSystemCards } from "@/app/landing-system-cards";
+import { FilmStage } from "@/app/product-film";
 import { Footer } from "@/components/footer";
 import { AskAiButton } from "@/components/ai/ask-ai-button";
 import { Header } from "@/components/header";
@@ -266,6 +267,14 @@ export default function Home() {
               shared container like every other section heading. ===== */}
       <Section className="pt-8 sm:pt-12">
         <LandingReplaces />
+      </Section>
+
+      {/* ===== Film — the statement and the crossed-off stack make the
+              claim; this is the minute that shows it. Sits before the
+              spotlight, which then takes the same system apart layer by
+              layer. ===== */}
+      <Section className="pt-20 sm:pt-28">
+        <FilmStage where="home" />
       </Section>
 
       {/* ===== Spotlight — the three layers of a revenue org ===== */}

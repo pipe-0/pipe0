@@ -1,3 +1,4 @@
+import { FilmStage } from "@/app/product-film";
 import { AskAiButton } from "@/components/ai/ask-ai-button";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
@@ -205,6 +206,12 @@ export default function EnrichmentApiPage() {
             </div>
           ))}
         </div>
+      </Section>
+
+      {/* ===== Film — the same engine from the product side: the API is
+              one of the interfaces it ends on. ===== */}
+      <Section className="pt-20 sm:pt-28">
+        <FilmStage where="api" />
       </Section>
 
       {/* ===== Two primitives ===== */}

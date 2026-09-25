@@ -1204,3 +1204,72 @@ a:has(> [data-slot="button"]),
     animation: none;
   }
 }
+
+/* ---- Product film (product-film.tsx) ----
+   The poster stage is the film's own backdrop — a near-white neutral — with
+   a faint wash of the hero sky rising from below, so it sits between the
+   white page and the indigo panels rather than competing with either. */
+.film-stage {
+  background:
+    radial-gradient(
+      70% 60% at 50% 115%,
+      color-mix(in oklab, #7b94e8, transparent 72%) 0%,
+      transparent 70%
+    ),
+    radial-gradient(
+      50% 40% at 50% -10%,
+      rgba(255, 255, 255, 0.9) 0%,
+      transparent 70%
+    ),
+    linear-gradient(180deg, hsl(230 20% 98.5%) 0%, hsl(228 22% 95.5%) 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 1px 2px rgba(14, 17, 23, 0.05);
+}
+.dark .film-stage {
+  background:
+    radial-gradient(
+      70% 60% at 50% 115%,
+      rgba(58, 73, 196, 0.35) 0%,
+      transparent 70%
+    ),
+    linear-gradient(180deg, hsl(230 12% 10%) 0%, hsl(232 16% 8%) 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+/* The product rises out of the bottom edge on a slight tilt and dissolves
+   into the stage before it is fully shown. Hover straightens it a little. */
+.film-horizon {
+  transform-origin: 50% 0%;
+  transform: translateX(-50%) rotateX(24deg);
+  transition: transform 900ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  box-shadow: 0 -18px 50px rgba(18, 24, 74, 0.1);
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, rgba(0, 0, 0, 0.55) 30%, transparent 62%);
+  mask-image: linear-gradient(180deg, #000 0%, rgba(0, 0, 0, 0.55) 30%, transparent 62%);
+}
+.group:hover .film-horizon {
+  transform: translateX(-50%) translateY(-10px) rotateX(14deg);
+}
+/* Primary pill on the stage — the glossy CTA recipe. */
+.film-play {
+  border: 1px solid color-mix(in oklab, var(--primary), #000000 18%);
+  background: linear-gradient(
+    180deg,
+    color-mix(in oklab, var(--primary), #ffffff 16%) 0%,
+    var(--primary) 55%
+  );
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    0 1px 2px rgba(14, 17, 23, 0.12),
+    0 8px 24px color-mix(in oklab, var(--primary), transparent 72%);
+  transition: transform 300ms ease-out;
+}
+.group:hover .film-play {
+  transform: translateY(-1px);
+}
+/* Lightbox backdrop — the deepest note of the hero sky, not flat black. */
+.film-overlay {
+  background:
+    radial-gradient(80% 70% at 50% 40%, rgba(35, 44, 140, 0.55), transparent 75%),
+    rgba(6, 8, 26, 0.9);
+  backdrop-filter: blur(8px);
+}
