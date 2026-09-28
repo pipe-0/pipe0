@@ -5,6 +5,7 @@ import { baseOptions, linkItems } from "@/lib/layout.shared";
 import { LogoRawSmall } from "@/components/logo";
 import { CatalogAwareSidebarItem } from "@/components/features/docs/catalog-aware-sidebar-item";
 import { AskAiButton } from "@/components/ai/ask-ai-button";
+import { themeScriptProps } from "@/lib/theme-script";
 
 export default function Layout({
   children,
@@ -12,7 +13,7 @@ export default function Layout({
   const base = baseOptions();
 
   return (
-    <RootProvider>
+    <RootProvider theme={{ scriptProps: themeScriptProps }}>
     <DocsLayout
       {...base}
       tree={source.getPageTree()}

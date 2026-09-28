@@ -211,7 +211,7 @@ export default function EnrichmentApiPage() {
       {/* ===== Film — the same engine from the product side: the API is
               one of the interfaces it ends on. ===== */}
       <Section className="pt-20 sm:pt-28">
-        <FilmStage where="api" />
+        <FilmStage film="product" where="api" />
       </Section>
 
       {/* ===== Two primitives ===== */}

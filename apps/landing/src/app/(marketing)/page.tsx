@@ -270,11 +270,11 @@ export default function Home() {
       </Section>
 
       {/* ===== Film — the statement and the crossed-off stack make the
-              claim; this is the minute that shows it. Sits before the
-              spotlight, which then takes the same system apart layer by
-              layer. ===== */}
+              claim; the intro film tells how automation got here and where
+              pipe0 fits. Sits before the spotlight, which then takes the
+              same system apart layer by layer. ===== */}
       <Section className="pt-20 sm:pt-28">
-        <FilmStage where="home" />
+        <FilmStage film="intro" where="home" />
       </Section>
 
       {/* ===== Spotlight — the three layers of a revenue org ===== */}

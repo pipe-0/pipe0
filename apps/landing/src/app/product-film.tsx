@@ -3,42 +3,71 @@
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { XIcon } from "lucide-react";
 import posthog from "posthog-js";
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 
 /**
- * The product film — 55 seconds, with sound.
+ * The site's films, with sound.
  *
- * Nothing on the page decodes it until someone asks: the poster is DOM, not a
+ * Nothing on the page decodes one until someone asks: the poster is DOM, not a
  * frame of the film, and the <video> only mounts inside the lightbox (Radix
- * unmounts closed content), so the 9MB file costs nothing on a page view.
+ * unmounts closed content), so the file costs nothing on a page view.
  *
- * Chapter titles are the film's own title cards, and in the film's own
- * two-tone form — which is the site's heading form too (see SectionHeading),
- * so the poster reads as part of the page rather than a pasted-in thumbnail.
+ * Each poster carries one line from its film, in the film's own two-tone
+ * form — which is the site's heading form too (see SectionHeading), so the
+ * poster reads as part of the page rather than a pasted-in thumbnail.
  */
-
-const SRC = "/media/website/pipe0-product-film-v11-sound.mp4";
-const DURATION = "0:55";
 
 type Chapter = { at: number; title: string; tail?: string };
 
-/* Start times sit a beat before each title card fades in. */
-const CHAPTERS: Chapter[] = [
-  { at: 0, title: "Any list.", tail: "The right source." },
-  { at: 17, title: "One sentence.", tail: "A shared sheet." },
-  { at: 23, title: "Millions of rows." },
-  { at: 27, title: "Monitors that stay live." },
-  { at: 34, title: "One core.", tail: "Every interface." },
-  { at: 40, title: "Why pipe0." },
-];
+type Film = {
+  id: string;
+  src: string;
+  duration: string;
+  label: string;
+  title: string;
+  tail?: string;
+  /** Wayfinding dots under the film in the lightbox. */
+  chapters?: Chapter[];
+};
+
+const FILMS = {
+  /** The story of automation, from RPA to agents, and where pipe0 fits. */
+  intro: {
+    id: "intro",
+    src: "/media/website/pipe0-intro.mp4",
+    duration: "2:40",
+    label: "pipe0 intro film",
+    title: "Automation that scales",
+    tail: "your ideas.",
+  },
+  /** The product tour. */
+  product: {
+    id: "product",
+    src: "/media/website/pipe0-product-film-v11-sound.mp4",
+    duration: "0:55",
+    label: "pipe0 product film",
+    title: "One sentence.",
+    tail: "A shared sheet.",
+    /* Start times sit a beat before each title card fades in. */
+    chapters: [
+      { at: 0, title: "Any list.", tail: "The right source." },
+      { at: 17, title: "One sentence.", tail: "A shared sheet." },
+      { at: 23, title: "Millions of rows." },
+      { at: 27, title: "Monitors that stay live." },
+      { at: 34, title: "One core.", tail: "Every interface." },
+      { at: 40, title: "Why pipe0." },
+    ],
+  },
+} satisfies Record<string, Film>;
 
 function stamp(s: number) {
   return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
 }
 
-function track(where: string) {
-  if (posthog.__loaded) posthog.capture("product_film_opened", { where });
+function track(film: Film, where: string) {
+  if (posthog.__loaded)
+    posthog.capture("product_film_opened", { where, film: film.id });
 }
 
 // ---------------------------------------------------------------------------
@@ -46,23 +75,27 @@ function track(where: string) {
 // ---------------------------------------------------------------------------
 
 function FilmLightbox({
+  film,
   open,
   onOpenChange,
 }: {
+  film: Film;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
   const video = useRef<HTMLVideoElement>(null);
   const [current, setCurrent] = useState(0);
 
+  const chapters = film.chapters;
+
   const seek = (i: number) => {
     const el = video.current;
-    if (!el) return;
-    el.currentTime = CHAPTERS[i].at;
+    if (!el || !chapters) return;
+    el.currentTime = chapters[i].at;
     void el.play().catch(() => {});
   };
 
-  const active = CHAPTERS.reduce(
+  const active = (chapters ?? []).reduce(
     (idx, c, i) => (current >= c.at - 0.25 ? i : idx),
     0,
   );
@@ -81,7 +114,7 @@ function FilmLightbox({
           }}
         >
           <DialogPrimitive.Title className="sr-only">
-            pipe0 product film
+            {film.label}
           </DialogPrimitive.Title>
           <DialogPrimitive.Close
             aria-label="Close film"
@@ -96,7 +129,7 @@ function FilmLightbox({
             <div className="overflow-hidden rounded-[14px] bg-[#f4f4f6] shadow-[0_0_0_1px_rgba(255,255,255,0.08),0_40px_120px_rgba(0,0,0,0.5)]">
               <video
                 ref={video}
-                src={SRC}
+                src={film.src}
                 controls
                 autoPlay
                 playsInline
@@ -107,9 +140,15 @@ function FilmLightbox({
             </div>
 
             {/* Optional wayfinding: where the film is, and a way to jump. */}
-            <div className="mt-5 flex justify-center">
-              <ChapterDots active={active} tone="dark" onSelect={seek} />
-            </div>
+            {chapters && (
+              <div className="mt-5 flex justify-center">
+                <ChapterDots
+                  chapters={chapters}
+                  active={active}
+                  onSelect={seek}
+                />
+              </div>
+            )}
           </div>
         </DialogPrimitive.Content>
       </DialogPrimitive.Portal>
@@ -118,13 +157,15 @@ function FilmLightbox({
 }
 
 /** Open/close state for the lightbox. */
-function useFilm(where: string) {
+function useFilm(film: Film, where: string) {
   const [open, setOpen] = useState(false);
   const play = () => {
     setOpen(true);
-    track(where);
+    track(film, where);
   };
-  const lightbox = <FilmLightbox open={open} onOpenChange={setOpen} />;
+  const lightbox = (
+    <FilmLightbox film={film} open={open} onOpenChange={setOpen} />
+  );
   return { play, lightbox };
 }
 
@@ -133,40 +174,18 @@ function useFilm(where: string) {
 // ---------------------------------------------------------------------------
 
 function ChapterDots({
+  chapters,
   active,
-  tone,
   onSelect,
 }: {
+  chapters: Chapter[];
   active: number;
-  tone: "light" | "dark";
-  /** Makes each dot a button that jumps to its chapter. */
-  onSelect?: (index: number) => void;
+  /** Jumps to the chapter at this index. */
+  onSelect: (index: number) => void;
 }) {
-  const dot = (i: number) =>
-    cn(
-      "block h-2 rounded-full transition-[width,background-color] duration-500 ease-out motion-reduce:transition-none",
-      i === active ? "w-6" : "w-2",
-      tone === "light"
-        ? i <= active
-          ? "bg-foreground"
-          : "bg-foreground/20"
-        : i <= active
-          ? "bg-white"
-          : "bg-white/25",
-    );
-
-  if (!onSelect) {
-    return (
-      <span aria-hidden className="flex items-center gap-2">
-        {CHAPTERS.map((c, i) => (
-          <span key={c.at} className={dot(i)} />
-        ))}
-      </span>
-    );
-  }
   return (
     <span className="flex items-center">
-      {CHAPTERS.map((c, i) => (
+      {chapters.map((c, i) => (
         <button
           key={c.at}
           type="button"
@@ -179,7 +198,9 @@ function ChapterDots({
         >
           <span
             className={cn(
-              dot(i),
+              "block h-2 rounded-full transition-[width,background-color] duration-500 ease-out motion-reduce:transition-none",
+              i === active ? "w-6" : "w-2",
+              i <= active ? "bg-white" : "bg-white/25",
               "group-hover/dot:bg-white group-focus-visible/dot:ring-2 group-focus-visible/dot:ring-white/60",
             )}
           />
@@ -209,72 +230,32 @@ function PlayGlyph({ className }: { className?: string }) {
 // Stage — the section-sized poster
 // ---------------------------------------------------------------------------
 
-const CYCLE_MS = 3400;
-
-/** Cycles the chapter titles on the poster while it is on screen. */
-function useCycle(length: number, ms: number) {
-  const host = useRef<HTMLDivElement>(null);
-  const [index, setIndex] = useState(0);
-  useEffect(() => {
-    const el = host.current;
-    if (!el) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    let id = 0;
-    const io = new IntersectionObserver(([entry]) => {
-      window.clearInterval(id);
-      if (entry?.isIntersecting) {
-        id = window.setInterval(() => setIndex((n) => (n + 1) % length), ms);
-      }
-    });
-    io.observe(el);
-    return () => {
-      io.disconnect();
-      window.clearInterval(id);
-    };
-  }, [length, ms]);
-  return { host, index };
-}
-
-function ChapterTitle({ index }: { index: number }) {
-  return (
-    <span className="grid">
-      {CHAPTERS.map((c, i) => (
-        <span
-          key={c.at}
-          aria-hidden={i !== index}
-          className={cn(
-            "col-start-1 row-start-1 transition-[opacity,filter,transform] duration-700 ease-out motion-reduce:transition-none",
-            i === index
-              ? "opacity-100 blur-0"
-              : "translate-y-1.5 opacity-0 blur-[6px]",
-          )}
-        >
-          <span className="text-foreground">{c.title}</span>
-          {c.tail && <span className="text-muted-foreground"> {c.tail}</span>}
-        </span>
-      ))}
-    </span>
-  );
-}
-
 /**
  * Not a frame of the film. A still gives the ending away and, at this size,
  * reads as a screenshot with a button on it. Instead the stage is the film's
- * own near-white backdrop, its title cards cycle in the middle, and the
+ * own near-white backdrop, one of its lines sits in the middle, and the
  * product rises out of the bottom edge on a slight tilt, fading before it is
  * fully shown — enough to say "this is the product" without saying what it
- * does. The dots under the title say how far through the chapters it is.
+ * does.
  */
-export function FilmStage({ where }: { where: string }) {
-  const { play, lightbox } = useFilm(where);
-  const { host, index } = useCycle(CHAPTERS.length, CYCLE_MS);
+export function FilmStage({
+  film: name,
+  where,
+}: {
+  /** A name, not the Film itself: this module is client-only, so a server
+   *  page importing FILMS would get a reference, not the object. */
+  film: keyof typeof FILMS;
+  where: string;
+}) {
+  const film: Film = FILMS[name];
+  const { play, lightbox } = useFilm(film, where);
 
   return (
-    <div ref={host}>
+    <div>
       <button
         type="button"
         onClick={() => play()}
-        aria-label={`Play the pipe0 product film (${DURATION})`}
+        aria-label={`Play the ${film.label} (${film.duration})`}
         className="group block w-full rounded-[18px] text-left outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
       >
         <div className="film-stage relative aspect-square w-full overflow-hidden rounded-[18px] border border-[var(--panel-edge)] [perspective:1400px] sm:aspect-[2.1/1]">
@@ -288,18 +269,18 @@ export function FilmStage({ where }: { where: string }) {
 
           <div className="absolute inset-x-0 top-[14%] flex flex-col items-center px-6 text-center sm:top-[17%]">
             <span className="text-[clamp(26px,3.2vw,44px)] font-semibold leading-[1.15] tracking-[-0.025em]">
-              <ChapterTitle index={index} />
+              <span className="text-foreground">{film.title}</span>
+              {film.tail && (
+                <span className="text-muted-foreground"> {film.tail}</span>
+              )}
             </span>
-            <span className="mt-5">
-              <ChapterDots active={index} tone="light" />
-            </span>
-            <span className="film-play mt-6 inline-flex items-center gap-3 rounded-full py-1.5 pl-1.5 pr-5 text-[15px] font-medium text-white sm:mt-7">
+            <span className="film-play mt-7 inline-flex items-center gap-3 rounded-full py-1.5 pl-1.5 pr-5 text-[15px] font-medium text-white sm:mt-8">
               <span className="grid size-9 place-items-center rounded-full bg-white text-[#2c37a4]">
                 <PlayGlyph className="size-3.5" />
               </span>
               Play film
               <span className="font-mono text-[12.5px] tabular-nums text-white/70">
-                {DURATION}
+                {film.duration}
               </span>
             </span>
           </div>

@@ -1,4 +1,5 @@
 import { RootProvider } from "fumadocs-ui/provider/next";
+import { themeScriptProps } from "@/lib/theme-script";
 
 export default function MarketingLayout({
   children,
@@ -10,6 +11,10 @@ export default function MarketingLayout({
   // visitor's system/stored preference, so the `.dark` class is never set
   // on this subtree.
   return (
-    <RootProvider theme={{ forcedTheme: "light" }}>{children}</RootProvider>
+    <RootProvider
+      theme={{ forcedTheme: "light", scriptProps: themeScriptProps }}
+    >
+      {children}
+    </RootProvider>
   );
 }
