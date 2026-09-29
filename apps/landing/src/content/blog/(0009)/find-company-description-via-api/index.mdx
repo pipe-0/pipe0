@@ -16,11 +16,11 @@ For this, we use [pipe0](https://pipe0.com).
 
 Pipe0 is a framework for data enrichment. To enrich data with pipe0 you use enrichment pipes.
 There are several pipes available to generate a company description via API. For this blog post, we're 
-using the pipe [CompanyGetDescriptionPipe0:Website](https://www.pipe0.com/docs/pipe-catalog/company-get-description-pipe0-website/version-1).
+using the pipe [company:overview@3](https://www.pipe0.com/docs/pipe-catalog/company:overview/3).
 
-This pipe relies on scraping website data from a URL and summarizing this data with the help of an LLM.
+Besides the description, this pipe returns the company's industry, headcount, founding year, and estimated revenue.
 
-The cost per invocation is ~1ct. per company description.
+It costs 1 credit per company.
 
 ## Prerequisites
 
@@ -30,34 +30,31 @@ The cost per invocation is ~1ct. per company description.
 ## Request object
 
 ```typescript tab="Typescript"
-const id = 1;
-const result = await fetch("https://api.pipe0.com/v1/pipes/run", {
+const id = "1";
+const result = await fetch("https://api.pipe0.com/v1/pipes/run/sync", {
   method: "POST",
   headers: {
     "Authorization": `Bearer <API_KEY>`,
     "Content-Type": "application/json",
   },
   body: JSON.stringify({
-    pipes: [{ pipe_id: "company:description:website@1" }],
-    input: [{id, company_website_url: "<COMPANY_URL>"}]
+    pipes: [{ pipe_id: "company:overview@3" }],
+    input: [{ id, company_domain: "<COMPANY_DOMAIN>" }]
   })
 });
 
 const response = await result.json();
 
-// [NOT SHOWN] Poll the "/check" endpoint until the task status is "completed"
-// Learn more: https://www.pipe0.com/docs/pipeline#async-processing
-
 // Print description
-console.log(response.records[id].fields["companyDescription"].value);
+console.log(response.records[id].fields.company_description.value);
 ```
 
 ```shell tab="cURL"
-curl -X POST "https://api.pipe0.com/v1/pipes/run" \
+curl -X POST "https://api.pipe0.com/v1/pipes/run/sync" \
 -H "Authorization: Bearer API_KEY" \
 -H "Content-Type: application/json" \
 -d '{
-    "pipes": [{ "pipe_id": "company:description:website@1" }],
-    "input": [{ "id": 1, "company_website_url": "<COMPANY_URL>" }]
+    "pipes": [{ "pipe_id": "company:overview@3" }],
+    "input": [{ "id": "1", "company_domain": "<COMPANY_DOMAIN>" }]
 }'
 ```

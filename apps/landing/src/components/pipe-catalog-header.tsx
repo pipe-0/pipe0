@@ -14,6 +14,8 @@ import { FieldRow } from "@/components/features/pipe-catalog/field-row";
 import { HighVolumePriceCell } from "@/components/high-volume-price";
 import { effectiveCredits } from "@/lib/pricing/effective-credits";
 import { TextLink } from "@/components/text-link";
+import { CatalogDeprecationAlert } from "@/components/catalog-deprecation-alert";
+import { resolveCurrentPipe } from "@/lib/catalog-lifecycle";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -67,11 +69,6 @@ import { Tab, Tabs } from "fumadocs-ui/components/tabs";
 import { Copy, Terminal, Upload } from "lucide-react";
 import { Fragment, useMemo, useState } from "react";
 import { toast } from "sonner";
-
-const dateFormatter = new Intl.DateTimeFormat("en-US", {
-  month: "short",
-  day: "2-digit",
-});
 
 const pipesByBasePipes = sortPipeCatalogByBasePipe();
 
@@ -238,6 +235,8 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
 
   // The curated snippet payload doubles as the source of example values in
   // the config reference below.
+  const deprecatedOn = pipeEntry.lifecycle?.deprecatedOn;
+  const currentSuccessor = deprecatedOn ? resolveCurrentPipe(pipeId) : null;
   const snippetRequest = pipesSnippetCatalog[pipeId]?.[0];
   const snippetPayload = snippetRequest?.pipes?.[0];
 
@@ -387,18 +386,19 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
       </div>
 
       {/* Deprecation alert */}
-      {pipeEntry.lifecycle?.replacedBy && (
-        <Alert variant="destructive">
-          <AlertTitle>
-            Deprecated by{" "}
-            {dateFormatter.format(
-              new Date(pipeEntry.lifecycle.deprecatedOn || ""),
-            )}
-          </AlertTitle>
-          <AlertDescription>
-            Use instead: {pipeEntry.lifecycle.replacedBy}
-          </AlertDescription>
-        </Alert>
+      {deprecatedOn && (
+        <CatalogDeprecationAlert
+          kind="pipe"
+          deprecatedOn={deprecatedOn}
+          successor={
+            currentSuccessor
+              ? {
+                  id: currentSuccessor,
+                  docPath: getPipeEntry(currentSuccessor).docPath,
+                }
+              : null
+          }
+        />
       )}
 
       <Accordion type="multiple" value={openItems} onValueChange={setOpenItems}>
@@ -608,8 +608,9 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
           </AccordionItem>
         )}
 
-        {/* Code examples */}
-        {snippetRequest && (
+        {/* Code examples. None for a deprecated pipe: a copyable snippet is
+            what agents and people reuse, and it would carry the deprecated id. */}
+        {snippetRequest && !deprecatedOn && (
           <AccordionItem value="code-examples">
             <AccordionTrigger>
               <SectionTriggerLabel

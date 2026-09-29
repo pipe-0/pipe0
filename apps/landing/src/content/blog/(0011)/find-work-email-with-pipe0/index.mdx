@@ -16,7 +16,7 @@ For this, we use [pipe0](https://pipe0.com).
 
 Pipe0 is a framework for data enrichment. To enrich data with pipe0 you use enrichment pipes.
 There are several pipes available to find a work email address via API. For this blog post, we're 
-using the pipe [people:workemail:waterfall@1](https://www.pipe0.com/docs/pipe-catalog/people-get-work-email-waterfall/version-1).
+using the pipe [person:workemail:waterfall@1](https://www.pipe0.com/docs/pipe-catalog/person:workemail:waterfall/1).
 
 This pipe relies on fetching contact data from multiple sources as a waterfall.
 
@@ -30,35 +30,48 @@ The cost per invocation is ~13ct. per work email address.
 ## Request object
 
 ```typescript tab="Typescript"
-const id = 1;
-const result = await fetch("https://api.pipe0.com/v1/pipes/run", {
+const id = "1";
+const result = await fetch("https://api.pipe0.com/v1/pipes/run/sync", {
   method: "POST",
   headers: {
     "Authorization": `Bearer <API_KEY>`,
     "Content-Type": "application/json",
   },
   body: JSON.stringify({
-    pipes: [{ pipe_id: "people:workemail:waterfall@1", providers: ["leadmagic", "prospeo", "amplemarket", "hunter"] }],
-    input: [{id, first_name: "<FIRST_NAME>", last_name: "<LAST_NAME>", company_website_url: "<COMPANY_URL>"}]
+    pipes: [
+      { pipe_id: "person:name:join@1" },
+      {
+        pipe_id: "person:workemail:waterfall@1",
+        config: {
+          providers: [
+            { provider: "leadmagic" },
+            { provider: "prospeo" },
+            { provider: "amplemarket" },
+            { provider: "hunter" },
+          ],
+        },
+      },
+    ],
+    input: [{ id, first_name: "<FIRST_NAME>", last_name: "<LAST_NAME>", company_domain: "<COMPANY_DOMAIN>" }]
   })
 });
 
 const response = await result.json();
 
-// [NOT SHOWN] Poll the "/check" endpoint until the task status is "completed"
-// Learn more: https://www.pipe0.com/docs/pipeline#async-processing
-
 // Print email
-console.log(response.records[id].fields["workEmail"].value);
+console.log(response.records[id].fields.work_email.value);
 ```
 
 ```shell tab="cURL"
-curl -X POST "https://api.pipe0.com/v1/pipes/run" \
+curl -X POST "https://api.pipe0.com/v1/pipes/run/sync" \
 -H "Authorization: Bearer <API_KEY>" \
 -H "Content-Type: application/json" \
 -d '{
-    "pipes": [{ "pipe_id": "people:workemail:waterfall@1",  "providers": ["leadmagic", "prospeo", "amplemarket", "hunter"] }],
-    "input": [{"id": 1, "first_name": "<FIRST_NAME>", "last_name": "<LAST_NAME>", "company_website_url": "<COMPANY_URL>"}]
+    "pipes": [
+      { "pipe_id": "person:name:join@1" },
+      { "pipe_id": "person:workemail:waterfall@1", "config": { "providers": [{ "provider": "leadmagic" }, { "provider": "prospeo" }, { "provider": "amplemarket" }, { "provider": "hunter" }] } }
+    ],
+    "input": [{ "id": "1", "first_name": "<FIRST_NAME>", "last_name": "<LAST_NAME>", "company_domain": "<COMPANY_DOMAIN>" }]
 }'
 ```
 

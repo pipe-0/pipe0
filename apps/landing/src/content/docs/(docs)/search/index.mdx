@@ -8,15 +8,15 @@ While pipes add fields to records you already have, search creates the records. 
 
 ## Run a search
 
-This request fetches a list of people from the [`people:profiles:crustdata@2`](/docs/search-catalog/people:profiles:crustdata/2) dataset. Each request takes a single search. `limit` sets the page size; use <AppLink linkType="pagination">pagination</AppLink> for more results.
+This request fetches a list of people from the [`people:profiles:crustdata@3`](/docs/search-catalog/people:profiles:crustdata/3) dataset. Each request takes a single search. `limit` sets the page size; use <AppLink linkType="pagination">pagination</AppLink> for more results.
 
 export const searchPayload = {
   search: {
-    search_id: "people:profiles:crustdata@2",
+    search_id: "people:profiles:crustdata@3",
     config: {
       limit: 25,
       filters: {
-        current_job_titles: { include: ["Software Engineer", "Developer"] },
+        current_employment_job_titles: { include: ["Software Engineer", "Developer"] },
       },
     },
   },
@@ -31,7 +31,7 @@ The response contains one result object per match, with the same field shape pip
   "id": "jyg5w5p7unhcufkp8f7z5za8",
   "status": "completed",
   "credits": { "spent": 5 },
-  "search_id": "people:profiles:crustdata@2",
+  "search_id": "people:profiles:crustdata@3",
   "total_pages": 2764,
   "next_page": {
     // pass this as `search` to fetch the next page
@@ -44,9 +44,9 @@ The response contains one result object per match, with the same field shape pip
         "status": "completed"
         // ...
       },
-      "job_title": {
+      "profile_url": {
         "type": "string",
-        "value": "Product Intranet Manager",
+        "value": "https://www.linkedin.com/in/gayle-pouros",
         "status": "completed"
         // ...
       }

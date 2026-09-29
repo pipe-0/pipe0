@@ -85,14 +85,14 @@ record.fields.last_name.value; // "Doe"
 ```ts
 const result = await pipe0.pipes.pipe({
   pipes: [
-    { pipe_id: "person:profile:waterfall@1" },
+    { pipe_id: "person:profile:waterfall@2" },
     {
       pipe_id: "prompt:run@1",
       config: {
         model: "google-low",
         prompt: {
           template: `
-            Profile: {{ profile }}
+            Profile: {{ person_profile_match }}
             {% output icp_fit, type: "boolean", description: "Does this match our ICP?" %}
             {% output reasoning, type: "string", description: "Why or why not?" %}
           `,
@@ -188,12 +188,12 @@ pipe0 sheets and buckets, Postgres, Databricks).
 ```ts
 const result = await pipe0.searches.search({
   search: {
-    search_id: "people:profiles:crustdata@2",
+    search_id: "people:profiles:crustdata@3",
     config: {
       limit: 25,
       filters: {
-        current_job_titles: { include: ["Head of RevOps"] },
-        locations: { include: ["San Francisco", "New York"] },
+        current_employment_job_titles: { include: ["Head of RevOps"] },
+        locations: { include: ["San Francisco Bay Area", "New York City Metropolitan Area"] },
       },
     },
   },
@@ -201,8 +201,7 @@ const result = await pipe0.searches.search({
 
 for (const row of result.results) {
   row.name.value; // string
-  row.job_title.value; // string
-  row.company_domain.value; // typed per output_fields
+  row.profile_url.value; // typed per output_fields
 }
 ```
 
@@ -224,7 +223,7 @@ without writing the pagination loop.
 ```ts
 const { results, errors } = await pipe0.searches.searchAll({
   searches: [
-    { search: { search_id: "people:profiles:crustdata@2", config: { /* … */ } } },
+    { search: { search_id: "people:profiles:crustdata@3", config: { /* … */ } } },
     { search: { search_id: "people:profiles:amplemarket@2", config: { /* … */ } } },
   ],
   maxPages: 5, // per search; Infinity fetches until next_page is null

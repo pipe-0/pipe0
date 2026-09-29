@@ -58,17 +58,19 @@ While pipes add fields to records you already have, search creates the records. 
 
 export const searchPayload = {
   search: {
-    search_id: "people:profiles:crustdata@2",
+    search_id: "people:profiles:crustdata@3",
     config: {
       limit: 25,
       filters: {
-        current_job_titles: { include: ["Software Engineer"] },
+        current_employment_job_titles: { include: ["Software Engineer"] },
       },
     },
   },
 };
 
 <RequestExample kind="search" payload={searchPayload} />
+
+Search and pipe ids end in a version (`@3`). Use the newest version that is not deprecated. See [Versions and deprecation](/docs/versions).
 
 The `results` array of a search response is a valid `input` for a pipes request, so you can search for people and enrich them in two calls. See [Search then enrich](/docs/examples/search-then-enrich).
 

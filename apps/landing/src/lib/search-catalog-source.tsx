@@ -9,6 +9,7 @@ import {
   searchCatalog,
   SearchId,
 } from "@pipe0/base";
+import { resolveCurrentSearch } from "@/lib/catalog-lifecycle";
 import {
   effectiveCredits,
   isPlatformPaid,
@@ -50,10 +51,12 @@ type SearchCatalogSource = Source<{
 function getSearchDeprecation(entry: ReturnType<typeof getSearchEntry>) {
   const deprecatedOn = entry.lifecycle?.deprecatedOn;
   if (!deprecatedOn) return null;
-  const replacedBy = entry.lifecycle?.replacedBy ?? null;
+  // Name the final current successor, not the next hop, which may itself be
+  // deprecated.
+  const replacedBy = resolveCurrentSearch(entry.searchId);
   const successor = replacedBy
     ? `Use ${replacedBy} instead: https://pipe0.com${getSearchEntry(replacedBy).docPath}`
-    : "It has no direct replacement";
+    : "It has no current replacement";
   return {
     deprecatedOn,
     replacedBy,

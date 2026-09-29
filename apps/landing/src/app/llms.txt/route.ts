@@ -1,3 +1,4 @@
+import { deprecatedCatalogPage } from "@/lib/catalog-lifecycle";
 import { compareConfigs } from "@/lib/compare/registry";
 import { source } from "@/lib/source";
 
@@ -44,7 +45,19 @@ export async function GET() {
 
   // Group docs pages by top-level section so the index stays scannable.
   const sections = new Map<string, string[]>();
+  const deprecated: string[] = [];
   for (const page of source.getPages()) {
+    const deprecation = deprecatedCatalogPage(
+      page.data as unknown as Record<string, unknown>,
+    );
+    if (deprecation) {
+      deprecated.push(
+        deprecation.successor
+          ? `- ${deprecation.id} → use [${deprecation.successor}](https://pipe0.com${deprecation.successorPath})`
+          : `- ${deprecation.id} → no current replacement`,
+      );
+      continue;
+    }
     const description = page.data.description
       ? `: ${page.data.description}`
       : "";
@@ -64,6 +77,17 @@ export async function GET() {
     lines.push(...bucket);
   }
 
+  if (deprecated.length) {
+    lines.push("");
+    lines.push("## Deprecated pipes and searches (do not use)");
+    lines.push("");
+    lines.push(
+      "These ids still run for existing integrations but must not be used in new work. Each line names the current id to use instead.",
+    );
+    lines.push("");
+    lines.push(...deprecated);
+  }
+
   lines.push("");
   lines.push("## Full Documentation");
   lines.push("");
@@ -72,7 +96,10 @@ export async function GET() {
   lines.push("## Notes");
   lines.push("");
   lines.push(
-    "- Individual pages can be accessed as markdown by appending `.mdx` to any docs URL (e.g. https://pipe0.com/docs/getting-started.mdx)",
+    "- Individual pages can be accessed as markdown by appending `.mdx` to any docs URL (e.g. https://pipe0.com/docs/search.mdx)",
+  );
+  lines.push(
+    "- Pipe and search ids are versioned (`@1`, `@2`, …). Use the highest version that is not deprecated; see https://pipe0.com/docs/versions",
   );
   lines.push(
     "- The full documentation is available at https://pipe0.com/llms-full.txt",

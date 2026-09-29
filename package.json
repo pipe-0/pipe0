@@ -7,7 +7,8 @@
     "cs": "npx changeset",
     "catalog:bump": "node scripts/bump-catalog.mjs",
     "examples:bump": "node scripts/bump-examples.mjs",
-    "bump": "pnpm run catalog:bump && pnpm examples:bump && pnpm i"
+    "bump": "pnpm run catalog:bump && pnpm examples:bump && pnpm i",
+    "check:catalog-ids": "node scripts/check-catalog-ids.mjs"
   },
   "devDependencies": {
     "@changesets/changelog-github": "^0.6.0",

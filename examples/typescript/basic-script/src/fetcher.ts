@@ -4,16 +4,16 @@ import client from "./client";
 export const requestBody: PipesRequest = {
   pipes: [
     {
-      pipe_id: "people:professionalprofileurl:name@1",
+      pipe_id: "person:profileurl:name@1",
     },
     {
-      pipe_id: "people:professionalprofile:waterfall@1",
+      pipe_id: "person:profile:waterfall@2",
     },
     {
-      pipe_id: "company:identity@1",
+      pipe_id: "company:identity@3",
     },
     {
-      pipe_id: "company:overview@1",
+      pipe_id: "company:overview@3",
     },
   ],
   input: [

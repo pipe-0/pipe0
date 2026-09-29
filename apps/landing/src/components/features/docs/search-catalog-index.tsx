@@ -529,6 +529,7 @@ function CatalogRow({ card }: { card: SearchCardData }) {
       priceFrom={isDiscounted}
       billableUnit={getSearchUnit(entry)}
       isNew={isNew}
+      isDeprecated={!!entry.lifecycle?.deprecatedOn}
     />
   );
 }

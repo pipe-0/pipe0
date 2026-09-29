@@ -86,7 +86,7 @@ const primitives = [
       <>
         <span className="text-[#2c37a4]">await</span> pipe0.search.run({"{"}
         {"\n"}  search_id:{" "}
-        <span className="text-emerald-700">&quot;people:profiles@3&quot;</span>,
+        <span className="text-emerald-700">&quot;people:profiles:crustdata@3&quot;</span>,
         {"\n"}  payload: {"{"} title:{" "}
         <span className="text-emerald-700">&quot;VP of Sales&quot;</span>,
         location: <span className="text-emerald-700">&quot;DACH&quot;</span> {"}"},

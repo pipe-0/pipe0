@@ -167,7 +167,7 @@ first pipe's required inputs must be satisfiable from these fields (or from `fie
 [CATEGORY]:[DATA]:(VENDOR | MECHANISM)@<version>
 ```
 
-Examples: `company:identity@3`, `people:email:waterfall@1`, `email:send:resend@1`,
+Examples: `company:identity@3`, `person:workemail:waterfall@1`, `email:send:resend@1`,
 `person:name:split@1`. Action pipes read hierarchically, e.g. `row:append:sheet@1`.
 
 - A shipped pipe version **never changes**. Improvements ship as a **new version**

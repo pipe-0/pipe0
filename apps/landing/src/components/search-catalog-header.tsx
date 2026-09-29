@@ -5,6 +5,8 @@ import { videoCatalog } from "@/lib/search/video-catalog";
 import { PayloadDocumenation } from "@/components/config-documentation";
 import { ApiRequestCodeExample } from "@/components/features/docs/api-request-code-example";
 import { CatalogHeader } from "@/components/features/docs/docs-layout";
+import { CatalogDeprecationAlert } from "@/components/catalog-deprecation-alert";
+import { resolveCurrentSearch } from "@/lib/catalog-lifecycle";
 import { BandCard } from "@/components/features/pipe-catalog/band-card";
 import { FieldRow } from "@/components/features/pipe-catalog/field-row";
 import { Info } from "@/components/info";
@@ -113,6 +115,9 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
           },
         };
 
+  const deprecatedOn = searchEntry.lifecycle?.deprecatedOn;
+  const currentSuccessor = deprecatedOn ? resolveCurrentSearch(searchId) : null;
+
   const formConfig = useMemo(() => {
     try {
       const config = getSearchPayloadFormConfig({
@@ -142,6 +147,22 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
           };
         })}
         tags={searchEntry.tags}
+        deprecationAlert={
+          deprecatedOn && (
+            <CatalogDeprecationAlert
+              kind="search"
+              deprecatedOn={deprecatedOn}
+              successor={
+                currentSuccessor
+                  ? {
+                      id: currentSuccessor,
+                      docPath: getSearchEntry(currentSuccessor).docPath,
+                    }
+                  : null
+              }
+            />
+          )
+        }
       >
         <div className="bg-accent/20 border rounded-sm">
           <Table>
@@ -326,14 +347,18 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
         </div>
       </CatalogHeader>
 
-      <div>
-        <h2 className="text-2xl">Code Example</h2>
-        <ApiRequestCodeExample
-          oas={searchMiniSpec}
-          operation={searchMiniSpec.operation("/v1/search/run", "post")}
-          harData={{ body: { search: snippetPayload } }}
-        />
-      </div>
+      {/* No runnable example for a deprecated search: a copyable snippet is
+          what agents and people reuse, and it would carry the deprecated id. */}
+      {!deprecatedOn && (
+        <div>
+          <h2 className="text-2xl">Code Example</h2>
+          <ApiRequestCodeExample
+            oas={searchMiniSpec}
+            operation={searchMiniSpec.operation("/v1/search/run", "post")}
+            harData={{ body: { search: snippetPayload } }}
+          />
+        </div>
+      )}
 
       <div className="">
         <Accordion type="multiple" defaultValue={["code"]}>
@@ -349,17 +374,18 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
               </AccordionContent>
             </AccordionItem>
           )}
-          <AccordionItem value="full-config">
-            <AccordionTrigger className="">
-              Full config example
-            </AccordionTrigger>
-            <AccordionContent>
-              <div>
-                <Tabs items={["Typescript", "cURL"]}>
-                  <Tab value="Typescript">
-                    <DynamicCodeBlock
-                      lang="typescript"
-                      code={`const result = await fetch("https://api.pipe0.com/v1/search/run", {
+          {!deprecatedOn && (
+            <AccordionItem value="full-config">
+              <AccordionTrigger className="">
+                Full config example
+              </AccordionTrigger>
+              <AccordionContent>
+                <div>
+                  <Tabs items={["Typescript", "cURL"]}>
+                    <Tab value="Typescript">
+                      <DynamicCodeBlock
+                        lang="typescript"
+                        code={`const result = await fetch("https://api.pipe0.com/v1/search/run", {
   method: "POST",
   headers: {
     "Authorization": \`Bearer \${API_KEY}\`,
@@ -375,12 +401,12 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
     },
   })
 });`}
-                    />
-                  </Tab>
-                  <Tab value="cURL">
-                    <DynamicCodeBlock
-                      lang="bash"
-                      code={`curl -X POST "https://api.pipe0.com/v1/search/run" \\
+                      />
+                    </Tab>
+                    <Tab value="cURL">
+                      <DynamicCodeBlock
+                        lang="bash"
+                        code={`curl -X POST "https://api.pipe0.com/v1/search/run" \\
 -H "Authorization: Bearer $API_KEY" \\
 -H "Content-Type: application/json" \\
 -d '{
@@ -392,12 +418,13 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
                       )}
     }
 }'`}
-                    />
-                  </Tab>
-                </Tabs>
-              </div>
-            </AccordionContent>
-          </AccordionItem>
+                      />
+                    </Tab>
+                  </Tabs>
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+          )}
           <AccordionItem value="form-ui">
             <AccordionTrigger className="">
               <span className="flex items-center gap-2">

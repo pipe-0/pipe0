@@ -1,0 +1,56 @@
+---
+title: Versions and deprecation
+description: Pipe and search ids end in a version number. Always build on the newest version that is not deprecated, and replace deprecated ids you find in existing code.
+date: 2026-09-29
+icon: History
+---
+
+Every `pipe_id` and `search_id` ends in a version, like the `@3` in `people:profiles:crustdata@3`. This page shows how to pick the right version and how to spot one you should not use.
+
+## Pick the newest current version
+
+A shipped version never changes. When pipe0 improves a pipe or search in a way that changes its inputs, outputs, or filters, the change ships as a new version next to the old one:
+
+| Id | Status |
+|---|---|
+| `people:profiles:crustdata@1` | Deprecated |
+| `people:profiles:crustdata@2` | Deprecated |
+| `people:profiles:crustdata@3` | Current |
+
+Use the highest version that is not deprecated. Versions of the same pipe or search can differ in filter names and output fields, so a payload written for `@2` does not always work on `@3`. Check the catalog page of the version you use.
+
+## Recognize a deprecated id
+
+A deprecated pipe or search still runs for sheets and integrations that already use it. It can be removed without notice. Don't use one in new work, even if an old example or blog post shows it.
+
+You can tell a deprecated id in these places:
+
+- **Catalog pages.** The <AppLink linkType="pipeCatalog">pipe catalog</AppLink> and <AppLink linkType="searchCatalog">search catalog</AppLink> mark deprecated versions with a banner that names the id to use instead. Deprecated versions have no code example.
+- **llms.txt.** [`/llms.txt`](https://pipe0.com/llms.txt) lists deprecated ids in their own section at the end, each with its replacement.
+- **MCP server.** The <AppLink linkType="mcp">MCP server</AppLink>'s list tools leave deprecated entries out. If an agent uses a deprecated id anyway, the result carries a hint naming the replacement.
+
+## Replace a deprecated id
+
+1. Open the catalog page of the deprecated id. The banner names the current replacement. Follow that link rather than raising the version number yourself: some replacements have a different name (`people:workemail:waterfall@1` became `person:workemail:waterfall@1`).
+2. Compare the inputs, outputs, and filters on the replacement's page, and update field names in your payload and in any code that reads the response.
+3. Run the new payload in <AppLink linkType="testMode">sandbox mode</AppLink> before you switch production traffic.
+
+For example, the deprecated `people:profiles:crustdata@2` search takes a `current_job_titles` filter. Its replacement, `people:profiles:crustdata@3`, calls the same filter `current_employment_job_titles`:
+
+export const searchPayload = {
+  search: {
+    search_id: "people:profiles:crustdata@3",
+    config: {
+      limit: 25,
+      filters: {
+        current_employment_job_titles: { include: ["Software Engineer"] },
+      },
+    },
+  },
+};
+
+<RequestExample kind="search" payload={searchPayload} />
+
+## Build with an AI agent
+
+If you let an agent like Claude Code or Cursor write your integration, point it at this page and at the catalog pages of the ids it picks. Ask it to confirm that every `pipe_id` and `search_id` in the code is current. The <AppLink linkType="mcp">MCP server</AppLink> only lists current ids, so an agent connected to it starts from the right versions.

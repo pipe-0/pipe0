@@ -10,6 +10,7 @@ import {
   providerCatalog,
   requirementToInputFields,
 } from "@pipe0/base";
+import { resolveCurrentPipe } from "@/lib/catalog-lifecycle";
 import {
   effectiveCredits,
   isPlatformPaid,
@@ -58,10 +59,12 @@ type PipeCatalogSource = Source<{
 function getPipeDeprecation(entry: ReturnType<typeof getPipeEntry>) {
   const deprecatedOn = entry.lifecycle?.deprecatedOn;
   if (!deprecatedOn) return null;
-  const replacedBy = entry.lifecycle?.replacedBy ?? null;
+  // Name the final current successor, not the next hop, which may itself be
+  // deprecated.
+  const replacedBy = resolveCurrentPipe(entry.pipeId);
   const successor = replacedBy
     ? `Use ${replacedBy} instead: https://pipe0.com${getPipeEntry(replacedBy).docPath}`
-    : "It has no direct replacement";
+    : "It has no current replacement";
   return {
     deprecatedOn,
     replacedBy,

@@ -17,6 +17,11 @@ import { SearchCatalogIndexPage } from "@/components/features/docs/search-catalo
 import { SearchEntryPage } from "@/components/features/docs/search-entry-page";
 import { PipeCatalogIndexPage } from "@/components/features/docs/pipe-catalog-index-page";
 import { getBreadcrumbItems } from "fumadocs-core/breadcrumb";
+import { getPipeEntry, getSearchEntry, PipeId, SearchId } from "@pipe0/base";
+import {
+  resolveCurrentPipe,
+  resolveCurrentSearch,
+} from "@/lib/catalog-lifecycle";
 import {
   JsonLd,
   breadcrumbJsonLd,
@@ -27,7 +32,7 @@ function decodeSlug(slug: string[] | undefined): string[] | undefined {
   return slug?.map((s) => decodeURIComponent(s));
 }
 
-/** Catalog entry titles are "Label (pipe:id@1)"; SERPs read better without the id. */
+/** Catalog entry titles are "Label (<pipe_id>)"; SERPs read better without the id. */
 function stripIdSuffix(title: string, id: string): string {
   return title.replace(` (${id})`, "");
 }
@@ -44,6 +49,12 @@ function withCatalogSuffix(
       : description;
   const sep = /[.!?]$/.test(trimmed) || trimmed.endsWith("...") ? " " : ". ";
   return `${trimmed}${sep}${suffix}`;
+}
+
+function deprecatedDescription(id: string, successor: string | null): string {
+  return successor
+    ? `${id} is deprecated. Do not use it in new work; use ${successor} instead.`
+    : `${id} is deprecated and has no current replacement. Do not use it in new work.`;
 }
 
 function structuredDataFor(page: NonNullable<ReturnType<typeof source.getPage>>) {
@@ -194,17 +205,34 @@ export async function generateMetadata(
     // SERP title only; the rendered H1 and sidebar keep "Quickstart".
     title = "Data Enrichment API Documentation";
   } else if (data._virtualType === "pipe-entry" && data._pipeId) {
-    title = `${stripIdSuffix(page.data.title, data._pipeId)} pipe`;
-    description = withCatalogSuffix(
-      description,
-      `Run ${data._pipeId} via the pipe0 data enrichment API or in Sheets.`,
-    );
+    const pipeId = data._pipeId as PipeId;
+    if (getPipeEntry(pipeId).lifecycle?.deprecatedOn) {
+      // Every version shares a label, so a deprecated page needs its id and
+      // status in the title, and a description that names the replacement.
+      title = `${page.data.title} (deprecated)`;
+      description = deprecatedDescription(pipeId, resolveCurrentPipe(pipeId));
+    } else {
+      title = `${stripIdSuffix(page.data.title, pipeId)} pipe`;
+      description = withCatalogSuffix(
+        description,
+        `Run ${pipeId} via the pipe0 data enrichment API or in Sheets.`,
+      );
+    }
   } else if (data._virtualType === "search-entry" && data._searchId) {
-    title = stripIdSuffix(page.data.title, data._searchId);
-    description = withCatalogSuffix(
-      description,
-      `Run ${data._searchId} via the pipe0 data enrichment API or in Sheets.`,
-    );
+    const searchId = data._searchId as SearchId;
+    if (getSearchEntry(searchId).lifecycle?.deprecatedOn) {
+      title = `${page.data.title} (deprecated)`;
+      description = deprecatedDescription(
+        searchId,
+        resolveCurrentSearch(searchId),
+      );
+    } else {
+      title = stripIdSuffix(page.data.title, searchId);
+      description = withCatalogSuffix(
+        description,
+        `Run ${searchId} via the pipe0 data enrichment API or in Sheets.`,
+      );
+    }
   }
 
   return {

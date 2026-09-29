@@ -149,7 +149,7 @@ const codeLines: React.ReactNode[] = [
   <>{"  pipes: ["}</>,
   <>
     {"    { pipe_id: "}
-    <span className="text-emerald-300">&quot;people:workemail@1&quot;</span>
+    <span className="text-emerald-300">&quot;person:workemail:waterfall@1&quot;</span>
     {" },"}
   </>,
   <>{"  ],"}</>,

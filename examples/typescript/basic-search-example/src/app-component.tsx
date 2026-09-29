@@ -3,18 +3,17 @@ import { SearchSection } from "./search-section";
 const searchSections = [
   {
     title: "Search for leads with Crustdata",
-    description:
-      "Uses the Icypeas dataset to find software engineers in San Francisco and New York",
-    searchType: "icypeas",
+    description: "Uses the Crustdata dataset to find people who work at Microsoft",
+    searchType: "crustdata",
     emoji: "🔍",
     payload: {
       search: {
-        search_id: "people:profiles:crustdata@1",
+        search_id: "people:profiles:crustdata@3",
         config: {
           limit: 5,
           filters: {
-            current_employers_website_urls: {
-              include: ["https://microsoft.com"],
+            current_employer_domains: {
+              include: ["microsoft.com"],
             },
           },
         },
