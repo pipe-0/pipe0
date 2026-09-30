@@ -1,0 +1,23 @@
+---
+title: Get credit balance
+description: GET /v1/credit-balance returns the credits your organization has left. Authenticate with your API key; no organization ID needed.
+full: true
+_openapi:
+  preload:
+    - https://api.pipe0.com/openapi
+  method: GET
+  toc: []
+  structuredData:
+    headings: []
+    contents:
+      - content: >-
+          Get the credit balance of the organization that owns the API key. A
+          production run is refused before it starts when its estimated cost
+          meets or exceeds this balance. Sandbox runs do not use credits.
+---
+
+Get the credits your organization has left. The API key tells pipe0 which organization you mean, so the request takes no parameters. A production run is refused before it starts when its estimated cost meets or exceeds this balance. Sandbox runs don't use credits.
+
+`balance` is the total you can spend. `purchased_balance` is the part of it you bought as one-off credit purchases. Plan credits are spent first.
+
+<APIPage document={"https://api.pipe0.com/openapi"} operations={[{"path":"/v1/credit-balance","method":"get"}]} />
