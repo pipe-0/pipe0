@@ -2,5 +2,5 @@
   "$schema": "../../../../../.source/json-schema/docs.meta.json",
   "title": "Integrations",
   "defaultOpen": false,
-  "pages": ["ai-sdk", "langchain", "slack-agent"]
+  "pages": ["ai-sdk", "langchain", "tanstack-ai", "slack-agent"]
 }
