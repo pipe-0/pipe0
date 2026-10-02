@@ -73,15 +73,45 @@ Every tool and `pipe0Tools` take the same options:
 | --- | --- | --- |
 | `apiKey` | `string` | Your pipe0 API key. Defaults to `process.env.PIPE0_API_KEY`. |
 | `environment` | `"production" \| "sandbox"` | `sandbox` returns free placeholder data while you build. Defaults to `production`. |
-| `needsApproval` | `boolean` | Asks the user to approve each call before it runs. Defaults to `false`. |
+| `needsApproval` | `boolean` | AI SDK 5 and 6 only. Asks the user to approve each call before it runs. Deprecated on AI SDK 7. |
 | `client` | `Pipe0` | A configured client from the [TypeScript client](/docs/sdks/typescript-client). |
 
 ## Credits
 
 In `production`, every tool call spends credits. `findPeople` costs about 0.1 credits per person returned.
 `enrichPerson` starts at 0.5 credits per value found, and its waterfalls only bill the provider that returned
-a result. Build against `sandbox`, which is free. In agents where users trigger the calls, set
-`needsApproval: true`.
+a result. Build against `sandbox`, which is free.
+
+## Approve calls before they run
+
+In agents where users trigger the calls, ask for approval before a tool spends credits. Set `toolApproval` on
+`generateText`, `streamText`, or `ToolLoopAgent`:
+
+```ts title="Ask before enriching a person"
+const result = await generateText({
+  model: "openai/gpt-5-mini",
+  prompt: "Get the work email of the CTO of Linear.",
+  tools: pipe0Tools(),
+  toolApproval: {
+    enrichPerson: "user-approval",
+  },
+  stopWhen: isStepCount(10),
+});
+```
+
+`findPeople` still runs on its own. When the model calls `enrichPerson`, the result contains a
+`tool-approval-request` instead of a tool result. The call runs after you send back the user's approval. See
+[Tool Approvals](https://ai-sdk.dev/docs/agents/tool-approvals) in the AI SDK docs.
+
+AI SDK 5 and 6 have no `toolApproval`. On those versions, pass `needsApproval: true` to the tools.
+
+## Keep your key and results safe
+
+Run the tools on your server. Keep `PIPE0_API_KEY` out of browser bundles, because anyone with the key can spend
+your credits.
+
+`findPeople` and `enrichPerson` return personal contact data. Use it in line with the privacy and marketing
+rules that apply to you, such as GDPR or CAN-SPAM, and only show results to users who are allowed to see them.
 
 ## Next steps
 
