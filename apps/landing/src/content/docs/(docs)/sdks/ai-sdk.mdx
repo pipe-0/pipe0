@@ -1,0 +1,94 @@
+---
+title: Vercel AI SDK
+description: Give agents built with the Vercel AI SDK tools to find people and enrich them with work emails, phone numbers, profiles, and firmographics.
+date: 2026-10-02
+---
+
+`@pipe0/ai-sdk` gives agents built with the [Vercel AI SDK](https://ai-sdk.dev) three tools: one finds people,
+two enrich people and companies. Your agent calls them like any other tool, and pipe0 queries dozens of data
+providers behind one API key.
+
+| Tool | What it does |
+| --- | --- |
+| `findPeople` | Runs a search for people by job title, employer, seniority, job function, company size, and location. |
+| `enrichPerson` | Runs waterfall pipes that find a work email, mobile number, and profile from a LinkedIn URL, an email, or a name and company domain. |
+| `enrichCompany` | Runs a pipe that adds firmographics for a company domain: description, industry, headcount, revenue, and founding year. |
+
+## Install
+
+```package-install
+@pipe0/ai-sdk
+```
+
+The package needs `ai` 5 or later and `zod` as peer dependencies.
+
+## Set your API key
+
+The tools read your pipe0 API key from `PIPE0_API_KEY`. See [Authentication](/docs/authentication) to create one.
+
+```bash title=".env"
+PIPE0_API_KEY=your-api-key
+```
+
+To pass the key in code instead, use the `apiKey` option.
+
+## Give your agent the tools
+
+`pipe0Tools()` returns all three tools. Pass them to `generateText` or `streamText`:
+
+```ts title="Find a person and their work email"
+import { generateText, isStepCount } from "ai";
+import { pipe0Tools } from "@pipe0/ai-sdk";
+
+const { text } = await generateText({
+  model: "openai/gpt-5-mini",
+  prompt: "Find the CTO of Linear and get their work email.",
+  tools: pipe0Tools(),
+  stopWhen: isStepCount(10),
+});
+
+console.log(text);
+```
+
+The model calls `findPeople` to find the person, then passes their LinkedIn URL to `enrichPerson` to get the
+work email. When a search returns no one, the tool tells the model which filter to drop, so it can widen the
+search and try again.
+
+To use only some tools, import them one by one:
+
+```ts title="Pick individual tools"
+import { enrichCompany, enrichPerson } from "@pipe0/ai-sdk";
+
+const tools = {
+  enrichPerson: enrichPerson(),
+  enrichCompany: enrichCompany(),
+};
+```
+
+## Options
+
+Every tool and `pipe0Tools` take the same options:
+
+| Option | Type | Description |
+| --- | --- | --- |
+| `apiKey` | `string` | Your pipe0 API key. Defaults to `process.env.PIPE0_API_KEY`. |
+| `environment` | `"production" \| "sandbox"` | `sandbox` returns free placeholder data while you build. Defaults to `production`. |
+| `needsApproval` | `boolean` | Asks the user to approve each call before it runs. Defaults to `false`. |
+| `client` | `Pipe0` | A configured client from the [TypeScript client](/docs/sdks/typescript-client). |
+
+## Credits
+
+In `production`, every tool call spends credits. `findPeople` costs about 0.1 credits per person returned.
+`enrichPerson` starts at 0.5 credits per value found, and its waterfalls only bill the provider that returned
+a result. Build against `sandbox`, which is free. In agents where users trigger the calls, set
+`needsApproval: true`.
+
+## Next steps
+
+These tools cover search and enrichment. For the full catalog, including buying signals and CRM routing, use
+the TypeScript client or connect your agent to the MCP server.
+
+<Cards>
+  <Card icon={<Zap />} title="TypeScript client" description="Run any pipe or search from code." href="/docs/sdks/typescript-client" />
+  <Card icon={<Search />} title="MCP server" description="Connect agents to every pipe0 tool." href="/docs/sdks/mcp" />
+</Cards>
