@@ -1,0 +1,68 @@
+{
+  "name": "@pipe0/langchain",
+  "version": "0.1.0",
+  "description": "pipe0 tools for LangChain.js: find people and enrich them with work emails, phone numbers, profiles, and firmographics.",
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "module": "./dist/index.js",
+  "main": "./dist/index.js",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "rimraf ./dist && tsc -p tsconfig.production.json",
+    "test": "vitest run",
+    "prepublishOnly": "pnpm run typecheck && pnpm run test && pnpm run build"
+  },
+  "keywords": [
+    "langchain",
+    "langchainjs",
+    "tools",
+    "agents",
+    "enrichment",
+    "data-enrichment",
+    "email-finder",
+    "lead-generation",
+    "gtm",
+    "pipe0"
+  ],
+  "author": "Florian Martens <florian_martens@outlook.de>",
+  "license": "MIT",
+  "homepage": "https://www.pipe0.com/docs/sdks/integrations/langchain",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pipe-0/pipe0.git",
+    "directory": "packages/langchain"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@pipe0/client": "catalog:"
+  },
+  "peerDependencies": {
+    "@langchain/core": "^0.3.0 || ^1.0.0",
+    "zod": "^3.25.0 || ^4.0.0"
+  },
+  "devDependencies": {
+    "@langchain/core": "^1.2.14",
+    "@types/node": "^22.0.0",
+    "rimraf": "^6.0.0",
+    "typescript": "^5.9.3",
+    "vitest": "^3.0.9",
+    "zod": "catalog:"
+  }
+}
