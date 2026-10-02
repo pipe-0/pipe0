@@ -1,6 +1,6 @@
 {
   "name": "@pipe0/langchain",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "pipe0 tools for LangChain.js: find people and enrich them with work emails, phone numbers, profiles, and firmographics.",
   "type": "module",
   "types": "./dist/index.d.ts",
@@ -51,7 +51,7 @@
     "node": ">=18"
   },
   "dependencies": {
-    "@pipe0/client": "catalog:"
+    "@pipe0/client": "^1.0.35"
   },
   "peerDependencies": {
     "@langchain/core": "^0.3.0 || ^1.0.0",
