@@ -47,6 +47,17 @@ const nextConfig: NextConfig = {
         destination: "/blog/nextra-use-blog-and-docs-theme",
         permanent: true,
       },
+      // Integration pages moved under /docs/sdks/integrations (2026-10).
+      {
+        source: "/docs/sdks/ai-sdk",
+        destination: "/docs/sdks/integrations/ai-sdk",
+        permanent: true,
+      },
+      {
+        source: "/docs/sdks/slack-agent",
+        destination: "/docs/sdks/integrations/slack-agent",
+        permanent: true,
+      },
       {
         source: "/docs/pipes/pipes-catalog",
         destination: "/docs/pipe-catalog",

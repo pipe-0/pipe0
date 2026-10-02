@@ -85,7 +85,7 @@ export default function SlackIntegration() {
                 />
               </a>
               <a
-                href="/docs/sdks/slack-agent"
+                href="/docs/sdks/integrations/slack-agent"
                 className="text-sm text-white/75 underline underline-offset-4 hover:text-white"
               >
                 Read the docs
@@ -139,7 +139,7 @@ export default function SlackIntegration() {
         */}
         <p className="mx-auto mt-8 max-w-3xl text-center text-sm text-muted-foreground">
           Full setup and usage details live in the{" "}
-          <a className="underline underline-offset-4" href="/docs/sdks/slack-agent">
+          <a className="underline underline-offset-4" href="/docs/sdks/integrations/slack-agent">
             Slack agent guide
           </a>
           .

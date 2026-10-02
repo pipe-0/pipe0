@@ -74,7 +74,7 @@ const surfaces: Surface[] = [
     title: "Bot command.",
     subtitle: "Where the team already works.",
     copy: "@pipe0 researches an account, finds contact data, and reports back in the channel that asked.",
-    href: "/docs/sdks/slack-agent",
+    href: "/docs/sdks/integrations/slack-agent",
     linkLabel: "Slack agent",
     pane: <SlackPane />,
   },
