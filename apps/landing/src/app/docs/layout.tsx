@@ -1,11 +1,10 @@
 import { source } from "@/lib/source";
 import { DocsLayout } from "fumadocs-ui/layouts/docs";
-import { RootProvider } from "fumadocs-ui/provider/next";
+import { RootProvider } from "@/components/root-provider";
 import { baseOptions, linkItems } from "@/lib/layout.shared";
 import { LogoRawSmall } from "@/components/logo";
 import { CatalogAwareSidebarItem } from "@/components/features/docs/catalog-aware-sidebar-item";
 import { AskAiButton } from "@/components/ai/ask-ai-button";
-import { themeScriptProps } from "@/lib/theme-script";
 import type * as PageTree from "fumadocs-core/page-tree";
 
 /**
@@ -55,7 +54,7 @@ export default function Layout({
   const base = baseOptions();
 
   return (
-    <RootProvider theme={{ scriptProps: themeScriptProps }}>
+    <RootProvider>
     <DocsLayout
       {...base}
       tree={slimTree(source.getPageTree())}
