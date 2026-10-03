@@ -20,9 +20,17 @@ import { cn } from "@/lib/utils";
 
 type Chapter = { at: number; title: string; tail?: string };
 
+/** Cloudflare Stream customer subdomain; films hosted there play in its player. */
+const STREAM_HOST = "https://customer-n1fwmijqbwqwvpt9.cloudflarestream.com";
+
 type Film = {
   id: string;
-  src: string;
+  /** Either a file under /public, played in our own <video>, or a Cloudflare
+   *  Stream video id, played in Stream's iframe (adaptive bitrate, and too
+   *  large for a static asset). Chapters need `src`: the iframe has no
+   *  currentTime we can read or seek. */
+  src?: string;
+  stream?: string;
   duration: string;
   label: string;
   title: string;
@@ -35,7 +43,7 @@ const FILMS = {
   /** The story of automation, from RPA to agents, and where pipe0 fits. */
   intro: {
     id: "intro",
-    src: "/media/website/pipe0-intro.mp4",
+    stream: "dd7471f30a94a000c1fcfbc76ff41dc0",
     duration: "2:40",
     label: "pipe0 intro film",
     title: "Automation that scales",
@@ -127,16 +135,26 @@ function FilmLightbox({
               dots below it always fit on screen together. */}
           <div className="w-full max-w-[min(1280px,calc((100svh-160px)*16/9))]">
             <div className="overflow-hidden rounded-[14px] bg-[#f4f4f6] shadow-[0_0_0_1px_rgba(255,255,255,0.08),0_40px_120px_rgba(0,0,0,0.5)]">
-              <video
-                ref={video}
-                src={film.src}
-                controls
-                autoPlay
-                playsInline
-                preload="auto"
-                className="block aspect-video w-full"
-                onTimeUpdate={(e) => setCurrent(e.currentTarget.currentTime)}
-              />
+              {film.stream ? (
+                <iframe
+                  src={`${STREAM_HOST}/${film.stream}/iframe?autoplay=true&preload=auto`}
+                  title={film.label}
+                  allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+                  allowFullScreen
+                  className="block aspect-video w-full border-0"
+                />
+              ) : (
+                <video
+                  ref={video}
+                  src={film.src}
+                  controls
+                  autoPlay
+                  playsInline
+                  preload="auto"
+                  className="block aspect-video w-full"
+                  onTimeUpdate={(e) => setCurrent(e.currentTarget.currentTime)}
+                />
+              )}
             </div>
 
             {/* Optional wayfinding: where the film is, and a way to jump. */}

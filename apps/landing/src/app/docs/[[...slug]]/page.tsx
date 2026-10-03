@@ -8,8 +8,9 @@ import { notFound } from "next/navigation";
 import { getMDXComponents } from "@/mdx-components";
 import type { Metadata } from "next";
 import { createRelativeLink } from "fumadocs-ui/mdx";
-import { openapi } from "@/lib/openapi";
+import { openapi, trimPreloaded } from "@/lib/openapi";
 import { APIPage } from "@/components/api-page";
+import type { OpenAPIPageProps_Preloaded } from "fumadocs-openapi/ui";
 import { LLMCopyButton } from "@/components/page-actions";
 import { StraightToc } from "@/components/features/docs/straight-toc";
 import { PipeEntryPage } from "@/components/features/docs/pipe-entry-page";
@@ -170,8 +171,17 @@ export default async function Page(props: PageProps<"/docs/[[...slug]]">) {
             // this allows you to link to other pages with relative file paths
             a: createRelativeLink(source, page),
             ...(preloaded && {
-              APIPage: (props: React.ComponentProps<typeof APIPage>) => (
-                <APIPage {...props} preloaded={preloaded} />
+              APIPage: (
+                props: Omit<OpenAPIPageProps_Preloaded, "preloaded">,
+              ) => (
+                <APIPage
+                  {...props}
+                  preloaded={trimPreloaded(
+                    preloaded,
+                    props.document,
+                    props.operations,
+                  )}
+                />
               ),
             }),
           })}

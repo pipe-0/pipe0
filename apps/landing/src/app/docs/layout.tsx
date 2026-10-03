@@ -6,6 +6,48 @@ import { LogoRawSmall } from "@/components/logo";
 import { CatalogAwareSidebarItem } from "@/components/features/docs/catalog-aware-sidebar-item";
 import { AskAiButton } from "@/components/ai/ask-ai-button";
 import { themeScriptProps } from "@/lib/theme-script";
+import type * as PageTree from "fumadocs-core/page-tree";
+
+/**
+ * The tree is serialized into every docs page and every RSC prefetch, and it
+ * holds ~530 pages, catalog entries included. Page descriptions, `$ref` source
+ * paths and page `$id`s are never read on the client: the sidebar shows names
+ * and keys items by position, and the page footer that would show
+ * descriptions is disabled. Folder descriptions stay; the tab dropdown
+ * renders them.
+ */
+function slimTree<T extends PageTree.Root | PageTree.Folder>(node: T): T {
+  const { $ref: _ref, ...rest } = node as T & { $ref?: unknown };
+  const out = {
+    ...rest,
+    children: node.children.map((child) =>
+      child.type === "folder"
+        ? slimTree(child)
+        : child.type === "page"
+          ? slimPage(child)
+          : child,
+    ),
+  } as PageTree.Root | PageTree.Folder;
+  if (out.type === "folder" && out.index) out.index = slimPage(out.index);
+  if (out.type === "root" && out.fallback) out.fallback = slimTree(out.fallback);
+  return out as T;
+}
+
+function slimPage(item: PageTree.Item): PageTree.Item {
+  // Catalog entries are only in the tree so the sidebar can resolve its root
+  // on detail pages (see catalogEntryTreePlugin); they never render, so the
+  // URL is all they need. They are ~470 of the ~530 pages.
+  if (item.$id?.startsWith("catalog-entry:")) {
+    return { type: "page", name: "", url: item.url };
+  }
+  const {
+    description: _description,
+    $ref: _ref,
+    $id: _id,
+    ...rest
+  } = item as PageTree.Item & { $ref?: unknown };
+  return rest;
+}
 
 export default function Layout({
   children,
@@ -16,7 +58,7 @@ export default function Layout({
     <RootProvider theme={{ scriptProps: themeScriptProps }}>
     <DocsLayout
       {...base}
-      tree={source.getPageTree()}
+      tree={slimTree(source.getPageTree())}
       links={linkItems.filter((item) => item.type === "icon")}
       nav={{
         ...base.nav,

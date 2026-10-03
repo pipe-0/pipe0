@@ -13,7 +13,4 @@ export const appInfo = {
     requestPipe:
       "https://github.com/pipe-0/pipe0/discussions/new?category=ideas",
   },
-  audio: {
-    intro: "/media/audio/intro.wav",
-  },
 };
