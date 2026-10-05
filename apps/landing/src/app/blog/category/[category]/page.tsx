@@ -1,4 +1,5 @@
 import {
+  CATEGORY_DESCRIPTIONS,
   categoryFromSlug,
   categorySlug,
   sortedPosts,
@@ -24,16 +25,10 @@ export async function generateMetadata(props: {
   const category = categoryFromSlug(slug);
   if (!category) notFound();
 
-  const categories = usedCategories(sortedPosts());
   return {
     title: `${category} — Blog`,
-    description: `${category} posts from Signal & Noise, the pipe0 journal on data, pipelines, and the craft of building software.`,
-    alternates: {
-      // The default category is what /blog itself shows — point its path
-      // twin back there so only one URL competes for it.
-      canonical:
-        category === categories[0] ? "/blog" : `/blog/category/${slug}`,
-    },
+    description: CATEGORY_DESCRIPTIONS[category],
+    alternates: { canonical: `/blog/category/${slug}` },
   };
 }
 

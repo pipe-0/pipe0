@@ -130,7 +130,12 @@ If you're building a system that requires auto-top-ups to remain operational at 
 
 ## High-usage billing
 
-High-usage billing lowers the per-operation credit price of high-traffic pipes and searches. You enroll an eligible operation into a discount tier, and every run of that operation bills at the lower price.
+High-usage billing lowers the per-operation credit price of high-traffic pipes and searches.
+You enroll an eligible operation into a discount tier in "Dashboard" > "Billing" > "High volume pricing",
+and every run of that operation bills at the lower price from then on.
+
+Enrollment is a dashboard setting only. You don't need API calls, request parameters, or code changes:
+your existing pipes, searches, and sheets pick up the lower price automatically.
 
 In the <AppLink linkType="pipeCatalog">pipe catalog</AppLink> and <AppLink linkType="searchCatalog">search catalog</AppLink>, eligible operations show a "high volume from" price next to their standard cost. Open the price to see the full tier breakdown.
 
@@ -153,10 +158,6 @@ Each paid plan includes a high-volume capacity, a fixed number of slots you can 
 ### 30-day lock
 
 Each enrollment is locked for 30 days from the day you set it. While it is locked you can move up to a cheaper tier if you have the capacity, but you cannot move down or unenroll. Changing the tier starts the 30 days again.
-
-### Enrollment
-
-To enroll, go to "Dashboard" > "Billing" > "High usage billing" and choose a tier for the operation you want to discount.
 
 ### Custom discount levels
 

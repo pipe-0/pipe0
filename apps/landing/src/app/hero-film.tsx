@@ -566,8 +566,6 @@ function Waterfall({ frame }: { frame: number }) {
         style={{
           fontSize: 13,
           fontWeight: 600,
-          letterSpacing: "0.09em",
-          textTransform: "uppercase",
           color: C.faint,
           marginBottom: 12,
         }}

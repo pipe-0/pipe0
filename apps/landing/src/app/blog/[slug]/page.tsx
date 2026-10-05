@@ -1,14 +1,21 @@
 import {
   categorySlug,
   formatDate,
+  lastRevised,
   postCover,
   relatedPosts,
 } from "@/app/blog/blog-utils";
 import CalButton from "@/components/cal-button";
-import { JsonLd, faqJsonLd } from "@/components/seo/json-ld";
+import {
+  JsonLd,
+  ORG_ID,
+  breadcrumbJsonLd,
+  faqJsonLd,
+  personRefJsonLd,
+} from "@/components/seo/json-ld";
 import { LogoRawSmall } from "@/components/logo";
 import { buttonVariants } from "@/components/ui/button";
-import { authorAvatar } from "@/lib/authors";
+import { authorUrl, getAuthor } from "@/lib/authors";
 import { appInfo } from "@/lib/const";
 import { blog, type BlogPage } from "@/lib/source";
 import { cn, getBaseUrl } from "@/lib/utils";
@@ -27,7 +34,9 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import fs from "node:fs/promises";
 import { AuthorAvatar } from "../author-avatar";
+import { AuthorCard } from "../author-card";
 import { PostFaq } from "../post-faq";
+import { PostToc } from "../post-toc";
 import { ShareActions, SummarizeActions } from "./page.client";
 
 export default async function BlogPost(props: {
@@ -39,11 +48,16 @@ export default async function BlogPost(props: {
   // on demand even though generateStaticParams skips them.
   if (!page || page.data.draft === true) notFound();
 
-  const { body: Mdx } = await page.data.load();
+  const { body: Mdx, toc } = await page.data.load();
   const minutes = await readingTime(page.absolutePath);
   const lede = page.data.description ?? page.data.excerpt;
   const authors = page.data.authors ?? [];
   const author = authors[0];
+  // The first managed author gets the "Written by" card; guests don't.
+  const managedAuthor = authors
+    .map((a) => getAuthor(a.name))
+    .find((a) => a !== undefined);
+  const updated = page.data.updated;
   const related = relatedPosts(page, 2);
   const shareUrl = `${getBaseUrl()}${page.url}`;
   // Both are opt-in per post; older posts don't carry them and render as
@@ -62,18 +76,37 @@ export default async function BlogPost(props: {
           ...(tldr && { abstract: tldr }),
           articleSection: page.data.category,
           datePublished: page.data.date,
-          dateModified: page.data.date,
+          dateModified: lastRevised(page).toISOString().slice(0, 10),
           url: shareUrl,
           mainEntityOfPage: shareUrl,
-          image: `${getBaseUrl()}${page.data.cover ?? "/opengraph-image"}`,
-          author: authors.map((a) => ({
-            "@type": "Person",
-            name: a.name,
-            jobTitle: a.title,
-            ...(authorAvatar(a.name) && { image: authorAvatar(a.name) }),
-          })),
-          publisher: { "@id": "https://pipe0.com/#organization" },
+          image: `${getBaseUrl()}${postShareImage(page)}`,
+          author: authors.length
+            ? authors.map((a) => {
+                const managed = getAuthor(a.name);
+                return managed
+                  ? personRefJsonLd(managed)
+                  : { "@type": "Person", name: a.name, jobTitle: a.title };
+              })
+            : { "@id": ORG_ID },
+          publisher: { "@id": ORG_ID },
+          ...(page.data.tags?.length && { keywords: page.data.tags }),
+          inLanguage: "en",
         }}
+      />
+      <JsonLd
+        data={breadcrumbJsonLd([
+          { name: "pipe0", url: "/" },
+          { name: "Blog", url: "/blog" },
+          ...(page.data.category
+            ? [
+                {
+                  name: page.data.category,
+                  url: `/blog/category/${categorySlug(page.data.category)}`,
+                },
+              ]
+            : []),
+          { name: page.data.title, url: page.url },
+        ])}
       />
       {faq.length > 0 && <JsonLd data={faqJsonLd(faq)} />}
 
@@ -135,6 +168,17 @@ export default async function BlogPost(props: {
                 </>
               )}
               {minutes !== null && <> · {minutes} min read</>}
+              {updated && (
+                <>
+                  {" · "}
+                  <span>
+                    Updated{" "}
+                    <time dateTime={new Date(updated).toISOString()}>
+                      {formatDate(updated)}
+                    </time>
+                  </span>
+                </>
+              )}
             </p>
 
             <h1 className="font-blog mt-4 text-[34px] font-semibold leading-[1.1] tracking-[-0.02em] text-fd-foreground text-pretty sm:text-[44px]">
@@ -161,9 +205,27 @@ export default async function BlogPost(props: {
                     ))}
                   </span>
                   <span>
-                    {authors
-                      .map((a) => (a.title ? `${a.name}, ${a.title}` : a.name))
-                      .join(" · ")}
+                    {authors.map((a, i) => {
+                      const managed = getAuthor(a.name);
+                      const label = managed?.name ?? a.name;
+                      return (
+                        <span key={a.name}>
+                          {i > 0 && " · "}
+                          {managed ? (
+                            <Link
+                              href={authorUrl(managed)}
+                              rel="author"
+                              className="font-medium text-fd-foreground transition-colors hover:text-fd-primary"
+                            >
+                              {label}
+                            </Link>
+                          ) : (
+                            label
+                          )}
+                          {a.title && `, ${a.title}`}
+                        </span>
+                      );
+                    })}
                   </span>
                 </>
               ) : (
@@ -196,7 +258,7 @@ export default async function BlogPost(props: {
               aria-label="TL;DR"
               className="mx-auto mt-10 max-w-[680px] rounded-2xl bg-fd-muted px-6 py-6 sm:mt-12 sm:px-8 sm:py-7"
             >
-              <p className="text-[12px] font-medium uppercase tracking-[0.1em] text-fd-muted-foreground">
+              <p className="text-[13px] font-medium text-fd-muted-foreground">
                 TL;DR
               </p>
               <p className="font-blog mt-3 text-[18px] leading-[1.45] text-fd-foreground text-pretty sm:text-[20px]">
@@ -205,11 +267,15 @@ export default async function BlogPost(props: {
             </aside>
           )}
 
+          <PostToc items={toc} />
+
           <div className="prose blog-prose mt-12 min-w-0 sm:mt-16">
             <Mdx components={getMDXComponents({})} />
           </div>
 
           <PostFaq items={faq} />
+
+          {managedAuthor && <AuthorCard author={managedAuthor} />}
 
           {/* Keep reading */}
           {related.length > 0 && (
@@ -449,6 +515,11 @@ function MiniSheet() {
   );
 }
 
+/** Cover when the post has one, otherwise its rendered title card. */
+function postShareImage(page: BlogPage): string {
+  return page.data.cover ?? `/og/blog/${page.slugs[0]}`;
+}
+
 /** Word-count estimate from the raw MDX, frontmatter stripped. */
 async function readingTime(absolutePath?: string): Promise<number | null> {
   if (!absolutePath) return null;
@@ -490,6 +561,8 @@ export async function generateMetadata(props: {
     description: page.data.description ?? page.data.excerpt,
     alternates: {
       canonical: page.data.canonicalUrl ?? page.url,
+      // Plain-markdown twin for answer engines and agents.
+      types: { "text/markdown": `${page.url}.md` },
     },
     openGraph: {
       type: "article",
@@ -499,12 +572,17 @@ export async function generateMetadata(props: {
       publishedTime: page.data.date
         ? new Date(page.data.date).toISOString()
         : undefined,
+      modifiedTime: lastRevised(page).toISOString(),
       section: page.data.category,
-      authors: page.data.authors?.map((a) => a.name),
+      authors: page.data.authors?.map((a) => {
+        const managed = getAuthor(a.name);
+        return managed ? `${getBaseUrl()}${authorUrl(managed)}` : a.name;
+      }),
+      tags: page.data.tags,
       // Real cover when the post has one; the generated data-URI SVG
-      // fallback is rejected by social scrapers, so those posts use the
-      // site-wide OG image instead.
-      images: [page.data.cover ?? "/opengraph-image"],
+      // fallback is rejected by social scrapers, so those posts get a
+      // rendered title card instead.
+      images: [postShareImage(page)],
     },
     twitter: { card: "summary_large_image" },
   };

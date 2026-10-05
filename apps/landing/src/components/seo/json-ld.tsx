@@ -1,3 +1,9 @@
+import {
+  AUTHORS,
+  authorAbsoluteUrl,
+  authorId,
+  type Author,
+} from "@/lib/authors";
 import { appInfo } from "@/lib/const";
 import { getBaseUrl } from "@/lib/utils";
 
@@ -11,7 +17,7 @@ export function JsonLd({ data }: { data: Record<string, unknown> }) {
   );
 }
 
-const ORG_ID = "https://pipe0.com/#organization";
+export const ORG_ID = "https://pipe0.com/#organization";
 
 export function organizationJsonLd() {
   return {
@@ -25,8 +31,12 @@ export function organizationJsonLd() {
       appInfo.links.github,
       appInfo.links.linkedin,
       "https://www.npmjs.com/package/@pipe0/client",
-      "https://florian-martens.medium.com",
+      "https://www.npmjs.com/package/@pipe0/react",
+      "https://www.npmjs.com/package/@pipe0/ai-sdk",
     ],
+    founder: AUTHORS.filter((a) => a.jobTitle === "Founder").map((a) => ({
+      "@id": authorId(a),
+    })),
     contactPoint: {
       "@type": "ContactPoint",
       email: appInfo.emails.support,
@@ -128,5 +138,56 @@ export function techArticleJsonLd(opts: {
     ...(opts.dateModified && { dateModified: opts.dateModified.toISOString() }),
     author: { "@id": ORG_ID },
     publisher: { "@id": ORG_ID },
+  };
+}
+
+/** The full Person node — emitted on the author page, referenced elsewhere. */
+export function personJsonLd(author: Author) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "@id": authorId(author),
+    name: author.name,
+    url: authorAbsoluteUrl(author),
+    image: author.avatar,
+    jobTitle: author.jobTitle,
+    description: author.bio,
+    worksFor: { "@id": ORG_ID },
+    alumniOf: author.pastRoles.map((role) => ({
+      "@type": "Organization",
+      name: role.org,
+      url: role.url,
+    })),
+    knowsAbout: author.knowsAbout,
+    sameAs: author.profiles.map((p) => p.url),
+  };
+}
+
+/**
+ * Compact Person reference for article `author` fields — the @id joins it
+ * to the full node on the author page; name and url keep it readable for
+ * consumers that don't resolve ids.
+ */
+export function personRefJsonLd(author: Author) {
+  return {
+    "@type": "Person",
+    "@id": authorId(author),
+    name: author.name,
+    url: authorAbsoluteUrl(author),
+    jobTitle: author.jobTitle,
+    image: author.avatar,
+    sameAs: author.profiles.map((p) => p.url),
+  };
+}
+
+export function profilePageJsonLd(author: Author, opts: { dateModified?: string }) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ProfilePage",
+    url: authorAbsoluteUrl(author),
+    name: `${author.name}, ${author.jobTitle} of pipe0`,
+    ...(opts.dateModified && { dateModified: opts.dateModified }),
+    mainEntity: personJsonLd(author),
+    isPartOf: { "@type": "WebSite", url: getBaseUrl(), name: "pipe0" },
   };
 }

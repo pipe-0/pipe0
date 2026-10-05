@@ -1,24 +1,31 @@
 import {
+  BLOG_DESCRIPTION,
+  CATEGORY_DESCRIPTIONS,
   categorySlug,
   formatDate,
+  lastRevised,
   postCover,
   sortedPosts,
   usedCategories,
   type Category,
 } from "@/app/blog/blog-utils";
+import { JsonLd, breadcrumbJsonLd } from "@/components/seo/json-ld";
+import { authorDisplayName } from "@/lib/authors";
 import type { BlogPage } from "@/lib/source";
-import { cn } from "@/lib/utils";
+import { cn, getBaseUrl } from "@/lib/utils";
 import Link from "next/link";
+import { SummarizeActions } from "./[slug]/page.client";
 import { PostByline, PostFeed, type FeedPost } from "./page.client";
+import { PreferredSourceButton } from "./preferred-source-button";
 
-function toFeedPost(post: BlogPage, ratio: number): FeedPost {
+export function toFeedPost(post: BlogPage, ratio: number): FeedPost {
   const author = post.data.authors?.[0];
   return {
     url: post.url,
     title: post.data.title,
     excerpt: post.data.excerpt,
     cover: postCover(post, ratio),
-    authorName: author?.name ?? "pipe0 team",
+    authorName: author ? authorDisplayName(author.name) : "pipe0 team",
     authorMeta:
       [
         author?.title ?? null,
@@ -26,93 +33,161 @@ function toFeedPost(post: BlogPage, ratio: number): FeedPost {
       ]
         .filter(Boolean)
         .join(" · ") || undefined,
+    category: post.data.category,
   };
 }
 
+/** "Sep 2026" — the index states freshness to the month. */
+function monthYear(date: Date) {
+  return date.toLocaleDateString("en-US", { month: "long", year: "numeric" });
+}
+
 /**
- * The blog index for one category — shared by /blog (the default category)
- * and /blog/category/[category], so every view prerenders statically.
+ * The blog index — /blog shows every post, /blog/category/[category] one
+ * section. Header first (what the blog is and how fresh it is), then
+ * section chips, the editors' pick, and a three-column grid.
  */
-export function BlogIndexView({ activeCategory }: { activeCategory: Category }) {
+export function BlogIndexView({
+  activeCategory,
+}: {
+  activeCategory?: Category;
+}) {
   const posts = sortedPosts();
   const categories = usedCategories(posts);
 
-  const filtered = posts.filter(
-    (post) => post.data.category === activeCategory,
-  );
+  const filtered = activeCategory
+    ? posts.filter((post) => post.data.category === activeCategory)
+    : posts;
 
-  // The hero is the category's freshest editors' pick (falling back to the
+  // The hero is the view's freshest editors' pick (falling back to the
   // newest post); everything else flows into the grid, newest first.
   const hero = filtered.find((p) => p.data.highlight) ?? filtered[0];
   const rest = filtered.filter((p) => p !== hero);
 
-  const tabs = categories.map((category) => ({
-    key: category,
-    label: category,
-    href:
-      category === categories[0]
-        ? "/blog"
-        : `/blog/category/${categorySlug(category)}`,
-  }));
+  const updated = filtered
+    .map(lastRevised)
+    .sort((a, b) => b.getTime() - a.getTime())[0];
+  const path = activeCategory
+    ? `/blog/category/${categorySlug(activeCategory)}`
+    : "/blog";
+
+  const chips = [
+    { key: "all", label: "All", count: posts.length, href: "/blog" },
+    ...categories.map((category) => ({
+      key: category,
+      label: category,
+      count: posts.filter((p) => p.data.category === category).length,
+      href: `/blog/category/${categorySlug(category)}`,
+    })),
+  ];
 
   return (
-    // Same container as the HomeLayout header: --fd-layout-width + px-4
-    <main className="mx-auto w-full max-w-(--fd-layout-width) px-4 py-12 md:py-14">
-      <div className="flex flex-col gap-9 md:flex-row md:items-stretch md:gap-0">
-        {/* Masthead rail — title, standfirst, and the category nav */}
-        <aside className="md:w-[210px] md:shrink-0 md:pr-8">
-          <div className="md:sticky md:top-24">
-            <h1 className="font-blog tracking-[-0.01em] text-fd-foreground">
-              <span className="block text-[38px] leading-[0.95] font-bold md:text-[44px]">
-                Signal
-              </span>
-              <span className="block text-[29px] leading-[1.15] font-medium italic md:text-[33px]">
-                &amp; Noise
-              </span>
-            </h1>
-            <p className="mt-4 text-[13.5px] leading-relaxed text-fd-muted-foreground text-pretty">
-              A journal from pipe0 — on data, pipelines, and the craft of
-              building software.
-            </p>
-            <hr className="mt-6 hidden w-10 border-fd-border md:block" />
-            <nav
-              aria-label="Blog categories"
-              className="mt-5 flex flex-wrap gap-x-5 border-t border-fd-border pt-3.5 md:mt-4 md:flex-col md:gap-0 md:border-t-0 md:pt-0"
-            >
-              {tabs.map((tab) => (
+    <>
+      <JsonLd
+        data={breadcrumbJsonLd([
+          { name: "pipe0", url: "/" },
+          { name: "Blog", url: "/blog" },
+          ...(activeCategory ? [{ name: activeCategory, url: path }] : []),
+        ])}
+      />
+
+      {/* Same container as the HomeLayout header: --fd-layout-width + px-4 */}
+      <main className="mx-auto w-full max-w-(--fd-layout-width) px-4 py-10 md:py-12">
+        <header className="border-b border-fd-border pb-8">
+          <nav
+            aria-label="Breadcrumb"
+            className="flex items-center gap-1.5 text-[13px] text-fd-muted-foreground"
+          >
+            <Link href="/" className="transition-colors hover:text-fd-foreground">
+              pipe0
+            </Link>
+            <span aria-hidden>/</span>
+            {activeCategory ? (
+              <>
                 <Link
-                  key={tab.key}
-                  href={tab.href}
-                  className={cn(
-                    "py-[5px] text-sm transition-colors",
-                    tab.key === activeCategory
-                      ? "font-semibold text-fd-primary"
-                      : "text-fd-muted-foreground hover:text-fd-foreground",
-                  )}
+                  href="/blog"
+                  className="transition-colors hover:text-fd-foreground"
                 >
-                  {tab.label}
+                  Blog
                 </Link>
-              ))}
-            </nav>
+                <span aria-hidden>/</span>
+                <span className="text-fd-foreground">{activeCategory}</span>
+              </>
+            ) : (
+              <span className="text-fd-foreground">Blog</span>
+            )}
+          </nav>
+
+          <h1 className="font-blog mt-4 text-[38px] font-bold leading-[1.05] tracking-[-0.02em] text-fd-foreground md:text-[48px]">
+            {activeCategory ?? "Signal & Noise"}
+          </h1>
+          <p className="mt-4 max-w-[680px] text-[16px] leading-relaxed text-fd-muted-foreground text-pretty md:text-[17px]">
+            {activeCategory
+              ? CATEGORY_DESCRIPTIONS[activeCategory]
+              : BLOG_DESCRIPTION}
+          </p>
+
+          <p className="mt-4 text-[13px] text-fd-muted-foreground">
+            {updated && (
+              <>
+                Updated{" "}
+                <span className="font-medium text-fd-foreground">
+                  {monthYear(updated)}
+                </span>
+                {" · "}
+              </>
+            )}
+            {filtered.length} posts
+          </p>
+
+          <div className="mt-6 flex flex-wrap items-center gap-x-8 gap-y-4">
+            <SummarizeActions url={`${getBaseUrl()}${path}`} />
+            <PreferredSourceButton className="md:ml-auto" />
           </div>
-        </aside>
+        </header>
 
-        {/* Hairline between rail and content — gives the whitespace an edge */}
-        <div className="min-w-0 flex-1 md:border-l md:border-fd-border md:pl-12">
-          {hero && (
-            <>
+        <nav
+          aria-label="Blog sections"
+          className="mt-8 flex flex-wrap gap-2"
+        >
+          {chips.map((chip) => {
+            const active = (chip.key === "all" && !activeCategory) || chip.key === activeCategory;
+            return (
+              <Link
+                key={chip.key}
+                href={chip.href}
+                aria-current={active ? "page" : undefined}
+                className={cn(
+                  "inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-[13px] transition-colors",
+                  active
+                    ? "bg-fd-primary font-medium text-fd-primary-foreground"
+                    : "text-fd-muted-foreground ring-1 ring-fd-border hover:bg-fd-accent hover:text-fd-foreground",
+                )}
+              >
+                {chip.label}
+                <span className={active ? "opacity-80" : "opacity-60"}>
+                  {chip.count}
+                </span>
+              </Link>
+            );
+          })}
+        </nav>
+
+        {hero && (
+          <>
+            <div className="mt-10">
               <FeaturedPost post={toFeedPost(hero, 16 / 9)} />
-              <hr className="mt-10 border-fd-border" />
-            </>
-          )}
+            </div>
+            <hr className="mt-10 border-fd-border" />
+          </>
+        )}
 
-          <PostFeed
-            key={activeCategory}
-            posts={rest.map((p) => toFeedPost(p, 2))}
-          />
-        </div>
-      </div>
-    </main>
+        <PostFeed
+          key={activeCategory ?? "all"}
+          posts={rest.map((p) => toFeedPost(p, 2))}
+        />
+      </main>
+    </>
   );
 }
 
@@ -129,7 +204,12 @@ function FeaturedPost({ post }: { post: FeedPost }) {
         className="aspect-[16/9] w-full min-w-0 flex-[1.1_1_360px] rounded-lg object-cover ring-1 ring-fd-foreground/10 transition-opacity group-hover:opacity-90"
       />
       <div className="flex flex-[1_1_300px] flex-col">
-        <h2 className="font-blog text-[26px] font-bold leading-[1.18] tracking-[-0.01em] text-fd-foreground text-pretty md:text-[30px]">
+        {post.category && (
+          <span className="text-[13px] font-medium text-fd-primary">
+            {post.category}
+          </span>
+        )}
+        <h2 className="font-blog mt-1.5 text-[26px] font-bold leading-[1.18] tracking-[-0.01em] text-fd-foreground text-pretty md:text-[30px]">
           {post.title}
         </h2>
         {post.excerpt && (

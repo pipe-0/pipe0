@@ -172,7 +172,7 @@ export function Header({ page }: { page: Page }) {
                 <SheetTitle>Menu</SheetTitle>
               </SheetHeader>
               <div className="mt-6 flex flex-col space-y-4">
-                <div className="px-6 text-xs font-semibold uppercase tracking-[0.1em] text-muted-foreground">
+                <div className="px-6 text-[13px] font-medium text-muted-foreground">
                   Products
                 </div>
                 {products.map((product) => (

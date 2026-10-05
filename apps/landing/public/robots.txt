@@ -2,6 +2,32 @@
 User-agent: *
 Allow: /
 
+# AI search and answer engines — fetch pages to answer a user's question or
+# to cite them. Welcome everywhere, API reference included.
+User-agent: OAI-SearchBot
+User-agent: ChatGPT-User
+User-agent: Claude-SearchBot
+User-agent: Claude-User
+User-agent: PerplexityBot
+User-agent: Perplexity-User
+Allow: /
+
+# AI training crawlers — welcome everywhere except the API reference, which
+# is excluded from model training. The markdown twins and the single-file
+# docs dump carry the same content, so they're excluded too.
+User-agent: GPTBot
+User-agent: ClaudeBot
+User-agent: Google-Extended
+User-agent: Applebot-Extended
+User-agent: CCBot
+User-agent: Meta-ExternalAgent
+User-agent: Bytespider
+User-agent: cohere-training-data-crawler
+Disallow: /docs/api
+Disallow: /llms.mdx/docs/api
+Disallow: /llms-full.txt
+Allow: /
+
 # Host
 Host: https://pipe0.com
 
@@ -12,4 +38,5 @@ Sitemap: https://pipe0.com/sitemap.xml
 # See https://llmstxt.org for the llms.txt standard
 # Full documentation index: https://pipe0.com/llms.txt
 # Full documentation content: https://pipe0.com/llms-full.txt
-# Individual pages as markdown: append .mdx to any /docs/ URL
+# Individual pages as markdown: append .mdx to any /docs/ URL, or .md to any /blog/ post URL
+# Blog feed: https://pipe0.com/blog/rss.xml

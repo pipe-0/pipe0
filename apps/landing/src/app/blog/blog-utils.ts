@@ -234,6 +234,22 @@ export function postCover(post: BlogPage, ratio: number): string {
 export const CATEGORIES = ["Thinking", "Engineering", "Sales data"] as const;
 export type Category = (typeof CATEGORIES)[number];
 
+/**
+ * What the blog is about — the index intro and its meta description. Draft
+ * copy: rewrite in your own words before it ships.
+ */
+export const BLOG_DESCRIPTION =
+  "Signal & Noise is the pipe0 blog. We write about B2B data enrichment and the providers behind it, and about the engineering that goes into a data platform.";
+
+/** One line per section — the category page intro and meta description. */
+export const CATEGORY_DESCRIPTIONS: Record<Category, string> = {
+  "Sales data":
+    "Guides to B2B data enrichment: finding and validating contact data, waterfall enrichment, and comparisons of Clay, ZoomInfo and other providers.",
+  Engineering:
+    "Notes from building pipe0: TypeScript, Postgres, MCP servers and the infrastructure behind a data platform.",
+  Thinking: "Essays on data, software and why we build pipe0 the way we do.",
+};
+
 export function categorySlug(category: string) {
   return category.toLowerCase().replace(/\s+/g, "-");
 }
@@ -282,4 +298,17 @@ export function relatedPosts(current: BlogPage, count: number): BlogPage[] {
     (p.data.category === current.data.category ? 1 : 0);
   // Stable sort — posts stay newest-first within the same score.
   return posts.sort((a, b) => score(b) - score(a)).slice(0, count);
+}
+
+/** Last substantive revision — `updated` when set, the publish date otherwise. */
+export function lastRevised(post: BlogPage): Date {
+  return new Date(post.data.updated ?? post.data.date);
+}
+
+/** Published posts by one author, newest first. Matches the frontmatter name. */
+export function postsByAuthor(authorKey: string): BlogPage[] {
+  const key = authorKey.toLowerCase();
+  return sortedPosts().filter((p) =>
+    p.data.authors?.some((a) => a.name.trim().toLowerCase() === key),
+  );
 }

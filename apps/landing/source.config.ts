@@ -141,6 +141,12 @@ export const blog = defineCollections({
       .array(z.object({ name: z.string(), title: z.string() }))
       .optional(),
     date: z.iso.date().or(z.date()),
+    /**
+     * Date of the last substantive revision — new facts, corrected claims,
+     * re-run numbers. Set by hand; typo and formatting fixes don't count.
+     * Shown as "Updated …" and emitted as `dateModified`.
+     */
+    updated: z.iso.date().or(z.date()).optional(),
     excerpt: z.string().optional(),
     tags: z.array(z.string()).optional(),
     /** Editorial section — the index nav groups posts by this. */
@@ -176,6 +182,10 @@ export const blog = defineCollections({
     canonicalUrl: z.string().optional(),
   }),
   async: true,
+  // Feeds the /blog/<slug>.md twin served to answer engines and agents.
+  postprocess: {
+    includeProcessedMarkdown: true,
+  },
   async mdxOptions(environment) {
     const { rehypeCodeDefaultOptions } =
       await import("fumadocs-core/mdx-plugins/rehype-code");

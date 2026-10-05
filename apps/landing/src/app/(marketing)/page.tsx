@@ -197,7 +197,7 @@ export default function Home() {
 
             {/* Trusted-by, set into the foot of the panel */}
             <div className="trusted-scrim relative z-10 mt-7 flex flex-col items-center justify-center gap-3 px-9 pb-9 pt-10 sm:flex-row sm:gap-8 sm:px-4 md:gap-10 md:pb-11">
-              <span className="text-[12px] font-semibold uppercase tracking-[0.12em] text-white/70">
+              <span className="text-[13px] font-medium text-white/70">
                 Trusted by
               </span>
               <div className="flex w-full max-w-140 flex-nowrap items-center justify-between gap-4 opacity-90 sm:w-auto sm:flex-wrap sm:justify-center sm:gap-6 md:gap-8 [&_img]:brightness-0 [&_img]:invert">

@@ -22,6 +22,10 @@ const nextConfig: NextConfig = {
         source: "/docs/:path*.mdx",
         destination: "/llms.mdx/docs/:path*",
       },
+      {
+        source: "/blog/:slug.md",
+        destination: "/llms.mdx/blog/:slug",
+      },
     ];
   },
   async redirects() {

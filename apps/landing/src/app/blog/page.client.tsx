@@ -17,9 +17,11 @@ export type FeedPost = {
   authorName: string;
   /** "Founder · Apr 8, 2025" */
   authorMeta?: string;
+  /** Section label shown above the title. */
+  category?: string;
 };
 
-const BATCH = 8;
+const BATCH = 9;
 
 /** The card grid — a batch at a time, with a Load-more button below. */
 export function PostFeed({ posts }: { posts: FeedPost[] }) {
@@ -27,7 +29,7 @@ export function PostFeed({ posts }: { posts: FeedPost[] }) {
 
   return (
     <>
-      <div className="mt-10 grid grid-cols-1 gap-x-14 gap-y-12 sm:grid-cols-2">
+      <div className="mt-10 grid grid-cols-1 gap-x-10 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
         {posts.slice(0, visible).map((post) => (
           <PostCard key={post.url} post={post} />
         ))}
@@ -59,7 +61,12 @@ function PostCard({ post }: { post: FeedPost }) {
         alt=""
         className="aspect-[2/1] w-full rounded-lg object-cover ring-1 ring-fd-foreground/10 transition-opacity group-hover:opacity-90"
       />
-      <h3 className="font-blog mt-4 text-[20px] font-bold leading-[1.25] tracking-[-0.005em] text-fd-foreground text-pretty transition-colors group-hover:text-fd-primary">
+      {post.category && (
+        <span className="mt-4 text-[13px] font-medium text-fd-primary">
+          {post.category}
+        </span>
+      )}
+      <h3 className="font-blog mt-1.5 text-[19px] font-bold leading-[1.25] tracking-[-0.005em] text-fd-foreground text-pretty transition-colors group-hover:text-fd-primary">
         {post.title}
       </h3>
       {post.excerpt && (

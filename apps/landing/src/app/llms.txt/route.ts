@@ -1,4 +1,6 @@
 import { deprecatedCatalogPage } from "@/lib/catalog-lifecycle";
+import { sortedPosts } from "@/app/blog/blog-utils";
+import { AUTHORS } from "@/lib/authors";
 import { compareConfigs } from "@/lib/compare/registry";
 import { source } from "@/lib/source";
 
@@ -88,6 +90,23 @@ export async function GET() {
     lines.push(...deprecated);
   }
 
+  // Blog — human-written posts, each with a markdown twin at <url>.md.
+  lines.push("");
+  lines.push("## Blog");
+  lines.push("");
+  for (const author of AUTHORS) {
+    lines.push(
+      `Written by [${author.name}](https://pipe0.com/authors/${author.slug}), ${author.jobTitle} of pipe0. ${author.credentials.slice(1).join(". ")}.`,
+    );
+    lines.push("");
+  }
+  for (const post of sortedPosts()) {
+    const summary = post.data.excerpt ?? post.data.description;
+    lines.push(
+      `- [${post.data.title}](https://pipe0.com${post.url}.md)${summary ? `: ${summary}` : ""}`,
+    );
+  }
+
   lines.push("");
   lines.push("## Full Documentation");
   lines.push("");
@@ -97,6 +116,9 @@ export async function GET() {
   lines.push("");
   lines.push(
     "- Individual pages can be accessed as markdown by appending `.mdx` to any docs URL (e.g. https://pipe0.com/docs/search.mdx)",
+  );
+  lines.push(
+    "- Blog posts are available as markdown by appending `.md` to the post URL (e.g. https://pipe0.com/blog/clay-alternatives.md)",
   );
   lines.push(
     "- Pipe and search ids are versioned (`@1`, `@2`, …). Use the highest version that is not deprecated; see https://pipe0.com/docs/versions",

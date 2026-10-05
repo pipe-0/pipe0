@@ -70,7 +70,7 @@ export function LandingReplaces() {
 
   return (
     <div ref={host}>
-      <span className="text-[12px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+      <span className="text-[13px] font-medium text-muted-foreground">
         One system instead of
       </span>
       <div className="mt-5 flex flex-wrap items-center gap-x-7 gap-y-3.5">
