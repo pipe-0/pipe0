@@ -1,0 +1,307 @@
+---
+title: "Hunter review (2026): still the best at name plus domain"
+description: "Hunter finds work emails from a name and a company domain
+  better than any provider we tested, with a free plan, unlimited users, and
+  an MCP server on every plan."
+tool:
+  name: Hunter
+  url: https://hunter.io
+  logo: /media/reviews/logos/hunter.png
+  category: Contact finder
+verdict: "The most accurate way we know to turn a name and a company domain
+  into a work email, with honest sourcing, free misses, and API and MCP on
+  every plan. It sells emails only, so phone numbers come from elsewhere."
+relationship: supplier
+scores:
+  easeOfUse:
+    score: 3.9
+    why: "Type a domain, get the people and their addresses. The extension,
+      Sheets add-on, and free plan make the first result take minutes."
+  dataQuality:
+    score: 3.8
+    why: "First on name and domain to work email in our benchmark, at 77%
+      with 95% agreement. No phone numbers, and every address comes from the
+      public web."
+  pricingValue:
+    score: 4
+    why: "A free plan, unlimited users, misses and repeat lookups free. From
+      $34 a month billed annually for 2,000 emails, though credits don't
+      roll over."
+  agentAccess:
+    score: 3.9
+    why: "API and MCP on every plan, including Free, at 15 requests a second,
+      with a confidence score and sources on every email."
+bestFor:
+  - "Finding work emails when you know the person and the company"
+  - "Small teams that want a free plan and unlimited users"
+  - "Agents that need email lookups over MCP"
+skipIf:
+  - "You need mobile phone numbers"
+  - "You start from LinkedIn profiles rather than names and domains"
+  - "You need coverage beyond what the public web shows"
+pros:
+  - title: "The best name and domain lookup we tested"
+    body: "From a name and company domain, Hunter found a work email for 77%
+      of 100 real signups, ahead of every other provider we ran on that test,
+      Wiza included."
+  - title: "Its answers hold up"
+    body: "When Hunter and another provider both found an address, they
+      matched 95% of the time. It agreed with Prospeo on 25 of 26 people and
+      with Amplemarket on 24 of 26."
+  - title: "Transparent sourcing"
+    body: "Hunter crawls the public web and shows where it found each
+      address, or says it is a pattern guess. Addresses with no remaining
+      public source are dropped after six months."
+  - title: "Fair billing"
+    body: "Misses are free, repeating a search in the same billing period is
+      free, and verifying an address costs half a credit."
+cons:
+  - title: "Emails only"
+    body: "Hunter sells no phone numbers. For mobiles you need a second
+      provider."
+  - title: "Public web data has limits"
+    body: "An address that never appears on a website can only be guessed
+      from the company's pattern. Hunter labels those guesses, but they are
+      guesses."
+  - title: "Credits don't roll over"
+    body: "Monthly credits reset each month. Yearly plans grant the year's
+      credits up front instead."
+pricing:
+  asOf: 2026-10-06
+  source: https://hunter.io/pricing
+  startingAt: 34
+  startingAtNote: "for Starter, billed annually ($49 billed monthly)"
+  freePlan: true
+  plans:
+    - name: Free
+      price: "$0"
+      includes: "50 credits a month, 1 connected email account, API and MCP
+        access."
+    - name: Starter
+      price: "$34/mo annual, $49 monthly"
+      includes: "2,000 credits a month, 3 email accounts, unlimited users."
+    - name: Growth
+      price: "$104/mo annual, $149 monthly"
+      includes: "10,000 credits a month, 10 email accounts."
+    - name: Scale
+      price: "$209/mo annual, $299 monthly"
+      includes: "25,000 credits a month, 20 email accounts, account
+        manager."
+    - name: Enterprise
+      price: "Custom"
+      includes: "Custom credits and terms."
+  notes:
+    - "Visitors in Europe see the same figures in euros."
+    - "One credit buys one email found through Domain Search or Email
+      Finder. Verifying an email costs half a credit."
+    - "No email found, an unknown verification result, or a repeat of the
+      same search in the same period costs nothing."
+    - "Every plan includes unlimited users, the API, the MCP server, and the
+      browser extensions."
+facts:
+  - label: Founded
+    value: "April 2015 by Antoine Finkelstein and François Grante"
+    source: https://hunter.io/about
+  - label: CEO
+    value: "Matthew Tharp"
+    source: https://hunter.io/about
+  - label: Company
+    value: "Hunter Web Services, Inc., fully remote"
+    source: https://hunter.io/terms-of-service
+  - label: Users
+    value: "7M+ accounts, according to Hunter"
+    source: https://hunter.io/about
+  - label: Data
+    value: "150M professional emails indexed from the public web"
+    source: https://hunter.io/our-data
+  - label: API
+    value: "15 requests a second and 500 a minute for search; every plan"
+    source: https://hunter.io/api-documentation/v2
+  - label: MCP server
+    value: "mcp.hunter.io, on every plan including Free"
+    source: https://hunter.io/mcp
+  - label: GDPR
+    value: "EU and UK representatives named in its privacy policy"
+    source: https://hunter.io/privacy-policy
+benchmark:
+  period: "July 2026"
+  rows:
+    - test: "Name and domain to work email"
+      dataset: signups
+      run: 20260731T122257Z-f809
+      n: 100
+      coverage: 77
+      agreement: 95
+      latency: "1.5 s"
+  notes:
+    - "Name and domain are derived from each signup email, so this test
+      measures finding a person's address format, not finding the company."
+    - "In a September repeat on the same 100 signups (20260907T143742Z-3e4b)
+      with Wiza added, Hunter again found 77% and Wiza 73%."
+    - "We left out our LinkedIn URL to email test for Hunter. The result
+      points to a bug in our own integration, which passes a URL where Hunter
+      expects a handle."
+  agreement:
+    test: "Name and domain to work email"
+    run: 20260731T122257Z-f809
+    unit: "work email"
+    pairs:
+      - provider: Prospeo
+        tier: Low-cost
+        compared: 26
+        agreed: 25
+      - provider: Amplemarket
+        tier: Premium
+        compared: 26
+        agreed: 24
+  latency:
+    test: "Name and domain to work email"
+    run: 20260731T122257Z-f809
+    seconds: 1.5
+    others:
+      - provider: LeadMagic
+        tier: Low-cost
+        seconds: 4.8
+      - provider: Amplemarket
+        tier: Premium
+        seconds: 0.6
+alternatives:
+  - name: pipe0
+    href: /enrichment-api
+    why: "You want Hunter's lookups inside a waterfall that also finds
+      phones and starts from LinkedIn profiles, billed per result."
+  - name: LeadMagic
+    href: /reviews/leadmagic
+    why: "You want emails and mobile numbers from one cheap API."
+  - name: Surfe
+    href: /reviews/surfe
+    why: "You start from LinkedIn and need mobile numbers at high coverage."
+  - name: Apollo
+    href: /reviews/apollo
+    why: "You want a contact database with sequences and a dialer."
+authors:
+  - name: Florian
+    title: Founder
+date: 2026-10-06
+faq:
+  - q: "Is Hunter accurate?"
+    a: "In our benchmark it was the best at finding a work email from a name
+      and company domain: 77% of 100 real signups, and its addresses matched
+      other providers 95% of the time. Hunter also labels each address with
+      its public sources or as a pattern guess."
+  - q: "How much does Hunter cost?"
+    a: "Hunter has a free plan with 50 credits a month. Starter costs $34 a
+      month billed annually or $49 monthly for 2,000 credits, Growth $104 or
+      $149, and Scale $209 or $299; Europe sees the same figures in euros.
+      Every plan has unlimited users."
+  - q: "Does Hunter find phone numbers?"
+    a: "No. Hunter finds and verifies email addresses only. For phone
+      numbers you need another provider or a waterfall."
+  - q: "Does Hunter have an API and an MCP server?"
+    a: "Yes, both on every plan including Free. The API allows 15 requests a
+      second for searches. The MCP server at mcp.hunter.io works with
+      Claude, ChatGPT, Cursor, and other clients."
+  - q: "Where does Hunter get its data?"
+    a: "Hunter crawls the public web, about 30 million pages a day, and
+      indexes addresses that appear on websites. Addresses with no public
+      source left are removed after six months, and people can claim and
+      delete their own address."
+---
+
+{/*
+FACT BASE (checked 2026-10-06 on primary sources unless marked):
+- Pricing (hunter.io/pricing, fetched in EUR; USD figures identical per
+  third parties, secondhand): Free 0, 50 credits; Starter 49 / 34 yearly,
+  2,000/mo; Growth 149 / 104, 10,000; Scale 299 / 209, 25,000; Enterprise
+  custom. One pool; 1 credit per email found; 0.5 per verification; misses,
+  unknown verifications, and repeats in the period free. No rollover
+  (yearly: upfront). Unlimited users; API, MCP, extension on all plans.
+- API (api-documentation/v2): search 15/s, 500/min; verifier 10/s,
+  300/min. Confidence score 0-100 and sources on Email Finder.
+- MCP (hunter.io/mcp): mcp.hunter.io/mcp, API key or OAuth, all plans.
+- Data (hunter.io/our-data): 30M pages crawled daily, 150M professional
+  emails indexed, public web only, 6-month removal without source.
+- Company (about, press, ToS): founded April 2015 by Antoine Finkelstein and
+  François Grante; CEO Matthew Tharp; Hunter Web Services, Inc., Delaware;
+  remote. 7M+ accounts. Bootstrapped: secondhand, not used.
+- Benchmark: work-email-from-name f809, signups n=100: hunter 77%, agree
+  0.95, p50 1.5 s; leadmagic 50, amplemarket 27, prospeo 27, mixrank 0.
+  Pairs: prospeo 25/26, amplemarket 24/26, leadmagic 45/47. Repeat 3e4b
+  n=100: hunter 77%, wiza 73%, agree 0.89. LinkedIn-to-work-email 9ef2
+  19.2% left out: evidence.md flags a likely pipe0 integration bug (URL vs
+  handle).
+- pipe0 relationship: Hunter is in person:workemail:waterfall@1 (name +
+  domain) defaults (leadmagic > wiza > prospeo > amplemarket > hunter).
+- Latency chart: uncached p50 in run f809 from bench.db (hunter 1.5 s,
+  leadmagic 4.8 s, amplemarket 0.6 s, prospeo 0.1 s); all 100 rows
+  uncached.
+*/}
+
+## What is Hunter?
+
+Hunter has been finding email addresses since 2015, when Antoine Finkelstein
+and François Grante built a tool that answers one question: what is the
+email address of this person at this company? Type a domain and Hunter lists
+the people it knows there with their addresses. Type a name and a domain and
+it returns the most likely address, a confidence score, and the web pages
+where it found it.
+
+Around that it has added a verifier, a company search, cold email sequences,
+a browser extension, a Google Sheets add-on, an API, and an MCP server. More
+than seven million accounts have signed up, and every plan, including the
+free one, comes with unlimited users.
+
+## Why it wins on name and domain
+
+Most providers start from a LinkedIn profile. Hunter starts from the
+company's website, and that is exactly what a name-and-domain lookup needs.
+It crawls about 30 million pages a day and indexes the addresses it finds,
+so it knows each company's email pattern from real examples, not from
+assumptions.
+
+In our benchmark, we gave five providers the names and company domains of
+100 real pipe0 signups. Hunter found a work email for 77 of them. The next
+best found 50. When we repeated the test in September with Wiza added,
+Hunter found 77% again and Wiza 73%. Its answers also held up: when Hunter
+and another provider both found an address, they matched 95% of the time.
+
+Hunter is honest about where an address comes from. Each result shows its
+public sources, or says it was derived from the company's pattern. Addresses
+that no longer appear anywhere are removed after six months.
+
+## What it costs
+
+The free plan gives 50 credits a month. Starter costs $34 a month billed
+annually for 2,000 credits, which is under 2 cents per email found, and a
+lookup that finds nothing is free. Repeating a search in the same billing
+period costs nothing either, and verification is half a credit. Visitors in
+Europe see the same figures in euros.
+
+Monthly credits don't roll over. On yearly plans, you get the year's credits
+up front, which helps teams whose volume comes in bursts.
+
+## Hunter for agents
+
+Hunter's API and MCP server are available on every plan, the free one
+included. The API allows 15 requests a second for searches, and the MCP
+server at `mcp.hunter.io` works with Claude, ChatGPT, Cursor, and others,
+with OAuth where the client supports it. Every email comes back with a
+confidence score, which is what an agent needs to decide whether to use it.
+
+## Hunter and pipe0
+
+We buy data from Hunter. It is part of pipe0's name-and-domain work email
+waterfall, and its benchmark result is why it stays there. Its strength is
+specific: give it a name and a domain and it does better than anyone else
+we have tested. Starting from a LinkedIn profile, and for phone numbers,
+other providers take over.
+
+## Who should buy Hunter
+
+Buy Hunter if you know who you want to reach and where they work, and you
+need their work email. The free plan is enough to judge it, and the paid
+plans are cheap per address.
+
+Look elsewhere if you need mobile numbers or start from LinkedIn profiles.
+[LeadMagic](/reviews/leadmagic) covers emails and phones from one API, and
+[Surfe](/reviews/surfe) found the most mobile numbers in our tests.

@@ -14,7 +14,7 @@ verdict: "The best company and people data API we have used for agents:
 relationship: supplier
 scores:
   easeOfUse:
-    score: 3.5
+    score: 4.1
     why: "An API, not an app. Through its MCP server, though, anyone with
       Claude or ChatGPT can query it in plain language in minutes."
   dataQuality:
@@ -23,7 +23,7 @@ scores:
       stack) with live lookups on request, and 78% mobile coverage in our
       benchmark."
   pricingValue:
-    score: 3.5
+    score: 4
     why: "Searches cost 0.03 credits a result and misses are cheap, but plan
       prices aren't published and contact data needs an Enterprise plan."
   agentAccess:
@@ -138,6 +138,16 @@ benchmark:
       other two."
     - "This benchmark measures contact data only. Crustdata's company and
       people data, which is what most teams buy it for, is not part of it."
+  latency:
+    test: "LinkedIn URL to mobile"
+    run: 20260804T202803Z-237d
+    seconds: 0.9
+    others:
+      - provider: Surfe
+        seconds: 4.4
+      - provider: Amplemarket
+        tier: Premium
+        seconds: 18.6
 alternatives:
   - name: pipe0
     href: /enrichment-api
@@ -219,6 +229,9 @@ FACT BASE (checked 2026-10-06 on primary sources unless marked):
   person:mobile:profileurl and person:workemail:profileurl waterfalls;
   people-profiles-crustdata-3 and companies-profiles-crustdata-3 searches;
   jobs-crustdata-1; person-posts-crustdata-1; company identity and match.
+- Latency chart: p50 per provider for run 237d from evidence.md's
+  phone table (Surfe 4.4 s, Amplemarket 18.6 s, Crustdata 0.9 s, Wiza
+  3.0 s); the stored run was served from cache.
 */}
 
 ## What is Crustdata?

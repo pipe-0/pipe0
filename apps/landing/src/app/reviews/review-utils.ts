@@ -128,7 +128,7 @@ export function benchmarkCaveats(
       : []),
     ...(benchmark.rows.some((r) => r.dataset === "signups")
       ? [
-          "The signup set is real pipe0 signup emails with no vendor involved. Name and domain are derived from the email, so those tests measure finding the address format, not finding the company.",
+          "The signup set is real pipe0 signup emails with no vendor involved in choosing them, a harder and more realistic population than the profile set.",
         ]
       : []),
     ...(hasAgreement

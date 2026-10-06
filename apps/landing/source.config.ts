@@ -256,6 +256,7 @@ export const reviews = defineCollections({
         "Enrichment platform",
         "Sales database",
         "Waterfall enrichment",
+        "Contact finder",
         "Sales engagement",
         "Agent data tools",
       ]),
@@ -346,6 +347,54 @@ export const reviews = defineCollections({
         ),
         /** Run-specific caveats, on top of the standard ones. */
         notes: z.array(z.string()).optional(),
+        /**
+         * Head-to-head agreement with two or three named providers on one
+         * test, drawn as tiles. Copy `compared` and `agreed` from the run
+         * report's `agreement.perPair` entry for the pair.
+         */
+        agreement: z
+          .object({
+            /** Must match a row's `test`. */
+            test: z.string(),
+            run: z.string(),
+            /** What both returned, singular, e.g. "mobile number". */
+            unit: z.string(),
+            pairs: z
+              .array(
+                z.object({
+                  provider: z.string(),
+                  tier: z.enum(["Low-cost", "Premium"]),
+                  compared: z.number().int().positive(),
+                  agreed: z.number().int().nonnegative(),
+                }),
+              )
+              .min(1)
+              .max(3),
+          })
+          .optional(),
+        /**
+         * Median response time against two or three named providers on one
+         * test, drawn as bars. Only uncached calls from the same run count.
+         */
+        latency: z
+          .object({
+            /** Must match a row's `test`. */
+            test: z.string(),
+            run: z.string(),
+            /** The reviewed tool's median, in seconds. */
+            seconds: z.number().positive(),
+            others: z
+              .array(
+                z.object({
+                  provider: z.string(),
+                  tier: z.enum(["Low-cost", "Premium"]).optional(),
+                  seconds: z.number().positive(),
+                }),
+              )
+              .min(1)
+              .max(3),
+          })
+          .optional(),
       })
       .optional(),
     authors: z.array(z.object({ name: z.string(), title: z.string() })),

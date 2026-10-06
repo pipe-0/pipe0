@@ -1,0 +1,326 @@
+---
+title: "Fiber AI review (2026): the best reverse email lookup we tested"
+description: "Fiber AI is a people and company data API built for agents,
+  with four MCP servers and a per-call price on every response. In our
+  benchmark it led on email to LinkedIn and on work email."
+tool:
+  name: Fiber AI
+  url: https://www.fiber.ai
+  logo: /media/reviews/logos/fiber.png
+  category: Agent data tools
+verdict: "A fast-moving data API for agents that led two of our four contact
+  tests, with cheap per-lookup prices and some of the best agent tooling in
+  the category. The $250 entry plan and slow phone reveals hold it back."
+relationship: neutral
+disclosure: "pipe0 doesn't buy data from Fiber AI today. We benchmarked it as
+  a candidate for our waterfalls, and the scores come from that benchmark."
+scores:
+  easeOfUse:
+    score: 3.5
+    why: "An API first, with a dashboard for search and exports. Through its
+      MCP servers, anyone in Claude or ChatGPT can query it in minutes."
+  dataQuality:
+    score: 4.5
+    why: "First on email to LinkedIn by a wide margin and first on work email,
+      within a point of the leaders on personal email, mid-pack on mobiles."
+  pricingValue:
+    score: 4
+    why: "A credit is 2 cents, so a work email costs 4 cents and a phone 6,
+      and misses are free. The cheapest plan is $250 a month with no free
+      tier."
+  agentAccess:
+    score: 4.5
+    why: "Four MCP servers, an OpenAPI spec, per-operation docs written for
+      agents, SDKs, webhooks, and a price on every response."
+bestFor:
+  - "Teams building agents or products on people and company data"
+  - "Turning a list of email addresses into LinkedIn profiles"
+  - "Developers who want to see what every call cost"
+skipIf:
+  - "You want a free plan to start"
+  - "Phone numbers are your main need"
+  - "You need a published security certification before you buy"
+pros:
+  - title: "The best reverse email lookup we measured"
+    body: "From an email address, Fiber found the person's LinkedIn profile
+      for 38% of 150 signups. The next provider in that run found 25%, and
+      Fiber's answers matched the others 92% of the time."
+  - title: "Strong on email"
+    body: "It found a work email for 76% of 50 profiles, the highest in that
+      run, and a personal email for 51% of 150, within a point of the best."
+  - title: "Cheap per lookup"
+    body: "A credit costs 2 cents on a subscription. A work or personal email
+      is 2 credits, a phone 3, and a reveal that finds nothing costs nothing."
+  - title: "Agent tooling done properly"
+    body: "Four MCP servers for different clients and auth needs, docs for
+      every operation as markdown, an OpenAPI spec, TypeScript and Python
+      SDKs, and webhooks for long jobs."
+cons:
+  - title: "No free plan"
+    body: "Plans start at $250 a month billed annually. Trials give 500
+      credits with a card, or 100 through the API without one."
+  - title: "Slow phone reveals"
+    body: "Phone and personal email reveals took a median of 9.7 and 3.1
+      seconds in our test, and Fiber recommends a two-minute timeout."
+  - title: "Premium phone added nothing"
+    body: "On the same 50 profiles, the 5-credit premium phone product found
+      64% of mobile numbers against 66% for the 3-credit standard reveal."
+  - title: "No public compliance claims"
+    body: "We found no SOC 2, ISO 27001, or GDPR statement on Fiber's site,
+      docs, or privacy policy. Ask before you send it personal data."
+pricing:
+  asOf: 2026-10-06
+  source: https://www.fiber.ai/pricing
+  startingAt: 250
+  startingAtNote: "for Prospector, billed annually ($300 billed monthly)"
+  freePlan: false
+  plans:
+    - name: Prospector
+      price: "$250/mo annual, $300 monthly"
+      includes: "15,000 credits a month."
+    - name: Growth
+      price: "$750/mo annual, $900 monthly"
+      includes: "50,000 credits a month, twice the rate limits, Slack
+        support."
+    - name: Enterprise
+      price: "$2,000/mo annual, $2,400 monthly"
+      includes: "150,000 credits a month, custom rate limits and endpoints."
+  notes:
+    - "A credit is 2 cents on a subscription and 3 cents as a pay-as-you-go
+      top-up."
+    - "A work or personal email costs 2 credits, a phone number 3, all
+      contact details 5, premium phone 5, and a reverse email lookup 2 (1 on
+      the lite endpoint)."
+    - "Reveals that find nothing and reverse lookups without a match are not
+      charged. A live LinkedIn fetch costs 2 credits even when the profile
+      doesn't exist."
+    - "Every response reports what the call cost, and the balance endpoint
+      returns your account's own price list."
+facts:
+  - label: Founders
+    value: "Adi Agashe (CEO) and Neel Mehta (CTO)"
+    source: https://www.fiber.ai/about
+  - label: Founded
+    value: "2023, Y Combinator Summer 2023"
+    source: https://www.ycombinator.com/companies/fiber-ai
+  - label: Headquarters
+    value: "New York"
+    source: https://www.ycombinator.com/companies/fiber-ai
+  - label: Dataset
+    value: "850M+ people, 40M+ companies, and 30M+ jobs, according to Fiber"
+    source: https://www.fiber.ai/data-api
+  - label: API
+    value: "OpenAPI spec, TypeScript and Python SDKs, webhooks for async jobs"
+    source: https://api.fiber.ai/docs
+  - label: Rate limits
+    value: "3,500 a minute for reverse email lookup, 200 for contact reveals"
+    source: https://docs.fiber.ai
+  - label: MCP servers
+    value: "Four at mcp.fiber.ai, with OAuth or an API key; Claude, ChatGPT,
+      Cursor, Codex, and VS Code"
+    source: https://docs.fiber.ai/build/mcp
+benchmark:
+  period: "August 2026"
+  rows:
+    - test: "Email to LinkedIn URL"
+      dataset: signups
+      run: 20260804T165645Z-0041
+      n: 150
+      coverage: 38
+      agreement: 92
+      latency: "7.3 s"
+    - test: "LinkedIn URL to work email"
+      run: 20260814T124831Z-67f9
+      n: 50
+      coverage: 76
+      agreement: 59
+      latency: "1.6 s"
+    - test: "LinkedIn URL to personal email"
+      run: 20260814T102434Z-7165
+      n: 150
+      coverage: 51.3
+      agreement: 80
+      latency: "3.1 s"
+    - test: "LinkedIn URL to mobile"
+      run: 20260804T202803Z-237d
+      n: 150
+      coverage: 64.7
+      agreement: 69
+      latency: "9.7 s"
+  notes:
+    - "The next best provider in the email to LinkedIn run found 24.7%. Surfe
+      and Amplemarket were not part of that run."
+    - "The work email test ran on 50 profiles, fewer than the others."
+    - "Mobile timing comes from an uncached 150-profile run on the same day;
+      the coverage run was served from cache."
+  agreement:
+    test: "Email to LinkedIn URL"
+    run: 20260804T165645Z-0041
+    unit: "LinkedIn profile"
+    pairs:
+      - provider: LeadMagic
+        tier: Low-cost
+        compared: 20
+        agreed: 19
+      - provider: Crustdata
+        tier: Premium
+        compared: 15
+        agreed: 14
+alternatives:
+  - name: pipe0
+    href: /enrichment-api
+    why: "You want contact data from a waterfall across 50+ providers, with
+      no monthly minimum beyond a $49 plan."
+  - name: Crustdata
+    href: /reviews/crustdata
+    why: "You need deep company data, such as headcount, hiring, and web
+      traffic, with live lookups and watchers."
+  - name: Surfe
+    href: /reviews/surfe
+    why: "Mobile numbers are the priority. Surfe found the most in our
+      benchmark."
+  - name: Hunter
+    href: /reviews/hunter
+    why: "You only need work emails from names and domains, on a free or
+      cheap plan."
+authors:
+  - name: Florian
+    title: Founder
+date: 2026-10-06
+faq:
+  - q: "What is Fiber AI?"
+    a: "Fiber AI is a people and company data API for AI agents and
+      products. It covers search, enrichment, contact details, live LinkedIn
+      fetches, job changes, and company signals, with MCP servers for Claude,
+      ChatGPT, Cursor, and other clients."
+  - q: "How much does Fiber AI cost?"
+    a: "Plans start at $250 a month billed annually for 15,000 credits, or
+      $300 monthly. A credit is 2 cents. A work email costs 2 credits, a phone
+      number 3, and lookups that find nothing are free. There is no free plan,
+      only a trial."
+  - q: "How good is Fiber's data?"
+    a: "In our benchmark, Fiber found the LinkedIn profile behind 38% of 150
+      email addresses, far ahead of every other provider in that run, and a
+      work email for 76% of 50 profiles. Its mobile coverage was mid-pack at
+      65%."
+  - q: "Does Fiber AI have an MCP server?"
+    a: "Yes, four, at mcp.fiber.ai: a core server that can call any
+      operation, a server for common operations with an API key, a full
+      server with OAuth, and a lite server. Setup guides cover Claude,
+      ChatGPT, Cursor, Codex, and VS Code."
+  - q: "Fiber AI or Crustdata: which should I choose?"
+    a: "Choose Fiber for contact data and reverse email lookups, where it
+      led our benchmark. Choose Crustdata for deep company data such as
+      headcount trends, hiring, and web traffic, and for watchers that track
+      changes."
+---
+
+{/*
+FACT BASE (checked 2026-10-06 on primary sources unless marked):
+- Pricing (fiber.ai/pricing.md): Prospector $300 monthly / $250 annual,
+  15,000 credits; Growth $900 / $750, 50,000, 2x rate limits, Slack;
+  Enterprise $2,400 / $2,000, 150,000, custom. 1 credit = $0.02 on a
+  subscription, $0.03 PAYG top-up. No free tier. Trials: dashboard 500
+  credits with card; API quickstart 100 credits without card
+  (docs.fiber.ai/account). Bulk search and datasets sold separately.
+- Credits (api.fiber.ai/ai-docs + openapi x-credit-cost): Quick Reveal
+  work 2, personal 2, phone 3, all contacts 5; premium phone 5; reverse
+  email 2, lite 1; live fetch 2 even on a miss. Misses not charged on
+  reveals ("partial reveals only bill for delivered data") and reverse
+  lookups. Premium-phone free miss observed in our benchmark (refund),
+  not documented publicly.
+- Rate limits: reverse email 3,500/min, Quick Reveal 200/min, search 180,
+  premium phone 120 (docs).
+- MCP: mcp.fiber.ai/mcp (core), /mcp/v2 (API key), /mcp/v3 (OAuth), /mcp/lite
+  (docs.fiber.ai/build/mcp). Official MCP registry entry ai.fiber/mcp.
+- Company: Adi Agashe CEO, Neel Mehta CTO (fiber.ai/about); 2023, YC S23,
+  NYC (YC page). Funding $4.3M seed: secondhand only, not used. No
+  compliance claims found anywhere public.
+- Dataset 850M+ people, 40M+ companies, 30M+ jobs (fiber.ai/data-api).
+- Benchmark (run reports, perProvider / perPair agreement):
+  email to LinkedIn 0041 signups n=150: fiber 38.0% agree 0.92, p50 7.3 s
+  uncached; next mixrank 24.7%; Surfe and Amplemarket not in run. Later
+  runs (5366, cde5) fiber auth_error on every call: key issue, not used.
+  Pairs: leadmagic 19/20, crustdata 14/15, wiza 20/20, mixrank 33/37.
+  Work email 67f9 n=50: fiber 76% (1st of 10), agree 0.59, p50 1.6 s.
+  Personal 7165 n=150: 51.3% vs wiza/forager 52%, agree 0.80, p50 3.1 s.
+  Mobile 237d n=150: 64.7%, agree 0.69; p50 9.7 s from uncached run
+  af0c. Premium vs standard, ccea n=50: 64% vs 66%.
+- Fiber is not wired into pipe0 core (no client in apps/core/src/clients).
+*/}
+
+## What is Fiber AI?
+
+Fiber AI is a data API for people and companies, built in New York by Adi
+Agashe and Neel Mehta after Y Combinator's summer 2023 batch. It does the
+things a GTM agent needs from one key: search people and companies, enrich a
+profile, reveal emails and phone numbers, fetch a LinkedIn profile live,
+track job changes, and watch companies for signals. It says it covers 850
+million people and 40 million companies.
+
+What sets it apart is how much of it is written for software. Every
+operation has its own markdown page for agents, the OpenAPI spec is public,
+and every response says what the call cost.
+
+## Where its data is strongest
+
+We ran Fiber through the same tests as every other provider, and its
+results are uneven in an interesting way: excellent on email, average on
+phones.
+
+The standout is the reverse lookup. Given 150 email addresses from real
+pipe0 signups, Fiber found the person's LinkedIn profile for 38% of them.
+The next best provider in that run found 25%. That gap is large enough to
+survive the small sample, and Fiber's answers matched the other providers
+92% of the time when both found someone.
+
+On work email from a LinkedIn profile, Fiber found 76% of 50, the highest
+of the ten providers in that run. On personal email it found 51% of 150,
+within a point of the two leaders. Mobile numbers are where it falls back
+to the middle: 65% of 150 profiles, well behind the 96% [Surfe](/reviews/surfe)
+reached on the same records.
+
+Fiber also sells a premium phone product at 5 credits instead of 3. On the
+same 50 profiles, it found 64% of mobile numbers against 66% for the
+standard reveal. Save the credits.
+
+## What it costs
+
+A credit is 2 cents on a subscription. A work or personal email is 2
+credits, so 4 cents; a phone number is 3, so 6 cents; and a reveal that
+finds nothing is free. Those are low prices for the coverage. Embedded
+waterfalls in other tools often charge 8 to 30 cents per email.
+
+The catch is the entry point. The smallest plan is $250 a month billed
+annually for 15,000 credits, and there is no free plan, only a trial of 500
+credits with a card or 100 through the API without one. A team that needs a
+few hundred lookups a month will pay for capacity it doesn't use.
+
+## Built for agents
+
+Fiber runs four MCP servers, each for a different situation: a core server
+that discovers and calls any of its 250-odd operations, one with direct
+tools for common jobs, one with OAuth for Claude and ChatGPT, and a lite
+version. It is listed in the official MCP registry and ships a Claude Code
+plugin.
+
+Rate limits are generous where it matters: 3,500 reverse lookups a minute
+and 200 contact reveals. Long jobs run asynchronously with signed webhooks.
+The one thing to plan around is speed on phones, where a reveal can take
+ten seconds or more, and Fiber itself recommends a two-minute timeout.
+
+## Fiber AI and pipe0
+
+pipe0 doesn't use Fiber today. We added it to our benchmark as a candidate
+for our waterfalls, and the numbers above are from that work. Its reverse
+lookup is the strongest result we have for that path.
+
+## Who should buy Fiber AI
+
+Buy Fiber if you are building an agent or a product that needs people data
+and contact details, especially if you start from email addresses. The
+price per lookup is low and the tooling is among the best we have seen.
+
+Look elsewhere if you need a free plan, if your volume is small, or if phone
+numbers are the main thing you buy. For mobiles, Surfe found the most in our
+tests; for company signals, [Crustdata](/reviews/crustdata) goes deeper.

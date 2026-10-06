@@ -156,6 +156,30 @@ benchmark:
       coverage: 25
       agreement: 87
       latency: "4.4 s"
+  agreement:
+    test: "LinkedIn URL to mobile"
+    run: 20260804T202803Z-237d
+    unit: "mobile number"
+    pairs:
+      - provider: Prospeo
+        tier: Low-cost
+        compared: 48
+        agreed: 47
+      - provider: Amplemarket
+        tier: Premium
+        compared: 119
+        agreed: 90
+  latency:
+    test: "LinkedIn URL to mobile"
+    run: 20260804T202803Z-237d
+    seconds: 4.4
+    others:
+      - provider: Wiza
+        tier: Low-cost
+        seconds: 3
+      - provider: Amplemarket
+        tier: Premium
+        seconds: 18.6
 alternatives:
   - name: pipe0
     href: /enrichment-api
@@ -247,7 +271,9 @@ FACT BASE (checked 2026-10-06 on primary sources unless marked):
   person:mobile:profileurl:waterfall default wiza > surfe > crustdata;
   person:workemail:profileurl:waterfall default wiza > amplemarket >
   crustdata > surfe; Surfe also in role waterfall and identity:email@2.
-  Our cost per Surfe mobile found: $0.24 (README).
+- Latency chart: p50 per provider for run 237d from evidence.md's
+  phone table (Surfe 4.4 s, Amplemarket 18.6 s, Crustdata 0.9 s, Wiza
+  3.0 s); the stored run was served from cache.
 */}
 
 ## What is Surfe?

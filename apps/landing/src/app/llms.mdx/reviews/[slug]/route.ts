@@ -103,6 +103,33 @@ export async function GET(
             (r) =>
               `| ${cell(r.test)} (${r.dataset === "signups" ? "signup emails" : "LinkedIn profiles"}) | ${r.n} | ${r.coverage}% | ${r.agreement !== undefined ? `${r.agreement}%` : "–"} | ${r.latency ?? "–"} | ${r.run} |`,
           ),
+          ...(d.benchmark.latency
+            ? [
+                "",
+                `### How fast ${tool} answers`,
+                "",
+                `${d.benchmark.latency.test}, median response time per lookup (run ${d.benchmark.latency.run}).`,
+                "",
+                `- ${tool}: ${d.benchmark.latency.seconds.toFixed(1)} s`,
+                ...d.benchmark.latency.others.map(
+                  (o) =>
+                    `- ${o.provider}${o.tier ? ` (${o.tier.toLowerCase()})` : ""}: ${o.seconds.toFixed(1)} s`,
+                ),
+              ]
+            : []),
+          ...(d.benchmark.agreement
+            ? [
+                "",
+                `### How often ${tool} agrees with other providers`,
+                "",
+                `${d.benchmark.agreement.test} (run ${d.benchmark.agreement.run}).`,
+                "",
+                ...d.benchmark.agreement.pairs.map(
+                  (p) =>
+                    `- ${p.provider} (${p.tier.toLowerCase()}): ${tool} and ${p.provider} returned the same ${d.benchmark!.agreement!.unit} for ${p.agreed} of ${p.compared} people (${Math.round((p.agreed / p.compared) * 100)}%).`,
+                ),
+              ]
+            : []),
           "",
           ...benchmarkCaveats(d.benchmark).map(
             (n) => `- ${n}`,

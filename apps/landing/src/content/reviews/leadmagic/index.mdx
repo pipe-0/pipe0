@@ -1,0 +1,282 @@
+---
+title: "LeadMagic review (2026): the cheap, accurate first lookup"
+description: "LeadMagic sells work emails, mobile numbers, and B2B profile
+  data through one API at under 2 cents a credit. It answers less often than
+  premium sources, but when it answers, it is usually right."
+tool:
+  name: LeadMagic
+  url: https://leadmagic.io
+  logo: /media/reviews/logos/leadmagic.png
+  category: Contact finder
+verdict: "One of the cheapest contact data APIs we use, with answers that match
+  premium providers when it finds them and API, CLI, and MCP on every plan.
+  Coverage is lower than premium sources, so it works best as a first step."
+relationship: supplier
+scores:
+  easeOfUse:
+    score: 4
+    why: "A web app, a CLI, and a native Clay integration. Most teams call it
+      from another tool rather than use it on its own."
+  dataQuality:
+    score: 3.5
+    why: "Its answers agree with other providers 95% of the time on name and
+      domain lookups. It finds fewer people than premium sources."
+  pricingValue:
+    score: 4.5
+    why: "Credits from 2 cents down to under 1 cent, an email for 1 credit,
+      misses free, and monthly credits that roll over up to twice."
+  agentAccess:
+    score: 3.5
+    why: "API, CLI, and an MCP server with 130+ tools on every plan. The MCP
+      server takes OAuth only, and most endpoints stop at 300 a minute."
+bestFor:
+  - "The first, cheapest step in an email or phone waterfall"
+  - "High-volume email finding on a budget"
+  - "Clay users who want a cheaper native provider"
+skipIf:
+  - "You need the highest possible coverage from a single provider"
+  - "You want a free trial before you pay"
+  - "You need a prospecting app with sequences"
+pros:
+  - title: "Low prices at every volume"
+    body: "Credits cost from 2 cents down to 0.7 cents depending on the plan.
+      A work email is 1 credit, a mobile number 5, and an empty result is
+      free."
+  - title: "Right when it answers"
+    body: "On name and domain lookups, LeadMagic's addresses matched
+      Amplemarket on 21 of 22 people and Prospeo on 20 of 22."
+  - title: "One API for many jobs"
+    body: "Emails, personal emails, mobiles, profile enrichment, job
+      changes, company funding, technographics, and ads search, all on one
+      key."
+  - title: "Agent-ready on every plan"
+    body: "The MCP server works in Claude, ChatGPT, Cursor, VS Code, and a
+      dozen other clients, with OAuth and more than 130 tools."
+cons:
+  - title: "Lower coverage than premium sources"
+    body: "From LinkedIn profiles in particular, LeadMagic finds fewer emails
+      and phone numbers than premium providers. Pair it with one."
+  - title: "No free trial"
+    body: "New accounts pick a paid plan at signup. The smallest is $83 a
+      month billed annually."
+  - title: "Some lookups bill on no news"
+    body: "The job change detector costs 3 credits per request, even when
+      the person hasn't changed jobs."
+pricing:
+  asOf: 2026-10-06
+  source: https://leadmagic.io/pricing
+  startingAt: 83
+  startingAtNote: "for Essential, billed annually ($99 billed monthly)"
+  freePlan: false
+  plans:
+    - name: Essential
+      price: "$83/mo annual, $99 monthly"
+      includes: "5,000 credits a month, 3 seats."
+    - name: Growth
+      price: "$208/mo annual, $249 monthly"
+      includes: "20,000 credits a month, 5 seats."
+    - name: Professional
+      price: "$416/mo annual, $499 monthly"
+      includes: "50,000 credits a month, 10 seats, search API without
+        credits."
+    - name: Ultimate
+      price: "$708/mo annual, $849 monthly"
+      includes: "100,000 credits a month, 20 seats, search API without
+        credits."
+    - name: Enterprise
+      price: "From $2,490 a quarter"
+      includes: "Custom credits and seats."
+  notes:
+    - "A credit costs from about 2 cents on Essential to 0.7 cents on
+      Ultimate."
+    - "A work email costs 1 credit, a personal email 2, a mobile number 5,
+      an email from a LinkedIn profile 5, and validation a quarter credit."
+    - "Empty lookups are free. The job change detector is the exception, at
+      3 credits per request."
+    - "Monthly plans bank up to twice the monthly credits. Annual plans don't
+      roll over."
+facts:
+  - label: Founder
+    value: "Jesse Ouellette; bootstrapped, according to LeadMagic"
+    source: https://leadmagic.io/company/story
+  - label: Launched
+    value: "As an API in February 2024"
+    source: https://leadmagic.io/company/story
+  - label: Company
+    value: "Lead Magic Corporation, Needham, Massachusetts"
+    source: https://leadmagic.io/terms
+  - label: Customers
+    value: "About 2,000 active subscribers, according to LeadMagic"
+    source: https://leadmagic.io/company/story
+  - label: Rate limits
+    value: "600 a minute for email finding and validation, 300 for most
+      other endpoints"
+    source: https://leadmagic.io/docs/v1/introduction
+  - label: MCP server
+    value: "mcp.leadmagic.io, OAuth, 130+ tools, every plan"
+    source: https://leadmagic.io/solutions/mcp
+  - label: Integrations
+    value: "Native provider in Clay; also Instantly, Smartlead, HubSpot,
+      Salesforce, Zapier, Make, and n8n"
+    source: https://leadmagic.io
+benchmark:
+  period: "July 2026"
+  rows:
+    - test: "Name and domain to work email"
+      dataset: signups
+      run: 20260731T122257Z-f809
+      n: 100
+      coverage: 50
+      agreement: 95
+      latency: "4.8 s"
+  notes:
+    - "Name and domain are derived from each signup email, so this test
+      measures finding a person's address format, not finding the company."
+  agreement:
+    test: "Name and domain to work email"
+    run: 20260731T122257Z-f809
+    unit: "work email"
+    pairs:
+      - provider: Prospeo
+        tier: Low-cost
+        compared: 22
+        agreed: 20
+      - provider: Amplemarket
+        tier: Premium
+        compared: 22
+        agreed: 21
+alternatives:
+  - name: pipe0
+    href: /enrichment-api
+    why: "You want LeadMagic as the cheap first step of a waterfall, with
+      premium providers behind it for the people it misses."
+  - name: Hunter
+    href: /reviews/hunter
+    why: "You find emails from names and domains and want the highest
+      coverage on that lookup."
+  - name: Surfe
+    href: /reviews/surfe
+    why: "Mobile coverage matters more than price."
+  - name: Fiber AI
+    href: /reviews/fiber
+    why: "You start from email addresses and need LinkedIn profiles."
+authors:
+  - name: Florian
+    title: Founder
+date: 2026-10-06
+faq:
+  - q: "Is LeadMagic accurate?"
+    a: "When it finds an answer, usually yes. On name and domain lookups in
+      our benchmark, its addresses matched other providers 95% of the time.
+      It finds fewer people than premium providers, so most teams use it as
+      the first step of a waterfall."
+  - q: "How much does LeadMagic cost?"
+    a: "Plans start at $83 a month billed annually, or $99 monthly, for 5,000
+      credits. A credit costs from about 2 cents down to 0.7 cents on larger
+      plans. A work email is 1 credit and a mobile number 5. There is no free
+      trial."
+  - q: "Does LeadMagic charge for failed lookups?"
+    a: "No. Empty or failed lookups are free, and an unknown validation
+      result costs nothing. The exception is the job change detector, which
+      costs 3 credits per request whether or not the person changed jobs."
+  - q: "Does LeadMagic have an MCP server?"
+    a: "Yes, at mcp.leadmagic.io, on every plan. It signs in with OAuth,
+      exposes more than 130 tools, and works with Claude, ChatGPT, Cursor, VS
+      Code, and other clients."
+  - q: "LeadMagic or Hunter: which should I choose?"
+    a: "For finding work emails from names and domains, Hunter found more in
+      our benchmark. Choose LeadMagic if you also need mobile numbers and
+      profile data from the same API, at a lower price per credit."
+---
+
+{/*
+FACT BASE (checked 2026-10-06 on primary sources unless marked):
+- Pricing (leadmagic.io/pricing): Essential $99 / $990 yr (~$83/mo), 5k
+  credits, 3 seats; Growth $249 / $2,490 yr (~$208), 20k, 5; Professional
+  $499 / $4,990 (~$416), 50k, 10; Ultimate $849 / $8,490 (~$708), 100k,
+  20; Enterprise from $2,490/quarter. Credits $0.0198 down to $0.0071.
+  Monthly plans roll over up to 2x; annual no rollover. No free trial.
+  Search API free of credits on Professional and Ultimate.
+- Credits (leadmagic.io/docs/v1/credits): email finder 1, validation 0.25,
+  mobile 5, profile URL to email 5, personal email 2, email to profile 10,
+  job change 3 per request even with no change, role finder 2, funding 4.
+  Empty/failed lookups free; unknown validation free.
+- Rate limits (docs): email finder and validation 600/min; most 300; some
+  100. Same on all self-serve plans.
+- MCP: mcp.leadmagic.io/mcp, OAuth only, 130+ tools, 13 clients
+  (leadmagic.io/solutions/mcp, .well-known/mcp.json).
+- Company (company/story, terms): Jesse Ouellette; "Bootstrapped. No VC.";
+  API launched Feb 2024; ~2,000 active subscribers; Lead Magic
+  Corporation, Needham, MA. "97% accuracy" marketing claim: not used.
+- Benchmark: work-email-from-name f809, signups n=100: leadmagic 50%,
+  agree 0.95, p50 4.8 s (uncached). Pairs: amplemarket 21/22, prospeo
+  20/22, hunter 45/47. Shown only this test, per Florian's rule for
+  supplier reviews (2026-10-06). Left out: phone-from-linkedin 237d 14.7%
+  (agreement 0.76, highest on that test), work email from LinkedIn 9ef2
+  27.5%, email to LinkedIn 0041 15.3%, personal email 0e5f 22%.
+- pipe0 relationship: first in person:workemail:waterfall@1 (name +
+  domain), person:profileurl:email:waterfall, ads waterfalls; in role,
+  funding, mobile-from-workemail, personal-email waterfalls.
+*/}
+
+## What is LeadMagic?
+
+LeadMagic is a contact data API. Jesse Ouellette launched it in February
+2024 after years of building data workflows for clients, and runs it
+without venture money from Needham, Massachusetts. One key covers work and
+personal emails, mobile numbers, LinkedIn profile enrichment, job change
+detection, company funding, technographics, and ad library search.
+
+It has about 2,000 active subscribers, and many of them never need its web
+app: they call it from Clay, where it is a native provider, from n8n or Make,
+from their own code, or from an agent over MCP.
+
+## Where it fits
+
+LeadMagic's data has a clear shape: when it answers, it is usually right,
+and it answers less often than the premium sources. In our name and domain
+test on 100 real pipe0 signups, it found a work email for half of them, and
+those addresses matched other providers 95% of the time. Against
+Amplemarket, a premium source, it agreed on 21 of 22 people.
+
+That shape is exactly what the first slot of a waterfall needs. A waterfall
+stops at the first answer, so the first provider decides accuracy for every
+person it answers, and its price is paid on every lookup. A cheap provider
+that is right when it answers leaves only the remaining people for the
+expensive providers behind it.
+
+## What it costs
+
+LeadMagic is among the cheapest contact data we buy. Credits cost about 2
+cents on the smallest plan and 0.7 cents on the largest, a work email is 1
+credit, and an empty lookup is free. Monthly plans let unused credits pile up to
+twice the monthly amount. Professional and Ultimate also make the search API
+free of credits.
+
+There is no free trial; the smallest plan is $83 a month billed annually.
+One billing detail to watch: the job change detector costs 3 credits per
+person checked, even when nothing changed.
+
+## LeadMagic for agents
+
+Every plan includes the API, a command-line tool, and an MCP server with
+more than 130 tools, which works in Claude, ChatGPT, Cursor, VS Code, and
+about a dozen other clients over OAuth. Email finding allows 600 requests a
+minute, which is plenty for an agent and enough for most batch jobs.
+
+## LeadMagic and pipe0
+
+We buy data from LeadMagic, and it runs first in several pipe0 waterfalls,
+including name and domain to work email and email to LinkedIn profile. We
+put it there for the reasons above: low price and answers that agree with
+premium sources. The providers behind it pick up the people it doesn't
+find.
+
+## Who should buy LeadMagic
+
+Buy LeadMagic if you enrich at volume, care about cost per result, and can
+put a second provider behind it for the people it misses.
+
+Look elsewhere if you want the most coverage from a single provider. For
+work emails from names and domains, [Hunter](/reviews/hunter) found more in
+our benchmark; for mobile numbers, [Surfe](/reviews/surfe) did.

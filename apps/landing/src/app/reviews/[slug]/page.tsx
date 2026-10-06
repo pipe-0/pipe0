@@ -21,6 +21,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
+import { AgreementTiles } from "../agreement-tiles";
+import { LatencyBars } from "../latency-bars";
 import { ScoreBar, ScorePill, ToolLogo } from "../review-parts";
 import {
   benchmarkCaveats,
@@ -361,6 +363,22 @@ export default async function Review(props: {
                 </tbody>
               </table>
             </div>
+            {d.benchmark.latency && (
+              <LatencyBars
+                tool={tool}
+                test={d.benchmark.latency.test}
+                seconds={d.benchmark.latency.seconds}
+                others={d.benchmark.latency.others}
+              />
+            )}
+            {d.benchmark.agreement && (
+              <AgreementTiles
+                tool={tool}
+                test={d.benchmark.agreement.test}
+                unit={d.benchmark.agreement.unit}
+                pairs={d.benchmark.agreement.pairs}
+              />
+            )}
             <ul className="mt-5 list-disc space-y-2 pl-5 text-[14px] leading-[1.6] text-fd-muted-foreground">
               {benchmarkCaveats(d.benchmark).map((note) => (
                 <li key={note}>{note}</li>
