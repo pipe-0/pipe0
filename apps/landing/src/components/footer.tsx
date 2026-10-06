@@ -50,6 +50,7 @@ const footerColumns: FooterGroup[][] = [
         { label: "Blog", href: "/blog" },
         { label: "About", href: "/resources/legal/imprint" },
         { label: "Support", href: "/support" },
+        { label: "AI instructions", href: "/ai-instructions" },
         { label: "Contact", href: `mailto:${appInfo.emails.support}` },
       ],
     },
@@ -62,6 +63,9 @@ const footerColumns: FooterGroup[][] = [
         { label: "pipe0 vs Apollo", href: "/compare/pipe0-vs-apollo" },
         { label: "pipe0 vs ZoomInfo", href: "/compare/pipe0-vs-zoominfo" },
         { label: "pipe0 vs FullEnrich", href: "/compare/pipe0-vs-fullenrich" },
+        { label: "pipe0 vs Treg", href: "/compare/pipe0-vs-treg" },
+        { label: "pipe0 vs Deepline", href: "/compare/pipe0-vs-deepline" },
+        { label: "pipe0 vs Landbase", href: "/compare/pipe0-vs-landbase" },
         {
           label: "Best waterfall enrichment tools",
           href: "/blog/best-waterfall-enrichment-tools",

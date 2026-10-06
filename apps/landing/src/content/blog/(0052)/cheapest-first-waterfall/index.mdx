@@ -1,0 +1,148 @@
+---
+title: Why the First Provider in a Waterfall Decides Accuracy
+date: 2026-10-06
+category: Sales data
+cover: /media/blog/covers/cheapest-first-waterfall.jpg
+tags:
+    - waterfall enrichment
+    - data quality
+    - AI agents
+excerpt: "A waterfall stops at the first answer, so the first provider decides accuracy. We checked cheapest-first routing against our provider benchmark: cheap answers often disagree with premium data, and cheap providers mostly find the same people."
+tldr: "A waterfall stops at the first answer, so a cheap provider that guesses wrong hides the right answer further down the chain. In our benchmark one of the cheapest work email sources disagreed with premium data on 33 of 46 shared answers, while Prospeo disagreed on 5 of 50. Put a provider first because it is cheap and agrees with premium data, not because it is cheapest."
+faq:
+    - q: "What is a cheapest-first waterfall?"
+      a: "A waterfall that orders its data providers by price, asks the cheapest one first, and moves to the next only on a miss. Agent tool gateways such as Treg route lookups this way. It keeps the price per call low but never checks whether the cheap answer is correct."
+    - q: "Why does the first provider in a waterfall matter so much?"
+      a: "A waterfall stops at the first answer. If the first provider returns a wrong email or phone number, the providers further down are never asked, even when they have the right one. Coverage comes from the chain; accuracy comes from whoever answers first."
+    - q: "Which provider should go first in a waterfall?"
+      a: "One that is cheap and fast, agrees with premium providers when you test it on a real list, and returns nothing when it is unsure. In our work email benchmark Prospeo and Hunter fit that description. Mixrank, one of the cheapest sources we tested, did not."
+    - q: "Does adding more cheap providers to a waterfall raise coverage?"
+      a: "Barely. In our phone benchmark, Amplemarket or Crustdata also found 61 of the 62 numbers that LeadMagic, Prospeo, and Aviato found together, plus 80 numbers those three missed. Cheap providers mostly find the same people."
+draft: false
+authors:
+    - name: Florian
+      title: Founder
+---
+
+A waterfall stops at the first answer. Coverage comes from the providers
+further down the chain, but accuracy comes from whoever answers first,
+because once a provider returns something, nobody else gets asked.
+
+That makes the order of a waterfall the most important setting it has. A lot
+of tools order by price. Agent tool gateways like [Treg](https://treg.to)
+route each lookup to the cheapest provider and fall through to the next one
+on a miss. It is transparent and easy to explain, and per call it is hard to
+beat. It also never asks whether the cheap answer is right.
+
+We sell waterfalls, so read this with that in mind. Everything below comes
+from our own provider benchmark, and the method is at the end.
+
+## A wrong answer costs more than a miss
+
+[Waterfall enrichment](/blog/what-is-waterfall-enrichment) works because
+providers bill on success. A miss costs nothing. It passes the question to
+the next provider for free.
+
+A wrong answer is different. It ends the chain. The waterfall reports a
+result, your sequencer sends the email, and three weeks later it bounces,
+while the correct address was sitting two providers down the whole time.
+
+So the first provider has to do something most cheap providers don't
+advertise: return nothing when it isn't sure.
+
+## How often a cheap answer matches a premium one
+
+We ran 120 LinkedIn profiles through every work email provider in our
+benchmark. Then we looked at the rows where a provider and one of two premium
+sources, Amplemarket or Crustdata, both returned an email, and counted how
+often the two matched.
+
+![Bar chart: share of work emails that differ from Amplemarket or Crustdata. Prospeo 10% (5 of 50), Hunter 15% (3 of 20), LeadMagic 21% (6 of 29), Aviato 58% (38 of 66), Mixrank 72% (33 of 46).](/media/blog/charts/first-slot-agreement.svg)
+
+Prospeo is cheap, answers in about 180 milliseconds, and differed from the
+premium answer on 5 of 50 rows. Hunter differed on 3 of 20. Either one is a
+good first provider.
+
+Mixrank is one of the cheapest sources in the set, and it found an email for
+49% of the list. Put it first and it answers on half the rows. On the rows
+where premium data also answered, it gave a different email 72% of the time.
+
+A different email is not automatically a wrong one. Premium providers make
+mistakes, and people change jobs. But a first provider that disagrees with
+Amplemarket on most rows is a bet, and in a waterfall you place that bet on
+every row before anyone better gets a turn.
+
+## Cheap providers mostly find the same people
+
+The other half of the cheapest-first pitch is coverage: chain enough cheap
+providers and the gaps close. Our phone numbers don't support that.
+
+On 150 LinkedIn profiles, LeadMagic, Prospeo, and Aviato found 62 mobile
+numbers between them. Amplemarket or Crustdata found 61 of those same 62, and
+80 more that none of the three cheap providers had.
+
+The cheap providers also overlap with each other. Prospeo found 17 of the 22
+numbers LeadMagic found. Adding a fourth cheap provider adds a fourth price,
+not much else. Coverage comes from datasets that are actually different, which
+is why we [curate instead of chain](/blog/what-is-waterfall-enrichment).
+
+## What cheapest-first looks like on a real list
+
+Treg's phone catalog lists 16 providers, priced per number found from $0.00483
+(QuickEnrich) to $0.749 (Lusha), each at the provider's own rate with no
+markup. Four of them are in our benchmark: Aviato at $0.08, LeadMagic at
+$0.125, Wiza at $0.15, and Prospeo at $0.245.
+
+We replayed our benchmark results through those four in Treg's order,
+cheapest first, at Treg's prices.
+
+![Bar chart: mobile numbers found on 150 LinkedIn profiles. pipe0 waterfall 94%, Treg routing over 4 benchmarked providers 72%. Single providers: Amplemarket 79.3%, Crustdata 78%, Wiza 65.3%, Prospeo 32.7%, LeadMagic 14.7%, Aviato 12%.](/media/blog/charts/mobile-coverage.svg)
+
+| | Mobiles found | Cost per number found |
+| --- | --- | --- |
+| Treg routing, 4 benchmarked providers | 72% (108 of 150) | about 14¢ |
+| The same, without Wiza | 41% | about 16¢ |
+| pipe0 waterfall | 94% (141 of 150) | about 12¢ |
+
+The price per number found comes out close. The number of numbers doesn't.
+Most of the gap is Amplemarket and Crustdata, which aren't in Treg's phone
+catalog. pipe0 is the only meta provider allowed to offer Amplemarket data.
+
+Our own phone waterfall starts with LeadMagic, the cheapest provider in it.
+On phones, LeadMagic matched the premium number on 18 of the 22 rows where
+both answered. Cheap is fine in the first slot. Cheap and unchecked is the
+problem.
+
+There are limits to what this shows. Twelve of Treg's 16 phone providers
+aren't in our benchmark, and some of them might close part of the gap. The
+Treg row is a replay of logged results, not a live run through Treg. And the
+profile list was pre-filtered for people who can be resolved, so every
+absolute rate here runs higher than it would on a cold list.
+
+## How we pick the first provider
+
+1. Cheap and fast, because it answers the easy rows, and most rows are easy.
+2. Tested against premium providers on a real list, with the disagreements
+   checked by hand.
+3. Willing to return nothing. A provider that always answers is the one to
+   worry about.
+
+After that, a provider joins the chain only if it finds data nobody else in
+the chain has. We stop at four or five. If a tool advertises twenty providers
+in one waterfall, ask to see the benchmark.
+
+## How we measured
+
+- The benchmark is a harness we built to decide waterfall order. It sends
+  identical inputs to every provider and keeps every raw response.
+- Work emails: 120 LinkedIn profiles, August 2026. Phones: 150 LinkedIn
+  profiles, August 2026.
+- "Matches" means the same email address, or the same last ten digits of a
+  phone number, as Amplemarket or Crustdata on the same person.
+- Waterfall coverage is computed from each provider's results, in order, not
+  from a separate live run.
+- pipe0 costs are our catalog prices. Treg costs are Treg's list prices,
+  checked on October 6, 2026.
+
+Per call, cheapest-first wins every time. Per row that comes back right, you
+only find out on your own list, so run one.

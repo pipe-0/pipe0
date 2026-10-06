@@ -1,0 +1,109 @@
+---
+title: "Stateless or Stateful? How Treg, Deepline, Landbase, and pipe0 Give Agents GTM Data"
+date: 2026-10-06
+category: Thinking
+cover: /media/blog/covers/gtm-data-for-agents-stateless-stateful.jpg
+tags:
+    - AI agents
+    - data enrichment
+    - MCP
+excerpt: "Treg, Deepline, and Landbase give agents access to GTM data. They place the responsibility to store that data on you. In contrast, Clay, Floqer, and Bitscale give data a home but can't make their data model scale. pipe0 does both on one engine, and an agent can move a list from one to the other with a sentence."
+tldr: "Tools like Treg, Deepline, and Landbase are stateless: the agent asks for data, gets it, and owns it. Tools like Clay are stateful: tables, schedules, and webhooks, built for people. pipe0 gives agents stateless building blocks with high coverage, and when a list needs signals, schedules, or webhooks, the agent writes it to a pipe0 sheet and keeps going."
+faq:
+    - q: "What is the difference between stateless and stateful GTM tools?"
+      a: "A stateless tool returns data to your agent and keeps nothing: Treg, Landbase, and Deepline work this way. A stateful tool keeps the data in tables that can run on a schedule, react to webhooks, and be reviewed by a team, like Clay, Floqer, or Bitscale. pipe0 does both and moves data between them."
+    - q: "Is pipe0 an alternative to Treg, Deepline, and Landbase?"
+      a: "Yes. All four give AI agents people and company data. pipe0 differs in coverage, from curated waterfalls with premium sources such as Amplemarket, and in what happens after the data comes back: it can live in a pipe0 sheet with schedules, signals, and webhooks."
+    - q: "When does an agent need a stateful tool?"
+      a: "When a list is too large to keep in a conversation, when it has to update on a schedule or react to signals and webhooks, or when a team needs to review it before anything goes out."
+draft: false
+authors:
+    - name: Florian
+      title: Founder
+---
+
+Someone recently asked me how pipe0 compares to [Treg](https://treg.to). I
+wrote back a long email. This is that email, with the numbers attached.
+
+Treg is building a set of stateless API endpoints that give agents access to data vendors.
+Deepline, Orthogonal, and Landbase take the same approach. You ask for
+data, they give it to you. You are responsible to store, own and maintain the data.
+
+While the story for tools like Treg, Orthogonal, and Deepline ends after you've received your data.
+Pipe0 takes things a further.
+
+## Two kinds of tools, sold separately
+
+Most GTM teams purchase data from tools that follow one of two approaches.
+
+On the first shelf are the stateless tools: Treg, Deepline, Landbase,
+Orthogonal. Your agent calls an endpoint and gets data back. Nothing
+is kept.
+
+On the second shelf are the stateful tools: Clay, Floqer, Bitscale. Data
+lives in tables, tables run on schedules, webhooks write new rows. They are
+very good at this, and they were built for a person clicking through a UI.
+
+An agent working inside one has to deal with columns appearing and rows
+still running under its feet.
+
+![Diagram: stateless tools (Treg, Deepline, Landbase, Orthogonal) return data and stop. Stateful tools (Clay, Floqer, Bitscale) keep data in tables built for people. pipe0 does both: stateless blocks, and a pipe0 sheet the agent writes to when a list needs a home.](/media/blog/charts/stateless-stateful.svg)
+
+## Treg's story ends with data. Ours doesn't.
+
+Getting the data is only one half of the coin. Eventually, you'll find yourself 
+needing tools that require more than just data retrival: Signals, schedules, and webhooks.
+
+And even if you don't changes are that you may end up having to work with large lists.
+A list of 40,000 accounts doesn't fit in a context window. A deal list your team wants to
+check before anything goes out needs a place where people can look at it.
+
+None of that works when the data stops at the agent.
+
+In pipe0 you can work exactly like you do in Treg. The agent asks for a list,
+enriches it, and the data comes back to the conversation. When the list gets
+large or needs to keep running, you tell it to write the list to a pipe0
+sheet. The same records that just lived in your coding agent are now a table
+in the cloud, up to 2M rows, with signals, webhooks, and schedules attached.
+Nothing gets exported or rebuilt.
+
+That combination is the whole idea. Stateless when stateless is enough,
+stateful when the work needs a home, and one engine underneath both.
+
+## Building blocks, not endpoints
+
+What the agent gets from pipe0 are building blocks: searches that find people
+and companies, and pipes that enrich them. Each block has fixed inputs and
+fixed outputs. The agent reads one, understands it, and clicks it onto the
+next.
+
+A catalog of 3,800 raw endpoints gives the agent more to choose from. It also
+leaves the agent to work out which provider to call, in which order, and what
+to do when one returns garbage. Our blocks make those decisions before the
+agent arrives, based on benchmarks we run ourselves. A phone number block is
+already a waterfall that has been tested against a real list.
+
+## The coverage part
+
+Treg routes each lookup to the cheapest provider first. In our benchmark,
+the four phone providers from Treg's catalog that we could test found 72% of
+mobile numbers on 150 LinkedIn profiles. pipe0's waterfall found 94%, at
+about 1/2 the cost per number found. The gap comes from premium sources,
+sold at custom rates.
+
+Deepline and Landbase we tested by hand on 20 records in September. pipe0
+found 18 mobile numbers, Landbase 13, Deepline 12. A number cost us 14 cents
+with pipe0, 43 with Landbase, and 41 with Deepline. pipe0 answered in 17
+seconds; Landbase took about a minute and Deepline more than two.
+
+Twenty records is a small test and 150 profiles isn't a census. The
+[waterfall post](/blog/cheapest-first-waterfall) has the method and the
+caveats, and the comparisons with [Treg](/compare/pipe0-vs-treg),
+[Deepline](/compare/pipe0-vs-deepline), and
+[Landbase](/compare/pipe0-vs-landbase) have the details.
+
+## Try it on your own list
+
+I'd rather you test it than believe me. Connect pipe0 to your agent and ask
+for any list, enrichment, or automation. If you don't see the difference in
+speed and quality right away, we did something wrong.

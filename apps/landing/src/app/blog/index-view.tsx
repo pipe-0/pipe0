@@ -119,7 +119,7 @@ export function BlogIndexView({
           </nav>
 
           <h1 className="font-blog mt-4 text-[38px] font-bold leading-[1.05] tracking-[-0.02em] text-fd-foreground md:text-[48px]">
-            {activeCategory ?? "Signal & Noise"}
+            {activeCategory ?? "Pipeline"}
           </h1>
           <p className="mt-4 max-w-[680px] text-[16px] leading-relaxed text-fd-muted-foreground text-pretty md:text-[17px]">
             {activeCategory

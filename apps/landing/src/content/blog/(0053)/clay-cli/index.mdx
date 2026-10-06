@@ -1,0 +1,174 @@
+---
+title: "The Clay CLI Is an Anti-Pattern: Why GTM Tools Don't Need a CLI"
+date: 2026-10-06
+category: Engineering
+cover: /media/blog/covers/clay-cli.jpg
+tags:
+    - Clay
+    - MCP
+    - AI agents
+    - security
+excerpt: "The Clay CLI, launched in July 2026, installs a program on your machine so agents can drive Clay. We think it's an anti-pattern: a CLI gets access to your shell and files, cloud agents won't run it, and nothing a GTM tool does needs it."
+tldr: "The Clay CLI installs a program on your machine and logs in with a locally stored session, even though Clay already runs a hosted MCP server. A CLI has access to your files and shell, cloud agents won't keep it installed, and the token argument for CLIs stopped holding once MCP clients loaded tools on demand. Clay already has a hosted MCP server and an API; the CLI adds risk without adding anything a GTM tool needs."
+faq:
+    - q: "What is the Clay CLI?"
+      a: "A command-line client for Clay, released with Clay's public API on July 9, 2026 and available on every plan during the open beta. You log in with clay login, which stores a session on your machine, and drive your workspace from a terminal or an AI coding agent: searches, workflows, functions, webhooks, and read-only table queries."
+    - q: "How do AI agents use the Clay CLI?"
+      a: "Through Clay's agent plugin for Claude Code, Codex, and Cursor, which bundles the CLI, the API, Clay's hosted MCP server, and skill files. Clay's documentation covers the install steps."
+    - q: "Why is the Clay CLI an anti-pattern?"
+      a: "Because a GTM tool doesn't need anything a CLI provides. A CLI is a program with access to your files and shell, which only makes sense for software that needs them. Finding emails and running workflows doesn't. A remote MCP server and an API do the same job without an install, and they work with cloud agents."
+    - q: "Is an MCP server or a CLI better for GTM tools?"
+      a: "A remote MCP server. It installs nothing, works with cloud agents that can't keep a CLI installed, and with on-demand tool loading it costs about the same in tokens as a CLI."
+    - q: "Is a CLI cheaper than an MCP server for batch enrichment?"
+      a: "Not inherently. A CLI run saves tokens because the records don't pass through the agent's context window. An agent gets the same savings by writing a short script against an idempotent batch API, or by calling MCP tools from code, without installing a program."
+    - q: "Are CLIs a security risk?"
+      a: "A CLI is a program with access to your file system and environment, so a compromised release can read secrets on your machine. That happened in August 2025, when malicious versions of the Nx build tool leaked thousands of developer credentials. GTM tools get nothing in return for taking that risk."
+draft: false
+authors:
+    - name: Florian
+      title: Founder
+---
+
+The Clay CLI is an anti-pattern. So is every other CLI a GTM tool ships for
+agents. A CLI on a GTM tool is not a feature. It's an admission that the
+vendor built something so complex it can't sit behind an API or an MCP
+server.
+
+I posted a version of that opinion on Reddit and got good pushback. This is
+the long version, including the counterarguments, which deserve a real
+answer. pipe0 ships an MCP server and an API and no CLI, so I have a stake
+here. Read accordingly.
+
+## What the Clay CLI does
+
+Clay released a [public API and a CLI](https://community.clay.com/x/announcements/msg_AOMXLxnE9dgA/introducing-clays-api-and-cli-build-and-run-workfl)
+on July 9, 2026, on every plan during its open beta. The API is a real step
+forward.
+
+The CLI is the part I'd skip. You log in with `clay login`, which stores a
+session on your machine, and then drive your workspace from the terminal:
+search Clay's people and company data, read tables, and run workflows,
+webhooks, and functions. The
+[agent plugin](https://university.clay.com/docs/clay-api-cli) for Claude
+Code, Codex, and Cursor bundles the CLI with the API, skill files, and Clay's
+MCP server.
+
+That last part is the odd one. Clay already runs a
+[hosted MCP server](https://university.clay.com/docs/mcp-troubleshooting-and-faqs)
+that every client connects to over the network. The agent can reach Clay
+without installing anything. The CLI is extra surface on top of that.
+
+Look at that list again. Apart from reading a file you point it at, every
+one of those commands is a network call to Clay's servers. None of them needs
+your shell or anything else a program on your machine gets access to.
+That's what makes it an anti-pattern: all the risk of a local program, none
+of the reasons for one.
+
+Deepline, Landbase, Treg, and ZoomInfo are in the same place. Deepline, Treg,
+and ZoomInfo also offer a remote MCP server and an API, so their CLIs are
+optional. Landbase
+leads with its CLI and an install script you pipe into your shell. If the
+remote options exist, the CLI is extra surface. If they don't, the CLI is the
+only way in.
+
+## What a CLI actually installs
+
+A CLI is a program on your machine. It runs with your user's permissions, so
+it can read your files, your shell environment, your `.env` files, and
+whatever tokens your other tools left lying around.
+
+That is fine as long as the vendor never ships a bad release. In August 2025
+someone published malicious versions of
+[Nx](https://thehackernews.com/2025/08/malicious-nx-packages-in-s1ngularity.html),
+a widely used JavaScript build tool. The install script collected
+GitHub tokens, SSH keys, and cloud credentials, and even asked the AI coding
+CLIs already on the machine to help search for more. 2,349 credentials ended
+up in public repositories. Nx is not a GTM tool, and the people behind it
+weren't careless. That's the point: every vendor is one compromised release
+away from this, and with a CLI you're trusting all of them.
+
+Agents make it worse. The Landbase docs suggest asking Claude Code to
+[auto-approve `landbase-cli*`](https://www.landbase.com/docs/landbase-cli)
+so it stops prompting for every command. Reasonable for convenience. It also
+means an agent can run any future version of that program without asking you.
+
+## Why vendors build CLIs anyway
+
+The honest reason is instructions. Some tools need megabytes of handbook text
+before an agent can use them: skill files, playbooks, long command
+references. Installing that once is cheaper than sending it over the network
+in every session.
+
+I'd turn that around. If your tool needs a handbook that size, the tool is
+too complicated. Finding a work email should not require a manual. Make the
+tool smaller until its description fits in a few lines, and the need for a
+CLI goes away with the handbook.
+
+## Cloud agents won't use your CLI
+
+Grok Bot, ChatGPT, and Claude running in the cloud don't live on your laptop.
+One reply on Reddit pointed out that you can use the Clay CLI from Grok Bot,
+and that's true. I wrote "won't", not "can't", on purpose.
+
+A cloud agent can install a CLI into its sandbox. Sandboxes are short-lived,
+so it has to install it again, keep it updated, and log in again, in an
+environment you can't see. It works the way a lot of things work: badly, and
+only if someone babysits it.
+
+A remote MCP server is a URL. The agent connects once and the vendor updates
+the server without anyone reinstalling anything.
+
+## The token argument
+
+The best case for CLIs used to be tokens. Early MCP clients loaded every tool
+definition into the conversation up front, so a server with fifty tools cost
+you context before you asked anything. Another commenter said MCP is "very
+chatty" and a CLI is more token efficient.
+
+That was true for a while. Progressive reveal and on-demand tool discovery
+fixed it: clients now load a tool's definition when the agent needs it. I
+don't know of a technical reason an agent should reason more between MCP
+calls than between shell commands. You can split hairs over small differences
+either way, but a well-built MCP server and a CLI cost about the same.
+
+## The batch argument
+
+The newest case for CLIs comes from ZoomInfo, which ships one too. Henry
+Schuck, ZoomInfo's CEO,
+[posted the output of an enrichment run on LinkedIn](https://www.linkedin.com/posts/hschuck_for-those-of-you-wondering-why-use-the-cli-activity-7513047665400598529-M8LY)
+as the answer to "why use the CLI versus an MCP". The agent's summary read:
+"each batch is a subprocess, so the whole pass cost no conversation tokens and
+ran in ~2.5 hours. The agent-loop equivalent would have been ~100M tokens."
+
+The numbers are probably right. The conclusion isn't. The savings didn't come
+from the CLI. They came from the agent not looping through every record in
+its context window.
+
+What that run needed was an idempotent batch API. The agent writes a small
+script that calls it in batches and writes the output to a file or a table.
+That script runs for hours just as efficiently as a CLI subprocess, costs the
+same zero conversation tokens, and nobody has to install and maintain a
+binary on their machine.
+
+Agent runtimes are also moving to calling MCP tools from code. Anthropic
+described the pattern in
+[code execution with MCP](https://www.anthropic.com/engineering/code-execution-with-mcp):
+the agent writes code that calls the tools, and the intermediate results
+never pass through its context. That gives a plain MCP server the same
+benefit. Both approaches are equally invisible to the user. Only one of them
+installs a program.
+
+## When a CLI is fine
+
+One commenter put it fairly: a CLI can just be a faster interface for people
+who already live in the terminal. Agreed. A thin CLI over a public API, for a
+person writing scripts, is a convenience, and nobody gets hurt.
+
+My objection is to the CLI as the main way agents reach a GTM tool. CLIs exist
+for software that needs system primitives: the file system, processes, the
+local network. A tool that finds phone numbers and writes rows to a CRM needs
+none of those.
+
+So here's my position, and I'm sticking to it: no GTM company needs to
+publish a CLI. Ship a remote MCP server and an API, keep the instructions
+short, and let the agent connect from wherever it runs.

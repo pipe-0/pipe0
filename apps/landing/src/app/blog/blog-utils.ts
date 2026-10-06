@@ -239,7 +239,7 @@ export type Category = (typeof CATEGORIES)[number];
  * copy: rewrite in your own words before it ships.
  */
 export const BLOG_DESCRIPTION =
-  "Signal & Noise is the pipe0 blog. We write about B2B data enrichment and the providers behind it, and about the engineering that goes into a data platform.";
+  "Pipeline is the pipe0 blog. We write about B2B data enrichment and the providers behind it, and about the engineering that goes into a data platform.";
 
 /** One line per section — the category page intro and meta description. */
 export const CATEGORY_DESCRIPTIONS: Record<Category, string> = {

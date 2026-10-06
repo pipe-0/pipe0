@@ -1,6 +1,7 @@
 ---
 title: Two Deepline Alternatives That We've Tested
 date: 2026-09-11
+updated: 2026-10-06
 category: Sales data
 tags:
     - data enrichment
@@ -77,7 +78,7 @@ Historically, companies have chosen CLIs over MCP servers if the functionality
 they expose requires megabytes of handbook text. This is the text the agent needs 
 to read in order to understand how to use the program.
 
-Having use install the handbook is faster than sending it over the wire. But, as you may suspect,
+Having users install the handbook is faster than sending it over the wire. But, as you may suspect,
 this is a problem for tools with bloated documentation. Ideally, programs need fewer instructions to operate.
 
 Lastly, CLIs make your program harder to invoke. Both Landbase and Deepline
@@ -120,7 +121,7 @@ Deepline works with a mixture of prebuilt plays and plays you can assemble
 yourself via their UI. After creation you can reference the plays from your
 agent.
 
-Rather than being a traditional data enrichment server, Deepline tends to goe deep
+Rather than being a traditional data enrichment server, Deepline tends to go deep
 into analysis.
 
 For example, when we asked Deepline to find a phone number for a person with a
@@ -185,12 +186,16 @@ The average mobile number cost 14¢ while the average work email cost 4.5¢.
 ## Landbase
 
 Landbase positions itself more upmarket with its cheapest plans starting at
-$499/mo. Similar to Deepline, Landbase ships a CLI and operates statefully.
-You create datasets on their server and then perform actions on these
-datasets.
+$499/mo. Similar to Deepline, Landbase ships a CLI. It works as a stateless
+set of endpoints: the agent asks for data and gets it back.
 
 Finding a phone number for a single record took 62s on average.
 
 In our test Landbase found 13 of 20 mobile numbers.
 
 The average mobile number cost 43¢ while the average work email cost 9¢.
+
+We've since put all three side by side with Treg, another stateless tool
+for agents: [pipe0 vs Deepline](/compare/pipe0-vs-deepline),
+[pipe0 vs Landbase](/compare/pipe0-vs-landbase), and
+[pipe0 vs Treg](/compare/pipe0-vs-treg).

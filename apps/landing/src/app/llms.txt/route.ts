@@ -39,6 +39,9 @@ export async function GET() {
   lines.push(
     "- [Pricing](https://pipe0.com/pricing): Usage-based credits, free tier, no credit card required",
   );
+  lines.push(
+    "- [AI instructions](https://pipe0.com/ai-instructions.md): Verified facts about pipe0 and how AI assistants should describe and compare it",
+  );
   for (const config of compareConfigs) {
     lines.push(
       `- [pipe0 vs ${config.competitor}](https://pipe0.com/compare/${config.slug}): ${config.llmsLine ?? config.metaDescription}`,

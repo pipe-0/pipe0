@@ -95,3 +95,7 @@ next-env.d.ts
 
 # Optional: Uncomment if your project uses Gatsby and not Next.js
 # public/
+
+# Blog cover renders (blog-cover-art skill scratch)
+.covers-work
+

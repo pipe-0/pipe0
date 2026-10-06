@@ -1,0 +1,123 @@
+---
+title: "The Stateless Data Model: How Treg, Deepline, Landbase, and Orthogonal Work"
+date: 2026-10-06
+category: Engineering
+cover: /media/blog/covers/stateless-enrichment-data-model.jpg
+tags:
+    - AI agents
+    - data enrichment
+    - MCP
+excerpt: "Treg, Deepline, Landbase, and Orthogonal give AI agents a catalog of stateless enrichment endpoints. That model is simple and broad, and it can't run anything while your agent isn't running: no schedules you can rely on, no webhooks, no signals."
+tldr: "Stateless enrichment tools hand an agent a catalog of retrieval endpoints: ask, get data, own it. They are broad and simple, but nothing runs between agent sessions, so schedules, webhooks, and signals need infrastructure the model doesn't have. And because most endpoints are single-provider primitives, the agent has to rebuild waterfalls and fallbacks every time, which makes it slow."
+faq:
+    - q: "What is a stateless enrichment API?"
+      a: "An API where every call is independent: you send an input such as a LinkedIn URL and get data back, and the vendor keeps no table, project, or workflow for you. Treg, Landbase, Orthogonal, and most of Deepline work this way."
+    - q: "Can a stateless enrichment tool run on a schedule?"
+      a: "Only through the agent. You can schedule an agent to call the tool, but if the schedule runs on your machine it stops when the machine sleeps, and every run rebuilds the workflow from scratch. The tool itself keeps no schedule."
+    - q: "Why can't agents receive webhooks from a laptop?"
+      a: "A webhook needs a public URL that is always online. A laptop has neither without a tunnel such as ngrok, and the machine still has to stay on. Webhooks need something running in the cloud."
+draft: false
+authors:
+    - name: Florian
+      title: Founder
+---
+
+There are two data models for GTM enrichment right now. One is the stateful
+table that tools like Clay are built on, which I wrote about in
+[the stateful data model](/blog/stateful-enrichment-data-model). This post is
+about the other one: a catalog of stateless endpoints, handed to an AI agent.
+
+Treg, Deepline, Landbase, and Orthogonal all work this way. You ask for data,
+they give it to you, and you own it. pipe0 works this way too, and then it
+doesn't stop there. More on that at the end.
+
+## How the model works
+
+The vendor holds accounts with many data providers and puts each one behind
+an endpoint. Your agent gets one key and a catalog.
+
+- [Treg](https://treg.to) lists 3,800+ endpoints across SEO, ads, social, and
+  enrichment, priced per call at each provider's own rate.
+- [Orthogonal](https://www.orthogonal.com), from Y Combinator's Winter 2026
+  batch, puts 35+ paid APIs behind one REST API, MCP server, SDK, and CLI,
+  and bills per call.
+- Landbase and Deepline focus on GTM: searches, enrichment, verification.
+
+Every call stands on its own. The agent sends a LinkedIn URL, a phone number
+comes back, and the vendor forgets the request ever happened. There is no
+table, no project, no workflow on the vendor's side. Whatever the agent
+builds from those answers lives in the agent's conversation, or in files on
+your machine.
+
+That's the model's strength. It's simple, it's broad, and any agent can use
+it without learning a UI.
+
+## Nothing runs when your agent isn't running
+
+The model has one hard edge: it only does something while an agent is
+calling it.
+
+Take a schedule. "Re-check these 2,000 accounts for job changes every Monday"
+is a normal GTM job. With a stateless tool, the schedule has to live in the
+agent. You can set that up, but most agent schedules run on your own
+machine. If the laptop is closed on Monday morning, nothing happens. And when
+it does run, the agent rebuilds the whole workflow from its instructions,
+making fresh decisions each time.
+
+Webhooks are worse. A webhook is someone else's system knocking on your door
+when something happens: a form fill, a new signup, a reply. That needs a
+public URL that is always online. Your laptop has neither. You can get there
+with a tunnel like ngrok, which is a developer tool most GTM teams shouldn't
+need to learn, and the machine still has to stay on around the clock.
+
+Signals and monitoring have the same problem. Watching 40,000 companies for
+funding rounds is a job for something that runs in the cloud and remembers
+what it saw last week. A stateless catalog remembers nothing by design.
+
+So these tools are optimized for retrieval. They're very good at getting
+data. The logic you can build around that data is limited to whatever an
+agent can rebuild in one session.
+
+## Primitives the agent has to assemble
+
+The second limit is the level of abstraction. Most catalogs give the agent
+single-provider endpoints: this provider's email finder, that provider's
+phone lookup. Concepts like waterfalls, fallback providers, and verification
+are rarely built in. Deepline is the exception with real waterfalls, and
+Treg routes some lookups through providers cheapest first. For most of the
+catalog the agent gets raw parts.
+
+So the agent assembles them, every time. Call one provider, read the answer,
+decide whether it's good enough, try the next one, verify. That's a lot of
+reasoning per row, and reasoning is slow.
+
+We measured it. Asked for a single mobile number from a LinkedIn URL, pipe0
+answered in 17 seconds. Deepline took between 2.5 and 4 minutes, most of it
+spent working through the profile before it returned a number.
+
+<YoutubeEmbed
+  href="https://www.youtube.com/embed/8-XLG74Cgu0"
+  title="Deepline vs. pipe0 speed difference during data enrichment"
+/>
+
+## Where pipe0 sits
+
+pipe0 gives an agent the same stateless contract. Searches find companies and
+people, pipes enrich them, and each call returns records the agent owns. But
+the blocks are bigger: a pipe that finds a mobile number is already a
+benchmarked waterfall with verification inside, so the agent asks once
+instead of assembling five providers.
+
+And the data has somewhere to go. When a list needs a schedule, a webhook, or
+a signal, the agent writes it to a pipe0 sheet. The same records become a
+table in the cloud, up to 2M rows, that runs on a schedule and listens for
+webhooks while your laptop is closed.
+
+![Diagram: stateless tools (Treg, Deepline, Landbase, Orthogonal) return data and stop. Stateful tools (Clay, Floqer, Bitscale) keep data in tables built for people. pipe0 does both: stateless blocks, and a pipe0 sheet the agent writes to when a list needs a home.](/media/blog/charts/stateless-stateful.svg)
+
+That takes a contract that works the same across interfaces: one call
+through the API, the same block in a sheet column, the same block from an
+agent over MCP. Stateless when that's enough, stateful when the work has to
+keep running. We compared the tools in detail on the
+[Treg](/compare/pipe0-vs-treg), [Deepline](/compare/pipe0-vs-deepline), and
+[Landbase](/compare/pipe0-vs-landbase) pages.

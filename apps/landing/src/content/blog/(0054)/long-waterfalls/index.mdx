@@ -1,0 +1,92 @@
+---
+title: Your 20-Provider Waterfall Has Never Been Benchmarked
+date: 2026-10-06
+category: Sales data
+cover: /media/blog/covers/long-waterfalls.jpg
+tags:
+    - waterfall enrichment
+    - data quality
+excerpt: "Vendors advertise waterfalls with 20+ providers for emails and phone numbers. In our benchmark, the best phone provider found 96% of numbers alone, and eight more providers added two. Long waterfalls ask the same few datasets the same question, over and over."
+tldr: "Most contact data providers buy from the same few datasets, so a 20-provider waterfall mostly asks one dataset the same question twenty times. In our phone benchmark the best provider found 96% of mobile numbers on its own; eight more providers added two numbers, and six of them added none. Billing on success keeps long waterfalls cheap, but they still cost time and accuracy."
+faq:
+    - q: "How many providers should a waterfall have?"
+      a: "Usually four or five well-chosen ones. In our benchmarks, coverage stops growing quickly once the providers with genuinely different data are in the chain. Adding more providers that resell the same datasets adds latency, not results."
+    - q: "Do long waterfalls cost more?"
+      a: "Not much in money, because good waterfalls only bill the provider that returns a result. They cost time, since every extra provider is another request to wait for, and they put more low-quality sources in line to answer first."
+    - q: "How can I tell if a waterfall vendor has benchmarked its providers?"
+      a: "Ask how much unique coverage each provider adds on a real list, and why the providers are in that order. A vendor that has benchmarked can answer both. A vendor that leads with the number of providers usually hasn't."
+draft: false
+authors:
+    - name: Florian
+      title: Founder
+---
+
+It's become normal to advertise waterfalls with 20 or more providers for
+finding emails and phone numbers. More providers, more coverage. It sounds
+right, and it's the clearest sign I know that a vendor has never run a
+benchmark.
+
+## Twenty providers, a few datasets
+
+Most contact data providers don't collect their own data. They buy it from
+the same handful of large sources and resell it under their own name, at
+their own price. Chain twenty of them and you haven't asked twenty datasets.
+You've asked the same few datasets twenty times whether they have a phone
+number they already told you they don't have.
+
+You can see this in our numbers. On 150 LinkedIn profiles, three cheap
+providers (LeadMagic, Prospeo, and Aviato) found 62 mobile numbers between
+them. Amplemarket or Crustdata had already found 61 of those 62.
+
+## What adding providers actually does
+
+We took the same 150 profiles and built the waterfall one provider at a time,
+always adding the provider that found the most numbers nobody in the chain had
+found yet.
+
+![Bar chart: mobile numbers found as providers are added to a waterfall. Surfe alone 96%, plus Crustdata 96.7%, plus Aviato 97.3%, then Amplemarket, Forager, LeadMagic, Fiber, Wiza, and Prospeo each add nothing and coverage stays at 97.3%.](/media/blog/charts/waterfall-plateau.svg)
+
+The best single provider found 96%. Two more providers added one number each.
+The remaining six added nothing at all. That's a nine-provider waterfall where
+six providers are decoration.
+
+Work emails flatten out more slowly. On 120 LinkedIn profiles, the best three
+providers reached 84%, the next three added about five points, and the last
+three added nothing. More real gain than with phones, and still nowhere near
+twenty. Two of those first three, Aviato and Mixrank, often disagree with
+premium data, so some of that early coverage is probably wrong.
+
+The list was pre-filtered for people who can be resolved, so every rate here
+runs higher than on a cold list. The shape of the curve is the point.
+
+## "But misses are free"
+
+A fair reply I got on Reddit: a waterfall stops as soon as it finds a valid
+result, and providers only bill on success, so the extra providers don't cost
+anything.
+
+On money, that's mostly right. On everything else it isn't.
+
+Every provider in the chain is another request to wait for. In our phone
+benchmark, median response times ranged from under a tenth of a second to
+almost nineteen seconds per lookup. A row that misses the first ten providers
+waits for all ten.
+
+And the order decides accuracy. A waterfall stops at the first answer, so
+every extra low-end provider is one more chance for a wrong answer to arrive
+before the right one. I wrote about that in
+[why the first provider decides accuracy](/blog/cheapest-first-waterfall).
+
+## How to spot a benchmarked waterfall
+
+It takes one question. Ask the vendor how much unique coverage each provider
+adds on a real list, and why they're in that order.
+
+A vendor that has benchmarked will show you something like the chart above.
+A vendor that hasn't will tell you how many providers they have.
+
+I've never seen a 20-provider waterfall with great coverage. Most are bad,
+some are good. Yes, that includes the big ones. Our own waterfalls use a
+handful of providers each, and a provider earns its place by finding data the
+others don't. If you want to check that claim, run your own list through us
+and through anyone else, and count.

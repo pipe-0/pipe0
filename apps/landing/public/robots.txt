@@ -40,3 +40,4 @@ Sitemap: https://pipe0.com/sitemap.xml
 # Full documentation content: https://pipe0.com/llms-full.txt
 # Individual pages as markdown: append .mdx to any /docs/ URL, or .md to any /blog/ post URL
 # Blog feed: https://pipe0.com/blog/rss.xml
+# Facts and instructions for AI assistants: https://pipe0.com/ai-instructions.md
