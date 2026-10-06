@@ -146,6 +146,9 @@ export async function GET() {
     "- Blog posts are available as markdown by appending `.md` to the post URL (e.g. https://pipe0.com/blog/clay-alternatives.md)",
   );
   lines.push(
+    "- Tool reviews are available as markdown by appending `.md` to the review URL (e.g. https://pipe0.com/reviews/clay.md), with scores, benchmark tables, pricing, and FAQ",
+  );
+  lines.push(
     "- Pipe and search ids are versioned (`@1`, `@2`, …). Use the highest version that is not deprecated; see https://pipe0.com/docs/versions",
   );
   lines.push(

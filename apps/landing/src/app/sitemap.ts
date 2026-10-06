@@ -50,6 +50,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
             url: url("/reviews"),
             changeFrequency: "weekly" as const,
             priority: 0.6,
+            // The hub changes whenever any review does.
+            lastModified: new Date(
+              Math.max(...reviews.map((r) => lastRevised(r).getTime())),
+            ),
           },
         ]
       : []),

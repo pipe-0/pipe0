@@ -1,0 +1,154 @@
+---
+title: "ZeroBounce vs. MillionVerifier: We Tested Both on 100 Known Addresses"
+date: 2026-10-06
+category: Sales data
+cover: /media/blog/covers/zerobounce-vs-millionverifier.jpg
+excerpt: "We ran 50 real and 50 fake addresses through ZeroBounce and
+  MillionVerifier. Both were perfect on Gmail and dead domains. On work
+  addresses, one answered and the other said catch-all."
+tags:
+  - email verification
+  - data enrichment
+tldr: "On 100 labelled addresses, ZeroBounce got 96 right and
+  MillionVerifier 66. The gap was entirely on work domains, where
+  MillionVerifier called most addresses catch-all. MillionVerifier costs
+  three to seven times less per check."
+faq:
+  - q: "Is ZeroBounce better than MillionVerifier?"
+    a: "For work addresses, yes, in our test: ZeroBounce confirmed 47 of 50
+      real addresses and passed no fake as valid, while MillionVerifier
+      confirmed 31 and called most work addresses catch-all. For consumer
+      lists the two were equally accurate, and MillionVerifier is much
+      cheaper."
+  - q: "How much cheaper is MillionVerifier than ZeroBounce?"
+    a: "10,000 checks cost $39 at MillionVerifier and $129 at ZeroBounce. A
+      million cost $449 against $3,199. That is roughly three times cheaper
+      at small volumes and seven times at a million."
+  - q: "What does catch-all mean in email verification?"
+    a: "A catch-all result means the mail server accepted the test without
+      confirming the mailbox, so the verifier cannot say whether the address
+      exists. Sending to catch-all addresses is a gamble on bounces."
+  - q: "How did you test the verifiers?"
+    a: "We used 50 real addresses of pipe0 users who signed in with Google
+      in the last 45 days and 50 fake ones we generated: random mailboxes at
+      Gmail, Outlook, and company domains, and addresses at domains that
+      don't exist. Each verdict was scored against the known answer."
+draft: false
+authors:
+  - name: Florian
+    title: Founder
+---
+
+{/*
+Numbers: evidence.md section G; run 20261006T201548Z-886a (accuracy) and
+20261006T201402Z-a061 (latency). Prices: public pricing pages, 2026-10-06.
+*/}
+
+Every email verifier says it is 99% accurate. ZeroBounce guarantees 99.6%,
+MillionVerifier promises "99%+". Neither number tells you what happens on
+your list, so we built a list where we already knew every answer and asked
+them.
+
+## The test
+
+We took 100 addresses. Fifty were real: pipe0 users who had signed in with
+Google in the previous 45 days, which proves the mailbox existed recently.
+Thirty were on company domains and twenty on Gmail. The other fifty were
+fake, generated for the test with no person behind them: twenty random
+mailboxes at Gmail and Outlook, twenty at well-known company domains such as
+stripe.com and atlassian.com, and ten at domains that don't exist.
+
+Every address went to ZeroBounce, MillionVerifier, and, as a third reference,
+MixRank's verification API. We scored each verdict against the known answer.
+A "valid" on a real address or an "invalid" on a fake one is right. Passing a
+fake as valid is the expensive error, because it bounces. Rejecting a real
+address is the other one, because it is a lead you never contact. Catch-all
+and unknown count as undetermined, not wrong: the verifier declined to
+commit.
+
+## The results
+
+| | ZeroBounce | MillionVerifier | MixRank |
+| --- | --- | --- | --- |
+| Right answers | 96 of 100 | 66 of 100 | 93 of 100 |
+| Real addresses confirmed | 47 of 50 | 31 of 50 | 47 of 50 |
+| Fakes caught | 49 of 50 | 35 of 50 | 46 of 50 |
+| Fakes passed as valid | 0 | 1 | 0 |
+| Real addresses rejected | 2 | 1 | 3 |
+| Undetermined | 2 | 32 | 4 |
+| Median time per check | 0.3 s | 0.7 s | 1.3 s |
+
+The headline gap, 96 against 66, hides where it comes from. Both verifiers
+were perfect on the easy half of the list. All 20 real Gmail addresses came
+back valid, and all 20 fake Gmail and Outlook mailboxes and all 10 dead
+domains came back invalid, on both.
+
+Every difference was on work domains.
+
+## Where they split
+
+Of the 30 real work addresses, ZeroBounce gave a definite answer on 29.
+MillionVerifier confirmed 11 and called 18 catch-all. On the 20 fake work
+addresses, the pattern repeated: ZeroBounce caught 19, MillionVerifier caught
+5 and called 13 catch-all.
+
+A catch-all verdict means the company's mail server accepted the test
+without confirming the mailbox, so the verifier can't tell a real address
+from a made-up one. Many company domains behave that way, and some verifiers
+are better than others at seeing through it. In this test, ZeroBounce and
+MixRank saw through it on almost every domain, and MillionVerifier on about
+a third.
+
+That matters for what you send. Following MillionVerifier strictly, sending
+only to its valid results, you would have dropped 19 of the 50 real
+addresses. Following it loosely, sending to catch-alls too, you would have
+sent to 14 of the 50 fakes: 14 bounces in 63 sends. ZeroBounce's valid
+results contained no fakes at all.
+
+MillionVerifier's caution has an upside. It rejected only one real address,
+the fewest of the three. It isn't making mistakes on work domains, it is
+declining to answer.
+
+## What it costs
+
+MillionVerifier is much cheaper, and it has no subscription.
+
+| Checks | ZeroBounce | MillionVerifier |
+| --- | --- | --- |
+| 10,000 | $129 | $39 |
+| 100,000 | $649 | $149 |
+| 1,000,000 | $3,199 | $449 |
+
+That is about three times cheaper at 10,000 checks and seven times at a
+million. MillionVerifier's credits never expire, and it credits back unknown
+and catch-all results. ZeroBounce charges for catch-alls, and for accounts
+created after June 1, 2026, its credits expire two years after the last
+purchase unless you subscribe.
+
+## Which one to use
+
+Use MillionVerifier for consumer lists: newsletters, signups, anything that
+is mostly Gmail and Outlook. It was exactly as accurate as ZeroBounce there,
+at a fraction of the price.
+
+Use ZeroBounce for work addresses and cold outbound. On a list of company
+emails, a third of MillionVerifier's answers will be catch-all, and you'll
+need a second check for those anyway. Paying more per check for an answer
+is cheaper than a bounced campaign.
+
+If you do both, you don't have to pick. In a pipe0 sheet, both are pipes, so
+you can run MillionVerifier on consumer rows and ZeroBounce on work rows of
+the same list.
+
+## What this test can't tell you
+
+A hundred addresses is a small sample, and 30 real work addresses decide
+most of the gap. One real address was rejected by all three verifiers. A
+sign-in 45 days earlier proves the Google account existed then, not that the
+address still works, so that one may be our labelling error rather than
+theirs. Our fake company addresses sit on twenty large domains; your
+prospects' mail servers will behave differently. Run your own list of known
+answers before you commit, and see the
+[ZeroBounce review](/reviews/zerobounce) and
+[MillionVerifier review](/reviews/millionverifier) for pricing details and
+the full scorecard.

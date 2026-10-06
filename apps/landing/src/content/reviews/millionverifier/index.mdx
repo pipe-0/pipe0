@@ -1,0 +1,307 @@
+---
+title: "MillionVerifier review (2026): cheap, but cautious on work domains"
+description: "MillionVerifier is the cheapest email verifier we use, with
+  credits that never expire and free unknowns. In our test it called most
+  work addresses catch-all, so it confirmed far fewer real leads."
+tool:
+  name: MillionVerifier
+  url: https://www.millionverifier.com
+  logo: /media/reviews/logos/millionverifier.png
+  category: Email verification
+verdict: "The cheapest way to clean a large list, with credits that never
+  expire and no charge for unknowns, but it calls most work domains
+  catch-all, so outbound lists need a second check."
+relationship: supplier
+disclosure: "pipe0 buys verification from MillionVerifier and offers it as a
+  pipe. The scores come from our own benchmark, not from that relationship."
+scores:
+  easeOfUse:
+    score: 4
+    why: "Upload a file or call one GET endpoint. Simple results, but no SDKs
+      and a pricing page that only exists as a slider on the homepage."
+  dataQuality:
+    score: 3
+    why: "Perfect on Gmail, fake freemail, and dead domains, but it called 18
+      of 30 real work addresses catch-all. 66 of 100 right in our test."
+  pricingValue:
+    score: 4.8
+    why: "10,000 checks for $39 and a million for $449, three to seven times
+      cheaper than ZeroBounce, with credits that never expire."
+  agentAccess:
+    score: 3
+    why: "A fast real-time API at 160 requests a second and a bulk API, but no
+      SDKs and no official MCP server."
+bestFor:
+  - "Cleaning large newsletter and consumer lists cheaply"
+  - "Removing dead domains and obvious typos before a send"
+  - "Teams that buy credits once and use them over years"
+skipIf:
+  - "Your list is mostly work addresses for cold outbound"
+  - "You need a definite answer on catch-all domains"
+  - "You need audited SOC 2 or ISO 27001 compliance"
+pros:
+  - title: "The lowest price we pay for verification"
+    body: "10,000 checks cost $39 and a million cost $449, against $129 and
+      $3,199 at ZeroBounce. At 25 million, a check costs 0.02 cents."
+  - title: "Credits never expire, unknowns are free"
+    body: "There is no subscription. Credits stay on the account, and unknown
+      and catch-all results are credited back as goodwill credits."
+  - title: "Flawless on the easy cases"
+    body: "It got all 20 real Gmail addresses, all 20 fake freemail addresses,
+      and all 10 addresses at nonexistent domains right in our test."
+  - title: "Fast"
+    body: "A median of 0.7 seconds per check in our test, with a real-time
+      API that allows 160 requests a second."
+cons:
+  - title: "Catch-all on most work domains"
+    body: "It called 18 of 30 real work addresses and 13 of 20 fake ones
+      catch-all. Sending only its valid results kept 31 of 50 real
+      addresses; sending catch-alls too let 14 fakes through."
+  - title: "No SDKs or MCP server"
+    body: "The docs have code samples, not libraries, and there is no official
+      MCP server for agents."
+  - title: "Data location claims don't match"
+    body: "Its help center says data is never processed outside the EU, while
+      its own processor list includes US and Canadian hosts and three AI
+      vendors."
+  - title: "The guarantees are narrow"
+    body: "The money-back guarantee needs more than 4% of valid addresses to
+      bounce on a file uploaded in the web app, and the goodwill credit for
+      unknowns can be withdrawn."
+pricing:
+  asOf: 2026-10-06
+  source: https://www.millionverifier.com
+  startingAt: 39
+  startingAtNote: "for 10,000 checks, one-time"
+  startingAtPeriod: one-time
+  freePlan: true
+  plans:
+    - name: Free credits
+      price: "$0"
+      includes: "500 credits with a business email, or up to 10,000 by
+        connecting an integration."
+    - name: Credit packs
+      price: "$39 to $8,499"
+      includes: "10,000 checks for $39, 100,000 for $149, 1 million for $449,
+        10 million for $2,599, 50 million for $8,499."
+  notes:
+    - "No monthly or annual plan. Credits never expire; inactive accounts can
+      be closed after a year but credits are restored on request."
+    - "Unknown and catch-all results are credited back as goodwill credits.
+      MillionVerifier's terms call this discretionary."
+    - "The money-back guarantee refunds the last payment if more than 4% of
+      valid addresses hard-bounce, for files uploaded in the web app and
+      mailed within 7 days."
+facts:
+  - label: Company
+    value: "GBD Software as a Service, Lakitelek, Hungary"
+    source: https://www.millionverifier.com
+  - label: CEO
+    value: "Tamás Hám-Szabó"
+    source: https://www.millionverifier.com
+  - label: Customers
+    value: "70,000+ businesses, according to MillionVerifier"
+    source: https://www.millionverifier.com
+  - label: Verdicts
+    value: "ok, catch_all, unknown, error, disposable, invalid, with a quality
+      flag and a sub-result"
+    source: https://developer.millionverifier.com
+  - label: API
+    value: "Real-time GET endpoint at 160 requests a second, plus a bulk
+      file API; code samples, no SDKs"
+    source: https://help.millionverifier.com/email-verification-api/real-time-api
+  - label: Servers
+    value: "Primary server in Budapest"
+    source: https://help.millionverifier.com/email-verification-api/api-speed
+  - label: Spam traps
+    value: "MillionVerifier says no verifier can detect them"
+    source: https://www.millionverifier.com
+benchmark:
+  period: "October 2026"
+  verification:
+    run: 20261006T201548Z-886a
+    n: 100
+    valid: 50
+    rows:
+      - provider: MillionVerifier
+        accuracy: 66
+        validConfirmed: 31
+        invalidCaught: 35
+        falsePositives: 1
+        falseNegatives: 1
+        undetermined: 32
+        latency: "0.7 s"
+      - provider: ZeroBounce
+        accuracy: 96
+        validConfirmed: 47
+        invalidCaught: 49
+        falsePositives: 0
+        falseNegatives: 2
+        undetermined: 2
+        latency: "0.3 s"
+      - provider: MixRank
+        accuracy: 93
+        validConfirmed: 47
+        invalidCaught: 46
+        falsePositives: 0
+        falseNegatives: 3
+        undetermined: 4
+        latency: "1.3 s"
+  notes:
+    - "MillionVerifier rejected only 1 of the 50 real addresses, the fewest of
+      the three; most of its misses are catch-all verdicts, not errors."
+    - "Its one fake passed as valid was a random mailbox at gitlab.com."
+    - "Median times come from the first, fully uncached run
+      (20261006T201402Z-a061)."
+  latency:
+    test: "Email verification"
+    run: 20261006T201402Z-a061
+    seconds: 0.7
+    others:
+      - provider: ZeroBounce
+        tier: Premium
+        seconds: 0.3
+      - provider: MixRank
+        seconds: 1.3
+alternatives:
+  - name: ZeroBounce
+    href: /reviews/zerobounce
+    why: "Your list is mostly work addresses and you need a definite answer
+      on domains that look catch-all."
+  - name: pipe0
+    href: /docs/pipe-catalog
+    why: "You want MillionVerifier for consumer lists and ZeroBounce for
+      work addresses, as columns in the same sheet."
+  - name: Hunter
+    href: /reviews/hunter
+    why: "You also need to find work emails, with verification included."
+authors:
+  - name: Florian
+    title: Founder
+date: 2026-10-06
+faq:
+  - q: "Is MillionVerifier accurate?"
+    a: "On consumer addresses and dead domains, yes: it got every Gmail,
+      fake freemail, and nonexistent-domain address in our test right. On
+      work domains it called most addresses catch-all, so overall it got 66
+      of 100 labelled addresses right against 96 for ZeroBounce."
+  - q: "How much does MillionVerifier cost?"
+    a: "Credit packs start at $39 for 10,000 checks and fall to $449 for a
+      million and $8,499 for 50 million. There is no subscription, credits
+      never expire, and unknown and catch-all results are credited back."
+  - q: "MillionVerifier or ZeroBounce: which should I use?"
+    a: "Use MillionVerifier for large consumer lists where price per check
+      decides. Use ZeroBounce for work addresses and cold outbound: in our
+      test it confirmed 47 of 50 real addresses against 31 for
+      MillionVerifier."
+  - q: "What does catch-all mean in MillionVerifier?"
+    a: "It means the mail server accepted the test without confirming the
+      mailbox, so MillionVerifier can't say whether the address exists. In
+      our test it gave that verdict on 18 of 30 real work addresses and 13
+      of 20 fake ones."
+  - q: "Does MillionVerifier have an API?"
+    a: "Yes: a real-time GET endpoint that allows 160 requests a second, and
+      a bulk file API. There are code samples in the docs but no SDKs, and
+      no official MCP server."
+---
+
+{/*
+FACT BASE (checked 2026-10-06 on primary sources unless marked):
+- Pricing: slider table in millionverifier.com/assets/js/main.js (the
+  /pricing URL 404s): 10k $39; 25k $59; 50k $89; 100k $149; 500k $299; 1M
+  $449; 2M $799; 3M $1,099; 4M $1,399; 5M $1,599; 10M $2,599; 25M $4,999;
+  50M $8,499. No plans; credits never expire (help center credit
+  information); inactive accounts removable after 12 months, credits
+  restored on request (terms §7).
+- Goodwill credit for unknown/catch-all (help refund-for-risky-emails;
+  terms §8 "discretionary"). Money-back: >4% OK hard bounce, web app
+  upload, mailed within 7 days (help 100-money-back-guarantee).
+- Free credits: homepage 100 vs help center 500 with business email / up
+  to 10,000 via integration. Used the help center.
+- API: v3 GET, 160 req/s (help real-time-api), bulk API; no SDKs, no
+  official MCP.
+- Data location conflict: help GDPR page (EU only, Hungary and Sweden) vs
+  processor list (millionverifier.com/service-providers-recipients-and-
+  subprocessors/, 2026-08-25) with US/Canadian hosts and Anthropic, OpenAI,
+  Google Gemini.
+- Company: GBD Software as a Service, Lakitelek, Hungary; CEO Tamás
+  Hám-Szabó (DPA); 70,000+ businesses (homepage). Founding year unknown.
+- Benchmark: run 886a; see evidence.md section G. Agreement tiles left out:
+  same verdict 67/100 with both others (same send decision 81-83/100).
+- pipe0 relationship: person:email:validate:millionverifier pipe.
+*/}
+
+## What is MillionVerifier?
+
+MillionVerifier is an email verification service run from Hungary by Tamás
+Hám-Szabó, built for one thing: checking very large lists for very little
+money. Upload a file or call a single GET endpoint, and each address comes
+back as ok, catch-all, unknown, disposable, invalid, or error, with a quality
+flag. It says more than 70,000 businesses use it, and it connects to
+newsletter tools, CRMs, and sequencers, including Clay.
+
+There is no subscription. You buy a pack of credits, and they never expire.
+
+## How it did in our test
+
+We ran 100 labelled addresses through three verifiers. Fifty were real
+mailboxes, pipe0 users who had signed in with Google in the last 45 days.
+Fifty were fake: random mailboxes at Gmail, Outlook, and well-known company
+domains, and addresses at domains that don't exist.
+
+On the easy half, MillionVerifier was perfect. All 20 real Gmail addresses
+came back valid, and all 20 fake freemail addresses and all 10 dead domains
+came back invalid. For a consumer newsletter list, that is the job.
+
+Work addresses were different. Of 30 real work addresses, MillionVerifier
+confirmed 11 and called 18 catch-all. Of 20 fake ones, it caught 5 and again
+called 13 catch-all. It gives that verdict when a mail server accepts the
+test without confirming the mailbox, which many company domains do. The
+other two verifiers resolved almost all of the same addresses.
+
+So the overall score, 66 of 100, says less about errors than about caution.
+MillionVerifier rejected only one real address, the fewest of the three. It
+just declined to commit on a third of the list. In practice, that leaves you
+two bad choices on a work list: send only to its valid results and lose 19
+of 50 real leads, or send to catch-alls as well and let 14 fakes through.
+
+## What it costs
+
+This is where MillionVerifier wins outright. 10,000 checks cost $39, 100,000
+cost $149, and a million cost $449. ZeroBounce charges $129, $649, and
+$3,199 for the same volumes. At 25 million and up, a check costs 0.02 cents.
+Unknown and catch-all results are credited back as goodwill credits, which
+MillionVerifier's terms say it can withdraw.
+
+The money-back guarantee is real but narrow: it refunds your last payment if
+more than 4% of the valid addresses hard-bounce, as long as you uploaded the
+file in the web app and mailed every valid address within seven days.
+
+## MillionVerifier for developers
+
+The real-time API is a single GET request that allows 160 requests a second
+and answered in a median of 0.7 seconds in our test. A bulk API handles
+files. There are code samples in the docs, but no SDKs and no official MCP
+server, so an agent reaches it through a generic HTTP tool or a third-party
+bridge.
+
+One thing to check before you send it customer data: its help center says
+data is never processed outside the EU, while its own published list of
+processors includes US and Canadian hosts and three AI vendors.
+
+## MillionVerifier and pipe0
+
+We buy verification from MillionVerifier, and pipe0 offers it as a pipe. It
+is the right choice for consumer addresses and list hygiene at volume. For
+work addresses, this benchmark is why we point outbound teams at
+[ZeroBounce](/reviews/zerobounce) instead.
+
+## Who should buy MillionVerifier
+
+Buy MillionVerifier if you clean large lists of mostly consumer addresses,
+or you want to remove dead domains and obvious junk before a send at the
+lowest possible price.
+
+Look elsewhere if your list is work addresses for cold outbound. There, a
+third of its answers will be catch-all, and you'll need a second verifier for
+those anyway.

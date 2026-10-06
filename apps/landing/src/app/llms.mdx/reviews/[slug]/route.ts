@@ -95,14 +95,35 @@ export async function GET(
           "",
           `## ${tool} in our benchmark`,
           "",
-          `pipe0 ran the same records through every provider it tests (${d.benchmark.period}).`,
+          d.benchmark.verification
+            ? `pipe0 ran the same labelled addresses through every verifier it tests and scored each verdict against the known answer (${d.benchmark.period}).`
+            : `pipe0 ran the same records through every provider it tests (${d.benchmark.period}).`,
           "",
-          "| Test | Records | Coverage | Agreement | Median time | Run |",
-          "| --- | --- | --- | --- | --- | --- |",
+          ...(d.benchmark.rows.length > 0
+            ? [
+                "| Test | Records | Coverage | Agreement | Median time | Run |",
+                "| --- | --- | --- | --- | --- | --- |",
+              ]
+            : []),
           ...d.benchmark.rows.map(
             (r) =>
               `| ${cell(r.test)} (${r.dataset === "signups" ? "signup emails" : "LinkedIn profiles"}) | ${r.n} | ${r.coverage}% | ${r.agreement !== undefined ? `${r.agreement}%` : "–"} | ${r.latency ?? "–"} | ${r.run} |`,
           ),
+          ...(d.benchmark.verification
+            ? [
+                "",
+                `### Verifier scorecard (run ${d.benchmark.verification.run})`,
+                "",
+                `${d.benchmark.verification.n} labelled addresses, ${d.benchmark.verification.valid} known valid and ${d.benchmark.verification.n - d.benchmark.verification.valid} known invalid. Catch-all and unknown count as undetermined, never as wrong.`,
+                "",
+                "| Verifier | Accuracy | Real confirmed | Fakes caught | Fakes passed as valid | Real called invalid | Undetermined | Median time |",
+                "| --- | --- | --- | --- | --- | --- | --- | --- |",
+                ...d.benchmark.verification.rows.map(
+                  (r) =>
+                    `| ${r.provider} | ${Math.round(r.accuracy)}% | ${r.validConfirmed}/${d.benchmark!.verification!.valid} | ${r.invalidCaught}/${d.benchmark!.verification!.n - d.benchmark!.verification!.valid} | ${r.falsePositives} | ${r.falseNegatives} | ${r.undetermined} | ${r.latency ?? "–"} |`,
+                ),
+              ]
+            : []),
           ...(d.benchmark.latency
             ? [
                 "",
@@ -126,7 +147,7 @@ export async function GET(
                 "",
                 ...d.benchmark.agreement.pairs.map(
                   (p) =>
-                    `- ${p.provider} (${p.tier.toLowerCase()}): ${tool} and ${p.provider} returned the same ${d.benchmark!.agreement!.unit} for ${p.agreed} of ${p.compared} people (${Math.round((p.agreed / p.compared) * 100)}%).`,
+                    `- ${p.provider}${p.tier ? ` (${p.tier.toLowerCase()})` : ""}: ${tool} and ${p.provider} returned the same ${d.benchmark!.agreement!.unit} for ${p.agreed} of ${p.compared} ${d.benchmark!.agreement!.subject} (${Math.round((p.agreed / p.compared) * 100)}%).`,
                 ),
               ]
             : []),

@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils";
 
 type Pair = {
   provider: string;
-  tier: "Low-cost" | "Premium";
+  tier?: "Low-cost" | "Premium";
   compared: number;
   agreed: number;
 };
@@ -17,13 +17,17 @@ export function AgreementTiles({
   tool,
   test,
   unit,
+  subject = "people",
   pairs,
 }: {
   tool: string;
   test: string;
   unit: string;
+  /** What a tile stands for: a person looked up, or an address checked. */
+  subject?: "people" | "addresses";
   pairs: Pair[];
 }) {
+  const one = subject === "people" ? "person" : "address";
   return (
     <figure className="mt-8">
       <figcaption>
@@ -31,7 +35,7 @@ export function AgreementTiles({
           How often {tool} agrees with other providers
         </p>
         <p className="mt-1 text-[14px] leading-relaxed text-fd-muted-foreground">
-          {test}. Each square is one person both providers returned a {unit}{" "}
+          {test}. Each square is one {one} both providers returned a {unit}{" "}
           for.
         </p>
         <div className="mt-3 flex flex-wrap gap-x-5 gap-y-1.5 text-[13px] text-fd-muted-foreground">
@@ -55,7 +59,7 @@ export function AgreementTiles({
       >
         {pairs.map((pair) => {
           const rate = Math.round((pair.agreed / pair.compared) * 100);
-          const sentence = `${tool} and ${pair.provider} returned the same ${unit} for ${pair.agreed} of ${pair.compared} people.`;
+          const sentence = `${tool} and ${pair.provider} returned the same ${unit} for ${pair.agreed} of ${pair.compared} ${subject}.`;
           return (
             <div
               key={pair.provider}
@@ -64,7 +68,7 @@ export function AgreementTiles({
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
                   <p className="text-[13px] text-fd-muted-foreground">
-                    {pair.tier} provider
+                    {pair.tier ? `${pair.tier} provider` : "Compared with"}
                   </p>
                   <p className="font-blog truncate text-[16px] font-semibold text-fd-foreground">
                     vs {pair.provider}
@@ -87,7 +91,7 @@ export function AgreementTiles({
                   return (
                     <span
                       key={i}
-                      title={`Person ${i + 1} of ${pair.compared}: ${agreed ? "same" : "different"} ${unit}`}
+                      title={`${one === "person" ? "Person" : "Address"} ${i + 1} of ${pair.compared}: ${agreed ? "same" : "different"} ${unit}`}
                       className="transition-transform hover:scale-125"
                     >
                       <Tile agreed={agreed} />

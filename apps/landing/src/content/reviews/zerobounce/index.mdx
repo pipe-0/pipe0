@@ -1,0 +1,337 @@
+---
+title: "ZeroBounce review (2026): the most accurate verifier we tested"
+description: "ZeroBounce got 96 of 100 labelled addresses right in our test and
+  passed no fake address as valid. It costs several times more per check
+  than budget verifiers, and new accounts' credits now expire."
+tool:
+  name: ZeroBounce
+  url: https://www.zerobounce.net
+  logo: /media/reviews/logos/zerobounce.png
+  category: Email verification
+verdict: "The most accurate email verifier we tested, with zero fakes passed
+  as valid and a real answer on work domains other verifiers call catch-all.
+  You pay three to seven times more per check for it."
+relationship: supplier
+disclosure: "pipe0 buys verification from ZeroBounce and offers it as a pipe.
+  The scores come from our own benchmark, not from that relationship."
+scores:
+  easeOfUse:
+    score: 4.5
+    why: "Upload a list or call one endpoint. 100 free checks a month, clear
+      statuses, and sub-statuses that say why an address failed."
+  dataQuality:
+    score: 4.7
+    why: "96 of 100 labelled addresses right, no fake passed as valid, and
+      only 2 undetermined. It resolved work domains another verifier gave up
+      on."
+  pricingValue:
+    score: 3
+    why: "From 2 cents a check on small packs to 0.3 cents at volume, several
+      times a budget verifier. Catch-all results are charged."
+  agentAccess:
+    score: 4.5
+    why: "An official MCP server, SDKs in 13 languages, a batch endpoint, and
+      a rate limit of 80,000 checks per 10 seconds."
+bestFor:
+  - "Cold outbound to work addresses, where a bounce hurts the domain"
+  - "Teams that need a definite answer on catch-all-looking domains"
+  - "Companies that need SOC 2, ISO 27001, or HIPAA paperwork"
+skipIf:
+  - "You verify millions of consumer addresses and price is everything"
+  - "You buy credits once and use them over several years"
+pros:
+  - title: "Most accurate in our test"
+    body: "ZeroBounce got 96 of 100 labelled addresses right: 47 of 50 real
+      ones confirmed and 49 of 50 fakes caught, more than the other two
+      verifiers."
+  - title: "No fake passed as valid"
+    body: "Not one of the 50 known-fake addresses came back valid, so a list
+      that sends only to its valid addresses would have bounced on none of
+      them."
+  - title: "Answers where others hedge"
+    body: "On 30 real work addresses, ZeroBounce gave a definite verdict on 29.
+      A budget verifier called 18 of the same 30 catch-all."
+  - title: "Fast and agent-ready"
+    body: "A median of 0.3 seconds per check, the fastest of the three, an
+      official MCP server for Claude, Cursor, and VS Code, and SDKs in 13
+      languages."
+cons:
+  - title: "Several times the price of budget verifiers"
+    body: "10,000 checks cost $129 against $39 at MillionVerifier, and 1
+      million cost $3,199 against $449."
+  - title: "Credits now expire"
+    body: "For accounts created after June 1, 2026, credits expire two years
+      after the last purchase unless a ZeroBounce ONE subscription is active.
+      Older pages still say credits never expire."
+  - title: "Catch-all results are billed"
+    body: "Unknown results are free, but a catch-all verdict costs a credit
+      like any other."
+  - title: "Real addresses can be rejected"
+    body: "It called 2 of our 50 real addresses invalid. One of them every
+      verifier rejected, so the label itself may be wrong."
+pricing:
+  asOf: 2026-10-06
+  source: https://www.zerobounce.net/email-validation-pricing
+  startingAt: 39
+  startingAtNote: "for 2,000 checks, pay as you go"
+  startingAtPeriod: one-time
+  freePlan: true
+  plans:
+    - name: Free
+      price: "$0"
+      includes: "100 validations a month on a business domain, plus small
+        monitoring and email finder allowances."
+    - name: Pay as you go
+      price: "$39 to $26,998"
+      includes: "2,000 checks for $39, 10,000 for $129, 100,000 for $649, 1
+        million for $3,199, down to 0.27 cents a check at 5 million."
+    - name: ZeroBounce ONE
+      price: "$79/mo annual, $99 monthly"
+      includes: "10,000 checks a month, warmup, DMARC and blacklist monitoring,
+        inbox placement tests, email finder, and 15% off extra credits."
+  notes:
+    - "One credit per check. Unknown results and duplicates are free; catch-all
+      results are charged."
+    - "Credits for accounts registered after June 1, 2026 expire two years
+      after the most recent purchase unless ZeroBounce ONE is active."
+    - "ZeroBounce guarantees 99.6% accuracy on lists of 1,000+ opt-in
+      addresses, refunding five times the shortfall if you send only to the
+      valid file within 72 hours and share bounce codes."
+facts:
+  - label: Founded
+    value: "2013 by Liviu Tanase, who is CEO"
+    source: https://www.zerobounce.net/about
+  - label: Headquarters
+    value: "Santa Barbara, California"
+    source: https://www.zerobounce.net/about
+  - label: Customers
+    value: "650,000+, according to ZeroBounce"
+    source: https://www.zerobounce.net/facts
+  - label: Verdicts
+    value: "valid, invalid, catch-all, unknown, spamtrap, abuse, do_not_mail,
+      each with a sub-status"
+    source: https://www.zerobounce.net/docs/email-validation-api-quickstart/v2-status-codes
+  - label: API
+    value: "Real-time and batch endpoints, 80,000 requests per 10 seconds,
+      SDKs in 13 languages"
+    source: https://www.zerobounce.net/docs/api-dashboard/api-rate-limits
+  - label: MCP server
+    value: "Official and open source, for Claude Desktop, Cursor, and VS Code"
+    source: https://www.zerobounce.net/mcp
+  - label: Compliance
+    value: "SOC 2 Type 2, ISO 27001, and HIPAA, according to ZeroBounce"
+    source: https://www.zerobounce.net/trust
+  - label: Data centers
+    value: "Frankfurt and New York"
+    source: https://www.zerobounce.net/docs/api-dashboard/api-endpoints
+benchmark:
+  period: "October 2026"
+  verification:
+    run: 20261006T201548Z-886a
+    n: 100
+    valid: 50
+    rows:
+      - provider: ZeroBounce
+        accuracy: 96
+        validConfirmed: 47
+        invalidCaught: 49
+        falsePositives: 0
+        falseNegatives: 2
+        undetermined: 2
+        latency: "0.3 s"
+      - provider: MixRank
+        accuracy: 93
+        validConfirmed: 47
+        invalidCaught: 46
+        falsePositives: 0
+        falseNegatives: 3
+        undetermined: 4
+        latency: "1.3 s"
+      - provider: MillionVerifier
+        accuracy: 66
+        validConfirmed: 31
+        invalidCaught: 35
+        falsePositives: 1
+        falseNegatives: 1
+        undetermined: 32
+        latency: "0.7 s"
+  notes:
+    - "Every verifier got all 20 real Gmail addresses, all 20 fake Gmail and
+      Outlook addresses, and all 10 addresses at nonexistent domains right.
+      The differences are all on work domains."
+    - "One real address was called invalid by all three verifiers. A sign-in
+      45 days earlier proves the Google account then, not the address today,
+      so it may be a labelling error."
+    - "Median times come from the first, fully uncached run
+      (20261006T201402Z-a061)."
+  agreement:
+    test: "Email verification, 100 labelled addresses"
+    run: 20261006T201548Z-886a
+    unit: "verdict"
+    subject: addresses
+    pairs:
+      - provider: MixRank
+        compared: 100
+        agreed: 93
+      - provider: MillionVerifier
+        tier: Low-cost
+        compared: 100
+        agreed: 67
+  latency:
+    test: "Email verification"
+    run: 20261006T201402Z-a061
+    seconds: 0.3
+    others:
+      - provider: MillionVerifier
+        tier: Low-cost
+        seconds: 0.7
+      - provider: MixRank
+        seconds: 1.3
+alternatives:
+  - name: MillionVerifier
+    href: /reviews/millionverifier
+    why: "You verify large consumer lists and the price per check matters
+      more than catch-all answers."
+  - name: pipe0
+    href: /docs/pipe-catalog
+    why: "You want ZeroBounce verification as a column next to email finding
+      and enrichment, billed in one subscription."
+  - name: Hunter
+    href: /reviews/hunter
+    why: "You also need to find work emails, with verification included."
+authors:
+  - name: Florian
+    title: Founder
+date: 2026-10-06
+faq:
+  - q: "Is ZeroBounce accurate?"
+    a: "In our test it was the most accurate of three verifiers: 96 of 100
+      labelled addresses right, 47 of 50 real addresses confirmed, and 49 of
+      50 fake addresses caught. It passed no fake address as valid."
+  - q: "How much does ZeroBounce cost?"
+    a: "Pay-as-you-go packs start at $39 for 2,000 checks and fall to about
+      0.3 cents a check at a million or more. ZeroBounce ONE costs $79 a month
+      billed annually for 10,000 checks plus deliverability tools. There are
+      100 free checks a month."
+  - q: "ZeroBounce or MillionVerifier: which is better?"
+    a: "ZeroBounce was more accurate in our test, 96% against 66%, mostly
+      because it gave definite answers on work domains that MillionVerifier
+      called catch-all. MillionVerifier is three to seven times cheaper per
+      check."
+  - q: "Do ZeroBounce credits expire?"
+    a: "For accounts registered after June 1, 2026, yes: credits expire two
+      years after the most recent purchase unless a ZeroBounce ONE
+      subscription is active. Older accounts and some ZeroBounce pages still
+      describe credits that never expire."
+  - q: "Does ZeroBounce have an API and an MCP server?"
+    a: "Yes. The API has real-time and batch endpoints with SDKs in 13
+      languages, and ZeroBounce publishes an official open-source MCP server
+      for Claude Desktop, Cursor, and VS Code."
+---
+
+{/*
+FACT BASE (checked 2026-10-06 on primary sources unless marked):
+- Pricing (zerobounce.net/email-validation-pricing, embedded data): 2,000
+  $39; 5,000 $69; 10,000 $129; 25,000 $274; 50,000 $499; 100,000 $649;
+  250,000 $1,299; 500,000 $2,199; 1M $3,199; 2M $5,999; 5M $13,499; 10M
+  $26,998. ONE $99/mo or $948/yr, 10,000 credits/mo, 15% off PAYG. Free
+  100/mo, business domain. Unknown and duplicates free; catch-all charged.
+- Credit expiry: terms-of-use §10c (accounts after 2026-06-01: 2 years
+  after last purchase unless ONE active); /about and docs FAQ say never.
+- Guarantee (docs/email-list-validation/the-zb-guarantee): 99.6%, 5x
+  refund per point, conditions. Self-run benchmark 98.02%: not used.
+- API: v2/validate, validatebatch (100/request), 80,000 per 10 s; 13 SDK
+  languages (wrappers page). MCP: @zerobounce/mcp, zerobounce.net/mcp.
+- Compliance claims (/trust): SOC 2 Type 2, ISO 27001:2022, HIPAA. Evidence
+  gated, not inspected. Data centers Frankfurt and NYC (api-endpoints).
+- Company: 2013, Liviu Tanase (about); Santa Barbara; 650,000+ customers
+  (/facts).
+- Benchmark: run 886a (accuracy), a061 (latency). See evidence.md section
+  G and closed/assets/provider-benchmark README "Email verification".
+  Agreement pairs from verify-score: zerobounce|mixrank same verdict
+  93/100, zerobounce|millionverifier 67/100.
+- pipe0 relationship: email:validate:zerobounce pipe (closed catalog
+  email-validate-zerobounce-1.ts).
+*/}
+
+## What is ZeroBounce?
+
+ZeroBounce checks whether an email address will accept mail before you send
+to it. Liviu Tanase founded it in 2013 in Santa Barbara, and it says more
+than 650,000 customers use it, from people cleaning a newsletter list to
+outbound teams checking every address before a sequence starts.
+
+You can upload a list or call one endpoint per address. Each check returns
+one of seven statuses (valid, invalid, catch-all, unknown, spamtrap, abuse,
+or do not mail) with a sub-status that says why, such as
+`mailbox_not_found` or `greylisted`. Around that, ZeroBounce has built a
+deliverability suite: an email finder, warmup, DMARC and blacklist
+monitoring, and inbox placement tests.
+
+## How it did in our test
+
+We ran 100 labelled addresses through three verifiers. Fifty were real: pipe0
+users who had signed in with Google in the previous 45 days, 30 on work
+domains and 20 on Gmail. Fifty were fake: random mailboxes at Gmail, Outlook,
+and well-known company domains, and addresses at domains that don't exist.
+
+ZeroBounce got 96 of them right. It confirmed 47 of the 50 real addresses and
+caught 49 of the 50 fakes, and it passed none of the fakes as valid. If you
+had sent only to the addresses it called valid, nothing in this test would
+have bounced.
+
+All three verifiers handled the easy cases perfectly: real Gmail addresses,
+random Gmail and Outlook mailboxes, and domains with no mail server. The
+difference was entirely on work domains. On 30 real work addresses,
+ZeroBounce gave a definite answer on 29. MillionVerifier called 18 of the
+same 30 catch-all, which in practice means "send at your own risk".
+
+ZeroBounce called two real addresses invalid. One of those, every verifier
+rejected, which suggests the address stopped existing after the user's last
+sign-in rather than an error by ZeroBounce.
+
+## What it costs
+
+Pay-as-you-go packs start at $39 for 2,000 checks, almost 2 cents each, and
+fall to about 0.3 cents a check at a million or more. ZeroBounce ONE, the
+subscription, costs $79 a month billed annually for 10,000 checks a month
+plus the deliverability tools. There are 100 free checks a month for a
+business email address.
+
+That is several times the price of budget verifiers: 10,000 checks cost $129
+at ZeroBounce and $39 at MillionVerifier. Unknown results are free, but
+catch-all results are billed. One change to know about: for accounts
+created after June 1, 2026, credits expire two years after the last purchase
+unless a subscription is active.
+
+## ZeroBounce for developers and agents
+
+The API has a real-time endpoint, a batch endpoint for 100 addresses per
+request, and a bulk file API, with SDKs in 13 languages and a limit of
+80,000 requests per 10 seconds. It answered in a median of 0.3 seconds in our
+test, the fastest of the three. ZeroBounce also publishes an official,
+open-source MCP server, so an agent in Claude, Cursor, or VS Code can verify
+an address before it writes to a CRM or a sequence.
+
+For companies with security reviews, ZeroBounce says it holds SOC 2 Type 2,
+ISO 27001, and HIPAA certifications, and it runs its own data centers in
+Frankfurt and New York.
+
+## ZeroBounce and pipe0
+
+We buy verification from ZeroBounce, and pipe0 offers it as a pipe you can
+add to a sheet next to email finding. We chose it for accuracy on work
+domains, which is where outbound lists live, and this benchmark is the
+reason it stays.
+
+## Who should buy ZeroBounce
+
+Buy ZeroBounce if you send to work addresses and a bounce costs you more
+than a check does: cold outbound, sales sequences, anything on a domain you
+care about. Its answers on catch-all-looking work domains are the reason to
+pay the premium.
+
+Look elsewhere if you verify very large consumer lists where price per check
+decides, or if you buy credits once and use them over years. Then
+[MillionVerifier](/reviews/millionverifier) costs a fraction and handles
+consumer addresses just as well.

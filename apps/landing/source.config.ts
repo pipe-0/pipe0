@@ -257,6 +257,7 @@ export const reviews = defineCollections({
         "Sales database",
         "Waterfall enrichment",
         "Contact finder",
+        "Email verification",
         "Sales engagement",
         "Agent data tools",
       ]),
@@ -285,6 +286,8 @@ export const reviews = defineCollections({
       startingAt: z.number(),
       /** What `startingAt` buys, e.g. "per seat, billed annually". */
       startingAtNote: z.string(),
+      /** "month" prints "$49/mo"; "one-time" prints "$39" for credit packs. */
+      startingAtPeriod: z.enum(["month", "one-time"]).default("month"),
       freePlan: z.boolean(),
       plans: z.array(
         z.object({
@@ -344,7 +347,9 @@ export const reviews = defineCollections({
             /** Median response time, e.g. "0.9 s". */
             latency: z.string().optional(),
           }),
-        ),
+        )
+          // Verifier reviews carry a `verification` scorecard instead.
+          .default([]),
         /** Run-specific caveats, on top of the standard ones. */
         notes: z.array(z.string()).optional(),
         /**
@@ -359,17 +364,45 @@ export const reviews = defineCollections({
             run: z.string(),
             /** What both returned, singular, e.g. "mobile number". */
             unit: z.string(),
+            /** What one tile stands for: a person looked up, or an address checked. */
+            subject: z.enum(["people", "addresses"]).default("people"),
             pairs: z
               .array(
                 z.object({
                   provider: z.string(),
-                  tier: z.enum(["Low-cost", "Premium"]),
+                  tier: z.enum(["Low-cost", "Premium"]).optional(),
                   compared: z.number().int().positive(),
                   agreed: z.number().int().nonnegative(),
                 }),
               )
               .min(1)
               .max(3),
+          })
+          .optional(),
+        /**
+         * Verifier scorecard against a labelled dataset: every verifier on the same addresses,
+         * each verdict scored against the known answer. Copy from `bench verify-score <run>`.
+         */
+        verification: z
+          .object({
+            run: z.string(),
+            /** Labelled addresses, and how many of them are known valid. */
+            n: z.number().int().positive(),
+            valid: z.number().int().positive(),
+            rows: z
+              .array(
+                z.object({
+                  provider: z.string(),
+                  accuracy: z.number(),
+                  validConfirmed: z.number().int(),
+                  invalidCaught: z.number().int(),
+                  falsePositives: z.number().int(),
+                  falseNegatives: z.number().int(),
+                  undetermined: z.number().int(),
+                  latency: z.string().optional(),
+                }),
+              )
+              .min(2),
           })
           .optional(),
         /**

@@ -85,10 +85,11 @@ export function reviewSlug(review: ReviewPage): string {
   return review.slugs[0];
 }
 
-/** "$49/mo", "Free" when the cheapest paid plan is $0. */
+/** "$49/mo", "$39" for a one-time credit pack, "Free" when the cheapest paid plan is $0. */
 export function formatStartingPrice(review: ReviewPage): string {
-  const { startingAt } = review.data.pricing;
-  return startingAt === 0 ? "Free" : `$${startingAt}/mo`;
+  const { startingAt, startingAtPeriod } = review.data.pricing;
+  if (startingAt === 0) return "Free";
+  return startingAtPeriod === "one-time" ? `$${startingAt}` : `$${startingAt}/mo`;
 }
 
 /** Other reviews to read next: same category first, then by score. */
@@ -115,12 +116,21 @@ export function benchmarkCaveats(
   benchmark: NonNullable<ReviewPage["data"]["benchmark"]>,
 ): string[] {
   const hasAgreement = benchmark.rows.some((r) => r.agreement !== undefined);
-  const sizes = benchmark.rows.map((r) => r.n);
+  const sizes = [
+    ...benchmark.rows.map((r) => r.n),
+    ...(benchmark.verification ? [benchmark.verification.n] : []),
+  ];
   const [min, max] = [Math.min(...sizes), Math.max(...sizes)];
   const range = min === max ? `${min} records` : `${min} to ${max} records`;
   return [
     ...(benchmark.notes ?? []),
     `Samples are small, ${range} per test, so treat a few points of difference as noise.`,
+    ...(benchmark.verification
+      ? [
+          "Known-valid addresses are pipe0 users with a live Google sign-in in the last 45 days; known-invalid addresses are synthetic, with no person behind them.",
+          "Catch-all, unknown, and risky verdicts count as undetermined, never as wrong. Only a fake passed as valid or a real address called invalid is an error.",
+        ]
+      : []),
     ...(benchmark.rows.some((r) => r.dataset === "profiles")
       ? [
           "The LinkedIn profile set passed one vendor's resolvability filter, so absolute rates run higher than on a typical list. Comparisons between providers stay fair.",

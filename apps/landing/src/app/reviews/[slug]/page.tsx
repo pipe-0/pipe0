@@ -23,6 +23,7 @@ import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 import { AgreementTiles } from "../agreement-tiles";
 import { LatencyBars } from "../latency-bars";
+import { VerificationScorecard } from "../verification-scorecard";
 import { ScoreBar, ScorePill, ToolLogo } from "../review-parts";
 import {
   benchmarkCaveats,
@@ -302,10 +303,19 @@ export default async function Review(props: {
         {d.benchmark && (
           <ReviewSection id="benchmark" title={`${tool} in our benchmark`}>
             <p className="text-[15.5px] leading-[1.65] text-fd-muted-foreground">
-              We ran the same records through every provider we test and
-              counted who returned a result. These are {tool}&apos;s numbers
-              from {d.benchmark.period}.
+              {d.benchmark.verification
+                ? `We ran the same ${d.benchmark.verification.n} labelled addresses through every verifier we test and scored each verdict against the known answer. These are the results from ${d.benchmark.period}.`
+                : `We ran the same records through every provider we test and counted who returned a result. These are ${tool}'s numbers from ${d.benchmark.period}.`}
             </p>
+            {d.benchmark.verification && (
+              <VerificationScorecard
+                tool={tool}
+                valid={d.benchmark.verification.valid}
+                invalid={d.benchmark.verification.n - d.benchmark.verification.valid}
+                rows={d.benchmark.verification.rows}
+              />
+            )}
+            {d.benchmark.rows.length > 0 && (
             <div className="mt-5 overflow-x-auto rounded-xl ring-1 ring-fd-border">
               <table className="w-full min-w-[620px] text-left text-[14px]">
                 <thead className="bg-fd-muted text-[13px] text-fd-muted-foreground">
@@ -363,6 +373,7 @@ export default async function Review(props: {
                 </tbody>
               </table>
             </div>
+            )}
             {d.benchmark.latency && (
               <LatencyBars
                 tool={tool}
@@ -376,6 +387,7 @@ export default async function Review(props: {
                 tool={tool}
                 test={d.benchmark.agreement.test}
                 unit={d.benchmark.agreement.unit}
+                subject={d.benchmark.agreement.subject}
                 pairs={d.benchmark.agreement.pairs}
               />
             )}
@@ -386,7 +398,12 @@ export default async function Review(props: {
             </ul>
             <p className="mt-4 text-[13px] text-fd-muted-foreground">
               Run ids:{" "}
-              {[...new Set(d.benchmark.rows.map((r) => r.run))].map((run, i) => (
+              {[
+                ...new Set([
+                  ...d.benchmark.rows.map((r) => r.run),
+                  ...(d.benchmark.verification ? [d.benchmark.verification.run] : []),
+                ]),
+              ].map((run, i) => (
                 <span key={run}>
                   {i > 0 && ", "}
                   <code className="text-[12px]">{run}</code>
