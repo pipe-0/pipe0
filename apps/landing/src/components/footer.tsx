@@ -1,4 +1,5 @@
 import { LogoRaw } from "@/components/logo";
+import { sortedReviews } from "@/app/reviews/review-utils";
 import { appInfo } from "@/lib/const";
 import { Linkedin } from "lucide-react";
 import Link from "next/link";
@@ -15,6 +16,29 @@ type FooterGroup = {
   links: FooterLink[];
 };
 
+// Reviews, A to Z. The footer lists the first ten and links to the index;
+// the group appears with the first published review (drafts count in dev,
+// like on /reviews).
+const REVIEW_LINK_LIMIT = 10;
+const footerReviews = sortedReviews().sort((a, b) =>
+  a.data.tool.name.localeCompare(b.data.tool.name),
+);
+const reviewGroup: FooterGroup[] =
+  footerReviews.length > 0
+    ? [
+        {
+          heading: "Tool reviews",
+          links: [
+            ...footerReviews.slice(0, REVIEW_LINK_LIMIT).map((r) => ({
+              label: `${r.data.tool.name} review`,
+              href: r.url,
+            })),
+            { label: "All tool reviews", href: "/reviews" },
+          ],
+        },
+      ]
+    : [];
+
 /* Columns hold stacked groups (Ferndesk pattern): tall lists sit at the
    edges, short groups stack in the middle so column heights stay level. */
 const footerColumns: FooterGroup[][] = [
@@ -30,6 +54,8 @@ const footerColumns: FooterGroup[][] = [
         { label: "TypeScript SDK", href: "/docs/sdks/typescript-client" },
       ],
     },
+    // Up to 11 links: stacked under the shortest group to keep columns level.
+    ...reviewGroup,
   ],
   [
     {

@@ -5,6 +5,7 @@ import {
   sortedPosts,
   usedCategories,
 } from "@/app/blog/blog-utils";
+import { publishedReviews } from "@/app/reviews/review-utils";
 import { AUTHORS, authorUrl } from "@/lib/authors";
 import { compareConfigs } from "@/lib/compare/registry";
 import { source, blog, legal } from "@/lib/source";
@@ -40,6 +41,25 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.4,
       lastModified: lastRevised(page),
     }));
+
+  const reviews = publishedReviews();
+  const reviewPages = [
+    ...(reviews.length > 0
+      ? [
+          {
+            url: url("/reviews"),
+            changeFrequency: "weekly" as const,
+            priority: 0.6,
+          },
+        ]
+      : []),
+    ...reviews.map((page) => ({
+      url: url(page.url),
+      changeFrequency: "monthly" as const,
+      priority: 0.6,
+      lastModified: lastRevised(page),
+    })),
+  ];
 
   const authorPages = AUTHORS.map((author) => ({
     url: url(authorUrl(author)),
@@ -118,6 +138,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...docPages,
     ...blogPages,
     ...blogCategoryPages,
+    ...reviewPages,
     ...authorPages,
     ...legalPages,
   ];

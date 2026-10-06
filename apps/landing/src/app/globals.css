@@ -478,6 +478,15 @@ a:has(> [data-slot="button"]),
   }
 }
 
+/* Reviews: the prose shares the review column with the structured
+   sections (verdict, tables), so it fills it instead of the post measure. */
+.review-prose > * {
+  max-width: none;
+}
+.review-prose h2 {
+  margin-top: 64px;
+}
+
 /* ============================================================
    Marketing landing / pricing redesign
    Scoped to `.landing`. Light is the primary theme; the design

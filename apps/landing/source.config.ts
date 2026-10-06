@@ -133,6 +133,39 @@ export const legal = defineCollections({
   async: true,
 });
 
+/** MDX options shared by the editorial collections (blog, reviews). */
+async function articleMdxOptions(environment: Parameters<ReturnType<typeof applyMdxPreset>>[0]) {
+  const { rehypeCodeDefaultOptions } =
+    await import("fumadocs-core/mdx-plugins/rehype-code");
+  const { remarkSteps } =
+    await import("fumadocs-core/mdx-plugins/remark-steps");
+
+  return applyMdxPreset({
+    rehypeCodeOptions: isLint
+      ? false
+      : {
+          inline: "tailing-curly-colon",
+          themes: {
+            light: "catppuccin-latte",
+            dark: "catppuccin-mocha",
+          },
+          transformers: [
+            ...(rehypeCodeDefaultOptions.transformers ?? []),
+            transformerEscape(),
+          ],
+        },
+    remarkCodeTabOptions: {
+      parseMdx: true,
+    },
+    remarkNpmOptions: {
+      persist: {
+        id: "package-manager",
+      },
+    },
+    remarkPlugins: isLint ? [] : [remarkSteps],
+  })(environment);
+}
+
 export const blog = defineCollections({
   type: "doc",
   dir: "src/content/blog",
@@ -186,37 +219,105 @@ export const blog = defineCollections({
   postprocess: {
     includeProcessedMarkdown: true,
   },
-  async mdxOptions(environment) {
-    const { rehypeCodeDefaultOptions } =
-      await import("fumadocs-core/mdx-plugins/rehype-code");
-    const { remarkSteps } =
-      await import("fumadocs-core/mdx-plugins/remark-steps");
+  mdxOptions: articleMdxOptions,
+});
 
-    return applyMdxPreset({
-      rehypeCodeOptions: isLint
-        ? false
-        : {
-            inline: "tailing-curly-colon",
-            themes: {
-              light: "catppuccin-latte",
-              dark: "catppuccin-mocha",
-            },
-            transformers: [
-              ...(rehypeCodeDefaultOptions.transformers ?? []),
-              transformerEscape(),
-            ],
-          },
-      remarkCodeTabOptions: {
-        parseMdx: true,
-      },
-      remarkNpmOptions: {
-        persist: {
-          id: "package-manager",
-        },
-      },
-      remarkPlugins: isLint ? [] : [remarkSteps],
-    })(environment);
+const criterion = z.object({
+  /** Out of 5, in half steps. */
+  score: z.number().min(1).max(5).multipleOf(0.5),
+  /** One plain sentence: why this score. Shown under the bar. */
+  why: z.string(),
+});
+
+const noteList = z.array(z.object({ title: z.string(), body: z.string() }));
+
+/**
+ * Tool reviews (/reviews/<slug>). The structured fields render the fixed
+ * review layout (verdict card, facts, pros and cons, pricing, alternatives,
+ * FAQ) and ship as Review structured data; the MDX body holds the prose.
+ * Everything here is plain text: no Markdown, no links.
+ */
+export const reviews = defineCollections({
+  type: "doc",
+  dir: "src/content/reviews",
+  schema: pageSchema.extend({
+    tool: z.object({
+      name: z.string(),
+      url: z.url(),
+      /** Square logo under /public. Cards fall back to a monogram. */
+      logo: z.string().optional(),
+      category: z.enum([
+        "Enrichment platform",
+        "Sales database",
+        "Waterfall enrichment",
+        "Sales engagement",
+        "Agent data tools",
+      ]),
+    }),
+    /**
+     * The review in one sentence, 30 words or fewer. Used as the TL;DR,
+     * the card line, the llms.txt line, and the Review `reviewBody`.
+     */
+    verdict: z.string(),
+    /** The four fixed criteria. The overall score is their mean. */
+    scores: z.object({
+      easeOfUse: criterion,
+      dataQuality: criterion,
+      pricingValue: criterion,
+      agentAccess: criterion,
+    }),
+    bestFor: z.array(z.string()),
+    skipIf: z.array(z.string()),
+    pros: noteList,
+    cons: noteList,
+    pricing: z.object({
+      /** Date the prices were read off the vendor's pricing page. */
+      asOf: z.iso.date().or(z.date()),
+      source: z.url(),
+      /** Lowest paid price in USD per month, for cards and the Offer. */
+      startingAt: z.number(),
+      /** What `startingAt` buys, e.g. "per seat, billed annually". */
+      startingAtNote: z.string(),
+      freePlan: z.boolean(),
+      plans: z.array(
+        z.object({
+          name: z.string(),
+          price: z.string(),
+          includes: z.string(),
+        }),
+      ),
+      /** Costs the plan table doesn't show. */
+      notes: z.array(z.string()).optional(),
+    }),
+    /** Key facts table. Each row names its source. */
+    facts: z.array(
+      z.object({
+        label: z.string(),
+        value: z.string(),
+        source: z.url().optional(),
+      }),
+    ),
+    alternatives: z.array(
+      z.object({ name: z.string(), href: z.string(), why: z.string() }),
+    ),
+    /** The matching /compare/pipe0-vs-<tool> page, if there is one. */
+    compare: z.string().optional(),
+    /** Overrides the default "pipe0 competes with <tool>" line. */
+    disclosure: z.string().optional(),
+    authors: z.array(z.object({ name: z.string(), title: z.string() })),
+    date: z.iso.date().or(z.date()),
+    /** Last substantive revision (new prices, re-scored criteria). */
+    updated: z.iso.date().or(z.date()).optional(),
+    faq: z.array(z.object({ q: z.string(), a: z.string() })),
+    /** Hidden in production builds; dev renders it with a draft banner. */
+    draft: z.boolean().optional(),
+  }),
+  async: true,
+  // Feeds the /reviews/<slug>.md twin served to answer engines and agents.
+  postprocess: {
+    includeProcessedMarkdown: true,
   },
+  mdxOptions: articleMdxOptions,
 });
 
 export default defineConfig({

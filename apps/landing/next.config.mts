@@ -26,6 +26,10 @@ const nextConfig: NextConfig = {
         source: "/blog/:slug.md",
         destination: "/llms.mdx/blog/:slug",
       },
+      {
+        source: "/reviews/:slug.md",
+        destination: "/llms.mdx/reviews/:slug",
+      },
     ];
   },
   async redirects() {

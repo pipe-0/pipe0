@@ -191,3 +191,95 @@ export function profilePageJsonLd(author: Author, opts: { dateModified?: string 
     isPartOf: { "@type": "WebSite", url: getBaseUrl(), name: "pipe0" },
   };
 }
+
+/**
+ * A review of a third-party tool: the Review node with the tool as a
+ * SoftwareApplication, its rating, and the pros and cons as
+ * positiveNotes / negativeNotes (Google's pros-and-cons markup).
+ */
+export function softwareReviewJsonLd(opts: {
+  url: string;
+  headline: string;
+  reviewBody: string;
+  rating: number;
+  tool: { name: string; url: string; category: string; image?: string };
+  price: number;
+  pros: string[];
+  cons: string[];
+  authors: Record<string, unknown>[];
+  datePublished: string;
+  dateModified: string;
+}) {
+  const absolute = `${getBaseUrl()}${opts.url}`;
+  const notes = (items: string[]) => ({
+    "@type": "ItemList",
+    itemListElement: items.map((name, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name,
+    })),
+  });
+  return {
+    "@context": "https://schema.org",
+    "@type": "Review",
+    "@id": `${absolute}#review`,
+    url: absolute,
+    mainEntityOfPage: absolute,
+    headline: opts.headline,
+    reviewBody: opts.reviewBody,
+    inLanguage: "en",
+    itemReviewed: {
+      "@type": "SoftwareApplication",
+      name: opts.tool.name,
+      url: opts.tool.url,
+      applicationCategory: "BusinessApplication",
+      applicationSubCategory: opts.tool.category,
+      operatingSystem: "Web",
+      ...(opts.tool.image && { image: `${getBaseUrl()}${opts.tool.image}` }),
+      offers: {
+        "@type": "Offer",
+        price: String(opts.price),
+        priceCurrency: "USD",
+      },
+    },
+    reviewRating: {
+      "@type": "Rating",
+      ratingValue: opts.rating.toFixed(1),
+      bestRating: "5",
+      worstRating: "1",
+    },
+    positiveNotes: notes(opts.pros),
+    negativeNotes: notes(opts.cons),
+    author: opts.authors,
+    publisher: { "@id": ORG_ID },
+    datePublished: opts.datePublished,
+    dateModified: opts.dateModified,
+  };
+}
+
+/** A hub page listing other pages, e.g. /reviews. */
+export function collectionPageJsonLd(opts: {
+  url: string;
+  name: string;
+  description: string;
+  items: { name: string; url: string }[];
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: opts.name,
+    description: opts.description,
+    url: `${getBaseUrl()}${opts.url}`,
+    publisher: { "@id": ORG_ID },
+    mainEntity: {
+      "@type": "ItemList",
+      numberOfItems: opts.items.length,
+      itemListElement: opts.items.map((item, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: item.name,
+        url: `${getBaseUrl()}${item.url}`,
+      })),
+    },
+  };
+}

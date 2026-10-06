@@ -14,6 +14,7 @@ import {
   blog as blogPosts,
   docs,
   legal as legalPages,
+  reviews as reviewPages,
 } from "collections/server";
 import { createPipeCatalogSource } from "./pipe-catalog-source";
 import { createSearchCatalogSource } from "./search-catalog-source";
@@ -48,6 +49,10 @@ export const blog = loader(toFumadocsSource(blogPosts, []), {
   baseUrl: "/blog",
 });
 
+export const reviews = loader(toFumadocsSource(reviewPages, []), {
+  baseUrl: "/reviews",
+});
+
 export const legal = loader(toFumadocsSource(legalPages, []), {
   baseUrl: "/resources/legal",
 });
@@ -55,3 +60,4 @@ export const legal = loader(toFumadocsSource(legalPages, []), {
 export type Page = InferPageType<typeof source>;
 export type Meta = InferMetaType<typeof source>;
 export type BlogPage = InferPageType<typeof blog>;
+export type ReviewPage = InferPageType<typeof reviews>;

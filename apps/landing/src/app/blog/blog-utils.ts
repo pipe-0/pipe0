@@ -300,8 +300,13 @@ export function relatedPosts(current: BlogPage, count: number): BlogPage[] {
   return posts.sort((a, b) => score(b) - score(a)).slice(0, count);
 }
 
-/** Last substantive revision — `updated` when set, the publish date otherwise. */
-export function lastRevised(post: BlogPage): Date {
+/**
+ * Last substantive revision — `updated` when set, the publish date
+ * otherwise. Takes any dated page (posts, reviews).
+ */
+export function lastRevised(post: {
+  data: { date: string | Date; updated?: string | Date };
+}): Date {
   return new Date(post.data.updated ?? post.data.date);
 }
 

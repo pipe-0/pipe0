@@ -1,0 +1,326 @@
+---
+title: "Clay review (2026): is it worth the price?"
+description: "Clay made table-based enrichment mainstream and still has the
+  biggest provider marketplace. Two billing meters, a 50,000-row ceiling,
+  and an API that runs what you built in the UI are the price of admission."
+tool:
+  name: Clay
+  url: https://www.clay.com
+  logo: /media/reviews/logos/clay.png
+  category: Enrichment platform
+verdict: "The most complete enrichment table on the market, with 150+
+  providers and a huge template community, held back by a two-meter credit
+  model and a learning curve measured in weeks."
+scores:
+  easeOfUse:
+    score: 3
+    why: "Templates help, but most teams need a specialist or an agency to
+      build and debug tables that run in production."
+  dataQuality:
+    score: 4.5
+    why: "Waterfalls across 150+ providers give it coverage no single
+      database matches. Quality depends on the order you build."
+  pricingValue:
+    score: 3
+    why: "Unlimited seats and free misses are fair. Two meters, actions that
+      expire monthly, and a 30% top-up premium make the bill hard to plan."
+  agentAccess:
+    score: 3.5
+    why: "API, CLI, and MCP on all plans since July 2026. Agents run what a
+      person built in the UI; the tables API is read-only and Enterprise-only."
+bestFor:
+  - "GTM engineers and RevOps teams who live in a table"
+  - "Agencies that reuse templates across clients"
+  - "Teams that want 150+ data providers under one bill"
+skipIf:
+  - "You need tables larger than 50,000 rows"
+  - "You want agents or code to build the workflow, not just run it"
+  - "You need a bill you can forecast to the dollar"
+pros:
+  - title: "The largest provider marketplace"
+    body: "Clay lists 150+ data providers on one subscription, plus Claygent
+      for web research. If a data source exists, it is probably a column in
+      Clay already."
+  - title: "Templates and a real community"
+    body: "Clay has the largest template library and the most active
+      community in the category. Agencies and freelancers sell Clay builds,
+      so help is easy to hire."
+  - title: "Unlimited seats on every plan"
+    body: "Seats are free on every plan, including Free. You pay for usage,
+      not for headcount, which suits teams where many people look and few
+      people build."
+  - title: "You don't pay for misses"
+    body: "If an enrichment returns nothing, Clay charges neither data
+      credits nor actions. BYOK lookups cost one action and no data credits."
+cons:
+  - title: "Two meters that move separately"
+    body: "Data credits pay for data and actions pay for every step that
+      runs. They are priced, topped up, and rolled over differently, so you
+      can run out of one while the other sits unused."
+  - title: "A learning curve measured in weeks"
+    body: "Clay is closer to a low-code platform than a sales tool. Waterfall
+      order, run conditions, and formulas all need someone who has done it
+      before, and there is no sandbox for practice runs."
+  - title: "50,000 rows per table"
+    body: "Every plan stops at 50,000 rows per table (200 on Free). Larger
+      lists get split across tables, or moved to Enterprise workarounds like
+      passthrough tables."
+  - title: "The API runs what the UI built"
+    body: "The public API runs functions and workflows that already exist,
+      1 to 100 items per call. Reading tables over the API is Enterprise-only
+      and read-only."
+pricing:
+  asOf: 2026-10-06
+  source: https://www.clay.com/pricing
+  startingAt: 167
+  startingAtNote: "for Launch, billed annually ($185 billed monthly)"
+  freePlan: true
+  plans:
+    - name: Free
+      price: "$0"
+      includes: "100 data credits and 500 actions a month. 200 rows per table,
+        no phone enrichment, no CRM integrations."
+    - name: Launch
+      price: "$167/mo annual, $185/mo monthly"
+      includes: "2,500 data credits and 15,000 actions a month. Up to 50,000
+        rows per table, unlimited seats."
+    - name: Growth
+      price: "$446/mo annual, $495/mo monthly"
+      includes: "6,000 data credits and 40,000 actions a month, unlimited
+        seats."
+    - name: Enterprise
+      price: "Custom, annual"
+      includes: "100,000+ data credits and 200,000+ actions. Tables API,
+        passthrough tables, and bulk enrichment."
+  notes:
+    - "Clay's own calculator assumes 1 data credit and 3 actions per work
+      email, and 5 data credits and 3 actions per phone number. On Launch,
+      billed annually, that is about 6 cents per email and 24 cents per phone,
+      before retries and validation failures."
+    - "Actions don't roll over. Monthly data credits roll over up to twice
+      the monthly amount; anything above that is dropped at renewal."
+    - "Top-ups are data credits only, at a 30% premium over plan rates.
+      Running out of actions means moving up a plan."
+    - "A waterfall provider that returns an email which later fails
+      validation is still charged."
+facts:
+  - label: Founded
+    value: "2017 in Brooklyn, New York. Headquartered in New York."
+    source: https://www.clay.com/about
+  - label: Funding
+    value: "Series D of $115M at a $7.1B valuation, September 2026"
+    source: https://www.clay.com/blog/series-d
+  - label: Customers
+    value: "17,000+, according to Clay (September 2026)"
+    source: https://www.clay.com/blog/series-d
+  - label: Data providers
+    value: "150+ in Clay's docs and pricing FAQ (its navigation says 200+)"
+    source: https://www.clay.com/pricing
+  - label: Rows per table
+    value: "50,000 on paid plans, 200 on Free"
+    source: https://university.clay.com/docs/sources
+  - label: Seats
+    value: "Unlimited on every plan"
+    source: https://www.clay.com/pricing
+  - label: API and CLI
+    value: "Public since July 9, 2026, on all plans"
+    source: https://www.clay.com/blog/build-on-clay-with-agent-plugin
+  - label: MCP clients
+    value: "Claude, ChatGPT, Copilot, Gemini, Grok, and Cursor"
+    source: https://www.clay.com/mcp
+  - label: Tables API
+    value: "Read-only, Enterprise plans only"
+    source: https://developers.clay.com/tables.md
+alternatives:
+  - name: pipe0
+    href: /compare/pipe0-vs-clay
+    why: "You want Clay-style tables up to 2M rows, plus stateless API and
+      MCP access where an agent can build the workflow, not just run it."
+  - name: Apollo
+    href: /reviews/apollo
+    why: "You want one cheap per-seat tool with its own database, sequences,
+      and a dialer, and your market is mostly US tech."
+  - name: FullEnrich
+    href: /compare/pipe0-vs-fullenrich
+    why: "You only need emails and phone numbers from a waterfall, at a flat
+      price per result, without building tables."
+  - name: ZoomInfo
+    href: /compare/pipe0-vs-zoominfo
+    why: "You are an enterprise buying a US data contract with intent data,
+      and budget matters less than procurement."
+compare: /compare/pipe0-vs-clay
+authors:
+  - name: Florian
+    title: Founder
+date: 2026-10-06
+faq:
+  - q: "Is Clay worth it?"
+    a: "For a GTM engineer or agency that builds tables every day, yes: no
+      other tool has as many data providers or templates. For a small sales
+      team that wants contact data without learning a platform, the cost and
+      the weeks of setup are hard to justify."
+  - q: "How much does Clay cost?"
+    a: "Clay has a free plan. Launch costs $167 a month billed annually or
+      $185 billed monthly, Growth costs $446 or $495, and Enterprise is
+      custom. Every plan has unlimited seats. Prices as of October 2026."
+  - q: "How much does Clay charge per email?"
+    a: "Clay doesn't publish a rate card. Its pricing calculator assumes 1
+      data credit and 3 actions per work email, which is about 6 cents on the
+      Launch plan billed annually. A phone number is assumed at 5 data
+      credits and 3 actions, about 24 cents. Real costs depend on the
+      providers in your waterfall."
+  - q: "Does Clay have an API?"
+    a: "Yes. Since July 9, 2026, Clay has a public API, a CLI, and an MCP
+      server on all plans. The API runs functions and workflows that were
+      built in Clay, 1 to 100 items per call. Reading tables through the API
+      is limited to Enterprise plans and is read-only."
+  - q: "How many rows can a Clay table hold?"
+    a: "50,000 rows per table on paid plans and 200 rows on the free plan.
+      Enterprise customers work around the limit with passthrough tables and
+      bulk enrichment."
+  - q: "Clay or Apollo: which should I choose?"
+    a: "Choose Apollo if you want one tool for finding contacts and sending
+      sequences, and your market is mostly US tech. Choose Clay if you need
+      coverage from many providers and custom enrichment logic, and someone
+      on the team will own the build."
+  - q: "Does Clay charge for failed lookups?"
+    a: "No. An enrichment that returns no result costs no data credits and
+      no actions. The exception is a waterfall provider that returns an email
+      that later fails validation; that provider is still charged."
+---
+
+{/*
+FACT BASE (checked 2026-10-06 on primary sources unless marked):
+- Plans, clay.com/pricing: Free $0 (100 credits, 500 actions, 200 rows);
+  Launch $185 monthly ($60 actions + $125 credits) or $167 annual ($54 +
+  $113), 2,500 credits/mo (one page label says 3K), 15,000 actions/mo;
+  Growth $495 / $446, 6,000 credits, 40,000 actions; Enterprise custom,
+  100K+ credits, 200K+ actions. Unlimited seats on all plans.
+- Top-ups: data credits only, +30% (50% on legacy). Actions can't be
+  topped up. Actions don't roll over; monthly credits roll over up to 2x;
+  annual plans roll 15% on renewal. Source: Clay public-docs
+  actions-data-credits.md.
+- Misses free (pricing FAQ). Charged for providers that return an email
+  that later fails validation (work-email-waterfall.md).
+- BYOK: 1 action, 0 data credits (pricing FAQ).
+- Calculator assumptions (clay.com/pricing-calculator JS): email 1 credit +
+  3 actions; phone 5 credits + 3 actions. Launch annual: $113/2,500 =
+  4.5c per credit, $54/15,000 = 0.36c per action -> ~5.6c email, ~23.7c
+  phone. FLORIAN: this sits low next to our "3-10x" claim and the $0.25 /
+  $0.75 per-found figures in best-data-enrichment-tools; those include
+  multi-provider waterfall attempts. Decide which framing to publish.
+- API/CLI: July 9, 2026, all plans incl. legacy (Clay blog
+  build-on-clay-with-agent-plugin). Beta vs GA conflicting (docs PR #2712
+  says GA; pricing FAQ still lists "Clay API access" under Enterprise).
+- Routines API: POST /routines/{id}/run, 1-100 items, 202 + poll, JSONL
+  batch for larger sets (developers.clay.com/routines/api.md). Workflows
+  (Alpha) can be built/edited from the CLI now.
+- Tables API: read-only AND Enterprise-only (developers.clay.com/tables.md).
+- MCP: clay.com/mcp, up to 1,000 People Search results; Claude, ChatGPT,
+  Copilot, Gemini, Grok, Cursor.
+- NOT FOUND, do not use: "no current plans" for building tables via API;
+  MCP capped at 100 results (the positioning skill states both; correct it).
+- Row limit: 50,000 all plans (university.clay.com/docs/sources); Free 200.
+- Company: founded 2017 Brooklyn, HQ NYC (clay.com/about). Series D $115M
+  at $7.1B, Sep 9, 2026, 17,000+ customers (clay.com/blog/series-d).
+  Founders secondhand: Kareem Amin, Nicolae Rusan; Varun Anand co-founder
+  ~2021. Not used.
+- Providers: 150+ (pricing FAQ, docs) vs 200+ (site nav).
+- "March 2026 repricing" date comes from our earlier posts (0035, 0040,
+  0044 fact base, Clay's public pricing memo); not re-checked this pass.
+*/}
+
+## What is Clay?
+
+Clay is a spreadsheet where every column can call a data provider, an AI
+model, or another tool. You load a list of companies or people, add columns
+that find work emails, phone numbers, tech stack, or hiring signals, and push
+the results into a CRM or a sequencer. It has been doing this since 2017 and,
+more than anyone, made the enrichment table the default way GTM teams build
+lists.
+
+The company raised $115 million at a $7.1 billion valuation in September
+2026 and says it has more than 17,000 customers. That size shows in the
+product: Claygent for web research, signals,
+CRM enrichment, a workflow builder, and since July 2026 an API, a CLI, and an
+MCP server.
+
+## How Clay works
+
+A Clay table is a program you can see. Each column is a step, each row runs
+through the steps, and each cell shows what came back. A typical build looks
+like this: import accounts from HubSpot, find three people per account by
+title, run a work-email waterfall that tries several providers in order, ask
+Claygent to summarize each company's last press release, and send the rows
+that pass a filter to a sequencer.
+
+The waterfall is where Clay earns its reputation. You choose which providers
+to try and in what order, and Clay stops at the first one that answers. With
+150+ providers in the marketplace, few lookups have nowhere left to go.
+
+That flexibility comes with a cost in time. Waterfall order, run conditions,
+formulas, and column dependencies are all yours to get right. Teams that do
+well with Clay usually have one person who owns it, or they hire one of the
+many agencies that build Clay tables for a living.
+
+## What Clay costs in practice
+
+Clay bills in two currencies. Data credits pay for data from Clay-managed
+providers. Actions pay for every step that runs: each enrichment, each AI
+prompt, each HTTP call. Since the March 2026 repricing, each plan's price
+is the sum of the two, and the pricing page shows both parts.
+
+The meters behave differently, and that is the part to model before you buy.
+Actions expire at the end of each month. Monthly data credits roll over, but
+only up to twice the monthly amount. You can buy more data credits at a 30%
+premium, but you can't buy more actions; you move up a plan. A team that
+runs many cheap steps (formulas, AI prompts, HTTP calls) can burn through
+actions while credits pile up, and the reverse happens to teams that mostly
+buy data.
+
+Two policies work in your favor. A lookup that finds nothing costs nothing,
+and bringing your own provider API key costs one action and no data credits.
+Clay's own calculator puts a work email at about 6 cents on the Launch plan
+billed annually, and a phone number at about 24 cents. Treat those as the
+floor: they assume the first provider answers.
+
+## Agents, the API, and the CLI
+
+Clay released a public API and CLI on July 9, 2026, on every plan, with a
+plugin that bundles them with an MCP server for Claude, ChatGPT, Cursor,
+and others. It is a real step forward from webhooks.
+
+The model behind it is that a person builds and an agent runs. The API runs
+functions and workflows that already exist in Clay, 1 to 100 items per call,
+and you poll until the results are ready. Reading tables over the API is
+limited to Enterprise and is read-only. Workflows, still in alpha, can now be
+edited from the CLI, which points to where Clay is heading. For now, an agent
+working with Clay is mostly a remote control for a table someone built by
+hand.
+
+## Clay vs pipe0
+
+pipe0 has the same kind of table, with columns that run enrichments and
+waterfalls, but sheets hold up to 2 million rows instead of 50,000. Every
+sheet capability is also a REST API and an MCP server, so an agent can build
+the workflow, not only run it, and can do one-off lookups without creating a
+table at all. Waterfalls bill only the provider that answered, and we measure
+pipe0 as 3 to 10 times more cost efficient than Clay-style tools. Test that on
+your own list; the [full comparison](/compare/pipe0-vs-clay) has the details.
+
+Clay is ahead on the things that take years: the template library, the
+community, the agency ecosystem, and the number of providers in its
+marketplace. If your team already has a Clay expert and your lists fit in
+50,000 rows, those are good reasons to stay.
+
+## Who should buy Clay
+
+Buy Clay if one person on your team will own it, your lists are tens of
+thousands of rows rather than millions, and you value coverage across many
+providers over a predictable bill. Agencies get the most from it, because
+templates and the community carry across clients.
+
+Look elsewhere if you want agents or code to build the workflow, if your
+lists outgrow 50,000 rows, or if the finance team needs a number they can
+forecast. For contact data only, a dedicated waterfall or a database like
+[Apollo](/reviews/apollo) will be simpler.

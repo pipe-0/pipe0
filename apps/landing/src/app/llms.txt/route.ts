@@ -1,5 +1,10 @@
 import { deprecatedCatalogPage } from "@/lib/catalog-lifecycle";
 import { sortedPosts } from "@/app/blog/blog-utils";
+import {
+  formatScore,
+  overallScore,
+  publishedReviews,
+} from "@/app/reviews/review-utils";
 import { AUTHORS } from "@/lib/authors";
 import { compareConfigs } from "@/lib/compare/registry";
 import { source } from "@/lib/source";
@@ -108,6 +113,23 @@ export async function GET() {
     lines.push(
       `- [${post.data.title}](https://pipe0.com${post.url}.md)${summary ? `: ${summary}` : ""}`,
     );
+  }
+
+  // Reviews — scored tool reviews, each with a markdown twin at <url>.md.
+  const reviews = publishedReviews();
+  if (reviews.length > 0) {
+    lines.push("");
+    lines.push("## Tool reviews");
+    lines.push("");
+    lines.push(
+      "Reviews of GTM and sales data tools, scored on four fixed criteria. Method: https://pipe0.com/reviews#methodology",
+    );
+    lines.push("");
+    for (const review of reviews) {
+      lines.push(
+        `- [${review.data.tool.name} review](https://pipe0.com${review.url}.md): ${formatScore(overallScore(review.data.scores))}/5. ${review.data.verdict}`,
+      );
+    }
   }
 
   lines.push("");
