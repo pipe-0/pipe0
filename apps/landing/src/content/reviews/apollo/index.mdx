@@ -1,77 +1,80 @@
 ---
-title: "Apollo review (2026): good enough data, hard to beat on price"
+title: "Apollo review (2026): easy to start, limited by one dataset"
 description: "Apollo bundles a 240M-contact database, sequences, a dialer, and
-  an MCP server into one per-seat tool with a free plan. The catch is that
-  every answer comes from one dataset."
+  an MCP server into one per-seat tool. Every answer comes from that one
+  dataset, through a fixed data model and tight API rate limits."
 tool:
   name: Apollo
   url: https://www.apollo.io
   logo: /media/reviews/logos/apollo.png
   category: Sales database
-verdict: "The best value all-in-one prospecting tool for small teams selling
-  into US tech: cheap seats, a free plan, and MCP on every plan, with coverage
-  that thins out wherever its single database does."
+verdict: "The easiest way for a small team to find contacts and send
+  sequences in one tool, held back by a single dataset, a fixed data model,
+  and API rate limits that stall real enrichment volume."
 scores:
   easeOfUse:
     score: 4.5
     why: "Sign up, filter, and send a sequence in an afternoon. No tables to
       build, no waterfall to configure."
   dataQuality:
-    score: 3
-    why: "One owned database: strong in US tech, thinner in Europe, small
-      companies, and niche titles. Apollo's own docs put email accuracy at
-      91%."
+    score: 2.5
+    why: "Every answer comes from one owned dataset, with nothing to fall
+      back on where it is thin. Apollo's own help center puts email accuracy
+      at 91%."
   pricingValue:
-    score: 4
-    why: "From $49 a seat with 2,500 credits, about 2 cents per email. Seats
-      add up for larger teams and unused credits never roll over."
+    score: 3.5
+    why: "Cheap to start at $49 a seat, but every user is a seat and credits
+      never roll over. Teams pay for headcount, not for the data they use."
   agentAccess:
-    score: 4
-    why: "MCP and API on every plan, including free, covering search,
-      enrichment, sequences, and CRM updates. Free plans are tightly rate
-      limited."
+    score: 3
+    why: "MCP and API on every plan, but general API endpoints stop at 400
+      requests an hour on Basic and Professional, and agents can only read
+      Apollo's fixed fields."
 bestFor:
   - "Small sales teams that want data and outreach in one tool"
-  - "Founders doing their own outbound on a budget"
+  - "Founders who want to start prospecting today"
   - "Teams selling mostly into US tech companies"
 skipIf:
-  - "You sell into Europe, small businesses, or niche roles"
-  - "You need coverage from more than one dataset"
-  - "You want to build custom enrichment logic"
+  - "Data quality outside US tech decides your pipeline"
+  - "You enrich at volume over the API or with agents"
+  - "You need custom fields, AI research, or more than one data source"
 pros:
   - title: "Data and outreach in one product"
     body: "Search, enrichment, sequences, a dialer, a meeting scheduler, and
-      intent topics share one login and one bill. Most teams can drop two or
-      three tools."
-  - title: "A free plan you can actually use"
+      intent topics share one login and one bill. A small team can drop two
+      or three tools."
+  - title: "Fast to start"
+    body: "There is nothing to build. Filter the database, reveal contacts,
+      and send a sequence on the first day."
+  - title: "A free plan for testing"
     body: "The free plan includes 75 credits a month, two sequences, and API
-      and MCP access. It is enough to test the data on your own market before
-      paying."
-  - title: "Low cost per contact"
-    body: "An email costs 1 credit and a mobile number 8. On Basic, billed
-      annually, that works out to about 2 cents per email and 16 cents per
-      mobile, and Apollo only charges when it finds data."
+      and MCP access. It is enough to check Apollo's coverage of your own
+      market before paying."
   - title: "MCP on every plan"
     body: "Apollo's MCP server works in Claude, ChatGPT, Cursor, and others,
       and lets an agent search, enrich, add contacts to sequences, and update
-      the CRM. Free plans qualify."
+      the CRM."
 cons:
-  - title: "One dataset decides your coverage"
-    body: "Every answer comes from Apollo's own database. Where it is thin
-      (Europe, small companies, uncommon titles) there is no second source to
-      fall back on."
+  - title: "One dataset decides your data quality"
+    body: "Every lookup is answered from Apollo's own database. Where it is
+      thin or stale (Europe, small companies, uncommon titles, people who
+      just changed jobs) there is no second source to check."
   - title: "Accuracy claims don't match"
     body: "Apollo's data page claims 98% email accuracy. Its own help center
-      article on email verification says 91%. Verify a sample before you
-      send at volume."
-  - title: "Per-seat pricing and expiring credits"
-    body: "Credits are granted per seat and don't roll over, purchased ones
-      included. Larger teams pay for seats that mostly need data, and the top
-      plan requires three seats on an annual contract."
-  - title: "List views, not an enrichment workspace"
-    body: "Apollo's lists filter its database. There is no table where
-      columns call other providers or AI, so custom enrichment happens in
-      another tool."
+      article on email verification says 91%, so roughly one email in eleven
+      may not be right."
+  - title: "Tight API rate limits"
+    body: "General API endpoints allow 400 requests an hour and 2,000 a day
+      on Basic and Professional, and 600 a day on Free. Agent and batch
+      workflows hit those ceilings quickly."
+  - title: "A fixed data model"
+    body: "Apollo returns its own 65+ fields and nothing else. You can't add
+      a column that calls another provider, runs an AI prompt, or computes a
+      score, so custom enrichment happens in another tool."
+  - title: "Seats and expiring credits"
+    body: "Credits come per seat and don't roll over, purchased ones
+      included. A team that needs more data but not more people pays for
+      seats, and the top plan needs three seats on an annual contract."
 pricing:
   asOf: 2026-10-06
   source: https://www.apollo.io/pricing
@@ -96,6 +99,8 @@ pricing:
       includes: "6,000 credits per seat a month, minimum 3 seats,
         10,000-record selection limit."
   notes:
+    - "Every user is a seat. A five-person team on Basic pays $245 a month
+      billed annually, or $325 billed monthly."
     - "One credit pool: an email costs 1 credit and a mobile number 8.
       Credits are only charged when Apollo finds data."
     - "Credits don't roll over, including purchased add-on credits, which
@@ -124,8 +129,9 @@ facts:
   - label: Email accuracy
     value: "98% on Apollo's data page, 91% in its help center"
     source: https://knowledge.apollo.io/hc/en-us/articles/10826699994381-How-Apollo-Verifies-Emails
-  - label: API
-    value: "All plans, rate limited by plan"
+  - label: API rate limits
+    value: "General endpoints: 600 a day on Free; 400 an hour and 2,000 a
+      day on Basic and Professional; 6,000 a day on Organization"
     source: https://docs.apollo.io/reference/rate-limits
   - label: MCP server
     value: "mcp.apollo.io/mcp, on all plans including Free"
@@ -134,7 +140,7 @@ alternatives:
   - name: pipe0
     href: /compare/pipe0-vs-apollo
     why: "You want coverage from waterfalls across 50+ providers instead of
-      one database, and enrichment that runs on schedules into your CRM."
+      one database, an API built for volume, and no per-seat pricing."
   - name: Clay
     href: /reviews/clay
     why: "You need custom enrichment logic across many providers and have
@@ -154,28 +160,29 @@ authors:
 date: 2026-10-06
 faq:
   - q: "Is Apollo worth it?"
-    a: "For a small team selling into US tech, yes. It replaces a contact
-      database and a sequencer for $49 to $79 a seat, and the free plan lets
-      you test the data first. If your market is Europe or small companies,
-      test coverage on a sample before committing."
+    a: "For a small team that wants data and sequences in one tool and sells
+      into US tech, it is a quick start. For teams whose pipeline depends on
+      data quality outside that market, or that enrich at volume, one dataset
+      and tight API limits make it a weak foundation."
   - q: "How much does Apollo cost?"
     a: "Apollo has a free plan. Basic costs $49 per seat a month billed
       annually or $65 monthly, Professional $79 or $99, and Organization $119
-      per seat billed annually with a three-seat minimum. Prices as of
-      October 2026."
-  - q: "How much does an email cost in Apollo?"
-    a: "An email costs 1 credit and a mobile number costs 8 credits. On the
-      Basic plan billed annually, that is about 2 cents per email and 16
-      cents per mobile. Apollo only charges credits when it finds data."
-  - q: "Does Apollo have an API and an MCP server?"
-    a: "Yes, both, on every plan including Free. The API is rate limited by
-      plan, with the free plan capped at 600 requests a day per endpoint. The
-      MCP server at mcp.apollo.io works with Claude, ChatGPT, Cursor, and
-      other clients."
-  - q: "How accurate is Apollo's data?"
-    a: "Apollo's data page claims 98% email accuracy, while its help center
-      article on email verification states 91%. Coverage is strongest for US
-      tech companies and thinner in Europe and among small businesses."
+      per seat billed annually with a three-seat minimum. Every user is a
+      seat. Prices as of October 2026."
+  - q: "How good is Apollo's data?"
+    a: "Apollo's data page claims 98% email accuracy, while its own help
+      center article on email verification states 91%. All data comes from
+      Apollo's single database, so where it is thin or stale there is no
+      second source to fall back on."
+  - q: "What are Apollo's API rate limits?"
+    a: "General endpoints allow 600 requests a day on the free plan, 400 an
+      hour and 2,000 a day on Basic and Professional, and 6,000 a day on
+      Organization. Enrichment and search endpoints have separate, higher
+      limits on paid plans."
+  - q: "Does Apollo have an MCP server?"
+    a: "Yes, at mcp.apollo.io, on every plan including Free. It works with
+      Claude, ChatGPT, Cursor, and other clients, and lets an agent search,
+      enrich, and add contacts to sequences within Apollo's own data."
   - q: "Apollo or Clay: which should I choose?"
     a: "Choose Apollo if you want one simple tool for finding contacts and
       sending sequences. Choose Clay if you need coverage from many providers
@@ -217,6 +224,17 @@ FACT BASE (checked 2026-10-06 on primary sources unless marked):
   later round found. Customers: "nearly 100,000 paying" (Feb 2026 press)
   vs "40,000 paying" (about page) vs "600,000+ companies" (pricing).
   Customer count not used.
+- Rate limits, general endpoints: Free 50/min, 200/hr, 600/day; Basic and
+  Professional 200/min, 400/hr, 2,000/day; Organization 200/min, 600/hr,
+  6,000/day. Enrichment endpoints on paid plans 1,000/min with no hourly or
+  daily cap; search 200/min, 6,000/hr, 50,000/day.
+- "65+ data points" per record: apollo.io/product/data.
+- Pricing vs pipe0 (FLORIAN, check before publishing): pipe0 measured
+  ~4-4.5c per work email, ~14c per mobile (evidence.md, 20-record test).
+  Apollo on Basic annual if every credit is used: ~2c email, ~16c mobile;
+  monthly $65/2,500 = 2.6c per credit -> ~2.6c email, ~21c mobile. So
+  pipe0 is cheaper per mobile and for teams (no seats), NOT per email on
+  paper. The review says only the defensible parts.
 - "Strong in US tech, thinner elsewhere" is our framing from the
   positioning skill, not a measured benchmark. We have no Apollo benchmark.
 */}
@@ -241,66 +259,85 @@ email and calendar signals, engagement data from its own tools (replies and
 bounces), public web crawling, and third-party providers. Paid plans add a
 waterfall that checks outside partners for missing data.
 
-Our read of that mix: the data is best where Apollo's users are, and in our
-experience that means US tech companies. Coverage gets thinner for European
-contacts, small businesses, and uncommon job titles, where fewer users
-contribute and fewer signals come back. We haven't benchmarked Apollo, so
-test it on your own market.
+That mix is the weakness. A database built from its own users is good where
+those users sell, which in our experience means US tech companies, and
+thin or stale everywhere else: European contacts, small businesses, uncommon
+job titles, and anyone who changed jobs since the last signal came in. When
+Apollo is wrong or empty, there is nothing behind it. No second provider
+gets asked.
 
-On accuracy, Apollo contradicts itself. Its data page claims 98% email
-accuracy. Its help center article on email verification, updated in
-September 2026, describes a seven-step process and "a 91% accuracy rate".
-Both may be true for different samples. Neither is a reason to skip a
-verification pass on a list you plan to send to.
+Apollo's own numbers don't agree with each other either. Its data page
+claims 98% email accuracy. Its help center article on email verification,
+updated in September 2026, describes a seven-step process and "a 91%
+accuracy rate". At 91%, roughly one email in eleven is wrong before you
+send. We haven't benchmarked Apollo ourselves, so test it on twenty accounts
+you know well; that is usually enough to see the gaps.
 
 ## What Apollo costs in practice
 
 Apollo prices per seat, and every seat comes with credits. An email costs 1
-credit and a mobile number 8, and credits are only charged when Apollo finds
-something. On Basic at $49 a seat billed annually, a seat's 2,500 credits
-come to about 2 cents per email or 16 cents per mobile. Embedded waterfalls
-in other tools typically charge 8 to 30 cents per email and 25 cents to a
-dollar per mobile.
+credit and a mobile number 8, charged only when Apollo finds something. A
+Basic seat at $49 a month billed annually includes 2,500 credits.
 
-Two details shape the real bill. Credits don't roll over, so a seat that
-uses half its credits pays double per contact. And credits are tied to
-seats, so a team that needs more data but not more people either buys
-add-on credits (1.5 to 2.5 cents each) or pays for seats nobody logs into.
-The Organization plan needs three seats on an annual contract.
+The sticker price is low; the shape of the bill is the problem. Every person
+who logs in is a seat, so a five-person team on Basic pays $245 a month
+before buying a single extra credit. Credits don't roll over, purchased ones
+included, so a seat that uses half its credits pays double for each contact.
+A team that needs more data but not more people either buys add-on credits
+(1.5 to 2.5 cents each) or pays for seats nobody uses. The Organization plan
+needs three seats on an annual contract.
 
-## Apollo for agents
+## A fixed data model
 
-Apollo is one of the more agent-ready tools in the category. Its MCP server
-at `mcp.apollo.io/mcp` works with Claude, ChatGPT, Cursor, and Claude Code,
-and lets an agent search the database, enrich contacts, add them to
-sequences, and update the CRM. It is available on every plan, including
-Free, which makes it the cheapest way to try agentic prospecting on real
-data. The REST API is also on every plan; the free tier is limited to 600
-requests a day per endpoint.
+Apollo's records are Apollo's fields: 65+ data points per person or
+company, defined by Apollo. Lists filter that database; they are not tables
+you can extend. There is no column that asks a second provider for a missing
+phone number, runs an AI prompt over a company's website, or scores an
+account with your own logic. Anything beyond a contact lookup happens in
+another tool, after an export.
 
-What an agent can't do is reach past Apollo's database. If Apollo doesn't
-have the mobile number, the agent doesn't either.
+## The API and agents
+
+Apollo has an MCP server at `mcp.apollo.io/mcp` and a REST API, both on
+every plan. An agent in Claude, ChatGPT, or Cursor can search the database,
+enrich contacts, add them to sequences, and update the CRM.
+
+The limits show up as soon as you use them for real work. General API
+endpoints allow 400 requests an hour and 2,000 a day on Basic and
+Professional, and 600 a day on Free; Organization raises the daily cap to
+6,000. Enrichment and search endpoints get separate, higher limits on paid
+plans, but an agent that looks up accounts, people, and sequences in one run
+touches several endpoints and hits the general ceiling first. And whatever
+the agent does, it can only read Apollo's own fields from Apollo's own
+dataset.
 
 ## Apollo vs pipe0
 
 pipe0 does not replace Apollo's sequences or dialer; it hands enriched lists
-to outreach tools. Where they overlap is data. Apollo answers every lookup
-from one database. pipe0 runs waterfalls across 50+ providers and stops at
-the first that answers, so coverage keeps growing where a single database
-runs out, and you pay only for the provider that found the result. Sheets
-hold up to 2 million rows and run enrichment on schedules into HubSpot,
-Salesforce, or Attio.
+to outreach tools. Where they overlap is data, and there the difference is
+structural. Apollo answers every lookup from one database. pipe0 runs
+waterfalls across 50+ providers and stops at the first that answers, so a
+miss in one dataset becomes a second and third chance instead of an empty
+cell. You pay only for the provider that found the result, and there are no
+seats: plans start at $49 a month for the whole team, and we measure about
+14 cents per mobile number found.
+
+The data model is open, too. A pipe0 sheet holds up to 2 million rows, and
+any column can run an enrichment, an AI prompt, or your own logic, on a
+schedule, into HubSpot, Salesforce, or Attio. The same blocks are an API and
+an MCP server built for agents running at volume.
 
 Many teams use both: pipe0 to find and verify the data, Apollo to send. The
 [full comparison](/compare/pipe0-vs-apollo) covers the differences.
 
 ## Who should buy Apollo
 
-Buy Apollo if you are a small team selling into US tech and want one tool
-for finding people and contacting them. Start on the free plan and check its
+Buy Apollo if you are a small team selling into US tech, you want one tool
+for finding people and contacting them, and speed of setup matters more to
+you than coverage outside that market. Start on the free plan and check its
 coverage of twenty accounts you know well before you pay.
 
-Look elsewhere if your market is Europe or small businesses, if you need
-mobile numbers at high coverage, or if your enrichment needs go beyond a
-contact lookup. Then a waterfall, or a table like [Clay](/reviews/clay),
-will return more.
+Look elsewhere if data quality outside US tech decides your pipeline, if you
+enrich over the API or with agents at any volume, or if your enrichment goes
+beyond a contact lookup. A waterfall, or a table like
+[Clay](/reviews/clay), will return more.

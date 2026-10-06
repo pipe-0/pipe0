@@ -31,7 +31,14 @@ function GoogleG() {
   );
 }
 
-export function PreferredSourceButton({ className }: { className?: string }) {
+export function PreferredSourceButton({
+  className,
+  wrap = false,
+}: {
+  className?: string;
+  /** Let the label wrap at every width, for narrow rails. */
+  wrap?: boolean;
+}) {
   return (
     <a
       href={PREFERRED_SOURCE_URL}
@@ -43,7 +50,12 @@ export function PreferredSourceButton({ className }: { className?: string }) {
       )}
     >
       <GoogleG />
-      <span className="max-w-[11.5rem] text-balance sm:max-w-none sm:whitespace-nowrap">
+      <span
+        className={cn(
+          "text-balance",
+          !wrap && "max-w-[11.5rem] sm:max-w-none sm:whitespace-nowrap",
+        )}
+      >
         Add pipe0 as a preferred source on Google
       </span>
     </a>

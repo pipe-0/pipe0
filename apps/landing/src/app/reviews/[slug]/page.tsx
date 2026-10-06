@@ -2,6 +2,7 @@ import { formatDate, lastRevised } from "@/app/blog/blog-utils";
 import { SummarizeActions } from "@/app/blog/[slug]/page.client";
 import { AuthorAvatar } from "@/app/blog/author-avatar";
 import { AuthorCard } from "@/app/blog/author-card";
+import { PreferredSourceButton } from "@/app/blog/preferred-source-button";
 import { BlogCta } from "@/app/blog/blog-cta";
 import { PostFaq } from "@/app/blog/post-faq";
 import {
@@ -11,7 +12,7 @@ import {
   personRefJsonLd,
   softwareReviewJsonLd,
 } from "@/components/seo/json-ld";
-import { authorUrl, getAuthor } from "@/lib/authors";
+import { authorUrl, getAuthor, type Author } from "@/lib/authors";
 import { reviews, type ReviewPage } from "@/lib/source";
 import { getBaseUrl } from "@/lib/utils";
 import { getMDXComponents } from "@/mdx-components";
@@ -46,7 +47,7 @@ export default async function Review(props: {
 }) {
   const { slug } = await props.params;
   const page = getReview(slug);
-  const { body: Mdx } = await page.data.load();
+  const { body: Mdx, toc } = await page.data.load();
   const d = page.data;
   const tool = d.tool.name;
   const score = overallScore(d.scores);
@@ -96,7 +97,11 @@ export default async function Review(props: {
       />
       {d.faq.length > 0 && <JsonLd data={faqJsonLd(d.faq)} />}
 
-      <main className="mx-auto w-full max-w-[860px] px-5 pt-8 sm:px-8 md:pt-11">
+      {/* Desktop: the review on the left, a sticky rail on the right (tool,
+          contents, author). Below lg the rail folds away and the author
+          card closes the article instead. */}
+      <div className="mx-auto w-full max-w-[1240px] px-5 pt-8 sm:px-8 md:pt-11 lg:grid lg:grid-cols-[minmax(0,1fr)_280px] lg:gap-14 xl:gap-20">
+      <main className="min-w-0">
         {d.draft && (
           <p className="mb-6 rounded-lg bg-amber-50 px-4 py-2.5 text-[13px] text-amber-900 ring-1 ring-amber-600/20">
             Draft: visible in development only. Remove{" "}
@@ -197,8 +202,9 @@ export default async function Review(props: {
         {/* Verdict card: the whole review in one block. Its first sentence
             is the quotable answer to "is {tool} any good". */}
         <section
+          id="verdict"
           aria-label={`${tool} verdict`}
-          className="review-verdict mt-10 rounded-2xl bg-fd-muted p-5 sm:p-7"
+          className="review-verdict mt-10 scroll-mt-24 rounded-2xl bg-fd-muted p-5 sm:p-7"
         >
           <div className="grid grid-cols-1 gap-8 md:grid-cols-[1fr_minmax(0,300px)]">
             <div>
@@ -406,7 +412,11 @@ export default async function Review(props: {
 
         <PostFaq items={d.faq} />
 
-        {managedAuthor && <AuthorCard author={managedAuthor} />}
+        {managedAuthor && (
+          <div className="lg:hidden">
+            <AuthorCard author={managedAuthor} />
+          </div>
+        )}
 
         {related.length > 0 && (
           <footer className="mt-16">
@@ -432,8 +442,122 @@ export default async function Review(props: {
         )}
       </main>
 
+      <ReviewRail
+        tool={tool}
+        logo={d.tool.logo}
+        url={d.tool.url}
+        score={score}
+        author={managedAuthor}
+        contents={[
+          { id: "verdict", title: "Verdict and scores" },
+          { id: "facts", title: `${tool} at a glance` },
+          ...toc
+            .filter((item) => item.depth === 2)
+            .map((item) => ({ id: item.url.slice(1), title: item.title })),
+          { id: "pros-and-cons", title: "Pros and cons" },
+          { id: "pricing", title: "Pricing" },
+          { id: "alternatives", title: "Alternatives" },
+          ...(d.faq.length > 0 ? [{ id: "post-faq", title: "FAQ" }] : []),
+        ]}
+      />
+      </div>
+
       <BlogCta />
     </>
+  );
+}
+
+/**
+ * Desktop rail: the tool and its score with the outbound link, the page
+ * contents, and a compact author card with the preferred-source opt-in.
+ * Sticky, and scrolls on its own if a short window can't fit it.
+ */
+function ReviewRail({
+  tool,
+  logo,
+  url,
+  score,
+  author,
+  contents,
+}: {
+  tool: string;
+  logo?: string;
+  url: string;
+  score: number;
+  author?: Author;
+  contents: { id: string; title: ReactNode }[];
+}) {
+  return (
+    <aside
+      aria-label="Review details"
+      className="hidden lg:block"
+    >
+      <div className="sticky top-20 flex max-h-[calc(100vh-6rem)] flex-col gap-6 overflow-y-auto p-px pb-6">
+        <div className="flex items-center gap-3 rounded-xl p-3 ring-1 ring-fd-border">
+          <ToolLogo name={tool} logo={logo} size={36} />
+          <div className="min-w-0 flex-1">
+            <p className="truncate font-blog text-[15px] font-semibold text-fd-foreground">
+              {tool}
+            </p>
+            <a
+              href={url}
+              rel="nofollow noopener"
+              target="_blank"
+              className="inline-flex items-center gap-1 text-[13px] text-fd-primary"
+            >
+              Visit site
+              <ArrowUpRight className="size-3" />
+            </a>
+          </div>
+          <ScorePill score={score} />
+        </div>
+
+        <nav aria-label="On this page">
+          <p className="text-[13px] font-medium text-fd-muted-foreground">
+            On this page
+          </p>
+          <ul className="mt-2.5 space-y-0.5 border-l border-fd-border">
+            {contents.map((item) => (
+              <li key={item.id}>
+                <a
+                  href={`#${item.id}`}
+                  className="-ml-px block border-l border-transparent py-1 pl-3 text-[13.5px] leading-snug text-fd-muted-foreground transition-colors hover:border-fd-foreground hover:text-fd-foreground"
+                >
+                  {item.title}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
+        {author && (
+          <div className="rounded-xl bg-fd-muted p-4">
+            <p className="text-[13px] font-medium text-fd-muted-foreground">
+              Written by
+            </p>
+            <div className="mt-3 flex items-center gap-3">
+              <AuthorAvatar name={author.key} className="size-10" />
+              <div className="min-w-0">
+                <Link
+                  href={authorUrl(author)}
+                  rel="author"
+                  className="font-blog text-[15px] font-semibold leading-tight text-fd-foreground transition-colors hover:text-fd-primary"
+                >
+                  {author.name}
+                </Link>
+                <p className="text-[13px] text-fd-muted-foreground">
+                  {author.jobTitle}, pipe0
+                </p>
+              </div>
+            </div>
+            <p className="mt-3 text-[13px] leading-relaxed text-fd-foreground text-pretty">
+              {author.bio}
+            </p>
+            <PreferredSourceButton wrap className="mt-4 w-full" />
+          </div>
+        )}
+      </div>
+    </aside>
   );
 }
 
