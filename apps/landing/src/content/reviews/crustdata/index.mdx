@@ -1,0 +1,296 @@
+---
+title: "Crustdata review (2026): live B2B data built for agents"
+description: "Crustdata is an API for company and people data that agents can
+  call directly: headcount, hiring, funding, web traffic, and contacts, with
+  live lookups when cached data isn't fresh enough."
+tool:
+  name: Crustdata
+  url: https://crustdata.com
+  logo: /media/reviews/logos/crustdata.png
+  category: Agent data tools
+verdict: "The best company and people data API we have used for agents:
+  broad, fresh, and fast, with one of the most complete MCP setups in the
+  category. Opaque pricing and tight rate limits are the catch."
+relationship: supplier
+scores:
+  easeOfUse:
+    score: 3.5
+    why: "An API, not an app. Through its MCP server, though, anyone with
+      Claude or ChatGPT can query it in plain language in minutes."
+  dataQuality:
+    score: 4.5
+    why: "Deep company data (headcount, hiring, funding, web traffic, tech
+      stack) with live lookups on request, and 78% mobile coverage in our
+      benchmark."
+  pricingValue:
+    score: 3.5
+    why: "Searches cost 0.03 credits a result and misses are cheap, but plan
+      prices aren't published and contact data needs an Enterprise plan."
+  agentAccess:
+    score: 4.7
+    why: "The most agent-ready data API we have used: MCP for every major
+      client, a dry-run mode that spends nothing, watchers with webhooks, and
+      agent-readable docs. Default rate limits are low."
+bestFor:
+  - "Teams building agents or products on top of B2B data"
+  - "Account research that needs hiring, headcount, and funding signals"
+  - "Signal-based outbound that watches companies for changes"
+skipIf:
+  - "You want a prospecting app with a UI for reps"
+  - "You need thousands of lookups a minute on a self-serve plan"
+  - "You only need emails and phone numbers"
+pros:
+  - title: "Company data with real depth"
+    body: "A company record carries headcount and its trend, funding, job
+      postings, web traffic and its sources, technographics, news, reviews,
+      and the leadership team. Few APIs return that much from one call."
+  - title: "Fresh when it matters"
+    body: "The standard dataset refreshes every 14 to 28 days, and live
+      endpoints fetch a person or company on request when that isn't fresh
+      enough."
+  - title: "Fast, high-coverage mobile numbers"
+    body: "In our benchmark Crustdata found a mobile number for 78% of 150
+      LinkedIn profiles, within two points of the best single premium source,
+      with a median response of 0.9 seconds."
+  - title: "Built for agents from the start"
+    body: "Its MCP server works in Claude, ChatGPT, Cursor, VS Code, and
+      Codex, signs in with OAuth, and has a dry-run mode that shows what a
+      call would cost without spending credits."
+cons:
+  - title: "Pricing you have to ask about"
+    body: "Crustdata publishes credit costs per endpoint but not what a
+      credit costs. Its own blog puts the lowest tier at $95 a month."
+  - title: "Contact data is Enterprise-only"
+    body: "Emails and phone numbers come from the contact enrichment
+      endpoint, which self-serve keys can't call."
+  - title: "Tight rate limits"
+    body: "Person and company enrichment allow 15 requests a minute and
+      search 30, by default. Large jobs go through batch endpoints instead."
+  - title: "No app for reps"
+    body: "There is no prospecting UI, Chrome extension, or sequencer. Sales
+      teams reach it through an agent, a spreadsheet tool, or their own code."
+pricing:
+  asOf: 2026-10-06
+  source: https://docs.crustdata.com/general/pricing
+  startingAt: 95
+  startingAtNote: "for the lowest self-serve tier, according to Crustdata's
+    blog"
+  freePlan: false
+  plans:
+    - name: Self-serve API
+      price: "From $95/mo"
+      includes: "Credits for search, enrichment, web, and watcher endpoints.
+        One-time or automatic top-ups by card. Free trial on request."
+    - name: Enterprise
+      price: "Custom"
+      includes: "Contact enrichment (emails and phones), live endpoints, and
+        higher rate limits."
+    - name: Datasets
+      price: "Custom"
+      includes: "Flat files of company and people data, refreshed monthly."
+  notes:
+    - "People and company search cost 0.03 credits per result. A person
+      enrichment costs 1 to 7 credits depending on what comes back, a company
+      enrichment 2 to 4."
+    - "Contact enrichment costs 1 credit per work email, 2 per personal email
+      and 2 per phone, up to 5.5 per person with verification."
+    - "Watchers that track companies or people for changes cost 0.5 to 5
+      credits per record on a 30-day cycle, or 150 on a one-day cycle."
+    - "Your account's own prices are free to read from the API, and the MCP
+      server can dry-run any call at zero cost."
+facts:
+  - label: Founders
+    value: "Abhilash Chowdhary, Manmohit Grewal, and Chris Pisarski"
+    source: https://crustdata.com/about
+  - label: Headquarters
+    value: "San Francisco"
+    source: https://crustdata.com/about
+  - label: Accelerator
+    value: "Y Combinator, Fall 2024"
+    source: https://www.ycombinator.com/companies/crustdata
+  - label: Funding
+    value: "$6M seed led by Y Combinator and A Capital, October 2025"
+    source: https://crustdata.com/blog/crustdata-closes-6m-seed-round
+  - label: Dataset
+    value: "1B+ people and 60M+ companies, according to Crustdata"
+    source: https://crustdata.com
+  - label: Freshness
+    value: "Refreshed every 14 to 28 days, with live lookups on request"
+    source: https://crustdata.com/about
+  - label: Signals
+    value: "Watchers for companies, people, jobs, and posts, delivered by
+      webhook"
+    source: https://docs.crustdata.com
+  - label: MCP server
+    value: "OAuth or API key; Claude, ChatGPT, Cursor, VS Code, and Codex"
+    source: https://docs.crustdata.com/for-agents/mcp
+benchmark:
+  period: "August 2026"
+  rows:
+    - test: "LinkedIn URL to mobile"
+      run: 20260804T202803Z-237d
+      n: 150
+      coverage: 78
+      latency: "0.9 s"
+  notes:
+    - "Of the three providers above 75% mobile coverage, Crustdata answered
+      fastest: a median of 0.9 seconds, against 4.4 and 18.6 seconds for the
+      other two."
+    - "This benchmark measures contact data only. Crustdata's company and
+      people data, which is what most teams buy it for, is not part of it."
+alternatives:
+  - name: pipe0
+    href: /enrichment-api
+    why: "You want Crustdata's data alongside 50+ other providers through
+      one API and MCP server, without a separate contract."
+  - name: Surfe
+    href: /reviews/surfe
+    why: "Contact coverage is the priority, especially mobile numbers, and
+      your reps work from LinkedIn into a CRM."
+  - name: Clay
+    href: /reviews/clay
+    why: "You want company research and enrichment in a table people can
+      edit, and someone on the team will build it."
+  - name: Apollo
+    href: /reviews/apollo
+    why: "You want a prospecting app with sequences rather than an API."
+authors:
+  - name: Florian
+    title: Founder
+date: 2026-10-06
+faq:
+  - q: "What is Crustdata?"
+    a: "Crustdata is a B2B data API for company and people data, built for
+      AI agents and products. It returns firmographics, headcount trends,
+      hiring, funding, web traffic, and contact details, with live lookups
+      when cached data isn't fresh enough."
+  - q: "How much does Crustdata cost?"
+    a: "Crustdata sells credits. Searches cost 0.03 credits per result,
+      person enrichment 1 to 7 credits, and company enrichment 2 to 4. It
+      doesn't publish what a credit costs; its blog puts the lowest tier at
+      $95 a month. Contact data needs an Enterprise plan."
+  - q: "Does Crustdata have email and phone data?"
+    a: "Yes, through its contact enrichment endpoint on Enterprise plans. In
+      our benchmark it found a mobile number for 78% of 150 LinkedIn
+      profiles, with a median response of 0.9 seconds."
+  - q: "Does Crustdata have an MCP server?"
+    a: "Yes. It works in Claude, ChatGPT, Cursor, VS Code, and Codex, signs
+      in with OAuth or an API key, and bills at normal credit prices. A
+      dry-run mode shows what a call would cost without spending credits."
+  - q: "How fresh is Crustdata's data?"
+    a: "Crustdata refreshes its dataset every 14 to 28 days. Its live
+      endpoints fetch a person or company on request, for cases where that
+      isn't recent enough."
+  - q: "What are Crustdata's rate limits?"
+    a: "By default, person and company enrichment allow 15 requests a
+      minute, search 30, and live endpoints 10. Batch endpoints handle larger
+      jobs asynchronously."
+---
+
+{/*
+FACT BASE (checked 2026-10-06 on primary sources unless marked):
+- Pricing: crustdata.com/pricing shows no prices; docs.crustdata.com/
+  general/pricing lists credits per endpoint: search 0.03/result (+0.1-2.5
+  premium field groups); person enrich 1-7; company enrich 2 (+2
+  technographics); contact enrich email 1, personal 2, phone 2, verified
+  +0.5, max 5.5, Enterprise only; live endpoints 7 / 2 per result; watchers
+  0.5-5 per record (30-day), 150 (1-day). $95/mo lowest tier from
+  crustdata.com/blog/data-enrichment-cost. Credit validity 12 months (docs)
+  vs 6 (blog): not used. Free trial per pricing FAQ.
+- Rate limits (docs.crustdata.com/general/rate-limits): enrich 15 RPM,
+  search 30, contact enrich 15, live 10, batch live 5. Pricing page sample
+  says 20 for person enrich: conflict, used the table.
+- Contact enrich 403 for self-serve keys (docs).
+- MCP: install.crustdata.com/mcp, OAuth or Bearer key, Claude, ChatGPT,
+  Cursor, VS Code, Codex, Antigravity; dry-run mode (docs/for-agents/mcp).
+- Company: founders per crustdata.com/about; HQ 95 Third St SF; YC F24
+  (ycombinator.com); $6M seed, YC + A Capital, 2025-10-22 (Crustdata blog).
+  Founded 2023 secondhand, not used. Dataset size conflicts on homepage
+  (60M vs 200M+ companies): used 60M+, matching the blog.
+- Freshness: about page "every 14-28 days" + "real-time data fetching on
+  request"; docs split cached vs /live endpoints.
+- Benchmark: phone 237d 117/150 (78%), 3rd of 9 behind Surfe 96% and
+  Amplemarket 79.3%; p50 0.9 s vs Surfe 4.4 s, Amplemarket 18.6 s
+  (evidence.md). Agreement (0.576) and the weaker work-email (50.8%, 5th)
+  and email-to-LinkedIn (8%) tests left out per Florian, 2026-10-06: show
+  the flattering figures. All head-to-head benchmark runs, never production
+  waterfall receipts (Crustdata runs late in prod waterfalls).
+- pipe0 relationship (closed packages/base catalog): default third in
+  person:mobile:profileurl and person:workemail:profileurl waterfalls;
+  people-profiles-crustdata-3 and companies-profiles-crustdata-3 searches;
+  jobs-crustdata-1; person-posts-crustdata-1; company identity and match.
+*/}
+
+## What is Crustdata?
+
+Crustdata is a B2B data API, and it was designed for software to read rather
+than for people to click. You give it a company or a person and get back a
+structured record: for a company, headcount and how it is trending, funding
+rounds, open jobs, web traffic and where it comes from, the tech stack,
+news, reviews, and the leadership team; for a person, their profile, career,
+and on Enterprise plans their email and phone number.
+
+Abhilash Chowdhary, Manmohit Grewal, and Chris Pisarski built it in San
+Francisco and went through Y Combinator in fall 2024. It raised a $6 million
+seed in October 2025, and its customers include YC itself.
+
+## Company data that stays current
+
+The difference between Crustdata and most data providers is what a record
+contains and how old it is. A company lookup does not stop at industry and
+size. It shows whether headcount grew over the last six months, which roles
+the company is hiring for and where, and whether its web traffic jumped
+after a launch. Those are the facts outbound actually runs on.
+
+Its dataset refreshes every 14 to 28 days. When that is too old, live
+endpoints fetch a person or company at request time. Watchers go one step
+further: you register the companies or people you care about, and Crustdata
+sends a webhook when something changes, such as a new job posting, a
+funding round, or a leadership move. For signal-based outbound, that
+replaces a pile of scrapers.
+
+## Contact data
+
+Crustdata also sells emails and phone numbers, through a contact endpoint on
+Enterprise plans. We benchmarked it: across 150 LinkedIn profiles, Crustdata
+found a mobile number for 78%, within two points of the best single premium
+source we tested. It was also the fastest of the high-coverage providers,
+with a median response of 0.9 seconds against 4.4 and 18.6 seconds for the
+other two. Speed like that matters when an agent is waiting on the answer.
+
+## Built for agents
+
+Crustdata describes itself as a data provider for AI agents, and the tooling
+backs that up. The MCP server installs in Claude, ChatGPT, Cursor, VS Code,
+and Codex and signs in with OAuth. A dry-run mode shows what a call would
+cost before it spends anything, which is exactly what you want when an agent
+is deciding what to look up. The docs publish an `llms.txt` index, and your
+account's own prices can be read from the API for free.
+
+The limits are on throughput. By default, enrichment allows 15 requests a
+minute and search 30, and contact data needs an Enterprise plan. Larger
+jobs go through batch endpoints that run asynchronously. For an agent doing
+account research, that is plenty; for bulk enrichment of a million rows, talk
+to Crustdata first.
+
+## Crustdata and pipe0
+
+We buy data from Crustdata. It runs in pipe0's default mobile and work email
+waterfalls, and it powers pipe0's people and company searches, job search,
+and company matching. We chose it for the freshness and depth of its company
+data and for the speed of its contact lookups.
+
+If you want Crustdata's data without a separate contract, pipe0 is one way
+to get it: the same searches and enrichments sit next to 50+ other
+providers, behind one API and MCP server, billed per result.
+
+## Who should buy Crustdata
+
+Buy Crustdata if you are building an agent or a product that needs current
+company and people data, or if your outbound runs on signals like hiring,
+headcount, and funding. It is the most agent-ready B2B data API we have
+worked with.
+
+Look elsewhere if your team wants a prospecting app with a UI, or if you
+only need contact details. For mobile numbers at the highest coverage,
+[Surfe](/reviews/surfe) led our benchmark.

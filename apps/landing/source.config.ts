@@ -223,8 +223,14 @@ export const blog = defineCollections({
 });
 
 const criterion = z.object({
-  /** Out of 5, in half steps. */
-  score: z.number().min(1).max(5).multipleOf(0.5),
+  /** Out of 5, to one decimal. */
+  score: z
+    .number()
+    .min(1)
+    .max(5)
+    .refine((v) => Number.isInteger(Math.round(v * 10 * 1e6) / 1e6), {
+      message: "Scores take at most one decimal",
+    }),
   /** One plain sentence: why this score. Shown under the bar. */
   why: z.string(),
 });
@@ -302,8 +308,46 @@ export const reviews = defineCollections({
     ),
     /** The matching /compare/pipe0-vs-<tool> page, if there is one. */
     compare: z.string().optional(),
-    /** Overrides the default "pipe0 competes with <tool>" line. */
+    /**
+     * How pipe0 relates to the tool; picks the disclosure line under the
+     * byline. "supplier" means pipe0 buys its data for waterfalls.
+     */
+    relationship: z
+      .enum(["competitor", "supplier", "neutral"])
+      .default("competitor"),
+    /** Overrides the relationship's default disclosure line. */
     disclosure: z.string().optional(),
+    /**
+     * Results from pipe0's provider benchmark. Copy numbers only from
+     * evidence.md or a read-only query of bench.db, with the run id.
+     */
+    benchmark: z
+      .object({
+        /** When the runs happened, e.g. "August 2026". */
+        period: z.string(),
+        rows: z.array(
+          z.object({
+            /** What went in and what came out, e.g. "LinkedIn URL to mobile". */
+            test: z.string(),
+            /**
+             * Which seed population: 1,204 stratified LinkedIn profiles, or
+             * real pipe0 signup emails. Decides which caveats print.
+             */
+            dataset: z.enum(["profiles", "signups"]).default("profiles"),
+            run: z.string(),
+            n: z.number().int(),
+            /** Share of records with a result, in percent. */
+            coverage: z.number(),
+            /** Share of results matching other providers, in percent. */
+            agreement: z.number().optional(),
+            /** Median response time, e.g. "0.9 s". */
+            latency: z.string().optional(),
+          }),
+        ),
+        /** Run-specific caveats, on top of the standard ones. */
+        notes: z.array(z.string()).optional(),
+      })
+      .optional(),
     authors: z.array(z.object({ name: z.string(), title: z.string() })),
     date: z.iso.date().or(z.date()),
     /** Last substantive revision (new prices, re-scored criteria). */

@@ -1,6 +1,8 @@
 import { formatDate, lastRevised } from "@/app/blog/blog-utils";
 import {
+  benchmarkCaveats,
   CRITERIA,
+  disclosureFor,
   formatScore,
   formatStartingPrice,
   isVisible,
@@ -57,6 +59,7 @@ export async function GET(
     "",
     `Source: ${base}${page.url}`,
     `Scoring method: ${base}/reviews#methodology`,
+    `Disclosure: ${disclosureFor(page)}`,
   ];
   if (d.description) lines.push("", `> ${d.description}`);
 
@@ -87,6 +90,25 @@ export async function GET(
     ...d.facts.map(
       (f) => `- **${f.label}:** ${f.value}${f.source ? ` ([source](${f.source}))` : ""}`,
     ),
+    ...(d.benchmark
+      ? [
+          "",
+          `## ${tool} in our benchmark`,
+          "",
+          `pipe0 ran the same records through every provider it tests (${d.benchmark.period}).`,
+          "",
+          "| Test | Records | Coverage | Agreement | Median time | Run |",
+          "| --- | --- | --- | --- | --- | --- |",
+          ...d.benchmark.rows.map(
+            (r) =>
+              `| ${cell(r.test)} (${r.dataset === "signups" ? "signup emails" : "LinkedIn profiles"}) | ${r.n} | ${r.coverage}% | ${r.agreement !== undefined ? `${r.agreement}%` : "–"} | ${r.latency ?? "–"} | ${r.run} |`,
+          ),
+          "",
+          ...benchmarkCaveats(d.benchmark).map(
+            (n) => `- ${n}`,
+          ),
+        ]
+      : []),
     "",
     // MDX comments hold the editorial fact base; they stay in the repo.
     (await page.data.getText("processed"))

@@ -105,3 +105,50 @@ export function relatedReviews(
     )
     .slice(0, count);
 }
+
+/**
+ * Printed under every benchmark table, on the page and in the .md twin.
+ * Mirrors the caveats in the positioning skill's evidence.md; the
+ * agreement caveat only appears when the table shows agreement.
+ */
+export function benchmarkCaveats(
+  benchmark: NonNullable<ReviewPage["data"]["benchmark"]>,
+): string[] {
+  const hasAgreement = benchmark.rows.some((r) => r.agreement !== undefined);
+  const sizes = benchmark.rows.map((r) => r.n);
+  const [min, max] = [Math.min(...sizes), Math.max(...sizes)];
+  const range = min === max ? `${min} records` : `${min} to ${max} records`;
+  return [
+    ...(benchmark.notes ?? []),
+    `Samples are small, ${range} per test, so treat a few points of difference as noise.`,
+    ...(benchmark.rows.some((r) => r.dataset === "profiles")
+      ? [
+          "The LinkedIn profile set passed one vendor's resolvability filter, so absolute rates run higher than on a typical list. Comparisons between providers stay fair.",
+        ]
+      : []),
+    ...(benchmark.rows.some((r) => r.dataset === "signups")
+      ? [
+          "The signup set is real pipe0 signup emails with no vendor involved. Name and domain are derived from the email, so those tests measure finding the address format, not finding the company.",
+        ]
+      : []),
+    ...(hasAgreement
+      ? [
+          "Agreement is the share of results that match what other providers returned for the same person. It is a proxy for accuracy, not ground truth.",
+        ]
+      : []),
+  ];
+}
+
+/** The disclosure line under the byline. */
+export function disclosureFor(review: ReviewPage): string {
+  const { disclosure, relationship, tool } = review.data;
+  if (disclosure) return disclosure;
+  switch (relationship) {
+    case "supplier":
+      return `pipe0 buys data from ${tool.name} and uses it in its waterfalls. The scores come from our own benchmark, not from that relationship.`;
+    case "neutral":
+      return `pipe0 neither competes with nor buys from ${tool.name}.`;
+    default:
+      return `pipe0 sells data enrichment and competes with ${tool.name} in parts of this review. We say where ${tool.name} is better.`;
+  }
+}

@@ -243,8 +243,8 @@ function Methodology() {
           How we review
         </h2>
         <p className="mt-3 text-[15.5px] leading-[1.65] text-fd-muted-foreground">
-          Every tool is scored from 1 to 5 on the same four criteria, in half
-          points. The overall score is the plain average of the four, rounded
+          Every tool is scored from 1 to 5 on the same four criteria, to one
+          decimal. The overall score is the plain average of the four, rounded
           to one decimal. We don&apos;t weight it and we don&apos;t adjust it
           by hand, so you can check the math on every page.
         </p>
@@ -271,10 +271,20 @@ function Methodology() {
           ourselves, the review says so.
         </p>
         <p>
+          For data providers, the data quality score rests on our own
+          benchmark: the same 50 to 150 records run through every provider
+          we test, with coverage, agreement with other providers, and
+          response time counted per test. Each review prints its numbers, the
+          run ids, and the caveats: small samples, a pre-filtered profile set
+          that runs high in absolute terms, and agreement as a proxy for
+          accuracy rather than proof of it.
+        </p>
+        <p>
           pipe0 sells data enrichment, so many of the tools reviewed here
-          compete with us. Each review says so at the top, credits the tool
-          where it is better than pipe0, and links to the full side-by-side
-          comparison where one exists.
+          compete with us, and others sell us the data our waterfalls run
+          on. Each review says which at the top, credits the tool where it is
+          better than pipe0, and links to the full side-by-side comparison
+          where one exists.
         </p>
         <p>
           We re-check prices and scores when a vendor changes its plans or

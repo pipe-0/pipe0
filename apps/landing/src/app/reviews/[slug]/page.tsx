@@ -23,7 +23,9 @@ import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 import { ScoreBar, ScorePill, ToolLogo } from "../review-parts";
 import {
+  benchmarkCaveats,
   CRITERIA,
+  disclosureFor,
   formatScore,
   formatStartingPrice,
   isVisible,
@@ -57,9 +59,10 @@ export default async function Review(props: {
     .map((a) => getAuthor(a.name))
     .find((a) => a !== undefined);
   const related = relatedReviews(page, 3);
-  const disclosure =
-    d.disclosure ??
-    `pipe0 sells data enrichment and competes with ${tool} in parts of this review. We say where ${tool} is better.`;
+  const disclosure = disclosureFor(page);
+  // Columns appear only when at least one test reports them.
+  const showAgreement = d.benchmark?.rows.some((r) => r.agreement !== undefined);
+  const showLatency = d.benchmark?.rows.some((r) => r.latency !== undefined);
 
   return (
     <>
@@ -294,6 +297,94 @@ export default async function Review(props: {
           </dl>
         </ReviewSection>
 
+        {d.benchmark && (
+          <ReviewSection id="benchmark" title={`${tool} in our benchmark`}>
+            <p className="text-[15.5px] leading-[1.65] text-fd-muted-foreground">
+              We ran the same records through every provider we test and
+              counted who returned a result. These are {tool}&apos;s numbers
+              from {d.benchmark.period}.
+            </p>
+            <div className="mt-5 overflow-x-auto rounded-xl ring-1 ring-fd-border">
+              <table className="w-full min-w-[620px] text-left text-[14px]">
+                <thead className="bg-fd-muted text-[13px] text-fd-muted-foreground">
+                  <tr>
+                    <th scope="col" className="px-4 py-2.5 font-medium">
+                      Test
+                    </th>
+                    <th scope="col" className="px-4 py-2.5 font-medium">
+                      Records
+                    </th>
+                    <th scope="col" className="px-4 py-2.5 font-medium">
+                      Coverage
+                    </th>
+                    {showAgreement && (
+                      <th scope="col" className="px-4 py-2.5 font-medium">
+                        Agreement
+                      </th>
+                    )}
+                    {showLatency && (
+                      <th scope="col" className="px-4 py-2.5 font-medium">
+                        Median time
+                      </th>
+                    )}
+                  </tr>
+                </thead>
+                <tbody>
+                  {d.benchmark.rows.map((row) => (
+                    <tr key={row.run + row.test} className="border-t border-fd-border">
+                      <th scope="row" className="px-4 py-3 font-medium text-fd-foreground">
+                        {row.test}
+                        <span className="block text-[12.5px] font-normal text-fd-muted-foreground">
+                          {row.dataset === "signups"
+                            ? "Signup emails"
+                            : "LinkedIn profiles"}
+                        </span>
+                      </th>
+                      <td className="px-4 py-3 tabular-nums text-fd-muted-foreground">
+                        {row.n}
+                      </td>
+                      <td className="px-4 py-3 font-semibold tabular-nums text-fd-foreground">
+                        {row.coverage}%
+                      </td>
+                      {showAgreement && (
+                        <td className="px-4 py-3 tabular-nums text-fd-muted-foreground">
+                          {row.agreement !== undefined ? `${row.agreement}%` : "–"}
+                        </td>
+                      )}
+                      {showLatency && (
+                        <td className="px-4 py-3 whitespace-nowrap tabular-nums text-fd-muted-foreground">
+                          {row.latency ?? "–"}
+                        </td>
+                      )}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <ul className="mt-5 list-disc space-y-2 pl-5 text-[14px] leading-[1.6] text-fd-muted-foreground">
+              {benchmarkCaveats(d.benchmark).map((note) => (
+                <li key={note}>{note}</li>
+              ))}
+            </ul>
+            <p className="mt-4 text-[13px] text-fd-muted-foreground">
+              Run ids:{" "}
+              {[...new Set(d.benchmark.rows.map((r) => r.run))].map((run, i) => (
+                <span key={run}>
+                  {i > 0 && ", "}
+                  <code className="text-[12px]">{run}</code>
+                </span>
+              ))}
+              .{" "}
+              <Link
+                href="/reviews#methodology"
+                className="underline underline-offset-[3px] hover:text-fd-foreground"
+              >
+                How we test
+              </Link>
+            </p>
+          </ReviewSection>
+        )}
+
         <div className="prose blog-prose review-prose mt-4 min-w-0">
           <Mdx components={getMDXComponents({})} />
         </div>
@@ -451,6 +542,9 @@ export default async function Review(props: {
         contents={[
           { id: "verdict", title: "Verdict and scores" },
           { id: "facts", title: `${tool} at a glance` },
+          ...(d.benchmark
+            ? [{ id: "benchmark", title: "Our benchmark" }]
+            : []),
           ...toc
             .filter((item) => item.depth === 2)
             .map((item) => ({ id: item.url.slice(1), title: item.title })),

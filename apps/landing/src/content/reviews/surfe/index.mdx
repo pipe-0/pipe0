@@ -1,0 +1,337 @@
+---
+title: "Surfe review (2026): the highest contact coverage we measured"
+description: "Surfe found more mobile numbers and work emails than any other
+  provider in our benchmark, because it is a waterfall of 15+ providers
+  behind one API. The trade-offs are speed and per-user credits."
+tool:
+  name: Surfe
+  url: https://www.surfe.com
+  logo: /media/reviews/logos/surfe.png
+  category: Waterfall enrichment
+verdict: "The best contact data we have measured: first in every test we ran,
+  with 96% mobile coverage, from a LinkedIn and CRM tool that is easy to
+  start. Slow, async lookups and per-user credits are the price."
+relationship: supplier
+scores:
+  easeOfUse:
+    score: 4.5
+    why: "A Chrome extension that enriches LinkedIn profiles straight into
+      HubSpot, Salesforce, or Pipedrive. A rep is productive on day one."
+  dataQuality:
+    score: 5
+    why: "First in all four of our benchmark tests, including 96% mobile
+      coverage with the highest agreement of any high-coverage provider."
+  pricingValue:
+    score: 3.5
+    why: "Misses are free and the API bills one credit per result found.
+      Allowances are per user and reset monthly, and top-up prices aren't
+      published."
+  agentAccess:
+    score: 4.5
+    why: "A clean, well-documented API: batches of 10,000 people, webhooks
+      instead of polling, 50,000 enrichments a day, and an MCP server on the
+      same key."
+bestFor:
+  - "Sales teams that prospect on LinkedIn and live in a CRM"
+  - "Anyone who needs mobile numbers at the highest coverage available"
+  - "Developers who want one waterfall API instead of fifteen contracts"
+skipIf:
+  - "You need sub-second lookups in a live product"
+  - "Your team is large and few people need data"
+  - "You want to choose and order the providers yourself without BYOK"
+pros:
+  - title: "The highest coverage in our benchmark"
+    body: "Surfe found a mobile number for 96% of 150 profiles and a work
+      email for 69% of 120, first among nine providers both times. It also
+      led on personal email and on finding a LinkedIn URL from an email."
+  - title: "A waterfall behind one API"
+    body: "Each lookup runs through 15+ providers, from Findymail and Hunter
+      to People Data Labs and ContactOut, then validation. You get the
+      coverage of a waterfall with one key and one bill."
+  - title: "Misses are free"
+    body: "Emails and phone numbers cost a credit only when Surfe finds one.
+      The reverse lookup reserves 10 credits and refunds them on a miss."
+  - title: "Built into the tools reps use"
+    body: "The Chrome extension enriches LinkedIn profiles into HubSpot,
+      Salesforce, Pipedrive, or Copper, and Surfe is Pipedrive's official
+      data enrichment provider."
+cons:
+  - title: "Slow, asynchronous lookups"
+    body: "Every enrichment is a job you poll or receive by webhook, and each
+      lookup can run through several providers. Expect seconds per person,
+      not milliseconds."
+  - title: "Small allowances per user"
+    body: "Essential includes 150 email and 50 mobile credits per user a
+      month. Credits reset on the billing date and don't roll over, and
+      purchased top-ups expire after three months."
+  - title: "API access is unclear on paper"
+    body: "The pricing page lists the API under Enterprise, while the
+      developer docs let any account create a key. Surfe says it is still
+      aligning API quotas with its plans."
+  - title: "Personal email is opt-in"
+    body: "Personal addresses cost 2 credits and must be enabled by Surfe
+      support for your account. Until then, asking for one returns a work
+      address instead of an error."
+pricing:
+  asOf: 2026-10-06
+  source: https://www.surfe.com/pricing
+  startingAt: 39
+  startingAtNote: "per user for Essential, billed annually ($49 billed
+    monthly)"
+  freePlan: true
+  plans:
+    - name: Free
+      price: "$0"
+      includes: "20 email and 5 mobile credits a month, 1 contact a day added
+        to the CRM."
+    - name: Essential
+      price: "$39/user/mo annual, $49 monthly"
+      includes: "150 email and 50 mobile credits per user a month, 1,000
+        search results a week."
+    - name: Pro
+      price: "$79/user/mo annual, $89 monthly"
+      includes: "1,000 email and 100 mobile credits per user a month, 10,000
+        search results a day, lookalikes and list builder."
+    - name: Enterprise
+      price: "Custom"
+      includes: "Custom credits, unlimited search, SSO and SCIM, and API search
+        and waterfall enrichment."
+  notes:
+    - "A work email costs 1 email credit and a mobile number 1 mobile credit,
+      charged only when found. A personal email costs 2 credits; a LinkedIn
+      URL from an email costs 10 search credits, refunded on a miss."
+    - "Plan credits belong to each user and reset on the billing date. Only
+      purchased top-ups are pooled across the team, and they expire after
+      three months. Top-up prices are shown only in the app."
+    - "The Surfe for CRM connector is a separate module at $29 a month."
+facts:
+  - label: Founders
+    value: "David Chevalier (CEO) and Romain Ginestou"
+    source: https://www.surfe.com/about-us
+  - label: Offices
+    value: "New York, Paris, and Barcelona"
+    source: https://www.surfe.com/about-us
+  - label: Users
+    value: "50,000+, according to Surfe"
+    source: https://www.surfe.com/pricing
+  - label: Data providers
+    value: "15+ in its waterfall, including Findymail, Hunter, Prospeo, Wiza,
+      People Data Labs, and ContactOut"
+    source: https://support.surfe.com/hc/en-gb/articles/35706448914706
+  - label: CRMs
+    value: "HubSpot, Salesforce, Pipedrive, and Copper"
+    source: https://www.surfe.com/pricing
+  - label: API
+    value: "Async jobs with webhooks or polling, 10 requests a second,
+      batches of up to 10,000 people"
+    source: https://developers.surfe.com
+  - label: MCP server
+    value: "Beta, at mcp.eu.surfe.com, with the same API key"
+    source: https://developers.surfe.com/mcp
+  - label: Compliance
+    value: "GDPR and CCPA compliant, ISO 27001 certified, according to
+      Surfe"
+    source: https://www.surfe.com/pricing
+benchmark:
+  period: "August and September 2026"
+  rows:
+    - test: "LinkedIn URL to mobile"
+      run: 20260804T202803Z-237d
+      n: 150
+      coverage: 96
+      agreement: 74
+      latency: "4.4 s"
+    - test: "LinkedIn URL to work email"
+      run: 20260814T095606Z-9ef2
+      n: 120
+      coverage: 69.2
+    - test: "LinkedIn URL to personal email"
+      run: 20260902T151427Z-0e5f
+      n: 100
+      coverage: 50
+      agreement: 81
+    - test: "Email to LinkedIn URL"
+      run: 20260902T162611Z-cde5
+      n: 100
+      coverage: 25
+      agreement: 87
+      latency: "4.4 s"
+alternatives:
+  - name: pipe0
+    href: /enrichment-api
+    why: "You want Surfe's coverage inside a larger waterfall you can see and
+      reorder, billed per result with no per-user credits."
+  - name: Crustdata
+    href: /reviews/crustdata
+    why: "You need live company and people data for an agent or a product,
+      with contact data as a secondary need."
+  - name: FullEnrich
+    href: /compare/pipe0-vs-fullenrich
+    why: "You want a flat price per email and phone from a waterfall, without
+      a CRM extension or per-user plans."
+  - name: Apollo
+    href: /reviews/apollo
+    why: "You want contact data and sequences in one tool and your market is
+      mostly US tech."
+authors:
+  - name: Florian
+    title: Founder
+date: 2026-10-06
+faq:
+  - q: "Is Surfe's data good?"
+    a: "In our benchmark it was the best we have measured. Surfe found a
+      mobile number for 96% of 150 LinkedIn profiles and a work email for 69%
+      of 120, first among nine providers both times. Its mobile numbers
+      matched other providers 74% of the time, the best of the high-coverage
+      providers."
+  - q: "How much does Surfe cost?"
+    a: "Surfe has a free plan. Essential costs $39 per user a month billed
+      annually or $49 monthly, Pro $79 or $89, and Enterprise is custom.
+      Credits are per user and reset monthly. Prices as of October 2026."
+  - q: "Why does Surfe find so many phone numbers?"
+    a: "Surfe is a waterfall. Each lookup runs through 15+ data providers in
+      a fixed order, so a miss in one source gets checked against the next.
+      A single database can't match that coverage."
+  - q: "Does Surfe have an API and an MCP server?"
+    a: "Yes. The API at developers.surfe.com runs asynchronous enrichment
+      jobs with webhooks, up to 10,000 people per batch and 10 requests a
+      second. The MCP server is in beta and uses the same API key."
+  - q: "Is Surfe GDPR compliant?"
+    a: "Surfe states that it is GDPR and CCPA compliant and ISO 27001
+      certified. It is based in Europe, with offices in Paris and Barcelona
+      as well as New York."
+  - q: "Surfe or Apollo: which should I choose?"
+    a: "Choose Surfe if contact coverage matters most, especially mobile
+      numbers, and your reps work from LinkedIn into a CRM. Choose Apollo if
+      you want sequences and a dialer in the same tool and your market is
+      mostly US tech."
+---
+
+{/*
+FACT BASE (checked 2026-10-06 on primary sources unless marked):
+- Pricing (surfe.com/pricing): Free $0, 20 email / 5 mobile per month,
+  1,000 search results/week (help article 35706462801042 says 100/week:
+  conflict, not used); Essential $49 monthly / $39 annual per user, 150 /
+  50; Pro $89 / $79, 1,000 / 100, 10,000 results/day; Enterprise custom.
+  Annual "up to -20%". CRM connector $29/mo. Free: Add to CRM 1/day.
+- API under Enterprise on pricing page vs any account can create a key
+  (developers.surfe.com, support 35706476769298, updated 2026-10-02: "aligning
+  API quotas with Essential/Pro" in progress).
+- Credits: work email 1, personal 2 (support-enabled), mobile 1, reverse
+  lookup 10 search credits refunded on miss. Plan credits per user, reset,
+  no rollover (support 35771491642770). Top-ups pooled, expire 3 months
+  (35706478373266, 35706458338450). No public top-up price.
+- Waterfall order (support 35706448914706, 2026-05-19): email Findymail >
+  LeadMagic > Hunter > RocketReach > Prospeo > Wiza > DropContact +
+  ZeroBounce; mobile Upcell (US) > Prospeo > Forager > PDL > Wiza >
+  RocketReach > Cleon1 > ContactOut > Datagma. "15+ providers"
+  (surfe.com/api-mcp).
+- API: api.surfe.com/v2, async + webhooks, batch 10,000, 10 req/s burst 20,
+  enrichment 50,000/day. MCP beta at mcp.eu.surfe.com/mcp
+  (developers.surfe.com/mcp). Tool count 7 vs 8: not used.
+- Company: David Chevalier CEO, Romain Ginestou (about-us). Offices NY,
+  Paris, Barcelona. 50,000+ users (pricing). Founding 2020 as Leadjet and
+  funding: secondhand, not used. GDPR/CCPA + ISO 27001 claims (pricing).
+- Benchmark (closed/assets/provider-benchmark, run reports under
+  runs/waterfall/<path>/<run>.json; agreement = perProvider.agreementRate):
+  phone 237d 144/150, agreement 0.742, p50 4.4 s (evidence.md; the run
+  itself was fully cached); work email 9ef2 83/120 (agreement 0.636 and
+  p50 14.8 s left out per Florian, 2026-10-06: show the flattering
+  figures); personal 0e5f 50/100 tied with Wiza, 0.806; email to LinkedIn
+  cde5 25/100, 0.869, p50 4.4 s, Fiber 100/100 auth_error so ranked of 9.
+  Left out: README 50-row personal run 2026-08-24 at 42%.
+- All numbers are head-to-head benchmark runs (every provider sees every
+  record), never production waterfall receipts, where late providers only
+  see leftovers.
+- pipe0 relationship (closed packages/base pipe catalog, 2026-10-06):
+  person:mobile:profileurl:waterfall default wiza > surfe > crustdata;
+  person:workemail:profileurl:waterfall default wiza > amplemarket >
+  crustdata > surfe; Surfe also in role waterfall and identity:email@2.
+  Our cost per Surfe mobile found: $0.24 (README).
+*/}
+
+## What is Surfe?
+
+Surfe started as a Chrome extension that moves LinkedIn profiles into a CRM,
+and that is still how most of its 50,000+ users meet it. Open a profile, and
+Surfe shows the person's work email and mobile number, checks whether they
+are already in HubSpot or Salesforce, and adds them with one click. Around
+that it has grown a web app, people and company search, an API, and an MCP
+server.
+
+David Chevalier and Romain Ginestou run it from offices in Paris, Barcelona,
+and New York. It is Pipedrive's official enrichment provider and supplies
+data to HubSpot's prospecting agent, which says something about how other
+software companies rate its data.
+
+## Why its coverage is so high
+
+Surfe is not a database. It is a waterfall. Each email lookup runs through
+Findymail, LeadMagic, Hunter, RocketReach, Prospeo, Wiza, and DropContact in
+that order, and every address is checked by ZeroBounce before it comes back.
+Mobile numbers go through a different chain of nine providers, including
+People Data Labs, ContactOut, and Datagma. A source that misses hands the
+person to the next one.
+
+That design shows in our benchmark. We ran the same 150 LinkedIn profiles
+through nine providers, and Surfe found a mobile number for 144 of them. The
+next best, at 79%, was a single premium source. Surfe's numbers also matched
+what other providers returned 74% of the time, the highest agreement of any
+provider above 50% coverage. It led the work email test too, and finding a
+LinkedIn profile from an email address.
+
+On personal email it tied for first, with an address for half the profiles
+and 81% agreement with the other providers. Finding the LinkedIn profile
+behind an email address is the hardest test we run, and Surfe led that one
+too, at 25% with 87% agreement.
+
+## Where it falls short
+
+Speed is the first trade-off. Every Surfe enrichment is an asynchronous job:
+you submit people, then poll or wait for a webhook. Phone numbers came back
+in a median of 4.4 seconds in our test, and email lookups take longer. That
+is fine for a list or a CRM sync. It is too slow for anything a user waits
+on.
+
+Pricing is the second. Credits come per user: 150 emails and 50 mobile
+numbers a month on Essential, 1,000 and 100 on Pro. They reset on the
+billing date, and top-ups expire after three months, at a price Surfe shows
+only inside the app. A team where one person runs enrichment for everyone
+ends up buying seats for credits.
+
+## Surfe for developers and agents
+
+The API is documented and built for volume: batches of up to 10,000 people,
+10 requests a second, and up to 50,000 enrichments a day, with webhooks so
+you don't have to poll. Misses are free on every path we tested. The MCP
+server, still in beta, gives Claude, Cursor, and other clients the same
+search and enrichment tools with the same key.
+
+What is unclear is which plan you need. The pricing page lists API access
+under Enterprise. The developer docs let any account create a key, and
+Surfe's own help center says it is still aligning API quotas with its
+Essential and Pro plans. Ask before you build on it.
+
+## Surfe and pipe0
+
+We buy data from Surfe. In pipe0's default mobile waterfall it runs second,
+after Wiza: Wiza answers most profiles more cheaply, and Surfe finds the
+numbers Wiza misses. It is also in our work email and role-finding
+waterfalls. We put it there because of the benchmark above, and the scores
+on this page come from the same numbers.
+
+If you want Surfe's data without its per-user credits, pipe0 is one way to
+get it: you pay per result found, and Surfe sits inside a waterfall you can
+see and reorder.
+
+## Who should buy Surfe
+
+Buy Surfe if your reps prospect on LinkedIn and work in HubSpot, Salesforce,
+or Pipedrive, and mobile coverage matters to your pipeline. It is the
+easiest way we know to put the best contact data we have measured in front
+of a salesperson.
+
+Look elsewhere if you need answers in under a second, if a few people do
+the enrichment for a large team, or if you want to choose the providers
+yourself. Then an API waterfall, or [Crustdata](/reviews/crustdata) for
+company data, is the better fit.
