@@ -1,16 +1,17 @@
 ---
-title: "ZeroBounce review (2026): the most accurate verifier we tested"
-description: "ZeroBounce got 96 of 100 labelled addresses right in our test and
-  passed no fake address as valid. It costs several times more per check
-  than budget verifiers, and new accounts' credits now expire."
+title: "ZeroBounce review (2026): fast, accurate, and no fakes passed"
+description: "ZeroBounce got 96 of 100 labelled addresses right in our test,
+  one behind LeadMagic, and passed no fake address as valid. It costs several
+  times more per check than budget verifiers, and new accounts' credits now
+  expire."
 tool:
   name: ZeroBounce
   url: https://www.zerobounce.net
   logo: /media/reviews/logos/zerobounce.png
   category: Email verification
-verdict: "The most accurate email verifier we tested, with zero fakes passed
-  as valid and a real answer on work domains other verifiers call catch-all.
-  You pay three to seven times more per check for it."
+verdict: "One of the two most accurate email verifiers we tested and the
+  fastest, with no fake passed as valid and real answers on work domains. You
+  pay three to seven times a budget verifier for it."
 relationship: supplier
 disclosure: "pipe0 buys verification from ZeroBounce and offers it as a pipe.
   The scores come from our own benchmark, not from that relationship."
@@ -40,10 +41,10 @@ skipIf:
   - "You verify millions of consumer addresses and price is everything"
   - "You buy credits once and use them over several years"
 pros:
-  - title: "Most accurate in our test"
+  - title: "Among the most accurate in our test"
     body: "ZeroBounce got 96 of 100 labelled addresses right: 47 of 50 real
-      ones confirmed and 49 of 50 fakes caught, more than the other two
-      verifiers."
+      ones confirmed and 49 of 50 fakes caught, the most fakes caught of the
+      four verifiers we tested."
   - title: "No fake passed as valid"
     body: "Not one of the 50 known-fake addresses came back valid, so a list
       that sends only to its valid addresses would have bounced on none of
@@ -52,7 +53,7 @@ pros:
     body: "On 30 real work addresses, ZeroBounce gave a definite verdict on 29.
       A budget verifier called 18 of the same 30 catch-all."
   - title: "Fast and agent-ready"
-    body: "A median of 0.3 seconds per check, the fastest of the three, an
+    body: "A median of 0.3 seconds per check, the fastest of the four, an
       official MCP server for Claude, Cursor, and VS Code, and SDKs in 13
       languages."
 cons:
@@ -147,6 +148,14 @@ benchmark:
         falseNegatives: 3
         undetermined: 4
         latency: "1.3 s"
+      - provider: LeadMagic
+        accuracy: 97
+        validConfirmed: 49
+        invalidCaught: 48
+        falsePositives: 0
+        falseNegatives: 1
+        undetermined: 2
+        latency: "2.0 s"
       - provider: MillionVerifier
         accuracy: 66
         validConfirmed: 31
@@ -159,7 +168,7 @@ benchmark:
     - "Every verifier got all 20 real Gmail addresses, all 20 fake Gmail and
       Outlook addresses, and all 10 addresses at nonexistent domains right.
       The differences are all on work domains."
-    - "One real address was called invalid by all three verifiers. A sign-in
+    - "One real address was called invalid by every verifier. A sign-in
       45 days earlier proves the Google account then, not the address today,
       so it may be a labelling error."
     - "Median times come from the first, fully uncached run
@@ -205,7 +214,7 @@ authors:
 date: 2026-10-06
 faq:
   - q: "Is ZeroBounce accurate?"
-    a: "In our test it was the most accurate of three verifiers: 96 of 100
+    a: "In our test it was the second most accurate of four verifiers: 96 of 100
       labelled addresses right, 47 of 50 real addresses confirmed, and 49 of
       50 fake addresses caught. It passed no fake address as valid."
   - q: "How much does ZeroBounce cost?"
@@ -270,7 +279,7 @@ monitoring, and inbox placement tests.
 
 ## How it did in our test
 
-We ran 100 labelled addresses through three verifiers. Fifty were real: pipe0
+We ran 100 labelled addresses through four verifiers. Fifty were real: pipe0
 users who had signed in with Google in the previous 45 days, 30 on work
 domains and 20 on Gmail. Fifty were fake: random mailboxes at Gmail, Outlook,
 and well-known company domains, and addresses at domains that don't exist.
@@ -280,7 +289,7 @@ caught 49 of the 50 fakes, and it passed none of the fakes as valid. If you
 had sent only to the addresses it called valid, nothing in this test would
 have bounced.
 
-All three verifiers handled the easy cases perfectly: real Gmail addresses,
+Every verifier handled the easy cases perfectly: real Gmail addresses,
 random Gmail and Outlook mailboxes, and domains with no mail server. The
 difference was entirely on work domains. On 30 real work addresses,
 ZeroBounce gave a definite answer on 29. MillionVerifier called 18 of the
@@ -309,7 +318,7 @@ unless a subscription is active.
 The API has a real-time endpoint, a batch endpoint for 100 addresses per
 request, and a bulk file API, with SDKs in 13 languages and a limit of
 80,000 requests per 10 seconds. It answered in a median of 0.3 seconds in our
-test, the fastest of the three. ZeroBounce also publishes an official,
+test, the fastest of the four. ZeroBounce also publishes an official,
 open-source MCP server, so an agent in Claude, Cursor, or VS Code can verify
 an address before it writes to a CRM or a sequence.
 

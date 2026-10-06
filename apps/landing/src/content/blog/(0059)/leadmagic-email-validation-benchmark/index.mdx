@@ -1,0 +1,136 @@
+---
+title: "LeadMagic's Email Validation Beat ZeroBounce in Our Test"
+date: 2026-10-06
+category: Sales data
+cover: /media/blog/covers/leadmagic-email-validation-benchmark.jpg
+excerpt: "We added LeadMagic to our verification benchmark: 100 addresses
+  where we know every answer. It got 97 right, one more than ZeroBounce,
+  and charged nothing when it couldn't tell."
+tags:
+  - email verification
+  - data enrichment
+tldr: "On 100 labelled addresses, LeadMagic's email validation got 97 right,
+  ZeroBounce 96, MixRank 93, and MillionVerifier 66. LeadMagic confirmed every
+  real address except one that all four rejected, and passed no fake as
+  valid. It was also the slowest, at about 2 seconds a check."
+faq:
+  - q: "Is LeadMagic's email validation accurate?"
+    a: "In our test it was the most accurate of four verifiers: 97 of 100
+      labelled addresses right, 49 of 50 real addresses confirmed, and no fake
+      address passed as valid. Its one rejected real address was rejected by
+      every verifier."
+  - q: "LeadMagic or ZeroBounce for email validation?"
+    a: "On accuracy the two were nearly tied, 97 against 96. LeadMagic
+      confirmed two more real addresses, ZeroBounce caught one more fake.
+      ZeroBounce answered in 0.3 seconds against about 2 for LeadMagic, and
+      LeadMagic is cheaper per check and doesn't charge for unknown results."
+  - q: "How much does LeadMagic email validation cost?"
+    a: "A quarter credit per valid or invalid verdict, which is between 0.18
+      and 0.5 cents depending on the plan. Unknown results, including
+      addresses on catch-all domains, are free."
+  - q: "How was the test run?"
+    a: "We used 50 real addresses of pipe0 users who signed in with Google in
+      the last 45 days and 50 fake ones we generated, then scored each
+      verdict against the known answer. Catch-all and unknown verdicts count
+      as undetermined, not as wrong."
+draft: false
+authors:
+  - name: Florian
+    title: Founder
+---
+
+{/*
+Numbers: evidence.md section G; LeadMagic run 20261006T204836Z-0576 (the
+other three replayed from cache), earlier runs 20261006T201548Z-886a and
+20261006T201402Z-a061 (latency). Prices: public pricing pages, 2026-10-06.
+*/}
+
+Earlier today we published a test of
+[ZeroBounce against MillionVerifier](/blog/zerobounce-vs-millionverifier) on
+100 addresses where we know every answer. LeadMagic, which we mostly use for
+finding emails and phone numbers, also sells validation, so we ran the same
+100 addresses through it. It came out on top.
+
+## The test, briefly
+
+Fifty addresses are real: pipe0 users who signed in with Google in the 45
+days before the test, 30 on company domains and 20 on Gmail. Fifty are fake,
+generated for the test with no person behind them: random mailboxes at Gmail,
+Outlook, and well-known company domains, and addresses at domains that don't
+exist.
+
+A verdict is right when it calls a real address valid or a fake one invalid.
+Calling a fake valid is the costly error, because it bounces. Calling a real
+address invalid loses a lead. Catch-all and unknown count as undetermined:
+the verifier didn't commit, which is better than guessing wrong.
+
+## The results
+
+| | LeadMagic | ZeroBounce | MixRank | MillionVerifier |
+| --- | --- | --- | --- | --- |
+| Right answers | 97 of 100 | 96 of 100 | 93 of 100 | 66 of 100 |
+| Real addresses confirmed | 49 of 50 | 47 of 50 | 47 of 50 | 31 of 50 |
+| Fakes caught | 48 of 50 | 49 of 50 | 46 of 50 | 35 of 50 |
+| Fakes passed as valid | 0 | 0 | 0 | 1 |
+| Real addresses rejected | 1 | 2 | 3 | 1 |
+| Undetermined | 2 | 2 | 4 | 32 |
+| Median time per check | 2.0 s | 0.3 s | 1.3 s | 0.7 s |
+
+LeadMagic and ZeroBounce are close enough that one address separates them,
+and on 100 addresses that is within noise. What sets LeadMagic apart is where
+its few misses fall.
+
+## Every real address but one
+
+LeadMagic confirmed 49 of the 50 real addresses. The one it rejected, every
+verifier rejected, and MillionVerifier's reason was "no mailbox". A Google
+sign-in 45 days ago proves the account existed then, not that the address
+still works today, so that one is most likely our label, not LeadMagic's
+mistake. Read that way, LeadMagic confirmed every real mailbox in the test.
+
+For outbound, that is the number that matters most. A verifier that wrongly
+rejects real work addresses quietly shrinks every list it touches, and you
+never find out which leads you lost. ZeroBounce rejected two real addresses
+and MixRank three.
+
+## Unknown, and free
+
+LeadMagic's two undetermined verdicts were both on fake addresses at
+salesforce.com and atlassian.com, where it said unknown rather than guess.
+LeadMagic has no separate catch-all status: an address on a domain that
+accepts all mail comes back as unknown.
+
+It also doesn't charge for that. A valid or invalid verdict costs a quarter
+credit, between 0.18 and 0.5 cents depending on the plan, and an unknown is
+free. ZeroBounce charges for catch-all results, and MillionVerifier credits
+them back as a goodwill gesture its terms say it can withdraw.
+
+## The trade-off is speed
+
+LeadMagic took a median of 2 seconds per check, the slowest of the four.
+ZeroBounce answered in 0.3 seconds. For a signup form, where a person waits
+for the answer, that difference is noticeable. For cleaning a list before a
+campaign or checking addresses in a batch, it isn't.
+
+## What we'd use, and when
+
+For cold outbound to work addresses, both LeadMagic and ZeroBounce are good
+choices, and the test can't separate them on accuracy. LeadMagic is cheaper
+per check and doesn't bill unknowns, ZeroBounce is much faster and comes with
+compliance paperwork and deliverability tools. MillionVerifier stays the
+cheapest option for consumer lists, where it was as accurate as the others,
+but a third of its answers on work domains were catch-all.
+
+In a pipe0 sheet you don't have to settle it once. Validation is a column, so
+you can run it after the email waterfall on every new row and see the
+verdict next to the address.
+
+## What this test can't tell you
+
+A hundred addresses is a small sample, and 30 real work addresses decide most
+of the differences. Our fake company addresses sit on 20 large domains, and
+your prospects' mail servers will behave differently. LeadMagic ran about
+half an hour after the other three, so a mail server that changed its
+behavior in between would affect the comparison. The full scorecards are in the reviews
+of [LeadMagic](/reviews/leadmagic), [ZeroBounce](/reviews/zerobounce), and
+[MillionVerifier](/reviews/millionverifier).

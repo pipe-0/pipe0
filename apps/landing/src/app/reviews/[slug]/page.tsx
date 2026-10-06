@@ -303,10 +303,17 @@ export default async function Review(props: {
         {d.benchmark && (
           <ReviewSection id="benchmark" title={`${tool} in our benchmark`}>
             <p className="text-[15.5px] leading-[1.65] text-fd-muted-foreground">
-              {d.benchmark.verification
-                ? `We ran the same ${d.benchmark.verification.n} labelled addresses through every verifier we test and scored each verdict against the known answer. These are the results from ${d.benchmark.period}.`
-                : `We ran the same records through every provider we test and counted who returned a result. These are ${tool}'s numbers from ${d.benchmark.period}.`}
+              {d.benchmark.verification && d.benchmark.rows.length > 0
+                ? `We run the same records through every provider we test. Below are ${tool}'s email verification results on ${d.benchmark.verification.n} labelled addresses, then its contact data results, from ${d.benchmark.period}.`
+                : d.benchmark.verification
+                  ? `We ran the same ${d.benchmark.verification.n} labelled addresses through every verifier we test and scored each verdict against the known answer. These are the results from ${d.benchmark.period}.`
+                  : `We ran the same records through every provider we test and counted who returned a result. These are ${tool}'s numbers from ${d.benchmark.period}.`}
             </p>
+            {d.benchmark.verification && d.benchmark.rows.length > 0 && (
+              <h3 className="font-blog mt-8 text-[17px] font-semibold text-fd-foreground">
+                Email verification
+              </h3>
+            )}
             {d.benchmark.verification && (
               <VerificationScorecard
                 tool={tool}
@@ -314,6 +321,11 @@ export default async function Review(props: {
                 invalid={d.benchmark.verification.n - d.benchmark.verification.valid}
                 rows={d.benchmark.verification.rows}
               />
+            )}
+            {d.benchmark.verification && d.benchmark.rows.length > 0 && (
+              <h3 className="font-blog mt-8 text-[17px] font-semibold text-fd-foreground">
+                Contact data
+              </h3>
             )}
             {d.benchmark.rows.length > 0 && (
             <div className="mt-5 overflow-x-auto rounded-xl ring-1 ring-fd-border">

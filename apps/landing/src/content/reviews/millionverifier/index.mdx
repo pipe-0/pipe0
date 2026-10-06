@@ -147,6 +147,14 @@ benchmark:
         falseNegatives: 3
         undetermined: 4
         latency: "1.3 s"
+      - provider: LeadMagic
+        accuracy: 97
+        validConfirmed: 49
+        invalidCaught: 48
+        falsePositives: 0
+        falseNegatives: 1
+        undetermined: 2
+        latency: "2.0 s"
   notes:
     - "MillionVerifier rejected only 1 of the 50 real addresses, the fewest of
       the three; most of its misses are catch-all verdicts, not errors."
@@ -244,7 +252,7 @@ There is no subscription. You buy a pack of credits, and they never expire.
 
 ## How it did in our test
 
-We ran 100 labelled addresses through three verifiers. Fifty were real
+We ran 100 labelled addresses through four verifiers. Fifty were real
 mailboxes, pipe0 users who had signed in with Google in the last 45 days.
 Fifty were fake: random mailboxes at Gmail, Outlook, and well-known company
 domains, and addresses at domains that don't exist.
@@ -257,10 +265,10 @@ Work addresses were different. Of 30 real work addresses, MillionVerifier
 confirmed 11 and called 18 catch-all. Of 20 fake ones, it caught 5 and again
 called 13 catch-all. It gives that verdict when a mail server accepts the
 test without confirming the mailbox, which many company domains do. The
-other two verifiers resolved almost all of the same addresses.
+other verifiers resolved almost all of the same addresses.
 
 So the overall score, 66 of 100, says less about errors than about caution.
-MillionVerifier rejected only one real address, the fewest of the three. It
+MillionVerifier rejected only one real address, tied for the fewest. It
 just declined to commit on a third of the list. In practice, that leaves you
 two bad choices on a work list: send only to its valid results and lose 19
 of 50 real leads, or send to catch-alls as well and let 14 fakes through.

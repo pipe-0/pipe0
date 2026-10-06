@@ -8,9 +8,9 @@ tool:
   url: https://leadmagic.io
   logo: /media/reviews/logos/leadmagic.png
   category: Contact finder
-verdict: "One of the cheapest contact data APIs we use, with answers that match
-  premium providers when it finds them and API, CLI, and MCP on every plan.
-  Coverage is lower than premium sources, so it works best as a first step."
+verdict: "One of the cheapest contact data APIs we use, with the most accurate
+  email validation we tested and API, CLI, and MCP on every plan. Its lookup
+  coverage trails premium sources."
 relationship: supplier
 scores:
   easeOfUse:
@@ -45,6 +45,10 @@ pros:
   - title: "Right when it answers"
     body: "On name and domain lookups, LeadMagic's addresses matched
       Amplemarket on 21 of 22 people and Prospeo on 20 of 22."
+  - title: "The most accurate email validation we tested"
+    body: "On 100 labelled addresses, LeadMagic's validation got 97 right,
+      ahead of ZeroBounce, MixRank, and MillionVerifier. It passed no fake as
+      valid, and its unknowns are free."
   - title: "One API for many jobs"
     body: "Emails, personal emails, mobiles, profile enrichment, job
       changes, company funding, technographics, and ads search, all on one
@@ -112,6 +116,10 @@ facts:
     value: "600 a minute for email finding and validation, 300 for most
       other endpoints"
     source: https://leadmagic.io/docs/v1/introduction
+  - label: Email validation
+    value: "0.25 credits per valid or invalid verdict; unknown, including
+      catch-all, is free"
+    source: https://leadmagic.io/docs/v1/reference/email-validation
   - label: MCP server
     value: "mcp.leadmagic.io, OAuth, 130+ tools, every plan"
     source: https://leadmagic.io/solutions/mcp
@@ -120,7 +128,44 @@ facts:
       Salesforce, Zapier, Make, and n8n"
     source: https://leadmagic.io
 benchmark:
-  period: "July 2026"
+  period: "July and October 2026"
+  verification:
+    run: 20261006T204836Z-0576
+    n: 100
+    valid: 50
+    rows:
+      - provider: LeadMagic
+        accuracy: 97
+        validConfirmed: 49
+        invalidCaught: 48
+        falsePositives: 0
+        falseNegatives: 1
+        undetermined: 2
+        latency: "2.0 s"
+      - provider: ZeroBounce
+        accuracy: 96
+        validConfirmed: 47
+        invalidCaught: 49
+        falsePositives: 0
+        falseNegatives: 2
+        undetermined: 2
+        latency: "0.3 s"
+      - provider: MixRank
+        accuracy: 93
+        validConfirmed: 47
+        invalidCaught: 46
+        falsePositives: 0
+        falseNegatives: 3
+        undetermined: 4
+        latency: "1.3 s"
+      - provider: MillionVerifier
+        accuracy: 66
+        validConfirmed: 31
+        invalidCaught: 35
+        falsePositives: 1
+        falseNegatives: 1
+        undetermined: 32
+        latency: "0.7 s"
   rows:
     - test: "Name and domain to work email"
       dataset: signups
@@ -132,6 +177,11 @@ benchmark:
   notes:
     - "Name and domain are derived from each signup email, so this test
       measures finding a person's address format, not finding the company."
+    - "LeadMagic's one rejected real address is the one every verifier
+      rejected, most likely a labelling error, so it confirmed every other
+      real address."
+    - "Its two undetermined verdicts were unknown, which LeadMagic does not
+      charge for, on fake addresses at salesforce.com and atlassian.com."
   agreement:
     test: "Name and domain to work email"
     run: 20260731T122257Z-f809
@@ -170,6 +220,11 @@ faq:
       our benchmark, its addresses matched other providers 95% of the time.
       It finds fewer people than premium providers, so most teams use it as
       the first step of a waterfall."
+  - q: "Is LeadMagic's email validation accurate?"
+    a: "In our test it was the most accurate of four verifiers: 97 of 100
+      labelled addresses right, 49 of 50 real addresses confirmed, and no fake
+      address passed as valid. ZeroBounce got 96, MixRank 93, and
+      MillionVerifier 66."
   - q: "How much does LeadMagic cost?"
     a: "Plans start at $83 a month billed annually, or $99 monthly, for 5,000
       credits. A credit costs from about 2 cents down to 0.7 cents on larger
@@ -217,6 +272,13 @@ FACT BASE (checked 2026-10-06 on primary sources unless marked):
 - pipe0 relationship: first in person:workemail:waterfall@1 (name +
   domain), person:profileurl:email:waterfall, ads waterfalls; in role,
   funding, mobile-from-workemail, personal-email waterfalls.
+- Email validation (run 20261006T204836Z-0576, four verifiers on the
+  labelled emails set; evidence.md section G): leadmagic 97/100, 49/50
+  real, 48/50 fakes, 0 FP, 1 FN (row 18, rejected by all), 2 unknown on
+  synthetic salesforce/atlassian, p50 2.1 s over 100 live calls. Pricing
+  0.25 credits per definitive verdict, unknown free (docs
+  /v1/reference/email-validation). Per check: 0.25 x $0.0071-$0.0198 =
+  0.18-0.5 cents.
 */}
 
 ## What is LeadMagic?
@@ -256,6 +318,25 @@ free of credits.
 There is no free trial; the smallest plan is $83 a month billed annually.
 One billing detail to watch: the job change detector costs 3 credits per
 person checked, even when nothing changed.
+
+## Email validation
+
+LeadMagic also validates addresses, and that turned out to be its strongest
+product in our tests. We ran 100 labelled addresses through it: 50 real
+mailboxes of pipe0 users and 50 fakes, from random Gmail mailboxes to
+addresses at domains that don't exist. It got 97 right, ahead of ZeroBounce
+at 96, MixRank at 93, and MillionVerifier at 66.
+
+It confirmed 49 of the 50 real addresses, and the one it rejected was
+rejected by every verifier, so that label is probably wrong. It passed no
+fake as valid. Where it couldn't tell, on two made-up addresses at
+salesforce.com and atlassian.com, it said unknown instead of guessing.
+
+Validation costs a quarter credit per valid or invalid verdict, between 0.18
+and 0.5 cents depending on the plan, and unknown results, including catch-all
+domains, are free. At about 2 seconds per check, it was the slowest of the
+four, so it suits batches better than a signup form. The full comparison is
+in [our verification benchmark](/blog/leadmagic-email-validation-benchmark).
 
 ## LeadMagic for agents
 
