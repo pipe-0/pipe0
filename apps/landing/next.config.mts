@@ -52,10 +52,22 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       // Integration pages moved under /docs/sdks/integrations (2026-10).
+      // The Vercel AI SDK and TanStack AI pages were removed afterwards, so
+      // their URLs point at the integrations overview.
       {
         source: "/docs/sdks/ai-sdk",
-        destination: "/docs/sdks/integrations/ai-sdk",
-        permanent: true,
+        destination: "/docs/sdks/integrations",
+        permanent: false,
+      },
+      {
+        source: "/docs/sdks/integrations/ai-sdk",
+        destination: "/docs/sdks/integrations",
+        permanent: false,
+      },
+      {
+        source: "/docs/sdks/integrations/tanstack-ai",
+        destination: "/docs/sdks/integrations",
+        permanent: false,
       },
       {
         source: "/docs/sdks/slack-agent",
