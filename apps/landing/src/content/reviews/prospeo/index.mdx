@@ -1,0 +1,279 @@
+---
+title: "Prospeo review (2026): fast, cheap, and right when it answers"
+description: "Prospeo answers in a fifth of a second, and its emails and phone
+  numbers matched premium providers in our benchmark. It finds fewer people
+  than the leaders, so it works best as the first step of a waterfall."
+tool:
+  name: Prospeo
+  url: https://prospeo.io
+  logo: /media/reviews/logos/prospeo.png
+  category: Contact finder
+verdict: "One of the fastest contact APIs we tested: answers in 0.2
+  seconds that agree with premium sources, at about 2 cents an email, with
+  an MCP server on every plan. Coverage trails the leaders."
+relationship: supplier
+scores:
+  easeOfUse:
+    score: 4
+    why: "A search with 30+ filters, a Chrome extension that works on any
+      site, CSV enrichment, and a free plan with 100 credits a month."
+  dataQuality:
+    score: 3.5
+    why: "Its mobile numbers matched Surfe on 47 of 48 people and its emails
+      agreed with others 71% of the time. It finds fewer people than the
+      leaders."
+  pricingValue:
+    score: 4.5
+    why: "About 2 cents per email on the $99 plan, misses free, and
+      re-enriching the same person within 90 days free."
+  agentAccess:
+    score: 4.5
+    why: "A synchronous API that answers in about 0.2 seconds, bulk calls of
+      50, and a hosted MCP server included on every plan."
+bestFor:
+  - "The first, cheapest slot in an email or phone waterfall"
+  - "Live enrichment where a person or an agent is waiting"
+  - "Teams that want search and enrichment in one cheap tool"
+skipIf:
+  - "You need the highest coverage from a single provider"
+  - "You need personal email addresses"
+  - "You need higher API limits without the $249 plan"
+pros:
+  - title: "Fast"
+    body: "Prospeo answered work email lookups in a median of 0.2 seconds in
+      our test, against 3.6 seconds for Amplemarket and 14.8 for Surfe."
+  - title: "Agrees with premium sources"
+    body: "When Prospeo and Surfe both found a mobile number, they matched
+      47 times out of 48. On reverse email lookups its profiles agreed with
+      other providers 90% of the time."
+  - title: "Low prices, free misses"
+    body: "An email costs 1 credit, about 2 cents on the Growth plan, and a
+      mobile 10. Nothing is charged when nothing is found."
+  - title: "MCP on every plan"
+    body: "A hosted MCP server with OAuth, plus a local npm package, at the
+      same credit prices as the API."
+cons:
+  - title: "Lower coverage than the leaders"
+    body: "From LinkedIn profiles it found 46% of work emails and 33% of
+      mobile numbers in our test, behind the top providers."
+  - title: "Work email only"
+    body: "Prospeo sells work emails and mobiles. It has no personal email
+      product."
+  - title: "Per-user plans"
+    body: "Plans and credits are per user, and API rate limits are low until
+      the $249 Pro plan."
+pricing:
+  asOf: 2026-10-08
+  source: https://prospeo.io/pricing
+  startingAt: 49
+  startingAtNote: "per user for Starter, billed monthly ($37 annual)"
+  freePlan: true
+  plans:
+    - name: Free
+      price: "$0"
+      includes: "100 credits a month, no API."
+    - name: Starter
+      price: "$49/mo, $37 annual"
+      includes: "2,000 credits a month, API access."
+    - name: Growth
+      price: "$99/mo, $74 annual"
+      includes: "5,000 credits a month."
+    - name: Pro
+      price: "$249/mo, $187 annual"
+      includes: "15,000 credits a month, much higher API limits."
+  notes:
+    - "A verified email costs 1 credit, a mobile 10 (with the email
+      included), and a page of 25 search results 1."
+    - "Misses are free, and re-enriching the same record within 90 days is
+      free."
+    - "Top-ups start at 1,000 credits for $10."
+facts:
+  - label: Founded
+    value: "2023 in Toronto, according to Prospeo"
+    source: https://prospeo.io/llm-info
+  - label: Customers
+    value: "15,000+ companies, according to Prospeo"
+    source: https://prospeo.io
+  - label: Database
+    value: "300M+ profiles, according to Prospeo"
+    source: https://prospeo.io/our-data
+  - label: API
+    value: "Synchronous enrich and search endpoints, bulk calls of 50"
+    source: https://prospeo.io/api-docs
+  - label: MCP server
+    value: "mcp.prospeo.io, OAuth or API key; also a local npm package"
+    source: https://prospeo.io/api-docs/mcp
+  - label: Integrations
+    value: "Salesforce, HubSpot, Pipedrive, Clay, Zapier, n8n, Make,
+      Instantly, Smartlead, Lemlist"
+    source: https://prospeo.io/integrations
+benchmark:
+  period: "August 2026"
+  rows:
+    - test: "LinkedIn URL to work email"
+      run: 20260814T095606Z-9ef2
+      n: 120
+      coverage: 45.8
+      agreement: 71
+      latency: "0.2 s"
+    - test: "Email to LinkedIn URL"
+      dataset: signups
+      run: 20260804T165645Z-0041
+      n: 150
+      coverage: 21.3
+      agreement: 90
+      latency: "0.1 s"
+    - test: "LinkedIn URL to mobile"
+      run: 20260804T202803Z-237d
+      n: 150
+      coverage: 32.7
+      agreement: 72
+      latency: "0.2 s"
+  notes:
+    - "On email to LinkedIn, only one provider in that run found more:
+      Fiber AI at 38%."
+  agreement:
+    test: "LinkedIn URL to mobile"
+    run: 20260804T202803Z-237d
+    unit: "mobile number"
+    pairs:
+      - provider: LeadMagic
+        tier: Low-cost
+        compared: 17
+        agreed: 15
+      - provider: Surfe
+        compared: 48
+        agreed: 47
+  latency:
+    test: "LinkedIn URL to work email"
+    run: 20260814T095606Z-9ef2
+    seconds: 0.2
+    others:
+      - provider: Amplemarket
+        tier: Premium
+        seconds: 3.6
+      - provider: Surfe
+        seconds: 14.8
+alternatives:
+  - name: pipe0
+    href: /enrichment-api
+    why: "You want Prospeo as a fast first step, with higher-coverage
+      providers behind it, billed per result."
+  - name: Wiza
+    href: /reviews/wiza
+    why: "You need more coverage per provider and personal emails, and can
+      wait longer for each answer."
+  - name: Hunter
+    href: /reviews/hunter
+    why: "You find emails from names and company domains."
+  - name: Surfe
+    href: /reviews/surfe
+    why: "Mobile coverage is the priority."
+authors:
+  - name: Florian
+    title: Founder
+date: 2026-10-08
+faq:
+  - q: "Is Prospeo accurate?"
+    a: "In our benchmark its answers agreed closely with premium providers:
+      its mobile numbers matched Surfe's on 47 of 48 people, and its work
+      emails agreed with other providers 71% of the time. It finds fewer
+      people than the highest-coverage providers."
+  - q: "How much does Prospeo cost?"
+    a: "There is a free plan with 100 credits a month. Starter costs $49 a
+      month for 2,000 credits, Growth $99 for 5,000, and Pro $249 for
+      15,000, all per user, with about 25% off billed annually. An email
+      costs 1 credit and a mobile 10."
+  - q: "How fast is Prospeo?"
+    a: "Prospeo answered work email lookups in a median of 0.2 seconds in our
+      test, the fastest of the nine providers in that test, against 3.6
+      seconds for Amplemarket and 14.8 for Surfe."
+  - q: "Does Prospeo have an API and an MCP server?"
+    a: "Yes. The API is synchronous, with bulk calls of up to 50 records, on
+      paid plans. The MCP server at mcp.prospeo.io is listed on every plan
+      and also runs locally as an npm package."
+---
+
+{/*
+FACT BASE (checked 2026-10-08 on primary sources unless marked):
+- Pricing (prospeo.io/pricing, rendered with headless Chrome): Free 100
+  credits/mo; Starter $49 / $37 annual, 2,000/mo; Growth $99 / $74,
+  5,000; Pro $249 / $187, 15,000. Per user. Email 1, mobile 10 (email
+  included), search 1 per 25 results; misses free; 90-day free re-enrich.
+  Top-ups from 1,000 for $10. Rollover flag-dependent: not used. API not
+  on Free (pricing table) vs "free API access" (docs intro): used the
+  table. Stale /llm-info plan numbers: not used.
+- API: api.prospeo.io, synchronous, bulk 50. Rate limits per plan (Pro
+  30/s enrich). MCP: mcp.prospeo.io + npx @prospeo/prospeo-mcp-server.
+- Company: founded 2023 Toronto (self-reported /llm-info); 15,000+
+  companies; 300M+ profiles (/our-data; other pages conflict). Founders
+  and funding secondhand, not used.
+- Benchmark (run reports): work email 9ef2 45.8%, agree 0.71, p50 0.2 s;
+  email to LinkedIn 0041 21.3%, agree 0.90, p50 0.1 s (50 uncached rows);
+  phone 237d 32.7%, agree 0.72, p50 0.2 s (evidence.md). Pairs phone:
+  leadmagic|prospeo 15/17, prospeo|surfe 47/48. Latency comparators from
+  9ef2 uncached medians (amplemarket 3.6 s, surfe 14.8 s). Name+domain
+  f809 27% left out per the supplier rule.
+- pipe0 relationship: in person:workemail:waterfall@1 defaults (name +
+  domain); selectable in mobile waterfalls.
+*/}
+
+## What is Prospeo?
+
+Prospeo is a contact data tool from Toronto, founded in 2023, that has grown
+quickly on one pitch: verified work emails and mobile numbers, cheaply. You
+can search people and companies with 30-odd filters, enrich a CSV, use a
+Chrome extension on LinkedIn or any company website, or call its API. It
+says more than 15,000 companies use it.
+
+## Fast and accurate, not exhaustive
+
+Prospeo's data has a clear profile in our benchmark. It doesn't find the
+most people: from 120 LinkedIn profiles it found 46% of work emails, and from
+150 profiles 33% of mobile numbers. But what it finds matches the premium
+providers. When Prospeo and Surfe both found a mobile number for the same
+person, they matched 47 times out of 48. On reverse email lookups, where it
+found the second most profiles in that run, its answers agreed with other
+providers 90% of the time.
+
+And it is fast. Prospeo answered work email lookups in a median of 0.2
+seconds, against 3.6 seconds for Amplemarket and 14.8 for Surfe on the same
+records.
+
+That combination is exactly what the first slot of a waterfall needs. The
+first provider is asked about everyone, so it has to be cheap and quick, and
+whatever it answers is final, so it has to be right. A provider like
+Prospeo answers the easy half of a list in a fraction of a second and leaves
+the rest to slower, broader sources.
+
+## What it costs
+
+There is a free plan with 100 credits a month. Starter costs $49 a month for
+2,000 credits, Growth $99 for 5,000, and Pro $249 for 15,000, all per user and
+about 25% cheaper billed annually. A verified email costs 1 credit, about 2
+cents on Growth, and a mobile number 10, with the email included. Misses are
+free, and asking about the same person again within 90 days is free too.
+
+## Prospeo for developers and agents
+
+The API is synchronous, so a lookup returns its answer in the same call,
+with bulk endpoints for 50 records at a time. The MCP server at
+`mcp.prospeo.io` signs in with OAuth or an API key, and there is also a
+local npm package. Rate limits are modest on the smaller plans, 5 requests a
+second for enrichment, and rise sharply on Pro.
+
+## Prospeo and pipe0
+
+We buy data from Prospeo. It is one of the providers in pipe0's name and
+domain work email waterfall, and selectable in the mobile waterfalls, for
+the speed and agreement above.
+
+## Who should buy Prospeo
+
+Buy Prospeo if you want cheap, fast, accurate contact data, especially as the
+first step before a broader provider, or for lookups where someone is
+waiting for the answer.
+
+Look elsewhere if you need the most coverage from one provider or personal
+email addresses. For coverage, [Wiza](/reviews/wiza) and
+[Surfe](/reviews/surfe) found more in our tests.

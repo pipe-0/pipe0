@@ -1,0 +1,248 @@
+---
+title: "FullEnrich review (2026): a simple waterfall for emails and phones"
+description: "FullEnrich runs each contact through a waterfall of 20+ data
+  providers and charges only when it finds something. It does one job, emails
+  and mobile numbers, and keeps the waterfall itself out of sight."
+tool:
+  name: FullEnrich
+  url: https://fullenrich.com
+  logo: /media/reviews/logos/fullenrich.png
+  category: Waterfall enrichment
+verdict: "The simplest way to buy emails and mobile numbers from a
+  waterfall: upload a list, pay per result found, done. You can't see or
+  change the providers, and a mobile number costs 10 credits."
+scores:
+  easeOfUse:
+    score: 4.5
+    why: "Upload a CSV or connect HubSpot and get emails and phones back.
+      Nothing to configure, unlimited users on every plan."
+  dataQuality:
+    score: 4
+    why: "A waterfall of 20+ providers with email and phone verification.
+      We haven't benchmarked it, and the order of providers is hidden."
+  pricingValue:
+    score: 3.5
+    why: "From $29 for 500 credits and misses are free, but a mobile number
+      costs 10 credits, about 35 to 58 cents depending on the plan."
+  agentAccess:
+    score: 4
+    why: "A documented async API with webhooks, batches of 100, and an MCP
+      server with OAuth. 60 requests a minute."
+bestFor:
+  - "Sales teams that need emails and mobiles for a list, quickly"
+  - "HubSpot users who want enrichment without a new tool"
+  - "Anyone who wants waterfall coverage without building one"
+skipIf:
+  - "You want to see or choose the providers in the waterfall"
+  - "You need company data, signals, or enrichment beyond contacts"
+  - "Mobile numbers at volume are your main cost"
+pros:
+  - title: "Waterfall coverage, no setup"
+    body: "Each contact goes through 20+ providers, including Hunter, Wiza,
+      ContactOut, and Snov, until one answers. You don't manage any of
+      them."
+  - title: "Only pay for what it finds"
+    body: "Not-found results and landlines cost nothing, and re-enriching
+      the same contact within three months is free."
+  - title: "Verification built in"
+    body: "Emails pass syntax, MX, and SMTP checks, including catch-all
+      verification, and phones are checked for landlines and dead numbers."
+  - title: "Agent-ready"
+    body: "An async API with signed webhooks, an MCP server for Claude and
+      other clients, and a CLI, all included from the free trial up."
+cons:
+  - title: "A closed waterfall"
+    body: "You can't see which provider answered or reorder them. When a
+      result is wrong, there is nothing to tune."
+  - title: "Mobile numbers are expensive"
+    body: "A mobile costs 10 credits and a personal email 3. On the
+      smallest plan that is about 58 cents per mobile found."
+  - title: "Contacts only"
+    body: "Emails, phones, and basic profiles. No company signals, custom
+      enrichment, or scheduled syncs beyond HubSpot."
+  - title: "No browser extension"
+    body: "FullEnrich retired its Chrome extension, so enrichment from
+      LinkedIn runs through lists or integrations."
+pricing:
+  asOf: 2026-10-08
+  source: https://fullenrich.com/pricing
+  startingAt: 29
+  startingAtNote: "for 500 credits a month on Pro"
+  freePlan: true
+  plans:
+    - name: Free trial
+      price: "$0"
+      includes: "50 credits, no card."
+    - name: Pro monthly
+      price: "$29 to $3,500"
+      includes: "500 credits for $29, 1,000 for $55, 5,000 for $255, 10,000
+        for $499, 100,000 for $3,500. Unlimited users."
+    - name: Pro annual
+      price: "From $26/mo"
+      includes: "About 10% cheaper, credits from 3.2 to 5.2 cents each."
+    - name: Enterprise
+      price: "Custom"
+      includes: "Custom volume and terms."
+  notes:
+    - "A work email costs 1 credit, a personal email 3, a mobile number 10,
+      and a reverse email lookup 1."
+    - "Not-found results and landlines are free; a catch-all email costs a
+      credit."
+    - "Unused credits roll over for 3 months on monthly plans and 12 months
+      on annual plans."
+facts:
+  - label: Company
+    value: "Founded in Paris, headquartered in San Francisco"
+    source: https://fullenrich.com/careers
+  - label: CEO
+    value: "Benjamin Douablin"
+    source: https://tech.eu/2025/02/18/fullenrich-raises-2m-seed-for-customer-data-aggregation/
+  - label: Funding
+    value: "$2M seed, February 2025"
+    source: https://tech.eu/2025/02/18/fullenrich-raises-2m-seed-for-customer-data-aggregation/
+  - label: Waterfall
+    value: "20+ providers, according to FullEnrich (25+ on its pricing page)"
+    source: https://fullenrich.com
+  - label: API
+    value: "Async batches of up to 100 contacts with signed webhooks; 60
+      requests a minute"
+    source: https://docs.fullenrich.com/api/v2/general/ratelimit.md
+  - label: MCP server
+    value: "mcp.fullenrich.com, OAuth"
+    source: https://fullenrich.com/integrations
+  - label: Compliance
+    value: "SOC 2 Type II, GDPR, CCPA, according to FullEnrich"
+    source: https://fullenrich.com/trust
+alternatives:
+  - name: pipe0
+    href: /compare/pipe0-vs-fullenrich
+    why: "You want a waterfall you can see and reorder, plus company data and
+      100+ enrichments, at about 7x the cost efficiency."
+  - name: Surfe
+    href: /reviews/surfe
+    why: "You also want a LinkedIn and CRM extension, and the mobile
+      coverage that led our benchmark."
+  - name: Wiza
+    href: /reviews/wiza
+    why: "You export lists from LinkedIn Sales Navigator and want emails and
+      phones on them."
+  - name: Clay
+    href: /reviews/clay
+    why: "You want to build your own waterfall and custom enrichment logic
+      in a table."
+compare: /compare/pipe0-vs-fullenrich
+authors:
+  - name: Florian
+    title: Founder
+date: 2026-10-08
+faq:
+  - q: "How much does FullEnrich cost?"
+    a: "Pro plans start at $29 a month for 500 credits and go up to $3,500
+      for 100,000. A work email costs 1 credit and a mobile number 10, and
+      results that aren't found are free. There is a free trial with 50
+      credits."
+  - q: "How does FullEnrich's waterfall work?"
+    a: "Each contact goes through 20+ data providers in turn until one finds
+      the email or phone number, and the result is verified before it comes
+      back. FullEnrich doesn't show which provider answered or let you
+      change the order."
+  - q: "Does FullEnrich have an API and an MCP server?"
+    a: "Yes. The API takes batches of up to 100 contacts and returns results
+      by signed webhook, at 60 requests a minute. The MCP server at
+      mcp.fullenrich.com signs in with OAuth."
+  - q: "Does FullEnrich have a Chrome extension?"
+    a: "Not anymore. FullEnrich retired its Chrome extension; enrichment now
+      runs through CSV uploads, HubSpot, Zapier, Make, n8n, Clay, the API, or
+      MCP."
+  - q: "FullEnrich or pipe0: what's the difference?"
+    a: "Both run waterfalls and charge only for results found. FullEnrich
+      focuses on emails and phones with a fixed, hidden provider order.
+      pipe0 lets you see and reorder the waterfall and adds company data,
+      100+ enrichments, and sheets that run on schedules."
+---
+
+{/*
+FACT BASE (checked 2026-10-08 on primary sources unless marked):
+- Pricing (fullenrich.com/pricing.md, updated 2026-07-14): free trial 50
+  credits; Pro monthly 500 $29, 750 $42.75, 1K $55, 1.5K $79.50, 2K $104,
+  5K $255, 10K $499, 15K $720, 25K $1,150, 50K $1,950, 100K $3,500
+  ($0.058-$0.035 per credit); annual ~10% cheaper, $0.052-$0.032 per
+  credit, from $26/mo. Credits: work email 1, personal 3, mobile 10,
+  reverse 1; not found and landlines free; catch-all charged (docs
+  credit.md). Rollover 3 months monthly, 12 months annual. Unlimited users.
+  Mobile per found: 10 x $0.058 = $0.58 smallest plan, 10 x $0.035 = $0.35.
+- Providers: 20+ (homepage, MCP page) vs 25+ (pricing page). Named on
+  homepage: Clearbit, Wiza, ContactOut, Anymail Finder, Snov, Hunter.
+- Verification: syntax + MX + SMTP (waterfall page); catch-all claims not
+  used. 80%+ find rate claim not used.
+- Chrome extension retired (secondhand, likely June 2025); not on site.
+- API: docs.fullenrich.com v2, batches of 100, HMAC webhooks, 60 req/min.
+  MCP mcp.fullenrich.com, OAuth.
+- Company: founded Paris, HQ San Francisco (careers). CEO Benjamin
+  Douablin, $2M seed Feb 2025 (tech.eu, secondhand). SOC 2 Type II, GDPR,
+  CCPA (fullenrich.com/trust).
+- "~7x as cost effective" is pipe0's approved claim vs waterfall providers
+  (evidence.md section D). No pipe0 benchmark of FullEnrich.
+*/}
+
+## What is FullEnrich?
+
+FullEnrich does one thing: you give it people, and it gives you their work
+emails, personal emails, and mobile numbers. Behind that sits a waterfall of
+20+ data providers, Hunter, Wiza, ContactOut, and Snov among them, tried one
+after another until one finds an answer. Founded in Paris and now based in
+San Francisco, it raised a $2 million seed round in 2025 and sells mostly to
+sales teams that want contact data without building anything.
+
+You upload a CSV, connect HubSpot, or call the API. Every email is checked
+for syntax, mail server, and mailbox before it comes back, and phone numbers
+are checked for landlines and numbers that no longer work.
+
+## Why the waterfall matters
+
+A single database answers from one dataset, and where it is thin you get
+nothing. A waterfall asks the next provider instead, so coverage grows with
+every source behind it. FullEnrich sells exactly that coverage, packaged so
+you never see the providers.
+
+That packaging is the trade-off. You can't tell which provider answered, and
+you can't change the order. When a result is wrong, or a provider is slow or
+expensive, there is nothing to adjust. We haven't benchmarked FullEnrich, so
+we can't say how its hidden order compares with an open one.
+
+## What it costs
+
+Pro plans start at $29 a month for 500 credits and drop to 3.5 cents a credit
+at 100,000. A work email costs 1 credit, a personal email 3, and a mobile
+number 10. Results that aren't found cost nothing, landlines are free, and
+re-enriching the same contact within three months is free too. Unused
+credits roll over for three months on monthly plans.
+
+The mobile price is where it adds up. At 10 credits each, a mobile number
+costs about 58 cents on the smallest plan and 35 cents at the largest.
+
+## FullEnrich for developers and agents
+
+The API takes batches of up to 100 contacts and sends results back by signed
+webhook, typically within 30 to 90 seconds per contact, at 60 requests a
+minute. The MCP server at `mcp.fullenrich.com` signs in with OAuth, and
+there is a CLI. All of it is included from the free trial up.
+
+## FullEnrich vs pipe0
+
+pipe0 runs waterfalls too, and also bills only for results found. The
+differences are what you can see and what else you get. A pipe0 waterfall is
+curated and visible: you can see which provider answered and reorder them.
+It sits next to company data, 100+ enrichments, and sheets that run on
+schedules, and we measure it as about 7x as cost effective as waterfall
+providers. Test that on your own list; the
+[full comparison](/compare/pipe0-vs-fullenrich) has the details.
+
+## Who should buy FullEnrich
+
+Buy FullEnrich if you need emails and mobile numbers for a list, you want
+waterfall coverage without building one, and you don't need to know where
+each answer came from.
+
+Look elsewhere if you want to control the waterfall, if mobile numbers at
+volume are your biggest cost, or if your needs go beyond contact details.

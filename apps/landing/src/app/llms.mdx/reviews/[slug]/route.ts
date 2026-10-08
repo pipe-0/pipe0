@@ -131,10 +131,10 @@ export async function GET(
                 "",
                 `${d.benchmark.latency.test}, median response time per lookup (run ${d.benchmark.latency.run}).`,
                 "",
-                `- ${tool}: ${d.benchmark.latency.seconds.toFixed(1)} s`,
+                `- ${tool}: ${d.benchmark.latency.seconds < 0.1 ? d.benchmark.latency.seconds.toFixed(2) : d.benchmark.latency.seconds.toFixed(1)} s`,
                 ...d.benchmark.latency.others.map(
                   (o) =>
-                    `- ${o.provider}${o.tier ? ` (${o.tier.toLowerCase()})` : ""}: ${o.seconds.toFixed(1)} s`,
+                    `- ${o.provider}${o.tier ? ` (${o.tier.toLowerCase()})` : ""}: ${o.seconds < 0.1 ? o.seconds.toFixed(2) : o.seconds.toFixed(1)} s`,
                 ),
               ]
             : []),

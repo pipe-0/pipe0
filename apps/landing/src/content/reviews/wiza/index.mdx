@@ -1,0 +1,287 @@
+---
+title: "Wiza review (2026): strong coverage on every input we tested"
+description: "Wiza turns LinkedIn and Sales Navigator lists into emails and
+  phone numbers, and its API was among the strongest on most of our contact
+  tests. Email lookups are slow, and plans are priced per user."
+tool:
+  name: Wiza
+  url: https://wiza.co
+  logo: /media/reviews/logos/wiza.png
+  category: Contact finder
+verdict: "One of the most consistent contact data APIs we tested, strong
+  from LinkedIn URLs and from names and domains, with cheap API credits and
+  an MCP server. Email reveals take seconds to minutes."
+relationship: supplier
+scores:
+  easeOfUse:
+    score: 4.5
+    why: "Export a Sales Navigator search or a LinkedIn profile with the
+      Chrome extension and get emails and phones back. A free plan to start."
+  dataQuality:
+    score: 4.2
+    why: "73% on name and domain lookups, 66% on mobiles and work emails, and
+      level with the best on personal email in our benchmark."
+  pricingValue:
+    score: 4.2
+    why: "API credits are cheap, about 5 cents an email and 12.5 cents a
+      phone. App plans are per user, and credits don't roll over."
+  agentAccess:
+    score: 4
+    why: "An async API with webhooks and an MCP server with OAuth. Work email
+      reveals average about 25 seconds, so plan for polling."
+bestFor:
+  - "Sales teams that prospect in LinkedIn Sales Navigator"
+  - "Developers who want one API for emails, personal emails, and phones"
+  - "Waterfalls that need a cheap, broad first provider"
+skipIf:
+  - "You need a work email back in under a second"
+  - "Your team is large and few people need data"
+  - "You need company signals rather than contact details"
+pros:
+  - title: "Consistent across inputs"
+    body: "From a name and domain, Wiza found 73 of 100 work emails. From
+      LinkedIn profiles, it found 66% of work emails and 65% of mobiles, and
+      tied for first on personal email."
+  - title: "Cheap API credits"
+    body: "API credits cost 2.5 cents each: 2 per email and 5 per phone, so
+      about 5 and 12.5 cents, and nothing is charged when no data is found."
+  - title: "Built around Sales Navigator"
+    body: "Export a search or list from Sales Navigator or Recruiter, or
+      reveal one profile with the Chrome extension, and enrich it in place."
+  - title: "Fast phone reveals"
+    body: "Mobile numbers came back in a median of 3 seconds in our test,
+      faster than the two highest-coverage phone providers."
+cons:
+  - title: "Slow email reveals"
+    body: "Wiza says a work email reveal averages about 25 seconds and can
+      take several minutes, because it verifies in real time."
+  - title: "Per-user plans"
+    body: "App plans are priced per user, from $49 a month, and monthly
+      credits reset on the billing date without rolling over."
+  - title: "Unlimited has a cap"
+    body: "Annual plans advertise unlimited emails, but bulk list exports
+      stop at 2,500 a month."
+  - title: "API access is separate"
+    body: "The API runs on its own credit pool, bought separately from the
+      app plans, and only the Team plan lists API access."
+pricing:
+  asOf: 2026-10-08
+  source: https://wiza.co/pricing
+  startingAt: 49
+  startingAtNote: "per user for Starter, billed monthly"
+  freePlan: true
+  plans:
+    - name: Free
+      price: "$0"
+      includes: "20 valid emails and 5 phone numbers."
+    - name: Starter
+      price: "$49/user/mo"
+      includes: "100 emails and 100 phones a month."
+    - name: Email + Phone
+      price: "$199/user/mo, or $166/mo annual"
+      includes: "500 emails and 500 phones a month; annual is unlimited
+        reveals with 2,500 bulk exports a month."
+    - name: API credits
+      price: "$0.025 a credit, from $50"
+      includes: "1 credit per profile, 2 per email, 5 per phone, charged only
+        when data is found."
+    - name: Team
+      price: "Custom"
+      includes: "3+ users, annual, API access."
+  notes:
+    - "Only valid emails are charged; risky emails are free to export."
+    - "Monthly plan credits reset on the billing date and don't roll over."
+    - "Extra reveals on app plans cost $0.15 per email and $0.35 per phone."
+facts:
+  - label: Customers
+    value: "50,000+ businesses, according to Wiza"
+    source: https://wiza.co/integrations
+  - label: Database
+    value: "850M+ contacts, according to Wiza"
+    source: https://wiza.co
+  - label: Data
+    value: "Work email, personal email, and up to 3 mobiles per person"
+    source: https://wiza.co
+  - label: API
+    value: "Async reveals with polling or webhooks; LinkedIn URL, name and
+      domain, or email as input"
+    source: https://docs.wiza.co
+  - label: MCP server
+    value: "mcp.wiza.co, OAuth or API key; Claude, Claude Code, and Codex"
+    source: https://mcp.wiza.co/usage.html
+  - label: Integrations
+    value: "Salesforce, HubSpot, Pipedrive, Attio, Outreach, Salesloft, Clay,
+      Zapier"
+    source: https://wiza.co/integrations
+benchmark:
+  period: "August and September 2026"
+  rows:
+    - test: "Name and domain to work email"
+      dataset: signups
+      run: 20260907T143742Z-3e4b
+      n: 100
+      coverage: 73
+      agreement: 89
+    - test: "LinkedIn URL to work email"
+      run: 20260814T095606Z-9ef2
+      n: 120
+      coverage: 65.8
+    - test: "LinkedIn URL to mobile"
+      run: 20260804T202803Z-237d
+      n: 150
+      coverage: 65.3
+      agreement: 70
+      latency: "3.0 s"
+    - test: "LinkedIn URL to personal email"
+      run: 20260814T102434Z-7165
+      n: 150
+      coverage: 52
+      agreement: 78
+  notes:
+    - "On personal email, Wiza and Forager tied for the most found, 52% each."
+    - "Name and domain are derived from each signup email, so that test
+      measures finding a person's address format, not finding the company."
+  agreement:
+    test: "LinkedIn URL to mobile"
+    run: 20260804T202803Z-237d
+    unit: "mobile number"
+    pairs:
+      - provider: Fiber AI
+        compared: 94
+        agreed: 91
+      - provider: Surfe
+        compared: 98
+        agreed: 73
+  latency:
+    test: "LinkedIn URL to mobile"
+    run: 20260804T202803Z-237d
+    seconds: 3.0
+    others:
+      - provider: Surfe
+        seconds: 4.4
+      - provider: Amplemarket
+        tier: Premium
+        seconds: 18.6
+alternatives:
+  - name: pipe0
+    href: /enrichment-api
+    why: "You want Wiza as the first step of a waterfall, with Surfe and
+      Crustdata behind it, billed per result with no per-user plans."
+  - name: Surfe
+    href: /reviews/surfe
+    why: "You need the highest mobile coverage and work from LinkedIn into a
+      CRM."
+  - name: FullEnrich
+    href: /reviews/fullenrich
+    why: "You want a hands-off waterfall for emails and phones from a CSV."
+  - name: Prospeo
+    href: /reviews/prospeo
+    why: "You need sub-second email lookups and pay per credit."
+authors:
+  - name: Florian
+    title: Founder
+date: 2026-10-08
+faq:
+  - q: "Is Wiza's data good?"
+    a: "In our benchmark Wiza was strong on most inputs: 73% of work
+      emails from names and domains, 66% of work emails and 65% of mobiles
+      from LinkedIn profiles, and tied for first on personal email at 52%."
+  - q: "How much does Wiza cost?"
+    a: "Wiza has a free plan with 20 emails and 5 phones. App plans start at
+      $49 per user a month. API credits are sold separately at 2.5 cents
+      each: 2 credits per email and 5 per phone, charged only when found."
+  - q: "Does Wiza have an API and an MCP server?"
+    a: "Yes. The API is asynchronous: you start a reveal and poll or wait for
+      a webhook. The MCP server at mcp.wiza.co works with Claude, Claude
+      Code, and Codex, and both use API credits."
+  - q: "Why is Wiza slow on emails?"
+    a: "Wiza verifies emails in real time rather than serving cached results.
+      It says a work email reveal averages about 25 seconds; phone numbers
+      came back in about 3 seconds in our test."
+  - q: "Wiza or Surfe: which should I choose?"
+    a: "Surfe found more mobile numbers in our benchmark, 96% against 65%.
+      Wiza is the more consistent all-rounder across inputs, including names
+      and domains, and its API credits are cheaper per result."
+---
+
+{/*
+FACT BASE (checked 2026-10-08 on primary sources unless marked):
+- Pricing (wiza.co/pricing): Free 20 emails + 5 phones; Starter $49/user
+  (100 + 100); Email $99/user (500 emails); Email + Phone $199/user (500 +
+  500); Annual Email $83/mo; Annual Email + Phone $166/mo (unlimited
+  reveals, 2,500 exports/mo per help article 12315280); Team custom with
+  API. Overage $0.15 email, $0.35 phone. No rollover (help 2978461).
+- API credits (help 13551713, docs credit-deduction-behavior): $0.025,
+  min 2,000 ($50); profile 1, email 2, phone 5; no data no charge. Expiry
+  conflict (never vs 12 months): not used.
+- API async (docs.wiza.co): individual_reveals + poll or webhook; email
+  ~25 s average, up to 380 s (Wiza docs). MCP mcp.wiza.co (usage.html).
+- Company: CEO Stephen Hakami, Toronto, bootstrapped: secondhand, not used.
+  50,000+ businesses (integrations page); 850M+ contacts (home).
+- Benchmark (run reports): name+domain 3e4b 73/100, agree 0.89 (p50 27 s
+  over uncached rows, left out); work email 9ef2 65.8%, agreement 0.65 and
+  p50 5.6 s left out per the supplier rule; phone 237d 65.3%, agree 0.70,
+  p50 3.0 s (evidence.md); personal 7165 52% tied with Forager, agree
+  0.78. Pairs on phone 237d: fiber|wiza 91/94, surfe|wiza 73/98.
+- pipe0 relationship: first in default mobile (wiza > surfe > crustdata)
+  and work-email profileurl waterfalls; second in name+domain.
+*/}
+
+## What is Wiza?
+
+Wiza started as the tool that turns a LinkedIn Sales Navigator search into a
+spreadsheet of emails, and that is still how most of its 50,000-plus business
+customers use it. Export a search, a lead list, or a Recruiter project, or
+open a profile with the Chrome extension, and Wiza adds work emails, personal
+emails, and up to three mobile numbers per person.
+
+Underneath is an API that does the same from a LinkedIn URL, a name and a
+company domain, or an email address, plus an MCP server for agents.
+
+## Consistent where others aren't
+
+Most contact providers are good at one input and weak at another. Wiza was
+strong on most of them in our benchmark. Given the names and company
+domains of 100 real pipe0 signups, it found a work email for 73. From 120
+LinkedIn profiles it found 66% of work emails, and from 150 profiles it found
+65% of mobile numbers. On personal email, it tied for first at 52%.
+
+That consistency is why it runs first in pipe0's default mobile and work
+email waterfalls. When Wiza and Fiber both found a mobile number for the
+same person, they matched 91 times out of 94.
+
+## Speed: fast phones, slow emails
+
+Wiza verifies emails in real time instead of serving them from a cache, and
+that costs time. Its own docs put an average work email reveal at about 25
+seconds, sometimes several minutes. Phone numbers are a different story: in
+our test they came back in a median of 3 seconds, faster than Surfe at 4.4
+seconds and Amplemarket at 18.6.
+
+The API is asynchronous for that reason. You start a reveal and either poll
+for the result or give Wiza a webhook to call.
+
+## What it costs
+
+There are two ways to pay. App plans are per user: a free plan with 20
+emails and 5 phones, Starter at $49 a user per month, and Email + Phone at
+$199, or $166 billed annually for unlimited reveals with 2,500 bulk exports a
+month. Monthly credits reset on the billing date.
+
+The API has its own credits at 2.5 cents each. An email costs 2 credits and a
+phone 5, so about 5 and 12.5 cents, charged only when Wiza finds something.
+For a developer or an agent, that is one of the lower prices in the market.
+
+## Wiza and pipe0
+
+We buy data from Wiza. It runs first in pipe0's default mobile and work
+email waterfalls, chosen on price and the coverage above, with Surfe and
+Crustdata behind it for the people it misses.
+
+## Who should buy Wiza
+
+Buy Wiza if your team prospects in Sales Navigator, or if you need one API
+that finds emails, personal emails, and phones from whatever input you have.
+
+Look elsewhere if you need an email back in under a second, or if a large
+team needs data but only a few people would use a seat.

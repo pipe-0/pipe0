@@ -6,8 +6,9 @@ type Entry = {
   seconds: number;
 };
 
+/** One decimal, or two below 0.1 s so a fast provider doesn't round up. */
 function formatSeconds(seconds: number) {
-  return `${seconds.toFixed(1)} s`;
+  return `${seconds < 0.1 ? seconds.toFixed(2) : seconds.toFixed(1)} s`;
 }
 
 /** "21x", or "1.5x" below 2 where a whole number would overstate it. */

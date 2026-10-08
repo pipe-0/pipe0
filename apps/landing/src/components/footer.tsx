@@ -112,8 +112,8 @@ const footerColumns: FooterGroup[][] = [
     {
       heading: "Legal",
       links: [
-        { label: "Privacy", href: "/resources/legal/privacy-policy/20260924" },
-        { label: "Terms", href: "/resources/legal/terms-of-service/20260823" },
+        { label: "Privacy", href: "/resources/legal/privacy-policy/20261008" },
+        { label: "Terms", href: "/resources/legal/terms-of-service/20261008" },
       ],
     },
   ],

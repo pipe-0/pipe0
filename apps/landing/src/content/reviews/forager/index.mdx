@@ -1,0 +1,274 @@
+---
+title: "Forager review (2026): the fastest contact data we measured"
+description: "Forager is a B2B data API that answered phone lookups in 80
+  milliseconds in our benchmark, with numbers that matched premium sources
+  and a tie for the most personal emails found. It has no MCP server."
+tool:
+  name: Forager
+  url: https://www.forager.ai
+  logo: /media/reviews/logos/forager.png
+  category: Agent data tools
+verdict: "The fastest contact data API we measured, at 80 milliseconds a
+  phone lookup, with fresh LinkedIn-based data and answers that match
+  premium sources. Built for developers, with no MCP server yet."
+relationship: supplier
+scores:
+  easeOfUse:
+    score: 3
+    why: "Data infrastructure first: an API, bulk data feeds, and a simple
+      web app. Most teams reach it through code or a waterfall."
+  dataQuality:
+    score: 4
+    why: "Its mobile numbers matched Amplemarket and Surfe 86% of the time,
+      it tied for the most personal emails found, and it recrawls every 2.5
+      weeks."
+  pricingValue:
+    score: 3.5
+    why: "From $50 a month, with mobiles from 21 to 33 cents and emails from
+      7 to 11 cents. Credit use per call is not fully documented."
+  agentAccess:
+    score: 3
+    why: "The fastest API we tested, but no MCP server and no published rate
+      limits."
+bestFor:
+  - "Products and agents that need contact data in real time"
+  - "Personal email lookups from LinkedIn profiles"
+  - "Platforms that want bulk people and company data as a feed"
+skipIf:
+  - "You want an MCP server or a no-code prospecting app"
+  - "You need the highest mobile coverage from one provider"
+  - "You need documented rate limits and billing for every call"
+pros:
+  - title: "Faster than anything else we measured"
+    body: "Forager answered phone lookups in a median of 80 milliseconds,
+      against 3 seconds for Wiza and 18.6 for Amplemarket on the same
+      profiles."
+  - title: "Answers that match premium sources"
+    body: "When Forager and Amplemarket both found a mobile number for the
+      same person, they matched 50 times out of 58. With Surfe, 56 out of 65."
+  - title: "Strong on personal email"
+    body: "From 150 LinkedIn profiles, Forager and Wiza tied for the most
+      personal email addresses found, 52% each."
+  - title: "Fresh data, several ways in"
+    body: "Forager recrawls its records about every 2.5 weeks and delivers
+      them by API or as bulk feeds to S3, Google Cloud Storage, or Snowflake."
+cons:
+  - title: "No MCP server"
+    body: "Agents reach Forager through its REST API only. There is no MCP
+      server or agent plugin."
+  - title: "Mid-pack mobile coverage"
+    body: "From 150 LinkedIn profiles it found 43% of mobile numbers, behind
+      the highest-coverage providers."
+  - title: "Gaps in the docs"
+    body: "Rate limits aren't published, and the docs don't say whether a
+      phone lookup that finds nothing is charged."
+  - title: "Personal email means webmail only"
+    body: "The personal email endpoint returns consumer addresses like Gmail
+      and Outlook, and reverse lookups only work on those."
+pricing:
+  asOf: 2026-10-08
+  source: https://www.forager.ai/pricing
+  startingAt: 50
+  startingAtNote: "for Starter, billed monthly ($45 annual)"
+  freePlan: false
+  plans:
+    - name: Starter
+      price: "$50/mo, $45 annual"
+      includes: "2,250 credits a month."
+    - name: Growth
+      price: "$100/mo, $90 annual"
+      includes: "5,250 credits a month."
+    - name: Pro
+      price: "$250/mo, $225 annual"
+      includes: "16,200 credits a month."
+    - name: Enterprise
+      price: "Custom"
+      includes: "Volume pricing and data feeds."
+  notes:
+    - "Person details cost 1 credit, a work or personal email 5, a phone
+      number 15, and a reverse email lookup 5."
+    - "Forager shows effective prices of 21 to 33 cents per mobile and 7 to
+      11 cents per email, depending on the plan."
+    - "Email lookups that find nothing are free. Monthly credits roll over,
+      and plans can be cancelled anytime."
+facts:
+  - label: Company
+    value: "Forager.ai, LLC"
+    source: https://www.forager.ai/terms-conditions
+  - label: Data
+    value: "850M+ person and company records, refreshed about every 2.5
+      weeks, according to Forager"
+    source: https://www.forager.ai
+  - label: Mobile numbers
+    value: "200M+, according to Forager"
+    source: https://www.forager.ai
+  - label: Delivery
+    value: "REST API, bulk feeds to S3, Google Cloud Storage, or Snowflake,
+      and a web app"
+    source: https://www.forager.ai
+  - label: API
+    value: "Mostly synchronous; work email lookups are async with polling or
+      a bulk webhook"
+    source: https://docs.forager.ai
+  - label: GDPR
+    value: "Describes itself as primarily a data processor"
+    source: https://www.forager.ai/gdpr-compliance
+benchmark:
+  period: "August 2026"
+  rows:
+    - test: "LinkedIn URL to mobile"
+      run: 20260804T202803Z-237d
+      n: 150
+      coverage: 43.3
+      agreement: 72
+      latency: "0.08 s"
+    - test: "LinkedIn URL to personal email"
+      run: 20260814T102434Z-7165
+      n: 150
+      coverage: 52
+      agreement: 80
+  notes:
+    - "On personal email, Forager and Wiza tied for the most found, 52% each."
+  agreement:
+    test: "LinkedIn URL to mobile"
+    run: 20260804T202803Z-237d
+    unit: "mobile number"
+    pairs:
+      - provider: Amplemarket
+        tier: Premium
+        compared: 58
+        agreed: 50
+      - provider: Surfe
+        compared: 65
+        agreed: 56
+  latency:
+    test: "LinkedIn URL to mobile"
+    run: 20260804T202803Z-237d
+    seconds: 0.08
+    others:
+      - provider: Wiza
+        seconds: 3.0
+      - provider: Amplemarket
+        tier: Premium
+        seconds: 18.6
+alternatives:
+  - name: pipe0
+    href: /enrichment-api
+    why: "You want Forager's speed inside a waterfall with higher-coverage
+      providers behind it, plus an MCP server."
+  - name: Crustdata
+    href: /reviews/crustdata
+    why: "You need live company signals and an agent-ready MCP setup."
+  - name: Fiber AI
+    href: /reviews/fiber
+    why: "You want a data API with MCP servers and strong email lookups."
+  - name: Surfe
+    href: /reviews/surfe
+    why: "Mobile coverage is the priority."
+authors:
+  - name: Florian
+    title: Founder
+date: 2026-10-08
+faq:
+  - q: "How fast is Forager?"
+    a: "In our benchmark Forager answered phone lookups from LinkedIn
+      profiles in a median of 80 milliseconds, the fastest of any provider we
+      have measured, against 3 seconds for Wiza and 18.6 for Amplemarket."
+  - q: "How much does Forager cost?"
+    a: "Plans start at $50 a month for 2,250 credits, then $100 for 5,250 and
+      $250 for 16,200, about 10% less billed annually. A phone number costs
+      15 credits and an email 5, which Forager shows as 21 to 33 cents per
+      mobile and 7 to 11 cents per email."
+  - q: "Is Forager's data accurate?"
+    a: "Its mobile numbers matched Amplemarket's on 50 of 58 people and
+      Surfe's on 56 of 65 in our benchmark, and it recrawls its records about
+      every 2.5 weeks."
+  - q: "Does Forager have an MCP server?"
+    a: "No. Forager offers a REST API and bulk data feeds, but no MCP server
+      or agent plugin."
+---
+
+{/*
+FACT BASE (checked 2026-10-08 on primary sources unless marked):
+- Pricing (forager.ai/pricing): Starter $50 / $45 annual, 2,250 credits;
+  Growth $100 / $90, 5,250; Pro $250 / $225, 16,200; Enterprise custom.
+  Effective mobile $0.33-$0.21, email $0.11-$0.07 (pricing page). Monthly
+  credits roll over; cancel anytime. Free trial credits unstated: not
+  claimed as a free plan.
+- Credits (docs.forager.ai/api-overview/credit-pricing): person 1, work
+  email 5, personal 5, phone 15, reverse email 5. Free misses documented
+  only for emails (OpenAPI); phone undocumented.
+- API: api-v2.forager.ai, mostly sync; v2 work email async 202 + poll,
+  bulk webhook. No published rate limits. No MCP (none found anywhere).
+- Data: 850M+ records refreshed every 2.5 weeks, 200M+ mobiles (home);
+  feeds S3/GCS/Snowflake; personal email returns webmail only.
+- Company: Forager.ai, LLC (terms, Florida address). CEO, founding year,
+  HQ (Santa Monica) secondhand and conflicting: not used.
+- Benchmark: phone 237d 43.3%, agree 0.72, p50 0.08 s (evidence.md);
+  personal 7165 52% tied with Wiza, agree 0.80. Pairs phone:
+  amplemarket|forager 50/58, forager|surfe 56/65. Reverse lookup (5366)
+  1.3% on a mixed slice (consumer-only endpoint) left out.
+- pipe0 relationship: in the default personal email waterfall (wiza >
+  aviato > mixrank > forager > leadmagic).
+*/}
+
+## What is Forager?
+
+Forager is B2B data infrastructure: people, company, and job data for
+platforms, AI agents, and waterfall tools rather than for salespeople
+clicking through an app. It says it holds more than 850 million person and
+company records and 200 million mobile numbers, and it recrawls them about
+every 2.5 weeks. You can query it by API, or take the whole dataset as a feed
+into S3, Google Cloud Storage, or Snowflake.
+
+## Speed first
+
+Forager's defining number in our benchmark is speed. It answered phone
+lookups from LinkedIn profiles in a median of 80 milliseconds. Wiza took 3
+seconds on the same profiles and Amplemarket 18.6. For a product where a
+user is waiting, or an agent making hundreds of lookups in a row, that
+difference is the whole experience.
+
+Speed doesn't come at the cost of accuracy. When Forager and Amplemarket both
+found a mobile number for the same person, they matched 50 times out of 58,
+and with Surfe 56 out of 65. Its coverage sits in the middle: it found a
+mobile for 43% of 150 profiles, behind the providers that run their own
+waterfalls.
+
+On personal email it was among the best. From the same set of profiles,
+Forager and Wiza tied for the most consumer addresses found, at 52% each.
+Its personal email endpoint only returns webmail addresses like Gmail and
+Outlook, which is usually what a personal email search is for anyway.
+
+## What it costs
+
+Plans start at $50 a month for 2,250 credits, then $100 for 5,250 and $250
+for 16,200, with 10% off billed annually. A phone number costs 15 credits and
+an email 5, which Forager itself shows as 21 to 33 cents per mobile and 7 to 11
+cents per email. Monthly credits roll over and plans cancel anytime.
+
+The docs leave some questions open. Email lookups that find nothing are
+free, but the docs don't say whether the same is true for phones, and rate
+limits aren't published.
+
+## Forager for developers
+
+Most endpoints are synchronous and very fast; work email lookups run as
+async jobs you poll, with a webhook for bulk requests. There is no MCP
+server, so agents reach Forager through its REST API or through a tool that
+wraps it.
+
+## Forager and pipe0
+
+We buy data from Forager. It is part of pipe0's default personal email
+waterfall, chosen for the personal email result above, and its speed makes
+it a good fit wherever an agent is waiting on the answer.
+
+## Who should buy Forager
+
+Buy Forager if you are building a product or an agent that needs contact
+data in real time, or if you want bulk people and company data delivered as
+a feed.
+
+Look elsewhere if you want an MCP server, a prospecting app for your sales
+team, or the highest mobile coverage from a single provider.
