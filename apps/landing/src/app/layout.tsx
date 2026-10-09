@@ -6,7 +6,7 @@ import {
   Geist_Mono,
   Hanken_Grotesk,
   Instrument_Serif,
-  Poppins,
+  Schibsted_Grotesk,
 } from "next/font/google";
 import { getBaseUrl } from "@/lib/utils";
 import { AskAiProvider } from "@/components/ai/ask-ai-provider";
@@ -34,25 +34,26 @@ const instrumentSerif = Instrument_Serif({
   style: ["normal", "italic"],
 });
 
-// Marketing fonts — Hanken Grotesk (body) and Poppins (display headings).
-// One voice per role: headlines never mix two families.
+// Blog sans.
 const hankenGrotesk = Hanken_Grotesk({
   variable: "--font-hanken",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
 });
 
-const poppins = Poppins({
-  variable: "--font-poppins",
+// Marketing pages — display and body. A grotesk drawn for a news publisher:
+// editorial rather than dev-tool, with figures that hold up at 120px.
+const schibstedGrotesk = Schibsted_Grotesk({
+  variable: "--font-schibsted",
   subsets: ["latin"],
-  weight: ["500", "600", "700"],
+  weight: ["400", "500", "600"],
 });
 
 export const metadata: Metadata = {
   metadataBase: new URL(getBaseUrl()),
   title: {
     template: "%s | pipe0",
-    default: "pipe0 | Run GTM like a team 10x your size.",
+    default: "pipe0 | Turn any GTM play into a production system with AI",
   },
   description:
     "With pipe0, technical and non-technical users build revenue systems at any scale. Morning briefings, always-on plays, signal engines, CRM enrichment, lead routing, and the infrastructure underneath. Replace tools like Clay, n8n, Hightouch, and Polytomic.",
@@ -89,7 +90,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${instrumentSerif.variable} ${hankenGrotesk.variable} ${poppins.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${instrumentSerif.variable} ${hankenGrotesk.variable} ${schibstedGrotesk.variable} antialiased`}
       >
         <JsonLd data={organizationJsonLd()} />
         <JsonLd data={webSiteJsonLd()} />

@@ -12,6 +12,7 @@ import { openapi, trimPreloaded } from "@/lib/openapi";
 import { APIPage } from "@/components/api-page";
 import type { OpenAPIPageProps_Preloaded } from "fumadocs-openapi/ui";
 import { LLMCopyButton } from "@/components/page-actions";
+import { PageNav } from "@/components/features/docs/page-nav";
 import { StraightToc } from "@/components/features/docs/straight-toc";
 import { PipeEntryPage } from "@/components/features/docs/pipe-entry-page";
 import { SearchCatalogIndexPage } from "@/components/features/docs/search-catalog-index-page";
@@ -186,6 +187,7 @@ export default async function Page(props: PageProps<"/docs/[[...slug]]">) {
             }),
           })}
         />
+        <PageNav url={page.url} />
       </DocsBody>
     </DocsPage>
   );

@@ -3,19 +3,15 @@
 import { useShiki } from "fumadocs-core/highlight/client";
 import { CodeBlock, Pre } from "fumadocs-ui/components/codeblock";
 import { Fragment, Suspense } from "react";
+import { pipe0CodeTheme } from "@/lib/shiki-theme";
 
 const shikiComponents = { pre: Pre };
 
 function ShikiHighlight({ code, lang }: { code: string; lang: string }) {
   const rendered = useShiki(code, {
     lang,
-    themes: {
-      light: "catppuccin-latte",
-      dark: "catppuccin-mocha",
-    },
-    // Emit both themes as CSS variables; without this shiki inlines the light
-    // theme's colors directly and dark mode renders a light code block.
-    defaultColor: false,
+    // One theme, the brand palette — the site has no dark mode.
+    theme: pipe0CodeTheme,
     components: shikiComponents,
   });
   return <>{rendered}</>;

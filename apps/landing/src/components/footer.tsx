@@ -61,9 +61,10 @@ const footerColumns: FooterGroup[][] = [
     {
       heading: "Products",
       links: [
-        { label: "Revenue systems", href: "/" },
+        { label: "GTM Teams", href: "/" },
+        { label: "Coding agents", href: "/mcp" },
         { label: "Enrichment & search API", href: "/enrichment-api" },
-        { label: "Pipe0 Sheets", href: "/docs/sheets" },
+        { label: "pipe0 Sheets", href: "/docs/sheets" },
         { label: "Slack integration", href: "/integrations/slack" },
         { label: "Pricing", href: "/pricing" },
         { label: "Sign up", href: appInfo.links.signupUrl, nofollow: true },
@@ -151,17 +152,17 @@ const socialLinks = [
   {
     label: "GitHub",
     href: appInfo.links.github,
-    icon: <GitHubIcon className="size-3.5" />,
+    icon: <GitHubIcon className="size-4 text-[#181717]" />,
   },
   {
     label: "Discord",
     href: appInfo.links.discord,
-    icon: <DiscordIcon className="size-3.5" />,
+    icon: <DiscordIcon className="size-4 text-[#5865F2]" />,
   },
   {
     label: "LinkedIn",
     href: appInfo.links.linkedin,
-    icon: <Linkedin className="size-3.5" />,
+    icon: <Linkedin className="size-4 text-[#0A66C2]" />,
   },
 ];
 
@@ -200,16 +201,19 @@ function FooterAnchor({
 
 export function Footer() {
   return (
-    <footer className="landing mt-16 px-5 sm:px-6">
-      <div className="mx-auto max-w-330">
-        <div className="grid grid-cols-1 gap-x-8 gap-y-10 border-b border-border pb-12 sm:grid-cols-2 md:grid-cols-[1.4fr_1fr_1fr_1.1fr]">
+    /* Sits inside the landing frame (LandingShell) on a muted band: the link
+       grid is one white panel; the copyright row below it is muted and its
+       rule runs the full width of the frame. */
+    <footer className="landing">
+      <div>
+        <div className="grid grid-cols-2 gap-x-6 gap-y-10 bg-background px-6 pb-14 pt-14 sm:px-10 md:grid-cols-[1.4fr_1fr_1fr_1.1fr] md:gap-x-8 lg:px-12">
           {/* Brand */}
-          <div className="flex flex-col gap-4 sm:col-span-2 md:col-span-1">
+          <div className="col-span-2 flex flex-col gap-4 md:col-span-1">
             <Link href="/" className="inline-flex">
               <LogoRaw />
             </Link>
             <p className="max-w-[240px] text-sm leading-relaxed text-muted-foreground">
-              Operate a Revenue Factory.
+              Give your GTM team its AI moment.
             </p>
             <ul className="mt-1 space-y-2.5">
               {socialLinks.map((social) => (
@@ -257,10 +261,10 @@ export function Footer() {
           ))}
         </div>
 
-        <div className="flex flex-col gap-2 py-7 text-[13px] text-muted-foreground sm:flex-row sm:justify-between">
+        <div className="flex flex-col gap-2 border-t border-[var(--rule)] bg-[var(--well)] px-6 py-6 text-[13px] text-muted-foreground sm:flex-row sm:justify-between sm:px-10 lg:px-12">
           <span>
             © {new Date().getFullYear()} {appInfo.productName}. All rights
-            reserved.
+            reserved. Other trademarks belong to their owners.
           </span>
           <span>Built quietly.</span>
         </div>

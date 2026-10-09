@@ -11,22 +11,22 @@
 :root {
   --background: hsl(0 0% 100%);
   --foreground: hsl(0 0% 3.9%);
-  --card: hsl(0 0% 99%);
+  --card: hsl(0 0% 100%);
   --card-foreground: hsl(0 0% 3.9%);
   --popover: hsl(0 0% 100%);
   --popover-foreground: hsl(0 0% 3.9%);
   --primary: hsl(236, 77%, 55%);
   --primary-foreground: hsl(0 0% 98%);
-  --secondary: hsl(0 0% 97.5%);
+  --secondary: hsl(228 33% 98%);
   --secondary-foreground: hsl(0 0% 9%);
-  --muted: hsl(0 0% 96.1%);
+  --muted: hsl(228 33% 97%);
   --muted-foreground: hsl(0 0% 45.1%);
-  --accent: hsl(0 0% 96.1%);
+  --accent: hsl(228 33% 97%);
   --accent-foreground: hsl(0 0% 9%);
   --destructive: hsl(0 84.2% 60.2%);
   --destructive-foreground: hsl(0 0% 98%);
-  --border: hsl(0 0% 89.8%);
-  --input: hsl(0 0% 89.8%);
+  --border: hsl(228 22% 90%);
+  --input: hsl(228 16% 85%);
   --ring: hsl(0 0% 3.9%);
   --chart-1: hsl(12 76% 61%);
   --chart-2: hsl(173 58% 39%);
@@ -34,7 +34,7 @@
   --chart-4: hsl(43 74% 66%);
   --chart-5: hsl(27 87% 67%);
   --radius: 0.35rem;
-  --sidebar: hsl(0 0% 98%);
+  --sidebar: hsl(0 0% 100%);
   --sidebar-foreground: hsl(240 5.3% 26.1%);
   --sidebar-primary: hsl(240 5.9% 10%);
   --sidebar-primary-foreground: hsl(0 0% 98%);
@@ -42,72 +42,12 @@
   --sidebar-accent-foreground: hsl(240 5.9% 10%);
   --sidebar-border: hsl(220 13% 91%);
   --sidebar-ring: hsl(217.2 91.2% 59.8%);
-
-  /* ---- Marketing landing redesign tokens (light) ---- */
-  --sky-1: #c8ddf6; /* hero panel sky gradient */
-  --sky-2: #e9f1fb;
-  --sky-edge: #c0d3eb;
-  --deep: #181d6b; /* deep indigo spotlight pane */
-  --deep-2: #232a8a;
-  --accent-soft: #e9ecfb; /* blue-50 tint */
-  --accent-soft-2: #dde2f9;
-  --panel: hsl(0 0% 96.5%); /* crisp cool gray panels */
-  --panel-edge: hsl(0 0% 91%);
-}
-
-.dark {
-  --background: hsl(0 0% 7%);
-  --foreground: hsl(0 0% 98%);
-  --card: hsl(0 0% 10.5%);
-  --card-foreground: hsl(0 0% 98%);
-  --popover: hsl(0 0% 10.5%);
-  --popover-foreground: hsl(0 0% 98%);
-  --primary: hsl(210, 100%, 61%);
-  --primary-foreground: hsl(0 0% 98%);
-  --secondary: hsl(0 0% 11%);
-  --secondary-foreground: hsl(0 0% 98%);
-  --muted: hsl(0 0% 13%);
-  --muted-foreground: hsl(0 0% 69%);
-  --accent: hsl(0 0% 14%);
-  --accent-foreground: hsl(0 0% 98%);
-  --destructive: hsl(0 62.8% 30.6%);
-  --destructive-foreground: hsl(0 0% 98%);
-  --border: hsl(0 0% 20%);
-  --input: hsl(0, 0%, 24%);
-  --ring: hsl(0 0% 83.1%);
-  --chart-1: hsl(220 70% 50%);
-  --chart-2: hsl(160 60% 45%);
-  --chart-3: hsl(30 80% 55%);
-  --chart-4: hsl(280 65% 60%);
-  --chart-5: hsl(340 75% 55%);
-  --sidebar: hsl(240 5.9% 10%);
-  --sidebar-foreground: hsl(240 4.8% 95.9%);
-  --sidebar-primary: hsl(224.3 76.3% 48%);
-  --sidebar-primary-foreground: hsl(0 0% 100%);
-  --sidebar-accent: hsl(240 3.7% 15.9%);
-  --sidebar-accent-foreground: hsl(240 4.8% 95.9%);
-  --sidebar-border: hsl(240 3.7% 15.9%);
-  --sidebar-ring: hsl(217.2 91.2% 59.8%);
-
-  /* ---- Marketing landing redesign tokens (dark) ---- */
-  --sky-1: hsl(222 30% 13%);
-  --sky-2: hsl(220 24% 9%);
-  --sky-edge: hsl(220 18% 20%);
-  --deep: #11163f;
-  --deep-2: #1a2160;
-  --accent-soft: hsl(229 38% 16%);
-  --accent-soft-2: hsl(229 36% 21%);
-  --panel: hsl(0 0% 11%);
-  --panel-edge: hsl(0 0% 17%);
 }
 
 @theme inline {
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-schibsted);
   --font-mono: var(--font-geist-mono);
   --font-serif: var(--font-instrument-serif);
-  /* Marketing redesign families (see landing section below) */
-  --font-display: var(--font-poppins);
-  --font-body: var(--font-hanken);
   /* Blog sans — Hanken carries all blog display + body type */
   --font-blog: var(--font-hanken), "Helvetica Neue", Helvetica, sans-serif;
   --color-background: var(--background);
@@ -146,8 +86,6 @@
   --color-sidebar-primary: var(--sidebar-primary);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar: var(--sidebar);
-  --animate-marquee: marquee var(--duration) infinite linear;
-  --animate-marquee-vertical: marquee-vertical var(--duration) linear infinite;
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up: accordion-up 0.2s ease-out;
   @keyframes accordion-down {
@@ -166,36 +104,6 @@
       height: 0;
     }
   }
-  @keyframes marquee {
-    from {
-      transform: translateX(0);
-    }
-    to {
-      transform: translateX(calc(-100% - var(--gap)));
-    }
-  }
-  @keyframes marquee-vertical {
-    from {
-      transform: translateY(0);
-    }
-    to {
-      transform: translateY(calc(-100% - var(--gap)));
-    }
-  }
-  @keyframes hero-slide-fade {
-    from {
-      opacity: 0;
-      transform: translateY(4px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-}
-
-.hero-slide-fade {
-  animation: hero-slide-fade 400ms ease-out;
 }
 
 @layer base {
@@ -256,17 +164,17 @@ a:has(> [data-slot="button"]),
   margin-top: 2.6em;
   margin-bottom: 0.5em;
   font-size: 1.4rem;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1.25;
-  letter-spacing: -0.014em;
+  letter-spacing: -0.025em;
 }
 #nd-docs-layout .prose :where(h3):not(:where(.not-prose, .not-prose *)) {
   margin-top: 1.9em;
   margin-bottom: 0.4em;
   font-size: 1.125rem;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1.3;
-  letter-spacing: -0.008em;
+  letter-spacing: -0.018em;
 }
 #nd-docs-layout .prose :where(h4):not(:where(.not-prose, .not-prose *)) {
   margin-top: 1.6em;
@@ -330,22 +238,32 @@ a:has(> [data-slot="button"]),
    floating bubbles. Shrink the circles and give each step room so the line
    shows through, Mixedbread-style. */
 #nd-docs-layout .fd-steps {
-  border-color: var(--color-fd-border);
+  border-color: var(--rule-strong);
+  margin-inline-start: 0.875rem;
+  padding-inline-start: 1.75rem;
 }
 #nd-docs-layout .fd-step {
-  padding-bottom: 0.9rem;
+  padding-bottom: 1.25rem;
 }
 #nd-docs-layout .fd-step:last-child {
   padding-bottom: 0;
 }
+/* Step numbers: the glossy indigo tile of the site's buttons, sitting on the
+   connector line with a ring of page colour so the line reads as passing
+   behind each step. */
 #nd-docs-layout .fd-step::before {
-  width: 1.5rem;
-  height: 1.5rem;
-  inset-inline-start: -0.75rem;
-  font-size: 0.75rem;
-  color: var(--color-fd-muted-foreground);
-  background-color: var(--color-fd-secondary);
-  box-shadow: 0 0 0 4px var(--color-fd-background);
+  width: 1.75rem;
+  height: 1.75rem;
+  inset-inline-start: -0.875rem;
+  border-radius: 8px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(180deg, #5f6ae8 0%, #3b49e0 60%);
+  border: 1px solid #2c37b0;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.34),
+    0 0 0 4px var(--color-fd-background);
 }
 
 /* Page title — the top of the hierarchy: clearly larger and heavier than the
@@ -354,9 +272,9 @@ a:has(> [data-slot="button"]),
 #nd-docs-layout #nd-page h1:first-child {
   margin-bottom: 0;
   font-size: 2.15rem;
-  font-weight: 700;
+  font-weight: 500;
   line-height: 1.05;
-  letter-spacing: -0.025em;
+  letter-spacing: -0.04em;
 }
 
 /* The Copy-Markdown action row sits right under the title; the body content
@@ -367,51 +285,164 @@ a:has(> [data-slot="button"]),
   margin-top: 0 !important;
 }
 
-/* Subtle lift for docs cards (Notion-inspired).
-   Scoped with :not([href^="#"]) so it never applies to heading anchor links —
-   fumadocs wraps heading text in <a data-card href="#...">, which otherwise
-   picked up a stray box-shadow that reads as an underline. Headings get no
-   effect beyond their appearing copy-link button. */
+/* Docs cards and callouts: flat and ruled, like the marketing grid. No drop
+   shadows; a card answers hover with the muted well. Scoped with
+   :not([href^="#"]) so heading anchor links (fumadocs wraps heading text in
+   <a data-card href="#...">) are untouched. */
 [data-card]:not([href^="#"]) {
-  box-shadow:
-    0 1px 2px rgba(0, 0, 0, 0.04),
-    0 1px 3px rgba(0, 0, 0, 0.06);
-  transition:
-    background-color 150ms ease,
-    box-shadow 150ms ease,
-    transform 150ms ease,
-    border-color 150ms ease;
+  box-shadow: none;
+  border-color: var(--rule);
+  border-radius: 10px;
+  transition: background-color 150ms ease;
 }
-
 [data-card]:not([href^="#"]):hover {
-  box-shadow:
-    0 2px 4px rgba(0, 0, 0, 0.05),
-    0 4px 12px rgba(0, 0, 0, 0.08);
+  background-color: var(--well);
 }
-
-.dark [data-card]:not([href^="#"]) {
-  box-shadow:
-    0 1px 2px rgba(0, 0, 0, 0.3),
-    0 1px 3px rgba(0, 0, 0, 0.2);
+[data-card]:not([href^="#"]) > .not-prose:first-child {
+  box-shadow: none;
+  border-color: var(--rule-strong);
+  color: var(--color-fd-primary);
 }
-
-.dark [data-card]:not([href^="#"]):hover {
-  box-shadow:
-    0 2px 4px rgba(0, 0, 0, 0.35),
-    0 6px 16px rgba(0, 0, 0, 0.35);
-}
-
-/* Soften icon tile inside cards: lighter accent, no heavy shadow */
-.dark [data-card]:not([href^="#"]) > .not-prose:first-child {
+#nd-docs-layout .shadow-md,
+#nd-docs-layout .shadow-lg {
   box-shadow: none;
 }
+#nd-docs-layout .rounded-xl {
+  border-radius: 10px;
+}
 
-/* adds labels to the sidebar links */
-.badge-new {
-  @apply dark:after:border-blue-200/30 dark:after:bg-blue-900/30 dark:after:text-blue-200;
-  &:after {
-    @apply ms-1.5 rounded-full border border-blue-200 bg-blue-100 px-1.5 text-xs font-bold text-blue-900 content-["New"];
+/* ============================================================
+   Docs: the inset canvas
+   The chrome (sidebar, gutters) sits on a faint cool grey; the page itself
+   is one white sheet with a hairline edge, spanning content and the
+   on-this-page column. The sheet is the layout grid's own ::before, placed
+   on the main + toc columns, so it needs no extra markup and grows with the
+   page. Desktop only — on phones the page is simply white.
+   ============================================================ */
+@media (min-width: 768px) {
+  #nd-docs-layout {
+    background-color: hsl(228 30% 97.5%);
   }
+  #nd-docs-layout::before {
+    content: "";
+    grid-column: 3 / 6;
+    grid-row: 1 / -1;
+    margin: 10px 10px 10px 0;
+    border: 1px solid var(--rule);
+    border-radius: 14px;
+    background: var(--color-fd-background);
+    box-shadow: 0 1px 2px rgba(14, 17, 23, 0.03);
+    pointer-events: none;
+  }
+  #nd-page,
+  #nd-toc {
+    position: relative;
+    z-index: 1;
+  }
+  #nd-sidebar {
+    background: transparent;
+    border-inline-end: none;
+  }
+}
+
+/* Room at the foot of every docs page for the floating Ask AI button, so it
+   never sits on top of the last links when scrolled to the bottom. */
+#nd-page {
+  padding-bottom: 7rem;
+}
+
+/* Sidebar folders: an open folder reads as a heading, not a selection —
+   only the current page gets the indigo. */
+#nd-sidebar [class*="bg-fd-primary/10"][data-active="true"] {
+  background: transparent;
+  color: var(--color-fd-foreground);
+  font-weight: 500;
+}
+/* The tree line beside an open folder's children: a full hairline, set where
+   the indented items clear it. */
+#nd-sidebar [data-state="open"].relative::before,
+#nd-sidebar [data-state="closed"].relative::before {
+  inset-inline-start: calc(var(--spacing) * 3.5);
+  background-color: var(--rule-strong);
+}
+
+/* On the glossy active item, coloured trailing badges (POST, GET) go white
+   so they stay legible on the indigo. */
+#nd-sidebar a.btn-glossy span {
+  color: rgb(255 255 255 / 0.82);
+}
+
+/* Sidebar footer (the GitHub link): fumadocs frames it in a bordered tray,
+   which read as an empty box. Just the icon, aligned with the nav. */
+#nd-docs-layout [class*="bg-fd-secondary/50"][class*="empty:hidden"] {
+  border: 0;
+  background: transparent;
+  padding: 0;
+}
+
+/* Tab switcher icons: a 32px glossy tile, legible at a glance. */
+#nd-sidebar button[aria-haspopup] > div:first-child,
+.tabs-dd-item > div:first-child {
+  width: 2rem;
+  height: 2rem;
+  margin-block: 0;
+}
+.tabs-dd-item {
+  align-items: center;
+  padding: 0.5rem;
+}
+.tabs-dd-item p.leading-none {
+  line-height: 1.25;
+}
+
+/* Callouts: a softly tinted panel in the callout's own colour — no side
+   bar, no shadow. Info uses the brand indigo. Matched on fumadocs' inline
+   --callout-color, so every MDX callout gets it without a component swap. */
+:root {
+  --color-fd-info: var(--primary);
+}
+div[style*="--callout-color"] {
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-block: 1.25rem;
+  padding: 0.875rem 1rem;
+  border-radius: 10px;
+  border-color: color-mix(in oklab, var(--callout-color) 20%, white);
+  background-color: color-mix(in oklab, var(--callout-color) 5%, white);
+  box-shadow: none;
+  color: var(--color-fd-foreground);
+}
+div[style*="--callout-color"] > div[role="none"] {
+  display: none;
+}
+/* The docs body gives every paragraph a bottom margin (id-scoped, so it
+   outranks the rule below); a callout's last paragraph must not, or the
+   panel grows a chin. */
+#nd-docs-layout div[style*="--callout-color"] p:last-child {
+  margin-bottom: 0;
+}
+div[style*="--callout-color"] > div:last-child > :last-child,
+div[style*="--callout-color"] > div:last-child > :last-child > :last-child {
+  margin-bottom: 0;
+}
+div[style*="--callout-color"] > svg {
+  width: 1.125rem;
+  height: 1.125rem;
+  margin-top: 0.1rem;
+}
+div[style*="--callout-color"] p:not([class*="font-medium"]) {
+  color: color-mix(in oklab, var(--color-fd-foreground) 78%, white);
+}
+
+/* Code blocks: the brand theme's paper, a hairline edge, a quiet header. */
+#nd-docs-layout figure.shiki {
+  border-color: var(--rule);
+  border-radius: 10px;
+  background-color: #fbfbfd;
+}
+#nd-docs-layout figure.shiki > div:first-child:not(:only-child) {
+  border-color: var(--rule);
+  background-color: hsl(228 33% 98%);
 }
 
 /* ============================================================
@@ -488,103 +519,41 @@ a:has(> [data-slot="button"]),
 }
 
 /* ============================================================
-   Marketing landing / pricing redesign
-   Scoped to `.landing`. Light is the primary theme; the design
-   tokens above carry dark-mode values so everything flips.
+   Marketing pages (homepage, pricing, API, compare, …)
+   Scoped to `.landing`. Layout primitives live in
+   components/grid.tsx and components/landing-shell.tsx.
    ============================================================ */
+/* Plain CSS names the next/font variable directly: font variables declared
+   in `@theme inline` are inlined into utilities and never emitted as custom
+   properties, so `var(--font-body)` here used to be invalid at computed-value
+   time and the landing fell back to each OS's system font.
+
+   Schibsted Grotesk carries display and body; Geist Mono (font-mono) is kept
+   for code and small data labels only. */
 .landing {
-  font-family: var(--font-body), "Helvetica Neue", Helvetica, sans-serif;
-}
-.landing h1,
-.landing h2,
-.landing h3 {
-  font-family: var(--font-display), var(--font-body), sans-serif;
+  font-family: var(--font-schibsted), "Helvetica Neue", Helvetica, sans-serif;
 }
 
-/* The single serif-italic highlight gesture (hero + CTA only). */
-/* Hero panel gloss — the same reflection language as .btn-glossy:
-   a crisp top highlight, a darker bottom edge, and a faint sheen,
-   layered above the scene as a non-interactive overlay. The spotlight
-   stage (.stage-glossy) shares the exact same treatment. */
-.hero-panel {
-  /* Border darker than the fill, like .btn-glossy, so the inner
-     highlight reads as a reflection rather than a doubled edge. */
-  border-color: color-mix(in oklab, #2c37a4, #000000 30%);
-  box-shadow:
-    0 1px 2px rgba(14, 17, 23, 0.12),
-    0 10px 30px rgba(14, 17, 23, 0.1);
-  /* Contain the z-indexed gloss overlay (::after) so it can never paint
-     above siblings that overlap the panel (e.g. the pricing cards). */
-  isolation: isolate;
+/* ---- Line grid (components/grid.tsx) ----
+   Rules are a cool neutral with a trace of the brand indigo in them, so the
+   frame reads as part of the palette rather than as default grey borders.
+   --mark is the registration ink: crosses and corner brackets. */
+:root,
+.landing {
+  --rule: hsl(228 22% 90%);
+  --rule-strong: hsl(228 16% 82%);
+  --mark: hsl(228 14% 62%);
+  --well: hsl(228 33% 98%);
 }
-/* On mostly-light fills (cards, carousel stage) the dark border reads
-   too heavy — use a soft indigo hairline instead. */
-.stage-glossy {
-  border-color: color-mix(in oklab, var(--primary), transparent 68%);
-  box-shadow:
-    0 1px 2px rgba(14, 17, 23, 0.08),
-    0 10px 30px rgba(14, 17, 23, 0.08);
-  isolation: isolate;
-}
-.hero-panel::after,
-.stage-glossy::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 30;
-  pointer-events: none;
-  border-radius: inherit;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.55),
-    inset 0 2px 4px rgba(255, 255, 255, 0.18),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.2);
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.17) 0%,
-    rgba(255, 255, 255, 0.05) 6%,
-    rgba(255, 255, 255, 0) 13%
+/* Fine diagonal hatch for media wells — a blueprint fill that says "this is
+   a stage" without competing with what stands on it. */
+.landing .hatch {
+  background-color: var(--well);
+  background-image: repeating-linear-gradient(
+    -45deg,
+    hsl(228 22% 92.5%) 0 1px,
+    transparent 1px 8px
   );
-}
-
-/* Headline pills ("APIs", "Agents", "Humans") — the hero panel in
-   miniature. Same border recipe (darker than the fill, so the top highlight
-   reads as a reflection rather than a doubled edge), the top slice of the
-   sky gradient as the fill, and the gloss folded into the box-shadow and a
-   second background layer instead of a pseudo-element, since an inline
-   pill has no room for one. Type is white in both themes; the dark theme
-   just swaps in the darker sky so the pills track the panel below. */
-.bot-pill {
-  color: #ffffff;
-  border: 1px solid color-mix(in oklab, #2c37a4, #000000 30%);
-  background:
-    linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 0.2) 0%,
-      rgba(255, 255, 255, 0.06) 40%,
-      rgba(255, 255, 255, 0) 70%
-    ),
-    linear-gradient(180deg, #2c37a4 0%, #3a49c4 55%, #4d61d6 100%);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.5),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.22),
-    0 1px 2px rgba(14, 17, 23, 0.14),
-    0 3px 8px rgba(44, 55, 164, 0.16);
-}
-.dark .bot-pill {
-  border-color: color-mix(in oklab, #232c8c, #000000 35%);
-  background:
-    linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 0.16) 0%,
-      rgba(255, 255, 255, 0.05) 40%,
-      rgba(255, 255, 255, 0) 70%
-    ),
-    linear-gradient(180deg, #141a56 0%, #232c8c 55%, #3346b4 100%);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.32),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.35),
-    0 1px 2px rgba(0, 0, 0, 0.3),
-    0 3px 8px rgba(0, 0, 0, 0.25);
 }
 
 /* Sky — dusk gradient: light blue at the horizon (meeting the scene),
@@ -652,99 +621,7 @@ a:has(> [data-slot="button"]),
     );
   transform: translate3d(-1%, -1%, 0) scale(1.14);
 }
-.dark .hero-sky {
-  background: linear-gradient(
-    180deg,
-    #0a0d28 0%,
-    #141a56 24%,
-    #232c8c 48%,
-    #4a63c4 70%,
-    #87a8da 86%,
-    #a9c6e8 100%
-  );
-}
-/* Spotlight feature chips — one chip "lights up" at a time, cycling
-   through the row (4 chips × 2s = 8s loop). */
-.spot-chip {
-  border: 1px solid rgba(28, 35, 51, 0.12);
-  background: rgba(255, 255, 255, 0.72);
-  color: #5b6478;
-  animation: chip-pulse 8s infinite;
-  animation-delay: var(--chip-delay, 0s);
-}
-@keyframes chip-pulse {
-  0%,
-  20% {
-    background: var(--accent-soft);
-    border-color: rgba(61, 70, 221, 0.42);
-    color: #2c37a4;
-    box-shadow: 0 2px 12px rgba(61, 70, 221, 0.2);
-    transform: translateY(-1px);
-  }
-  26%,
-  100% {
-    background: rgba(255, 255, 255, 0.72);
-    border-color: rgba(28, 35, 51, 0.12);
-    color: #5b6478;
-    box-shadow: none;
-    transform: translateY(0);
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .spot-chip {
-    animation: none;
-  }
-}
 
-/* ---------- System cards — layered visuals ---------- */
-
-/* Film-grain overlay (no mask — clips to its container). */
-.grain-overlay {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  background-size: 120px 120px;
-  opacity: 0.26;
-  mix-blend-mode: overlay;
-}
-
-/* Search card — queries cycle inside the floating search pill.
-   3 queries × 3s each = 9s loop; delays are set inline per item. */
-.search-query {
-  animation: query-cycle 9s ease-in-out infinite;
-  animation-delay: var(--q-delay, 0s);
-  opacity: 0;
-}
-@keyframes query-cycle {
-  0%,
-  3% {
-    opacity: 0;
-    transform: translateY(7px);
-  }
-  8%,
-  28% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  33%,
-  100% {
-    opacity: 0;
-    transform: translateY(-7px);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .search-query {
-    animation: none;
-  }
-  .search-query:first-child {
-    opacity: 1;
-  }
-  .animate-marquee {
-    animation: none;
-  }
-}
-
-/* Top shadow — a gentle darkening at the very top, echoing the
-   trusted-by scrim at the foot of the scene. */
 /* ---- Product materials, ported from apps/dash/src/index.css ----
 
    The hero scene shows pipe0's own surfaces, so it uses pipe0's own materials
@@ -801,25 +678,6 @@ a:has(> [data-slot="button"]),
     0 10px 24px -12px rgba(17, 17, 17, 0.25);
 }
 
-/* Safari only, for the mobile hero globe. Safari cannot decode the WebM's
-   VP9 alpha (it paints transparent areas black), so it gets an opaque video
-   with the sky's base colour (#bfd7fa) baked in. The panel is set to that
-   same colour (.hero-panel-flat) so the video's edge is invisible, and this
-   layer puts the saturated indigo back over the top — one hue fading out via
-   alpha, so there are no opaque bands and no seam. */
-.hero-safari-sky {
-  background: linear-gradient(
-    180deg,
-    rgba(44, 55, 164, 0.9) 0%,
-    rgba(44, 55, 164, 0.6) 20%,
-    rgba(44, 55, 164, 0.3) 37%,
-    rgba(44, 55, 164, 0) 56%
-  );
-}
-.hero-panel-flat {
-  background: #bfd7fa;
-}
-
 /* Hero film scene.
 
    The animation is authored in a fixed 1200x500 coordinate space and scaled
@@ -855,115 +713,7 @@ a:has(> [data-slot="button"]),
      length, and `scale` only accepts a unitless number — so the declaration
      is simply dropped and the scene renders at its full 1200px. */
   scale: var(--hero-scale, 1);
-  font-family: var(--font-body), "Helvetica Neue", Helvetica, sans-serif;
-}
-
-.hero-top-scrim {
-  background: linear-gradient(
-    180deg,
-    rgba(10, 14, 50, 0.28) 0%,
-    rgba(10, 14, 50, 0.1) 45%,
-    rgba(10, 14, 50, 0) 100%
-  );
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .card-sky::before,
-  .card-sky::after {
-    animation: none;
-  }
-}
-
-/* Saturated indigo card background — the brand primary, with a couple of
-   light pools drifting through for permanent, subtle motion. Shared by all
-   three system cards so they read as one family. Drop in as a full-bleed
-   absolute layer (`card-sky absolute inset-0`) behind the card content. */
-.card-sky {
-  overflow: hidden;
-  background: linear-gradient(
-    150deg,
-    #232b94 0%,
-    #303bc4 32%,
-    var(--primary) 62%,
-    #5a6df0 100%
-  );
-}
-.card-sky::before,
-.card-sky::after {
-  content: "";
-  position: absolute;
-  inset: -45%;
-  pointer-events: none;
-  will-change: transform;
-}
-.card-sky::before {
-  background:
-    radial-gradient(
-      42% 38% at 24% 28%,
-      rgba(150, 168, 255, 0.55) 0%,
-      rgba(150, 168, 255, 0) 70%
-    ),
-    radial-gradient(
-      38% 36% at 80% 74%,
-      rgba(86, 108, 232, 0.5) 0%,
-      rgba(86, 108, 232, 0) 70%
-    );
-  animation: card-sky-a 22s ease-in-out infinite alternate;
-}
-.card-sky::after {
-  background:
-    radial-gradient(
-      36% 34% at 72% 18%,
-      rgba(176, 154, 255, 0.42) 0%,
-      rgba(176, 154, 255, 0) 70%
-    ),
-    radial-gradient(
-      34% 32% at 16% 82%,
-      rgba(120, 140, 255, 0.44) 0%,
-      rgba(120, 140, 255, 0) 70%
-    );
-  animation: card-sky-b 28s ease-in-out infinite alternate;
-}
-@keyframes card-sky-a {
-  0% {
-    transform: translate3d(-8%, -6%, 0) scale(1.05) rotate(-3deg);
-  }
-  100% {
-    transform: translate3d(10%, 8%, 0) scale(1.26) rotate(4deg);
-  }
-}
-@keyframes card-sky-b {
-  0% {
-    transform: translate3d(9%, 5%, 0) scale(1.22) rotate(3deg);
-  }
-  100% {
-    transform: translate3d(-10%, -7%, 0) scale(1.04) rotate(-4deg);
-  }
-}
-
-/* Compact card-sky for small icon frames (sidebar tab icons). The drifting
-   light pools read as noise at icon scale, so a single highlight is baked into
-   a static gradient drawn from the same indigo family. */
-.card-sky-sm {
-  background:
-    radial-gradient(
-      125% 110% at 26% 16%,
-      rgba(150, 168, 255, 0.55) 0%,
-      rgba(150, 168, 255, 0) 62%
-    ),
-    linear-gradient(150deg, #232b94 0%, #303bc4 40%, var(--primary) 100%);
-}
-
-/* Icon tile for the docs "next steps" list — a soft neutral gradient with a
-   hairline edge, so the framed icon reads clearly at a larger size. */
-.icon-frame {
-  background: linear-gradient(160deg, hsl(0 0% 98%) 0%, hsl(0 0% 91%) 100%);
-  border-color: rgba(0, 0, 0, 0.08);
-  color: var(--color-fd-muted-foreground);
-}
-.dark .icon-frame {
-  background: linear-gradient(160deg, hsl(0 0% 18%) 0%, hsl(0 0% 12%) 100%);
-  border-color: rgba(255, 255, 255, 0.1);
+  font-family: var(--font-schibsted), "Helvetica Neue", Helvetica, sans-serif;
 }
 
 /* Collection-switcher dropdown rows — keep a flat hover, never a gradient
@@ -982,46 +732,8 @@ a:has(> [data-slot="button"]),
   background-image: none;
 }
 
-/* Pricing hero foot — deeper than the landing hero's trusted-scrim, so the
-   pricing cards' light borders cut clearly against the panel. */
-.pricing-scrim {
-  background: linear-gradient(
-    180deg,
-    rgba(16, 20, 64, 0) 0%,
-    rgba(16, 20, 64, 0.28) 35%,
-    rgba(15, 18, 58, 0.58) 70%,
-    rgba(12, 15, 48, 0.88) 100%
-  );
-}
-
-/* Trusted-by row sits in a darkening shadow at the foot of the scene, so the
-   white wordmarks read cleanly in both light and dark mode. */
-.trusted-scrim {
-  /* Saturated indigo, not a dark neutral — low-chroma darks muddy to
-     gray/black over the near-white globe. Eased stops keep the band
-     reading as the sky deepening rather than a shadow. */
-  background: linear-gradient(
-    180deg,
-    rgba(44, 55, 164, 0) 0%,
-    rgba(44, 55, 164, 0.12) 30%,
-    rgba(42, 52, 158, 0.3) 60%,
-    rgba(38, 47, 148, 0.5) 85%,
-    rgba(35, 44, 140, 0.62) 100%
-  );
-}
-
-/* Active sidebar / filter item — pin to a deep, saturated brand indigo so the
-   dark-mode primary's brighter sky-blue doesn't wash it out. Sits a touch
-   darker than the light-mode primary so it reads as a rich indigo on the
-   near-black sidebar rather than a glowing blue. */
-.btn-glossy-indigo,
-#nd-nav a[data-active="true"] {
-  --primary: hsl(235, 80%, 50%);
-}
-
 /* Glassy CTA buttons — inner reflection, vertical gradient, darker edge. */
-.btn-glossy,
-#nd-nav a[data-active="true"] {
+.btn-glossy {
   background: linear-gradient(
     180deg,
     color-mix(in oklab, var(--primary), #ffffff 16%) 0%,
@@ -1033,8 +745,7 @@ a:has(> [data-slot="button"]),
     inset 0 -1px 0 rgba(0, 0, 0, 0.12),
     0 1px 2px rgba(14, 17, 23, 0.2);
 }
-.btn-glossy:hover,
-#nd-nav a[data-active="true"]:hover {
+.btn-glossy:hover {
   background: linear-gradient(
     180deg,
     color-mix(in oklab, var(--primary), #000000 4%) 0%,
@@ -1052,57 +763,13 @@ a:has(> [data-slot="button"]),
   border-color: rgba(14, 17, 23, 0.34);
   background: rgba(255, 255, 255, 0.9);
 }
-.dark .btn-glossy-outline {
-  background: rgba(255, 255, 255, 0.04);
-  border-color: rgba(255, 255, 255, 0.14);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
-}
-.dark .btn-glossy-outline:hover {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.26);
-}
 
-/* Spotlight carousel — vertical progress rail that fills over the cycle. */
-.spot-rail i {
-  display: block;
-  width: 100%;
-  height: 100%;
-  background: var(--primary);
-  border-radius: 2px;
-  transform-origin: top;
-  transform: scaleY(0);
-}
-.spot-rail.is-active i {
-  animation: spot-fill var(--spot-speed, 4200ms) linear forwards;
-}
-@keyframes spot-fill {
-  from {
-    transform: scaleY(0);
-  }
-  to {
-    transform: scaleY(1);
-  }
-}
-
-/* Off-screen pause — the AnimationPauser toggles `data-idle` on these
-   animated layers when they leave the viewport, so their never-ending
-   compositor work stops while they're not visible. */
-.card-sky[data-idle]::before,
-.card-sky[data-idle]::after,
-.blob[data-idle],
-.blob[data-idle] .blob-eyes {
-  animation-play-state: paused;
-}
-
-/* Fumadocs top nav: the active link ("Documentation" / "Blog") wears the same
-   glossy-indigo pill as the active sidebar item. Fill, border color, and gloss
-   come from the shared .btn-glossy/.btn-glossy-indigo rules above; this adds
-   only what the nav <a> lacks compared to the sidebar item. */
+/* Fumadocs top nav (blog, reviews, legal): the active link is a quiet pill —
+   the muted well and full ink, same as the marketing header's hover state. */
 #nd-nav a[data-active="true"] {
-  border-width: 1px;
-  border-style: solid;
-  border-radius: 0.5rem;
-  color: #fff;
+  border-radius: 8px;
+  background-color: var(--well);
+  color: var(--color-fd-foreground);
 }
 
 /* Print: legal documents. Procurement teams print the DPA and the terms to
@@ -1152,133 +819,59 @@ a:has(> [data-slot="button"]),
     margin: 18mm 16mm;
   }
 }
-
-/* ---------- Blobs — the little inline bots (landing-blobs.tsx) ----------
-   Two loops on the body (a slow bob and a faster wobble/squash) and one on
-   the eyes (a blink). Negative `--blob-delay` values offset a row so no two
-   move in step. */
-.blob {
-  overflow: visible;
-  transform-box: fill-box;
-  transform-origin: 50% 85%;
-  animation:
-    blob-bob 3.6s ease-in-out infinite,
-    blob-wobble 5.2s ease-in-out infinite;
-  animation-delay: var(--blob-delay, 0s), calc(var(--blob-delay, 0s) * 1.4);
-}
-.blob-eyes {
-  transform-box: fill-box;
-  transform-origin: center;
-  animation: blob-blink 4.8s infinite;
-  animation-delay: var(--blob-delay, 0s);
-}
-@keyframes blob-bob {
-  0%,
-  100% {
-    translate: 0 0;
-  }
-  50% {
-    translate: 0 -0.08em;
-  }
-}
-@keyframes blob-wobble {
-  0%,
-  100% {
-    transform: rotate(-3deg) scale(1, 1);
-  }
-  30% {
-    transform: rotate(2deg) scale(1.04, 0.96);
-  }
-  60% {
-    transform: rotate(-1deg) scale(0.97, 1.04);
-  }
-  80% {
-    transform: rotate(3deg) scale(1.02, 0.98);
-  }
-}
-@keyframes blob-blink {
-  0%,
-  88%,
-  100% {
-    transform: scaleY(1);
-  }
-  92%,
-  96% {
-    transform: scaleY(0.12);
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .blob,
-  .blob-eyes {
-    animation: none;
-  }
-}
-
-/* ---- Product film (product-film.tsx) ----
-   The poster stage is the film's own backdrop — a near-white neutral — with
-   a faint wash of the hero sky rising from below, so it sits between the
-   white page and the indigo panels rather than competing with either. */
-.film-stage {
-  background:
-    radial-gradient(
-      70% 60% at 50% 115%,
-      color-mix(in oklab, #7b94e8, transparent 72%) 0%,
-      transparent 70%
-    ),
-    radial-gradient(
-      50% 40% at 50% -10%,
-      rgba(255, 255, 255, 0.9) 0%,
-      transparent 70%
-    ),
-    linear-gradient(180deg, hsl(230 20% 98.5%) 0%, hsl(228 22% 95.5%) 100%);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.9),
-    0 1px 2px rgba(14, 17, 23, 0.05);
-}
-.dark .film-stage {
-  background:
-    radial-gradient(
-      70% 60% at 50% 115%,
-      rgba(58, 73, 196, 0.35) 0%,
-      transparent 70%
-    ),
-    linear-gradient(180deg, hsl(230 12% 10%) 0%, hsl(232 16% 8%) 100%);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
-}
-/* The product rises out of the bottom edge on a slight tilt and dissolves
-   into the stage before it is fully shown. Hover straightens it a little. */
-.film-horizon {
-  transform-origin: 50% 0%;
-  transform: translateX(-50%) rotateX(24deg);
-  transition: transform 900ms cubic-bezier(0.2, 0.7, 0.2, 1);
-  box-shadow: 0 -18px 50px rgba(18, 24, 74, 0.1);
-  -webkit-mask-image: linear-gradient(180deg, #000 0%, rgba(0, 0, 0, 0.55) 30%, transparent 62%);
-  mask-image: linear-gradient(180deg, #000 0%, rgba(0, 0, 0, 0.55) 30%, transparent 62%);
-}
-.group:hover .film-horizon {
-  transform: translateX(-50%) translateY(-10px) rotateX(14deg);
-}
-/* Primary pill on the stage — the glossy CTA recipe. */
-.film-play {
-  border: 1px solid color-mix(in oklab, var(--primary), #000000 18%);
-  background: linear-gradient(
-    180deg,
-    color-mix(in oklab, var(--primary), #ffffff 16%) 0%,
-    var(--primary) 55%
-  );
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.35),
-    0 1px 2px rgba(14, 17, 23, 0.12),
-    0 8px 24px color-mix(in oklab, var(--primary), transparent 72%);
-  transition: transform 300ms ease-out;
-}
-.group:hover .film-play {
-  transform: translateY(-1px);
-}
 /* Lightbox backdrop — the deepest note of the hero sky, not flat black. */
 .film-overlay {
   background:
     radial-gradient(80% 70% at 50% 40%, rgba(35, 44, 140, 0.55), transparent 75%),
     rgba(6, 8, 26, 0.9);
   backdrop-filter: blur(8px);
+}
+
+/* Ask AI character (components/ai/ask-ai-button.tsx): a slow bob and an
+   occasional blink. */
+@keyframes buddy-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-1.5px);
+  }
+}
+@keyframes buddy-blink {
+  0%,
+  90%,
+  100% {
+    transform: scaleY(1);
+  }
+  93% {
+    transform: scaleY(0.15);
+  }
+}
+.buddy-bob {
+  animation: buddy-bob 3.2s ease-in-out infinite;
+}
+.buddy-blink {
+  transform-origin: center;
+  animation: buddy-blink 4.6s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .buddy-bob,
+  .buddy-blink {
+    animation: none;
+  }
+}
+
+/* Scroll reveals (components/reveal-root.tsx). Only active once the observer
+   has set html.reveal-on; reduced motion never sets it. */
+.reveal-on [data-reveal="up"] {
+  opacity: 0;
+  translate: 0 14px;
+  transition:
+    opacity 0.7s ease var(--reveal-delay, 0ms),
+    translate 0.8s cubic-bezier(0.22, 0.8, 0.24, 1) var(--reveal-delay, 0ms);
+}
+.reveal-on [data-reveal="up"][data-in] {
+  opacity: 1;
+  translate: 0 0;
 }

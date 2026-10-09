@@ -1,5 +1,6 @@
 import { highlight } from "fumadocs-core/highlight";
 import { CodeBlock, Pre } from "fumadocs-ui/components/codeblock";
+import { pipe0CodeTheme } from "@/lib/shiki-theme";
 
 const shikiComponents = { pre: Pre };
 
@@ -20,13 +21,8 @@ export async function StaticCodeBlock({
 }) {
   const rendered = await highlight(code, {
     lang,
-    themes: {
-      light: "catppuccin-latte",
-      dark: "catppuccin-mocha",
-    },
-    // Emit both themes as CSS variables; without this shiki inlines the light
-    // theme's colors directly and dark mode renders a light code block.
-    defaultColor: false,
+    // One theme, the brand palette — the site has no dark mode.
+    theme: pipe0CodeTheme,
     components: shikiComponents,
   });
 

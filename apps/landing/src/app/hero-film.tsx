@@ -307,7 +307,9 @@ function Cell({
         margin: "-5px -8px",
         background: `rgba(230,244,237,${flash})`,
         fontSize: 14.5,
-        fontVariantNumeric: figures ? "tabular-nums" : "normal",
+        // Proportional: Schibsted's tnum also widens the period, which split
+        // emails into "j . weber@northbeam . de".
+        fontVariantNumeric: "normal",
         color: C.ink,
         opacity: fadeIn(frame, at, 6),
         whiteSpace: "nowrap",
@@ -608,7 +610,7 @@ function Waterfall({ frame }: { frame: number }) {
               alignItems: "center",
               gap: 6,
               fontSize: 16,
-              fontVariantNumeric: "tabular-nums",
+              fontVariantNumeric: "normal",
               color: s.ok ? C.green : C.faint,
             }}
           >

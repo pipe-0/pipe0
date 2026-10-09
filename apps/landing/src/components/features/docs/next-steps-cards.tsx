@@ -5,8 +5,8 @@ import { cn } from "@/lib/utils";
 /**
  * Docs "next steps" list. Replaces the fumadocs default Card/Cards grid: instead
  * of bordered cards, items render as a tight vertical list of rows, each with a
- * larger gradient-framed icon — closer to a guided "what's next" list than a
- * gallery of cards.
+ * glossy indigo icon tile (the same tile as the docs section switcher) —
+ * closer to a guided "what's next" list than a gallery of cards.
  */
 export function Cards({ className, ...props }: ComponentProps<"div">) {
   return (
@@ -38,7 +38,7 @@ export function Card({
   const inner = (
     <>
       {icon ? (
-        <div className="icon-frame flex size-9 shrink-0 items-center justify-center rounded-lg border [&_svg]:size-[1.05rem]">
+        <div className="btn-glossy flex size-9 shrink-0 items-center justify-center rounded-[8px] border text-white [&_svg]:size-[1.05rem]">
           {icon}
         </div>
       ) : null}

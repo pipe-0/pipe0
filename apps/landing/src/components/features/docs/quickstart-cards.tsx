@@ -1,229 +1,73 @@
-"use client";
-
-import { cn } from "@/lib/utils";
-import { ArrowUpRight, Library, Search, Zap } from "lucide-react";
+import { Brackets, dotsStyle } from "@/components/grid";
+import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
 
 /**
- * The three quickstart entry points, rendered as media cards: the catalogs
- * play short product recordings, the API Reference shows an animated code
- * sample echoing the marketing site. Drop into the docs index in place of the
- * default `<Cards>`.
+ * The three quickstart entry points, in the site's line-grid language: cells
+ * that share 1px walls, each with a still Blender line drawing on the dotted
+ * stage (assets/illustrations/lineart.py) and one line of copy. Still images
+ * rather than recordings, so the page reads without anything moving.
  */
-export function QuickstartCards() {
-  return (
-    <div className="not-prose mt-5 mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-      <QuickstartCard
-        href="/docs/pipe-catalog"
-        icon={<Zap className="size-4" />}
-        title="Pipe Catalog"
-        description="Enrich individual rows or perform row-based actions."
-        media={<DemoVideo src="/media/website/pipe-catalog-demo.mp4" />}
-      />
-      <QuickstartCard
-        href="/docs/search-catalog"
-        icon={<Search className="size-4" />}
-        title="Search Catalog"
-        description="Create rows by searching for people, companies, or data."
-        media={<DemoVideo src="/media/website/search-demo.mp4" />}
-      />
-      <QuickstartCard
-        href="/docs/api"
-        icon={<Library className="size-4" />}
-        title="API Reference"
-        description="Public API endpoints."
-        media={<CodeWindow />}
-      />
-    </div>
-  );
-}
-
-function QuickstartCard({
-  href,
-  icon,
-  title,
-  description,
-  media,
-}: {
-  href: string;
-  icon: React.ReactNode;
-  title: string;
-  description: string;
-  media: React.ReactNode;
-}) {
-  return (
-    <Link
-      href={href}
-      className="group flex flex-col overflow-hidden rounded-xl border bg-fd-card no-underline transition-colors hover:border-fd-primary/40 hover:bg-fd-accent"
-    >
-      {/* Indigo stage — the demo floats here, echoing the landing-page cards */}
-      <div className="relative flex aspect-[16/10] items-center justify-center overflow-hidden border-b p-5">
-        <div className="card-sky absolute inset-0" aria-hidden />
-        {media}
-      </div>
-      <div className="flex flex-col gap-1.5 p-4">
-        <div className="flex items-center gap-2">
-          <span className="flex size-7 items-center justify-center rounded-md border bg-fd-secondary text-fd-secondary-foreground">
-            {icon}
-          </span>
-          <span className="text-sm font-medium text-fd-card-foreground">
-            {title}
-          </span>
-          {/* Navigation affordance */}
-          <ArrowUpRight className="ml-auto size-4 text-fd-muted-foreground transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-fd-foreground" />
-        </div>
-        <p className="text-sm text-fd-muted-foreground">{description}</p>
-      </div>
-    </Link>
-  );
-}
-
-function DemoVideo({ src }: { src: string }) {
-  // Instead of a hard loop, each playthrough is followed by a random
-  // 3–10s rest on the final frame before the demo starts over.
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const replayTimeout = useRef<number | null>(null);
-  // Only decode while on screen — several of these mount at once and
-  // decoding them all off-screen pins the GPU/CPU and spins laptop fans.
-  const inView = useRef(false);
-
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        inView.current = entry.isIntersecting;
-        if (entry.isIntersecting) {
-          void video.play().catch(() => {});
-        } else {
-          video.pause();
-        }
-      },
-      { threshold: 0 },
-    );
-    io.observe(video);
-
-    return () => {
-      io.disconnect();
-      if (replayTimeout.current !== null) {
-        window.clearTimeout(replayTimeout.current);
-      }
-    };
-  }, []);
-
-  return (
-    <div className="relative w-full max-w-[240px] overflow-hidden rounded-[10px] border border-white/20 bg-white shadow-[0_18px_40px_rgba(0,0,0,0.35)]">
-      <video
-        ref={videoRef}
-        className="block h-auto w-full"
-        muted
-        playsInline
-        preload="metadata"
-        src={src}
-        onEnded={(e) => {
-          const video = e.currentTarget;
-          replayTimeout.current = window.setTimeout(
-            () => {
-              if (!inView.current) return;
-              video.currentTime = 0;
-              void video.play();
-            },
-            3000 + Math.random() * 7000,
-          );
-        }}
-      />
-    </div>
-  );
-}
-
-/* ---- Animated code sample (echoes the marketing CodebasePane) ---- */
-
-const codeLines: React.ReactNode[] = [
-  <>
-    <span className="text-indigo-300">const</span> res ={" "}
-    <span className="text-indigo-300">await</span> pipe0.pipes.
-    <span className="text-sky-300">run</span>({"{"}
-  </>,
-  <>{"  pipes: ["}</>,
-  <>
-    {"    { pipe_id: "}
-    <span className="text-emerald-300">&quot;person:workemail:waterfall@1&quot;</span>
-    {" },"}
-  </>,
-  <>{"  ],"}</>,
-  <>
-    {"  input: [{ name: "}
-    <span className="text-emerald-300">&quot;John Doe&quot;</span>
-    {" }],"}
-  </>,
-  <>{"});"}</>,
+const entries = [
+  {
+    href: "/docs/pipe-catalog",
+    title: "Pipe catalog",
+    description: "Enrich rows: work emails, mobiles, company data, AI steps, and actions.",
+    image: "/media/website/illustrations/catalog.png",
+  },
+  {
+    href: "/docs/search-catalog",
+    title: "Search catalog",
+    description: "Create rows by searching for people and companies.",
+    image: "/media/website/illustrations/search.png",
+  },
+  {
+    href: "/docs/api",
+    title: "API reference",
+    description: "Every endpoint, generated from the OpenAPI spec.",
+    image: "/media/website/illustrations/reference.png",
+  },
 ];
 
-function CodeWindow() {
-  // Starts on the full sample (also the SSR / reduced-motion state). The
-  // finished sample rests for a random 3–10s, then wipes and retypes —
-  // mirroring the demo videos' play/pause cycle.
-  const [shown, setShown] = useState(codeLines.length);
-
-  useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
-    let line = codeLines.length;
-    let timeout: number;
-
-    const schedule = () => {
-      if (line >= codeLines.length) {
-        timeout = window.setTimeout(
-          () => {
-            line = 0;
-            setShown(0);
-            schedule();
-          },
-          3000 + Math.random() * 7000,
-        );
-      } else {
-        timeout = window.setTimeout(() => {
-          line += 1;
-          setShown(line);
-          schedule();
-        }, 700);
-      }
-    };
-
-    schedule();
-    return () => window.clearTimeout(timeout);
-  }, []);
-
+export function QuickstartCards() {
   return (
-    <div className="relative w-full max-w-[260px] overflow-hidden rounded-[10px] border border-white/15 bg-[linear-gradient(160deg,#232a8a_0%,#10143f_92%)] p-3.5 shadow-[0_18px_40px_rgba(0,0,0,0.4)]">
-      <div className="flex items-center gap-1.5 pb-3">
-        <span className="size-2 rounded-full bg-white/25" />
-        <span className="size-2 rounded-full bg-white/25" />
-        <span className="size-2 rounded-full bg-white/25" />
-        <span className="ml-1.5 font-mono text-[10px] text-white/45">
-          enrich.ts
-        </span>
-      </div>
-      <pre className="overflow-hidden font-mono text-[11px] leading-relaxed text-white/85">
-        <code>
-          {codeLines.map((content, i) => (
-            <div
-              key={i}
-              className={cn(
-                "transition-opacity duration-300",
-                i < shown ? "opacity-100" : "opacity-0",
-              )}
-            >
-              {content}
-              {i === shown - 1 && (
-                <span className="ml-0.5 inline-block h-3 w-1.5 translate-y-0.5 animate-pulse bg-sky-300/80" />
-              )}
-            </div>
-          ))}
-        </code>
-      </pre>
+    <div className="not-prose mb-8 mt-5 grid grid-cols-1 gap-px overflow-hidden rounded-[10px] border border-[var(--rule)] bg-[var(--rule)] sm:grid-cols-3">
+      {entries.map((entry) => (
+        <Link
+          key={entry.href}
+          href={entry.href}
+          className="group flex flex-col bg-fd-background no-underline transition-colors hover:bg-[var(--well)]"
+        >
+          <div
+            style={dotsStyle}
+            className="relative m-3 mb-0 flex aspect-[16/10] items-center justify-center border border-[var(--rule)]"
+          >
+            <Brackets />
+            <Image
+              src={entry.image}
+              alt=""
+              width={1600}
+              height={1200}
+              sizes="(min-width: 640px) 240px, 80vw"
+              className="h-auto w-[78%]"
+            />
+          </div>
+          <div className="flex flex-1 flex-col px-4 pb-4 pt-3.5">
+            <span className="flex items-center justify-between text-[15px] font-medium text-fd-foreground">
+              {entry.title}
+              <span
+                aria-hidden
+                className="text-fd-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:text-fd-foreground"
+              >
+                &rarr;
+              </span>
+            </span>
+            <span className="mt-1 text-[13.5px] leading-relaxed text-fd-muted-foreground">
+              {entry.description}
+            </span>
+          </div>
+        </Link>
+      ))}
     </div>
   );
 }

@@ -9,8 +9,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { cn, copyToClipboard, formatCredits } from "@/lib/utils";
-import { type ProviderName, providerCatalog } from "@pipe0/base";
-import { AvatarGroup } from "@pipe0/react";
+import { providerCatalog } from "@pipe0/base";
 import { ArrowRight, Copy } from "lucide-react";
 import Link from "next/link";
 import { useIntentPrefetch } from "@/hooks/use-intent-prefetch";
@@ -47,18 +46,45 @@ type CatalogListRowProps = {
 const FIELD_PILL_LIMIT = 3;
 const PROVIDER_STACK_LIMIT = 4;
 
+/**
+ * The entry's provider tile. With more than one provider it is drawn as a
+ * physical stack: blank cards fanned out to the right behind the front one,
+ * one per extra provider (up to three), so the count reads at a glance
+ * without a "+N" badge.
+ */
 export function ProviderTile({ providers }: { providers: readonly string[] }) {
   const primary = providers[0];
-  const remaining = providers.length - 1;
+  const behind = Math.min(Math.max(providers.length - 1, 0), 3);
   const provider = primary
     ? providerCatalog[primary as keyof typeof providerCatalog]
     : undefined;
 
   return (
-    <div className="relative shrink-0">
-      <div className="flex size-10 items-center justify-center rounded-md bg-muted overflow-hidden">
+    <div
+      className="relative shrink-0"
+      style={{ width: 44 + behind * 8, height: 44 }}
+      title={`${providers.length} provider${providers.length === 1 ? "" : "s"}`}
+    >
+      {Array.from({ length: behind }, (_, k) => {
+        const depth = behind - k; // furthest card first
+        return (
+          <span
+            key={depth}
+            aria-hidden
+            className="absolute top-0 size-11 rounded-[10px] border border-[var(--rule-strong)] bg-background"
+            style={{
+              left: depth * 8,
+              transform: `rotate(${depth * 5}deg) scale(${1 - depth * 0.06})`,
+              transformOrigin: "bottom left",
+              backgroundColor: `hsl(228 33% ${100 - depth * 2}%)`,
+              boxShadow: "0 1px 2px rgba(14,17,23,0.05)",
+            }}
+          />
+        );
+      })}
+      <div className="absolute left-0 top-0 flex size-11 items-center justify-center overflow-hidden rounded-[10px] border border-[var(--rule)] bg-background shadow-[0_1px_2px_rgba(14,17,23,0.05)]">
         {provider?.logoUrl ? (
-          <Avatar className="rounded-md size-7">
+          <Avatar className="size-7 rounded-md">
             <AvatarImage
               src={provider.logoUrl}
               alt={provider.label}
@@ -72,47 +98,72 @@ export function ProviderTile({ providers }: { providers: readonly string[] }) {
           <span className="text-xs font-medium text-muted-foreground">P</span>
         )}
       </div>
-      {remaining > 0 && (
-        <span className="absolute -top-1 -left-1 inline-flex items-center justify-center rounded-full bg-secondary text-secondary-foreground text-[10px] leading-none font-medium px-1 min-w-4 h-4 border border-background">
-          +{remaining}
-        </span>
-      )}
     </div>
   );
 }
 
-export function ProviderStack({ providers }: { providers: readonly string[] }) {
-  if (providers.length === 0) return null;
-  const visible = providers.slice(0, PROVIDER_STACK_LIMIT);
-  const overflow = providers.length - visible.length;
+/* Grey tones for the tiles, light to slightly darker, cycled per tile. */
+const TILE_TONES = [
+  "hsl(228 33% 99%)",
+  "hsl(228 28% 96.5%)",
+  "hsl(228 24% 94%)",
+  "hsl(228 22% 91.5%)",
+];
 
+/**
+ * A card's provider preview: logo tiles in the same material as the stacked
+ * entry tile, overlapping to the right in alternating grey tones. When there
+ * are more than fit, the row simply runs out past the card's right edge and
+ * fades — a preview, not a list. The parent should let it bleed to the edge.
+ */
+export function ProviderTileStrip({
+  providers,
+}: {
+  providers: readonly string[];
+}) {
+  if (providers.length === 0) return null;
+  const shown = providers.slice(0, 9);
   return (
-    <div className="flex items-center -space-x-1.5">
-      {visible.map((name) => {
+    <div
+      className="flex items-center overflow-hidden py-1 pl-0.5"
+      style={{
+        maskImage: "linear-gradient(to right, black 72%, transparent 100%)",
+        WebkitMaskImage:
+          "linear-gradient(to right, black 72%, transparent 100%)",
+      }}
+    >
+      {shown.map((name, i) => {
         const p = providerCatalog[name as keyof typeof providerCatalog];
         return (
           <Tooltip key={name}>
             <TooltipTrigger asChild>
-              <Avatar className="size-4 rounded-sm ring-1 ring-background">
-                <AvatarImage
-                  src={p?.logoUrl}
-                  alt={p?.label ?? name}
-                  className="object-contain"
-                />
-                <AvatarFallback className="rounded-sm text-[8px]">
-                  {(p?.label ?? name).slice(0, 1).toUpperCase()}
-                </AvatarFallback>
-              </Avatar>
+              <span
+                className="relative grid size-11 shrink-0 place-items-center rounded-[10px] border border-[var(--rule-strong)] shadow-[0_1px_2px_rgba(14,17,23,0.05)]"
+                style={{
+                  marginLeft: i === 0 ? 0 : -10,
+                  zIndex: shown.length - i,
+                  backgroundColor: TILE_TONES[i % TILE_TONES.length],
+                  transform: `rotate(${i === 0 ? 0 : (i % 2 ? 2.5 : -2)}deg)`,
+                }}
+              >
+                {p?.logoUrl ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={p.logoUrl}
+                    alt={p.label}
+                    className="size-5 object-contain"
+                  />
+                ) : (
+                  <span className="text-[11px] text-muted-foreground">
+                    {name.slice(0, 2)}
+                  </span>
+                )}
+              </span>
             </TooltipTrigger>
             <TooltipContent>{p?.label ?? name}</TooltipContent>
           </Tooltip>
         );
       })}
-      {overflow > 0 && (
-        <span className="inline-flex items-center justify-center size-4 rounded-sm ring-1 ring-background bg-muted text-[8px] font-medium text-muted-foreground">
-          +{overflow}
-        </span>
-      )}
     </div>
   );
 }
@@ -129,7 +180,7 @@ function FieldPill({
   return (
     <span
       className={cn(
-        "inline-flex items-center font-mono text-[11px] px-1.5 py-0.5 rounded bg-muted text-muted-foreground whitespace-nowrap",
+        "inline-flex items-center whitespace-nowrap text-[12px] text-muted-foreground",
         className,
       )}
     >
@@ -149,10 +200,8 @@ function FieldPillRow({
   if (fields === "dynamic") {
     return (
       <div className="inline-flex items-center gap-1 min-w-0">
-        <span className="text-[10px] font-medium text-muted-foreground/80 tracking-wide">
-          {label}
-        </span>
-        <span className="inline-flex items-center font-mono text-[11px] px-1.5 py-0.5 rounded bg-primary/10 text-primary whitespace-nowrap italic">
+        <span className="text-[12px] text-muted-foreground/70">{label}</span>
+        <span className="whitespace-nowrap text-[12px] text-primary">
           dynamic
         </span>
       </div>
@@ -164,19 +213,18 @@ function FieldPillRow({
   const overflowNames = fields.slice(FIELD_PILL_LIMIT).map((f) => f.name);
 
   return (
-    <div className="inline-flex items-center gap-1 min-w-0">
-      <span className="text-[10px] font-medium text-muted-foreground/80 tracking-wide">
-        {label}
-      </span>
-      {visible.map((f) => (
+    <div className="inline-flex min-w-0 items-center gap-1.5">
+      <span className="text-[12px] text-muted-foreground/70">{label}</span>
+      {visible.map((f, i) => (
         <FieldPill key={f.name} required={f.required}>
           {f.name}
+          {i < visible.length - 1 || overflow > 0 ? "," : ""}
         </FieldPill>
       ))}
       {overflow > 0 && (
         <Tooltip>
           <TooltipTrigger asChild>
-            <span className="inline-flex items-center font-mono text-[11px] px-1.5 py-0.5 rounded bg-muted text-muted-foreground whitespace-nowrap cursor-default">
+            <span className="cursor-default whitespace-nowrap text-[12px] text-muted-foreground">
               +{overflow}
             </span>
           </TooltipTrigger>
@@ -231,7 +279,7 @@ export function CatalogListRow({
     <Link
       href={href}
       {...intentPrefetch}
-      className="group flex gap-4 py-3 border-b border-border last:border-b-0 hover:bg-muted/40 transition-colors -mx-2 px-2 rounded"
+      className="group -mx-3 flex gap-4 rounded-[10px] border-b border-[var(--rule)] px-3 py-3.5 transition-colors last:border-b-0 hover:bg-[var(--well)]"
     >
       <ProviderTile providers={providers} />
 
@@ -239,70 +287,59 @@ export function CatalogListRow({
         <div className="flex items-center gap-2 min-w-0">
           <span
             className={cn(
-              "text-sm font-semibold text-foreground truncate",
+              "truncate text-[15px] font-medium tracking-[-0.01em] text-foreground",
               isDeprecated && "line-through",
             )}
           >
             {label}
           </span>
-          <span className="hidden md:inline font-mono text-xs text-muted-foreground/80 truncate">
+          <span className="hidden truncate text-[12.5px] text-muted-foreground/80 md:inline">
             {entryId.replace(/@\d+$/, "")}
           </span>
           {isNew && (
             <Badge
               variant="default"
-              className="text-[10px] px-1.5 py-0 leading-none bg-foreground text-background shrink-0"
+              className="shrink-0 bg-primary px-1.5 py-0 text-[10px] leading-none text-white"
             >
               New
             </Badge>
           )}
         </div>
-        <p className="text-xs text-muted-foreground line-clamp-1 mt-0.5">
+        <p className="mt-0.5 line-clamp-1 text-[13.5px] text-muted-foreground">
           {description}
         </p>
         {showFieldRow && (
           <div className="hidden md:flex items-center gap-2 mt-1.5 min-w-0 overflow-hidden">
-            {inHasContent && <FieldPillRow label="IN" fields={inputs} />}
+            {inHasContent && <FieldPillRow label="In" fields={inputs} />}
             {inHasContent && outHasContent && (
               <ArrowRight className="size-3 text-muted-foreground/60 shrink-0" />
             )}
-            {outHasContent && <FieldPillRow label="OUT" fields={outputs} />}
+            {outHasContent && <FieldPillRow label="Out" fields={outputs} />}
           </div>
         )}
       </div>
 
-      <div className="hidden sm:flex flex-col items-end gap-1 shrink-0 text-right">
-        <div className="inline-flex items-center gap-1 text-xs text-muted-foreground">
-          {priceLabel ? (
-            <span className="text-xs text-muted-foreground">{priceLabel}</span>
-          ) : (
-            <>
-              {credits ? (
-                <span className="text-xs text-muted-foreground">
-                  {priceFrom ? "from " : ""}
-                  {formatCredits(credits)} cr
+      {/* Price: the amount in full ink, its unit underneath. The provider
+          count is carried by the stacked tile on the left. */}
+      <div className="hidden min-w-[88px] shrink-0 flex-col items-end text-right sm:flex">
+        {priceLabel ? (
+          <span className="text-[13.5px] text-muted-foreground">{priceLabel}</span>
+        ) : credits ? (
+          <>
+            <span className="text-[15px] font-medium tabular-nums tracking-[-0.01em] text-foreground">
+              {priceFrom && (
+                <span className="mr-1 text-[12px] font-normal text-muted-foreground">
+                  from
                 </span>
-              ) : (
-                <span className="text-xs text-muted-foreground">Free</span>
               )}
-              {billableUnit && credits ? (
-                <span className="text-xs text-muted-foreground">
-                  / {billableUnit}
-                </span>
-              ) : null}
-            </>
-          )}
-        </div>
-        {providerCount > 0 && (
-          <AvatarGroup
-            providers={providers as readonly ProviderName[]}
-            size="sm"
-          />
-        )}
-        {providerCount > 0 && (
-          <span className="text-[10px] text-muted-foreground/70">
-            {providerCount} provider{providerCount === 1 ? "" : "s"}
-          </span>
+              {formatCredits(credits)} cr
+            </span>
+            <span className="text-[12px] text-muted-foreground">
+              per {billableUnit ?? "result"}
+            </span>
+          </>
+        ) : (
+          <span className="text-[15px] font-medium text-foreground">Free</span>
         )}
       </div>
 

@@ -67,11 +67,13 @@ export const gitConfig = {
 
 export function baseOptions(): BaseLayoutProps {
   return {
+    // The site has one (light) theme; see components/root-provider.
+    themeSwitch: { enabled: false },
     nav: {
       title: (
         <span className="inline-flex items-center gap-2">
           <LogoRawSmall />
-          <span className="font-medium">Pipe0</span>
+          <span className="font-medium">pipe0</span>
         </span>
       ),
     },

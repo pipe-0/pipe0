@@ -8,17 +8,18 @@ import { HeaderVideoSection } from "@/components/features/docs/header-video-sect
 import { PipeFormPreview } from "@/components/features/docs/pipe-form-preview";
 import { BandCard } from "@/components/features/pipe-catalog/band-card";
 import { CategoryBadge } from "@/components/features/pipe-catalog/category-badge";
-import { ProviderTile } from "@/components/features/pipe-catalog/catalog-list-row";
+import {
+  EntryHeader,
+  SectionTriggerLabel,
+} from "@/components/features/pipe-catalog/entry-header";
 import { ProviderTable } from "@/components/features/pipe-catalog/provider-table";
 import { FieldRow } from "@/components/features/pipe-catalog/field-row";
 import { HighVolumePriceCell } from "@/components/high-volume-price";
 import { effectiveCredits } from "@/lib/pricing/effective-credits";
-import { TextLink } from "@/components/text-link";
 import { CatalogDeprecationAlert } from "@/components/catalog-deprecation-alert";
 import { resolveCurrentPipe } from "@/lib/catalog-lifecycle";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import {
   Tooltip,
   TooltipContent,
@@ -34,7 +35,7 @@ import {
 } from "@/lib/pipes/provider-order";
 import { pipesMiniSpec } from "@/lib/pipes/snippet-catalog";
 import { videoCatalog } from "@/lib/pipes/video-catalog";
-import { cn, copyToClipboard, formatCredits } from "@/lib/utils";
+import { formatCredits } from "@/lib/utils";
 import { docsLinkPaths } from "@pipe0/doc-links";
 import {
   BillableOperationDef,
@@ -57,7 +58,6 @@ import {
   sortPipeCatalogByBasePipe,
   validatePipesOrError,
 } from "@pipe0/base";
-import { AvatarGroup } from "@pipe0/react";
 import {
   Accordion,
   AccordionContent,
@@ -66,9 +66,8 @@ import {
 } from "@/components/ui/accordion";
 import { Callout } from "fumadocs-ui/components/callout";
 import { Tab, Tabs } from "fumadocs-ui/components/tabs";
-import { Copy, Terminal, Upload } from "lucide-react";
-import { Fragment, useMemo, useState } from "react";
-import { toast } from "sonner";
+import { Terminal, Upload } from "lucide-react";
+import { useMemo, useState } from "react";
 
 const pipesByBasePipes = sortPipeCatalogByBasePipe();
 
@@ -169,34 +168,6 @@ function toCodeExampleBody({
     : rest;
 }
 
-function SectionTriggerLabel({
-  label,
-  count,
-  hint,
-}: {
-  label: string;
-  count?: number | string;
-  hint?: string;
-}) {
-  return (
-    <span className="flex items-baseline gap-2">
-      <span className="text-base font-semibold tracking-tight text-foreground">
-        {label}
-      </span>
-      {count !== undefined && (
-        <span className="text-xs text-muted-foreground tabular-nums font-normal">
-          {count}
-        </span>
-      )}
-      {hint && (
-        <span className="text-xs text-muted-foreground font-normal">
-          · {hint}
-        </span>
-      )}
-    </span>
-  );
-}
-
 export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
   const pipeEntry = getPipeEntry(pipeId);
   const defaultPayload = getPipeDefaultPayload(pipeId);
@@ -285,10 +256,6 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
 
   const [openItems, setOpenItems] = useState<string[]>(DEFAULT_OPEN_ITEMS);
 
-  const handleCopyId = () => {
-    copyToClipboard(pipeId);
-    toast("✅ Copied");
-  };
 
   const inputFieldCount =
     pipeEntry.inputFieldMode === "static"
@@ -306,84 +273,19 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
 
   return (
     <div className="space-y-5">
-      {/* Header */}
-      <div className="space-y-3">
-        <div className="flex items-start gap-3">
-          <ProviderTile providers={defaultProviders} />
-          <div className="min-w-0 flex-1">
-            <div className="flex items-center gap-2 flex-wrap">
-              <h1
-                className={cn(
-                  "text-2xl font-semibold tracking-tight",
-                  pipeEntry.lifecycle?.deprecatedOn && "line-through",
-                )}
-              >
-                {pipeEntry.label}
-              </h1>
-              {category && <CategoryBadge category={category} />}
-              {availableVersions.length > 1 && (
-                <div className="ml-auto text-xs text-muted-foreground">
-                  {availableVersions.map((e, index) => (
-                    <Fragment key={e.link + index}>
-                      <TextLink
-                        className={cn(
-                          "text-xs",
-                          e.isDeprecated && "line-through",
-                        )}
-                        href={e.link}
-                      >
-                        {e.displayValue}
-                      </TextLink>
-                      {index < availableVersions.length - 1 && ", "}
-                    </Fragment>
-                  ))}
-                </div>
-              )}
-            </div>
-            <p className="text-sm text-muted-foreground mt-1">
-              {pipeEntry.description}
-            </p>
-          </div>
-        </div>
-
-        {/* Metadata row */}
-        <div className="flex items-center gap-3 flex-wrap text-xs text-muted-foreground">
-          <div className="group/id flex items-center gap-1 min-w-0 rounded-md border border-input px-2 py-1">
-            <span className="font-mono text-xs text-foreground truncate">
-              {pipeId}
-            </span>
-            <Button
-              size="icon"
-              variant="ghost"
-              aria-label="Copy pipe id"
-              className="size-4 opacity-60 hover:opacity-100 focus-visible:opacity-100 transition-opacity shrink-0"
-              onClick={handleCopyId}
-            >
-              <Copy className="size-3" />
-            </Button>
-          </div>
-
-          {startingPrice ? (
-            <span className="inline-flex items-center gap-1.5">
-              <span>from</span>
-              <span>{formatCredits(lowestPrice)} cr</span>
-              <span>/ result</span>
-            </span>
-          ) : (
-            <span>Free</span>
-          )}
-
-          {defaultProviders.length > 0 && (
-            <span className="inline-flex items-center gap-1.5">
-              <AvatarGroup providers={defaultProviders} size="sm" />
-              <span>
-                {defaultProviders.length} provider
-                {defaultProviders.length === 1 ? "" : "s"}
-              </span>
-            </span>
-          )}
-        </div>
-      </div>
+      <EntryHeader
+        id={pipeId}
+        idLabel="Copy pipe id"
+        label={pipeEntry.label}
+        description={pipeEntry.description}
+        providers={defaultProviders}
+        badge={category && <CategoryBadge category={category} />}
+        deprecated={!!deprecatedOn}
+        versions={availableVersions}
+        price={
+          startingPrice ? `from ${formatCredits(lowestPrice)} cr / result` : "Free"
+        }
+      />
 
       {/* Deprecation alert */}
       {deprecatedOn && (
@@ -654,12 +556,12 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
           </AccordionTrigger>
           <AccordionContent className="pl-6">
             <div className="space-y-3">
-              <Alert variant="warning">
+              <Alert>
                 <Terminal className="h-4 w-4" />
-                <AlertTitle>Heads up!</AlertTitle>
+                <AlertTitle>Config is optional</AlertTitle>
                 <AlertDescription>
-                  Passing config values is optional. The following example
-                  contains the default pipe config.
+                  This example spells out the default config. Send only the
+                  values you want to change.
                 </AlertDescription>
               </Alert>
               <Tabs items={["Typescript", "cURL"]}>

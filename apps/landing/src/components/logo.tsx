@@ -44,18 +44,11 @@ export function LogoRawSmall({ className }: { className?: string }) {
   );
 }
 
-export function LinkLogo() {
-  return (
-    <Link href="/" className="">
-      <LogoRaw />
-    </Link>
-  );
-}
-
 export function LinkLogoSmall() {
   return (
-    <Link href="/" className="">
-      <LogoRawSmall />
+    <Link href="/" className="inline-flex" aria-label="pipe0 home">
+      {/* As tall as the header buttons (36px). */}
+      <LogoRawSmall className="h-9 w-auto" />
     </Link>
   );
 }

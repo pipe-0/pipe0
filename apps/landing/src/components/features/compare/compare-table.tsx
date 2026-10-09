@@ -23,6 +23,7 @@ function CellView({ cell }: { cell: CompareCell }) {
   );
 }
 
+/** Rail-to-rail table; the pipe0 column carries the muted tint. */
 export function CompareTable({
   competitor,
   rows,
@@ -31,50 +32,48 @@ export function CompareTable({
   rows: CompareRow[];
 }) {
   return (
-    <div className="overflow-hidden rounded-[18px] border border-border bg-card">
-      {/* Horizontal scroll lives inside the panel so the page never scrolls sideways. */}
-      <div className="overflow-x-auto">
-        <table className="w-full min-w-[640px] border-collapse text-left text-sm">
-          <thead>
-            <tr className="border-b border-border">
-              <th scope="col" className="w-[34%] px-5 py-4 sm:px-6" />
+    // Horizontal scroll lives inside the band so the page never scrolls sideways.
+    <div className="overflow-x-auto border-t border-[var(--rule)]">
+      <table className="w-full min-w-[640px] border-collapse text-left text-[15px]">
+        <thead>
+          <tr className="border-b border-[var(--rule)]">
+            <th scope="col" className="w-[34%] px-6 py-4 sm:pl-10 lg:pl-12" />
+            <th
+              scope="col"
+              className="border-l border-[var(--rule)] bg-[var(--well)] px-6 py-4 font-medium text-foreground"
+            >
+              pipe0
+            </th>
+            <th
+              scope="col"
+              className="border-l border-[var(--rule)] px-6 py-4 font-medium text-foreground sm:pr-10 lg:pr-12"
+            >
+              {competitor}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((row) => (
+            <tr
+              key={row.feature}
+              className="border-b border-[var(--rule)] last:border-b-0"
+            >
               <th
-                scope="col"
-                className="border-l border-border bg-primary/[0.04] px-5 py-4 font-semibold text-foreground sm:px-6"
+                scope="row"
+                className="px-6 py-4 text-left font-medium text-foreground sm:pl-10 lg:pl-12"
               >
-                pipe0
+                {row.feature}
               </th>
-              <th
-                scope="col"
-                className="border-l border-border px-5 py-4 font-semibold text-foreground sm:px-6"
-              >
-                {competitor}
-              </th>
+              <td className="border-l border-[var(--rule)] bg-[var(--well)] px-6 py-4">
+                <CellView cell={row.pipe0} />
+              </td>
+              <td className="border-l border-[var(--rule)] px-6 py-4 sm:pr-10 lg:pr-12">
+                <CellView cell={row.competitor} />
+              </td>
             </tr>
-          </thead>
-          <tbody>
-            {rows.map((row) => (
-              <tr
-                key={row.feature}
-                className="border-b border-border last:border-b-0"
-              >
-                <th
-                  scope="row"
-                  className="px-5 py-4 text-left font-medium text-foreground sm:px-6"
-                >
-                  {row.feature}
-                </th>
-                <td className="border-l border-border bg-primary/[0.04] px-5 py-4 sm:px-6">
-                  <CellView cell={row.pipe0} />
-                </td>
-                <td className="border-l border-border px-5 py-4 sm:px-6">
-                  <CellView cell={row.competitor} />
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }
