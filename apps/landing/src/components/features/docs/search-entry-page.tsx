@@ -7,6 +7,7 @@ export async function SearchEntryPage({ searchId }: { searchId: string }) {
   return (
     <DocsPage
       tableOfContent={{ enabled: false, component: null }}
+      footer={{ enabled: false }}
       breadcrumb={{ enabled: false }}
       className="lg:col-[main-start/toc-end] max-w-6xl"
     >

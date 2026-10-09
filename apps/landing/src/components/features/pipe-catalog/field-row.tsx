@@ -26,52 +26,6 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-export function OutputFieldEnabledBadge({
-  isEnabledByDefault,
-}: {
-  isEnabledByDefault: boolean;
-}) {
-  return (
-    <Link href={docsLinkPaths.outputFieldToggle} target="_blank">
-      <>
-        {isEnabledByDefault ? (
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="outline"
-                size="sm"
-                className={cn("size-5 bg-background")}
-              >
-                <Check className="size-3" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              Enabled by default. You can disable this field via the pipe
-              config.
-            </TooltipContent>
-          </Tooltip>
-        ) : (
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="outline"
-                size="sm"
-                className={cn("size-5 bg-background")}
-              >
-                <X className="size-3" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              Disabled by default. You can enable this field via the pipe
-              config.
-            </TooltipContent>
-          </Tooltip>
-        )}
-      </>
-    </Link>
-  );
-}
-
 export function findFieldByName(fieldName: string) {
   return (Object.entries(fieldCatalog).find(([name]) => name === fieldName) ||
     [])[1];

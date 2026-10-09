@@ -1,11 +1,12 @@
 "use client";
 
+import { CatalogBanner } from "@/components/features/pipe-catalog/catalog-banner";
 import { ConditionalWrapper } from "@/components/conditional-wrapper";
 import {
+  ProviderTileStrip,
   CatalogFieldList,
   CatalogListRow,
 } from "@/components/features/pipe-catalog/catalog-list-row";
-import { H1 } from "@/components/headings";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -50,7 +51,6 @@ import {
   sortSearchCatalogByBaseSearch,
 } from "@pipe0/base";
 import {
-  AvatarGroup,
   type SearchCardData,
   SearchCatalog,
   SearchCatalogActiveFilters,
@@ -68,9 +68,13 @@ import {
   ArrowDown,
   ChevronDown,
   Copy,
-  ExternalLink,
   Search,
   X,
+  Archive,
+  type LucideIcon,
+  Database,
+  Building2,
+  UserRound,
 } from "lucide-react";
 import Link from "next/link";
 import { useIntentPrefetch } from "@/hooks/use-intent-prefetch";
@@ -102,6 +106,8 @@ type CategoryOption = {
   id: SearchCategory | null;
   title: string;
   color?: string;
+  /** Category glyph, drawn in the category colour (replaces the dot). */
+  icon?: LucideIcon;
   disabled: boolean;
 };
 
@@ -119,24 +125,28 @@ const quickStartOptions: CategoryOption[] = [
     id: "companies",
     title: "Companies",
     color: SEARCH_CATEGORY_COLORS.companies,
+    icon: Building2,
     disabled: false,
   },
   {
     id: "people",
     title: "People",
     color: SEARCH_CATEGORY_COLORS.people,
+    icon: UserRound,
     disabled: false,
   },
   {
     id: "data",
     title: "Data",
     color: SEARCH_CATEGORY_COLORS.data,
+    icon: Database,
     disabled: false,
   },
   {
     id: "deprecated",
     title: "Deprecated",
     color: SEARCH_CATEGORY_COLORS.deprecated,
+    icon: Archive,
     disabled: false,
   },
 ];
@@ -179,10 +189,10 @@ function DocsFilterDropdown({
       <DropdownMenuTrigger asChild>
         <button
           className={cn(
-            "inline-flex items-center gap-1 px-2 py-1 text-xs rounded-md border transition-colors max-w-[220px]",
+            "inline-flex h-8 max-w-[220px] items-center gap-1.5 rounded-[7px] px-2.5 text-[13.5px] transition-colors",
             value
-              ? "border-primary text-primary bg-primary/5"
-              : "border-input text-muted-foreground hover:bg-muted hover:text-foreground",
+              ? "bg-primary/[0.07] font-medium text-primary"
+              : "text-muted-foreground hover:bg-[var(--well)] hover:text-foreground",
           )}
         >
           {leadingIcon && (
@@ -263,7 +273,7 @@ function DocsCategoryButtons({
   }, []);
 
   return (
-    <div className="flex gap-1 flex-wrap items-center">
+    <div className="flex flex-wrap items-center gap-1">
       {quickStartOptions.map((option) => {
         const isActive = value === option.id;
         const count =
@@ -282,29 +292,29 @@ function DocsCategoryButtons({
             <button
               data-disabled={option.disabled}
               className={cn(
-                "inline-flex items-center gap-1.5 px-2.5 py-1 text-sm rounded-md transition-colors",
+                "inline-flex h-8 items-center gap-1.5 rounded-[7px] border border-transparent px-3 text-[13.5px] transition-colors",
                 option.id === "deprecated" && !isActive && "opacity-60",
                 isActive
-                  ? "bg-foreground text-background font-medium"
-                  : "text-foreground hover:bg-muted",
+                  ? "btn-glossy font-medium text-white [&_[data-count]]:text-white/75 "
+                  : "text-foreground hover:bg-background",
                 "data-[disabled=true]:opacity-50 data-[disabled=true]:pointer-events-none",
               )}
               onClick={() => setValue(option.id)}
             >
-              {option.color && (
-                <span
-                  className="size-2 rounded-full shrink-0"
-                  style={{ backgroundColor: option.color }}
+              {option.icon && (
+                <option.icon
+                  data-dot
+                  className="size-3.5 shrink-0"
+                  style={{ color: isActive ? "white" : option.color }}
+                  strokeWidth={2.2}
                   aria-hidden
                 />
               )}
               {option.id === "deprecated" ? <s>{option.title}</s> : option.title}
               {typeof count === "number" && count > 0 && (
                 <span
-                  className={cn(
-                    "tabular-nums text-xs",
-                    isActive ? "text-background/70" : "text-muted-foreground",
-                  )}
+                  data-count
+                  className="text-[12px] tabular-nums text-muted-foreground"
                 >
                   {count}
                 </span>
@@ -365,7 +375,7 @@ const SearchCard = ({ tableEntry }: { tableEntry: SearchCatalogTableData }) => {
 
   return (
     <Link href={href} {...intentPrefetch}>
-      <Card className="flex flex-col justify-stretch border-input hover:border-primary/50 transition-colors relative h-full min-h-[230px]">
+      <Card className="relative flex h-full min-h-[230px] flex-col justify-stretch border-[var(--rule)] transition-colors hover:border-[var(--rule-strong)] hover:bg-[var(--well)]">
         <span className="absolute right-3 top-3 inline-flex gap-1 text-muted-foreground text-xs items-center">
           {/* A usage-metered search prices variable work (model tokens, per-call
               provider tools), so `cost.credits.default` is 0 and reading it here
@@ -393,14 +403,13 @@ const SearchCard = ({ tableEntry }: { tableEntry: SearchCatalogTableData }) => {
         </span>
         <CardHeader className="pb-1.5">
           <div className="flex items-start gap-3">
-            <AvatarGroup providers={[tableEntry.provider]} size="sm" />
-            <div className="min-w-0 pr-12">
-              <CardTitle className="text-sm font-semibold leading-tight flex items-center gap-2">
+            <div className="min-w-0 pr-24">
+              <CardTitle className="flex items-center gap-2 text-[15px] font-medium leading-snug tracking-[-0.01em]">
                 <span className="truncate">{tableEntry.label}</span>
                 {isNew && (
                   <Badge
                     variant="default"
-                    className="text-[10px] px-1.5 py-0 leading-none bg-foreground text-background shrink-0"
+                    className="shrink-0 bg-primary px-1.5 py-0 text-[10px] leading-none text-white"
                   >
                     New
                   </Badge>
@@ -409,12 +418,15 @@ const SearchCard = ({ tableEntry }: { tableEntry: SearchCatalogTableData }) => {
             </div>
           </div>
         </CardHeader>
-        <CardContent className="grow text-xs text-muted-foreground leading-relaxed">
+        <CardContent className="grow text-[13.5px] leading-relaxed text-muted-foreground">
           <p className="line-clamp-3">{tableEntry.description}</p>
         </CardContent>
-        <CardFooter className="pt-0 pb-3 px-4 flex flex-col items-stretch gap-2">
-          <div className="flex items-center gap-1.5 text-muted-foreground text-xs">
-            <span className="font-mono break-all truncate">{searchId}</span>
+        <CardFooter className="flex flex-col items-stretch gap-2.5 px-6 pb-3 pt-0">
+          <div className="-mr-6 py-1">
+            <ProviderTileStrip providers={[tableEntry.provider]} />
+          </div>
+          <div className="flex items-center gap-1.5 text-[12px] text-muted-foreground">
+            <span className="truncate">{searchId}</span>
             <Button
               size="icon"
               className="size-5 shrink-0"
@@ -639,25 +651,13 @@ export function SearchCatalogIndex({
       context={ctx}
       className="space-y-5 mx-auto min-w-0 max-w-full"
     >
-      {/* Header */}
-      <div className="space-y-2 min-w-0">
-        <div className="flex items-baseline justify-between gap-4">
-          <H1 className="pb-0">Search Catalog</H1>
-          <Link
-            href={appInfo.links.requestPipe}
-            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-          >
-            <Button size="sm" variant="link">
-              Request a search <ExternalLink />
-            </Button>
-          </Link>
-        </div>
-        <p className="text-sm text-muted-foreground max-w-3xl">
-          Searches give you access to datasets for finding leads and companies
-          using various filters. You can combine multiple searches into one
-          request and deduplicate the results.
-        </p>
-      </div>
+      <CatalogBanner
+        title="Search catalog"
+        description="Searches create rows from prospecting datasets and the systems you already run. Combine several in one request and deduplicate the results."
+        image="/media/website/illustrations/search.png"
+        requestHref={appInfo.links.requestPipe}
+        requestLabel="Request a search"
+      />
 
       {/* Legacy docs callout */}
       <Callout type="info" title="Looking for the old search docs?">
@@ -673,66 +673,70 @@ export function SearchCatalogIndex({
         .
       </Callout>
 
-      {/* Search bar */}
-      <SearchCatalogSearchFilter
-        render={(_, { value, setValue }) => (
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              type="search"
-              placeholder="Search..."
-              className="w-full pl-9 h-10"
-              value={value}
-              onChange={(e) => setValue(e.target.value)}
+      {/* Toolbar: search and the field filters on one line, categories as
+          tabs underneath — one framed control instead of three loose rows. */}
+      <div className="overflow-hidden rounded-[12px] border border-[var(--rule)] bg-background">
+        <div className="flex flex-col md:flex-row md:items-center">
+          <div className="min-w-0 flex-1">
+            <SearchCatalogSearchFilter
+              render={(_, { value, setValue }) => (
+                <div className="relative">
+                  <Search className="absolute left-4 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+                  <Input
+                    type="search"
+                    placeholder="Search by name, field, or provider"
+                    className="h-12 w-full rounded-none border-0 bg-transparent pl-11 text-[15px] shadow-none focus-visible:ring-0"
+                    value={value}
+                    onChange={(e) => setValue(e.target.value)}
+                  />
+                </div>
+              )}
             />
           </div>
-        )}
-      />
-
-      {/* Filters cluster: categories + provider/output quick filters */}
-      <div className="space-y-2">
-        <SearchCatalogCategoryFilter
-          render={(_, { value, setValue }) => (
-            <DocsCategoryButtons value={value} setValue={setValue} />
-          )}
-        />
-
-        <div className="flex items-center gap-1.5 flex-wrap">
-          <SearchCatalogProviderFilter
-            render={(_, { value, setValue, options }) => (
-              <DocsFilterDropdown
-                defaultLabel="Provider"
-                value={value}
-                setValue={setValue}
-                options={options}
-                renderItem={(option) => (
-                  <>
-                    {option.imageSrc && (
-                      <img
-                        src={option.imageSrc}
-                        alt=""
-                        className="size-4 shrink-0 rounded-sm"
-                      />
+          <div className="flex flex-wrap items-center gap-1 border-t border-[var(--rule)] px-2 py-1.5 md:border-l md:border-t-0">
+              <SearchCatalogProviderFilter
+                render={(_, { value, setValue, options }) => (
+                  <DocsFilterDropdown
+                    defaultLabel="Provider"
+                    value={value}
+                    setValue={setValue}
+                    options={options}
+                    renderItem={(option) => (
+                      <>
+                        {option.imageSrc && (
+                          <img
+                            src={option.imageSrc}
+                            alt=""
+                            className="size-4 shrink-0 rounded-sm"
+                          />
+                        )}
+                        <span className="truncate">{option.label}</span>
+                      </>
                     )}
-                    <span className="truncate">{option.label}</span>
-                  </>
+                  />
                 )}
               />
-            )}
-          />
 
-          <SearchCatalogOutputFieldFilter
-            render={(_, { value, setValue, options }) => (
-              <DocsFilterDropdown
-                defaultLabel="Output fields"
-                leadingIcon={<ArrowDown className="size-3.5" />}
-                value={value}
-                setValue={setValue}
-                options={options}
-                renderItem={(option) => (
-                  <span className="truncate">{option.label}</span>
+              <SearchCatalogOutputFieldFilter
+                render={(_, { value, setValue, options }) => (
+                  <DocsFilterDropdown
+                    defaultLabel="Output fields"
+                        value={value}
+                    setValue={setValue}
+                    options={options}
+                    renderItem={(option) => (
+                      <span className="truncate">{option.label}</span>
+                    )}
+                  />
                 )}
               />
+
+          </div>
+        </div>
+        <div className="border-t border-[var(--rule)] bg-[var(--well)] px-2 py-1.5">
+          <SearchCatalogCategoryFilter
+            render={(_, { value, setValue }) => (
+              <DocsCategoryButtons value={value} setValue={setValue} />
             )}
           />
         </div>

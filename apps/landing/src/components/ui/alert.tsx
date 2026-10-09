@@ -4,19 +4,20 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const alertVariants = cva(
-  "relative w-full rounded-lg border px-4 py-3 text-sm grid has-[>svg]:grid-cols-[calc(var(--spacing)*4)_1fr] grid-cols-[0_1fr] has-[>svg]:gap-x-3 gap-y-0.5 items-start [&>svg]:size-4 [&>svg]:translate-y-0.5 [&>svg]:text-current",
+  "relative w-full rounded-[10px] border px-4 py-3.5 text-sm grid has-[>svg]:grid-cols-[calc(var(--spacing)*4)_1fr] grid-cols-[0_1fr] has-[>svg]:gap-x-3 gap-y-0.5 items-start [&>svg]:size-4 [&>svg]:translate-y-0.5 [&>svg]:text-current",
   {
     variants: {
       variant: {
-        default: "bg-card text-card-foreground",
+        default:
+          "border-[var(--rule)] bg-[var(--well)] text-foreground [&>svg]:text-primary *:data-[slot=alert-description]:text-foreground/75",
         destructive:
           "text-destructive bg-card [&>svg]:text-current *:data-[slot=alert-description]:text-destructive/90",
         warning:
-          "border-amber-200 bg-amber-50 text-amber-900 [&>svg]:text-amber-600 *:data-[slot=alert-description]:text-amber-900/80 dark:border-amber-900/40 dark:bg-amber-950/30 dark:text-amber-200 dark:[&>svg]:text-amber-400 dark:*:data-[slot=alert-description]:text-amber-200/80",
+          "border-amber-200/80 bg-amber-50/70 text-amber-950 [&>svg]:text-amber-600 *:data-[slot=alert-description]:text-amber-950/75",
         info:
           "border-primary/20 bg-primary/5 text-foreground [&>svg]:text-primary *:data-[slot=alert-description]:text-foreground/80",
         success:
-          "border-emerald-200 bg-emerald-50 text-emerald-900 [&>svg]:text-emerald-600 *:data-[slot=alert-description]:text-emerald-900/80 dark:border-emerald-900/40 dark:bg-emerald-950/30 dark:text-emerald-200 dark:[&>svg]:text-emerald-400 dark:*:data-[slot=alert-description]:text-emerald-200/80",
+          "border-emerald-200/80 bg-emerald-50/70 text-emerald-950 [&>svg]:text-emerald-600 *:data-[slot=alert-description]:text-emerald-950/75",
       },
     },
     defaultVariants: {

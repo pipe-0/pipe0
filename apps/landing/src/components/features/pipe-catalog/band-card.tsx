@@ -25,8 +25,8 @@ export function BandCard({
   children: ReactNode;
 }) {
   return (
-    <div className="rounded-md border border-border overflow-hidden">
-      <div className="flex items-center gap-2 bg-muted/40 px-3 py-1.5 border-b border-border">
+    <div className="overflow-hidden rounded-[10px] border border-[var(--rule)]">
+      <div className="flex items-center gap-2 border-b border-[var(--rule)] bg-[var(--well)] px-3 py-2">
         <span
           className="size-1.5 rounded-full shrink-0"
           style={{ backgroundColor: TONE_COLORS[tone] }}

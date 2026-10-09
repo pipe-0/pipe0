@@ -7,68 +7,60 @@ import {
   useTransform,
   type MotionValue,
 } from "motion/react";
-import Image from "next/image";
-import { Blob, type BlobKind, type BlobTone } from "@/app/landing-blobs";
 import { useRef } from "react";
 
 /* The positioning statement — read once, on the way down from the hero.
-   Each word lifts from a muted wash to the full foreground as it scrolls
-   through the middle of the viewport. The "pipe0" token resolves to the
-   inline wordmark; `:name` tokens resolve to the little inline bots
-   (see BOTS below). */
-// const STATEMENT =
-//   "We build contact data APIs with the highest coverage and accuracy, :clover agents that handle any GTM task, and :rainbow Clay-like tables that scale to millions of rows. We're 5x cheaper than traditional providers :round and respond to support tickets in minutes. :triangle We're the most powerful B2B tool you've never heard of. :cluster";
-const STATEMENT =
-  "We give small GTM teams the firepower of big ones. pipe0 connects your whole stack to people & company data, intent signals, and sales intelligence for a fifth of what comparable tools charge. :cluster We're the most powerful GTM tool you've never heard of.";
+   Each word darkens from a faint wash to full ink as it scrolls through the
+   middle of the viewport.
 
-/* Which bot each token stands for. Tones stay inside the app palette. */
-const BOTS: Record<string, { kind: BlobKind; tone: BlobTone; delay: number }> = {
-  ":clover": { kind: "clover", tone: "green", delay: 0 },
-  ":rainbow": { kind: "rainbow", tone: "amber", delay: -1.1 },
-  ":round": { kind: "round", tone: "sky", delay: -2.2 },
-  ":triangle": { kind: "triangle", tone: "indigo", delay: -0.7 },
-  ":cluster": { kind: "cluster", tone: "indigo", delay: -1.8 },
-};
+   One text node per word, with its colour animated, rather than a muted copy
+   under a full-colour overlay: the overlay version put every word in the DOM
+   twice, which is what crawlers and answer engines then read. */
+const STATEMENT =
+  "Coding agents sped up engineers. But GTM doesn't run on code. It runs on research, lists, and automations, and that is what pipe0 builds.";
 
 const WORDS = STATEMENT.split(" ");
+
+const FAINT = "rgba(11, 13, 18, 0.14)";
+const INK = "rgba(11, 13, 18, 1)";
 
 export function LandingStatement() {
   const targetRef = useRef<HTMLDivElement>(null);
   const reduced = useReducedMotion();
   /* The section is pinned while the words light up, then the page carries on
-     — the usual scroll-hijack shape, done with sticky rather than by taking
-     over the scroll: the outer element is tall, the inner one sticks to the
-     viewport, and progress is measured across the tall one. Nothing has to
-     preventDefault, so trackpad momentum, keyboard paging and reduced-motion
-     all keep working. */
+     — done with sticky rather than by taking over the scroll: the outer
+     element is tall, the inner one sticks, and progress is measured across
+     the tall one. Momentum, keyboard paging and reduced motion all keep
+     working. */
   const { scrollYProgress } = useScroll({
     target: targetRef,
     offset: ["start start", "end end"],
   });
 
   return (
-    <div ref={targetRef} className="relative h-[175vh] sm:h-[230vh]">
-      <div className="sticky top-0 flex h-svh flex-col items-center justify-center">
-        <p className="mx-auto flex max-w-280 flex-wrap justify-center gap-x-[0.26em] gap-y-[0.1em] text-center text-[clamp(25px,3.4vw,48px)] font-semibold leading-[1.22] tracking-[-0.02em]">
+    /* Capped on tall screens: the pinned stage is at most 42rem high and
+       sits centred under the header, so a 1440px-tall display doesn't get
+       a screen of empty space around four lines of type. */
+    <div ref={targetRef} className="relative h-[115vh] sm:h-[min(190vh,1600px)]">
+      <div className="sticky top-[22svh] flex h-[56svh] flex-col items-center justify-center sm:top-[max(4rem,calc(50svh-21rem))] sm:h-[min(100svh,42rem)]">
+        {/* Normal text flow with real spaces between words — a flex row
+            with a gap looked the same but left no spaces in the text, so
+            crawlers read "Codingagentssped…". */}
+        <p className="mx-auto max-w-250 text-balance px-6 text-center text-[clamp(24px,2.5vw,36px)] font-medium leading-[1.12] tracking-[-0.04em]">
           {WORDS.map((word, i) => {
             const start = i / WORDS.length;
-            const end = start + 1 / WORDS.length;
             return (
               <Word
                 key={`${word}-${i}`}
+                last={i === WORDS.length - 1}
                 progress={scrollYProgress}
-                range={[start, end]}
-                logo={word === "pipe0"}
-                bot={BOTS[word]}
+                range={[start, start + 1 / WORDS.length]}
                 reduced={!!reduced}
               >
                 {word}
               </Word>
             );
           })}
-        </p>
-        <p className="mt-10 text-center text-md font-medium text-muted-foreground sm:mt-12">
-          Built in <b className="font-semibold">San Francisco</b>, Berlin, and <b className="font-semibold">Zurich</b> 📍
         </p>
       </div>
     </div>
@@ -79,88 +71,22 @@ function Word({
   children,
   progress,
   range,
-  logo,
-  bot,
   reduced,
+  last,
 }: {
   children: string;
+  last: boolean;
   progress: MotionValue<number>;
   range: [number, number];
-  logo: boolean;
-  bot?: { kind: BlobKind; tone: BlobTone; delay: number };
   reduced: boolean;
 }) {
-  const opacity = useTransform(progress, range, [0, 1]);
-  const style = { opacity: reduced ? 1 : opacity };
-
-  if (bot) {
-    /* Same two-layer trick as the wordmark: a washed-out bot underneath, the
-       full-colour one fading in over it. Both run the same animation with the
-       same delay, so they stay perfectly registered. */
-    return (
-      <span className="relative inline-flex translate-y-[0.1em] items-center">
-        <Blob {...bot} size={1.1} className="opacity-15 grayscale" />
-        <motion.span
-          aria-hidden
-          style={style}
-          className="absolute inset-0 flex items-center"
-        >
-          <Blob {...bot} size={1.1} />
-        </motion.span>
-      </span>
-    );
-  }
-
-  if (logo) {
-    return (
-      <span className="relative inline-flex translate-y-[0.08em] items-center">
-        {/* Muted base — fades up to the full wordmark on scroll. */}
-        <Wordmark className="opacity-15 grayscale" />
-        <motion.span
-          aria-hidden
-          style={style}
-          className="absolute inset-0 flex items-center"
-        >
-          <Wordmark />
-        </motion.span>
-      </span>
-    );
-  }
-
-  return (
-    <span className="relative">
-      {/* Muted base — the resting state every word fades up from. */}
-      <span className="text-foreground/15">{children}</span>
-      {/* Saturated overlay — fades in across this word's scroll range. */}
-      <motion.span
-        aria-hidden
-        style={style}
-        className="absolute inset-0 text-foreground"
-      >
-        {children}
-      </motion.span>
-    </span>
-  );
-}
-
-/* Inline pipe0 wordmark, sized to sit on the text baseline. */
-function Wordmark({ className = "" }: { className?: string }) {
+  const color = useTransform(progress, range, [FAINT, INK]);
   return (
     <>
-      <Image
-        src="/logo-small-light.svg"
-        width={1100}
-        height={400}
-        alt="pipe0"
-        className={`block h-[1em] w-auto dark:hidden ${className}`}
-      />
-      <Image
-        src="/logo-small-dark.svg"
-        width={1100}
-        height={400}
-        alt="pipe0"
-        className={`hidden h-[1em] w-auto dark:block ${className}`}
-      />
+      <motion.span style={{ color: reduced ? INK : color }}>
+        {children}
+      </motion.span>
+      {!last && " "}
     </>
   );
 }

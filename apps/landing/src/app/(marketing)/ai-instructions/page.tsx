@@ -1,6 +1,5 @@
-import { Footer } from "@/components/footer";
-import { Header } from "@/components/header";
-import { Section } from "@/components/marketing";
+import { Band } from "@/components/grid";
+import { LandingShell } from "@/components/landing-shell";
 import { AI_INSTRUCTIONS, type AiBlock } from "@/lib/ai-instructions";
 import { createMetadata } from "@/lib/metadata";
 import type { ReactNode } from "react";
@@ -68,12 +67,10 @@ function Block({ block }: { block: AiBlock }) {
 export default function AiInstructions() {
   const { title, intro, updated, sections } = AI_INSTRUCTIONS;
   return (
-    <div className="landing min-h-screen bg-background">
-      <Header page="product" />
-
-      <Section className="mt-20">
-        <article className="mx-auto max-w-[720px]">
-          <h1 className="mb-3 text-[clamp(30px,3.6vw,44px)] font-semibold tracking-[-0.02em] text-foreground">
+    <LandingShell page="product">
+      <Band>
+        <article className="mx-auto max-w-[720px] px-6 pb-16 pt-12 sm:pt-16">
+          <h1 className="mb-3 text-[clamp(26px,2.8vw,40px)] font-medium tracking-[-0.045em] text-foreground">
             {title}
           </h1>
           <p className="mb-6 text-[13px] text-muted-foreground">
@@ -99,7 +96,7 @@ export default function AiInstructions() {
 
           {sections.map((section) => (
             <section key={section.heading} className="mb-12">
-              <h2 className="mb-4 text-xl font-semibold tracking-[-0.01em] text-foreground">
+              <h2 className="mb-4 text-xl font-medium tracking-[-0.02em] text-foreground">
                 {section.heading}
               </h2>
               <div className="space-y-4">
@@ -110,10 +107,7 @@ export default function AiInstructions() {
             </section>
           ))}
         </article>
-      </Section>
-
-      <div className="mt-12" />
-      <Footer />
-    </div>
+      </Band>
+    </LandingShell>
   );
 }

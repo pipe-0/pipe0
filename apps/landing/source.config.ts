@@ -1,4 +1,5 @@
 import { shikiConfig } from "@/lib/shiki";
+import { pipe0CodeTheme } from "@/lib/shiki-theme";
 import { pageSchema } from "fumadocs-core/source/schema";
 import {
   applyMdxPreset,
@@ -69,8 +70,8 @@ export const docs = defineDocs({
               langs: ["ts", "js", "html", "tsx", "mdx", "json"],
               inline: "tailing-curly-colon",
               themes: {
-                light: "catppuccin-latte",
-                dark: "catppuccin-mocha",
+                light: pipe0CodeTheme,
+                dark: pipe0CodeTheme,
               },
               transformers: [
                 ...(rehypeCodeDefaultOptions.transformers ?? []),
@@ -146,8 +147,8 @@ async function articleMdxOptions(environment: Parameters<ReturnType<typeof apply
       : {
           inline: "tailing-curly-colon",
           themes: {
-            light: "catppuccin-latte",
-            dark: "catppuccin-mocha",
+            light: pipe0CodeTheme,
+            dark: pipe0CodeTheme,
           },
           transformers: [
             ...(rehypeCodeDefaultOptions.transformers ?? []),

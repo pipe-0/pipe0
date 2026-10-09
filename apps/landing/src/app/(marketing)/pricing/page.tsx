@@ -1,188 +1,213 @@
-import { Footer } from "@/components/footer";
-import { AskAiButton } from "@/components/ai/ask-ai-button";
+import { LandingEconomics } from "@/app/landing-economics";
+import { LandingFaq, type Faq } from "@/app/landing-faq";
 import CalButton from "@/components/cal-button";
-import { Header } from "@/components/header";
-import { CtaPanel, Section } from "@/components/marketing";
-import { PricingCard } from "@/components/pricing-card";
-import { Button } from "@/components/ui/button";
+import {
+  Band,
+  Cell,
+  Cells,
+  SectionHead,
+  buttonSkin,
+} from "@/components/grid";
+import { CloseBand, LandingShell, PageHero } from "@/components/landing-shell";
+import { JsonLd, faqJsonLd } from "@/components/seo/json-ld";
 import { appInfo } from "@/lib/const";
 import { createMetadata } from "@/lib/metadata";
-import { JsonLd, faqJsonLd } from "@/components/seo/json-ld";
-import { Check } from "lucide-react";
+import { cn } from "@/lib/utils";
 import Link from "next/link";
 
 export const metadata = createMetadata({
-  title: "Pricing — Pay-as-you-go Credits",
+  title: "Pricing — Pay as you go, no subscription",
   description:
-    "Simple usage-based pricing for pipe0. Buy credits and pay only for the enrichments you run. Every plan includes the full platform, API, and Sheets. Start free with 20 credits.",
+    "Premium enrichment data, pay as you go. Buy credits that never expire, or pick a monthly plan for a lower price per credit. Every waterfall bills only the provider that found the data.",
   path: "/pricing",
 });
 
-const faqs = [
+/* Plan ladder — keep in sync with the app's billing page and
+   pipe0-server-ts/packages/common/src/stripe-product-catalog.ts
+   (`highVolumeCapacity`). Larger plans live in the app. */
+type Plan = {
+  name: string;
+  price: string;
+  cadence: string;
+  credits: string;
+  perCredit?: string;
+  points: string[];
+  featured?: boolean;
+};
+
+const plans: Plan[] = [
   {
-    q: "What is included in the price?",
-    a: "The credit price includes access to our platform, API keys, dashboard, and basic support. Usage of pipes and searches consumes credits.",
+    name: "Pay as you go",
+    price: "$0",
+    cadence: "to start",
+    credits: "Buy credits when you need them",
+    points: ["Credits never expire", "No subscription", "Sandbox runs are free"],
+    featured: true,
   },
   {
-    q: "How does usage-based billing work?",
-    a: "You're only charged when you successfully execute a pipe or search. Each operation has a different credit price that you can find in the pipe or search catalog.",
+    name: "1,600 credits a month",
+    price: "$49",
+    cadence: "per month",
+    credits: "Refills every month",
+    perCredit: "$0.031 per credit",
+    points: ["40k rows per sheet", "1 high-volume billing slot"],
   },
   {
-    q: "Do I need a subscription?",
-    a: "No. You can buy credits one-off from the billing section in the dashboard; they never expire. A subscription refills your balance every month at a lower price per credit and raises your usage limits.",
+    name: "5,000 credits a month",
+    price: "$149",
+    cadence: "per month",
+    credits: "Refills every month",
+    perCredit: "$0.030 per credit",
+    points: ["100k rows per sheet", "6 high-volume billing slots"],
   },
   {
-    q: "How do I get started?",
-    a: "Create an account to try pipe0. Once you're ready to purchase credits, navigate to the billing section in the dashboard.",
+    name: "12,000 credits a month",
+    price: "$349",
+    cadence: "per month",
+    credits: "Refills every month",
+    perCredit: "$0.029 per credit",
+    points: [
+      "200k rows per sheet",
+      "12 high-volume billing slots",
+      "Actions at $3 per 100k",
+    ],
   },
 ];
 
-const payAsYouGoPoints = [
-  "Buy credits whenever you need them",
-  "Credits never expire",
-  "Full platform, API, and Sheets",
+/* What every plan, including pay as you go, comes with. */
+const included = [
+  "Unlimited users",
+  "Every data provider",
+  "Sheets, API, and MCP",
+  "Schedules and webhooks",
+  "Full support",
+];
+
+const faqs: Faq[] = [
+  {
+    q: "What do I pay when nothing is found?",
+    a: "Nothing. Every waterfall bills only the provider that returned data. Each pipe and search lists its credit price in the catalog before you run it.",
+  },
+  {
+    q: "Do I need a subscription?",
+    a: "No. Buy credits one-off from the billing page in the app; they never expire. A monthly plan refills your balance at a lower price per credit and raises your usage limits.",
+  },
+  {
+    q: "What is included in the price?",
+    a: "The platform, Sheets, API keys, the MCP server, and support. Credits are spent only when you run pipes and searches.",
+  },
+  {
+    q: "Can I use my own provider keys?",
+    a: "Yes. Store your key and pipe0 uses it instead of the managed connection, for a small platform fee per call: 0.05 credits, or 0.001 on plans above $300 a month.",
+    link: { href: "/docs/connections", label: "Connections" },
+  },
 ];
 
 export default function Pricing() {
   return (
-    <div className="landing min-h-screen bg-background">
-      <JsonLd data={faqJsonLd(faqs)} />
-      <Header page="pricing" />
+    <LandingShell page="pricing">
+      <JsonLd data={faqJsonLd(faqs.map(({ q, a }) => ({ q, a })))} />
 
-      {/* ===== Hero panel — header + plans over the dark-alley scene ===== */}
-      <section className="mx-auto max-w-384 px-3 sm:px-6">
-        <div className="hero-panel border relative overflow-hidden rounded-[18px]">
-          {/* Indigo backdrop — the system cards' gradient */}
-          <div className="card-sky absolute inset-0" aria-hidden />
-          {/* Deep shadow at the foot, so the pricing cards' light borders
-              stand out against the panel */}
-          <div
-            className="pricing-scrim pointer-events-none absolute inset-x-0 bottom-0 h-1/2"
-            aria-hidden
-          />
+      <PageHero
+        kicker="No subscription required."
+        title="Premium enrichment data, pay as you go."
+        lede="Start with credits that never expire, or pick a monthly plan for a lower price per credit. Every waterfall bills only the provider that found the data."
+      />
 
-          <div className="relative z-10 px-5 pb-36 pt-14 text-center sm:px-10 sm:pb-56 sm:pt-20">
-            <h1 className="mx-auto max-w-2xl text-[clamp(34px,4.5vw,52px)] font-semibold leading-[1.08] tracking-[-0.025em] text-white">
-              Pay for what you run.
-            </h1>
-            <p className="mx-auto mt-5 max-w-[560px] text-[17px] leading-relaxed text-white/75 sm:text-[18px]">
-              Start without a subscription and buy credits as you go, or pick a
-              monthly volume for a lower price per credit.
-            </p>
-
-            {/* Pay as you go — the default way in, so it lives up here on the
-                panel rather than among the priced plans. Frosted glass over
-                the indigo: a hairline light border, a blurred tint of the
-                scene behind it, and white type, so it belongs to the hero
-                instead of floating on it. Stacks on narrow screens. */}
-            <div className="mx-auto mt-12 max-w-[880px] rounded-[16px] border border-white/20 bg-white/[0.08] p-5 text-left shadow-[inset_0_1px_0_rgba(255,255,255,0.22),0_18px_40px_-20px_rgba(0,0,0,0.55)] backdrop-blur-md sm:p-6">
-              <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between sm:gap-8">
-                <div className="min-w-0">
-                  <h2 className="text-[20px] font-semibold tracking-[-0.01em] text-white">
-                    Pay as you go
-                  </h2>
-                  <p className="mt-1.5 max-w-[520px] text-[14.5px] leading-relaxed text-white/75">
-                    No subscription needed. Every account starts here: add
-                    credits from the dashboard when you need them and pay only
-                    for what you run.
-                  </p>
-                  <ul className="mt-3.5 flex flex-col gap-x-5 gap-y-1.5 text-[13px] text-white/80 sm:flex-row sm:flex-wrap">
-                    {payAsYouGoPoints.map((point) => (
-                      <li key={point} className="flex items-center gap-1.5">
-                        <Check className="size-3.5 shrink-0 text-white/70" />
-                        <span>{point}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+      {/* ===== Plans — four cells on one row, the way in first ===== */}
+      <Band>
+        <Cells className="sm:grid-cols-2 lg:grid-cols-4">
+          {plans.map((plan) => (
+            <Cell key={plan.name} className="flex flex-col px-6 py-10 sm:px-8">
+              {plan.featured && (
+                <span
+                  aria-hidden
+                  className="absolute inset-x-0 top-0 h-[3px] bg-primary"
+                />
+              )}
+              <p className="text-[15px] font-medium text-foreground">
+                {plan.name}
+              </p>
+              <p className="mt-6 flex items-baseline gap-2">
+                <span className="text-[clamp(30px,2.6vw,38px)] font-medium leading-none tracking-[-0.045em] text-foreground">
+                  {plan.price}
+                </span>
+                <span className="text-[14px] text-muted-foreground">
+                  {plan.cadence}
+                </span>
+              </p>
+              <p className="mt-3 text-[15px] text-foreground">{plan.credits}</p>
+              <p className="mt-0.5 h-5 text-[13.5px] text-muted-foreground">
+                {plan.perCredit}
+              </p>
+              <ul className="mt-6 space-y-2 border-t border-[var(--rule)] pt-6 text-[14.5px] text-muted-foreground">
+                {plan.points.map((point) => (
+                  <li key={point}>{point}</li>
+                ))}
+              </ul>
+              <div className="mt-auto pt-8">
                 <Link
                   href={appInfo.links.signupUrl}
                   rel="nofollow"
-                  className="w-full shrink-0 sm:w-auto"
+                  className={cn(
+                    "inline-flex h-10 w-full items-center justify-center rounded-[8px] border text-[15px] font-medium",
+                    plan.featured ? buttonSkin.primary : buttonSkin.secondary,
+                  )}
                 >
-                  <Button variant="cta" className="w-full sm:w-auto sm:px-5">
-                    Start for free
-                  </Button>
+                  Start free
                 </Link>
               </div>
-            </div>
+            </Cell>
+          ))}
+        </Cells>
 
-            <p className="mt-14 text-center text-[clamp(20px,2vw,26px)] font-semibold tracking-[-0.01em] text-white">
-              Or pick a monthly volume
-            </p>
-            <p className="mx-auto mt-2 max-w-[460px] text-[14px] text-white/65">
-              Subscriptions refill your balance every month at a lower price per
-              credit and raise your usage limits.
-            </p>
-          </div>
+        {/* Shared by every plan — said once instead of on every card. */}
+        <div className="flex flex-col gap-3 border-t border-[var(--rule)] px-6 py-5 text-[14.5px] sm:px-8 lg:flex-row lg:items-center lg:gap-8">
+          <span className="font-medium text-foreground">Every plan includes</span>
+          <span className="text-muted-foreground">{included.join(" · ")}</span>
         </div>
-      </section>
 
-      {/* ===== Plans — overlapping the foot of the hero panel ===== */}
-      <Section className="relative z-10 -mt-28 sm:-mt-44">
-        <PricingCard />
-
-        {/* The larger volumes are not displayed here; the app's billing page
-            carries the full ladder. One quiet line, not a fourth card. */}
-        <p className="mt-5 text-center text-[13px] text-muted-foreground">
-          Larger monthly plans are available in the app.
-        </p>
-
-        {/* Enterprise — same container and gap as the grid above, so it reads
-            as the last row of the plans. Calm panel surface rather than the
-            cards' lifted white, since it sits off the dark hero panel and is
-            an aside to the priced volumes, not another one. */}
-        <div className="mt-3.5 flex flex-col gap-5 rounded-[14px] border border-[var(--panel-edge)] bg-[var(--panel)] p-6 sm:flex-row sm:items-center sm:justify-between sm:gap-8 sm:p-7">
+        <div className="flex flex-col gap-5 border-t border-[var(--rule)] px-6 py-8 sm:px-8 lg:flex-row lg:items-center lg:justify-between">
           <div>
-            <h2 className="text-lg font-semibold tracking-[-0.01em] text-foreground">
-              Enterprise.
-            </h2>
-            <p className="mt-1.5 max-w-[560px] text-sm leading-relaxed text-muted-foreground">
-              Higher volumes, custom terms, and dedicated support. Tell us what
-              you run and we&apos;ll put a plan together.
+            <p className="text-[17px] font-medium text-foreground">
+              Larger volumes and enterprise
+            </p>
+            <p className="mt-1 max-w-[60ch] text-[15px] leading-relaxed text-muted-foreground">
+              Bigger monthly plans are in the app. For custom terms and
+              dedicated support, tell us what you run and we&apos;ll put a plan
+              together.
             </p>
           </div>
-          <CalButton variant="cta" className="w-full shrink-0 sm:w-auto">
+          <CalButton
+            variant="ghost"
+            className={cn(
+              "inline-flex h-11 shrink-0 items-center justify-center rounded-[8px] border px-5 text-[15px] font-medium",
+              buttonSkin.secondary,
+            )}
+          >
             Book a call
           </CalButton>
         </div>
-      </Section>
+      </Band>
 
-      {/* ===== FAQ ===== */}
-      <Section className="mt-24">
-        <h2 className="mb-8 text-center text-[clamp(24px,2.6vw,32px)] font-semibold tracking-[-0.02em] text-foreground">
-          Questions.
-        </h2>
-        <div className="mx-auto max-w-3xl">
-          {faqs.map((faq) => (
-            <div key={faq.q} className="border-b border-border py-6">
-              <h3 className="mb-2 text-base font-semibold text-foreground">
-                {faq.q}
-              </h3>
-              <p className="text-sm leading-relaxed text-muted-foreground">
-                {faq.a}
-              </p>
-            </div>
-          ))}
-        </div>
-      </Section>
-
-      {/* ===== CTA panel ===== */}
-      <Section className="mt-24">
-        <CtaPanel
-          title={
-            <>
-              Start for free.
-            </>
-          }
-          note="The first 20 credits are on us. No credit card required."
+      {/* ===== What a result costs ===== */}
+      <Band>
+        <SectionHead
+          title="What a result costs."
+          lede="Measured averages against the public list prices of waterfall providers. Misses cost nothing."
         />
-      </Section>
+        <LandingEconomics pricingLink={false} />
+      </Band>
 
-      <Footer />
+      <Band>
+        <SectionHead title="Questions about pricing." />
+        <LandingFaq items={faqs} />
+      </Band>
 
-      {/* Bounded to the pricing hero width (max-w-384 = 96rem). */}
-      <AskAiButton bound="96rem" variant="overlay" />
-    </div>
+      <CloseBand
+        title="Start with credits that never expire."
+        lede="Run a few rows of a list you already know. Compare the hit rate and the cost per contact."
+      />
+    </LandingShell>
   );
 }

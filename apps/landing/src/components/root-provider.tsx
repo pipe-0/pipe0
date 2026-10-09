@@ -14,6 +14,9 @@ import { themeScriptProps } from "@/lib/theme-script";
  *
  * Search runs on a static index built with the site (/api/search, see that
  * route) and is queried in the browser, so typing never calls a function.
+ *
+ * One theme for the whole site: light is forced everywhere (docs, blog,
+ * marketing), and the layouts hide the theme switch.
  */
 export function RootProvider({
   theme,
@@ -23,7 +26,13 @@ export function RootProvider({
   return (
     <FumadocsRootProvider
       {...props}
-      theme={{ ...theme, scriptProps: themeScriptProps }}
+      theme={{
+        ...theme,
+        forcedTheme: "light",
+        defaultTheme: "light",
+        enableSystem: false,
+        scriptProps: themeScriptProps,
+      }}
       search={{ ...search, options: { type: "static", ...search?.options } }}
     />
   );

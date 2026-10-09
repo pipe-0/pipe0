@@ -3,7 +3,7 @@ import { ImageResponse } from "next/og";
 import { join } from "path";
 
 export const runtime = "nodejs";
-export const alt = "pipe0 — Operate a Revenue Factory";
+export const alt = "pipe0 — Give your GTM team its AI moment";
 export const size = {
   width: 1200,
   height: 630,
@@ -18,9 +18,9 @@ export const contentType = "image/png";
    GlobeLoop composition (closed/assets/remotion/src/GlobeLoop.tsx), frozen at
    the moment the connection arc completes. */
 
-const TITLE = "Operate a Revenue Factory";
+const TITLE = "Give your GTM team its AI moment";
 const SUBTITLE =
-  "From morning briefings to the signal engine behind your pipeline.";
+  "Turn any GTM play into a production system. Pay as you go.";
 
 // ---------------------------------------------------------------------------
 // Globe scene — static SVG, same math as the GlobeLoop composition: a planet

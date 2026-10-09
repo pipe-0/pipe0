@@ -1,6 +1,5 @@
-import { Footer } from "@/components/footer";
-import { Header } from "@/components/header";
-import { Section } from "@/components/marketing";
+import { Band, Cell, Cells } from "@/components/grid";
+import { LandingShell } from "@/components/landing-shell";
 import { appInfo } from "@/lib/const";
 import { createMetadata } from "@/lib/metadata";
 
@@ -40,36 +39,37 @@ const channels = [
 
 export default function Support() {
   return (
-    <div className="landing min-h-screen bg-background">
-      <Header page="product" />
-
-      <Section className="mt-20">
-        <h1 className="mb-4 text-center text-[clamp(30px,3.6vw,44px)] font-semibold tracking-[-0.02em] text-foreground">
-          How can we help?
-        </h1>
-        <p className="mx-auto mb-14 max-w-xl text-center text-[15px] leading-relaxed text-muted-foreground">
-          Whatever you&apos;re running into — setup, billing, integrations, or
-          data questions — these channels reach us. Email is answered within
-          two business days.
-        </p>
-        <div className="mx-auto grid max-w-4xl gap-6 sm:grid-cols-2">
+    <LandingShell page="product">
+      <Band>
+        <div className="flex flex-col items-center px-6 pb-12 pt-12 text-center sm:px-10 sm:pb-14 sm:pt-16 lg:px-12">
+          <h1 className="text-balance text-[clamp(26px,2.8vw,40px)] font-medium leading-[1.04] tracking-[-0.045em] text-foreground">
+            How can we help?
+          </h1>
+          <p className="mx-auto mt-6 max-w-[620px] text-balance text-[17px] leading-[1.55] text-muted-foreground">
+            Whatever you&apos;re running into — setup, billing, integrations, or
+            data questions — these channels reach us. Email is answered within
+            two business days.
+          </p>
+        </div>
+        <Cells className="border-t border-[var(--rule)] sm:grid-cols-2">
           {channels.map((c) => (
-            <div key={c.title} className="rounded-xl border border-border p-6">
-              <h2 className="mb-2 text-base font-semibold text-foreground">{c.title}</h2>
-              <p className="mb-4 text-sm leading-relaxed text-muted-foreground">{c.body}</p>
+            <Cell key={c.title} className="flex flex-col px-6 py-10 sm:px-10 lg:px-12">
+              <h2 className="text-[17px] font-medium tracking-[-0.015em] text-foreground">
+                {c.title}
+              </h2>
+              <p className="mt-2 text-[15px] leading-relaxed text-muted-foreground">
+                {c.body}
+              </p>
               <a
-                className="text-sm font-medium text-foreground underline underline-offset-4"
+                className="mt-5 text-[15px] font-medium text-primary underline decoration-primary/30 underline-offset-4 hover:decoration-primary"
                 href={c.href}
               >
                 {c.linkLabel}
               </a>
-            </div>
+            </Cell>
           ))}
-        </div>
-      </Section>
-
-      <div className="mt-24" />
-      <Footer />
-    </div>
+        </Cells>
+      </Band>
+    </LandingShell>
   );
 }

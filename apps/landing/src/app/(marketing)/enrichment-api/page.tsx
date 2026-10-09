@@ -1,21 +1,23 @@
-import { FilmStage } from "@/app/product-film";
-import { AskAiButton } from "@/components/ai/ask-ai-button";
-import { Footer } from "@/components/footer";
-import { Header } from "@/components/header";
+import { LandingProof } from "@/app/landing-proof";
 import {
-  CtaPanel,
-  Section,
-  SectionHeading,
-} from "@/components/marketing";
-import { Button } from "@/components/ui/button";
-import { createMetadata } from "@/lib/metadata";
+  Band,
+  Brackets,
+  ButtonLink,
+  Cell,
+  Cells,
+  RowLink,
+  SectionHead,
+  dotsStyle,
+} from "@/components/grid";
+import { CloseBand, LandingShell, PageHero } from "@/components/landing-shell";
 import { JsonLd, softwareApplicationJsonLd } from "@/components/seo/json-ld";
-import { cn } from "@/lib/utils";
+import { createMetadata } from "@/lib/metadata";
 import { providerCatalog } from "@pipe0/base";
-import Link from "next/link";
+import Image from "next/image";
+import type { ReactNode } from "react";
 
 const description =
-  "One API for people and company data: search across multiple datasets, then compose 50+ providers into waterfalls that only bill what answers. Built to sit inside your own CRM, ATS or product.";
+  "One API for people and company data. Search across datasets, then enrich with curated waterfalls across 50+ providers that bill only the provider that found the data. REST, TypeScript SDK, and MCP.";
 
 export const metadata = createMetadata({
   title: "Enrichment & Search API",
@@ -23,342 +25,278 @@ export const metadata = createMetadata({
   path: "/enrichment-api",
 });
 
-/* Numbers this page leans on. Coverage is the argument, so it leads. */
-const stats = [
+/* ---- Code samples -------------------------------------------------------
+   Both mirror the TypeScript client docs (sdks/typescript-client.mdx):
+   `pipes.pipe()` returns records keyed by the input's id, each field as
+   { value }; `searches.search()` takes one `search` with a config. */
+
+const kw = "text-[#2c37a4]";
+const str = "text-emerald-700";
+const dim = "text-[#98a1b5]";
+
+const enrichCode = (
+  <>
+    <span className={kw}>const</span> result = <span className={kw}>await</span>{" "}
+    pipe0.pipes.pipe({"{"}
+    {"\n"}  pipes: [{"{"} pipe_id:{" "}
+    <span className={str}>&quot;person:workemail:waterfall@1&quot;</span> {"}"}],
+    {"\n"}  input: [{"{"}
+    {"\n"}    id: <span className={str}>&quot;1&quot;</span>,
+    {"\n"}    name: <span className={str}>&quot;Lena Brandt&quot;</span>,
+    {"\n"}    company_domain: <span className={str}>&quot;heliolabs.io&quot;</span>,
+    {"\n"}  {"}"}],{"\n"}
+    {"}"});{"\n\n"}
+    result.records[<span className={str}>&quot;1&quot;</span>].fields.work_email.value
+    {"\n"}
+    <span className={dim}>{"// → "}</span>
+    <span className={str}>&quot;lena@heliolabs.io&quot;</span>
+  </>
+);
+
+const searchCode = (
+  <>
+    <span className={kw}>const</span> result = <span className={kw}>await</span>{" "}
+    pipe0.searches.search({"{"}
+    {"\n"}  search: {"{"}
+    {"\n"}    search_id: <span className={str}>&quot;people:profiles:crustdata@3&quot;</span>,
+    {"\n"}    config: {"{"}
+    {"\n"}      limit: 25,
+    {"\n"}      filters: {"{"}
+    {"\n"}        current_employment_job_titles: {"{"} include: [
+    <span className={str}>&quot;Head of RevOps&quot;</span>] {"}"},
+    {"\n"}      {"}"},
+    {"\n"}    {"}"},
+    {"\n"}  {"}"},
+    {"\n"}
+    {"}"});
+  </>
+);
+
+/* ---- Content ------------------------------------------------------------ */
+
+const primitives: {
+  name: string;
+  line: string;
+  code: ReactNode;
+  href: string;
+  linkLabel: string;
+}[] = [
   {
-    figure: "1B+",
-    label: "profiles reachable",
-    note: "across every dataset the API can query",
+    name: "Searches create records",
+    line: "Find people and companies across prospecting datasets and the systems you already run, like HubSpot, Salesforce, or Postgres.",
+    code: searchCode,
+    href: "/docs/search-catalog",
+    linkLabel: "Search catalog",
   },
   {
-    figure: "50+",
-    label: "providers behind one call",
-    note: "curated, not chained — see the waterfall below",
-  },
-  {
-    figure: "100+",
-    label: "enrichments and searches",
-    note: "people, companies, email, phone, web, AI",
+    name: "Pipes add properties to them",
+    line: "Work emails, mobiles, verification, company data, AI steps, and CRM writes. Stack them in one call.",
+    code: enrichCode,
+    href: "/docs/pipe-catalog",
+    linkLabel: "Pipe catalog",
   },
 ];
 
 /* Real marks from the provider catalog — the same source the docs use. */
-const marqueeRow = [
-  "openai",
-  "anthropic",
-  "crustdata",
+const providerIds = [
   "amplemarket",
+  "crustdata",
+  "leadmagic",
   "prospeo",
   "hunter",
+  "surfe",
+  "wiza",
+  "zerobounce",
   "exa",
   "firecrawl",
   "perplexity",
-  "googlemaps",
+  "openai",
+  "anthropic",
   "gemini",
-  "postgres",
+  "hubspot",
+  "salesforce",
 ] as const;
 
-function ProviderTile({ id }: { id: string }) {
-  const provider = providerCatalog[id as keyof typeof providerCatalog];
-  if (!provider?.logoUrl) return null;
-  return (
-    <span className="grid size-12 shrink-0 place-items-center rounded-[12px] border border-border bg-background">
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={provider.logoUrl}
-        alt={provider.label}
-        loading="lazy"
-        className="size-6 object-contain"
-      />
-    </span>
-  );
-}
-
-/* Two primitives, shown as the calls you actually write. */
-const primitives = [
+const useCases = [
   {
-    name: "Searches",
-    tagline: "Create records you do not have yet.",
-    body: "One query runs across multiple datasets at once instead of one provider at a time — people, companies, job posts, channel members, calendar guests.",
-    href: "/docs/search-catalog",
-    linkLabel: "Search catalog",
-    code: (
-      <>
-        <span className="text-[#2c37a4]">await</span> pipe0.search.run({"{"}
-        {"\n"}  search_id:{" "}
-        <span className="text-emerald-700">&quot;people:profiles:crustdata@3&quot;</span>,
-        {"\n"}  payload: {"{"} title:{" "}
-        <span className="text-emerald-700">&quot;VP of Sales&quot;</span>,
-        location: <span className="text-emerald-700">&quot;DACH&quot;</span> {"}"},
-        {"\n"}
-        {"}"});
-      </>
-    ),
+    title: "CRMs",
+    body: "Enrich records on create, re-verify on a schedule, and write back through the same call.",
   },
   {
-    name: "Pipes",
-    tagline: "Add properties to records you already have.",
-    body: "Stack enrichments, actions and conditions into one composed call. Verification, company data, CRM writes and AI steps are all just pipes.",
-    href: "/docs/pipe-catalog",
-    linkLabel: "Pipe catalog",
-    code: (
-      <>
-        <span className="text-[#2c37a4]">await</span> pipe0.pipes.run({"{"}
-        {"\n"}  pipes: [{"\n"}    {"{"} pipe_id:{" "}
-        <span className="text-emerald-700">
-          &quot;person:workemail:waterfall@1&quot;
-        </span>{" "}
-        {"}"},{"\n"}    {"{"} pipe_id:{" "}
-        <span className="text-emerald-700">&quot;company:overview@3&quot;</span>{" "}
-        {"}"},{"\n"}  ],{"\n"}  input: rows,{"\n"}
-        {"}"});
-      </>
-    ),
+    title: "ATS and recruiting tools",
+    body: "Resolve candidates to work emails and mobiles, and enrich the companies behind them.",
+  },
+  {
+    title: "Sales tools and agents",
+    body: "Offer waterfall enrichment inside your own product, billed per result found.",
   },
 ];
 
 const docsLinks = [
-  {
-    href: "/docs",
-    title: "Quickstart",
-    body: "First authenticated call in a few minutes.",
-  },
-  {
-    href: "/docs/api",
-    title: "API reference",
-    body: "Every endpoint, generated from the OpenAPI spec.",
-  },
-  {
-    href: "/docs/sdks/typescript-client",
-    title: "TypeScript SDK",
-    body: "Typed client for pipes, searches and sheets.",
-  },
-  {
-    href: "/docs/sdks/mcp",
-    title: "MCP server",
-    body: "The same engine, reachable from your agents.",
-  },
+  { href: "/docs", label: "Quickstart: first call in a few minutes" },
+  { href: "/docs/api", label: "API reference" },
+  { href: "/docs/sdks/typescript-client", label: "TypeScript SDK" },
+  { href: "/docs/sdks/mcp", label: "MCP server for agents" },
 ];
+
+function CodeCard({ children, file }: { children: ReactNode; file: string }) {
+  return (
+    <div className="w-full min-w-0 overflow-hidden rounded-[10px] border border-[#1c2333]/10 bg-white shadow-[0_1px_2px_rgba(14,17,23,0.04),0_8px_24px_rgba(28,35,80,0.06)]">
+      <div className="border-b border-[#1c2333]/8 bg-[#f7f9fc] px-4 py-2 font-mono text-[11px] text-[#5b6478]">
+        {file}
+      </div>
+      <pre className="overflow-x-auto px-4 py-4 font-mono text-[11.5px] leading-[1.7] text-[#2b3350] sm:text-[12.5px]">
+        <code>{children}</code>
+      </pre>
+    </div>
+  );
+}
 
 export default function EnrichmentApiPage() {
   return (
-    <div className="landing min-h-screen bg-background">
+    <LandingShell page="api">
       <JsonLd data={softwareApplicationJsonLd({ description })} />
-      <Header page="api" />
 
-      {/* ===== Hero — same shape as the homepage: copy at the shared
-              container width, then a wider panel. ===== */}
-      <div>
-        <Section className="py-[clamp(20px,3.2svh,38px)]">
-          <SectionHeading
-            as="h1"
-            title="Enrichment and search API."
-            subtitle="Composable enough to sit underneath a CRM."
-          />
-          <div className="mt-7 flex flex-wrap items-center gap-3">
-            <Link href="/docs">
-              <Button variant="cta" size="xl">
-                Read the docs
-              </Button>
-            </Link>
-            <Link href="/docs/pipe-catalog">
-              <Button variant="ctaOutline" size="xl">
-                Browse the catalog
-              </Button>
-            </Link>
+      <PageHero
+        kicker="Enrichment and search API."
+        title="Every provider behind one call."
+        lede="Search and enrich people and companies from your product, scripts, or agents. Typed inputs and outputs, curated waterfalls, one key, and one bill."
+        actions={
+          <div className="flex flex-wrap justify-center gap-3">
+            <ButtonLink href="/docs">Read the docs</ButtonLink>
+            <ButtonLink href="/docs/pipe-catalog" tone="secondary">
+              Browse the catalog
+            </ButtonLink>
           </div>
-        </Section>
+        }
+      />
 
-        <section className="mx-auto w-full max-w-[1750px] px-4 sm:px-7">
-          <div className="hero-panel border relative flex min-h-[calc(min(100vw-3.5rem,1694px)/2.4)] w-full flex-col justify-center overflow-hidden rounded-[18px] px-5 py-10 sm:px-10">
-            <div className="hero-sky pointer-events-none absolute inset-0 z-0" aria-hidden />
-            <div className="relative z-10 mx-auto w-full max-w-[820px] overflow-hidden rounded-[12px] border border-[#1c2333]/10 bg-white shadow-[0_1px_2px_rgba(14,17,23,0.06),0_24px_60px_rgba(18,24,74,0.28)]">
-              <div className="flex items-center gap-1.5 border-b border-[#1c2333]/8 bg-[#f7f9fc] px-3.5 py-2.5">
-                <span className="size-2.5 rounded-full bg-[#1c2333]/15" />
-                <span className="size-2.5 rounded-full bg-[#1c2333]/15" />
-                <span className="size-2.5 rounded-full bg-[#1c2333]/15" />
-                <span className="ml-2 text-[11px] font-medium text-[#5b6478]">
-                  enrich.ts
-                </span>
-              </div>
-              <pre className="overflow-x-auto px-5 py-4 font-mono text-[11px] leading-relaxed text-[#2b3350] sm:text-[13.5px]">
-                <code>{primitives[1].code}</code>
-              </pre>
-            </div>
+      {/* ===== The illustration, on the dotted stage — the code itself
+              follows in the primitives section. ===== */}
+      <Band>
+        <div className="px-6 py-10 sm:px-10 sm:py-12 lg:px-12">
+          <div
+            style={dotsStyle}
+            className="relative flex justify-center border border-[var(--rule)] px-4 py-8 sm:py-10"
+          >
+            <Brackets />
+            <Image
+              src="/media/website/illustrations/api.png"
+              alt="Layers of data threaded on a single pipe"
+              width={1600}
+              height={1200}
+              priority
+              sizes="(min-width: 1024px) 520px, 80vw"
+              className="h-auto w-full max-w-[520px]"
+            />
           </div>
-        </section>
-      </div>
-
-      {/* ===== Coverage — the argument for this product ===== */}
-      <Section className="pt-16 sm:pt-24">
-        <div className="grid gap-10 border-t border-border pt-12 sm:grid-cols-3 sm:gap-8">
-          {stats.map((stat) => (
-            <div key={stat.figure}>
-              <div className="text-[clamp(38px,4.4vw,54px)] font-semibold leading-none tracking-[-0.03em] text-foreground">
-                {stat.figure}
-              </div>
-              <div className="mt-3 text-[15px] font-medium text-foreground">
-                {stat.label}
-              </div>
-              <div className="mt-1 text-sm text-muted-foreground">
-                {stat.note}
-              </div>
-            </div>
-          ))}
         </div>
-      </Section>
-
-      {/* ===== Film — the same engine from the product side: the API is
-              one of the interfaces it ends on. ===== */}
-      <Section className="pt-20 sm:pt-28">
-        <FilmStage film="product" where="api" />
-      </Section>
+      </Band>
 
       {/* ===== Two primitives ===== */}
-      <Section className="pt-20 sm:pt-28">
-        <SectionHeading
+      <Band>
+        <SectionHead
           title="Two primitives. Everything else composes."
-          subtitle="Searches create records. Pipes add properties to them. Every workflow on pipe0 is those two, arranged."
+          lede="Every workflow on pipe0 is searches and pipes, arranged. The same ones run in Sheets and over MCP."
         />
-        <div className="mt-10 grid gap-5 lg:grid-cols-2">
+        <Cells className="border-t border-[var(--rule)] lg:grid-cols-2">
           {primitives.map((p) => (
-            <div
-              key={p.name}
-              className="flex flex-col overflow-hidden rounded-[18px] border border-[var(--panel-edge)] bg-[var(--panel)]"
-            >
-              <div className="px-6 pt-6 sm:px-8 sm:pt-8">
-                <h3 className="text-[17px] font-medium text-foreground">
+            <Cell key={p.name} className="flex flex-col">
+              <div className="px-6 pt-10 sm:px-10 lg:px-12">
+                <h3 className="text-[clamp(20px,1.7vw,24px)] font-medium tracking-[-0.025em] text-foreground">
                   {p.name}
                 </h3>
-                <p className="mt-1 text-[15px] text-muted-foreground">
-                  {p.tagline}
-                </p>
-                <p className="mt-3 max-w-[520px] text-sm leading-relaxed text-muted-foreground">
-                  {p.body}
+                <p className="mt-2 max-w-[52ch] text-[16px] leading-relaxed text-muted-foreground">
+                  {p.line}
                 </p>
               </div>
-              <div className="mt-6 px-6 sm:px-8">
-                <div className="overflow-hidden rounded-[12px] border border-[#1c2333]/10 bg-white">
-                  <pre className="overflow-x-auto px-4 py-3.5 font-mono text-[11px] leading-relaxed text-[#2b3350] sm:text-[12px]">
-                    <code>{p.code}</code>
-                  </pre>
-                </div>
+              <div className="px-6 pb-10 pt-8 sm:px-10 lg:px-12">
+                <CodeCard file="pipe0.ts">{p.code}</CodeCard>
               </div>
-              <div className="mt-auto px-6 py-5 sm:px-8">
-                <Link
-                  href={p.href}
-                  className="text-sm font-medium text-primary underline-offset-4 hover:underline"
-                >
-                  {p.linkLabel} &rarr;
-                </Link>
-              </div>
-            </div>
+              <RowLink href={p.href} className="mt-auto">
+                {p.linkLabel}
+              </RowLink>
+            </Cell>
           ))}
-        </div>
-      </Section>
+        </Cells>
+      </Band>
 
-      {/* ===== Waterfalls and providers ===== */}
-      <Section className="pt-20 sm:pt-28">
-        <SectionHeading
-          title="Curation, not chaining."
-          subtitle="We only add providers when they contribute enrichment coverage. Waterfalls stay short, fast, and reliable."
+      {/* ===== Coverage, measured ===== */}
+      <Band>
+        <SectionHead
+          title="Curated waterfalls, measured."
+          lede="A provider joins a waterfall only when it finds data the others miss. Same 150 people, two waterfalls."
         />
-        <div className="mt-10 overflow-hidden rounded-[18px] border border-[var(--panel-edge)] bg-[var(--panel)] px-6 py-10 sm:px-10">
-          <div className="flex flex-wrap justify-center gap-3">
-            {marqueeRow.map((id) => (
-              <ProviderTile key={id} id={id} />
-            ))}
-          </div>
-          <p className="mx-auto mt-8 max-w-[560px] text-center text-sm leading-relaxed text-muted-foreground">
-            Bring your own keys on any plan, or use pipe0&rsquo;s negotiated
-            rates. Either way the composition, retries, and billing are one call.
-          </p>
-        </div>
-      </Section>
+        <LandingProof />
+      </Band>
+
+      {/* ===== Providers ===== */}
+      <Band>
+        <SectionHead
+          title="50+ providers, one key."
+          lede="Use pipe0's managed connections, or bring your own keys for a small platform fee per call."
+        />
+        <ul className="grid grid-cols-2 gap-px border-t border-[var(--rule)] bg-[var(--rule)] sm:grid-cols-4 lg:grid-cols-8">
+          {providerIds.map((id) => {
+            const provider = providerCatalog[id];
+            if (!provider?.logoUrl) return null;
+            return (
+              <li
+                key={id}
+                className="flex h-24 flex-col items-center justify-center gap-2 bg-background px-3"
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={provider.logoUrl}
+                  alt=""
+                  loading="lazy"
+                  className="size-6 object-contain"
+                />
+                <span className="text-[13px] text-muted-foreground">
+                  {provider.label}
+                </span>
+              </li>
+            );
+          })}
+        </ul>
+      </Band>
 
       {/* ===== Who builds on it ===== */}
-      <Section className="pt-20 sm:pt-28">
-        <SectionHeading
-          title="Built to sit under someone else's product."
-          subtitle="CRMs, ATSs, sequencers and sales tools use the API to add Clay-like enrichment inside their own interface."
-        />
-        <div className="mt-10 grid gap-5 sm:grid-cols-3">
-          {[
-            {
-              title: "CRM builders",
-              body: "Keep records current: enrich on create, re-verify on a schedule, write back through the same call.",
-            },
-            {
-              title: "ATS builders",
-              body: "Resolve candidates to work emails and phone numbers, and enrich the companies behind them.",
-            },
-            {
-              title: "Sales tools",
-              body: "Offer waterfall enrichment as a feature of your own product, billed per result that lands.",
-            },
-          ].map((c) => (
-            <div
-              key={c.title}
-              className="rounded-[18px] border border-[var(--panel-edge)] bg-[var(--panel)] px-6 py-7"
-            >
-              <h3 className="text-[16px] font-medium text-foreground">
+      <Band>
+        <SectionHead title="Built to sit under your product." />
+        <Cells className="border-t border-[var(--rule)] sm:grid-cols-3">
+          {useCases.map((c) => (
+            <Cell key={c.title} className="px-6 py-10 sm:px-10 lg:px-12">
+              <h3 className="text-[18px] font-medium tracking-[-0.015em] text-foreground">
                 {c.title}
               </h3>
-              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+              <p className="mt-3 text-[15.5px] leading-relaxed text-muted-foreground">
                 {c.body}
               </p>
-            </div>
+            </Cell>
           ))}
-        </div>
-      </Section>
+        </Cells>
+      </Band>
 
       {/* ===== Docs ===== */}
-      <Section className="pt-20 sm:pt-28">
-        <SectionHeading
+      <Band>
+        <SectionHead
           title="Start in the docs."
-          subtitle="Everything here is documented, versioned and typed."
+          lede="Everything here is documented, versioned, and typed."
         />
-        {/* A divided list, not the measures pattern used for the interface
-            tabs — a rule over a label reads as "selectable", and these are
-            plain links. Rows with a title, a line and an arrow say navigation. */}
-        <div className="mt-10 overflow-hidden rounded-[18px] border border-[var(--panel-edge)] bg-[var(--panel)]">
-          {docsLinks.map((l, i) => (
-            <Link
-              key={l.href}
-              href={l.href}
-              className={cn(
-                "group flex items-center gap-5 px-6 py-5 transition-colors hover:bg-background/70 sm:px-8",
-                i > 0 && "border-t border-[var(--panel-edge)]",
-              )}
-            >
-              <span className="min-w-0 flex-1">
-                <span className="block text-[16px] font-medium text-foreground">
-                  {l.title}
-                </span>
-                <span className="mt-0.5 block text-sm leading-relaxed text-muted-foreground">
-                  {l.body}
-                </span>
-              </span>
-              <span
-                aria-hidden
-                className="shrink-0 text-muted-foreground transition-transform duration-300 group-hover:translate-x-1 group-hover:text-foreground"
-              >
-                &rarr;
-              </span>
-            </Link>
+        <div className="border-t border-[var(--rule)] [&>a:first-child]:border-t-0">
+          {docsLinks.map((l) => (
+            <RowLink key={l.href} href={l.href}>
+              {l.label}
+            </RowLink>
           ))}
         </div>
-      </Section>
+      </Band>
 
-      <Section className="pt-20 sm:pt-28">
-        <CtaPanel
-          title="Build on it for free."
-          note="The first 20 credits are on us. No credit card required."
-        />
-      </Section>
-
-      <Footer />
-      <AskAiButton bound="1750px" variant="overlay" />
-    </div>
+      <CloseBand
+        title="Build on it for free."
+        lede="Sandbox requests cost nothing, and new accounts get free credits for production calls."
+      />
+    </LandingShell>
   );
 }

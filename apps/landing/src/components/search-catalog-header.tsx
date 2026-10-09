@@ -4,7 +4,13 @@ import { searchMiniSpec } from "@/lib/search/snippet-catalog";
 import { videoCatalog } from "@/lib/search/video-catalog";
 import { PayloadDocumenation } from "@/components/config-documentation";
 import { ApiRequestCodeExample } from "@/components/features/docs/api-request-code-example";
-import { CatalogHeader } from "@/components/features/docs/docs-layout";
+import {
+  EntryHeader,
+  SectionTriggerLabel,
+} from "@/components/features/pipe-catalog/entry-header";
+import { HeaderVideoSection } from "@/components/features/docs/header-video-section";
+import { formatCredits } from "@/lib/utils";
+import { lowestManagedCredit } from "@/lib/pricing/high-volume";
 import { CatalogDeprecationAlert } from "@/components/catalog-deprecation-alert";
 import { resolveCurrentSearch } from "@/lib/catalog-lifecycle";
 import { BandCard } from "@/components/features/pipe-catalog/band-card";
@@ -25,15 +31,6 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { docsLinkPaths } from "@pipe0/doc-links";
 import {
   FieldName,
@@ -130,262 +127,289 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
     }
   }, [defaultSearchPayload]);
 
+  const versions = searchVersions.map((v) => {
+    const versionEntry = getSearchEntry(v.searchId);
+    return {
+      displayValue: `@${v.searchId.split("@")[1]}`,
+      link: versionEntry.docPath,
+      isDeprecated: !!versionEntry.lifecycle?.deprecatedOn,
+    };
+  });
+
+  const costUnit = usageMetered
+    ? "Usage"
+    : searchEntry.cost.mode === "per_result"
+      ? "result"
+      : searchEntry.cost.mode === "per_search"
+        ? "search"
+        : "page";
+
+  const outputSection = (() => {
+    if (searchEntry.outputFieldMode === "config") {
+      return (
+        <Callout type="info" title="You define the output fields">
+          This search&apos;s columns come from its own config, not from the
+          catalog: every <code>{'{% output name, type: "string" %}'}</code> tag
+          you declare in the prompt becomes one column on every row returned.
+          See the config reference below for the tag syntax.
+        </Callout>
+      );
+    }
+    if (searchEntry.outputFieldMode === "dynamic") {
+      return (
+        <Callout type="info" title="Dynamic output fields">
+          This search&apos;s output columns are determined at run time and
+          depend on the data source. Enable{" "}
+          <Link
+            href="/docs/search/request-payload#configfield_definitionsenabled"
+            className="text-primary underline"
+          >
+            <code>config.field_definitions.enabled</code>
+          </Link>{" "}
+          to receive the columns alongside your results in the response{" "}
+          <Link
+            href="/docs/search/response-object#field_definitions"
+            className="text-primary underline"
+          >
+            <code>field_definitions</code>
+          </Link>
+          .
+        </Callout>
+      );
+    }
+    const enabled: { fieldName: string; found: NonNullable<ReturnType<typeof getField>> }[] = [];
+    const optional: { fieldName: string; found: NonNullable<ReturnType<typeof getField>> }[] = [];
+    for (const fieldName of getDefaultSearchOutputFields(searchEntry.searchId)) {
+      const found = getField(fieldName as FieldName);
+      if (!found) continue;
+      const isEnabledByDefault = !!(
+        defaultSearchPayload?.config?.output_fields as Record<string, any>
+      )?.[fieldName]?.enabled;
+      (isEnabledByDefault ? enabled : optional).push({ fieldName, found });
+    }
+    const renderRow = ({
+      found,
+    }: {
+      fieldName: string;
+      found: NonNullable<ReturnType<typeof getField>>;
+    }) => (
+      <FieldRow
+        key={found.name}
+        fieldName={found.name}
+        fieldType={found.type}
+        description={found.description}
+      />
+    );
+    return (
+      <div className="space-y-2">
+        {enabled.length > 0 && (
+          <BandCard
+            label="Enabled by default"
+            description="These fields are returned without extra config."
+            count={enabled.length}
+            tone="enabled"
+          >
+            {enabled.map(renderRow)}
+          </BandCard>
+        )}
+        {optional.length > 0 && (
+          <BandCard
+            label="Enable on demand"
+            description="Opt in to these fields via the search config."
+            count={optional.length}
+            tone="optional"
+          >
+            {optional.map(renderRow)}
+          </BandCard>
+        )}
+      </div>
+    );
+  })();
+
   return (
-    <div className="pipe-header space-y-5">
-      <CatalogHeader
+    <div className="space-y-5">
+      <EntryHeader
+        id={searchId}
+        idLabel="Copy search id"
         label={searchEntry.label}
         description={searchEntry.description}
-        defaultProviders={[searchEntry.provider]}
-        id={searchId}
-        video={video}
-        availableVersions={searchVersions.map((v) => {
-          const versionEntry = getSearchEntry(v.searchId);
-          return {
-            displayValue: `@${v.searchId.split("@")[1]}`,
-            link: versionEntry.docPath,
-            isDeprecated: !!(versionEntry.lifecycle as any)?.deprecatedOn,
-          };
-        })}
-        tags={searchEntry.tags}
-        deprecationAlert={
-          deprecatedOn && (
-            <CatalogDeprecationAlert
-              kind="search"
-              deprecatedOn={deprecatedOn}
-              successor={
-                currentSuccessor
-                  ? {
-                      id: currentSuccessor,
-                      docPath: getSearchEntry(currentSuccessor).docPath,
-                    }
-                  : null
-              }
-            />
-          )
+        providers={[searchEntry.provider]}
+        deprecated={!!deprecatedOn}
+        versions={versions}
+        price={
+          usageMetered
+            ? USAGE_METERED_LABEL
+            : (() => {
+                const credits = effectiveCredits(searchEntry.cost);
+                return credits
+                  ? `from ${formatCredits(lowestManagedCredit(credits))} cr / ${costUnit}`
+                  : "Free";
+              })()
         }
+      />
+
+      {deprecatedOn && (
+        <CatalogDeprecationAlert
+          kind="search"
+          deprecatedOn={deprecatedOn}
+          successor={
+            currentSuccessor
+              ? {
+                  id: currentSuccessor,
+                  docPath: getSearchEntry(currentSuccessor).docPath,
+                }
+              : null
+          }
+        />
+      )}
+
+      <Accordion
+        type="multiple"
+        defaultValue={["provider", "billing", "output-fields", "walkthrough", "code-example"]}
       >
-        <div className="bg-accent/20 border rounded-sm">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Provider</TableHead>
-                <TableHead>Billing Mode</TableHead>
-                <TableHead>Credentials</TableHead>
-                <TableHead>
-                  <div className="flex gap-2 items-center">
-                    {usageMetered
-                      ? "Cost"
-                      : searchEntry.cost.mode === "per_result"
-                        ? "Cost per result"
-                        : searchEntry.cost.mode === "per_search"
-                          ? "Cost per search"
-                          : "Cost per page"}
-                    <InlineDocsBadge href={docsLinkPaths.searchBilling} />
-                  </div>
-                </TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell className="">
-                  <div className="flex gap-2 items-center">
-                    <Avatar>
-                      <AvatarImage
-                        src={providerEntry.logoUrl}
-                        alt={`${providerEntry.label} logo`}
-                      />
-                      <AvatarFallback>P</AvatarFallback>
-                    </Avatar>
-                    <div className="font-medium">
-                      {providerEntry.label}{" "}
-                      <Info>{providerEntry.description}</Info>
-                    </div>
-                  </div>
-                </TableCell>
-                <TableCell>
+        <AccordionItem value="provider">
+          <AccordionTrigger>
+            <SectionTriggerLabel label="Provider" />
+          </AccordionTrigger>
+          <AccordionContent className="pl-6">
+            <div className="overflow-hidden rounded-[10px] border border-[var(--rule)]">
+              <div className="grid grid-cols-[minmax(0,1fr)_140px_140px_140px] items-center gap-4 border-b border-[var(--rule)] bg-[var(--well)] px-3 py-2 text-[12px] font-medium text-muted-foreground">
+                <span>Provider</span>
+                <span>Billing</span>
+                <span>Connection</span>
+                <span className="flex items-center justify-end gap-1.5">
+                  Cost
+                  <InlineDocsBadge href={docsLinkPaths.searchBilling} />
+                </span>
+              </div>
+              <div className="grid grid-cols-[minmax(0,1fr)_140px_140px_140px] items-center gap-4 px-3 py-2.5 text-sm">
+                <div className="flex min-w-0 items-center gap-2">
+                  <Avatar className="size-7 rounded-md">
+                    <AvatarImage
+                      src={providerEntry.logoUrl}
+                      alt={`${providerEntry.label} logo`}
+                    />
+                    <AvatarFallback className="rounded-md text-[10px]">
+                      {providerEntry.label.slice(0, 2)}
+                    </AvatarFallback>
+                  </Avatar>
+                  <span className="truncate font-medium">
+                    {providerEntry.label}
+                  </span>
+                  <Info>{providerEntry.description}</Info>
+                </div>
+                <span className="text-muted-foreground">
                   {usageMetered
                     ? "Usage"
                     : searchEntry.cost.mode === "per_result"
-                      ? "Per Result"
-                      : "Per Search"}
-                </TableCell>
-                <TableCell>
-                  <div className="flex items-center gap-2">
-                    {connections.join(", ")}
-                  </div>
-                </TableCell>
-                <TableCell>
+                      ? "Per result"
+                      : searchEntry.cost.mode === "per_search"
+                        ? "Per search"
+                        : "Per page"}
+                </span>
+                <span className="text-muted-foreground">
+                  {connections.join(", ")}
+                </span>
+                <div className="text-right tabular-nums">
                   {usageMetered ? (
-                    <div>{USAGE_METERED_LABEL}</div>
+                    <span>{USAGE_METERED_LABEL}</span>
                   ) : (
                     <HighVolumePriceCell
                       credits={effectiveCredits(searchEntry.cost)}
                       unit="credits"
                     />
                   )}
-                  <p className="max-w-37.5">
-                    <small className="text-muted-foreground">
+                  {(usageMetered || searchEntry.cost.mode === "per_page") && (
+                    <p className="text-[12px] text-muted-foreground">
                       {usageMetered
                         ? searchEntry.cost.info
-                        : searchEntry.cost.mode === "per_page" &&
-                          "1 page = 100 records; 200 results = 2 pages"}
-                    </small>
-                  </p>
-                </TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </div>
+                        : "1 page = 100 records"}
+                    </p>
+                  )}
+                </div>
+              </div>
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+
         {usageMetered && billableEntries.length > 0 && (
-          <div>
-            <h3 className="text-2xl mb-3 pb-2 border-b">Billing</h3>
-            <p className="text-sm text-muted-foreground mb-3">
-              Every operation this search can bill while it runs. Model token
-              rates are charged per 100-token block; the rest are charged per
-              call. Hover a price for its unit.
-            </p>
-            <ProviderTable entries={billableEntries} />
-          </div>
+          <AccordionItem value="billing">
+            <AccordionTrigger>
+              <SectionTriggerLabel label="Billing" count={billableEntries.length} />
+            </AccordionTrigger>
+            <AccordionContent className="pl-6">
+              <p className="mb-3 text-sm text-muted-foreground">
+                Every operation this search can bill while it runs. Model token
+                rates are charged per 100-token block; the rest are charged per
+                call. Hover a price for its unit.
+              </p>
+              <ProviderTable entries={billableEntries} />
+            </AccordionContent>
+          </AccordionItem>
         )}
-        <div>
-          <h3 className="text-2xl mb-3 pb-2 border-b">Output Fields</h3>
-          <div className="space-y-3">
-            {searchEntry.outputFieldMode === "config" ? (
-              <Callout type="info" title="You define the output fields">
-                This search&apos;s columns come from its own config, not from
-                the catalog: every{" "}
-                <code>{"{% output name, type: \"string\" %}"}</code> tag you
-                declare in the prompt becomes one column on every row returned.
-                The catalog therefore lists none — see the config reference
-                below for the tag syntax.
-              </Callout>
-            ) : searchEntry.outputFieldMode === "dynamic" ? (
-              <Callout type="info" title="Dynamic output fields">
-                This search&apos;s output columns are determined at run time and
-                depend on the data source, so they aren&apos;t known ahead of
-                time. Enable{" "}
-                <Link
-                  href="/docs/search/request-payload#configfield_definitionsenabled"
-                  className="underline text-primary"
-                >
-                  <code>config.field_definitions.enabled</code>
-                </Link>{" "}
-                to receive the columns alongside your results in the response{" "}
-                <Link
-                  href="/docs/search/response-object#field_definitions"
-                  className="underline text-primary"
-                >
-                  <code>field_definitions</code>
-                </Link>
-                .
-              </Callout>
-            ) : (
-              (() => {
-                const enabled: {
-                  fieldName: string;
-                  found: NonNullable<ReturnType<typeof getField>>;
-                }[] = [];
-                const optional: {
-                  fieldName: string;
-                  found: NonNullable<ReturnType<typeof getField>>;
-                }[] = [];
-                for (const fieldName of getDefaultSearchOutputFields(
-                  searchEntry.searchId,
-                )) {
-                  const found = getField(fieldName as FieldName);
-                  if (!found) continue;
-                  const isEnabledByDefault = !!(
-                    defaultSearchPayload?.config?.output_fields as Record<
-                      string,
-                      any
-                    >
-                  )?.[fieldName]?.enabled;
-                  (isEnabledByDefault ? enabled : optional).push({
-                    fieldName,
-                    found,
-                  });
-                }
-                const renderRow = ({
-                  fieldName,
-                  found,
-                }: {
-                  fieldName: string;
-                  found: NonNullable<ReturnType<typeof getField>>;
-                }) => (
-                  <FieldRow
-                    key={fieldName}
-                    fieldName={found.name}
-                    fieldType={found.type}
-                    description={found.description}
-                  />
-                );
-                return (
-                  <>
-                    {enabled.length > 0 && (
-                      <BandCard
-                        label="Enabled by default"
-                        description="These fields are returned without extra config."
-                        count={enabled.length}
-                      >
-                        {enabled.map(renderRow)}
-                      </BandCard>
-                    )}
-                    {optional.length > 0 && (
-                      <BandCard
-                        label="Enable optionally"
-                        description="Opt in to these fields via the search config."
-                        count={optional.length}
-                      >
-                        {optional.map(renderRow)}
-                      </BandCard>
-                    )}
-                  </>
-                );
-              })()
-            )}
-          </div>
-        </div>
-      </CatalogHeader>
 
-      {/* No runnable example for a deprecated search: a copyable snippet is
-          what agents and people reuse, and it would carry the deprecated id. */}
-      {!deprecatedOn && (
-        <div>
-          <h2 className="text-2xl">Code Example</h2>
-          <ApiRequestCodeExample
-            oas={searchMiniSpec}
-            operation={searchMiniSpec.operation("/v1/search/run", "post")}
-            harData={{ body: { search: snippetPayload } }}
-          />
-        </div>
-      )}
+        <AccordionItem value="output-fields">
+          <AccordionTrigger>
+            <SectionTriggerLabel label="Output fields" />
+          </AccordionTrigger>
+          <AccordionContent className="pl-6">{outputSection}</AccordionContent>
+        </AccordionItem>
 
-      <div className="">
-        <Accordion type="multiple" defaultValue={["code"]}>
-          {formConfig && (
-            <AccordionItem value="config-reference">
-              <AccordionTrigger className="">Config reference</AccordionTrigger>
-              <AccordionContent>
-                <PayloadDocumenation
-                  formConfig={formConfig}
-                  searchable
-                  examplePayload={configExamplePayload}
-                />
-              </AccordionContent>
-            </AccordionItem>
-          )}
-          {!deprecatedOn && (
-            <AccordionItem value="full-config">
-              <AccordionTrigger className="">
-                Full config example
-              </AccordionTrigger>
-              <AccordionContent>
-                <div>
-                  <Tabs items={["Typescript", "cURL"]}>
-                    <Tab value="Typescript">
-                      <DynamicCodeBlock
-                        lang="typescript"
-                        code={`const result = await fetch("https://api.pipe0.com/v1/search/run", {
+        {video && (
+          <AccordionItem value="walkthrough">
+            <AccordionTrigger>
+              <SectionTriggerLabel label="Walkthrough" hint="2 min" />
+            </AccordionTrigger>
+            <AccordionContent className="pl-6">
+              <HeaderVideoSection videoUrl={video} />
+            </AccordionContent>
+          </AccordionItem>
+        )}
+
+        {/* No runnable example for a deprecated search: a copyable snippet is
+            what agents and people reuse, and it would carry the deprecated id. */}
+        {!deprecatedOn && (
+          <AccordionItem value="code-example">
+            <AccordionTrigger>
+              <SectionTriggerLabel label="Code example" hint="POST /v1/search/run" />
+            </AccordionTrigger>
+            <AccordionContent className="pl-6">
+              <ApiRequestCodeExample
+                oas={searchMiniSpec}
+                operation={searchMiniSpec.operation("/v1/search/run", "post")}
+                harData={{ body: { search: snippetPayload } }}
+              />
+            </AccordionContent>
+          </AccordionItem>
+        )}
+
+
+        {formConfig && (
+          <AccordionItem value="config-reference">
+            <AccordionTrigger>
+              <SectionTriggerLabel label="Config reference" />
+            </AccordionTrigger>
+            <AccordionContent className="pl-6">
+              <PayloadDocumenation
+                formConfig={formConfig}
+                searchable
+                examplePayload={configExamplePayload}
+              />
+            </AccordionContent>
+          </AccordionItem>
+        )}
+        {!deprecatedOn && (
+          <AccordionItem value="full-config">
+            <AccordionTrigger className="">
+              Full config example
+            </AccordionTrigger>
+            <AccordionContent className="pl-6">
+              <div>
+                <Tabs items={["Typescript", "cURL"]}>
+                  <Tab value="Typescript">
+                    <DynamicCodeBlock
+                      lang="typescript"
+                      code={`const result = await fetch("https://api.pipe0.com/v1/search/run", {
   method: "POST",
   headers: {
     "Authorization": \`Bearer \${API_KEY}\`,
@@ -395,56 +419,50 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
     search: {
       search_id: "${searchId}",
       config: ${JSON.stringify(defaultSearchPayload, null, 2).replace(
-                        /\n/g,
-                        "\n      ",
-                      )}
+                      /\n/g,
+                      "\n      ",
+                    )}
     },
   })
 });`}
-                      />
-                    </Tab>
-                    <Tab value="cURL">
-                      <DynamicCodeBlock
-                        lang="bash"
-                        code={`curl -X POST "https://api.pipe0.com/v1/search/run" \\
+                    />
+                  </Tab>
+                  <Tab value="cURL">
+                    <DynamicCodeBlock
+                      lang="bash"
+                      code={`curl -X POST "https://api.pipe0.com/v1/search/run" \\
 -H "Authorization: Bearer $API_KEY" \\
 -H "Content-Type: application/json" \\
 -d '{
     "search": {
       "search_id": "${searchId}",
       "config": ${JSON.stringify(defaultSearchPayload, null, 2).replace(
-                        /\n/g,
-                        "\n      ",
-                      )}
+                      /\n/g,
+                      "\n      ",
+                    )}
     }
 }'`}
-                      />
-                    </Tab>
-                  </Tabs>
-                </div>
-              </AccordionContent>
-            </AccordionItem>
-          )}
-          <AccordionItem value="form-ui">
-            <AccordionTrigger className="">
-              <span className="flex items-center gap-2">
-                Form UI
-                <Badge className="text-[10px] px-1.5 py-0 font-medium leading-none">
-                  Beta
-                </Badge>
-              </span>
-            </AccordionTrigger>
-            <AccordionContent>
-              <SearchFormPreview
-                searchId={searchId}
-                searchLabel={searchEntry.label}
-                defaultValues={defaultSearchPayload}
-                docsHref={docsLinkPaths.elementsReact}
-              />
+                    />
+                  </Tab>
+                </Tabs>
+              </div>
             </AccordionContent>
           </AccordionItem>
-        </Accordion>
-      </div>
+        )}
+        <AccordionItem value="form-ui">
+          <AccordionTrigger>
+            <SectionTriggerLabel label="Form UI" hint="Beta" />
+          </AccordionTrigger>
+          <AccordionContent className="pl-6">
+            <SearchFormPreview
+              searchId={searchId}
+              searchLabel={searchEntry.label}
+              defaultValues={defaultSearchPayload}
+              docsHref={docsLinkPaths.elementsReact}
+            />
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
     </div>
   );
 }

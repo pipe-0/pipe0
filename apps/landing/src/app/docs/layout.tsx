@@ -64,7 +64,7 @@ export default function Layout({
         title: (
           <span className="inline-flex items-center gap-2">
             <LogoRawSmall />
-            <span>Pipe0</span>
+            <span className="font-medium">pipe0</span>
           </span>
         ),
       }}
@@ -78,7 +78,7 @@ export default function Layout({
             // Flat hover in the dropdown rows — no gradient wash.
             props: { className: "tabs-dd-item" },
             icon: (
-              <div className="[&_svg]:size-full card-sky-sm flex size-full items-center justify-center rounded-lg border border-white/15 p-1.5 text-white shadow-sm">
+              <div className="btn-glossy flex size-full items-center justify-center rounded-[7px] border text-white [&_svg]:size-4">
                 {node.icon}
               </div>
             ),

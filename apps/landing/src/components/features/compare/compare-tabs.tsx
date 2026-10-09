@@ -6,9 +6,10 @@ import type { CompareGroup } from "@/lib/compare/types";
 import { CompareTable } from "./compare-table";
 
 /**
- * Segmented pill tabs over the comparison groups. Every panel stays in the
- * DOM (inactive ones carry the `hidden` attribute) so crawlers and answer
- * engines read the full comparison regardless of the selected tab.
+ * Text tabs over the comparison groups, set in a ruled strip like the folder
+ * tabs on the homepage. Every panel stays in the DOM (inactive ones carry the
+ * `hidden` attribute) so crawlers and answer engines read the full comparison
+ * regardless of the selected tab.
  */
 export function CompareTabs({
   competitor,
@@ -28,7 +29,7 @@ export function CompareTabs({
         <div
           role="tablist"
           aria-label="Comparison categories"
-          className="mb-6 inline-flex flex-wrap items-center gap-1 rounded-full border border-border bg-card p-1"
+          className="flex flex-wrap gap-x-7 border-t border-[var(--rule)] px-6 sm:px-10 lg:px-12"
         >
           {groups.map((group, i) => (
             <button
@@ -40,10 +41,10 @@ export function CompareTabs({
               aria-controls={`compare-panel-${i}`}
               onClick={() => setActive(i)}
               className={cn(
-                "rounded-full border border-transparent px-4 py-1.5 text-sm font-medium transition-colors",
+                "-mb-px border-b-2 py-4 text-[15px] font-medium transition-colors",
                 i === active
-                  ? "btn-glossy btn-glossy-indigo border text-white"
-                  : "text-muted-foreground hover:text-foreground",
+                  ? "border-primary text-foreground"
+                  : "border-transparent text-muted-foreground hover:text-foreground",
               )}
             >
               {group.label}
@@ -63,7 +64,9 @@ export function CompareTabs({
         </div>
       ))}
       {footnote && (
-        <p className="mt-3 text-xs text-muted-foreground">{footnote}</p>
+        <p className="border-t border-[var(--rule)] px-6 py-5 text-[13.5px] leading-relaxed text-muted-foreground sm:px-10 lg:px-12">
+          {footnote}
+        </p>
       )}
     </div>
   );

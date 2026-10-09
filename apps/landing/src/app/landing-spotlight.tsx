@@ -1,8 +1,7 @@
 "use client";
 
-import { SectionHeading } from "@/components/marketing";
-import { PlaceholderAvatar } from "@/components/placeholder-avatar";
 import { cn } from "@/lib/utils";
+import { LoopVideo } from "@/components/loop-video";
 import {
   motion,
   useMotionValue,
@@ -11,6 +10,8 @@ import {
   useScroll,
   useTransform,
 } from "motion/react";
+import { Brackets, dotsStyle } from "@/components/grid";
+import Image from "next/image";
 import Link from "next/link";
 import {
   createRef,
@@ -40,53 +41,59 @@ type Surface = {
   key: string;
   tab: string;
   title: string;
-  subtitle: string;
   copy: string;
   href: string;
   linkLabel: string;
-  pane: ReactNode;
+  /** One small example under the copy; omitted where the copy is enough. */
+  pane?: ReactNode;
+  /** Isometric line drawing, rendered in Blender (assets/illustrations). */
+  illustration: string;
+  /** The same drawing as a Blender loop (lineart.py, .mp4 output). */
+  loop: string;
 };
 
 const surfaces: Surface[] = [
   {
     key: "agent",
-    tab: "UI Agent",
-    title: "Find & enrich leads",
-    subtitle: "Smart tables orchestrate your data.",
-    copy: "Combine a smart, infinite spreadsheet with the most powerful GTM agent.",
+    tab: "Sheets",
+    title: "A sheet that keeps running",
+    copy: "Sheets are a remote workspace for your lists, with schedules, signals, and webhooks built in. Ask in plain language and the agent sets it up; every column stays yours to adjust.",
     href: "/docs/sheets/ai-agents",
     linkLabel: "Agents in Sheets",
-    pane: <AgentPane />,
+    illustration: "/media/website/illustrations/sheets.png",
+    loop: "/media/website/illustrations/sheets.mp4",
   },
   {
     key: "mcp",
     tab: "MCP",
-    title: "Connect Claude, Codex, and Cursor",
-    subtitle: "Data enrichment on every interface",
-    copy: "The same engine over MCP, with no glue code in between. Your agent gets every search and pipe as a tool.",
+    title: "Claude, Codex, and Cursor",
+    copy: "Connect the MCP server and your agent gets every search and pipe as a tool, with data back in the same call. When a list gets big, it writes it to a sheet your team can open.",
     href: "/docs/sdks/mcp",
     linkLabel: "MCP server",
     pane: <McpPane />,
+    illustration: "/media/website/illustrations/mcp.png",
+    loop: "/media/website/illustrations/mcp.mp4",
   },
   {
     key: "slack",
     tab: "Slack",
-    title: "Bot command.",
-    subtitle: "Where the team already works.",
-    copy: "@pipe0 researches an account, finds contact data, and reports back in the channel that asked.",
+    title: "Ask from Slack",
+    copy: "Mention @pipe0 in a channel. It researches the account, finds contact data, and answers in the thread, with a link to continue in pipe0.",
     href: "/docs/sdks/integrations/slack-agent",
     linkLabel: "Slack agent",
     pane: <SlackPane />,
+    illustration: "/media/website/illustrations/slack-chat.png",
+    loop: "/media/website/illustrations/slack.mp4",
   },
   {
     key: "api",
     tab: "API",
-    title: "A full, stateless API",
-    subtitle: "Access all of our data inside your own product.",
-    copy: "Compose providers, actions and conditions into pipes, then ship enrichment behind your own UI.",
+    title: "Build it into your product",
+    copy: "Typed REST endpoints and a TypeScript SDK for every search and pipe. Ship enrichment behind your own UI, billed per result found.",
     href: "/enrichment-api",
     linkLabel: "Enrichment API",
-    pane: <ApiPane />,
+    illustration: "/media/website/illustrations/api.png",
+    loop: "/media/website/illustrations/api.mp4",
   },
 ];
 
@@ -104,10 +111,6 @@ export function LandingSpotlight() {
 
   return (
     <div>
-      <SectionHeading
-        title="Access 50+ providers with one subscription"
-        subtitle="A replacement for tools like Clay, n8n, and Zapier, at a fraction of the cost."
-      />
 
       {/* The first tab stands TAB_H above the first page, inside this margin,
           so the tab height is added back to keep the usual gap under the
@@ -117,8 +120,48 @@ export function LandingSpotlight() {
           as tall as the tallest: a shorter page parked over a taller one
           would otherwise leave the taller one's bottom showing beneath it.
           The last row is the dwell for the final page. */}
+      {/* Phones: no folder. The stacking pages and offset tabs need a wide
+          screen to read; here each surface is a plain card in sequence. */}
+      <div className="space-y-4 px-4 pb-6 sm:hidden">
+        {surfaces.map((s) => (
+          <article
+            key={s.key}
+            className="overflow-hidden rounded-[14px] border border-[var(--rule)] bg-background"
+          >
+            <div
+              style={dotsStyle}
+              className="relative flex aspect-[16/10] items-center justify-center border-b border-[var(--rule)]"
+            >
+              <Brackets />
+              <LoopVideo
+                src={s.loop}
+                poster={s.illustration}
+                className="w-[72%]"
+              />
+            </div>
+            {/* Fixed-height copy block so every card is the same height;
+                the link sits at its foot. No examples on phones — calmer. */}
+            <div className="flex h-[264px] flex-col px-6 pb-6 pt-6">
+              <p className="text-[13px] text-muted-foreground">{s.tab}</p>
+              <h3 className="mt-1.5 text-[21px] font-medium leading-tight tracking-[-0.03em] text-foreground">
+                {s.title}
+              </h3>
+              <p className="mt-3 text-[15px] leading-relaxed text-muted-foreground">
+                {s.copy}
+              </p>
+              <Link
+                href={s.href}
+                className="mt-auto inline-block text-[15px] font-medium text-primary underline decoration-primary/30 underline-offset-4"
+              >
+                {s.linkLabel} <span aria-hidden>&rarr;</span>
+              </Link>
+            </div>
+          </article>
+        ))}
+      </div>
+
       <div
-        className="relative mt-[calc(2rem+44px)] grid gap-y-14 sm:mt-[calc(3rem+44px)]"
+        className="relative mt-[44px] grid gap-y-14 max-sm:hidden"
         style={{
           gridTemplateRows: `repeat(${surfaces.length}, 1fr) 35svh`,
         }}
@@ -186,8 +229,10 @@ function Page({
     <div ref={ref} className="sticky" style={{ top: STICK_TOP }}>
       <article
         className={cn(
-          "relative h-full rounded-[18px] border border-[var(--panel-edge)] bg-background shadow-[0_1px_2px_rgba(14,17,23,0.04),0_18px_44px_rgba(28,35,80,0.08)]",
-          index === 0 && "rounded-tl-none",
+          /* Top and bottom only: the page runs rail to rail and shares the
+             frame's own side borders rather than drawing a second pair
+             inside them. */
+          "relative h-full border-y border-[var(--rule)] bg-background",
         )}
       >
         {/* The folder tab. Its bottom edge reaches one pixel into the page,
@@ -196,19 +241,24 @@ function Page({
             puts its border on top of the page's), and that page squares its
             top-left corner so the tab's side runs straight into the page. */}
         <div
-          className="absolute flex items-center rounded-t-[12px] border border-b-0 border-[var(--panel-edge)] bg-background px-3 text-[13px] font-medium text-foreground sm:px-5 sm:text-[15px]"
+          className="absolute flex items-center gap-3 border border-b-0 border-[var(--rule)] bg-background px-4 text-[13px] font-medium text-foreground sm:px-6 sm:text-[14px] lg:px-12"
           style={{
             height: TAB_H,
             bottom: "calc(100% - 1px)",
             left: `calc(${index} * 100% / ${surfaces.length} - 1px)`,
-            width: `calc(100% / ${surfaces.length} - 8px)`,
+            /* The last tab runs flush to the page's right edge (covering
+               its border), so the tab row spans the full width. */
+            width:
+              index === surfaces.length - 1
+                ? `calc(100% / ${surfaces.length} + 1px)`
+                : `calc(100% / ${surfaces.length} - 8px)`,
           }}
         >
           <span className="relative z-10 truncate">{surface.tab}</span>
           <motion.span
             aria-hidden
             style={{ opacity: reduced ? 0 : tabShade }}
-            className="absolute inset-0 rounded-t-[11px] bg-[var(--panel)]"
+            className="absolute inset-0 bg-[var(--well)]"
           />
         </div>
 
@@ -222,37 +272,44 @@ function Page({
             two different heights, with the leftover page showing beneath
             the short one. Side by side at `lg` the single row stretches and
             the rule is moot. */}
-        <div className="grid h-full grid-cols-[minmax(0,1fr)] grid-rows-[auto_minmax(0,1fr)] gap-8 p-6 sm:p-10 lg:min-h-[min(72svh,660px)] lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] lg:grid-rows-none lg:gap-12">
-          {/* Copy column — the section heading pair, one size down. */}
+        <div className="grid h-full grid-cols-[minmax(0,1fr)] grid-rows-[auto_minmax(0,1fr)] gap-8 px-6 py-8 sm:px-10 sm:py-10 lg:min-h-[min(72svh,660px)] lg:px-12 lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] lg:grid-rows-none lg:gap-12">
+          {/* Copy column — title, one paragraph and the link at the top;
+              one small example of what using the surface looks like, set
+              at the foot of the column. */}
           <div className="flex flex-col">
-            <div className="text-[clamp(22px,2.45vw,31px)] font-medium leading-[1.36] tracking-[-0.018em]">
-              <h3 className="text-foreground">{surface.title}</h3>
-              <p className="text-muted-foreground">{surface.subtitle}</p>
-            </div>
-            <p className="mt-5 max-w-[46ch] text-[15px] leading-relaxed text-muted-foreground sm:text-[16px]">
+            <h3 className="text-balance text-[clamp(20px,1.6vw,22px)] font-medium leading-[1.12] tracking-[-0.03em] text-foreground">
+              {surface.title}
+            </h3>
+            <p className="mt-4 max-w-[46ch] text-[15px] leading-relaxed text-muted-foreground sm:text-[16px]">
               {surface.copy}
             </p>
-            <div className="mt-8 lg:mt-auto lg:pt-10">
+            <div className={surface.pane ? "mt-6" : "mt-6 lg:mt-auto"}>
               <Link
                 href={surface.href}
-                className="text-sm font-medium text-primary underline-offset-4 hover:underline"
+                className="text-[14.5px] font-medium text-primary underline decoration-primary/30 underline-offset-4 hover:decoration-primary"
               >
                 {surface.linkLabel} <span aria-hidden>&rarr;</span>
               </Link>
             </div>
+            {surface.pane && (
+              <div className="mt-10 max-w-[460px] lg:mt-auto">
+                {surface.pane}
+              </div>
+            )}
           </div>
 
-          {/* Preview column — the hero panel in small: the same dusk-sky
-              gradient, dark border and top-edge gloss, so the preview sits
-              on the same material the product scene does up top. The sky
-              is its own layer under the pane, exactly as in the hero, so
-              `.hero-panel`'s gloss overlay (::after) stays clipped to the
-              rounded corners and the white card floats above both. */}
-          <div className="hero-panel relative flex min-w-0 items-center overflow-hidden rounded-[14px] border p-4 sm:p-8 [&>*]:min-w-0">
-            <div className="hero-sky pointer-events-none absolute inset-0 z-0" aria-hidden />
-            <div className="relative z-10 flex w-full min-w-0 items-center [&>*]:min-w-0">
-              {surface.pane}
-            </div>
+          {/* Illustration column — a dotted well with registration
+              brackets, the same stage as every figure on the page. */}
+          <div
+            style={dotsStyle}
+            className="relative flex min-h-[260px] min-w-0 items-center justify-center overflow-hidden border border-[var(--rule)] p-6"
+          >
+            <Brackets />
+            <LoopVideo
+              src={surface.loop}
+              poster={surface.illustration}
+              className="w-[86%] max-w-[600px]"
+            />
           </div>
         </div>
       </article>
@@ -262,123 +319,77 @@ function Page({
 
 /* ---- Previews ---------------------------------------------------------- */
 
-/* Full width of the panel — the preview is the point of the section, not a
-   thumbnail floating in it. */
-const card =
-  "w-full rounded-[12px] border border-[#1c2333]/10 bg-white shadow-[0_1px_2px_rgba(14,17,23,0.05),0_14px_36px_rgba(28,35,80,0.10)]";
+/* Previews are frameless: plain type on the stage, no card, no shadow. */
+const card = "w-full";
 
-function AgentPane() {
-  return (
-    <div className={card}>
-      <div className="p0-composer m-4 rounded-[12px] px-4 py-3.5">
-        <p className="text-[15px] text-[#1c2333]">
-          Find the VP of Sales at every company in this sheet and verify their
-          work email.
-        </p>
-      </div>
-      <div className="space-y-2 px-5 pb-5 text-[13.5px] text-[#5b6478]">
-        {[
-          "Added column · VP of Sales",
-          "Added column · Work email (waterfall)",
-          "Enriching 1,204 rows…",
-        ].map((step, i) => (
-          <p key={step} className="flex items-center gap-2.5">
-            <span
-              className={cn(
-                "size-1.5 rounded-full",
-                i === 2 ? "bg-primary" : "bg-emerald-500",
-              )}
-            />
-            {step}
-          </p>
-        ))}
-      </div>
-    </div>
-  );
-}
+/* The coding agents the MCP server is used from, as their own marks. */
+const agents = [
+  { name: "Claude Code", src: "/media/website/logos/agent-claude.svg" },
+  { name: "Codex", src: "/media/website/logos/agent-openai.svg" },
+  { name: "Cursor", src: "/media/website/logos/agent-cursor.svg" },
+];
 
 function McpPane() {
   return (
-    <div className={cn(card, "overflow-hidden")}>
-      <div className="flex items-center gap-2 border-b border-[#1c2333]/8 bg-[#f7f9fc] px-4 py-2.5 text-[11px] font-medium text-[#5b6478]">
-        Claude Code · pipe0 MCP
-      </div>
-      <pre className="overflow-x-auto px-5 py-4 font-mono text-[11px] leading-relaxed text-[#2b3350] sm:text-[13px]">
-        <code>
-          <span className="text-[#5b6478]">&gt;</span> find 100 CTOs in Berlin
-          {"\n\n"}
-          <span className="text-[#2c37a4]">run_search_oneshot</span>(
-          <span className="text-emerald-700">&quot;people:profiles&quot;</span>){"\n"}
-          <span className="text-[#2c37a4]">run_pipes_oneshot</span>(
-          <span className="text-emerald-700">&quot;person:workemail&quot;</span>)
-          {"\n\n"}
-          <span className="text-emerald-700">✓ 100 records · 94 emails</span>
-        </code>
-      </pre>
-    </div>
+    <ul className="flex flex-wrap items-center gap-x-7 gap-y-3">
+      {agents.map((a) => (
+        <li
+          key={a.name}
+          className="flex items-center gap-2.5 text-[15px] font-medium text-foreground"
+        >
+          <Image src={a.src} alt="" width={22} height={22} className="size-[22px]" />
+          {a.name}
+        </li>
+      ))}
+    </ul>
   );
 }
+
+/* Slack's own channel-link treatment, so mentions read as live links. */
+const slackLink = "rounded-[4px] bg-[#e8f2fb] px-1 font-medium text-[#1264a3]";
+
+/* The four-colour Slack mark (Slack's published brand asset geometry), used
+   as the asker's avatar so the scene says "this is Slack" before a word is
+   read. */
+function SlackMark({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 54 54" className={className} aria-hidden>
+      <path
+        fill="#36C5F0"
+        d="M19.712.133a5.381 5.381 0 0 0-5.376 5.387 5.381 5.381 0 0 0 5.376 5.386h5.376V5.52A5.381 5.381 0 0 0 19.712.133m0 14.365H5.376A5.381 5.381 0 0 0 0 19.884a5.381 5.381 0 0 0 5.376 5.387h14.336a5.381 5.381 0 0 0 5.376-5.387 5.381 5.381 0 0 0-5.376-5.386"
+      />
+      <path
+        fill="#2EB67D"
+        d="M53.76 19.884a5.381 5.381 0 0 0-5.376-5.386 5.381 5.381 0 0 0-5.376 5.386v5.387h5.376a5.381 5.381 0 0 0 5.376-5.387m-14.336 0V5.52A5.381 5.381 0 0 0 34.048.133a5.381 5.381 0 0 0-5.376 5.387v14.364a5.381 5.381 0 0 0 5.376 5.387 5.381 5.381 0 0 0 5.376-5.387"
+      />
+      <path
+        fill="#ECB22E"
+        d="M34.048 54a5.381 5.381 0 0 0 5.376-5.387 5.381 5.381 0 0 0-5.376-5.386h-5.376v5.386A5.381 5.381 0 0 0 34.048 54m0-14.365h14.336a5.381 5.381 0 0 0 5.376-5.386 5.381 5.381 0 0 0-5.376-5.387H34.048a5.381 5.381 0 0 0-5.376 5.387 5.381 5.381 0 0 0 5.376 5.386"
+      />
+      <path
+        fill="#E01E5A"
+        d="M0 34.249a5.381 5.381 0 0 0 5.376 5.386 5.381 5.381 0 0 0 5.376-5.386v-5.387H5.376A5.381 5.381 0 0 0 0 34.249m14.336 0v14.364A5.381 5.381 0 0 0 19.712 54a5.381 5.381 0 0 0 5.376-5.387V34.25a5.381 5.381 0 0 0-5.376-5.387 5.381 5.381 0 0 0-5.376 5.387"
+      />
+    </svg>
+  );
+}
+
+const avatar = "grid size-9 shrink-0 place-items-center";
 
 function SlackPane() {
   return (
-    <div className={cn(card, "p-5")}>
-      <div className="flex gap-3">
-        <PlaceholderAvatar size={32} radius={7} />
-        <div className="min-w-0">
-          <p className="text-[13px] font-semibold text-[#1d1c1d]">Florian</p>
-          <p className="mt-0.5 text-[14.5px] leading-relaxed text-[#1d1c1d]">
-            <span className="rounded bg-[#e8f2fb] px-1 font-medium text-[#1264a3]">
-              @pipe0
-            </span>{" "}
-            who from #customers works in engineering? Get their work emails.
-          </p>
-        </div>
-      </div>
-      <div className="mt-4 flex gap-3">
-        <span className="grid size-8 shrink-0 place-items-center rounded-[7px] border border-[#1c2333]/10 bg-white">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo-small-light.svg" alt="" className="h-3 w-auto" aria-hidden />
-        </span>
-        <div className="min-w-0">
-          <p className="flex items-center gap-1.5 text-[13px] font-semibold text-[#1d1c1d]">
-            pipe0
-            <span className="rounded-[3px] bg-[#f2f1ee] px-1 py-px text-[9px] font-bold tracking-wide text-[#616061]">
-              APP
-            </span>
-          </p>
-          <p className="mt-0.5 text-[14.5px] leading-relaxed text-[#1d1c1d]">
-            Found <span className="font-semibold">12 people</span> in #customers
-            with engineering titles — 11 work emails verified.
-          </p>
-          <p className="mt-2 text-[12.5px] font-medium text-[#1264a3]">
-            Continue in pipe0: #customers · engineering
-          </p>
-        </div>
+    <div className="flex gap-3">
+      <span className={avatar}>
+        <SlackMark className="size-5" />
+      </span>
+      <div className="min-w-0">
+        <p className="text-[13.5px] font-semibold text-[#1d1c1d]">Florian</p>
+        <p className="mt-0.5 text-[15px] leading-relaxed text-[#1d1c1d]">
+          <span className={slackLink}>@pipe0</span> who in{" "}
+          <span className={slackLink}>#customers</span> works in engineering?
+        </p>
       </div>
     </div>
   );
 }
 
-function ApiPane() {
-  return (
-    <div className={cn(card, "overflow-hidden")}>
-      <div className="flex items-center gap-2 border-b border-[#1c2333]/8 bg-[#f7f9fc] px-4 py-2.5 text-[11px] font-medium text-[#5b6478]">
-        enrich.ts
-      </div>
-      <pre className="overflow-x-auto px-5 py-4 font-mono text-[11px] leading-relaxed text-[#2b3350] sm:text-[13px]">
-        <code>
-          <span className="text-[#2c37a4]">const</span> res ={" "}
-          <span className="text-[#2c37a4]">await</span> pipe0.pipes.run({"{"}
-          {"\n"}  pipes: [{"\n"}    {"{"} pipe_id:{" "}
-          <span className="text-emerald-700">
-            &quot;person:workemail:waterfall@1&quot;
-          </span>{" "}
-          {"}"},{"\n"}    {"{"} pipe_id:{" "}
-          <span className="text-emerald-700">&quot;company:overview@3&quot;</span>{" "}
-          {"}"},{"\n"}  ],{"\n"}  input: rows,{"\n"}
-          {"}"});
-        </code>
-      </pre>
-    </div>
-  );
-}

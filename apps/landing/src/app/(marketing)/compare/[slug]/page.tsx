@@ -3,14 +3,13 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Fragment } from "react";
 
-import { AskAiButton } from "@/components/ai/ask-ai-button";
 import { CompareTabs } from "@/components/features/compare/compare-tabs";
 import { CompareVideos } from "@/components/features/compare/compare-videos";
 import { DifferenceCards } from "@/components/features/compare/difference-cards";
 import { TheirEdgePanel } from "@/components/features/compare/their-edge-panel";
-import { Footer } from "@/components/footer";
-import { Header } from "@/components/header";
-import { CtaPanel, Section } from "@/components/marketing";
+import { LandingFaq } from "@/app/landing-faq";
+import { Band, SectionHead } from "@/components/grid";
+import { CloseBand, LandingShell, PageHero } from "@/components/landing-shell";
 import {
   JsonLd,
   breadcrumbJsonLd,
@@ -56,7 +55,7 @@ export default async function ComparePage(props: {
   if (!config) notFound();
 
   return (
-    <div className="landing min-h-screen bg-background">
+    <LandingShell page="product">
       <JsonLd data={faqJsonLd(config.faqs)} />
       {config.media?.videos.map((video) => (
         <JsonLd key={video.youtubeId} data={videoJsonLd(video)} />
@@ -67,106 +66,65 @@ export default async function ComparePage(props: {
           { name: `pipe0 vs ${config.competitor}` },
         ])}
       />
-      <Header page="product" />
 
-      {/* Two-tier layout: text sections live in a centered narrow block
-          (left-aligned inside), rich elements span the wide Section. */}
+      <PageHero
+        title={`pipe0 vs ${config.competitor}.`}
+        lede={config.heroSubtitle}
+      />
 
-      {/* ===== Hero: narrow ===== */}
-      <Section className="pt-16 sm:pt-24">
-        <div className="mx-auto max-w-[920px]">
-          <h1 className="max-w-3xl text-[clamp(34px,4.5vw,52px)] font-semibold leading-[1.08] tracking-[-0.025em] text-foreground">
-            pipe0 vs {config.competitor}.
-          </h1>
-          <p className="mt-5 max-w-[640px] text-[17px] leading-relaxed text-muted-foreground sm:text-[18px]">
-            {config.heroSubtitle}
-          </p>
-        </div>
-      </Section>
-
-      {/* ===== Comparison, tabbed: full Section width ===== */}
-      <Section className="mt-14">
+      {/* ===== Comparison, tabbed ===== */}
+      <Band>
+        <SectionHead title="Side by side." />
         <CompareTabs
           competitor={config.competitor}
           groups={config.table.groups}
           footnote={config.table.footnote}
         />
-      </Section>
+      </Band>
 
-      {/* ===== Differences: narrow ===== */}
-      <Section className="mt-24">
-        <div className="mx-auto max-w-[920px]">
-          <DifferenceCards
-            heading={config.differences.heading}
-            cards={config.differences.cards}
-          />
-        </div>
-      </Section>
+      <Band>
+        <DifferenceCards
+          heading={config.differences.heading}
+          cards={config.differences.cards}
+        />
+      </Band>
 
-      {/* ===== Honest verdict: full Section width ===== */}
-      <Section className="mt-20">
+      {/* ===== Honest verdict ===== */}
+      <Band>
         <TheirEdgePanel competitor={config.competitor} {...config.theirEdge} />
-      </Section>
+      </Band>
 
-      {/* ===== Additional material: narrow ===== */}
       {config.media && config.media.videos.length > 0 && (
-        <Section className="mt-24">
-          <div className="mx-auto max-w-[920px]">
-            <CompareVideos
-              heading={config.media.heading}
-              videos={config.media.videos}
-            />
-          </div>
-        </Section>
+        <Band>
+          <CompareVideos
+            heading={config.media.heading}
+            videos={config.media.videos}
+          />
+        </Band>
       )}
 
-      {/* ===== Common questions: narrow ===== */}
-      <Section className="mt-24">
-        <div className="mx-auto max-w-[920px]">
-          <h2 className="text-[clamp(22px,2.4vw,30px)] font-semibold tracking-[-0.02em] text-foreground">
-            Common questions.
-          </h2>
-          <div className="mt-10 grid gap-x-12 gap-y-10 sm:grid-cols-2">
-            {config.faqs.map((faq) => (
-              <div key={faq.q}>
-                <h3 className="text-base font-semibold text-foreground">
-                  {faq.q}
-                </h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                  {faq.a}
-                </p>
-              </div>
+      <Band>
+        <SectionHead title="Common questions." />
+        <LandingFaq items={config.faqs} />
+        {config.related && config.related.length > 0 && (
+          <p className="border-t border-[var(--rule)] px-6 py-5 text-[14.5px] text-muted-foreground sm:px-10 lg:px-12">
+            Keep reading:{" "}
+            {config.related.map((link, i) => (
+              <Fragment key={link.href}>
+                {i > 0 && <span aria-hidden> · </span>}
+                <Link
+                  href={link.href}
+                  className="font-medium text-primary underline decoration-primary/30 underline-offset-4 hover:decoration-primary"
+                >
+                  {link.label}
+                </Link>
+              </Fragment>
             ))}
-          </div>
-          {config.related && config.related.length > 0 && (
-            <p className="mt-14 text-sm text-muted-foreground">
-              Keep reading:{" "}
-              {config.related.map((link, i) => (
-                <Fragment key={link.href}>
-                  {i > 0 && <span aria-hidden> · </span>}
-                  <Link
-                    href={link.href}
-                    className="text-primary underline-offset-4 hover:underline"
-                  >
-                    {link.label}
-                  </Link>
-                </Fragment>
-              ))}
-            </p>
-          )}
-        </div>
-      </Section>
+          </p>
+        )}
+      </Band>
 
-      {/* ===== CTA ===== */}
-      <Section className="mt-24">
-        <CtaPanel
-          title={config.cta.title}
-          subtitle={config.cta.subtitle}
-        />
-      </Section>
-
-      <Footer />
-      <AskAiButton bound="1280px" variant="overlay" />
-    </div>
+      <CloseBand title={config.cta.title} lede={config.cta.subtitle} />
+    </LandingShell>
   );
 }

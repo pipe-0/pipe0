@@ -3,7 +3,7 @@
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { XIcon } from "lucide-react";
 import posthog from "posthog-js";
-import { useRef, useState } from "react";
+import { useRef, useState, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 /**
@@ -244,68 +244,39 @@ function PlayGlyph({ className }: { className?: string }) {
   );
 }
 
-// ---------------------------------------------------------------------------
-// Stage — the section-sized poster
-// ---------------------------------------------------------------------------
-
 /**
- * Not a frame of the film. A still gives the ending away and, at this size,
- * reads as a screenshot with a button on it. Instead the stage is the film's
- * own near-white backdrop, one of its lines sits in the middle, and the
- * product rises out of the bottom edge on a slight tilt, fading before it is
- * fully shown — enough to say "this is the product" without saying what it
- * does.
+ * The same film behind a small inline button, for places where the film is a
+ * footnote to the copy rather than a section of its own.
  */
-export function FilmStage({
+export function FilmButton({
   film: name,
   where,
+  children,
 }: {
-  /** A name, not the Film itself: this module is client-only, so a server
-   *  page importing FILMS would get a reference, not the object. */
   film: keyof typeof FILMS;
   where: string;
+  children: ReactNode;
 }) {
   const film: Film = FILMS[name];
   const { play, lightbox } = useFilm(film, where);
 
   return (
-    <div>
+    <>
       <button
         type="button"
         onClick={() => play()}
         aria-label={`Play the ${film.label} (${film.duration})`}
-        className="group block w-full rounded-[18px] text-left outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+        className="group inline-flex h-11 items-center gap-3 rounded-[6px] border border-[var(--rule-strong)] bg-background pl-1.5 pr-4 text-[14px] font-medium text-foreground outline-none transition-colors hover:bg-[var(--well)] focus-visible:ring-2 focus-visible:ring-primary"
       >
-        <div className="film-stage relative aspect-square w-full overflow-hidden rounded-[18px] border border-[var(--panel-edge)] [perspective:1400px] sm:aspect-[2.1/1]">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/media/website/product-film-still.jpg"
-            alt=""
-            loading="lazy"
-            className="film-horizon absolute left-1/2 top-[73%] w-[165%] max-w-none rounded-[14px] border border-[#1c2333]/8 sm:top-[52%] sm:w-[76%]"
-          />
-
-          <div className="absolute inset-x-0 top-[14%] flex flex-col items-center px-6 text-center sm:top-[17%]">
-            <span className="text-[clamp(26px,3.2vw,44px)] font-semibold leading-[1.15] tracking-[-0.025em]">
-              <span className="text-foreground">{film.title}</span>
-              {film.tail && (
-                <span className="text-muted-foreground"> {film.tail}</span>
-              )}
-            </span>
-            <span className="film-play mt-7 inline-flex items-center gap-3 rounded-full py-1.5 pl-1.5 pr-5 text-[15px] font-medium text-white sm:mt-8">
-              <span className="grid size-9 place-items-center rounded-full bg-white text-[#2c37a4]">
-                <PlayGlyph className="size-3.5" />
-              </span>
-              Play film
-              <span className="font-mono text-[12.5px] tabular-nums text-white/70">
-                {film.duration}
-              </span>
-            </span>
-          </div>
-        </div>
+        <span className="grid size-8 place-items-center rounded-[4px] bg-primary text-white">
+          <PlayGlyph className="size-3" />
+        </span>
+        {children}
+        <span className="font-mono text-[12px] tabular-nums text-muted-foreground">
+          {film.duration}
+        </span>
       </button>
-
       {lightbox}
-    </div>
+    </>
   );
 }
