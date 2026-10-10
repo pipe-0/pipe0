@@ -24,7 +24,7 @@ export const metadata = createMetadata({
 
 /* Plan ladder — keep in sync with the app's billing page and
    pipe0-server-ts/packages/common/src/stripe-product-catalog.ts
-   (`highVolumeCapacity`). Larger plans live in the app. */
+   (`highVolumeCapacity`; pay as you go is `PAY_AS_YOU_GO.centsPerCredit`). Larger plans live in the app. */
 type Plan = {
   name: string;
   price: string;
@@ -41,6 +41,7 @@ const plans: Plan[] = [
     price: "$0",
     cadence: "to start",
     credits: "Buy credits when you need them",
+    perCredit: "$0.035 per credit",
     points: ["Credits never expire", "No subscription", "Sandbox runs are free"],
     featured: true,
   },

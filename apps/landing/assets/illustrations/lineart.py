@@ -263,6 +263,30 @@ elif which == 'agent':
     finish(bpy.context.object, accent='all')
     AZ = 20
     target, scale = (0,0,1.0), 2.9
+elif which == 'security':
+    # A padlock standing on a slab, its keyhole in indigo on the face the
+    # camera sees. The shackle is the upper half of a torus on two legs.
+    box((0,0,0.12), (3.4,3.4,0.24))
+    # lifted a hair off the slab: coplanar faces break the Freestyle lines
+    top = 0.26 + 1.5
+    rounded_slab((0,0,0.26+0.75), 2.2, 1.1, 1.5, 0.22)
+    R, r, rise = 0.68, 0.15, 0.55
+    bpy.ops.mesh.primitive_torus_add(major_radius=R, minor_radius=r, major_segments=96, minor_segments=24, location=(0,0,0), rotation=(math.radians(90),0,0))
+    sh = bpy.context.object
+    bpy.ops.object.transform_apply(rotation=True)
+    bm = bmesh.new(); bm.from_mesh(sh.data)
+    bmesh.ops.delete(bm, geom=[v for v in bm.verts if v.co.z < -1e-4], context='VERTS')
+    bm.to_mesh(sh.data); bm.free()
+    sh.location = (0,0,top+rise)
+    finish(sh)
+    for p_ in sh.data.polygons: p_.material_index = 1  # flat tone; per-normal reads as jagged on a torus
+    for x in (-R, R):
+        cyl((x,0,top+rise/2-0.05), r, rise+0.1)
+    # keyhole on the -y face: a round head and a slot below it
+    bpy.ops.mesh.primitive_cylinder_add(vertices=96, radius=0.2, depth=0.04, location=(0,-0.56,0.24+0.9), rotation=(math.radians(90),0,0))
+    finish(bpy.context.object, accent='all')
+    box((0,-0.56,0.24+0.62), (0.16,0.04,0.42), accent='all')
+    target, scale = (0,0,1.1), 6.6
 elif which == 'api':
     for k,z in enumerate((0.15, 0.95, 1.75)):
         o = box((0,0,z), (3.0 - k*0.5, 3.0 - k*0.5, 0.3), accent=(k==2))

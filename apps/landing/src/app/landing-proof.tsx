@@ -14,10 +14,10 @@ import Link from "next/link";
  * show; a number that is simply there reads as a measurement.
  */
 
-const bars = [
+const bars: { label: string; value: number; ours?: boolean; worst?: boolean }[] = [
   { label: "pipe0 waterfall", value: 94, ours: true },
   { label: "Traditional waterfall", value: 72 },
-  { label: "Two cheap providers", value: 36 },
+  { label: "Two cheap providers", value: 36, worst: true },
 ];
 
 export function LandingProof() {
@@ -56,7 +56,11 @@ export function LandingProof() {
                     className="absolute inset-y-0 left-0 rounded-[3px]"
                     style={{
                       width: `${bar.value}%`,
-                      ...(bar.ours ? barSkin.win : barSkin.lose),
+                      ...(bar.ours
+                        ? barSkin.win
+                        : bar.worst
+                          ? barSkin.worst
+                          : barSkin.lose),
                     }}
                   />
                 </div>
@@ -77,8 +81,8 @@ export function LandingProof() {
       <p className="border-t border-[var(--rule)] px-6 py-5 text-[13.5px] leading-relaxed text-muted-foreground sm:px-10 lg:px-12">
         Mobile numbers found from 150 LinkedIn profiles, same rows for every
         route, August 2026. The traditional waterfall asks the cheapest
-        provider first. pipe0 paid about 12¢ per number found, the
-        traditional waterfall about 14¢.{" "}
+        provider first. pipe0 paid about 12¢ per number found. A
+        traditional waterfall costs around 52¢ per result.{" "}
         <Link
           href="/blog/cheapest-first-waterfall"
           className="font-medium text-primary underline decoration-primary/30 underline-offset-4 hover:decoration-primary"

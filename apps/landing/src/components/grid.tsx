@@ -163,6 +163,14 @@ export const barSkin = {
     boxShadow:
       "inset 0 1px 0 rgba(255,255,255,0.7), 0 1px 2px rgba(14,17,23,0.05)",
   },
+  /* The weakest result, one step past amber: a pale coral at the same
+     lightness, so the row reads "worse" without reading "error". */
+  worst: {
+    background: "linear-gradient(180deg, #fde4df 0%, #f8cbc3 60%)",
+    border: "1px solid #eaa598",
+    boxShadow:
+      "inset 0 1px 0 rgba(255,255,255,0.7), 0 1px 2px rgba(14,17,23,0.05)",
+  },
 } as const;
 
 /** Standard cell padding. */

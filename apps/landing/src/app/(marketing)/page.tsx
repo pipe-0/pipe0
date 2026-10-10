@@ -24,7 +24,7 @@ import {
 import Image from "next/image";
 
 const homeDescription =
-  "pipe0 turns any GTM play or data idea into a production system with AI. Find and enrich B2B contacts across 50+ providers, build Clay-like tables, and run automations from an agent, the API, or MCP. Pay only for results.";
+  "Turns any GTM play or data idea into a production system with pipe0. Find and enrich B2B contacts across 50+ providers, build Clay-like tables, and run automations from an agent, the API, or MCP. Pay only for results.";
 
 // Title is omitted so the root default applies verbatim (no template suffix).
 export const metadata = createMetadata({
@@ -116,7 +116,7 @@ export default function Home() {
             </span>
           </h1>
           <p className="mt-6 max-w-[680px] text-[16px] max-sm:-mx-3 sm:mx-auto sm:text-balance leading-[1.55] text-muted-foreground sm:text-[19px]">
-            pipe0 turns any GTM play or data idea into a production system.
+            Turn any GTM play or data idea into a production system with pipe0.
             Describe it, and the agent builds something you can see, change,
             and trust.
           </p>
