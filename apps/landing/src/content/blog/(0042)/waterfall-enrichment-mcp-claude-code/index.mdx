@@ -1,155 +1,119 @@
 ---
 title: Waterfall Enrichment in Claude Code with an MCP Server
-date: 2026-08-10
+date: 2026-10-11
 category: Sales data
+cover: /media/blog/covers/waterfall-enrichment-mcp-claude-code.jpg
 tags:
     - data enrichment
     - MCP
     - AI agents
-excerpt: "Most enrichment MCP servers wrap one provider, so a miss is a
-    dead end. A verified map of which servers actually cascade, why
-    server-side waterfalls beat agent-orchestrated retries, and the exact
-    Claude Code setup."
-draft: true
+excerpt: "Waterfall enrichment is how you get accurate, affordable B2B data. Which MCP servers run waterfalls, how to connect one to Claude Code, and how to change the provider order."
+tldr: "Most enrichment MCP servers wrap a single provider. A miss is a dead end. Add a waterfall MCP server like pipe0 to your coding agent to increase coverage and accuracy."
+faq:
+    - q: "How do I set up waterfall enrichment in Claude Code?"
+      a: "Add an MCP server that runs waterfalls server-side. Run `claude mcp add --transport http pipe0 https://api.pipe0.com/v1/mcp`, run /mcp to sign in, and ask Claude Code for the data you need. The agent picks the best waterfall to fulfill your request."
+    - q: "Which MCP servers support waterfall enrichment?"
+      a: "Most enrichment MCP servers wrap a single provider. pipe0 and FullEnrich run waterfalls behind an official MCP server. Clay runs waterfalls inside Clay tables, and BetterContact has no official MCP server. Surfe, Prospeo, LeadMagic, Crustdata, and Apollo offer single-provider MCP servers."
+    - q: "Can I change the order of providers in the waterfall?"
+      a: "Yes, with pipe0. Each waterfall pipe takes a providers list in its config, so you can tell the agent which providers to ask and in what order, or drop one entirely."
+draft: false
 authors:
     - name: Florian
       title: Founder
 ---
 
-{/*
-SEARCH INTENT: "which mcp servers support waterfall enrichment logic?"
-pos 6.3, "how do i set up waterfall enrichment using an mcp server
-inside claude code?" pos 4. AI-assistant-shaped queries; answer each
-verbatim as a heading with the answer in sentence one.
+Waterfall enrichment is one of the core strategies for getting accurate,
+affordable B2B data: ask providers in order until one has the answer. Read ["What Is Waterfall Enrichment?"](/blog/what-is-waterfall-enrichment) to learn more about the idea.
 
-RESEARCH BASIS (45+ sources, every vendor's MCP status individually
-verified): the market's 7 ranking "best MCP servers for GTM" articles
-are all vendor-published, five rank themselves #1, only one discloses
-the conflict, and none map which servers actually cascade. That map is
-this post's core asset.
+## Which MCP servers run waterfalls
 
-THE VERIFIED MAP: server-side multi-provider waterfall = Clay (200+
-vendors claim), pipe0 (waterfall pipes with named providers, verified
-from live schema), Cleanlist (15+ sources), SyncGTM (7 named
-providers), and FullEnrich (its integrations page lists a live MCP
-server; one research pass missed it, so double-check before
-publishing). Single-provider (miss = dead end): Hunter (NOTE: its
-local MCP repo is ARCHIVED, replaced by a remote server; articles
-still link the dead one), ZoomInfo (skills plugin), Lusha, LeadMagic
-(19 tools), Crustdata, Coresignal, Exa, Firecrawl, Apify (marketplace
-gateway). NO official MCP despite what articles imply: Apollo
-(community wrappers only, verified against their GitHub org and 404
-docs pages), People Data Labs, Findymail. Explorium markets "50+
-sources" but describes pre-harmonized data, not a live cascade —
-classify carefully.
+Most enrichment MCP servers wrap one provider: Hunter, LeadMagic,
+Crustdata, Apollo. They're useful, but when the provider has no answer,
+the agent hits a dead end.
 
-READER: already sold on Claude Code; wants the recipe plus cost
-control. Cost-anxiety facts: no vendor implements a protocol-level
-"confirm before spend"; controls that DO exist: pay-on-success
-billing (pipe0), inline validation that refuses a malformed run
-before it bills (pipe0; the separate validate_pipes dry-run tool
-was removed in MCP server 2.1.0, so do not cite it), balance-check
-tools (LeadMagic get_credits), refund-on-bad-result (Firecrawl),
-client-side oauth.scopes pinning, and Claude Code's 25k-token
-output cap per MCP response.
+The solution is to add a B2B waterfall MCP server to your agent. A
+waterfall finds more than any single provider:
 
-CONCEPT STACK:
-L1: the two ideas and why they compose
-L2: which servers cascade (the verified answer)
-L3: server-side cascade vs agent-orchestrated retries (4 concrete
-    differences)
-L4: exact setup in Claude Code
-L5: an annotated run + cost control
-L6: one-off to production
-*/}
+![Work emails found from a LinkedIn URL: pipe0 waterfall 77.5%, Surfe 69.2%, Wiza 65.8%, Amplemarket 55.8%, Crustdata 50.8%, Prospeo 45.8%, LeadMagic 27.5%.](/media/blog/charts/workemail-linkedin-coverage.svg)
 
-## Why agents and waterfalls compose
+Waterfall MCP servers:
 
-- One paragraph per concept, linking the existing deep dives: a
-  waterfall tries providers in order until one returns a verified
-  result; MCP is how agents discover and call tools, including paid
-  data tools. The thesis: agents are good at judgment (who to
-  enrich, what a miss means) and bad at being data providers;
-  waterfalls are the opposite. Wire them together and the agent
-  stops hallucinating contact data and starts orchestrating
-  verified lookups.
+- [pipe0](https://pipe0.com) has waterfall pipes for work emails, personal
+  emails, mobile numbers, and company data, over providers like Wiza,
+  Amplemarket, Crustdata, Surfe, Hunter, and LeadMagic, in an order you
+  choose.
+- [FullEnrich](/reviews/fullenrich) has an official MCP server over its
+  email and phone waterfall.
+- [Clay](/reviews/clay) runs waterfalls inside Clay tables, so an agent can
+  trigger them but not build them.
+- BetterContact runs an email and phone waterfall, but has no official MCP
+  server; you'd connect it through a third party like Zapier.
 
-## Which MCP servers support waterfall enrichment logic?
+Single-provider MCP servers, useful as one step in a chain:
 
-- Answer in the first sentence: most enrichment MCP servers wrap a
-  single provider, so a miss is a dead end; only a handful cascade
-  across providers server-side, and as of August 2026 the verified
-  list is Clay, pipe0, Cleanlist, SyncGTM, and FullEnrich.
-- The single-provider roster, so readers can classify what they
-  find: Hunter (note: the widely-linked local repo is archived,
-  replaced by a remote server; several ranking articles still point
-  at the dead one), ZoomInfo (a skills plugin over its own
-  database), Lusha, LeadMagic, Crustdata, Coresignal, Exa,
-  Firecrawl, Apify. All useful; none falls through to a second
-  vendor on a miss.
-- The corrections that earn trust, stated with evidence: [CAUTION:
-  two research passes disagreed on Apollo: one found no official
-  MCP (org repos empty, docs page 404), the other found an
-  apollo-mcp-plugin repo and hosted mcp.apollo.io in beta. Verify
-  live before publishing either claim.] And claims that "50+
-  sources" equals a waterfall deserve scrutiny:
-  pre-merged datasets answer from one blended index; a cascade
-  retries live on a miss. Different failure behavior, same
-  marketing words.
-- Why server-side matters at the agent layer, four concrete
-  differences: one tool call instead of N (each MCP response also
-  counts against Claude Code's 25,000-token output cap); one billed
-  unit instead of per-vendor charges for every retry; one response
-  schema instead of the model normalizing each vendor's shape
-  turn by turn; one client-side timeout instead of N sequential
-  ones.
-- [pipe0 →] the concrete example, from the live tool schema rather
-  than marketing: pipe0's waterfall pipes are named as such
-  (person:workemail:waterfall, person:mobile:profileurl:waterfall,
-  company:funding:waterfall), each declaring its providers
-  (leadmagic, prospeo, amplemarket, hunter, crustdata) and priced
-  per row on success. The cascade is inspectable before you run it.
+- [Surfe](/reviews/surfe) has the highest coverage of any single provider
+  above, with an official MCP server in beta.
+- [Prospeo](/reviews/prospeo), [LeadMagic](/reviews/leadmagic),
+  [Crustdata](/reviews/crustdata), and [Apollo](/reviews/apollo) all have
+  official MCP servers.
+- [Wiza](/reviews/wiza) and [Hunter](/reviews/hunter) have no official MCP
+  server, but both run inside pipe0's waterfalls.
 
-## How do I set it up in Claude Code?
+For the wider picture, see
+[the best MCP servers for GTM engineers](/blog/best-mcp-servers-gtm).
 
-- The exact current commands, because every ranking article skips
-  them: `claude mcp add --transport http <name> <url>` for remote
-  servers; scopes local, project (.mcp.json, checked into git), or
-  user; OAuth via /mcp in-session or `claude mcp login <name>`;
-  entries with a url require an explicit type field. Link
-  Anthropic's MCP docs as the canonical reference.
-- Then the pipe0-specific step, mirroring data-enrichment-claude-
-  code so instructions stay consistent (link it for depth), and the
-  verification move: run claude mcp list and confirm the tools
-  appear.
+## Set it up
 
-## An annotated run
+The example uses pipe0. Add the server from your terminal:
 
-- A transcript-shaped example: "find work emails for these eight
-  people, verify before returning." Show the agent choosing the
-  waterfall pipe, cells resolving with statuses, and no_result as
-  an answer rather than an error.
-- The cost-control section, addressing the real anxiety with the
-  real facts: no MCP server on the market implements a hard
-  confirm-before-spend prompt in the protocol today, so spend
-  control is structural, and the structures that exist are:
-  pay-on-success billing (a miss across the whole cascade costs
-  nothing), inline validation that refuses a malformed run before
-  it spends anything (there is no separate dry-run tool; the run
-  is the check), scoped API keys, and the fact that a run only
-  fills unresolved cells so re-runs never double-charge. State what
-  pipe0 implements of these plainly; mention Firecrawl's
-  refund-feedback tool and LeadMagic's balance-check tool as the
-  other patterns in the wild.
+```bash title="Claude Code"
+claude mcp add --transport http pipe0 https://api.pipe0.com/v1/mcp
+```
 
-## From chat to production
+Then run `/mcp` inside Claude Code, select pipe0, and choose Authenticate.
+A browser window opens for sign-in; there's no API key to paste.
 
-- The growth path in four steps: ad hoc runs in chat; sheets when
-  results need state the agent can return to; schedules when it
-  should happen without you; the API when it ships inside your
-  product. Everything the MCP server does is the same engine as
-  the sheets and REST API, so nothing is rebuilt between steps.
-- End with a three-sentence build the reader can start tonight: a
-  nightly schedule that enriches yesterday's signups through the
-  waterfall, validates emails, writes the sheet, and posts misses
-  to Slack. Link the signup-alerts example. Stop there.
+## Run a waterfall
+
+Ask for what you need:
+
+```text title="Prompt"
+Find work emails for these 8 LinkedIn profiles. Only keep emails that
+pass validation.
+```
+
+The agent looks up the right pipe, `person:workemail:profileurl:waterfall@1`,
+and sends the profiles in one call. Before it spends anything, it asks you
+to confirm. Each person comes back with a work email or a clear "no
+result", which is an answer, not an error: every provider in the chain was
+asked and none had it. Misses cost nothing.
+
+The same request works outside Claude Code too:
+
+export const payload = {
+  pipes: [{ pipe_id: "person:workemail:profileurl:waterfall@1" }],
+  input: [{ id: "1", profile_url: "https://www.linkedin.com/in/jane-doe" }],
+};
+
+<RequestExample kind="pipes" payload={payload} defaultTab="curl" />
+
+## Change the provider order
+
+The waterfall's default order is Wiza, Amplemarket, Crustdata, then
+Surfe. If you trust a different provider for your market, say so:
+
+```text title="Prompt"
+Run the same waterfall, but ask Amplemarket first and skip Wiza.
+```
+
+The agent passes a `providers` list in the pipe's config, and the server
+asks them in that order. Hunter, Findymail, and LeadMagic can join the
+chain too.
+
+## From chat to something that keeps running
+
+A one-off run in chat is a good start. When the list matters, ask the agent
+to put it in a sheet, then to refresh it on a schedule. It's the same
+engine, so nothing gets rebuilt along the way. If you're new to the pipe0
+MCP server, [this walkthrough](/blog/data-enrichment-claude-code) builds a
+full prospect list from one prompt.

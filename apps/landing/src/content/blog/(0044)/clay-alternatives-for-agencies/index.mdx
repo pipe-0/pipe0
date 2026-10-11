@@ -1,178 +1,113 @@
 ---
-title: Clay Alternatives for Agencies
-date: 2026-08-10
+title: Clay Alternatives for Agencies (2026)
+date: 2026-10-11
 category: Sales data
+cover: /media/blog/covers/clay-alternatives-for-agencies.jpg
 tags:
+    - Clay
+    - agencies
     - data enrichment
-    - sales automation
-excerpt: "Clay's March 2026 repricing deleted the $349 tier agencies ran
-    on, and its own memo explains why. The margin math for multi-client
-    enrichment, and what to run instead."
-draft: true
+excerpt: "What an outbound agency needs from a Clay alternative: a cost per client you can invoice through, workflows you reuse across clients, and API or CLI access. Five options compared."
+tldr: "Agencies feel Clay's pricing first, because every cost multiplies with every client while retainers stay flat. Clay's March 2026 repricing removed the $349 Explorer plan for new customers. Look for per-result billing, workflows you can reuse across clients, and API or CLI access: pipe0, Freckle, FullEnrich, and n8n each cover part or all of that."
+faq:
+    - q: "What is the best Clay alternative for an agency?"
+      a: "It depends on what you deliver. For enrichment and automation across many clients, pipe0 bills per result and runs the same workflow for every client, in the app or through the API. If your team builds in Claude Code, look at Freckle. If you only deliver emails and phone numbers, FullEnrich is simpler."
+    - q: "Did Clay remove the Explorer plan?"
+      a: "Yes. In March 2026 Clay merged its three self-serve plans into two: Launch from $185 a month and Growth from $495 a month. Existing Explorer customers could stay on their legacy plan, but new customers can't buy it."
+    - q: "Which Clay alternatives have CLI or API access?"
+      a: "pipe0 has a REST API, a TypeScript SDK, and an MCP server on every plan. Freckle runs from a CLI built for coding agents. n8n is fully scriptable if you host it. Clay has an API and a CLI too, but they operate work that lives inside a Clay workspace."
+    - q: "Is there a cheaper alternative to Clay for agencies?"
+      a: "Yes. pipe0 bills only for results, starts at $49 a month, and its sandbox runs are free, so building a client workflow doesn't spend the client's budget. FullEnrich is a cheaper option if contact data is all you deliver."
+    - q: "How do agencies reuse workflows across clients?"
+      a: "Keep the workflow definition separate from each client's data. In pipe0 a workflow is a list of pipes, so the same definition runs against every client's sheet or as one API call per client. In Clay, teams keep template tables and duplicate them for each client."
+draft: false
 authors:
     - name: Florian
       title: Founder
 ---
 
+Agencies looking for a Clay alternative usually want four things: a cost per
+client they can invoice through, workflows they build once and reuse for
+every client, API or CLI access so delivery runs without someone clicking,
+and pricing that doesn't punish iteration.
 
+Agencies feel enrichment pricing before anyone else. An in-house team runs
+one workspace and pays one bill. An agency runs the same playbook for eight
+clients, so every cost multiplies with every client it wins, while the
+retainer stays flat.
 
-{/*
-SEARCH INTENT: ~12 impressions of long-tail, largely AI-assistant
-shaped ("top clay alternatives for agencies frustrated with action
-credit pricing", "...clay's move toward enterprise pricing", "clay
-alternatives with cli access" pos 2.5, "cost-effective alternatives to
-clay that are usage-based" pos 1). We rank pos 1-16 with no page.
+## What changed at Clay
 
-READER PSYCHOLOGY: Agency operators think in margin. Enrichment spend
-is COGS against retainers, multiplied by client count. The March 2026
-repricing is THE event this audience is searching about, and the
-research gives us receipts nobody else uses: Clay's own public pricing
-memo. Acknowledge the frustration by quoting the primary source, never
-by editorializing (positioning rule: state facts, let readers
-conclude).
+In March 2026, Clay folded its three self-serve plans into two. Explorer,
+the $349 plan many agencies ran on, is gone for new customers. Launch now
+starts at $185/mo and Growth at $495/mo, and connecting to any HTTP API
+starts at Growth. Usage is metered in two currencies: Data Credits for data,
+and Actions for running enrichments, workflows, and AI. Building and
+debugging a client workflow spends the same Actions as running it.
 
-RESEARCH RECEIPTS TO USE:
-- March 11, 2026: Explorer tier ($349/mo, the agency favorite)
-  eliminated; three self-serve tiers collapsed to two (Launch $185,
-  Growth $495); legacy plans frozen, switch window closed Apr 10.
-- The memo's own words: change is "intentionally revenue and profit
-  negative" short-term; a "2022 mispricing decision"; Pro "had been
-  losing money... for years".
-- Two-currency model: Data Credits + Actions; every workflow step,
-  AI prompt, and HTTP call burns Actions; top-ups +30% premium.
-- No sandbox: iteration burns live credits; secondhand reports of
-  $800-1,000 burned in a learning week; 4-6 weeks to productivity;
-  28% of negative G2 reviews cite learning curve [secondhand, flag].
-- Community critique: the "90% of users never hit limits" framing
-  vs agency operators consuming ~75% of Actions monthly (Adewale
-  analysis). 96% of agency-model GTM practitioners use Clay
-  (reachly.co) — the segment IS the community.
-- Clay's July 9, 2026 public API/CLI/MCP launch is available on all
-  plans — answers the "cli access" queries with a real yes for Clay
-  too; be fair about it.
-- RESEARCH GAP flagged by agent: no verified primary quotes on
-  multi-client workspace mechanics; pull 2-3 agency-owner threads
-  manually before publishing.
+Clay was unusually open about why. It wrote that it had mispriced a tier in
+2022 and run it at a loss for years, and expected the change to cost it
+about 10% of revenue. Fair enough. For an agency, though, the plan it resold
+is gone.
 
-CONCEPT STACK:
-L1: why agencies feel enrichment pricing first (N-client
-    multiplication + the iteration tax)
-L2: what March 2026 changed, from the primary source
-L3: the agency requirements rubric
-L4: alternatives scored against the rubric (Clay included, fairly)
-L5: the margin model, worked with real prices
-L6: migration without dropping a client
+## Quick comparison
 
-PIPE0 HANDOFFS: rubric walk-through (usage-based, BYO keys, API on
-every plan, social pricing at volume) and the margin model (6-12x
-claim with mechanism).
-*/}
+| Tool | Best for agencies that | API or CLI | Price |
+|---|---|---|---|
+| pipe0 | Want per-result billing and workflows they can script | REST API, SDK, MCP | From $49/mo |
+| Clay | Already resell Clay and its templates | Remote control for the workspace | From $185/mo |
+| Freckle | Build in Claude Code or Codex | CLI | From $99/mo |
+| FullEnrich | Only deliver emails and phone numbers | API | From €55/mo |
+| n8n | Have engineers and want full control | Self-hosted | From €20/mo |
 
-## Why agencies hit this wall first
+## pipe0
 
-- The multiplication argument: an in-house team runs one workspace
-  and one bill; an agency runs N of everything, and platform pricing
-  rarely pools across clients. Cost grows linearly with wins while
-  retainers do not.
-- The iteration tax, now structural: Clay meters Actions on every
-  workflow step, AI prompt, and HTTP call, with no sandbox mode, so
-  building and debugging a client workflow costs the same currency as
-  running it. In-house teams amortize that across a year; agencies
-  rebuild per client. Secondhand practitioner reports describe
-  $800-1,000 burned in a single learning week [label as
-  review-aggregated; primary G2 text was not directly verifiable].
-- The segment's weight, from the one number available: 96% of
-  agency-model GTM practitioners use Clay. The community that made
-  the product big is the one most exposed to its pricing.
+![pipe0: "Agents make engineers 10x faster. GTM teams are still waiting."](/media/blog/brands/pipe0.svg)
 
-## What actually changed in March 2026
+[pipe0](https://pipe0.com) bills per result: a waterfall bills only the
+provider that found the data, and sandbox runs are free, so building a
+client workflow doesn't eat that client's budget. A workflow is a list of
+pipes, so the same definition runs for every client, as a sheet in the app
+or as one API call from your own scripts.
 
-- The facts, from Clay's own published memo and pricing page, no
-  editorializing needed: on March 11, 2026 the $349 Explorer tier
-  (the standard agency choice) was eliminated; self-serve collapsed
-  to Launch ($185/mo, 15,000 Actions + 3,000 Data Credits, 50k-row
-  tables) and Growth ($495/mo, 40,000 + 6,000, unlimited rows);
-  existing customers could stay on legacy plans but the window to
-  switch between them closed April 10; mid-cycle top-ups carry a 30%
-  premium (down from 50%).
-- Quote the memo directly, because a vendor publishing its own margin
-  admissions is rare and the transparency deserves credit even when
-  the outcome hurts: the change is "intentionally revenue and profit
-  negative" short-term, correcting a "2022 mispricing decision", and
-  the Pro tier "had been losing money... for years."
-- The framing gap the community identified: Clay's "90% of users
-  never hit limits" reassurance is about median users; agency
-  operators are the tail consuming most of the Actions. Both
-  statements are true; only one describes you.
-- Fairness note that also answers the "cli access" searches: Clay's
-  July 2026 API, CLI, and MCP launch is available on every plan
-  including legacy, with no extra credit tax. The automation gap that
-  drove some agency searches has narrowed; the pricing structure has
-  not.
+Sheets, the API, and the MCP server come with every plan, along with
+unlimited users, schedules, and webhooks. Clients who already pay for a data
+provider can keep it: bring their key and pipe0 uses it. On average, pipe0
+runs 6–12x cheaper than Clay.
 
-## What an agency stack actually requires
+## Clay
 
-- The rubric the rest of the post scores against, five requirements:
-  per-client isolation without per-client platform fees; portable
-  workflow templates (build once, deploy N times); usage-based COGS
-  you can invoice through; API/CLI access so delivery can be
-  automated; data portability at offboarding (the client owns their
-  list).
-- One sentence on why this differs from in-house needs: agencies
-  resell the output, so unit cost and repeatability outrank UI
-  polish.
+If your clients pay for their own Clay seats, or your playbooks are Clay
+templates your team knows by heart, staying is reasonable. Keep a template
+library, set credit budgets per client, and bring your own API keys to skip
+Data Credits. Clay's API and CLI trigger work that lives in a Clay
+workspace; they don't run a workflow outside it. More on that in
+[Clay alternatives for AI-first GTM teams](/blog/clay-alternatives-ai-first-teams).
 
-## The alternatives, scored
+## Freckle
 
-- Clay with discipline (stay, but operate differently): template
-  libraries, credit budgets per client, BYO API keys where possible
-  (connecting your own provider keys drops that step's Data Credit
-  cost to zero, per Clay's FAQ), legacy plan if you still hold one.
-  Honest verdict: viable for agencies whose clients pay for Clay
-  seats directly; the iteration tax remains.
-- FullEnrich for pure contact-data agencies: $29-55/mo, flat rate
-  card ($0.055/verified email, $0.55/mobile at Pro), unlimited
-  seats. No workflow layer; link the fullenrich-vs-clay post.
-- DIY on n8n plus provider APIs: real for engineering-heavy shops;
-  link the open-source post for the true cost accounting.
-- [pipe0 →] pipe0 against the rubric, factually: usage-based billing
-  that charges only the provider that returned a result (from
-  $49/mo, 20 free credits); 6-12x more cost efficient than
-  traditional tabular tools, with social pricing that stays cost
-  efficient at volume; bring your own API keys and use the API on
-  any plan; the whole engine is scriptable (REST, TypeScript SDK,
-  MCP), which is the terminal-native delivery the queries describe;
-  sheets to 2M rows with point-in-time recovery, so a client
-  deliverable survives a bad run. Disclosure sentence as always.
+![Freckle: "Run GTM workflows from your terminal"](/media/blog/brands/freckle.svg)
 
-## The margin model
+[Freckle](https://www.freckle.io) calls itself "the Clay alternative built
+for GTM engineers who live in coding agents." Workflows are saved and
+reusable, it runs from the terminal, and it prices on outputs instead of
+action credits. A good fit if your team already builds in Claude Code.
 
-- Build the worked example agencies will screenshot. Assumptions on
-  screen: 8 clients, 5,000 net-new contacts per client per month,
-  work email + mobile waterfall, realistic hit rates.
-- Price it three ways with the verified numbers: Clay (Growth tier
-  plus both currencies; note honestly that per-enrichment credit
-  costs vary by routed provider, cite Clay's own worked waterfall
-  example of $0.20-1.00 per lookup), FullEnrich (flat card), pipe0
-  (usage-based, success-billed). Show effective per-client COGS and
-  margin on a standard retainer under each.
-- Include the line item vendors never model: iteration. Estimate
-  build-and-debug runs as a percentage of production volume (20% is
-  conservative) and show what that costs where testing burns live
-  credits versus where re-running a finished sheet is free.
+## Two more, quickly
 
-## Migrating without dropping a client
+- [FullEnrich](https://fullenrich.com) finds emails and phone numbers across
+  20+ vendors at a flat price per result. The cheaper swap if contact details
+  are all you deliver; there are no workflows.
+- [n8n](https://n8n.io) lets you build the flow yourself, self-hosted if a
+  client needs its data to stay in a region. You own the provider contracts,
+  retries, and rate limits.
 
-- Sequence: pilot the new stack on one internal or lowest-risk
-  client; export tables to CSV; map each workflow column to its
-  equivalent pipe; run both stacks in parallel for one cycle on the
-  same list; compare coverage and cost per delivered record; then
-  move the book.
-- Name the true switching cost so the advice stays credible:
-  rebuilt templates, retrained operators, two to four weeks of
-  parallel running. An agency that switches for price alone and
-  skips the parallel run trades a pricing problem for a delivery
-  problem.
-- End on the operator's line: agencies do not need a cheaper
-  workbench, they need enrichment priced like infrastructure,
-  because on their P&L that is what it is.
+For the wider list, see [the best Clay alternatives](/blog/clay-alternatives).
+
+## Switching without dropping a client
+
+Move one low-risk client first. Export its Clay tables to CSV, rebuild the
+workflow, and run both stacks on the same list for one cycle. Compare cost
+and usable records, then move the rest. Plan for two to four weeks of
+parallel running: switching for price alone and skipping the parallel run
+trades a pricing problem for a delivery problem.
