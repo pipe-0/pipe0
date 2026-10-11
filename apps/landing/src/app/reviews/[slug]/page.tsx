@@ -365,7 +365,7 @@ export default async function Review(props: {
                         </span>
                       </th>
                       <td className="px-4 py-3 tabular-nums text-fd-muted-foreground">
-                        {row.n}
+                        {row.n.toLocaleString("en-US")}
                       </td>
                       <td className="px-4 py-3 font-semibold tabular-nums text-fd-foreground">
                         {row.coverage}%

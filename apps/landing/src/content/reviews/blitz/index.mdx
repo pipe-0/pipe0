@@ -1,0 +1,280 @@
+---
+title: "Blitz API review (2026): fast, precise, and unlimited, but it finds less"
+description: "Blitz API sells unlimited B2B data for a flat monthly price. In
+  our benchmark its emails were among the most consistent and came back in a
+  third of a second, but it found an email for fewer than half the people."
+tool:
+  name: Blitz API
+  url: https://blitz-api.ai
+  logo: /media/reviews/logos/blitz.png
+  category: Contact finder
+verdict: "A fast, developer-first data API with unlimited lookups for a flat
+  fee. The emails it returns are reliable, but it found one for 38 to 41% of
+  people, and phones are US-only."
+relationship: competitor
+scores:
+  easeOfUse:
+    score: 4
+    why: "Clear docs, typed SDKs, and errors that name the fix. It is built
+      for developers; other teams go through Clay, n8n, or Make."
+  dataQuality:
+    score: 3
+    why: "Its emails agreed with other providers as often as anyone's, but it
+      found one for 38% of profiles in our head-to-head test. Phones are
+      US-only."
+  pricingValue:
+    score: 3.5
+    why: "Unlimited lookups for a flat fee are cheap at high volume, but
+      email starts at $499 a month, whatever your volume."
+  agentAccess:
+    score: 4.5
+    why: "A synchronous API that answered in about 0.3 seconds, plus an MCP
+      server with OAuth, built-in skills, and searchable docs."
+bestFor:
+  - "Teams enriching tens of thousands of LinkedIn profiles a month"
+  - "Developers who want sub-second, synchronous lookups"
+  - "Workflows that would rather skip a person than risk a bad email"
+skipIf:
+  - "You need an email for as many people on your list as possible"
+  - "You need mobile numbers outside the United States"
+  - "Your volume is low or uneven from month to month"
+pros:
+  - title: "Consistent answers"
+    body: "When Blitz and another provider both found an email, they agreed
+      73% of the time, tied for the highest of the 10 providers we tested."
+  - title: "Fast"
+    body: "Lookups came back in a median of 0.3 seconds, synchronously. Many
+      contact providers take several seconds or make you poll."
+  - title: "Flat-rate unlimited"
+    body: "Paid plans have no per-lookup fees, so re-running a list or
+      testing a new workflow costs nothing extra."
+  - title: "Agent-ready"
+    body: "An MCP server with one tool per endpoint and OAuth sign-in, plus
+      an llms.txt index and Python and TypeScript SDKs."
+cons:
+  - title: "Lower coverage"
+    body: "From 120 LinkedIn profiles, Blitz found a work email for 38%. A
+      waterfall of four providers found 84% of the same people."
+  - title: "Phones are US-only"
+    body: "Blitz says its 45 million mobile numbers cover only the United
+      States, and phone lookups need the $599 plan."
+  - title: "A high floor"
+    body: "Email lookups need the $499 a month plan. At low volume that is
+      more per email than paying per result."
+  - title: "Developers only"
+    body: "Blitz is an API. Without a developer, you work through
+      integrations such as Clay, n8n, or Make."
+pricing:
+  asOf: 2026-10-11
+  source: https://docs.blitz-api.ai/guide/concepts/pricing-unlimited
+  startingAt: 399
+  startingAtNote: "for Unlimited Leads, without email or phone lookups"
+  freePlan: false
+  plans:
+    - name: Free trial
+      price: "$0"
+      includes: "1,000 records, charged per result found. No phone lookups."
+    - name: Unlimited Leads
+      price: "$399/mo"
+      includes: "People and company search, company data, and domain to
+        LinkedIn lookups."
+    - name: Unlimited Email
+      price: "$499/mo"
+      includes: "Everything in Leads, plus work email lookups."
+    - name: Unlimited Phone
+      price: "$599/mo"
+      includes: "Everything in Email, plus mobile numbers, US only."
+  notes:
+    - "Unlimited plans are subject to a fair use policy."
+    - "Rate limits are per endpoint and depend on the plan."
+facts:
+  - label: Database
+    value: "550M+ LinkedIn-based contacts and 65M+ verified emails, according
+      to Blitz"
+    source: https://docs.blitz-api.ai/guide/concepts/quality
+  - label: Phones
+    value: "45M+ mobile numbers, United States only, according to Blitz"
+    source: https://docs.blitz-api.ai/guide/concepts/quality
+  - label: API
+    value: "Synchronous REST with a LinkedIn URL or email as input; typed
+      Python and TypeScript SDKs"
+    source: https://docs.blitz-api.ai/sdks/overview
+  - label: MCP server
+    value: "api.blitz-api.ai/mcp, OAuth or API key; one tool per endpoint"
+    source: https://docs.blitz-api.ai/guide/integrations/MCP
+  - label: Integrations
+    value: "Clay, n8n, Make"
+    source: https://docs.blitz-api.ai/guide/integrations/clay
+benchmark:
+  period: "October 2026"
+  rows:
+    - test: "LinkedIn URL to work email"
+      run: 20261011T173839Z-27b0
+      n: 120
+      coverage: 37.5
+      agreement: 73
+      latency: "0.3 s"
+    - test: "LinkedIn URL to work email, all profiles"
+      run: 20261011T174046Z-5a57
+      n: 1204
+      coverage: 41.1
+      latency: "0.3 s"
+    - test: "Email to LinkedIn URL"
+      dataset: signups
+      run: 20261011T173957Z-de8f
+      n: 100
+      coverage: 10
+      agreement: 94
+      latency: "0.3 s"
+  notes:
+    - "On the same 120 profiles, pipe0's default work email waterfall found
+      84%, and Blitz found no email it missed."
+    - "From the same 100 emails, pipe0's reverse lookup waterfall found a
+      LinkedIn profile for 29%, against Blitz's 10%."
+    - "Across all 1,204 profiles, Blitz's coverage ran from 54% in the
+      United States to 30% in Spain."
+    - "Phone lookups weren't part of this test."
+  agreement:
+    test: "LinkedIn URL to work email"
+    run: 20261011T173839Z-27b0
+    unit: "work email"
+    pairs:
+      - provider: Wiza
+        compared: 42
+        agreed: 34
+      - provider: Surfe
+        compared: 41
+        agreed: 31
+      - provider: Amplemarket
+        tier: Premium
+        compared: 35
+        agreed: 26
+alternatives:
+  - name: pipe0
+    href: /enrichment-api
+    why: "You want an email for as many people as possible, from a
+      waterfall you can see, paying only when a result is found."
+  - name: Wiza
+    href: /reviews/wiza
+    why: "You want broad coverage from LinkedIn URLs with cheap per-result
+      API credits."
+  - name: Surfe
+    href: /reviews/surfe
+    why: "You need mobile numbers, including outside the United States."
+  - name: Prospeo
+    href: /reviews/prospeo
+    why: "You want fast email lookups and pay per credit instead of a flat
+      fee."
+authors:
+  - name: Florian
+    title: Founder
+date: 2026-10-11
+faq:
+  - q: "How much does Blitz API cost?"
+    a: "Plans are flat-rate and unlimited: $399 a month for search and
+      company data, $499 with work emails, and $599 with US mobile numbers.
+      A free trial includes 1,000 records."
+  - q: "How good is Blitz API's email data?"
+    a: "In our test of 120 LinkedIn profiles, Blitz found a work email for
+      38%, and for 41% across 1,204 profiles. When another provider also
+      found one, they agreed 73% of the time, tied for the highest we
+      measured."
+  - q: "Does Blitz API have phone numbers outside the US?"
+    a: "No. Blitz says its mobile numbers cover the United States only, and
+      phone lookups need the $599 a month plan."
+  - q: "Does Blitz API have an MCP server?"
+    a: "Yes. The server at api.blitz-api.ai/mcp exposes one tool per API
+      endpoint, signs in with OAuth or an API key, and includes the docs and
+      built-in skills."
+  - q: "Blitz API or pipe0: which should I choose?"
+    a: "Blitz is cheaper per lookup at very high volume and its answers are
+      precise, but it found an email for 38% of the profiles where pipe0's
+      waterfall found 84%. You can also run Blitz first and send only its
+      misses to pipe0."
+---
+
+{/*
+FACT BASE (checked 2026-10-11 on primary sources unless marked):
+- Pricing (docs.blitz-api.ai/guide/concepts/pricing-unlimited and index):
+  Unlimited Leads $399/mo, Unlimited Email $499/mo, Unlimited Phone $599/mo;
+  fair use policy on all plans. Free trial 1,000 records, consumed per
+  result returned; phone not on the trial (key-info allowed_apis, live 401).
+- Quality page (docs.blitz-api.ai/guide/concepts/quality): 550M+ contacts,
+  65M+ verified emails ("97% accuracy" claim not used), 45M+ phones US only,
+  no pattern guessing, re-verified every 30 days.
+- API: v2 REST, x-api-key, per-endpoint RPS by plan (trial 5/s); SDKs
+  Python and TypeScript. MCP api.blitz-api.ai/mcp, OAuth or x-api-key.
+  Integrations pages: Clay, n8n, Make.
+- Benchmark: brain/positioning/evidence.md, "Blitz API (2026-10-11)".
+  27b0 work email 45/120, agreement 209/286, p50 289 ms live; 5a57 495/1204
+  (US 54%, Spain 30%); de8f reverse 10/100, agreement 62/66, p50 305 ms.
+  pipe0 default waterfall 101/120 (run d126), reverse 29/100 (run 72f0).
+  Pairs from 27b0: wiza 34/42, surfe 31/41, amplemarket 26/35.
+- pipe0 relationship: competitor; not used in any pipe0 waterfall.
+*/}
+
+## What is Blitz API?
+
+Blitz API is a B2B data API built around a LinkedIn-based dataset of more
+than 550 million contacts. It finds people at companies, enriches LinkedIn
+profiles, and returns work emails and, in the United States, mobile numbers.
+
+Its pitch is the price model. Instead of charging per lookup, Blitz sells
+three flat monthly plans with unlimited use, subject to a fair use policy.
+
+## Precise, but it finds less
+
+Blitz says it never guesses an email from a name pattern and would rather
+return nothing than a risky address. Our benchmark matches that.
+
+We ran Blitz on the same 120 LinkedIn profiles as nine other providers.
+When Blitz and another provider both found an email, they agreed 73% of the
+time, tied with Hunter for the most consistent of the ten. But Blitz found
+an email for only 45 of the 120, or 38%. Across all 1,204 profiles in our
+dataset it found 41%, from 54% in the United States down to 30% in Spain.
+
+For comparison, pipe0's default work email waterfall found an email for 101
+of the same 120 people, 84%, and every person Blitz found was among them.
+Starting from an email, Blitz found the LinkedIn profile for 10 of 100
+people, against 29 for pipe0's reverse lookup waterfall.
+
+## Fast and built for agents
+
+Blitz answered in a median of 0.3 seconds, synchronously. Several contact
+providers take seconds per lookup or make you poll for results, so this
+matters if an agent or a live form is waiting.
+
+The MCP server exposes one tool per API endpoint and signs in with OAuth,
+and the docs ship with an llms.txt index and built-in skills for agents.
+Errors name the field that was wrong and the closest valid value.
+
+## What it costs
+
+There are three plans: $399 a month for search and company data, $499 to
+add work emails, and $599 to add mobile numbers, which cover the United
+States only. A free trial includes 1,000 records, and phone lookups aren't
+part of it.
+
+Flat-rate pricing is cheap when you run tens of thousands of lookups a
+month. At lower volume, $499 buys fewer emails than paying per result would.
+Because Blitz found an email for fewer than half the people we tested, the
+real cost per email found is about two and a half times the cost per lookup.
+
+## Blitz API and pipe0
+
+pipe0 competes with Blitz and doesn't use it in its waterfalls. We tested
+it on the same inputs as every other provider in our benchmark.
+
+If you already pay for Blitz, the two work together: run Blitz first and
+send only the people it misses through pipe0. In our test that kept
+coverage at 84% and cut pipe0 spend by about 40%.
+
+## Who should buy Blitz API
+
+Buy Blitz if you enrich tens of thousands of LinkedIn profiles a month,
+want answers in under a second, and would rather skip a person than send to
+a doubtful address.
+
+Look elsewhere if you need an email for as many people on your list as
+possible, mobile numbers outside the United States, or if your volume is
+low.

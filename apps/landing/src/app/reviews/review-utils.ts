@@ -121,10 +121,11 @@ export function benchmarkCaveats(
     ...(benchmark.verification ? [benchmark.verification.n] : []),
   ];
   const [min, max] = [Math.min(...sizes), Math.max(...sizes)];
-  const range = min === max ? `${min} records` : `${min} to ${max} records`;
+  const fmt = (n: number) => n.toLocaleString("en-US");
+  const range = min === max ? `${fmt(min)} records` : `${fmt(min)} to ${fmt(max)} records`;
   return [
     ...(benchmark.notes ?? []),
-    `Samples are small, ${range} per test, so treat a few points of difference as noise.`,
+    `Each test ran on ${range}.`,
     ...(benchmark.verification
       ? [
           "Known-valid addresses are pipe0 users with a live Google sign-in in the last 45 days; known-invalid addresses are synthetic, with no person behind them.",
