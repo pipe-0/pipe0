@@ -1,0 +1,115 @@
+---
+title: The Best Tools for GTM Engineers (2026)
+date: 2026-10-11
+category: Sales data
+tags:
+    - GTM engineering
+    - AI agents
+    - data enrichment
+excerpt: "GTM engineers build the systems and experiments that scale a company's growth. Here are the tools they use for each layer of the stack: reasoning, data and automation, CRM, sending, sync, and research."
+tldr: "Every GTM engineering stack has the same building blocks: data and enrichment, automation, sync, a CRM, and a sending tool. The logic now lives in coding agents like Claude Code, so pick tools for every other layer that your agent can operate."
+faq:
+    - q: "What tools do GTM engineers use?"
+      a: "A typical stack has Claude Code for the logic, pipe0 or Clay for data and automation, Attio, Twenty, or HubSpot as the CRM, lemlist or Amplemarket for outreach, Hightouch or Polytomic for warehouse sync, and Exa or Parallel for web research."
+    - q: "What is the best data enrichment tool for GTM engineers?"
+      a: "pipe0 is a good default. It's a stateless data API and an MCP server, with Clay-like sheets and schedules on the same engine, so a coding agent can look up data, build automations, and keep them running. Clay works if your playbooks already live there."
+    - q: "Do GTM engineers still need Clay?"
+      a: "Clay is still the most common tool in GTM stacks, and teams with playbooks built in it can keep them there. It was built for people clicking through tables, though, and its API is a remote control for the Clay workspace, so it's a poor fit when a coding agent does the building."
+    - q: "Can Claude Code replace a GTM tool stack?"
+      a: "It replaces the place where the logic lives, not the tools underneath. Claude Code is great for research and small automations, but large lists, signals, webhooks, and schedules need a data and automation layer behind it."
+    - q: "Which MCP servers should a GTM engineer connect?"
+      a: "Start with one for data and automation, such as pipe0, one for your CRM, such as Attio or HubSpot, and one for web research, such as Exa or Parallel. That covers finding, enriching, and recording accounts from inside your agent."
+draft: false
+authors:
+    - name: Florian
+      title: Founder
+---
+
+Every GTM engineering stack has the same building blocks: data and
+enrichment, automation, sync, a CRM, and a sending tool. In
+[a survey of 62 company stacks](https://intempt.com/blog/gtm-stack-2026),
+Clay showed up in 71% of them, n8n in 48%, HubSpot in 39%, and Attio in 32%.
+
+What changed is where the thinking happens. So for every layer below, the
+question is the same: can your coding agent operate it?
+
+## The stack at a glance
+
+| Layer | Pick | Why |
+|---|---|---|
+| Reasoning | Claude Code | Where your GTM logic lives now |
+| Data and automation | pipe0 or Clay | Enrichment, lists, and automations |
+| CRM | Attio, Twenty, or HubSpot | All open to agents |
+| Sending | lemlist or Amplemarket | Multichannel outreach |
+| Warehouse sync | pipe0, Hightouch, or Polytomic | Warehouse and tools in sync |
+| Web research | Exa or Parallel | Web search built for agents |
+
+## Reasoning: Claude Code
+
+This is the layer that moved. Instead of encoding a play in Clay's table
+columns, you describe it to a coding agent, and the plan lives in files you
+can review, version, and rerun.
+
+Claude Code is the default for answering research questions and building
+small automations that run on your machine or in its cloud environment.
+
+As things get bigger, you'll hit the limits of an agent-only approach:
+iterating on and storing large lists, signals, webhooks, schedules.
+Building those with Claude alone turns into real engineering work that slows
+down the experiments you actually care about.
+
+## Data and automation: pipe0
+
+![pipe0: "Give your GTM team its AI moment"](/media/blog/brands/pipe0-ai-moment.svg)
+
+[pipe0](https://pipe0.com) is the data and automation layer built for real
+GTM workflows. At its core is a stateless, idempotent data API: ask for
+data, get it back. Connect it to your agent and it gets contact data plus
+access to the systems around it, like your sequencer, your CRM, and Gmail.
+
+When you need signals, webhooks, emails, and schedules, move the same data
+into a cloud-hosted, Clay-like table with up to 2 million rows and
+point-in-time restore. Think of pipe0 as Terraform for automation, as an
+API. Your agent reaches all of it over MCP, and on average it's 6–12x more
+cost-efficient than Clay.
+
+Clay is still the most common tool in this layer, and if your playbooks
+already live there, it works. Its API is a remote control for the Clay
+workspace, though, so it fits best when people, not agents, do the
+building.
+
+## CRM: Attio, Twenty, or HubSpot
+
+Attio is built for agents from the ground up. Its SDK, API, and MCP server
+make the CRM something your agent can read and write without a human in
+between.
+
+![Attio: "Welcome to agentic revenue."](/media/blog/brands/attio.svg)
+
+[Twenty](https://twenty.com) is the open-source option: self-hostable, with
+a built-in MCP server, for teams that want to shape the CRM themselves.
+HubSpot is the default for smaller teams: free to start, with its own
+[MCP server](/blog/best-mcp-servers-gtm). If your company already runs
+Salesforce, keep it; what matters is that your agent can reach it.
+
+## The rest, quickly
+
+- Sending: [lemlist](https://www.lemlist.com) runs multichannel campaigns
+  across email, LinkedIn, and calls. [Amplemarket](https://www.amplemarket.com)
+  pairs outreach with its own B2B data in one AI platform.
+- Warehouse sync: [Hightouch](https://hightouch.com) and
+  [Polytomic](https://www.polytomic.com) keep your warehouse and your tools
+  in sync, in both directions with Polytomic. pipe0 covers simpler syncs
+  itself: read rows, enrich them, write them back.
+- Web research: [Exa](https://exa.ai) and [Parallel](https://parallel.ai)
+  are web search built for agents, both with MCP servers, for research the
+  data providers don't cover.
+
+For the MCP side of this stack, see
+[the best MCP servers for GTM engineers](/blog/best-mcp-servers-gtm).
+
+## How to pick
+
+Give your coding agent one real job, end to end: "Find 50 accounts that
+match our ICP, get the head of RevOps at each, and put them in the CRM."
+Watch where it stops and asks for you. That layer is the one to replace.

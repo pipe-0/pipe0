@@ -1,94 +1,134 @@
 ---
-title: The Best MCP Servers for GTM Teams (2026)
+title: The Best MCP Servers for GTM Engineers and Teams (2026)
 date: 2026-07-23
+updated: 2026-10-11
 category: Sales data
 cover: /media/blog/covers/best-mcp-servers-gtm.jpg
 tags:
     - MCP
     - AI agents
     - data enrichment
-excerpt: "Nine MCP servers for sales and GTM work, compared by what they're actually best at: agentic workflows, databases, CRMs, outreach, and web research."
+excerpt: "The MCP servers worth wiring into Claude Code, Codex, or ChatGPT for GTM work, and the one question that separates them: was the server built for agents, or bolted onto a tool built for people?"
+tldr: "A GTM agent needs three servers: one for data and automation, one for your CRM, and one for web research. For data, pick a server built for agents rather than a remote control for a human UI. pipe0 runs searches, waterfalls, and whole sheets on the same engine as its API, at 6–12x lower cost than Clay."
+faq:
+    - q: "What is the best MCP server for GTM engineers?"
+      a: "For data and automation, pipe0. Its MCP server exposes the same engine as its REST API: stateless lookups that answer directly, plus sheets the agent can build, enrich, and schedule. Pair it with your CRM's official server and a web research server like Exa."
+    - q: "Do I need more than one MCP server?"
+      a: "Usually yes. Data, CRM, and web research are different jobs, and no single server does all three well. Two or three servers cover most teams."
+    - q: "Does Clay have an MCP server?"
+      a: "Clay offers MCP for Reps, a connection an admin sets up for sellers, with its own functions and per-rep credit budgets. It runs work that lives in the Clay workspace. Agents can't build Clay tables through Clay's official tools."
+    - q: "Is it safe to give an agent CRM write access?"
+      a: "Only with the right controls: OAuth scoping, confirmation before writes and before spending credits, an audit trail, and a way to undo. Test the workflow in a sandbox before it touches production records."
+    - q: "Do these servers work with ChatGPT, Codex, and Claude Code?"
+      a: "Yes. They all speak the same protocol over a hosted URL, so any MCP client can connect. Some also ship as native connectors in Claude and ChatGPT."
 authors:
     - name: Florian
       title: Founder
 ---
 
-MCP servers connect agents like Claude or ChatGPT to real systems. This can be your CRM, a data provider, an enrichment service.
+A GTM agent in Claude Code, Codex, or ChatGPT is only as good as the servers
+you connect to it. Most setups need three: one for data and automation, one
+for your CRM, and one for web research.
 
-Many new MCP servers launched this year: Apollo, ZoomInfo, Clay, and Attio all shipped official servers.
-
-An obvious question is "which one should I use?". In this blog, we try to give you an overview of common and helpful MCP servers for GTM teams.
+The data server is where the choice matters. Some MCP servers were built for
+agents: the agent can find data, enrich it, and build a list that keeps
+running. Others are a remote control for a tool built for people clicking.
+The agent can trigger what a person set up, and stops there.
 
 ## Quick comparison
 
-| Server | Best for | Data behind it | Pricing model |
+| Server | Best for | Endpoint | Pricing |
 |---|---|---|---|
-| pipe0 | Most GTM workflows | 100+ enrichments and searches, 50+ providers | Usage-based, from $49/mo |
-| Clay MCP | Teams already using Clay | Clay's provider network | Included in higher tiers |
-| Apollo MCP | Free entry to a big database | Apollo's own database | All plans, including free |
-| ZoomInfo GTM.AI | Enterprise contract customers | ZoomInfo's database | Annual contract |
-| Amplemarket | All-in-one outreach | Amplemarket's database | Not published |
-| Crustdata | Builders who want raw data | Crustdata's live B2B data | API pricing |
-| HubSpot MCP | HubSpot CRM access | Your CRM | Included with HubSpot |
-| Attio MCP | Attio CRM access | Your CRM | Included with Attio |
-| Exa | Web research context | Live web index | Usage-based |
+| pipe0 | Data and automation for agents | Hosted, OAuth | From $49/mo |
+| Clay | Teams already running Clay | Admin-enabled MCP for Reps | Clay credits |
+| Apollo | A big database, free to start | `mcp.apollo.io/mcp` | All plans |
+| ZoomInfo | Enterprise ZoomInfo customers | `mcp.zoominfo.com/mcp` | ZoomInfo license |
+| Amplemarket | Prospecting and outreach | `mcp.amplemarket.com/mcp` | Amplemarket plan |
+| Crustdata | Raw B2B data for builders | `install.crustdata.com/mcp` | Usage-based |
+| HubSpot | HubSpot CRM | `mcp.hubspot.com` | Included |
+| Attio | Attio CRM | `mcp.attio.com/mcp` | Included |
+| Exa | Web research | `mcp.exa.ai/mcp` | Usage-based |
 
-## pipe0: best for agentic GTM workflows
+## pipe0: built for agents
 
-Most MCP servers let an agent look things up: Contacts from a CRM, or outreach sequences from your sequencer.
+Most MCP servers let an agent look things up. pipe0 lets it run the whole
+workflow: search for prospects, enrich them through waterfalls across 50+
+providers, write the results into a sheet, and schedule the refresh.
 
-pipe0 lets an agent run entire workflows: search for prospects, enrich them through waterfalls, write the results into a sheet.
+The MCP server and the REST API are the same engine. An agent can ask a
+data question and get the answer back in the conversation, with nothing
+stored. When the list starts to matter, it says "put this in a sheet" and
+the same data becomes a table you can open, change, and schedule. 100+
+enrichments and searches, sheets up to 2 million rows, and 6–12x more
+cost-efficient than Clay.
 
-One thing separates it from everything else on this list: agents work stateless or stateful, and data moves freely between one-off requests that stay in the conversation and UI tables that you can inspect and tweak.
+It connects to any MCP client over OAuth. Setup is in the
+[MCP server docs](/docs/sdks/mcp), and the
+[Claude Code walkthrough](/blog/claude-code-sales-prospecting) shows a full
+session.
 
-Connects to any MCP client over OAuth. Setup is in the [MCP server docs](/docs/sdks/mcp); the [Claude Code walkthrough](/blog/claude-code-sales-prospecting) shows a full session.
+## Clay: a remote control for the workspace
 
-## Clay MCP: best if your ops team already runs Clay
+Clay's MCP for Reps is a connection an admin sets up for sellers, with its
+own functions and per-rep credit budgets. The Clay plugin for Claude Code and
+Codex doesn't include it. Both run work that already lives in Clay: the
+agent can trigger tables, functions, and workflows, but it can't build a
+table through Clay's official tools. If your team's logic already lives in
+Clay and stays there, connect it. If you want your agent to do the building,
+see
+[Clay alternatives for AI-first teams](/blog/clay-alternatives-ai-first-teams).
 
-Clay released its MCP server at [clay.com/mcp](https://clay.com/mcp) for Claude, ChatGPT, and Codex. The server can search Clay's database, enrich contacts, run pre-built Functions, and push contacts to Salesforce and sequencers. Rather than a first-class stateless MCP server, Clay shipped a remote control for their platform. The MCP server is available on higher tier plans only. If your team's enrichment logic already lives in Clay tables, this is the natural place to connect your agent.
+## Apollo: a big database, free to start
 
-## Apollo MCP: best free entry to a big B2B database
+Apollo's server works in Claude, ChatGPT, Cursor, Codex, and any MCP client.
+Agents search Apollo's database, enrich contacts, manage sequences, and update
+the CRM. It runs on every plan, though free accounts need a work email for
+search and enrichment. The data is one database, strong in US tech and
+thinner elsewhere. [pipe0 vs Apollo](/compare/pipe0-vs-apollo) covers the
+tradeoff.
 
-Apollo's first-party server ([docs](https://docs.apollo.io/docs/apollo-mcp)) is available as a native connector inside Claude, ChatGPT, and Perplexity, or as a remote endpoint at `mcp.apollo.io/mcp`. Agents search the database, enrich contacts, add to sequences, and update the CRM. It is in beta and every plan qualifies, including free, which makes it the lowest-friction way to try agentic prospecting. The data is Apollo's own database, with the coverage profile that implies: strong in US tech, thinner elsewhere. Our [pipe0 vs Apollo](/compare/pipe0-vs-apollo) comparison covers the tradeoff.
+## ZoomInfo: for teams that already pay for it
 
-## ZoomInfo GTM.AI: best for enterprise contract customers
+ZoomInfo's server puts company search, contact discovery, enrichment, and
+intent data inside Claude and ChatGPT. It needs a ZoomInfo license, so it
+makes sense if your company already has one.
 
-ZoomInfo launched GTM.AI in June 2026 as its agent-native integration: company search, contact discovery, enrichment, and intent signals at `mcp.zoominfo.com/mcp`. If your company already pays for ZoomInfo, this puts the database inside Claude, ChatGPT, and Copilot.
+## Five more, quickly
 
-## Amplemarket: best all-in-one outreach MCP
-
-Amplemarket's MCP (launched March 2026) covers the rep motion end to end: find prospects by ICP description, enrich them, build lists, research accounts, with sequence enrollment listed as in development. Claude and ChatGPT are supported, and setup is a sign-in rather than API keys. If you want one vendor from prospect to outreach and its database fits your market, this is the most complete rep-facing option.
-
-## Crustdata: best raw B2B data for builders
-
-Crustdata's server at `mcp.crustdata.com` gives agents live company and people intelligence over an API key: headcount trends, funding, web traffic, people lookups. It is data infrastructure rather than a workflow product, which is exactly right if you are building your own agent and want current B2B facts in it. (Crustdata is also one of the providers inside pipe0's waterfalls.)
-
-## HubSpot MCP and Attio MCP: best CRM access
-
-Your data server answers "who should we talk to"; your CRM server answers "what do we already know." HubSpot's official server at `mcp.hubspot.com` gives agents OAuth-scoped read and write access to contacts, deals, and engagements. Attio's hosted server at `mcp.attio.com/mcp` does the same for Attio workspaces. Both are included with the products. Nearly every real GTM agent setup pairs one of these with a data server.
-
-## Exa: best web research context
-
-Exa's server at `mcp.exa.ai/mcp` gives agents live web search, company research, and LinkedIn lookups. It is not a contact database; it is the context layer that makes outreach specific ("they announced a Series B last week"). Cheap, useful, and it composes with everything above.
+- [Amplemarket](https://www.amplemarket.com) covers the rep motion: find
+  prospects from an ICP description, enrich them, build lists, research
+  accounts. Sequence enrollment isn't available yet.
+- [Crustdata](https://crustdata.com) gives agents live company and people
+  data: headcount, funding, jobs, and web signals. Data infrastructure for
+  teams building their own agent.
+- [HubSpot](https://developers.hubspot.com/mcp) and
+  [Attio](https://attio.com/apps/mcp) give agents read and write access to
+  your CRM, scoped to your own permissions. Almost every GTM setup needs one.
+- [Exa](https://docs.exa.ai/examples/exa-mcp) adds live web search and company
+  research, the context that makes outreach specific ("they announced a
+  Series B last week").
 
 ## When the agent is wrong
 
-This is the section the category skips, and it should be your first evaluation question. An agent with MCP access can spend your credits and write to your CRM, which means the interesting failure mode is not a wrong answer in chat but a wrong action in a system of record.
+An agent with MCP access can spend credits and write to your CRM. The real
+failure isn't a wrong answer in chat, it's a wrong action in a system of
+record. Ask three things of any data server:
 
-Ask three things of any server on this list. Does the agent have to confirm before spending money or writing externally? Can you see afterward exactly what it did? Can you undo it? On pipe0 the answers are confirmation gates on billable calls, an append-only run history, and point-in-time recovery, plus a sandbox where nothing bills and nothing writes. Most servers in this list publish no equivalent, which does not make them unusable; it makes supervision your job.
+- Does the agent confirm before it spends money or writes somewhere?
+- Can you see exactly what it did afterward?
+- Can you undo it?
+
+On pipe0, billable calls ask for confirmation, every run lands in the sheet's
+history, point-in-time recovery undoes mistakes, and a sandbox lets the agent
+rehearse a flow with mock data before anything bills or writes.
 
 ## Build your stack
 
-Two or three servers cover most teams:
+- Starting out: Apollo plus your CRM's server.
+- Enrichment at scale: pipe0 plus your CRM's server, with Exa for
+  research.
+- Enterprise on ZoomInfo: ZoomInfo plus HubSpot or Salesforce, with Exa
+  for research.
 
-- **Small team starting out**: Apollo MCP (free) plus your CRM's server. Upgrade the data layer when single-database coverage disappoints.
-- **Enrichment-heavy team**: pipe0 plus your CRM's server. Waterfalls for coverage, sheets for the lists, schedules for the refresh.
-- **Enterprise with ZoomInfo**: GTM.AI plus HubSpot or Salesforce access, with Exa for research context.
-
-## Common questions
-
-**Do I need more than one MCP server?** Usually yes. Data, CRM, and web research are different jobs, and no single server does all three well.
-
-**Is it safe to give an agent CRM write access?** It depends on the server's controls. Look for OAuth scoping, confirmation before writes, and an audit trail. Test in a sandbox before production; pipe0 ships one for exactly this reason.
-
-**Do these work with ChatGPT or only Claude?** All the servers above support both where noted, over the same protocol. Our [ChatGPT guide](/blog/connect-chatgpt-crm-data) walks through a CRM enrichment setup step by step.
+For a ChatGPT setup step by step, see
+[connect ChatGPT to your CRM data](/blog/connect-chatgpt-crm-data).

@@ -1,0 +1,121 @@
+---
+title: The Best Data Enrichment APIs (2026)
+date: 2026-10-11
+category: Engineering
+cover: /media/blog/covers/best-data-enrichment-apis.jpg
+tags:
+    - API
+    - data enrichment
+excerpt: "An enrichment API is something you build on when you need to integrate B2B data into a tool or workflow. Eight APIs compared."
+tldr: "Judge an enrichment API like infrastructure: stateless and idempotent calls, versioned contracts, a sandbox, coverage beyond one dataset, and paying only for results. pipe0 checks every box and adds pipes that write to other systems. Single-dataset APIs like People Data Labs and Crustdata are strong in their slice."
+faq:
+    - q: "What is the best data enrichment API?"
+      a: "For most products and data pipelines, pipe0. It is a stateless, idempotent API over 50+ providers, with waterfalls that bill only the provider that answered, a free sandbox, and pipes that can write results back to your CRM. If you need bulk records from one large dataset, People Data Labs is a strong pick."
+    - q: "Why does a waterfall API find more data than a single provider?"
+      a: "Every provider has gaps. A waterfall asks several providers in order and stops at the first answer, so it covers what any one dataset misses. Finding mobile numbers from LinkedIn profiles, pipe0's waterfall found 94%, Crustdata 78%, and LeadMagic 15%."
+    - q: "Does Clay have a data enrichment API?"
+      a: "No. Clay's API is a remote control for the Clay workspace: it triggers tables, functions, and workflows that live in Clay. It isn't a data API you can build a product or a data pipeline on."
+    - q: "How do I test an enrichment API without paying for data?"
+      a: "Use a sandbox. pipe0's sandbox returns mock data in the production shape for free, so your integration and CI tests run without spending credits."
+draft: false
+authors:
+    - name: Florian
+      title: Founder
+---
+
+An enrichment API is something you build on. Your signup flow, your lead
+scoring, or your warehouse sync.
+
+Four things matter:
+
+- A stateless, idempotent contract: send records, get enriched records
+  back. Ask the same question twice, get the same answer.
+- Versioned, typed endpoints, so what your code calls today means the same
+  thing next year.
+- A sandbox. Enrichmnet data is expensive and you don't want to burn credits during testing.
+- Coverage beyond one dataset, billed only when there's a result.
+
+## Quick comparison
+
+| API | Best for | Data | Price |
+|---|---|---|---|
+| pipe0 | Products and pipelines that need data and automation | 50+ providers, waterfalls | From $49/mo |
+| People Data Labs | Bulk person and company records | One large dataset | From $98/mo |
+| Crustdata | Fresh people and company data | One live dataset | Custom |
+| Apollo | Data inside an outreach tool | One dataset | From $49 per seat/mo |
+| Hunter | Emails from a name and a domain | One dataset | From €49/mo |
+| FullEnrich | Emails and phones | 20+ vendors | From €55/mo |
+| LeadMagic | Cheap emails and mobiles | One dataset | From $99/mo |
+| Clay | Running work inside Clay | 200+ vendors via Clay | From $185/mo |
+
+Every dataset has gaps. A waterfall that asks several providers in order
+fills them:
+
+![Mobile numbers found from LinkedIn profiles: pipe0 94%, Crustdata 78%, LeadMagic 14.7%.](/media/blog/charts/enrichment-api-mobile-coverage.svg)
+
+## pipe0
+
+pipe0 is a stateless, idempotent data API over 50+ providers. Every
+enrichment is a _pipe_ with a versioned ID and fixed inputs and outputs. Here
+is a work email from a LinkedIn URL:
+
+export const payload = {
+  pipes: [{ pipe_id: "person:workemail:profileurl:waterfall@1" }],
+  input: [{ id: "1", profile_url: "https://www.linkedin.com/in/jane-doe" }],
+};
+
+<RequestExample kind="pipes" payload={payload} defaultTab="curl" />
+
+The waterfall bills only the provider that answered. Its order is yours to
+change: pass a `providers` list in the pipe's config to pick which providers
+it asks, and in what sequence. Set `config.environment` to `"sandbox"` and the
+same call returns mock data for free.
+
+Pipes also decide, branch, and write to other systems, so a whole automation
+fits in one request.
+
+## People Data Labs
+
+![People Data Labs: "The data you need. The flexibility you want."](/media/blog/brands/peopledatalabs.svg)
+
+[People Data Labs](https://www.peopledatalabs.com) sells person and company
+records from one large dataset, through APIs and CSV enrichment. It's a good fit
+when you want raw records at volume and plan to build the logic around them
+yourself. Coverage is whatever the one dataset has.
+
+## Crustdata
+
+![Crustdata: "One live graph of people and companies"](/media/blog/brands/crustdata.svg)
+
+[Crustdata](https://crustdata.com) keeps its people and company data fresh
+by re-verifying it continuously, and adds live signals like hiring and
+funding. Pick it when freshness matters more than breadth. It's also one of
+the providers inside pipe0's waterfalls.
+
+## Four more, quickly
+
+- [Apollo](https://www.apollo.io): its API exposes the same database as the
+  app. Useful if your team already lives in Apollo.
+- [Hunter](https://hunter.io): finds and verifies emails from a name and a
+  domain. Simple, well documented, and narrow.
+- [FullEnrich](https://fullenrich.com): an email and phone waterfall over
+  20+ vendors. Requests are asynchronous, with results by webhook.
+- [LeadMagic](https://leadmagic.io): low prices for emails and mobiles, and
+  you only pay for valid results. Coverage is thin on its own.
+
+## What about Clay?
+
+Clay's API is a remote control for the Clay workspace. It triggers tables,
+functions, and workflows that live in Clay, but it isn't a data API you can
+build a product on. More in
+[Clay vs pipe0 for developers](/blog/clay-vs-pipe0-developers).
+
+## How to choose
+
+If you need raw records at volume, start with People Data Labs or Crustdata.
+If you only need emails, Hunter or LeadMagic will do. If enrichment is part of
+your product or your pipeline, pick a data API with a waterfall and a
+sandbox, and [start with pipe0](https://pipe0.com).
+
+Prospecting for an SDR team is a different job; see
+[the best SDR APIs for lead generation](/blog/best-sdr-apis-lead-generation).
