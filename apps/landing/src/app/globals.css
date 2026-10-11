@@ -463,9 +463,23 @@ div[style*="--callout-color"] p:not([class*="font-medium"]) {
   max-width: 42.5rem;
   margin-inline: auto;
 }
-.blog-prose > :is(figure, pre, table, iframe, video),
+.blog-prose > :is(figure:not(.shiki), table, iframe, video),
 .blog-prose > p:has(> img:only-child) {
   max-width: 100%;
+}
+/* Code is text: it stays on the text measure, with room above and below,
+   and wears the same paper and hairline as code in the docs. */
+.blog-prose > :is(figure.shiki, div:has(> [role="tablist"])) {
+  margin-block: 28px;
+}
+.blog-prose figure.shiki {
+  border-color: var(--rule);
+  border-radius: 10px;
+  background-color: #fbfbfd;
+}
+.blog-prose figure.shiki > div:first-child:not(:only-child) {
+  border-color: var(--rule);
+  background-color: hsl(228 33% 98%);
 }
 .blog-prose :is(h2, h3, h4) {
   font-family: var(--font-blog);
@@ -489,7 +503,7 @@ div[style*="--callout-color"] p:not([class*="font-medium"]) {
   width: 100%;
   border-radius: 0;
 }
-.blog-prose figcaption {
+.blog-prose figure:not(.shiki) figcaption {
   margin-top: 10px;
   font-size: 13px;
   line-height: 1.5;

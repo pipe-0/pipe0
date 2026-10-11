@@ -5,10 +5,10 @@ export const clayConfig: CompareConfig = {
   competitor: "Clay",
   metaTitle: "pipe0 vs Clay: Data Enrichment & Sales Automation Compared",
   metaDescription:
-    "Compare pipe0 and Clay for data enrichment and sales automation: spreadsheet UI, API access, row limits, credit billing, recovery, scheduling, and AI agent support.",
+    "Compare pipe0 and Clay (clay.com) for data enrichment and sales automation: spreadsheet UI, API access, row limits, credit billing, scheduling, and AI agents.",
   llmsLine: "Factual comparison for data enrichment and sales automation",
   heroSubtitle:
-    "Two of the most powerful data enrichment services in modern GTM. pipe0 is an agentic workspace: AI agents and humans operate the same tables, and jobs like CRM enrichment and lead routing run as scheduled workflows. Clay pairs its table with the largest template community in the category.",
+    "Two of the most powerful data enrichment services in modern GTM. pipe0 is an agentic workspace: AI agents and humans operate the same tables, and jobs like CRM enrichment and lead routing run as scheduled workflows. Clay (clay.com) pairs its table with the largest template community in the category.",
   table: {
     footnote: "Verified July 2026 against Clay's public docs and pricing page.",
     groups: [

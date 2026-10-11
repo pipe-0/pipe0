@@ -32,9 +32,7 @@ export const metadata = createMetadata({
   path: "/",
 });
 
-/* The cost multiple vs Clay, as the founder states it in the 2026-10 pitch.
-   The positioning skill's evidence file still approves "3–10x"; update
-   evidence.md with the source for this range, or change it back here. */
+/* The cost multiple vs Clay, approved in the positioning evidence file. */
 const CLAY_MULTIPLE = "6–12x";
 
 const trustedLogos = [

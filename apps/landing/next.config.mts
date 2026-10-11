@@ -55,6 +55,18 @@ const nextConfig: NextConfig = {
         destination: "/blog/nextra-use-blog-and-docs-theme",
         permanent: true,
       },
+      // The two 2025 Clay comparison posts were folded into the maintained
+      // compare page (2026-10) so one URL ranks for "pipe0 vs Clay".
+      {
+        source: "/blog/clay-vs-pipe0",
+        destination: "/compare/pipe0-vs-clay",
+        permanent: true,
+      },
+      {
+        source: "/blog/clay-vs-pipe0-2",
+        destination: "/compare/pipe0-vs-clay",
+        permanent: true,
+      },
       // Integration pages moved under /docs/sdks/integrations (2026-10).
       // The Vercel AI SDK and TanStack AI pages were removed afterwards, so
       // their URLs point at the integrations overview.

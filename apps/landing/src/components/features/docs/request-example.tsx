@@ -11,6 +11,9 @@ import { StaticCodeBlock } from "@/components/features/docs/static-code-block";
  * <RequestExample kind="pipes" payload={payload} />
  */
 type RequestKind = "pipes" | "search";
+type RequestTab = "sdk" | "python" | "curl";
+
+const TAB_INDEX: Record<RequestTab, number> = { sdk: 0, python: 1, curl: 2 };
 
 const SYNC_ENDPOINT: Record<RequestKind, string> = {
   pipes: "https://api.pipe0.com/v1/pipes/run/sync",
@@ -96,9 +99,12 @@ function toCurlBody(value: unknown): string {
 export function RequestExample({
   kind = "pipes",
   payload,
+  defaultTab = "sdk",
 }: {
   kind?: RequestKind;
   payload: unknown;
+  /** Tab shown first. Blog posts default to cURL so no language looks required. */
+  defaultTab?: RequestTab;
 }) {
   const url = SYNC_ENDPOINT[kind];
   const method = SDK_METHOD[kind];
@@ -131,7 +137,7 @@ export function RequestExample({
   ].join("\n");
 
   return (
-    <Tabs items={["pipe0 SDK", "Python", "cURL"]}>
+    <Tabs items={["pipe0 SDK", "Python", "cURL"]} defaultIndex={TAB_INDEX[defaultTab]}>
       <Tab value="pipe0 SDK">
         <StaticCodeBlock lang="typescript" code={sdk} />
       </Tab>

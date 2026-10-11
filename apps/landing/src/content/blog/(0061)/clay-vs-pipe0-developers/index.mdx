@@ -1,0 +1,115 @@
+---
+title: "Clay vs pipe0 for Developers: Enrichment APIs and Data Syncs"
+date: 2026-10-11
+category: Engineering
+cover: /media/blog/covers/clay-vs-pipe0-developers.jpg
+tags:
+    - Clay
+    - API
+    - data enrichment
+excerpt: "Developers look for a Clay API to build enrichment into their product or to enrich a warehouse or CRM and write it back. Clay's API wasn't built for either: it's a remote control for the Clay workspace. pipe0 is a data API built for both."
+tldr: "Clay's API is a remote control for a workspace: you set up a table or function in Clay first, then operate that stateful asset from your code. pipe0 is a stateless, idempotent data API, and a whole automation (find, enrich, write back) fits in one request, like Terraform for automation. The same pipes can also run in the cloud on a schedule."
+faq:
+    - q: "Does Clay have an API for developers?"
+      a: "Yes, but it is a remote control for the Clay workspace, not a data API. It operates tables, functions, and workflows that live in Clay. It isn't designed to power workflows outside of Clay, like enrichment inside your product or a sync with your warehouse."
+    - q: "Does pipe0 have a stateless enrichment API?"
+      a: "Yes, and it's the core of pipe0. You send records and a list of pipes, such as person:workemail:profileurl:waterfall@1, and get the enriched records back. It's idempotent: ask for the same data and you get the same data back, unless the underlying data changed. Nothing has to be set up in an app first."
+    - q: "Can pipe0 enrich my warehouse or CRM and write the data back?"
+      a: "Yes. Send your rows with the enrichment pipes and a write-back pipe at the end, such as a Salesforce or HubSpot record update or an HTTP request to your own endpoint. The whole sync is one request your scheduler can run. If you'd rather not run a scheduler, the same pipes run in a pipe0 sheet in the cloud on a schedule."
+    - q: "How do I test enrichment code without spending credits?"
+      a: "Use pipe0's sandbox. Set config.environment to sandbox and the same request returns mock data in the production shape, for free, which works in unit tests and CI."
+    - q: "Is pipe0 cheaper than Clay?"
+      a: "Yes. On average pipe0 is 6 to 12 times more cost-efficient than Clay. Plans start at $49 a month; Clay starts at $185 a month."
+draft: false
+authors:
+    - name: Florian
+      title: Founder
+---
+Developers who search for Clay's API usually have one of two jobs. They want
+to build data enrichment into their own product. Or they have data in a
+warehouse or CRM that needs to be enriched on a schedule and written back.
+
+Clay's API wasn't built for either. It's a remote control into the Clay
+workspace, not a tool for powering workflows outside of it. [pipe0](https://pipe0.com) was built
+for exactly these two jobs, and the reason is the shape of the API.
+
+## A data API vs a remote control
+
+A data API takes records and returns enriched records. Nothing has to exist
+before the call. The call is the contract.
+
+Clay's API is a remote control for a Clay workspace. Someone first sets up a
+table, its columns, or a function in Clay, and your code then operates that
+remote, deeply stateful asset by ID. The logic lives in Clay, where anyone
+can change what your code gets back without a pull request. And none of the
+things you expect when you build on top of something are there: no
+idempotency, no versioned contracts, no test mode.
+
+pipe0 is a stateless, idempotent data API. You ask for data and get it
+back. Ask for the same data again and you get the same answer, unless the
+underlying data changed. Larger requests return a run ID to poll, but
+nothing has to exist before the call. Every enrichment is a _pipe_ with a
+versioned ID and fixed inputs and outputs, and a shipped version never
+changes.
+
+That's also what makes pipe0 more than an enrichment API. Pipes don't only
+look things up: they decide, branch, and write to other systems. The flow
+you'd draw in Zapier or n8n becomes a list of pipes in one request. Think
+Terraform for automation, as an API.
+
+## Job 1: enrichment inside your product
+
+Enrich a signup while the request is still open, score an inbound lead, or
+let your users type a domain and get a company profile. With pipe0, that's
+one call:
+
+export const enrichPayload = {
+  pipes: [{ pipe_id: "person:workemail:profileurl:waterfall@1" }],
+  input: [{ id: "1", profile_url: "https://www.linkedin.com/in/jane-doe" }],
+};
+
+<RequestExample kind="pipes" payload={enrichPayload} defaultTab="curl" />
+
+The waterfall behind `person:workemail:profileurl:waterfall@1` starts from a
+LinkedIn URL, asks providers in a fixed order, and bills only the one that
+answered. Small batches come back
+in one round trip; larger ones queue and the SDK polls for you. Work is
+accepted and prioritized instead of rejected, so a well-behaved client
+never sees a rate-limit error. And `config.environment: "sandbox"` returns
+mock data in the real shape for free, so the code path runs in CI.
+
+Clay's API has no equivalent. It can trigger work that lives in the Clay
+workspace, but it isn't an enrichment endpoint you can build a product on.
+
+## Job 2: the sync
+
+Your users live in Postgres or Databricks, your accounts in Salesforce or
+HubSpot. Every night, new contacts should get a verified work email, and the
+result should land back where your team works.
+
+With pipe0, the whole sync is one request. Your job reads the new rows and
+sends them with the pipes that describe the automation:
+
+```text title="The sync, as pipes"
+person:workemail:profileurl:waterfall@1  ->  find the work email
+record:update:salesforce@1               ->  write it back to Salesforce
+```
+
+Run it from the scheduler you already have. Because the API is
+idempotent, a retry after a failed night returns the same answers instead
+of new surprises. `http:request@1` writes to anything that isn't a CRM.
+
+If you'd rather not run the scheduler yourself, the same pipes run in a
+pipe0 sheet in the cloud, on a schedule, with history and undo.
+
+Clay's API can't express this. The sync would have to live inside a Clay
+table, which your pipeline can barely read from the outside.
+
+## Which one to pick
+
+If your RevOps team already runs its enrichment in Clay and the work stays
+inside Clay, the API lets you nudge it from outside.
+
+If the enrichment belongs in your product or your data pipeline, use a data
+API. pipe0 starts at $49 a month and runs 6–12x cheaper than Clay on
+average, and the [docs](/docs) start with a single request.

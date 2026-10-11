@@ -1,0 +1,194 @@
+---
+title: Clay Alternatives for AI-First GTM Teams
+date: 2026-10-11
+category: Sales data
+cover: /media/blog/covers/clay-alternatives-ai-first-teams.jpg
+tags:
+    - Clay
+    - AI agents
+    - MCP
+    - data enrichment
+excerpt: "Most teams now want their own agents to run GTM, not a platform's built-in one. The two common ways to replace Clay, Clay clones and data-for-agents tools, both leave a gap. A third approach, and a directory of the tools in each camp."
+tldr: "Teams want agents they already use, like Claude Code or Codex, to run their GTM work. Clay clones keep Clay's table-first data model and its limits. Data-to-agent tools give agents data but leave you building production software for signals, schedules, and webhooks. pipe0 runs the same enrichments statelessly and in sheets, on one engine."
+faq:
+    - q: "What is the best Clay alternative for teams that work through AI agents?"
+      a: "It depends on whether your agent only needs answers or also needs somewhere to keep them. Stateless tools such as Deepline and Treg return data per call. pipe0 returns data per call and can also write it into a sheet that holds up to 2 million rows, with schedules and history."
+    - q: "Can AI agents use Clay?"
+      a: "Only in a limited way. The public API Clay launched in July 2026 is a thin remote for work set up in the Clay app, not a full data API: it runs functions and workflows that a person built in the UI. Table access through the API is read-only, Enterprise-only, and capped at 100 records per page, and search results are capped by plan, at 50 per request and 100 a month on the free plan."
+    - q: "Can an AI agent build a Clay table?"
+      a: "Not with Clay's official tools. Clay's API and CLI can't create tables or add columns, and Clay's own CLI instructions tell the agent to have the user create the table in the Clay app first. Some teams do it anyway with unofficial MCP servers that call Clay's internal API using a session cookie copied from the browser. That works, but it gives the agent full access to your Clay account, isn't supported by Clay, and can break whenever Clay changes its internals."
+draft: false
+authors:
+    - name: Florian
+      title: Founder
+---
+
+Clay.com introduced most GTM teams to the power of LLMs. It excelled at
+bringing LLMs into your workflows and let you orchestrate complex plays.
+
+In 2026, things have changed.
+
+Most teams now want AI agents to do the orchestrating. Clay did a great job of
+integrating LLMs, but it struggles to be a tool that the agents you own can
+integrate with.
+
+This distinction matters. If you bet on Clay, more and more of your workflows
+have to run on Clay. Instead of Codex, Claude Cowork, or Grok Bot, Clay becomes
+your daily driver.
+
+Many teams shy away from that vision. They acknowledge what Clay has done for
+GTM, but they clearly see the gap between Clay and state-of-the-art agentic
+orchestrators.
+
+So instead of a platform that brings everything together, most teams are
+looking for tools that plug into their agent of choice. They want Clay-like
+enrichment and automation without being cut off from the speed of innovation
+we see in AI.
+
+## The Clay-clone approach
+
+Last year, Clay launched Sculptor and quickly abandoned it. Clay's data model
+was simply never built to work well with AI. Next to the extreme complexity of
+the tool, the main culprit is the instability of its core data model.
+
+An agent has to reason about the state of the table constantly before it can
+apply any transformation. And while it does, it can never be sure the table
+hasn't changed since it last checked. With this data model, even simple changes
+can take 10 minutes or more.
+
+Over the last year, several companies have launched Clay clones built on the
+exact same data model. Because they run at a smaller scale, they can allocate
+more RAM to each customer, which allows larger tables. They also designed their
+systems to be somewhat simpler, which makes them easier for AI agents to
+operate. That's a step in the right direction. But ultimately these tools share
+Clay's limitations:
+
+- No stateless API
+- To power AI agents, they split their processing into "workflows" and "tables"
+- A row limit
+- A limited MCP server
+
+Notable companies that follow this approach are Freckle, Floqer, and Databar.
+
+## The data-to-agent approach
+
+When teams look to replace Clay with something more AI-first, most of them
+look for a tool that connects their agent with data. This is the data-to-agent
+approach that companies like Deepline, Treg, and Landbase bring to market.
+
+Here, the agent is tasked with building automations end to end. To reach its
+goal, it calls the connected data endpoints.
+
+This approach can answer research questions and enrich individual records and
+small lists. It can even power complex automation pipelines that run on your
+local machine, or in the cloud environment that comes built into Claude, Codex,
+and the like.
+
+However, many teams quickly realize that this approach means building real
+software. Even with the help of agents, building a production system can be
+overwhelming for non-engineers: databases, security, analytics, domains, DNS.
+
+The resulting systems are typically black boxes that struggle to make signals,
+webhooks, and schedules digestible.
+
+## A different angle
+
+With so many tools copying Clay's data model, and so many that simply hand data
+to an agent, the narrative has hardened that you have to choose between the
+two:
+
+1. Connect your agent to stateless data APIs, and face the hardship of building
+   an end-to-end engineering system the moment you need signals, schedules, or
+   webhooks.
+2. Use a Clay clone that works slightly better with a built-in agent, and give
+   your own agent limited access to data and automations.
+
+But there is a third approach, the one we follow at pipe0.
+
+pipe0 runs the same enrichments two ways. Stateless: an agent sends records,
+gets them back enriched, and nothing is kept. Stateful: the agent writes the
+records into a sheet, a table in the cloud that holds up to 2 million rows,
+with schedules, reports, point-in-time recovery, signals, and more.
+
+Data moves between the two without being rebuilt. The agent can start with a
+quick lookup and say "put this in a sheet" once the list starts to matter.
+
+The MCP server and the REST API expose the same engine as the app. Our MCP
+server is simply how your own agent learns to work with GTM automation and
+lists.
+
+## How to choose without trusting anyone's blog
+
+Start with one question: does the tool have a stateless API? Connect it to
+your agent and ask something small, like:
+
+> Find the work email address for linkedin.com/in/jane-doe-123456.
+
+If the tool creates a table, a workflow, or a run you now have to manage, it
+isn't stateless. If it just answers the question, it is. That one prompt tells
+you more about how the tool will feel inside your agent than any feature page.
+
+Then test coverage. Pick the twenty-five accounts you know best, the ones where
+you'd spot a wrong email at a glance. Give each tool's agent the same
+instruction, in one sentence, and look at three things: how far it gets before
+it needs you, how many of the results you'd actually send to, and what the run
+cost in dollars.
+
+We wrote down how to run a fair test in
+[setting up benchmarks](/blog/how-to-choose-the-right-b2b-data-provider#setting-up-benchmarks),
+why a long provider list says nothing about coverage in
+["Your 20-Provider Waterfall Has Never Been Benchmarked"](/blog/long-waterfalls),
+and why the first provider in a waterfall decides accuracy in
+[this post on cheapest-first waterfalls](/blog/cheapest-first-waterfall).
+
+The tool whose agent finishes the job and lands the list somewhere you can find
+next Monday is your answer. The rest is marketing, this post included.
+
+## Tool directory
+
+Every tool below is good at something. Here's what each does best.
+
+### Both approaches on one engine
+
+![pipe0: "Agents make engineers 10x faster. GTM teams are still waiting."](/media/blog/brands/pipe0.svg)
+
+[pipe0](https://pipe0.com) turns any GTM play or data idea into a production
+system. Ask your agent a data question and get an answer back, or describe a
+play and it builds a sheet you can see, change, and trust. 100+ enrichments
+and searches across 50+ providers, sheets up to 2 million rows, and 6–12x more
+cost-efficient than Clay.
+
+Best for teams that want their own agent, in Claude Code, Codex, or ChatGPT,
+to run Clay-like enrichment and automation without building the
+infrastructure themselves.
+
+### The Clay-clone approach
+
+![Clay: "Build systems to grow revenue"](/media/blog/brands/clay.svg)
+
+[Clay](https://www.clay.com) built the category. It has the largest template
+library and community in GTM, Claygents for AI research, and more native
+integrations than anyone. Best for teams whose playbooks already live in
+Clay.
+
+- [Floqer](https://www.floqer.com): waterfall enrichment with built-in
+  verification and live buying signals. Best for keeping CRM data clean.
+- [Databar](https://databar.ai): 160+ data providers under one credit
+  system. Best for broad contact discovery in one workspace.
+- [Freckle](https://www.freckle.io): Clay-style workflows built for Claude
+  Code and Codex, with no action credits. Best for GTM engineers who live in
+  the terminal.
+
+### The data-to-agent approach
+
+![Deepline: "Own your GTM alpha. Build with Deepline."](/media/blog/brands/deepline.svg)
+
+[Deepline](https://deepline.com) gives coding agents one API key for data
+providers and GTM tools, and the logic is code you own. Best for
+engineering-minded teams that want their GTM logic in their own repository.
+
+- [Treg](https://treg.to): "OpenRouter for agent tools", 111 providers
+  behind one credential, paid per call. Best for agents that need tools well
+  beyond GTM.
+- [Landbase](https://www.landbase.com): describe target accounts in plain
+  language and get lists that keep updating. Best for account discovery.

@@ -63,7 +63,6 @@ import {
   useSearchCatalogContext,
   useSearchCatalogTable,
 } from "@pipe0/react";
-import { Callout } from "fumadocs-ui/components/callout";
 import {
   ArrowDown,
   ChevronDown,
@@ -658,20 +657,6 @@ export function SearchCatalogIndex({
         requestHref={appInfo.links.requestPipe}
         requestLabel="Request a search"
       />
-
-      {/* Legacy docs callout */}
-      <Callout type="info" title="Looking for the old search docs?">
-        The legacy search endpoint documentation is still available at{" "}
-        <a
-          href="https://legacydocs.pipe0.com"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="underline font-medium"
-        >
-          legacydocs.pipe0.com
-        </a>
-        .
-      </Callout>
 
       {/* Toolbar: search and the field filters on one line, categories as
           tabs underneath — one framed control instead of three loose rows. */}
