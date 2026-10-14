@@ -10,7 +10,7 @@ import {
   useRef,
   useState,
 } from 'react';
-import { Loader2, MessageCircleIcon, RefreshCw, SearchIcon, Send, X } from 'lucide-react';
+import { Loader2, RefreshCw, SearchIcon, Send, Square, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { buttonVariants } from 'fumadocs-ui/components/ui/button';
 import { type UseChatHelpers } from '@ai-sdk/react';
@@ -28,7 +28,7 @@ export type ChatUIMessage = UIMessage<
   }
 >;
 
-export type SearchTool = Tool<{ query: string; limit: number }>;
+type DocsTool = Tool<{ query?: string; url?: string }>;
 
 const Context = createContext<{
   open: boolean;
@@ -42,21 +42,20 @@ export function AISearchPanelHeader({ className, ...props }: ComponentProps<'div
   return (
     <div
       className={cn(
-        'sticky top-0 flex items-start gap-2 border rounded-xl bg-fd-secondary text-fd-secondary-foreground shadow-sm',
+        'sticky top-0 flex items-start gap-2 border-b border-(--rule,var(--color-fd-border)) pb-2',
         className,
       )}
       {...props}
     >
-      <div className="px-3 py-2 flex-1">
-        <p className="text-sm font-medium mb-2">AI Chat</p>
-        <p className="text-xs text-fd-muted-foreground">
-          AI can be inaccurate, please verify the answers.
+      <div className="px-2 py-1 flex-1">
+        <p className="text-[15px] font-medium">Ask AI</p>
+        <p className="text-[13px] text-fd-muted-foreground">
+          Answers come from the pipe0 docs. AI can be wrong, so check the linked pages.
         </p>
       </div>
 
       <button
         aria-label="Close"
-        tabIndex={-1}
         className={cn(
           buttonVariants({
             size: 'icon-sm',
@@ -107,7 +106,7 @@ export function AISearchInputActions() {
         )}
         onClick={() => setMessages([])}
       >
-        Clear Chat
+        Clear chat
       </button>
     </>
   );
@@ -143,7 +142,7 @@ export function AISearchInput(props: ComponentProps<'form'>) {
   };
 
   useEffect(() => {
-    if (isLoading) document.getElementById('nd-ai-input')?.focus();
+    if (isLoading && canAutoFocus()) document.getElementById('nd-ai-input')?.focus();
   }, [isLoading]);
 
   return (
@@ -151,7 +150,7 @@ export function AISearchInput(props: ComponentProps<'form'>) {
       <Input
         value={input}
         placeholder={isLoading ? 'AI is answering...' : 'Ask a question'}
-        autoFocus
+        autoFocus={canAutoFocus()}
         className="p-3"
         disabled={status === 'streaming' || status === 'submitted'}
         onChange={(e) => {
@@ -176,8 +175,8 @@ export function AISearchInput(props: ComponentProps<'form'>) {
           )}
           onClick={stop}
         >
-          <Loader2 className="size-4 animate-spin text-fd-muted-foreground" />
-          Abort Answer
+          <Square className="size-3 fill-current" />
+          Stop
         </button>
       ) : (
         <button
@@ -196,6 +195,15 @@ export function AISearchInput(props: ComponentProps<'form'>) {
       )}
     </form>
   );
+}
+
+/**
+ * Focusing the input on a touch device raises the software keyboard, which
+ * covers half the panel (and the starter questions) before the visitor has
+ * decided to type. Only take focus where there is a physical keyboard.
+ */
+function canAutoFocus() {
+  return typeof window !== 'undefined' && window.matchMedia('(pointer: fine)').matches;
 }
 
 function List(props: Omit<ComponentProps<'div'>, 'dir'>) {
@@ -264,9 +272,22 @@ const roleName: Record<string, string> = {
   assistant: 'pipe0',
 };
 
-function Message({ message, ...props }: { message: ChatUIMessage } & ComponentProps<'div'>) {
+function Thinking() {
+  return (
+    <p className="flex items-center gap-2 text-sm text-fd-muted-foreground">
+      <Loader2 className="size-3.5 animate-spin" />
+      Thinking…
+    </p>
+  );
+}
+
+function Message({
+  message,
+  pending = false,
+  ...props
+}: { message: ChatUIMessage; pending?: boolean } & ComponentProps<'div'>) {
   let markdown = '';
-  const searchCalls: UIToolInvocation<SearchTool>[] = [];
+  const toolCalls: (UIToolInvocation<DocsTool> & { toolName: string })[] = [];
 
   for (const part of message.parts ?? []) {
     if (part.type === 'text') {
@@ -276,10 +297,10 @@ function Message({ message, ...props }: { message: ChatUIMessage } & ComponentPr
 
     if (part.type.startsWith('tool-')) {
       const toolName = part.type.slice('tool-'.length);
-      const p = part as UIToolInvocation<Tool>;
+      const p = part as UIToolInvocation<DocsTool>;
 
-      if (toolName !== 'search' || !p.toolCallId) continue;
-      searchCalls.push(p);
+      if (!p.toolCallId) continue;
+      toolCalls.push({ ...p, toolName });
     }
   }
 
@@ -293,25 +314,36 @@ function Message({ message, ...props }: { message: ChatUIMessage } & ComponentPr
       >
         {roleName[message.role] ?? 'unknown'}
       </p>
-      <div className="prose text-sm">
-        <Markdown text={markdown} />
-      </div>
-
-      {searchCalls.map((call) => {
-        return (
-          <div
-            key={call.toolCallId}
-            className="flex flex-row gap-2 items-center mt-3 rounded-lg border bg-fd-secondary text-fd-muted-foreground text-xs p-2"
-          >
-            <SearchIcon className="size-4" />
-            {call.state === 'output-error' || call.state === 'output-denied' ? (
-              <p className="text-fd-error">{call.errorText ?? 'Failed to search'}</p>
-            ) : (
-              <p>{!call.output ? 'Searching…' : `${call.output.length} search results`}</p>
-            )}
-          </div>
-        );
-      })}
+      {toolCalls.length > 0 && (
+        <div className="mb-2 flex flex-col gap-1">
+          {toolCalls.map((call) => (
+            <div
+              key={call.toolCallId}
+              className="flex min-w-0 items-center gap-1.5 text-xs text-fd-muted-foreground"
+            >
+              <SearchIcon className="size-3.5 shrink-0" />
+              {call.state === 'output-error' || call.state === 'output-denied' ? (
+                <p className="text-fd-error">{call.errorText ?? 'Search failed'}</p>
+              ) : call.toolName === 'read_page' ? (
+                <p className="truncate">
+                  {call.output ? 'Read' : 'Reading'} {call.input?.url}
+                </p>
+              ) : (
+                <p className="truncate">
+                  {call.output ? 'Searched' : 'Searching'} the docs for “{call.input?.query}”
+                </p>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+      {markdown.length > 0 ? (
+        <div className="prose text-sm">
+          <Markdown text={markdown} />
+        </div>
+      ) : (
+        pending && <Thinking />
+      )}
     </div>
   );
 }
@@ -476,6 +508,7 @@ export function AISearchPanel({
 export function AISearchPanelList({ className, style, ...props }: ComponentProps<'div'>) {
   const chat = useChatContext();
   const messages = chat.messages.filter((msg) => msg.role !== 'system');
+  const busy = chat.status === 'submitted' || chat.status === 'streaming';
 
   return (
     <List
@@ -488,26 +521,68 @@ export function AISearchPanelList({ className, style, ...props }: ComponentProps
       {...props}
     >
       {messages.length === 0 ? (
-        <div className="text-sm text-fd-muted-foreground/80 size-full flex flex-col items-center justify-center text-center gap-2">
-          <MessageCircleIcon fill="currentColor" stroke="none" />
-          <p onClick={(e) => e.stopPropagation()}>Start a new chat below.</p>
-        </div>
+        <Starters />
       ) : (
         <div className="flex flex-col px-3 gap-4">
+          {messages.map((item, i) => (
+            <Message
+              key={item.id}
+              message={item}
+              pending={busy && i === messages.length - 1}
+            />
+          ))}
+          {/* The first stream event can take a while (the model searches
+              before it writes), so show the reply slot straight away. */}
+          {busy && messages.at(-1)?.role === 'user' && (
+            <div>
+              <p className="mb-1 text-sm font-medium text-fd-primary">pipe0</p>
+              <Thinking />
+            </div>
+          )}
           {chat.error && (
             <div className="p-2 bg-fd-secondary text-fd-secondary-foreground border rounded-lg">
-              <p className="text-xs text-fd-muted-foreground mb-1">
-                Request Failed: {chat.error.name}
-              </p>
+              <p className="text-xs text-fd-muted-foreground mb-1">That didn’t work</p>
               <p className="text-sm">{chat.error.message}</p>
             </div>
           )}
-          {messages.map((item) => (
-            <Message key={item.id} message={item} />
-          ))}
         </div>
       )}
     </List>
+  );
+}
+
+const starterQuestions = [
+  'How do I find a work email from a name and company domain?',
+  'What does a pipe cost, and when am I billed?',
+  'How do I connect pipe0 to my agent over MCP?',
+  'How do I chain two pipes in one request?',
+];
+
+function Starters() {
+  const { sendMessage } = useChatContext();
+
+  return (
+    <div className="mt-auto flex flex-col gap-2 px-2" onClick={(e) => e.stopPropagation()}>
+      <p className="px-1 text-[13px] font-medium text-fd-muted-foreground">Try asking</p>
+      {starterQuestions.map((question) => (
+        <button
+          key={question}
+          type="button"
+          className="rounded-lg border border-(--rule,var(--color-fd-border)) px-3 py-2.5 text-left text-sm transition-colors hover:bg-fd-accent"
+          onClick={() =>
+            void sendMessage({
+              role: 'user',
+              parts: [
+                { type: 'data-client', data: { location: location.href } },
+                { type: 'text', text: question },
+              ],
+            })
+          }
+        >
+          {question}
+        </button>
+      ))}
+    </div>
   );
 }
 
