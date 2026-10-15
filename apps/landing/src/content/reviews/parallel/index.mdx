@@ -1,0 +1,257 @@
+---
+title: "Parallel review (2026): strong web research, the wrong tool for big lists"
+description: "Parallel is one of the best APIs for researching the companies
+  on a list you already have: accurate, cited answers in seconds to a
+  minute. It is a poor tool for building new lists, the slowest we tested
+  with the fewest rows. Use it to research a list, not to build one."
+tool:
+  name: Parallel
+  url: https://parallel.ai
+  logo: /media/reviews/logos/parallel.png
+  category: List building
+verdict: "Excellent for researching rows you already have: accurate,
+  cited answers in seconds to a minute. For building new lists it was the
+  slowest tool we tested and returned the fewest rows."
+relationship: supplier
+disclosure: "pipe0 buys from Parallel and runs its web search, page
+  extraction and company entity search on it. The scores come from our own
+  benchmark, not from that relationship."
+scope:
+  summary: "Parallel builds web search and research APIs for AI agents. We
+    reviewed it for the two GTM jobs teams bring to us: researching the
+    rows on a list, and building a new list from a prompt."
+  tested:
+    - "Finding a specific page or fact per company with Search and Task"
+    - "Local business lists with Task pro and ultra, FindAll and Entity
+      Search"
+    - "Speed and cost against Exa, DataForSEO, Crustdata and Amplemarket"
+  notTested:
+    - "Monitor, Chat and the Responses API"
+    - "Extract at volume as a crawler"
+scores:
+  easeOfUse:
+    score: 4
+    why: "Clear APIs with structured output and a citation and confidence
+      per answer. Picking among nine Task processors takes some reading."
+  dataQuality:
+    score: 3
+    why: "Research answers were accurate: Task base solved 5 of 5 hard
+      lookups. Lists were short and loose, 17 to 200 rows, and 55% of NYC
+      rows were inside the city."
+  pricingValue:
+    score: 3.5
+    why: "Search at $5 per 1,000 requests and Task base at $0.01 a run are
+      fair for research. Verified list rows from FindAll cost us $48 per
+      1,000."
+  agentAccess:
+    score: 4.5
+    why: "A free hosted Search MCP, a Task MCP, citations on every answer,
+      and 600 searches a minute by default."
+bestFor:
+  - "Researching one fact or page per company on a list you already have"
+  - "Agents that need fast, cited web search"
+  - "Qualifying companies quickly with Entity Search"
+skipIf:
+  - "You want to build a new list of hundreds or thousands of businesses"
+  - "You need addresses and phone numbers for local businesses"
+  - "The step has to finish in under a few minutes"
+pros:
+  - title: "Finds the right page"
+    body: "Searching a company's own domain, Parallel ranked the right page
+      first on 4 of 5 sites, in one to three seconds."
+  - title: "Reliable research tasks"
+    body: "The base Task processor solved 5 of 5 hard lookups, including a
+      small company's imprint page, in 22 to 63 seconds for $0.01 each."
+  - title: "Citations by default"
+    body: "Every Task answer comes with its sources, the reasoning and a
+      confidence level, so a person or an agent can check it."
+  - title: "Fast company search"
+    body: "Entity Search returned 81 to 158 companies in two to five seconds
+      for under a cent a call."
+cons:
+  - title: "Slow lists"
+    body: "Task pro and ultra took eight to fourteen minutes per list, too
+      long for an interactive step or a 10-minute limit."
+  - title: "Short lists"
+    body: "Tasks returned 17 to 200 local businesses where DataForSEO
+      returned 826 to 3,959, and ultra found fewer NYC barbershops than pro."
+  - title: "Expensive verified matches"
+    body: "FindAll's matches were all verified, but 24 Chicago venues cost us
+      $1.15, about $48 per 1,000."
+  - title: "Fast modes cut corners"
+    body: "Turbo search answered a revenue question with an acquisition
+      price. Pick the processor and mode for the question."
+pricing:
+  asOf: 2026-10-15
+  source: https://parallel.ai/pricing
+  startingAt: 0
+  startingAtNote: "pay as you go, with $5 in free credit each month"
+  freePlan: true
+  plans:
+    - name: Search
+      price: "$5 per 1,000 requests"
+      includes: "Basic and advanced modes, 10 results; turbo and fast $1 per
+        1,000."
+    - name: Extract
+      price: "$1 per 1,000 URLs"
+      includes: "Page contents as excerpts or full markdown."
+    - name: Task
+      price: "$5 to $300 per 1,000 runs"
+      includes: "Lite $5, base $10, core $25, pro $100, ultra $300, with
+        larger ultra tiers above."
+    - name: FindAll
+      price: "From $0.25 per run"
+      includes: "Base: $0.25 per run plus $0.03 per match. Core and pro cost
+        more per match."
+    - name: Entity Search
+      price: "$5 per 1,000 requests"
+      includes: "Up to 100 companies per request; beta."
+  notes:
+    - "The $5 monthly credit needs a card on file."
+    - "Task prices are per successful run."
+facts:
+  - label: APIs
+    value: "Search, Extract, Task, FindAll, Entity Search, Monitor and Chat"
+    source: https://docs.parallel.ai/getting-started/pricing
+  - label: Task latency
+    value: "Lite 10 to 60 s, base 15 to 100 s, pro 2 to 10 min, ultra 5 to
+      25 min, per Parallel's docs"
+    source: https://docs.parallel.ai/getting-started/pricing
+  - label: Rate limits
+    value: "Search, Extract and Entity Search 600 a minute; Task 2,000 a
+      minute"
+    source: https://docs.parallel.ai/getting-started/rate-limits
+  - label: MCP servers
+    value: "Search MCP at search.parallel.ai/mcp, free without a key; Task
+      MCP with authentication"
+    source: https://docs.parallel.ai/integrations/mcp/quickstart
+  - label: Search controls
+    value: "Search objective plus keyword queries, domain allow and block
+      lists, and an after-date filter"
+alternatives:
+  - name: pipe0 company entity search
+    href: /docs/search-catalog/companies:entitysearch:parallel/1
+    why: "You want Parallel's Entity Search in a sheet, followed by
+      enrichment pipes on the companies it finds."
+  - name: Exa
+    href: /reviews/exa
+    why: "You want a prompt-based list of a few hundred rows in minutes,
+      not a quarter of an hour."
+  - name: DataForSEO
+    href: /reviews/dataforseo
+    why: "Your list is local businesses: thousands of rows per city in
+      seconds."
+  - name: Crustdata
+    href: /reviews/crustdata
+    why: "Filters can describe your companies, from headcount to tech stack."
+authors:
+  - name: Florian
+    title: Founder
+date: 2026-10-15
+faq:
+  - q: "What is Parallel Web Systems?"
+    a: "Parallel builds web APIs for AI agents: Search, Extract for page
+      contents, Task for research questions with cited answers, FindAll for
+      verified lists, and Entity Search for companies."
+  - q: "Is Parallel good for building lead lists?"
+    a: "Not in our tests. On four local business lists, Parallel's Task API
+      returned 17 to 200 rows in eight to fourteen minutes. Exa returned
+      more every time, and DataForSEO returned 826 to 3,959 in seconds."
+  - q: "What is Parallel best at?"
+    a: "Research on rows you already have. Searching within a company's
+      domain, it ranked the right page first on 4 of 5 sites in one to three
+      seconds, and its base Task processor solved 5 of 5 hard lookups."
+  - q: "How much does the Parallel Task API cost?"
+    a: "From $5 per 1,000 runs for lite to $300 for ultra, with base at
+      $10. Larger ultra tiers cost up to $2,400 per 1,000."
+  - q: "Exa or Parallel?"
+    a: "For building lists, Exa: it returned more rows in less time in all
+      four of our local scenarios. For cited research answers per row,
+      Parallel's Task API was the most reliable we measured; we didn't
+      benchmark Exa on that job."
+---
+
+{/*
+FACT BASE (pipe0 benchmarks):
+- Research, 2026-08-06 and 2026-08-10, 5 company domains: Search with
+  source_policy.include_domains ranked the correct page (imprint, legal,
+  about) first on 4 of 5, ~1-3 s; failed only on the thinly indexed small
+  site. Task base solved 5/5 incl. pipe0.com's /resources/legal/imprint;
+  lite failed that case. Base measured 22-63 s. Turbo answered "SAP Concur
+  revenue" with the $8.3B acquisition price.
+- Lists, 2026-10-09: Task pro NYC 125 / 475 s, DFW 17 / 498 s, Chicago 82 /
+  616 s, Miami 23 / 522 s, $0.10 each; Task ultra NYC 62 / 663 s (55% in
+  NYC), DFW 200 / 830 s ($0.30; 100% phone, 19 of 20 sites load); Chicago
+  pro 55% in city, 2 of 20 sites load. Entity Search 81-158 rows, 2-5 s,
+  $0.005-0.008, companies without address or phone, stopped below the
+  1,000 asked. FindAll base Chicago 24 verified venues, 380 s, $1.15.
+- Pricing and limits from parallel.ai/pricing and docs, read 2026-10-15.
+  -fast processors announced 2025-12 are not on the current price tables.
+*/}
+
+## What is Parallel?
+
+Parallel Web Systems builds web APIs for AI agents. Search returns ranked
+excerpts for a stated objective, Extract reads pages, Task answers a
+research question with a structured and cited result, FindAll builds
+verified lists, and Entity Search finds companies.
+
+## What is Parallel best at?
+
+Researching the rows you already have. Most GTM research is one question
+per company: who runs it, where its pricing page is, which tools it uses.
+On five company websites, including one with almost no search footprint,
+Parallel's Search ranked the right page first on four, in one to three
+seconds. The base Task processor answered all five, including a small
+company's imprint page at an unguessable path, in 22 to 63 seconds for a
+cent each.
+
+Every Task answer carries its sources, the reasoning and a confidence
+level, so a person or an agent can check it.
+
+## Which Parallel processor should you use?
+
+Base for research questions; skip lite and the fast search modes for
+facts. In our tests lite missed exactly the hard case base solved while
+saving little time, and turbo search answered a company revenue question
+with the company's acquisition price. Fast modes are for finding pages,
+not for reading facts off them.
+
+## Can Parallel build lead lists?
+
+Not well. Task runs returned 17 to 200 local businesses per list and took
+eight to fourteen minutes, slower than any other tool we compared. Exa's
+agent returned more rows on all four lists in three to six minutes, and
+DataForSEO returned 826 to 3,959 in seconds.
+
+<ListBenchmark chart="rows" highlight="parallel" />
+
+<ListBenchmark chart="time" highlight="parallel" />
+
+Higher processors don't fix it. The ultra processor returned fewer New
+York City barbershops than pro, and only 55% of them were in the city.
+
+## What do FindAll and Entity Search cost per row?
+
+They sit at opposite ends. FindAll verifies every match, so its rows are
+accurate and expensive: 24 Chicago event venues cost $1.15, about $48 per
+1,000. Entity Search returns 81 to 158 companies in two to five seconds
+for under a cent, but the rows are company profiles without an address or
+a phone number, and it stops well short of large lists.
+
+<ListBenchmark chart="cost" highlight="parallel" />
+
+## Parallel and pipe0
+
+pipe0 runs its web search, page extraction and company entity search on
+Parallel, and its research agent uses the Task API for questions that need
+a deeper look. New local and company lists go to DataForSEO, the company
+databases or Exa instead.
+
+## Parallel, Exa or DataForSEO: which should you use?
+
+Use Parallel to research a page, a fact or a person per company, with a
+citation you can check. Use DataForSEO, a company database or Exa to build
+the list itself.
+
+<ListBenchmark chart="fit" highlight="parallel" />

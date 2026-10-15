@@ -23,6 +23,7 @@ import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 import { AgreementTiles } from "../agreement-tiles";
 import { LatencyBars } from "../latency-bars";
+import { ListBenchmark } from "../list-benchmark-charts";
 import { VerificationScorecard } from "../verification-scorecard";
 import { ScoreBar, ScorePill, ToolLogo } from "../review-parts";
 import {
@@ -204,6 +205,34 @@ export default async function Review(props: {
           </p>
           <SummarizeActions url={url} className="mt-4" />
         </header>
+
+        {d.scope && (
+          <section
+            id="scope"
+            aria-labelledby="scope-heading"
+            className="mt-10 scroll-mt-24 rounded-2xl p-5 ring-1 ring-fd-border sm:p-6"
+          >
+            <h2
+              id="scope-heading"
+              className="text-[13px] font-medium text-fd-muted-foreground"
+            >
+              What we reviewed
+            </h2>
+            <p className="mt-2 text-[15.5px] leading-[1.6] text-fd-foreground text-pretty">
+              {d.scope.summary}
+            </p>
+            <div className="mt-4 grid grid-cols-1 gap-5 sm:grid-cols-2">
+              <VerdictList title="Tested for" items={d.scope.tested} icon="yes" />
+              {d.scope.notTested && (
+                <VerdictList
+                  title="Not scored here"
+                  items={d.scope.notTested}
+                  icon="skip"
+                />
+              )}
+            </div>
+          </section>
+        )}
 
         {/* Verdict card: the whole review in one block. Its first sentence
             is the quotable answer to "is {tool} any good". */}
@@ -433,7 +462,7 @@ export default async function Review(props: {
         )}
 
         <div className="prose blog-prose review-prose mt-4 min-w-0">
-          <Mdx components={getMDXComponents({})} />
+          <Mdx components={getMDXComponents({ ListBenchmark })} />
         </div>
 
         <ReviewSection id="pros-and-cons" title={`${tool} pros and cons`}>
@@ -587,6 +616,7 @@ export default async function Review(props: {
         score={score}
         author={managedAuthor}
         contents={[
+          ...(d.scope ? [{ id: "scope", title: "What we reviewed" }] : []),
           { id: "verdict", title: "Verdict and scores" },
           { id: "facts", title: `${tool} at a glance` },
           ...(d.benchmark
@@ -724,7 +754,12 @@ function ReviewSection({
   );
 }
 
-function Mark({ icon }: { icon: "yes" | "no" }) {
+function Mark({ icon }: { icon: "yes" | "no" | "skip" }) {
+  if (icon === "skip") {
+    return (
+      <Minus aria-hidden className="mt-0.5 size-4 shrink-0 text-fd-muted-foreground" />
+    );
+  }
   return icon === "yes" ? (
     <Check aria-hidden className="mt-0.5 size-4 shrink-0 text-emerald-600" />
   ) : (
@@ -739,7 +774,7 @@ function VerdictList({
 }: {
   title: string;
   items: string[];
-  icon: "yes" | "no";
+  icon: "yes" | "no" | "skip";
 }) {
   return (
     <div>

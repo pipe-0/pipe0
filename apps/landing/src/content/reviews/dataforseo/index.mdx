@@ -1,0 +1,287 @@
+---
+title: "DataForSEO review (2026): the fastest way to build local business lists"
+description: "DataForSEO is the best way we found to build local business
+  lists: thousands of businesses per city in seconds, about $0.37 per 1,000
+  rows, most with a phone number. Its limit is scope: it only knows
+  businesses with a map listing, and it filters by category, not by
+  meaning."
+tool:
+  name: DataForSEO
+  url: https://dataforseo.com
+  logo: /media/reviews/logos/dataforseo.png
+  category: List building
+verdict: "The best tool we tested for local business lists: two to six
+  times the rows of the next best tool, in seconds, at $0.37 per 1,000. It
+  only knows businesses with a map listing."
+relationship: supplier
+disclosure: "pipe0 buys from DataForSEO and offers its business listings as
+  pipe0's local business search. The scores come from our own benchmark, not
+  from that relationship."
+scope:
+  summary: "DataForSEO sells a large catalog of SEO and marketing data APIs.
+    We reviewed one of them, Business Listings Search, for a single job:
+    building lists of local businesses for sales and marketing outreach."
+  tested:
+    - "Listing local businesses by category and city, on four scenarios"
+    - "Phone, website and freshness of every row returned"
+    - "Speed and cost against Exa, Parallel, Crustdata and Amplemarket"
+  notTested:
+    - "Search result, keyword, backlink and other SEO APIs"
+    - "Business info and review endpoints for a single listing"
+scores:
+  easeOfUse:
+    score: 3.5
+    why: "One live endpoint that answers in about a second. You work in
+      category ids and a latitude, longitude and radius string, and errors
+      arrive inside an HTTP 200."
+  dataQuality:
+    score: 4.5
+    why: "The biggest list in every scenario, 80 to 96% of rows with a phone,
+      and 94 to 98% of records updated this year. Permanently closed
+      listings are flagged, not hidden."
+  pricingValue:
+    score: 5
+    why: "$0.012 per request plus $0.00036 per business: about $0.37 per
+      1,000 rows, the cheapest per useful row we measured. Prepaid credit
+      doesn't expire."
+  agentAccess:
+    score: 4
+    why: "A synchronous REST API, a free category list, cursor paging with
+      no depth limit, and an official MCP server. At most eight filters per
+      request."
+bestFor:
+  - "Lists of storefronts, trades, clinics, venues and restaurants by city"
+  - "Outreach that needs a phone number and opening hours per location"
+  - "Large lists: thousands of rows per city, paged in seconds"
+skipIf:
+  - "Your targets have no map listing, such as online-only brands"
+  - "You need firmographics: headcount, revenue, funding or tech stack"
+  - "Nobody on your team can call an API"
+pros:
+  - title: "Volume"
+    body: "3,959 New York City barbershops in 15 seconds, against 1,932 from
+      the next best tool, which took five and a half minutes."
+  - title: "Contact-ready rows"
+    body: "80 to 96% of rows had a phone number. Every row carries the
+      address, coordinates, rating, review count, opening hours and whether
+      the owner claimed the listing."
+  - title: "Predictable price"
+    body: "You pay per request and per business returned, so the cost of a
+      list is known before you run it: $0.37 for a full page of 1,000."
+  - title: "Fresh and honest about closures"
+    body: "94% of NYC records and 98% of Dallas records were updated in
+      2026, and 8% of NYC rows were marked permanently closed, so you can
+      filter them out."
+cons:
+  - title: "Only businesses with a listing"
+    body: "Companies without a storefront, like online brands or software
+      firms, aren't in the data at all."
+  - title: "Categories, not prompts"
+    body: "You pick from about 5,300 category ids. An ask like 'venues that
+      host 100+ guests' needs a second filtering step."
+  - title: "Developer-first"
+    body: "No app for sales teams. You call the API, through their MCP
+      server, or through a tool built on top of it."
+  - title: "Thin on firmographics"
+    body: "No headcount, revenue or ownership data. Pair it with a company
+      database or enrichment if you need them."
+pricing:
+  asOf: 2026-10-15
+  source: https://dataforseo.com/pricing/business-data/business-listings
+  startingAt: 50
+  startingAtPeriod: one-time
+  startingAtNote: "minimum prepaid top-up, pay as you go"
+  freePlan: false
+  plans:
+    - name: Trial
+      price: "$0"
+      includes: "$1 in trial credit."
+    - name: Pay as you go
+      price: "$50 minimum top-up"
+      includes: "Prepaid credit for every DataForSEO API. No subscription,
+        and the credit doesn't expire."
+    - name: Business Listings Search
+      price: "$0.012 per request"
+      includes: "Plus $0.00036 per business returned, so a full page of
+        1,000 businesses costs about $0.37."
+  notes:
+    - "The category list is free to call."
+    - "DataForSEO raised Business Listings prices by 20% on July 1, 2026.
+      The older product page still shows the previous rates."
+facts:
+  - label: What it searches
+    value: "Business listings by category, location and radius, with
+      filters for rating, reviews, claimed listings and opening status"
+    source: https://docs.dataforseo.com/v3/business_data/business_listings/search/live/
+  - label: Categories
+    value: "About 5,300 category ids, downloadable for free"
+    source: https://docs.dataforseo.com/v3/business_data/business_listings/categories/
+  - label: Page size and paging
+    value: "Up to 1,000 businesses per request; a cursor token pages past
+      that with no depth limit"
+    source: https://docs.dataforseo.com/v3/business_data/business_listings/search/live/
+  - label: Rate limits
+    value: "2,000 calls per minute, 30 at the same time"
+    source: https://docs.dataforseo.com/v3/business_data/business_listings/search/live/
+  - label: MCP server
+    value: "Official, hosted at mcp.dataforseo.com/mcp, also open source"
+    source: https://dataforseo.com/help-center/setting-up-the-official-dataforseo-mcp-server-simple-guide
+  - label: Company
+    value: "DataForSEO OÜ, registered in Estonia (EU), registry code
+      14502291"
+    source: https://dataforseo.com/terms-of-service
+alternatives:
+  - name: pipe0 local business search
+    href: /docs/search-catalog/places:dataforseo/1
+    why: "You want DataForSEO's listings in a sheet or through an agent,
+      with enrichment pipes for emails and contacts on the same rows."
+  - name: Exa
+    href: /reviews/exa
+    why: "The list is defined somewhere on the web, like a show's
+      exhibitors, rather than by a business category."
+  - name: Crustdata
+    href: /reviews/crustdata
+    why: "Your targets are companies you describe with firmographics or a
+      tech stack, not storefronts."
+  - name: Parallel
+    href: /reviews/parallel
+    why: "You need one researched answer per business, not a bigger list."
+authors:
+  - name: Florian
+    title: Founder
+date: 2026-10-15
+faq:
+  - q: "What is DataForSEO Business Listings?"
+    a: "An API that searches a database of local business listings by
+      category, location and radius. Each result includes the name, address,
+      coordinates, phone, website, rating, review count and opening hours."
+  - q: "How much does DataForSEO Business Listings cost?"
+    a: "$0.012 per request plus $0.00036 per business returned, so 1,000
+      businesses cost about $0.37. Accounts are prepaid, with a $50 minimum
+      top-up and a $1 trial credit."
+  - q: "What is the best API for building local business lists?"
+    a: "In our October 2026 benchmark, DataForSEO returned the most
+      businesses in all four scenarios, 826 to 3,959 per city, in 2 to 15
+      seconds. Exa's research agent returned 146 to 1,932 in 3 to 6 minutes,
+      and LinkedIn-based company databases found 26 barbershops in New York
+      City."
+  - q: "Is DataForSEO data up to date?"
+    a: "In our test, 94% of New York City records and 98% of Dallas records
+      had been updated in 2026. Permanently closed businesses are flagged, 8%
+      of the NYC barbershops, and can be excluded with one filter."
+  - q: "Does DataForSEO have an MCP server?"
+    a: "Yes. DataForSEO publishes an official MCP server, hosted at
+      mcp.dataforseo.com/mcp and available as open source."
+---
+
+{/*
+FACT BASE (pipe0 benchmark, 2026-10-09 to 2026-10-14; duo session 0861a58c):
+- Scenarios, DataForSEO Business Listings live: NYC barbershops 3,959 rows
+  15 s $1.47 (80% phone, 37% website, 100% in NYC ZIPs, 1,459 match a
+  licensed shop's address of 1,952 in NYS licence data, 94% updated 2026,
+  8% closed_forever); DFW HVAC 2,147 available, first 1,000 in 3 s $0.37
+  (96% phone, 75% website, 98% updated 2026); Chicago event venues 826 in
+  2 s $0.31 (87% phone, 83% website, 96% in Chicago); Miami property
+  managers 1,180 available, first 1,000 2 s $0.37 (95% phone, 67% website).
+- Exa ultra rows also in DataForSEO: NYC 66, Miami 85, Chicago 47, DFW 42
+  (vs first 1,000 rows).
+- "Two to six times the next best tool": NYC 3,959 vs Exa ultra 1,932
+  (2.0x); DFW 2,147 vs Exa ultra 341 (6.3x, Crustdata ~280 mixed); Chicago
+  826 vs Exa ultra 146 (5.7x); Miami 1,180 vs Amplemarket ~500 mixed (2.4x).
+- Pricing: $0.012 per live request + $0.00036 per item; $50 minimum top-up;
+  $1 trial; no expiry (dataforseo.com/pricing, read 2026-10-15). 20% price
+  rise 2026-07-01 (dataforseo.com/update/pricing-update-in-dataforseo-apis).
+- Categories endpoint free; 5,321 categories in our 2026-10-14 download.
+- offset_token cursor decodes to Elasticsearch search_after; offset is only
+  recommended to 10,000 results.
+- Errors: HTTP 200 with a task-level status code; 401 bad auth.
+- Legal entity from the terms page; Estonian register 14502291.
+*/}
+
+## What is DataForSEO?
+
+DataForSEO is an Estonian data company that sells SEO and marketing data
+through APIs: search results, keywords, backlinks and business data.
+Agencies and software companies build products on top of it.
+
+Its Business Listings Search API is a database of local businesses with a
+map listing. Give it a category, a location and a radius, and it returns
+the matching businesses, up to 1,000 per request, each with an address,
+phone number, website, rating and opening hours.
+
+## What is the best API for local business lists?
+
+DataForSEO, in our benchmark. On four lists (New York City barbershops,
+Dallas–Fort Worth HVAC contractors, Chicago event venues and Miami
+property managers) it returned the most businesses every time, two to six
+times the next best tool, in seconds. Prompt-based agents from Exa and
+Parallel returned hundreds at best, and company databases built from
+LinkedIn pages barely list storefront businesses: 26 barbershops in all of
+New York City.
+
+<ListBenchmark chart="rows" highlight="dataforseo" />
+
+## Is DataForSEO business data accurate?
+
+Mostly, and it says when it isn't. Three out of four of its NYC
+barbershops matched a shop on the state licence list by address, and every
+row was inside a New York City ZIP code. Most of the rest are unlicensed
+shops and salons that also cut hair. 8% were listings marked permanently
+closed, which one filter removes.
+
+<ListBenchmark chart="nyc" highlight="dataforseo" />
+
+Records were fresh: 94% of NYC records and 98% of Dallas records had been
+updated in 2026. Most rows are ready for outreach.
+
+<ListBenchmark chart="fill" />
+
+## How fast is DataForSEO, and what does it cost?
+
+A page of 1,000 businesses comes back in one to three seconds and costs
+about $0.37. The price is $0.012 per request plus $0.00036 per business,
+so you know what a list costs before you run it. Research agents take two
+to fourteen minutes per list and bill per run, which puts a short list at
+several dollars per 1,000 rows.
+
+<ListBenchmark chart="time" highlight="dataforseo" />
+
+<ListBenchmark chart="cost" highlight="dataforseo" />
+
+## Does DataForSEO find every business?
+
+No source does. Between 42% and 85% of the businesses Exa's agent found
+were also in DataForSEO's list; the rest were real misses or businesses
+just outside the radius or category. For a complete territory, run a
+second source and merge on the address.
+
+<ListBenchmark chart="overlap" />
+
+## What can't DataForSEO do?
+
+It only knows businesses with a map listing, so online-only companies are
+missing entirely. It filters by category, not meaning: "venues that host
+corporate events for 100 or more guests" is a category search followed by
+a qualifying step on the description, services and attributes each
+listing carries. And it has no headcount, revenue or ownership data.
+
+It is also built for developers. Categories are ids such as
+`barber_shop`, the location is a latitude, longitude and radius string,
+and a failed task comes back inside an HTTP 200 with its own status code.
+The free category list and the official MCP server make it easier to use
+from an agent than by hand.
+
+## DataForSEO and pipe0
+
+pipe0 buys from DataForSEO and offers Business Listings as its local
+business search, with category and city autocomplete done for you. Rows
+land in a sheet, where enrichment pipes add emails and decision makers.
+
+## DataForSEO, Exa or a company database: which should you use?
+
+Use DataForSEO when your targets are storefronts, trades, clinics,
+restaurants or venues and you need thousands of them with phone numbers.
+Use a company database when filters such as headcount or tech stack
+describe the list, and Exa when only a prose brief does.
+
+<ListBenchmark chart="fit" highlight="dataforseo" />

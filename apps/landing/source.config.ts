@@ -261,6 +261,7 @@ export const reviews = defineCollections({
         "Email verification",
         "Sales engagement",
         "Agent data tools",
+        "List building",
       ]),
     }),
     /**
@@ -275,6 +276,21 @@ export const reviews = defineCollections({
       pricingValue: criterion,
       agentAccess: criterion,
     }),
+    /**
+     * What the review covered, printed above the verdict. For tools much
+     * broader than the use cases we tested (search APIs, data platforms),
+     * so the score reads as "for these jobs", not "for everything".
+     */
+    scope: z
+      .object({
+        /** One or two sentences: the context the tool was reviewed in. */
+        summary: z.string(),
+        /** The jobs we tested it on. */
+        tested: z.array(z.string()).min(1),
+        /** Parts of the product the review doesn't score. */
+        notTested: z.array(z.string()).optional(),
+      })
+      .optional(),
     bestFor: z.array(z.string()),
     skipIf: z.array(z.string()),
     pros: noteList,

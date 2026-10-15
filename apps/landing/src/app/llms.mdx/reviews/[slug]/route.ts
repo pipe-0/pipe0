@@ -8,6 +8,10 @@ import {
   isVisible,
   overallScore,
 } from "@/app/reviews/review-utils";
+import {
+  listBenchmarkMarkdown,
+  type ChartName,
+} from "@/app/reviews/list-benchmark";
 import { authorDisplayName, authorUrl, getAuthor } from "@/lib/authors";
 import { reviews } from "@/lib/source";
 import { getBaseUrl } from "@/lib/utils";
@@ -62,6 +66,19 @@ export async function GET(
     `Disclosure: ${disclosureFor(page)}`,
   ];
   if (d.description) lines.push("", `> ${d.description}`);
+  if (d.scope) {
+    lines.push(
+      "",
+      `**What we reviewed:** ${d.scope.summary}`,
+      "",
+      "Tested for:",
+      "",
+      ...d.scope.tested.map((item) => `- ${item}`),
+      ...(d.scope.notTested
+        ? ["", "Not scored here:", "", ...d.scope.notTested.map((item) => `- ${item}`)]
+        : []),
+    );
+  }
 
   lines.push(
     "",
@@ -161,6 +178,11 @@ export async function GET(
     // MDX comments hold the editorial fact base; they stay in the repo.
     (await page.data.getText("processed"))
       .replace(/\{\/\*[\s\S]*?\*\/\}/g, "")
+      // Benchmark charts become the same numbers as tables.
+      .replace(
+        /<ListBenchmark\b[^>]*?chart="(\w+)"[^>]*?\/>/g,
+        (_, chart: string) => listBenchmarkMarkdown(chart as ChartName),
+      )
       .trim(),
     "",
     `## ${tool} pros and cons`,

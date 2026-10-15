@@ -20,6 +20,8 @@ import {
   sortedReviews,
 } from "./review-utils";
 import { ReviewsGrid, type ReviewCard } from "./reviews-grid";
+import { ListBenchmark } from "./list-benchmark-charts";
+import { LIST_BENCHMARK_PERIOD } from "./list-benchmark";
 
 const TITLE = "GTM tool reviews";
 
@@ -134,6 +136,10 @@ export default function ReviewsIndex() {
 
         <ReviewsGrid cards={cards} />
 
+        <ListBuildingSection
+          reviews={reviews.filter((r) => r.data.tool.category === "List building")}
+        />
+
         {/* One table across every review: the answer to "which tool is best
             for X" in a shape answer engines can lift whole. */}
         <section aria-labelledby="at-a-glance" className="mt-16">
@@ -227,6 +233,68 @@ export default function ReviewsIndex() {
   );
 }
 
+/**
+ * The search and list-building reviews share one benchmark, so the hub
+ * says up front what they were tested for: these tools do far more than
+ * build GTM lists, and their scores only speak to that job.
+ */
+function ListBuildingSection({
+  reviews,
+}: {
+  reviews: ReturnType<typeof sortedReviews>;
+}) {
+  if (reviews.length === 0) return null;
+  return (
+    <section
+      id="list-building"
+      aria-labelledby="list-building-heading"
+      className="mt-16 scroll-mt-24"
+    >
+      <h2
+        id="list-building-heading"
+        className="font-blog text-[26px] font-semibold tracking-[-0.015em] text-fd-foreground"
+      >
+        Search APIs for list building
+      </h2>
+      <div className="mt-3 max-w-[680px] space-y-3 text-[15.5px] leading-[1.65] text-fd-muted-foreground">
+        <p>
+          Exa, Parallel and DataForSEO are broad platforms: web search, crawling,
+          research agents, SEO data. We reviewed them for one job, the one sales
+          and marketing teams ask us about most: building a prospect list. That
+          means local businesses by category and city, companies a filter can
+          describe, and lists an outside source defines, such as trade-show
+          exhibitors.
+        </p>
+        <p>
+          We ran the same scenarios through every tool in {LIST_BENCHMARK_PERIOD},
+          next to the filter-based company databases Crustdata and Amplemarket,
+          and checked the results against public ground truth where it exists:
+          New York State&apos;s barbershop licences, a show&apos;s official
+          exhibitor list, live Shopify stores. Their scores speak to list
+          building, not to everything these products do.
+        </p>
+      </div>
+      <ul className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-3">
+        {reviews.map((r) => (
+          <li key={r.url}>
+            <Link
+              href={r.url}
+              className="group flex items-center gap-3 rounded-xl p-3 ring-1 ring-fd-border transition-colors hover:bg-fd-accent/60"
+            >
+              <ToolLogo name={r.data.tool.name} logo={r.data.tool.logo} />
+              <span className="min-w-0 flex-1 truncate font-medium text-fd-foreground group-hover:text-fd-primary">
+                {r.data.tool.name} review
+              </span>
+              <ScorePill score={overallScore(r.data.scores)} />
+            </Link>
+          </li>
+        ))}
+      </ul>
+      <ListBenchmark chart="fit" />
+    </section>
+  );
+}
+
 /** The scoring method. Every review links here. */
 function Methodology() {
   return (
@@ -278,6 +346,15 @@ function Methodology() {
           run ids, and the caveats: small samples, a pre-filtered profile set
           that runs high in absolute terms, and agreement as a proxy for
           accuracy rather than proof of it.
+        </p>
+        <p>
+          For search and list-building tools, we run the same list requests
+          through each one and count unique rows, time per run from the
+          vendor&apos;s own timestamps, and what we paid. Quality is checked
+          against ground truth where one exists (a licence registry, an
+          official exhibitor list, a live store) and by spot checks where it
+          doesn&apos;t. Each scenario ran once, so read small differences as
+          noise and large ones as signal.
         </p>
         <p>
           pipe0 sells data enrichment, so many of the tools reviewed here

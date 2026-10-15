@@ -31,16 +31,16 @@ export const CRITERIA: {
     key: "dataQuality",
     label: "Data quality",
     rubric:
-      "Coverage and accuracy of the contact and company data it returns, " +
-      "across regions and job titles, not only US tech.",
+      "Coverage and accuracy of the contact, company or business data it " +
+      "returns, across regions, job titles and industries, not only US tech.",
   },
   {
     key: "pricingValue",
     label: "Pricing value",
     rubric:
-      "What a found email or phone number really costs once credits, " +
-      "seats, top-ups and expiry are counted, and how predictable the bill " +
-      "is.",
+      "What a found email, phone number or list row really costs once " +
+      "credits, seats, top-ups and expiry are counted, and how predictable " +
+      "the bill is.",
   },
   {
     key: "agentAccess",

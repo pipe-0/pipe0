@@ -1,0 +1,309 @@
+---
+title: "Exa review (2026): how well its AI agent builds lead lists"
+description: "Exa is a capable general-purpose list builder: describe a list
+  in plain language and its agent searches a large web index for a few
+  hundred accurate rows. It is usually the weaker choice when a filter-based
+  search fits the list, or when the full list is public on one page and can
+  be scraped. Its niche is narrow: lists no filter can describe."
+tool:
+  name: Exa
+  url: https://exa.ai
+  logo: /media/reviews/logos/exa.png
+  category: List building
+verdict: "The best prompt-based list builder we tested: a few hundred
+  accurate rows in minutes, ahead of Parallel every time. When a database
+  filter can describe the list, the filter wins."
+relationship: supplier
+disclosure: "pipe0 buys from Exa and offers its Agent as a list-building
+  search. The scores come from our own benchmark, not from that
+  relationship."
+scope:
+  summary: "Exa is a search engine built for AI: web search, page contents,
+    answers, research agents and Websets. We reviewed it for one job:
+    building prospect lists for sales and marketing teams from a plain
+    language prompt."
+  tested:
+    - "Local business lists with the Agent API (ultra and medium effort)"
+    - "Local businesses through search's places results"
+    - "Online brands and trade-show exhibitors, scored against ground truth"
+  notTested:
+    - "Web search and contents for RAG and AI apps"
+    - "Websets, Exa's list product, which has its own paid plan"
+scores:
+  easeOfUse:
+    score: 4
+    why: "A prompt and an output schema in, a structured list out. Runs are
+      asynchronous and take two to six minutes, and search's 10-place cap
+      isn't in the docs."
+  dataQuality:
+    score: 3.5
+    why: "Rows were mostly precise, 96% on exhibitors, but lists were short
+      (146 to 341 local businesses) and phone coverage swung from 97% to
+      8%."
+  pricingValue:
+    score: 3.5
+    why: "A medium run is $0.10 flat. Ultra is metered and cost us about
+      $1.10 per run, so short lists landed at $3 to $8 per 1,000 rows."
+  agentAccess:
+    score: 4.5
+    why: "A hosted MCP server with an agent tool, Python and JavaScript
+      SDKs, spend and time caps per run, and up to 50 runs at once."
+bestFor:
+  - "A few hundred accurate rows from a prose brief no filter can express"
+  - "Lists published on the web, like exhibitors or members, when a sample
+    is enough"
+  - "Agents that need list building behind one tool call"
+skipIf:
+  - "You need thousands of local businesses per city"
+  - "You need every entry of a directory, not a sample"
+  - "A database filter can describe your list (industry, size, tech stack)"
+  - "Your workflow can't wait two to six minutes for a result"
+pros:
+  - title: "Beat Parallel on every list"
+    body: "On four local lists, Exa's ultra agent returned 146 to 1,932 rows
+      in three to six minutes. Parallel's tasks returned 17 to 200 in eight
+      to fourteen."
+  - title: "Accurate rows from a prompt"
+    body: "Rows were real and on target: 96% of the trade-show exhibitors it
+      returned were on the official list, and every NYC row from a medium
+      run was inside the city."
+  - title: "Built for agents"
+    body: "A hosted MCP server, budget and time caps per run, and a
+      structured output schema make it a safe tool to hand an agent."
+  - title: "Cheap fixed runs"
+    body: "Medium effort costs $0.10 a run and returned 81 to 217 local
+      businesses in about two minutes, every NYC row inside the city."
+cons:
+  - title: "A few hundred rows per run"
+    body: "Unless it finds a registry to copy, a run stops at a few hundred
+      rows: 146 to 341 local businesses, or 212 of a show's 3,194
+      exhibitors. DataForSEO returned 826 to 3,959 local businesses."
+  - title: "Slow for interactive work"
+    body: "Agent runs took two to six minutes, and ultra's time limit can't
+      go below five minutes."
+  - title: "Uneven contact data"
+    body: "97% of Dallas HVAC rows had a phone number, but 8% of NYC
+      barbershops did, and 39% of Miami rows fell outside Miami-Dade."
+  - title: "Places search caps at 10"
+    body: "Search returns at most 10 places per call. Wider lists mean
+      splitting a city into ZIP codes yourself."
+pricing:
+  asOf: 2026-10-15
+  source: https://exa.ai/pricing
+  startingAt: 0
+  startingAtNote: "pay as you go, with $10 in free credit each month"
+  freePlan: true
+  plans:
+    - name: Free credit
+      price: "$10 a month"
+      includes: "Resets on the 1st of each month. No subscription or minimum
+        spend."
+    - name: Search
+      price: "$7 per 1,000 requests"
+      includes: "Fast and auto search with up to 10 results; deep search
+        $12, extra results $1 per 1,000."
+    - name: Agent, fixed effort
+      price: "$0.012 to $1.00 per run"
+      includes: "Minimal, low, medium ($0.10), high and xhigh effort, each
+        at a flat price."
+    - name: Agent, auto and ultra
+      price: "Metered"
+      includes: "$0.10 per compute unit plus $0.005 per search, capped by a
+        $1 to $100 budget per run."
+    - name: Websets
+      price: "Separate plan"
+      includes: "Exa's list product, billed apart from API credit."
+  notes:
+    - "Ultra runs default to a $20 spending cap and $5 for auto; we used
+      ultra with a $5 cap and a 10-minute limit."
+    - "Contact enrichment inside an Agent run costs $0.02 per email and
+      $0.07 per phone number."
+facts:
+  - label: Agent API
+    value: "Asynchronous runs from a prompt and an output schema; effort
+      from minimal to ultra"
+    source: https://exa.ai/docs/reference/agent
+  - label: Run limits
+    value: "Budget $1 to $100 per run; ultra time limit 5 minutes to 3 hours"
+    source: https://exa.ai/docs/reference/agent
+  - label: Places
+    value: "Local business profiles with address, hours and reviews, served
+      inside search; 10 per call in our tests"
+    source: https://exa.ai/docs/search/data/sports-weather-places
+  - label: Rate limits
+    value: "Search 10 requests per second; Agent 50 active runs"
+    source: https://exa.ai/docs/reference/rate-limits
+  - label: MCP server
+    value: "Hosted at mcp.exa.ai/mcp, with search, fetch and agent tools"
+    source: https://exa.ai/docs/get-started/exa-mcp
+  - label: SDKs
+    value: "Python and JavaScript"
+    source: https://exa.ai/docs/get-started/exa-mcp
+alternatives:
+  - name: pipe0 list-building search
+    href: /docs/search-catalog/research:exa/1
+    why: "You want Exa's agent in a sheet or an MCP workflow, billed from
+      Exa's own cost, with enrichment on the rows it returns."
+  - name: DataForSEO
+    href: /reviews/dataforseo
+    why: "You need local businesses by category: thousands of rows per city
+      in seconds."
+  - name: Crustdata
+    href: /reviews/crustdata
+    why: "Filters can describe your companies, including the tech they use."
+  - name: Parallel
+    href: /reviews/parallel
+    why: "You need one researched answer per row rather than a new list."
+authors:
+  - name: Florian
+    title: Founder
+date: 2026-10-15
+faq:
+  - q: "Can Exa build lead lists?"
+    a: "Yes, lists of a few hundred rows. Exa's Agent API turns a prompt
+      into a structured list. In our tests an ultra run returned 146 to 341
+      local businesses per city in three to six minutes for about $1.10."
+  - q: "Can Exa extract a full exhibitor list or directory?"
+    a: "No. On a trade show whose 3,194 exhibitors were public on one page,
+      Exa returned 212 of them, 96% correct. To get every entry, use a tool
+      that reads the directory page itself."
+  - q: "How much does an Exa Agent run cost?"
+    a: "Fixed efforts cost $0.012 to $1.00 per run; medium is $0.10. Auto
+      and ultra are metered at $0.10 per compute unit plus $0.005 per
+      search, within a budget you set between $1 and $100. Our ultra runs
+      cost $1.09 to $1.46."
+  - q: "How many places does Exa search return?"
+    a: "In our tests, 10 places per search call, whatever numResults was
+      set to. Exa recommends the Agent for longer lists."
+  - q: "Exa or Parallel for building lists?"
+    a: "Exa. On four local business lists Exa's ultra agent returned more
+      rows than Parallel's Task API every time, in three to six minutes
+      against eight to fourteen."
+  - q: "Exa or DataForSEO for local businesses?"
+    a: "DataForSEO. It returned two to six times Exa's rows in seconds, at
+      $0.37 per 1,000. Exa found some businesses DataForSEO missed, so for
+      a complete territory you can merge both."
+---
+
+{/*
+FACT BASE (pipe0 benchmark, 2026-10-09 to 2026-10-14; sessions 23fd7dcd and
+duo 0861a58c):
+- Local scenarios, Exa Agent ultra ($5 cap): NYC barbershops 1,932 rows
+  325 s $1.46 (1,715 match the NYS licence list; copied the registry; 8%
+  phone); DFW HVAC 341 / 173 s / $1.09 (97% phone, 90% website, 16 of 20
+  sampled sites load); Chicago venues 146 / 189 s / $1.10 (91% in city);
+  Miami property managers 170 / 336 s / $1.11 (61% in Miami-Dade).
+- Medium ($0.10 flat): NYC 217 / 125 s (100% in NYC, 68% phone); DFW 156 /
+  105 s; Chicago 81 / 125 s; Miami 100 / 132 s.
+- Parallel Task pro 17-125 rows in 475-616 s; ultra 62-200 in 663-830 s.
+- Places via /search: 10 places per call regardless of numResults; 178 NYC
+  ZIP calls -> 602 unique barbershops in 20 s for $1.25 (591 in NYC, 598
+  tagged Barbershop). Our key: 10 rps; a 6th simultaneous agent run was
+  refused (docs say 50 active runs).
+- Shopify brands: Exa ultra 28 rows, 26 verified, 165 s, ~$1.50; Crustdata
+  91 rows, 77 verified; 25 of Exa's 26 already in Crustdata.
+- Expo West 2026 (3,194 official): Exa ultra 220 rows, 212 real, 3.8 min,
+  $1.45 (~63 credits), stopReason schema_satisfied (not our 500-row cap).
+  The list is public on one server-rendered page. Current research agent
+  (harvest_list, on main since 7bb40724b): full directory (3,226 rows,
+  ~3 min, 8 credits) in 1 of 9 runs, median ~45. Exa's sources were never
+  inspected, so "Exa merges scattered sources" is unverified; scattered
+  lists are untested.
+- Pricing from exa.ai/pricing and docs/reference/agent, read 2026-10-15.
+*/}
+
+## What is Exa?
+
+Exa is a search engine built for AI applications. Its API searches the
+web, returns page contents, answers questions, and runs research agents.
+For sales and marketing teams the relevant part is the Agent API: describe
+a list in plain language, define the columns, and it searches, checks and
+returns structured rows.
+
+## Can Exa build lead lists?
+
+Yes, lists of a few hundred rows. An Agent run returned 146 to 341 local
+businesses per city in our tests, and the rows were accurate. It beat
+Parallel's research tasks on every list. Purpose-built data beat it on
+volume: DataForSEO's business listings returned two to six times as many
+local businesses, in seconds.
+
+<ListBenchmark chart="rows" highlight="exa" />
+
+A run can return far more when the list already exists in one public
+source. Asked for New York City barbershops, Exa found the state licence
+registry and returned 1,932 rows, 1,715 of them licensed shops. Registry
+rows carry legal entity names ("CUTTING POINT CORP") and rarely a phone
+number: 8% had one, against 80% in DataForSEO's list.
+
+<ListBenchmark chart="nyc" highlight="exa" />
+
+## How long does an Exa Agent run take, and what does it cost?
+
+An ultra run takes three to six minutes and costs about $1 to $1.50; a
+medium run takes about two minutes for a flat $0.10. Both are slower than
+a database query and faster than Parallel's research tasks, which took
+eight to fourteen minutes. Ultra's time limit can't be set below five
+minutes, so it doesn't suit a step that must answer quickly.
+
+<ListBenchmark chart="time" highlight="exa" />
+
+Because you pay per run, the cost per row depends on how many rows the run
+finds: $0.46 to $1.23 per 1,000 rows for medium and $0.76 to $7.53 for
+ultra, against $0.37 for DataForSEO.
+
+<ListBenchmark chart="cost" highlight="exa" />
+
+## When does a database filter beat Exa?
+
+Whenever a filter can describe the list. Online-only brands look like
+Exa's territory, since they have no storefront to find on a map. But a
+company database with a technology filter found three times as many
+verified Shopify brands in seconds, and already held 25 of the 26 Exa
+found.
+
+<ListBenchmark chart="shopify" />
+
+The same holds for local businesses with a clear category. Use Exa for
+what a filter can't express, then check whether the database had it first.
+
+## Can Exa get every exhibitor or member from a public list?
+
+No. It returns an accurate sample of a few hundred, not the whole list. On
+a trade show whose 3,194 exhibitors are public on one page, Exa returned
+212, and 96% of them were real. A research agent that can read the
+directory page directly returned the full list, but only when it found
+that page; a typical run returned fewer rows than Exa.
+
+<ListBenchmark chart="exhibitors" />
+
+So Exa is the dependable choice when a few hundred correct rows are
+enough. When you need every entry, point a scraper or a list-reading agent
+at the directory page. We haven't yet tested lists that no single page
+holds, such as companies mentioned across many news articles.
+
+## Can Exa's search return local businesses?
+
+Yes, 10 at a time. Exa's search returns places with address, phone,
+rating and opening hours, and they were precise: 591 of 602 NYC
+barbershops were inside the city. Each call returns at most 10 places, so
+a city-wide list means splitting the city into ZIP codes yourself. Across
+178 NYC ZIP codes that gave 602 unique barbershops in 20 seconds for
+$1.25, about 15% of what DataForSEO returned.
+
+## Exa and pipe0
+
+pipe0 offers Exa's ultra agent as a list-building search, with a $5
+spending cap and a 10-minute limit per run, billed from Exa's own reported
+cost. Its agent sends local businesses to DataForSEO and filterable
+companies to the company databases, and uses Exa for briefs no filter can
+express.
+
+## Exa, DataForSEO or Parallel: which should you use?
+
+Use DataForSEO for local businesses by category, a company database for
+anything a filter can describe, and Parallel for researching rows you
+already have. Use Exa when the list needs a prose brief and a few hundred
+accurate rows are enough.
+
+<ListBenchmark chart="fit" highlight="exa" />
