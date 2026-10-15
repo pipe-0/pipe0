@@ -1,42 +1,59 @@
-# An API Based Framework for Data Enrichment
+# pipe0: turn any GTM play into a production system with AI
 
-[![Everything Is AWESOME](https://imagedelivery.net/3B3AWuP94-S3Ro5eEac6JA/b63a90b7-6969-45f2-237b-1d9d45673b00/ytthumbnail)](https://youtu.be/k9g7Tpcawu0 "Pipe0 Intro")
+[![pipe0 intro](https://imagedelivery.net/3B3AWuP94-S3Ro5eEac6JA/b63a90b7-6969-45f2-237b-1d9d45673b00/ytthumbnail)](https://youtu.be/k9g7Tpcawu0 "pipe0 intro")
 
 Click the image to watch an intro video.
 
-[Pipe0](https://pipe0.com) is a framework for data enrichment. It replaces providers
-like Zoominfo, Prospeo, or Findymail with a more flexible API.
+AI made engineers 10x faster. GTM teams are still waiting.
 
-Our API is built around three endpoints allow you to design features similar to tools like [n8n](https://n8n.io) (node-based automation)
-or [clay](https://clay.com) (table-based automation). Three three endpoints (pimitives) are:
+Coding agents sped up engineers, but GTM doesn't run on code. It runs on
+research, lists, and automations. Today's GTM tools come with a tradeoff:
+they're either built for humans and hard for agents to use, or built for
+agents and leave the building to you.
 
-**Pipes:** A composable endpoint to enrich data & perform actions in 3rd party systems
-**Searches:**: A composable endpoint to search for companies and leads using filters
-**Comming soon:** A data transforamtion endpoint
+[pipe0](https://pipe0.com) is native to both. Ask a data question or describe
+a play, and the agent builds a system you can see, change, and trust.
 
-Aside from finding information like email addresses, phone numbers, and LinkedIn profiles
-(s. [pipe catalog](https://pipe0.com/resources/pipe-catalog) for a full list),
-you can use Pipe0 to express conditions, perform actions, and generate insights with AI.
+## How it works
 
-We took a lot of inspiration from [Clay](https://clay.com). We moved many of its features
-into a stateless, fast, and cost-effective API.
+pipe0 is built from a small set of primitives:
 
-It's easy to underestimate the engineering challenge of building a robust data enrichment platform in-house.
-Here are some things that you never have to worry about when using Pipe0:
+- **Searches** find companies and people using filters.
+- **Pipes** enrich records. Each pipe has fixed inputs and outputs. Pipes find
+  emails, phone numbers, and LinkedIn profiles, but they also decide, branch,
+  run AI, and write to other systems. See the
+  [pipe catalog](https://pipe0.com/docs/pipe-catalog).
+- **Sheets** are Clay-like tables in the cloud that hold up to 2M records,
+  with schedules, signals, webhooks, and reports.
 
-⚡️ Enriching data in parallel with speed and accuracy  
-🛑 Dealing with different provider rate limits  
-🧼 Sanitizing & healing input  
-🖥️ Monitoring dozens of 3rd-party API integrations  
-🌊 Building custom waterfalls  
-💵 Managing credit balances with different providers  
-🏗️ Run enrichment, scraping and AI infrastructure at low cost  
-🍝 Spaghetti code  
+The same primitives work two ways:
+
+- **Stateless:** one API call, data back. Ask for the same data and you get
+  the same answer, unless the underlying data changed.
+- **Stateful:** write the data to a sheet, and it becomes a table with
+  schedules and always-on automations. Nothing is rebuilt.
+
+One engine, three surfaces: everything in a sheet is also available through
+the REST API and the [MCP server](https://pipe0.com/mcp).
+
+## Why not build it yourself
+
+It's easy to underestimate what a production data and automation platform
+takes. With pipe0 you never deal with:
+
+⚡️ Running enrichments in parallel with speed and accuracy  
+🛑 Different provider rate limits  
+🧼 Sanitizing and healing input  
+🖥️ Monitoring 50+ third-party data providers  
+🌊 Building and ordering waterfalls (misses are free; you pay the provider that answers)  
+💵 Managing credit balances across providers  
+🏗️ Running enrichment, scraping, and AI infrastructure at low cost  
 💾 Caching
 
 ## Use cases
 
-🤖 Building sales technology applications like automated outreach, SDR, etc.  
-🪄 AI Agents that need a flexible data source  
-🧙🏻 Updating CRM or ATS data  
+🌅 Morning briefings and research for your team  
+🔁 Always-on plays and signal engines  
+🧙🏻 CRM enrichment, cleanup, and lead routing  
+🤖 A data source for your own agents and sales tools  
 🧬 Enriching large datasets
