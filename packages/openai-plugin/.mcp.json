@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "pipe0": {
+      "type": "http",
+      "url": "https://api.pipe0.com/v1/mcp"
+    }
+  }
+}

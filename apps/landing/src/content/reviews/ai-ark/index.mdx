@@ -1,0 +1,298 @@
+---
+title: "AI Ark review (2026): cheap verified emails, but it finds fewer than half"
+description: "AI Ark is a B2B database and contact API that charges only for
+  verified emails it finds, at about a cent each. It found an email for 42 to
+  45% of the LinkedIn profiles we tested and answered in several seconds, so
+  it works best as a low-cost step in front of a broader waterfall."
+tool:
+  name: AI Ark
+  url: https://ai-ark.com
+  logo: /media/reviews/logos/ai-ark.png
+  category: Contact finder
+verdict: "A cheap, pay-per-result contact API whose emails are verified as
+  they are returned. It found an email for 42 to 45% of people, and each
+  lookup takes several seconds."
+relationship: competitor
+scope:
+  summary: "AI Ark is a full B2B database with a web app, people and company
+    search, and contact finding. We tested its API on one job: finding a work
+    email from a LinkedIn profile URL."
+  tested:
+    - "LinkedIn URL to work email, through the API"
+  notTested:
+    - "People and company search, and the web app"
+    - "Mobile phone lookups"
+    - "Reverse email lookup and personality analysis"
+scores:
+  easeOfUse:
+    score: 3.5
+    why: "The docs list the credit cost of every endpoint and include a page
+      written for AI agents. We tested the API only, not the web app."
+  dataQuality:
+    score: 3
+    why: "It found a work email for 42% of our 120-profile test set, mid-pack
+      among 11 providers, and every email it found was also found by another
+      provider."
+  pricingValue:
+    score: 4.5
+    why: "One credit per verified email found, nothing on a miss, at about a
+      cent per credit on the $49 plan and less at volume."
+  agentAccess:
+    score: 3.5
+    why: "REST API, a hosted MCP server, a CLI and an llms.txt index. But
+      lookups took a median of 6 seconds, and our free key was limited to 5
+      requests a minute."
+bestFor:
+  - "Teams that want to pay only for emails actually found"
+  - "High-volume enrichment where a cent per email matters"
+  - "A cheap first step before a broader email waterfall"
+skipIf:
+  - "You need an email for as many people on your list as possible"
+  - "An agent or a live form is waiting on each lookup"
+  - "You want to test at real speed on the free plan"
+pros:
+  - title: "Pay only for emails found"
+    body: "An email lookup costs 1 credit when AI Ark finds a verified address
+      and nothing when it doesn't. Our 100 free credits bought exactly 100
+      emails."
+  - title: "Cheap per email"
+    body: "At $49 for 5,000 credits, a found email costs about a cent. AI Ark
+      says plans above 30,000 credits a month cost $2 to $4 per 1,000."
+  - title: "Verified as it returns"
+    body: "Every email is checked with BounceBan at the moment it is returned.
+      98 of the 100 we got were verified directly with the mail server."
+  - title: "Many ways in"
+    body: "A REST API, a hosted MCP server, an open-source CLI, Clay
+      templates, and an llms.txt index for AI agents."
+cons:
+  - title: "Finds fewer than half"
+    body: "From 120 LinkedIn profiles, AI Ark found a work email for 42%. A
+      waterfall of four providers found 84% of the same people."
+  - title: "Adds almost nothing to a waterfall"
+    body: "AI Ark found 1 email in 120 that pipe0's default waterfall missed,
+      and none that the other 10 providers we tested all missed."
+  - title: "Slow lookups"
+    body: "Lookups took a median of 6 seconds and up to 31 seconds for the
+      slowest tenth. Misses took longest, at a median of 16 seconds."
+  - title: "A tight free tier"
+    body: "Our free key was limited to 5 requests a minute, not the 5 per
+      second the docs describe, and the free plan has 100 credits a month."
+pricing:
+  asOf: 2026-10-16
+  source: https://ai-ark.com/pricing
+  startingAt: 49
+  startingAtNote: "for 5,000 credits a month"
+  freePlan: true
+  plans:
+    - name: Free
+      price: "$0"
+      includes: "100 credits a month, up to 25 records at a time."
+    - name: Usage-Based
+      price: "$49/mo"
+      includes: "5,000 credits a month, up to 10,000 records at a time."
+    - name: Agency & Enterprise
+      price: "Custom"
+      includes: "Higher volumes, white-label, multi-user management, and a
+        dedicated account manager."
+  notes:
+    - "A verified work email costs 1 credit, charged only when one is found."
+    - "A mobile number costs 5 credits, charged only when one is found."
+    - "People search costs 0.5 credits per result, and reverse email lookup
+      0.5 credits per request, found or not."
+    - "Unused credits roll over up to twice the monthly allowance. Paying
+      annually saves 20%."
+facts:
+  - label: Database
+    value: "400M+ people and 70M+ companies, according to AI Ark"
+    source: https://docs.ai-ark.com/docs/get-started
+  - label: Email verification
+    value: "Every email is verified in real time by BounceBan, SMTP and
+      catch-all, when it is returned"
+    source: https://docs.ai-ark.com/docs/get-started
+  - label: API
+    value: "REST with an X-TOKEN header; email lookups by LinkedIn URL or AI
+      Ark person ID; 5 requests per second by default"
+    source: https://docs.ai-ark.com/docs/get-started
+  - label: MCP server
+    value: "api.ai-ark.com/v1/mcp, with the API key passed in the URL"
+    source: https://docs.ai-ark.com/reference/mcp
+  - label: CLI and integrations
+    value: "Open-source ark CLI; Clay templates"
+    source: https://docs.ai-ark.com/reference/cli
+benchmark:
+  period: "October 2026"
+  rows:
+    - test: "LinkedIn URL to work email"
+      run: 20261016T094909Z-d3c3
+      n: 120
+      coverage: 41.7
+      agreement: 67
+      latency: "9.3 s"
+    - test: "LinkedIn URL to work email, next profiles"
+      run: 20261016T102747Z-1e6c
+      n: 111
+      coverage: 45
+      latency: "5.6 s"
+  notes:
+    - "On the same 120 profiles, pipe0's default work email waterfall found
+      84%. AI Ark found 1 email that waterfall missed."
+    - "On all 228 profiles AI Ark looked up, it found an email for 43.9%,
+      against 41.7% for Blitz on the same people."
+    - "The second run stopped after 111 profiles because the free credits ran
+      out."
+    - "Phone lookups weren't part of this test."
+  agreement:
+    test: "LinkedIn URL to work email"
+    run: 20261016T094909Z-d3c3
+    unit: "work email"
+    pairs:
+      - provider: Wiza
+        compared: 46
+        agreed: 37
+      - provider: Surfe
+        compared: 47
+        agreed: 35
+      - provider: Amplemarket
+        tier: Premium
+        compared: 40
+        agreed: 29
+alternatives:
+  - name: pipe0
+    href: /enrichment-api
+    why: "You want an email for as many people as possible, from a
+      waterfall you can see, paying only when a result is found."
+  - name: Blitz API
+    href: /reviews/blitz
+    why: "You want sub-second lookups and unlimited use for a flat monthly
+      fee."
+  - name: Wiza
+    href: /reviews/wiza
+    why: "You want broader coverage from LinkedIn URLs with per-result API
+      credits."
+  - name: Prospeo
+    href: /reviews/prospeo
+    why: "You want fast email lookups and pay per credit."
+authors:
+  - name: Florian
+    title: Founder
+date: 2026-10-16
+faq:
+  - q: "How much does AI Ark cost?"
+    a: "There is a free plan with 100 credits a month and a $49 plan with
+      5,000 credits a month; larger plans are custom. A verified email costs 1
+      credit and is only charged when one is found, so an email costs about a
+      cent on the $49 plan."
+  - q: "How good is AI Ark's email data?"
+    a: "In our test of 120 LinkedIn profiles, AI Ark found a work email for
+      42%, and for 45% of the next 111. When another provider also found one,
+      they agreed 67% of the time, mid-pack among the 11 providers we
+      tested."
+  - q: "How fast is the AI Ark API?"
+    a: "Email lookups took a median of 6 seconds in our test, and up to 31
+      seconds for the slowest tenth, because each email is verified during
+      the request. Lookups that found nothing took longest."
+  - q: "Does AI Ark have an MCP server?"
+    a: "Yes. AI Ark hosts an MCP server at api.ai-ark.com/v1/mcp that gives
+      agents API access and documentation search. You pass your API key in
+      the URL."
+  - q: "AI Ark or pipe0: which should I choose?"
+    a: "AI Ark is cheaper per email found, but it found an email for 42% of
+      the profiles where pipe0's waterfall found 84%, and it added 1 email in
+      120 to that waterfall. Use AI Ark if price per email matters most; use
+      pipe0 if coverage does."
+---
+
+{/*
+FACT BASE (checked 2026-10-16 on primary sources unless marked):
+- Pricing (ai-ark.com/pricing): Free $0, 100 credits/month, 25 records at a
+  time; Usage-Based $49/month, 5,000 credits, 10k records at a time; Agency &
+  Enterprise custom. FAQ: $2-4 per 1,000 credits above 30K/month, rollover
+  up to 2x allowance, annual saves 20%.
+- Credit costs (docs.ai-ark.com/docs/get-started and /docs/ai-agents): export
+  single person 1 credit if a valid email is found, 0 if not; mobile 5 per
+  phone found; people search 0.5 per result; reverse lookup 0.5 per request;
+  BounceBan real-time verification; 400M+ people, 70M+ companies; 5 rps
+  default. Free key measured at 5 requests/minute (x-ratelimit-limit-minute).
+- MCP (docs.ai-ark.com/reference/mcp): api.ai-ark.com/v1/mcp?token=<key>.
+  CLI (docs.ai-ark.com/reference/cli): github.com/ai-ark-com/ark-cli.
+- Benchmark: brain/positioning/evidence.md, "AI Ark (2026-10-16)".
+  d3c3 50/120, agreement 231/345 (6th of 11), p50 9.3 s; 1e6c 50/111,
+  p50 5.6 s; all 228: 43.9% vs Blitz 41.7%, p50 6.0 s, p90 31 s, hits 3.9 s,
+  misses 15.6 s. pipe0 default waterfall 101/120; AI Ark marginal 1;
+  0 exclusive over the other 10. AI Ark first, pipe0 on misses: 102/120,
+  pipe0 credits 176.5 -> 100 (43% less). Pairs: wiza 37/46, surfe 35/47,
+  amplemarket 29/40. 98/100 SMTP, 2 catch-all.
+- pipe0 relationship: competitor; not used in any pipe0 waterfall.
+*/}
+
+## What is AI Ark?
+
+AI Ark is a B2B data platform built on a database of more than 400 million
+people and 70 million companies. It finds people and companies through a web
+app and an API, and returns work emails and mobile numbers for them.
+
+Its pitch is paying only for what comes back. An email lookup costs one
+credit when AI Ark finds an address and nothing when it doesn't, and every
+address is verified with BounceBan at the moment it is returned.
+
+## Mid-pack coverage
+
+We ran AI Ark on the same 120 LinkedIn profiles as ten other providers. It
+found a work email for 50 of them, or 42%, which puts it in the middle of
+the field: Surfe found 69% and Wiza 66%, while Blitz found 38% and Hunter
+19%. On the next 111 profiles it found 45%.
+
+When AI Ark and another provider both found an email, they agreed 67% of
+the time, sixth of the eleven. Across all 228 profiles it looked up, AI Ark
+found slightly more than Blitz on the same people, 43.9% against 41.7%.
+
+For comparison, pipe0's default work email waterfall found an email for 101
+of the same 120 people, 84%. AI Ark found one email that waterfall missed,
+and none that all ten other providers missed.
+
+## Seconds, not milliseconds
+
+AI Ark checks each email while you wait, and that shows in the response
+time. Lookups took a median of 6 seconds across all 228 profiles, and the
+slowest tenth took 31 seconds or more. Lookups that found nothing were the
+slowest, at a median of 16 seconds, against 4 seconds for those that found
+an email.
+
+That is fine for a batch job, but slow when an agent or a live form is
+waiting on each lookup. Blitz answered the same kind of lookup in 0.3
+seconds.
+
+The free plan adds its own limit. Our free key allowed 5 requests a minute,
+not the 5 per second the docs describe, so a test of a few hundred profiles
+takes hours.
+
+## What it costs
+
+There is a free plan with 100 credits a month and a $49 plan with 5,000
+credits a month. AI Ark says plans above 30,000 credits a month cost $2 to
+$4 per 1,000 credits. A verified email costs one credit and a mobile number
+five, both charged only when one is found.
+
+That makes AI Ark one of the cheapest ways to buy an email: about a cent each
+on the $49 plan. Because misses are free, the cost per email found is the
+same as the cost per lookup. People search and reverse email lookup are
+billed differently, per result returned and per request.
+
+## AI Ark and pipe0
+
+pipe0 competes with AI Ark and doesn't use it in its waterfalls. We tested
+it on the same inputs as every other provider in our benchmark.
+
+Because AI Ark only charges for emails it finds, it can sit in front of a
+waterfall without wasting money on misses. In our test, running AI Ark first
+and sending only the people it missed through pipe0 found 102 of 120, one
+more than pipe0 alone, and cut pipe0 spend by about 40%. The 50 emails AI
+Ark found cost about 50 cents.
+
+## Who should buy AI Ark
+
+Buy AI Ark if you want verified emails at about a cent each, pay only for
+what you get, and run your lookups in batches.
+
+Look elsewhere if you need an email for as many people on your list as
+possible, or if an agent or a live form waits on each lookup.
