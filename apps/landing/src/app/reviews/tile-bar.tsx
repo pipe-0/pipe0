@@ -13,6 +13,7 @@ export function TileRow({
   strong,
   total,
   filled,
+  slots,
   skin,
 }: {
   label: string;
@@ -22,8 +23,15 @@ export function TileRow({
   total: number;
   /** Segments filled from the left. */
   filled: number;
+  /**
+   * Segments the full width holds, when rows of one chart have different
+   * totals: every row then uses the same segment size and a shorter row
+   * ends early. Defaults to `total`.
+   */
+  slots?: number;
   skin: "win" | "lose";
 }) {
+  const width = slots ?? total;
   return (
     <div
       title={`${label}: ${value}`}
@@ -33,7 +41,7 @@ export function TileRow({
         <span className={cn(strong && "font-medium")}>{label}</span>{" "}
         <span className="text-fd-muted-foreground">({value})</span>
       </p>
-      <div aria-hidden className={cn("flex h-5", total > 60 ? "gap-px" : "gap-[2px]")}>
+      <div aria-hidden className={cn("flex h-5", width > 60 ? "gap-px" : "gap-[2px]")}>
         {Array.from({ length: total }, (_, i) => (
           <span
             key={i}
@@ -44,6 +52,9 @@ export function TileRow({
             style={i < filled ? barSkin[skin] : undefined}
           />
         ))}
+        {width > total && (
+          <span className="min-w-0" style={{ flexGrow: width - total }} />
+        )}
       </div>
     </div>
   );

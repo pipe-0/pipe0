@@ -33,6 +33,8 @@ export function AgreementTiles({
   const rates = pairs.map((p) => Math.round((p.agreed / p.compared) * 100));
   const [lo, hi] = [Math.min(...rates), Math.max(...rates)];
   const range = lo === hi ? `${lo}%` : `${lo} to ${hi}%`;
+  // One tile per person in every row, so a pair with fewer comparisons draws a shorter row.
+  const slots = Math.max(...pairs.map((p) => p.compared));
   return (
     <figure className="mt-14">
       <figcaption>
@@ -49,6 +51,7 @@ export function AgreementTiles({
             value={`${rates[i]}%`}
             total={pair.compared}
             filled={pair.agreed}
+            slots={slots}
             skin="win"
           />
         ))}

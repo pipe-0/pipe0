@@ -51,9 +51,16 @@ export const CRITERIA: {
   },
 ];
 
-/** Mean of the four criteria, to one decimal. The only overall score. */
+/** Criteria with a score; N/A ones stay out of the mean. */
+export function scoredCriteria(scores: ReviewPage["data"]["scores"]): number {
+  return CRITERIA.filter((c) => scores[c.key].score !== null).length;
+}
+
+/** Mean of the scored criteria, to one decimal. The only overall score. */
 export function overallScore(scores: ReviewPage["data"]["scores"]): number {
-  const values = CRITERIA.map((c) => scores[c.key].score);
+  const values = CRITERIA.map((c) => scores[c.key].score).filter(
+    (v): v is number => v !== null,
+  );
   const mean = values.reduce((sum, v) => sum + v, 0) / values.length;
   return Math.round(mean * 10) / 10;
 }

@@ -1,17 +1,18 @@
 ---
 title: "Amplemarket review (2026): premium contact data inside a sales platform"
 description: "We reviewed Amplemarket's data only, not its sales platform. It
-  found a mobile number for 79% of 150 profiles, second of nine providers,
-  and its results agreed with other providers more often than most. The
-  data comes with a platform subscription from $600 a month."
+  was second of ten at finding the LinkedIn profile behind an email,
+  answered work email lookups in half a second, and found tech stacks
+  nearly as broad as BuiltWith's. The data comes with a platform
+  subscription from $600 a month."
 tool:
   name: Amplemarket
   url: https://www.amplemarket.com
   logo: /media/reviews/logos/amplemarket.png
-  category: Sales database
-verdict: "Some of the most reliable contact data we have measured: second
-  on mobile numbers and reverse lookups, with high agreement. It comes
-  bundled in a full sales platform, priced like one."
+  category: Contact finder
+verdict: "Reliable people and company data: second on reverse lookups with
+  high agreement, half-second work emails and broad tech stacks. It comes
+  bundled in a full sales platform."
 relationship: supplier
 disclosure: "pipe0 buys data from Amplemarket and runs it in several of its
   waterfalls. We reviewed only Amplemarket's data, not its sales platform.
@@ -22,7 +23,7 @@ scope:
     We reviewed one part of it, the people and company data behind the API,
     as a source for enrichment."
   tested:
-    - "Finding mobile numbers and work emails from LinkedIn profiles"
+    - "Finding work emails from LinkedIn profiles"
     - "Finding the LinkedIn profile behind an email address"
     - "Tech-stack data on 10 SaaS and 10 e-commerce websites"
   notTested:
@@ -30,36 +31,34 @@ scope:
     - "Duo AI agents, intent signals and job change alerts"
 scores:
   easeOfUse:
-    score: 4
-    why: "One API key and one request per person, by LinkedIn URL, email or
-      name and company. Getting an account goes through a demo and an
-      annual contract."
+    score: 4.2
+    why: "One API key and one fast, synchronous request per person. People
+      search is narrow: few include and exclude options, and a 20-value cap
+      per filter the docs don't state."
   dataQuality:
-    score: 4.5
-    why: "Second of nine on mobile numbers and second of ten on reverse
-      lookups, with results that agree with other providers more often
-      than most."
-  pricingValue:
-    score: 3
-    why: "Data comes only with a platform subscription from $600 a month on
-      an annual term. Worth it if you use the platform, expensive if you
-      only want the data."
-  agentAccess:
     score: 4
-    why: "A documented REST API on every account, 500 requests a minute,
-      batches of 10,000 people, and an MCP server for Claude and ChatGPT."
+    why: "Accurate when it answers, with 76 to 84% agreement on work emails,
+      but it leads no test: fourth of nine on work emails, second on reverse
+      lookups behind Surfe."
+  pricingValue:
+    score: null
+    why: "Not scored. Amplemarket doesn't sell its data on its own; it comes
+      with a platform subscription from $600 a month, so there is no data
+      price to judge."
+  agentAccess:
+    score: 4.4
+    why: "A fast, synchronous REST API on every account, with email answers
+      in half a second, batches of 10,000 people, 500 requests a minute and
+      an MCP server for Claude and ChatGPT."
 bestFor:
   - "Sales teams that want data and outreach in one platform"
-  - "Waterfalls that need a premium source for mobile numbers"
+  - "Waterfalls that need fast, well-agreed work emails"
   - "Resolving email addresses to LinkedIn profiles"
 skipIf:
   - "You only need data and don't want a sales platform contract"
   - "You need a few hundred lookups a month, not thousands"
   - "You filter on a company's current tech stack without checking it"
 pros:
-  - title: "Strong mobile coverage"
-    body: "It found a mobile number for 79% of 150 profiles, second of nine
-      providers. Its numbers matched the leader's 90 times out of 119."
   - title: "Reliable reverse lookups"
     body: "It found the LinkedIn profile behind 22 of 100 signup emails,
       second of ten, and agreed with the other providers 94% of the time."
@@ -73,15 +72,16 @@ cons:
   - title: "Data is sold with the platform"
     body: "There is no data-only plan. You buy seats in a sales platform,
       with an annual term, to get the data."
-  - title: "Slow phone lookups"
-    body: "Mobile numbers took a median of 18.6 seconds per person in our
-      test, too slow for anything a user waits on."
   - title: "Undated tech stacks"
     body: "Technologies come without detection dates, so it listed
       conflicting shop platforms for 3 of 10 online stores."
-  - title: "Phone credits are scarce"
-    body: "Startup includes 600 phone credits per user a year, about 50 a
-      month, against 13,500 email credits."
+  - title: "Narrow search filters"
+    body: "People search takes at most 20 values per filter, a limit the docs
+      don't state, and offers few exclude options, which rules out more
+      complex prospecting queries."
+  - title: "Mid-pack on work email coverage"
+    body: "It found a work email for 56% of 120 LinkedIn profiles, fourth of
+      nine providers."
 pricing:
   asOf: 2026-10-17
   source: https://www.amplemarket.com/pricing
@@ -132,8 +132,8 @@ facts:
 alternatives:
   - name: Surfe
     href: /reviews/surfe
-    why: "You want the highest mobile coverage we measured, with per-user
-      plans from $39 a month instead of a platform contract."
+    why: "You want the highest work email coverage we measured, with
+      per-user plans from $39 a month instead of a platform contract."
   - name: Wiza
     href: /reviews/wiza
     why: "You want low-cost work emails and mobile numbers from LinkedIn
@@ -144,15 +144,6 @@ alternatives:
 benchmark:
   period: "August and September 2026"
   rows:
-    - test: "LinkedIn URL to mobile"
-      run: 20260804T202803Z-237d
-      n: 150
-      coverage: 79.3
-      agreement: 71
-      waterfall:
-        providers: [Wiza, Surfe, Crustdata]
-        coverage: 96.7
-        added: 0
     - test: "LinkedIn URL to work email"
       run: 20260814T095606Z-9ef2
       n: 120
@@ -177,19 +168,23 @@ benchmark:
       default, which returned no person data on our account in October
       2026."
   agreement:
-    test: "LinkedIn URL to mobile"
-    run: 20260804T202803Z-237d
-    unit: "mobile number"
+    test: "LinkedIn URL to work email"
+    run: 20260814T095606Z-9ef2
+    unit: "work email"
     conclusion: "Amplemarket's data accuracy is above average."
     pairs:
       - provider: Prospeo
         tier: Low-cost
-        compared: 37
-        agreed: 28
+        compared: 45
+        agreed: 38
+      - provider: Wiza
+        tier: Low-cost
+        compared: 55
+        agreed: 42
       - provider: Surfe
         tier: Premium
-        compared: 119
-        agreed: 90
+        compared: 61
+        agreed: 50
   latency:
     test: "LinkedIn URL to work email"
     run: 20260814T095606Z-9ef2
@@ -207,9 +202,10 @@ authors:
 date: 2026-10-17
 faq:
   - q: "Is Amplemarket's data accurate?"
-    a: "Amplemarket's data accuracy is above average. In our benchmark it
-      found a mobile number for 79% of 150 LinkedIn profiles, second of nine
-      providers."
+    a: "Amplemarket's data accuracy is above average. Its work emails
+      matched Surfe's 50 times out of 61 and Prospeo's 38 out of 45, and it
+      was second of ten at finding the LinkedIn profile behind a signup
+      email, agreeing with the other providers 94% of the time."
   - q: "How much does Amplemarket cost?"
     a: "The Startup plan costs $600 a month on an annual term and includes
       two users, 13,500 email credits and 600 phone credits per user a year.
@@ -232,13 +228,12 @@ faq:
 {/*
 FACT BASE (pipe0 provider benchmark, closed/assets/provider-benchmark; run
 reports runs/waterfall/<path>/<run>.json, bench.db read-only, 2026-10-17):
-- Mobile, 20260804T202803Z-237d, n=150: Amplemarket 119 (79.3%), 2nd of 9
-  (Surfe 96%, Crustdata 78%); agreement 71.1% (354/498); p50 18.6 s
-  (cachedShare 0.97, latency of the real calls). Pairs: Surfe 90/119,
-  Prospeo 28/37. Default waterfall Wiza > Surfe > Crustdata 145/150
-  (96.7%); Amplemarket found 0 rows beyond it.
+- Mobile (run 237d) deliberately left out, 2026-10-17: Amplemarket doesn't
+  sell phone data to third parties and pipe0 doesn't offer it, so we don't
+  publish it (user decision).
 - Work email, 20260814T095606Z-9ef2, n=120: 67 (55.8%), 4th of 9;
-  agreement 65.0%; pair Surfe 50/61. p50 Amplemarket 460 ms, Wiza 5628,
+  agreement 65.0%; pairs (agreement.perPair) Surfe 50/61, Wiza 42/55,
+  Prospeo 38/45. p50 Amplemarket 460 ms, Wiza 5628,
   Surfe 10676. Default waterfall Wiza > Amplemarket > Crustdata > Surfe
   101/120 (84.2%).
 - Email to LinkedIn URL (signups), 20260902T162611Z-cde5, n=100: 22, 2nd of
@@ -267,20 +262,22 @@ writing. João Batalha and his co-founders launched it at the end of 2019,
 and it raised $12 million in 2022.
 
 Under all of that sits its own people and company data: work emails,
-mobile numbers, LinkedIn profiles, firmographics and tech stacks. That data
+LinkedIn profiles, firmographics and tech stacks. That data
 is what this review covers. We didn't test the sequences, the inbox, the
 dialer or the AI agents, and the scores say nothing about them.
 
 ## How good is Amplemarket's data?
 
-Amplemarket's data accuracy is above average. We ran the same LinkedIn
-profiles through nine providers, and Amplemarket found a mobile number for
-119 of 150, second only to Surfe.
+Amplemarket's data accuracy is above average. It was second of ten on the
+hardest test we run, finding the LinkedIn profile behind a signup email
+address, and its answers there agreed with the other providers 94% of the
+time.
 
-It was second again on the hardest test we run, finding the LinkedIn
-profile behind a signup email address, and its answers there agreed with
-the other providers 94% of the time. On work emails it found an address
-for 56% of 120 profiles, fourth of nine, and answered in half a second.
+On work emails it found an address for 56% of 120 LinkedIn profiles, fourth
+of nine, and answered in half a second. When it did find one, it matched
+Surfe's address 50 times out of 61. pipe0's default work email waterfall,
+which runs Amplemarket second after Wiza, found an address for 84% of the
+same profiles.
 
 Its company data is broad too. On 20 websites it found a CRM, payment,
 email or pixel tool in as many categories as BuiltWith, plus back-office
@@ -295,13 +292,12 @@ looks the same as the one it runs today. Check before you filter on it.
 
 Price, for anyone who only wants the data. Amplemarket doesn't sell data on
 its own: you buy a sales platform, from $600 a month on an annual term for
-two users. Startup includes 600 phone credits per user a year, about 50 a
-month. If your team already lives in Amplemarket, the data comes with it.
-If you just need enrichment, you pay for a lot of software you won't use.
+two users. If your team already lives in Amplemarket, the data comes with
+it. If you just need enrichment, you pay for a lot of software you won't
+use.
 
-Speed on phone numbers is the other. Mobile lookups took a median of 18.6
-seconds per person in our test. That is fine for a list, not for a live
-product.
+Coverage on work emails is the other. Fourth of nine is solid, not
+leading, which is why it works best as one source in a waterfall.
 
 ## Amplemarket for developers and agents
 
@@ -326,9 +322,9 @@ you can see and reorder.
 ## Who should buy Amplemarket
 
 Buy Amplemarket if you want prospecting data and outreach in one platform,
-and your reps will use both. The data inside it is among the most reliable
-we have measured.
+and your reps will use both. The data inside it is accurate and fast, though
+not the most complete we have measured.
 
 Look elsewhere if you only need data. [Surfe](/reviews/surfe) has higher
-mobile coverage on per-user plans, and an API waterfall gives you
+work email coverage on per-user plans, and an API waterfall gives you
 Amplemarket's data next to other sources, billed per result.

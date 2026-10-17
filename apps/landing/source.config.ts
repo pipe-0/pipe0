@@ -224,15 +224,20 @@ export const blog = defineCollections({
 });
 
 const criterion = z.object({
-  /** Out of 5, to one decimal. */
+  /**
+   * Out of 5, to one decimal. `null` prints N/A and leaves the criterion
+   * out of the overall mean, for a criterion that doesn't apply (pricing
+   * value for data only sold inside a platform).
+   */
   score: z
     .number()
     .min(1)
     .max(5)
     .refine((v) => Number.isInteger(Math.round(v * 10 * 1e6) / 1e6), {
       message: "Scores take at most one decimal",
-    }),
-  /** One plain sentence: why this score. Shown under the bar. */
+    })
+    .nullable(),
+  /** One plain sentence: why this score, or why there is none. Shown under the bar. */
   why: z.string(),
 });
 

@@ -84,7 +84,7 @@ export function ScoreBar({
   why,
 }: {
   label: string;
-  score: number;
+  score: number | null;
   why: string;
 }) {
   return (
@@ -93,17 +93,23 @@ export function ScoreBar({
         <span className="font-medium text-fd-foreground">{label}</span>
         <span className="font-semibold tabular-nums text-fd-foreground">
           {formatScore(score)}
-          <span className="font-normal text-fd-muted-foreground">/5</span>
+          {score !== null && (
+            <span className="font-normal text-fd-muted-foreground">/5</span>
+          )}
         </span>
       </div>
       <div
         className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-fd-foreground/10"
         role="img"
-        aria-label={`${label}: ${formatScore(score)} out of 5`}
+        aria-label={
+          score === null
+            ? `${label}: not scored`
+            : `${label}: ${formatScore(score)} out of 5`
+        }
       >
         <div
           className="h-full rounded-full bg-fd-primary"
-          style={{ width: `${(score / 5) * 100}%` }}
+          style={{ width: `${((score ?? 0) / 5) * 100}%` }}
         />
       </div>
       <p className="mt-1.5 text-[13px] leading-snug text-fd-muted-foreground">

@@ -30,6 +30,7 @@ import { ScoreBar, ScorePill, ToolLogo } from "../review-parts";
 import {
   benchmarkCaveats,
   CRITERIA,
+  scoredCriteria,
   disclosureFor,
   formatScore,
   formatStartingPrice,
@@ -253,7 +254,10 @@ export default async function Review(props: {
                 </span>
               </div>
               <p className="mt-1 text-[13px] text-fd-muted-foreground">
-                Our score for {tool}, the average of four criteria
+                Our score for {tool}, the average of{" "}
+                {scoredCriteria(d.scores) === CRITERIA.length
+                  ? "four criteria"
+                  : `the ${["one", "two", "three"][scoredCriteria(d.scores) - 1]} criteria that apply`}
               </p>
               <p className="font-blog mt-5 text-[19px] leading-[1.45] text-fd-foreground text-pretty">
                 {d.verdict}

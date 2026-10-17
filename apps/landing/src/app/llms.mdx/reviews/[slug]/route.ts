@@ -91,7 +91,7 @@ export async function GET(
     "| --- | --- | --- |",
     ...CRITERIA.map(
       (c) =>
-        `| ${c.label} | ${formatScore(d.scores[c.key].score)}/5 | ${cell(d.scores[c.key].why)} |`,
+        `| ${c.label} | ${d.scores[c.key].score === null ? "N/A" : `${formatScore(d.scores[c.key].score)}/5`} | ${cell(d.scores[c.key].why)} |`,
     ),
     `| **Overall** (mean) | **${formatScore(overallScore(d.scores))}/5** | |`,
     "",

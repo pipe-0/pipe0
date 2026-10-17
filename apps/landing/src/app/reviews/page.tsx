@@ -313,7 +313,9 @@ function Methodology() {
         <p className="mt-3 text-[15.5px] leading-[1.65] text-fd-muted-foreground">
           Every tool is scored from 1 to 5 on the same four criteria, to one
           decimal. The overall score is the plain average of the four, rounded
-          to one decimal. We don&apos;t weight it and we don&apos;t adjust it
+          to one decimal. A criterion that doesn&apos;t apply, such as pricing
+          value for data sold only inside a platform, shows N/A and stays out
+          of the average. We don&apos;t weight it and we don&apos;t adjust it
           by hand, so you can check the math on every page.
         </p>
       </div>

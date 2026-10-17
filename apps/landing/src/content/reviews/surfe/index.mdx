@@ -183,10 +183,13 @@ benchmark:
         tier: Low-cost
         compared: 48
         agreed: 47
-      - provider: Amplemarket
-        tier: Premium
-        compared: 119
-        agreed: 90
+      - provider: Wiza
+        tier: Low-cost
+        compared: 98
+        agreed: 73
+      - provider: Fiber
+        compared: 97
+        agreed: 71
   latency:
     test: "LinkedIn URL to mobile"
     run: 20260804T202803Z-237d
@@ -195,9 +198,8 @@ benchmark:
       - provider: Wiza
         tier: Low-cost
         seconds: 3
-      - provider: Amplemarket
-        tier: Premium
-        seconds: 18.6
+      - provider: Crustdata
+        seconds: 0.9
 alternatives:
   - name: pipe0
     href: /enrichment-api
@@ -290,8 +292,11 @@ FACT BASE (checked 2026-10-06 on primary sources unless marked):
   person:workemail:profileurl:waterfall default wiza > amplemarket >
   crustdata > surfe; Surfe also in role waterfall and identity:email@2.
 - Latency chart: p50 per provider for run 237d from evidence.md's
-  phone table (Surfe 4.4 s, Amplemarket 18.6 s, Crustdata 0.9 s, Wiza
-  3.0 s); the stored run was served from cache.
+  phone table (Surfe 4.4 s, Crustdata 0.9 s, Wiza 3.0 s); the stored run
+  was served from cache. Amplemarket's phone data is never published
+  (2026-10-17: it doesn't sell phone data to third parties); mobile
+  agreement pairs from 237d perPair: Prospeo 47/48, Wiza 73/98, Fiber
+  71/97.
 */}
 
 ## What is Surfe?
@@ -318,8 +323,8 @@ People Data Labs, ContactOut, and Datagma. A source that misses hands the
 person to the next one.
 
 That design shows in our benchmark. We ran the same 150 LinkedIn profiles
-through nine providers, and Surfe found a mobile number for 144 of them. The
-next best, at 79%, was a single premium source. Surfe's numbers also matched
+through nine providers, and Surfe found a mobile number for 144 of them,
+96%. Surfe's numbers also matched
 what other providers returned 74% of the time, the highest agreement of any
 provider above 50% coverage. It led the work email test too, and finding a
 LinkedIn profile from an email address.

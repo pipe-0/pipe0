@@ -16,22 +16,22 @@ verdict: "The fastest contact data API we measured, at 80 milliseconds a
 relationship: supplier
 scores:
   easeOfUse:
-    score: 3
-    why: "Data infrastructure first: an API, bulk data feeds, and a simple
-      web app. Most teams reach it through code or a waterfall."
+    score: 4
+    why: "A mostly synchronous REST API with one request per lookup, plus bulk
+      data feeds and a simple web app. Credit use per call isn't fully
+      documented."
   dataQuality:
     score: 4
-    why: "Its mobile numbers matched Amplemarket and Surfe 86% of the time,
-      it tied for the most personal emails found, and it recrawls every 2.5
-      weeks."
+    why: "Its mobile numbers matched Surfe's 86% of the time, it tied for the
+      most personal emails found, and it recrawls every 2.5 weeks."
   pricingValue:
     score: 3.5
     why: "From $50 a month, with mobiles from 21 to 33 cents and emails from
       7 to 11 cents. Credit use per call is not fully documented."
   agentAccess:
-    score: 3
-    why: "The fastest API we tested, but no MCP server and no published rate
-      limits."
+    score: 4
+    why: "The fastest API we tested, at 80 milliseconds a lookup, which suits
+      agents making many calls. No MCP server and no published rate limits."
 bestFor:
   - "Products and agents that need contact data in real time"
   - "Personal email lookups from LinkedIn profiles"
@@ -43,11 +43,10 @@ skipIf:
 pros:
   - title: "Faster than anything else we measured"
     body: "Forager answered phone lookups in a median of 80 milliseconds,
-      against 3 seconds for Wiza and 18.6 for Amplemarket on the same
-      profiles."
+      against 3 seconds for Wiza and 4.4 for Surfe on the same profiles."
   - title: "Answers that match premium sources"
-    body: "When Forager and Amplemarket both found a mobile number for the
-      same person, they matched 50 times out of 58. With Surfe, 56 out of 65."
+    body: "When Forager and Surfe both found a mobile number for the same
+      person, they matched 56 times out of 65."
   - title: "Strong on personal email"
     body: "From 150 LinkedIn profiles, Forager and Wiza tied for the most
       personal email addresses found, 52% each."
@@ -138,13 +137,13 @@ benchmark:
     unit: "mobile number"
     conclusion: "Forager's data accuracy is above average."
     pairs:
-      - provider: Amplemarket
-        tier: Premium
-        compared: 58
-        agreed: 50
       - provider: Surfe
+        tier: Premium
         compared: 65
         agreed: 56
+      - provider: Crustdata
+        compared: 54
+        agreed: 38
   latency:
     test: "LinkedIn URL to mobile"
     run: 20260804T202803Z-237d
@@ -152,9 +151,9 @@ benchmark:
     others:
       - provider: Wiza
         seconds: 3.0
-      - provider: Amplemarket
+      - provider: Surfe
         tier: Premium
-        seconds: 18.6
+        seconds: 4.4
 alternatives:
   - name: pipe0
     href: /enrichment-api
@@ -177,16 +176,15 @@ faq:
   - q: "How fast is Forager?"
     a: "In our benchmark Forager answered phone lookups from LinkedIn
       profiles in a median of 80 milliseconds, the fastest of any provider we
-      have measured, against 3 seconds for Wiza and 18.6 for Amplemarket."
+      have measured, against 3 seconds for Wiza and 4.4 for Surfe."
   - q: "How much does Forager cost?"
     a: "Plans start at $50 a month for 2,250 credits, then $100 for 5,250 and
       $250 for 16,200, about 10% less billed annually. A phone number costs
       15 credits and an email 5, which Forager shows as 21 to 33 cents per
       mobile and 7 to 11 cents per email."
   - q: "Is Forager's data accurate?"
-    a: "Its mobile numbers matched Amplemarket's on 50 of 58 people and
-      Surfe's on 56 of 65 in our benchmark, and it recrawls its records about
-      every 2.5 weeks."
+    a: "Its mobile numbers matched Surfe's on 56 of 65 people in our
+      benchmark, and it recrawls its records about every 2.5 weeks."
   - q: "Does Forager have an MCP server?"
     a: "No. Forager offers a REST API and bulk data feeds, but no MCP server
       or agent plugin."
@@ -210,7 +208,8 @@ FACT BASE (checked 2026-10-08 on primary sources unless marked):
   HQ (Santa Monica) secondhand and conflicting: not used.
 - Benchmark: phone 237d 43.3%, agree 0.72, p50 0.08 s (evidence.md);
   personal 7165 52% tied with Wiza, agree 0.80. Pairs phone:
-  amplemarket|forager 50/58, forager|surfe 56/65. Reverse lookup (5366)
+  forager|surfe 56/65, crustdata|forager 38/54 (amplemarket|forager
+  50/58 never published: Amplemarket doesn't sell phone data, 2026-10-17). Reverse lookup (5366)
   1.3% on a mixed slice (consumer-only endpoint) left out.
 - pipe0 relationship: in the default personal email waterfall (wiza >
   aviato > mixrank > forager > leadmagic).
@@ -229,15 +228,14 @@ into S3, Google Cloud Storage, or Snowflake.
 
 Forager's defining number in our benchmark is speed. It answered phone
 lookups from LinkedIn profiles in a median of 80 milliseconds. Wiza took 3
-seconds on the same profiles and Amplemarket 18.6. For a product where a
+seconds on the same profiles and Surfe 4.4. For a product where a
 user is waiting, or an agent making hundreds of lookups in a row, that
 difference is the whole experience.
 
-Speed doesn't come at the cost of accuracy. When Forager and Amplemarket both
-found a mobile number for the same person, they matched 50 times out of 58,
-and with Surfe 56 out of 65. Its coverage sits in the middle: it found a
-mobile for 43% of 150 profiles, behind the providers that run their own
-waterfalls.
+Speed doesn't come at the cost of accuracy. When Forager and Surfe both
+found a mobile number for the same person, they matched 56 times out of 65.
+Its coverage sits in the middle: it found a mobile for 43% of 150 profiles,
+behind the providers that run their own waterfalls.
 
 On personal email it was among the best. From the same set of profiles,
 Forager and Wiza tied for the most consumer addresses found, at 52% each.

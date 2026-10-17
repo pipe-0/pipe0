@@ -171,9 +171,8 @@ benchmark:
     others:
       - provider: Surfe
         seconds: 4.4
-      - provider: Amplemarket
-        tier: Premium
-        seconds: 18.6
+      - provider: Crustdata
+        seconds: 0.9
 alternatives:
   - name: pipe0
     href: /enrichment-api
@@ -269,7 +268,7 @@ Wiza verifies emails in real time instead of serving them from a cache, and
 that costs time. Its own docs put an average work email reveal at about 25
 seconds, sometimes several minutes. Phone numbers are a different story: in
 our test they came back in a median of 3 seconds, faster than Surfe at 4.4
-seconds and Amplemarket at 18.6.
+seconds.
 
 The API is asynchronous for that reason. You start a reveal and either poll
 for the result or give Wiza a webhook to call.
