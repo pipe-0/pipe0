@@ -1,0 +1,70 @@
+---
+title: "BuiltWith vs DataForSEO: Which API Finds a Company's Tech Stack? (2026)"
+date: 2026-10-17
+category: Sales data
+cover: /media/blog/covers/builtwith-vs-dataforseo.jpg
+tags:
+    - technographics
+    - API
+excerpt: "We looked up the same 20 websites in both APIs. DataForSEO is a third cheaper, but BuiltWith found a technology in five to six times as many categories."
+tldr: "BuiltWith wins. On 10 SaaS and 10 e-commerce websites it found a technology in 76 to 83% of the categories that matter for prospecting (CRM, payments, email, reviews, ad pixels), against 13 to 14% for DataForSEO. DataForSEO costs $0.012 per lookup, BuiltWith about $0.018. Use BuiltWith, and filter its results to technologies that are still live."
+faq:
+    - q: "Is BuiltWith or DataForSEO better for technographics?"
+      a: "In our testing, BuiltWith won the comparison. We tested 20 websites in Octorber 2026, BuiltWith found a technology in 76 to 83% of the prospecting categories we checked, DataForSEO in 13 to 14%. DataForSEO mostly detects the website framework and failed on 2 of 20 websites that redirect."
+    - q: "How much does a BuiltWith or DataForSEO tech-stack lookup cost?"
+      a: "DataForSEO charges $0.012 per Domain Technologies lookup. A BuiltWith Domain API lookup uses one credit, about $0.018 at 20,000 credits for $359."
+    - q: "Why does BuiltWith list technologies a company no longer uses?"
+      a: "BuiltWith keeps every technology it has ever detected. Its own definition of live is a technology detected after its latest full crawl. pipe0's tech stack pipe returns only those by default, and drops signals that aren't tools, such as popularity rankings, CDN locations and currencies."
+draft: false
+authors:
+    - name: Florian
+      title: Founder
+---
+
+Tech-stack data answers two questions in outreach: does this company use
+the tool I sell against, and what does its stack say about it? Both
+punish wrong answers more than missing ones. Telling a Shopify store "I
+saw you're on Magento" ends the conversation.
+
+We looked up the same 20 websites, 10 SaaS companies and 10 online stores,
+in BuiltWith's Domain API and DataForSEO's Domain Technologies API. For
+each website we checked whether the tool found anything in the categories
+that matter for prospecting: CRM and marketing automation, payments, email
+and SMS, reviews, support, analytics and ad pixels.
+
+![Tech-stack categories found: SaaS companies BuiltWith 83%, DataForSEO 13%; online stores BuiltWith 76%, DataForSEO 14%.](/media/blog/charts/builtwith-vs-dataforseo-categories.svg)
+
+| | BuiltWith | DataForSEO |
+| --- | --- | --- |
+| Categories found, SaaS | 83% | 13% |
+| Categories found, online stores | 76% | 14% |
+| Lookups failed or empty | 0 of 20 | 2 of 20 |
+| Price per lookup | about $0.018 | $0.012 |
+
+## Why DataForSEO falls short
+
+DataForSEO's lookup sees mostly the website framework: Next.js, React,
+Shopify, a cookie banner. It found HubSpot, Salesforce, Klaviyo or Stripe
+almost nowhere, and it can't look up a website that redirects to another
+domain. It is a third cheaper, but a lookup that misses the CRM isn't a
+bargain.
+
+## What to watch with BuiltWith
+
+BuiltWith finds the tools, but it never forgets them. It still listed
+Magento for two Shopify stores where it last saw Magento in 2019 and 2020,
+and HubSpot for companies where it hadn't seen HubSpot in two years. It also reports signals that
+aren't tools at all: popularity rankings, CDN edge locations, server
+countries and currencies.
+
+Ask BuiltWith for live technologies only (detected since its latest full
+crawl) before you filter on a tool, and drop the non-tool signals.
+
+## Using BuiltWith in pipe0
+
+pipe0's [tech stack pipe](/docs/pipe-catalog/company:techstack:builtwith/2)
+does both by default: it returns technologies currently in use, about 120
+recognisable tools per company instead of 400 to 500 entries, grouped by
+type.
+You can widen it to the last 12 months or the full history. The full
+DataForSEO results are in our [DataForSEO review](/reviews/dataforseo).

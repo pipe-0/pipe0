@@ -24,6 +24,7 @@ import type { ReactNode } from "react";
 import { AgreementTiles } from "../agreement-tiles";
 import { LatencyBars } from "../latency-bars";
 import { ListBenchmark } from "../list-benchmark-charts";
+import { TechBenchmark } from "../tech-benchmark-charts";
 import { VerificationScorecard } from "../verification-scorecard";
 import { ScoreBar, ScorePill, ToolLogo } from "../review-parts";
 import {
@@ -456,7 +457,7 @@ export default async function Review(props: {
         )}
 
         <div className="prose blog-prose review-prose mt-4 min-w-0">
-          <Mdx components={getMDXComponents({ ListBenchmark })} />
+          <Mdx components={getMDXComponents({ ListBenchmark, TechBenchmark })} />
         </div>
 
         <ReviewSection id="pros-and-cons" title={`${tool} pros and cons`}>

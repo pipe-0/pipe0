@@ -15,6 +15,7 @@ import {
   type ChartName,
 } from "@/app/reviews/list-benchmark";
 import { authorDisplayName, authorUrl, getAuthor } from "@/lib/authors";
+import { techBenchmarkMarkdown } from "@/app/reviews/tech-benchmark";
 import { reviews } from "@/lib/source";
 import { getBaseUrl } from "@/lib/utils";
 import { notFound } from "next/navigation";
@@ -200,6 +201,7 @@ export async function GET(
         /<ListBenchmark\b[^>]*?chart="(\w+)"[^>]*?\/>/g,
         (_, chart: string) => listBenchmarkMarkdown(chart as ChartName),
       )
+      .replace(/<TechBenchmark\b[^>]*?\/>/g, () => techBenchmarkMarkdown())
       .trim(),
     "",
     `## ${tool} pros and cons`,
