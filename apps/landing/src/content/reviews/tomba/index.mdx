@@ -1,0 +1,259 @@
+---
+title: "Tomba review (2026): cheap email finding, but check every answer"
+description: "Tomba is a Hunter-style email finder and verifier with a
+  generous API, an MCP server and plans from $49 a month. In our tests a
+  third of the work emails it returned were personal mailboxes, and fewer
+  than half of its phone numbers matched another provider's. Use it for
+  pattern-based finding you verify, not as a final source."
+tool:
+  name: Tomba
+  url: https://tomba.io
+  logo: /media/reviews/logos/tomba.png
+  category: Contact finder
+verdict: "Inexpensive, easy to call and agent-ready, but it often returns
+  personal mailboxes as work emails, so every answer needs a check before
+  outreach."
+relationship: neutral
+scores:
+  easeOfUse:
+    score: 4
+    why: "One GET request per lookup with a key and a secret, and a clear
+      score and status on each answer. The free plan's limits are tight."
+  dataQuality:
+    score: 2.5
+    why: "6 of the 17 work emails it served through Treg were personal
+      mailboxes, and 9 of its 22 phone numbers matched another provider's."
+  pricingValue:
+    score: 3.8
+    why: "From $49 a month for 2,500 searches and 2,500 verifications. A
+      finder miss is free, but unused credits don't carry over."
+  agentAccess:
+    score: 4
+    why: "A REST API, 13 SDKs, a CLI and an MCP server. The free plan allows
+      2 requests a minute and 10 a day per endpoint."
+bestFor:
+  - "Finding likely addresses from a name and a company domain"
+  - "Teams that verify every address before they send"
+  - "Low-volume lookups on a small monthly budget"
+skipIf:
+  - "You send to work emails without verifying them"
+  - "You need mobile numbers that match other sources"
+  - "You want to test it seriously on the free plan"
+pros:
+  - title: "Misses are free"
+    body: "A finder lookup costs a credit only when it returns an address whose
+      status isn't unknown. A verification is free when the answer is unknown
+      or disposable."
+  - title: "Built for developers and agents"
+    body: "Tomba lists 13 official SDKs, a REST API, a CLI and an MCP server.
+      Every answer carries a score, a verification status and its sources."
+  - title: "Valid phone numbers"
+    body: "All 22 numbers it returned through Treg were real, well-formed
+      numbers, and 18 of them were mobiles."
+  - title: "A working verifier"
+    body: "It called all 10 real work addresses we checked valid, the same
+      answer ZeroBounce gave."
+cons:
+  - title: "Personal mailboxes as work emails"
+    body: "Of 17 work emails Tomba returned through Treg, 6 were Gmail, Yahoo,
+      Hotmail or Outlook addresses, and only 3 were on the person's company
+      domain."
+  - title: "Phones that don't match"
+    body: "Only 9 of its 22 mobile numbers matched a number another provider
+      returned for the same person."
+  - title: "A free plan you can't test with"
+    body: "2 requests a minute and 10 a day per endpoint. Our account showed
+      25 searches, but the daily cap stopped us long before we used them."
+  - title: "Credits reset monthly"
+    body: "Unused plan credits don't carry over. Pay-as-you-go packs last 365
+      days."
+pricing:
+  asOf: 2026-10-17
+  source: https://tomba.io/pricing
+  startingAt: 49
+  startingAtNote: "Basic, 2,500 searches and 2,500 verifications a month"
+  startingAtPeriod: month
+  freePlan: true
+  plans:
+    - name: Free
+      price: "$0"
+      includes: "25 searches every 30 days, 2 requests a minute and 5 to 10 a
+        day per endpoint."
+    - name: Basic
+      price: "$49/mo, $37 billed yearly"
+      includes: "2,500 searches and 2,500 verifications a month."
+    - name: Growth
+      price: "$89/mo, $67 billed yearly"
+      includes: "5,000 searches and 5,000 verifications, phone finder, browser
+        extensions and API access."
+    - name: Pro
+      price: "$199/mo, $149 billed yearly"
+      includes: "20,000 searches and 20,000 verifications a month."
+    - name: Pro Plus
+      price: "$449/mo, $337 billed yearly"
+      includes: "50,000 searches and 50,000 verifications, no per-minute
+        limits."
+  notes:
+    - "A finder search costs 1 credit, or 6 with phone data, and only when an
+      address with a known status comes back."
+    - "Yearly billing is 25% off. Unused plan credits don't carry over."
+facts:
+  - label: Company
+    value: "Tomba technology web service LLC, founded 2021"
+    source: https://tomba.io/about
+  - label: Registered
+    value: "Claymont, Delaware, USA"
+    source: https://tomba.io/about
+  - label: Users
+    value: "150,000+ professionals"
+    source: https://tomba.io/about
+  - label: Database
+    value: "450M+ contacts, 80M+ companies (self-reported)"
+    source: https://tomba.io/about
+  - label: API
+    value: "REST, 13 SDKs, CLI, MCP server"
+    source: https://tomba.io/about
+  - label: Free plan limits
+    value: "2 requests a minute, 10 a day per endpoint"
+    source: https://tomba.io/pricing
+benchmark:
+  period: "October 2026"
+  rows: []
+  notes:
+    - "These answers reached us through Treg's routed phone lookup, which asks
+      Tomba only after cheaper providers miss, so they are the harder people
+      to find. 22 mobile numbers in total."
+  agreement:
+    test: "LinkedIn URL to mobile"
+    run: 20261017T205207Z-a09a
+    unit: "mobile number"
+    conclusion: "Tomba's mobile accuracy is below average: its numbers match
+      Amplemarket's only about half the time, and Surfe's and Wiza's about a
+      third, where most providers we test match them 70% of the time or
+      more."
+    pairs:
+      - provider: Amplemarket
+        tier: Premium
+        compared: 19
+        agreed: 10
+      - provider: Surfe
+        tier: Premium
+        compared: 22
+        agreed: 8
+      - provider: Wiza
+        tier: Low-cost
+        compared: 17
+        agreed: 6
+alternatives:
+  - name: Hunter
+    href: /reviews/hunter
+    why: "You want name and domain lookups that agreed with other providers
+      95% of the time in our test."
+  - name: Prospeo
+    href: /reviews/prospeo
+    why: "You want a low-cost finder whose emails and phones matched other
+      sources more often."
+  - name: pipe0
+    href: /docs/pipe-catalog
+    why: "You want several finders in a waterfall, with verification chained
+      into the same request."
+authors:
+  - name: Florian
+    title: Founder
+date: 2026-10-17
+faq:
+  - q: "Is Tomba accurate?"
+    a: "Not reliably for work emails. In our tests, 6 of 17 work emails it
+      returned were personal mailboxes, and only 3 were on the person's
+      company domain. Its verifier called 10 of 10 real work addresses
+      valid."
+  - q: "How much does Tomba cost?"
+    a: "Basic costs $49 a month, or $37 billed yearly, for 2,500 searches and
+      2,500 verifications. Growth is $89 and Pro $199. The free plan gives 25
+      searches every 30 days."
+  - q: "Does Tomba charge for a search that finds nothing?"
+    a: "No. A finder search costs a credit only when it returns an address
+      with a known status. A verification is free when the result is unknown
+      or disposable."
+  - q: "Can I test Tomba on the free plan?"
+    a: "Only lightly. The free plan allows 2 requests a minute and 10 a day
+      per endpoint, so a test of a few hundred lookups takes weeks."
+  - q: "Does Tomba have an MCP server?"
+    a: "Yes. Tomba lists an MCP server alongside a REST API, a CLI and 13
+      official SDKs."
+---
+
+{/*
+FACT BASE (2026-10-17):
+- Our data is thin, so there is no benchmark scorecard. Sources:
+  (1) Tomba direct, free account: LinkedIn finder 5 lookups
+  (runs 20261017T203532Z-8bf7, ...-f47a): 3 found
+  (francis.sarpaning@glicogroup.com, agrees with Blitz; a hotmail.com
+  address; s@wf.com with accept_all true), 2 misses. Verifier 10 distinct
+  valid_work addresses (rows 1-12), all "Valid", same as ZeroBounce; no fake
+  addresses reached before the daily cap.
+  (2) Through Treg's routed endpoints, which reach Tomba only after cheaper
+  providers miss: email run 20261017T201255Z-b220, 17 served, 5 webmail +
+  1 outlook.com.br, 3 on the dataset company domain; phone run
+  20261017T205207Z-a09a, 22 served, all valid per libphonenumber (18
+  MOBILE, 4 FIXED_LINE_OR_MOBILE), 9 of 22 match a number another provider
+  returned for the same person.
+- Limits measured: 429 "Limit is 2 requests" (rpm), "daily ... 10"; pricing
+  page lists finder 1/2/5 and verifier 1/2/10 for Free. Live API returns
+  status "Valid" (capitalised).
+- Billing: docs.tomba.io/usage-and-quotas. Pricing: tomba.io/pricing. Company:
+  tomba.io/about. pipe0 relationship: none.
+*/}
+
+## What is Tomba?
+
+Tomba is an email finder and verifier in the mould of Hunter. Give it a name
+and a company domain, a LinkedIn profile URL or a domain, and it returns the
+most likely address with a score, a verification status and the web pages
+it found it on. Tomba technology web service LLC was founded in 2021 and
+says 150,000 professionals use it.
+
+Around the finder sit a verifier, a phone finder, a domain search, browser
+extensions and integrations, plus an API with 13 SDKs and an MCP server.
+
+## How it did in our tests
+
+Tomba's free plan allows 2 requests a minute and 10 a day per endpoint, so
+we could not run it across our full benchmark. We have two smaller views of
+its data instead.
+
+The first is direct. Of 5 LinkedIn lookups, Tomba found 3 addresses: one
+matched what other providers returned, one was a Hotmail address, and one
+was a two-letter mailbox on a domain that accepts all mail. Its verifier
+called all 10 real work addresses we checked valid, the same verdict
+ZeroBounce gave.
+
+The second is through [Treg](/reviews/treg), whose waterfalls call Tomba
+after cheaper providers miss. There Tomba answered 17 work email lookups and
+22 mobile lookups. 6 of the 17 emails were personal mailboxes, such as
+`@gmail.com` and `@yahoo.com`, and only 3 were on the person's company
+domain. All 22 phone numbers were valid, 18 of them mobiles, but only 9
+matched a number another provider found for the same person.
+
+These are the harder cases, people the cheaper providers could not find,
+so they are not a fair measure of Tomba's overall coverage. They do show
+how it fails: when it isn't sure, it still returns an address, and that
+address is often a personal one.
+
+## What it costs
+
+Basic costs $49 a month, or $37 billed yearly, for 2,500 searches and 2,500
+verifications, about 2 cents a search. Growth at $89 adds the phone finder,
+and Pro at $199 covers 20,000 of each. A finder search is free when nothing
+comes back, but plan credits reset every month.
+
+## Who should use Tomba
+
+Use Tomba if you find addresses from names and domains on a small budget and
+verify everything before you send. Its pricing and API make it an easy
+first step.
+
+Look elsewhere if the address goes straight into a sequence. In our tests
+too many of its work emails were personal mailboxes, and for phones,
+[Surfe](/reviews/surfe) and [Wiza](/reviews/wiza) agreed with other sources
+far more often.

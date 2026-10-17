@@ -397,7 +397,7 @@ export const reviews = defineCollections({
         /** Run-specific caveats, on top of the standard ones. */
         notes: z.array(z.string()).optional(),
         /**
-         * Head-to-head agreement with two or three named providers on one
+         * Head-to-head agreement with two to four named providers on one
          * test, drawn as tiles. Copy `compared` and `agreed` from the run
          * report's `agreement.perPair` entry for the pair.
          */
@@ -412,6 +412,11 @@ export const reviews = defineCollections({
             subject: z.enum(["people", "addresses"]).default("people"),
             /** One sentence under the tiles: our accuracy verdict, e.g. "below average". */
             conclusion: z.string().optional(),
+            /**
+             * Render the tiles where the body places `<Agreement />` instead
+             * of in the benchmark block, next to the text that discusses them.
+             */
+            inline: z.boolean().optional(),
             pairs: z
               .array(
                 z.object({
@@ -422,7 +427,7 @@ export const reviews = defineCollections({
                 }),
               )
               .min(1)
-              .max(3),
+              .max(4),
           })
           .optional(),
         /**

@@ -38,6 +38,26 @@ export type DifferenceCard = {
 };
 
 /**
+ * One benchmark chart: a single point, a few bars. `max` is the value that
+ * fills a bar; pick it per chart (100 for coverage, 15 for an error rate) so
+ * small differences stay visible. `ours` gets the indigo skin, `worst` the
+ * coral one. `display` overrides the printed value ("6.8 s").
+ */
+export type CompareChart = {
+  title: string;
+  max: number;
+  bars: {
+    label: string;
+    value: number;
+    display?: string;
+    ours?: boolean;
+    worst?: boolean;
+  }[];
+  /** One sentence under the bars: what was measured, on how many people. */
+  note?: string;
+};
+
+/**
  * A YouTube video shown in the "additional material" block. `description`
  * says what the viewer will see, in one or two sentences, no hype. The
  * date and duration feed VideoObject structured data; take them from the
@@ -81,6 +101,17 @@ export type CompareConfig = {
   table: {
     groups: CompareGroup[];
     /** e.g. "Verified July 2026 against Clay's public docs and pricing page." */
+    footnote?: string;
+  };
+  /**
+   * Benchmark charts, rendered under the table. Only for competitors we have
+   * measured head to head; every number comes from a run in the provider
+   * benchmark.
+   */
+  charts?: {
+    heading: string;
+    lede?: string;
+    charts: CompareChart[];
     footnote?: string;
   };
   differences: {

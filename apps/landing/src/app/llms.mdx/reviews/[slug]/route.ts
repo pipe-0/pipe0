@@ -202,6 +202,8 @@ export async function GET(
         (_, chart: string) => listBenchmarkMarkdown(chart as ChartName),
       )
       .replace(/<TechBenchmark\b[^>]*?\/>/g, () => techBenchmarkMarkdown())
+      // The tiles are already spelled out in the benchmark section.
+      .replace(/<Agreement\b[^>]*?\/>/g, "")
       .trim(),
     "",
     `## ${tool} pros and cons`,

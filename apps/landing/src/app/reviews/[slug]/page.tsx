@@ -405,7 +405,7 @@ export default async function Review(props: {
               </table>
             </div>
             )}
-            {d.benchmark.agreement && (
+            {d.benchmark.agreement && !d.benchmark.agreement.inline && (
               <AgreementTiles
                 tool={tool}
                 test={d.benchmark.agreement.test}
@@ -461,7 +461,26 @@ export default async function Review(props: {
         )}
 
         <div className="prose blog-prose review-prose mt-4 min-w-0">
-          <Mdx components={getMDXComponents({ ListBenchmark, TechBenchmark })} />
+          <Mdx
+            components={getMDXComponents({
+              ListBenchmark,
+              TechBenchmark,
+              // This review's own agreement tiles, placed by the body.
+              Agreement: () =>
+                d.benchmark?.agreement ? (
+                  <div className="not-prose">
+                  <AgreementTiles
+                    tool={tool}
+                    test={d.benchmark.agreement.test}
+                    unit={d.benchmark.agreement.unit}
+                    subject={d.benchmark.agreement.subject}
+                    pairs={d.benchmark.agreement.pairs}
+                    conclusion={d.benchmark.agreement.conclusion}
+                  />
+                  </div>
+                ) : null,
+            })}
+          />
         </div>
 
         <ReviewSection id="pros-and-cons" title={`${tool} pros and cons`}>

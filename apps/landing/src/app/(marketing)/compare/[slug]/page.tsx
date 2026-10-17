@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Fragment } from "react";
 
+import { CompareCharts } from "@/components/features/compare/compare-charts";
 import { CompareTabs } from "@/components/features/compare/compare-tabs";
 import { CompareVideos } from "@/components/features/compare/compare-videos";
 import { DifferenceCards } from "@/components/features/compare/difference-cards";
@@ -81,6 +82,16 @@ export default async function ComparePage(props: {
           footnote={config.table.footnote}
         />
       </Band>
+
+      {config.charts && (
+        <Band>
+          <SectionHead title={config.charts.heading} lede={config.charts.lede} />
+          <CompareCharts
+            charts={config.charts.charts}
+            footnote={config.charts.footnote}
+          />
+        </Band>
+      )}
 
       <Band>
         <DifferenceCards

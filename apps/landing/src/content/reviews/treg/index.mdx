@@ -1,0 +1,424 @@
+---
+title: "Treg review (2026): one gateway for thousands of APIs, unchecked data"
+description: "Treg is a well-built gateway: one token for thousands of APIs,
+  with waterfalls for email and phone ranked by cost. It forwards raw
+  provider responses, and in our test 13% of its mobile numbers and 8% of
+  its work emails were clearly wrong. Check what it returns before you
+  send."
+tool:
+  name: Treg
+  url: https://treg.to
+  logo: /media/reviews/logos/treg.png
+  category: Waterfall enrichment
+verdict: "One token and one bill for thousands of APIs at honest prices. Its
+  cost-ranked waterfall finds a lot, but passes on invalid numbers and
+  personal mailboxes that a check would have caught."
+relationship: competitor
+compare: /compare/pipe0-vs-treg
+scores:
+  easeOfUse:
+    score: 4
+    why: "One token and one simple call per lookup, but thousands of bundled
+      endpoints that each return their provider's own JSON, which makes typed
+      clients and large lists hard work."
+  dataQuality:
+    score: 3.9
+    why: "Coverage close to a premium waterfall and numbers that matched
+      Amplemarket's 72% of the time, but 13% of its mobile numbers were
+      invalid or landlines and 8% of its work emails were personal mailboxes."
+  pricingValue:
+    score: 4.5
+    why: "Prepaid, pay per result at each provider's own price with no markup,
+      and most misses are free. Your own provider keys run unmetered."
+  agentAccess:
+    score: 4.2
+    why: "An MCP server, a CLI and a cost cap per call. But endpoints have no
+      docs of their own beyond a link to each provider's, and responses come
+      back raw, untrimmed for an agent's context."
+bestFor:
+  - "Agents that need many data providers behind one token and one bill"
+  - "Teams that want to try providers without a contract with each"
+  - "Low-cost lookups where you verify every result anyway"
+skipIf:
+  - "You send to what you get back without checking it"
+  - "You need to choose the order of providers by quality, not price"
+  - "A user is waiting on the answer: slow lookups can take minutes"
+pros:
+  - title: "One token for 113 providers"
+    body: "Treg's catalog lists 4,000+ endpoints from 113 providers. You never
+      sign up with them: Treg injects its own keys, or yours, server-side."
+  - title: "Honest, visible pricing"
+    body: "Each answer costs what the provider that found it charges, with no
+      markup, and the price is shown before the call. A miss is free on all
+      15 phone providers and 24 of 25 email providers."
+  - title: "Coverage close to a premium waterfall"
+    body: "It returned a mobile number for 94 of 97 people and a work email
+      for 103 of 120, about as many as pipe0's default waterfalls."
+  - title: "Transparent answers"
+    body: "Every response names the provider that answered, every provider
+      tried before it, and what each one cost."
+cons:
+  - title: "Clearly wrong data passes through"
+    body: "12 of its 94 mobile numbers were invalid, missing a country code,
+      or landlines. 8 of its 103 work emails were Gmail, Yahoo, Hotmail or
+      Outlook addresses."
+  - title: "Order by price, not quality"
+    body: "Providers are ranked by expected cost per hit and the first answer
+      is final. The wrong data came from providers lower in the order, which
+      answer when better ones miss."
+  - title: "A long tail of slow lookups"
+    body: "Half its email lookups ended in under a second, but 10% took more
+      than 80 seconds, and 7 of 120 ran past our 2-minute timeout. Those were
+      still charged."
+  - title: "Heavy bundling, untyped responses"
+    body: "Thousands of endpoints behind one token, each returning its
+      provider's own JSON, and nothing stored. Typed clients, joins and
+      re-runs on large lists are yours to build."
+pricing:
+  asOf: 2026-10-17
+  source: https://treg.to
+  startingAt: 10
+  startingAtNote: "minimum prepaid top-up, after $1 of free credit"
+  startingAtPeriod: one-time
+  freePlan: true
+  plans:
+    - name: Free credit
+      price: "$0"
+      includes: "$1.00 of credit, once, for a new verified account."
+    - name: Prepaid balance
+      price: "$10 to $2,000"
+      includes: "Top up and pay per call at each provider's price, no markup.
+        $5 bonus at $50, $10 at $100, $15 at $200."
+    - name: Your own keys
+      price: "Unmetered"
+      includes: "Calls through provider keys you already pay for are not
+        charged to the balance."
+  notes:
+    - "Routed lookups bill the provider that answered, plus any provider tried
+      before it that bills a miss: 1 of 25 for email, none for phone."
+    - "A cost cap per call (default $1) bounds how far down the list a lookup
+      may go."
+facts:
+  - label: Made by
+    value: "Superdesign"
+    source: https://github.com/superdesigndev/treg
+  - label: Catalog
+    value: "4,000+ endpoints from 113 providers"
+    source: https://treg.to
+  - label: Email waterfall
+    value: "25 providers, ranked by expected cost per hit"
+    source: https://treg.to/catalog/endpoints/treg.people.email.find
+  - label: Phone waterfall
+    value: "15 providers, $0.0005 to $0.75 per number"
+    source: https://treg.to/catalog/endpoints/treg.people.phone.find
+  - label: Agent access
+    value: "MCP server, CLI, llms.txt"
+    source: https://treg.to/llms.txt
+  - label: Source code
+    value: "Open source on GitHub"
+    source: https://github.com/superdesigndev/treg
+alternatives:
+  - name: pipe0
+    href: /docs/pipe-catalog
+    why: "You want waterfalls ordered for quality and typed results your
+      agent can chain into checks and multi-step automations."
+  - name: Surfe
+    href: /reviews/surfe
+    why: "You want the highest mobile coverage we measured from one API,
+      with its own waterfall of 15+ providers."
+  - name: FullEnrich
+    href: /reviews/fullenrich
+    why: "You want a waterfall that verifies emails and phones before it
+      returns them."
+benchmark:
+  period: "October 2026"
+  rows:
+    - test: "LinkedIn URL to mobile"
+      run: 20261017T205207Z-a09a
+      n: 97
+      coverage: 84.5
+      agreement: 66
+      waterfall:
+        providers: [Wiza, Surfe, Crustdata]
+        coverage: 93.8
+        added: 2
+    - test: "LinkedIn URL to work email"
+      run: 20261017T201255Z-b220
+      n: 120
+      coverage: 79.2
+      agreement: 64
+      waterfall:
+        providers: [Wiza, Amplemarket, Crustdata, Surfe]
+        coverage: 83.3
+        added: 6
+  notes:
+    - "Coverage counts usable answers only. We removed answers that were
+      clearly wrong: mobile numbers that are invalid, missing a country code,
+      or landlines (12 of Treg's 94, 4 of the waterfall's 95), and personal
+      mailboxes returned as work emails (8 of Treg's 103, 1 of the
+      waterfall's 101)."
+    - "Treg ran live with its default routing and a cost cap of $0.30 per
+      mobile lookup and $0.05 per email lookup. The mobile test stopped at 97
+      people when our prepaid balance ran out."
+    - "pipe0's waterfall figures replay its default providers' benchmark
+      answers on the same people, in the default order."
+  agreement:
+    test: "LinkedIn URL to mobile"
+    run: 20261017T205207Z-a09a
+    unit: "mobile number"
+    inline: true
+    conclusion: "Treg's mobile accuracy is about average, slightly below on
+      premium sources: it agrees with Amplemarket and Surfe no more often than
+      with low-cost providers, and less often with Surfe than most providers
+      we test."
+    pairs:
+      - provider: Amplemarket
+        tier: Premium
+        compared: 78
+        agreed: 56
+      - provider: Surfe
+        tier: Premium
+        compared: 94
+        agreed: 65
+      - provider: Wiza
+        tier: Low-cost
+        compared: 66
+        agreed: 50
+      - provider: Prospeo
+        tier: Low-cost
+        compared: 37
+        agreed: 26
+authors:
+  - name: Florian
+    title: Founder
+date: 2026-10-17
+faq:
+  - q: "What is Treg?"
+    a: "Treg is a catalog of 4,000+ data and tool endpoints from 113
+      providers behind one token, built for AI agents. Its routed lookups,
+      such as finding an email or a phone number, try providers one at a
+      time, ranked by expected cost per hit, and return the first answer."
+  - q: "Is Treg's data accurate?"
+    a: "It finds a lot, but not all of it is usable. In our test, 12 of its
+      94 mobile numbers were invalid, missing a country code, or landlines,
+      and 8 of its 103 work emails were personal mailboxes. Its numbers
+      agreed with other providers 66% of the time."
+  - q: "How much does Treg cost?"
+    a: "New accounts get $1 of credit. After that you top up a prepaid
+      balance from $10 and pay each provider's own price per result, with no
+      markup. Most misses are free, and calls through your own provider keys
+      are not charged."
+  - q: "Does Treg have an MCP server?"
+    a: "Yes. Treg has an MCP server, a CLI, and an llms.txt guide an agent can
+      set itself up from."
+  - q: "Treg or pipe0: what is the difference?"
+    a: "Treg is a gateway: one token for thousands of APIs, returning each
+      provider's raw response, with waterfalls for a few lookups ordered by
+      expected cost per hit. pipe0 is also a stateless enrichment API, but
+      it wraps retrieval in a data model: typed fields an agent can chain into
+      checks and multi-step automations, with waterfalls ordered for quality. In our
+      test pipe0's returned usable mobile numbers for 94% of people against
+      85% for Treg."
+---
+
+{/*
+FACT BASE (2026-10-17):
+- Benchmark: closed/assets/provider-benchmark, live Treg runs on the team
+  googlemail-19 ($1 free credit + $10 top-up). Email run
+  20261017T201255Z-b220 (120 LinkedIn profiles, cap $0.05): 103 found, 8
+  personal mailboxes (Tomba 6 incl. outlook.com.br, LeadMagic personal
+  finder 2), usable 95; 7 timeouts at 120 s. Phone run
+  20261017T205207Z-a09a: balance ran out at row 97, so rows 1-97 only (cap
+  $0.30): 94 found, 12 clearly wrong (phonenumbers: invalid 6, unparseable
+  3, landline 2, special 1; Aviato 6 of 9, Lima Data 3 of 5, ContactOut 1,
+  Wiza 2 landlines), usable 82. pipe0 replay on the same rows (cached
+  answers, default order): email 101 found / 100 usable, phone 95 / 91.
+  Treg added 6 emails and 2 mobiles beyond the replay. Agreement:
+  perProvider treg phone 271/413 (66%), email 362/566 (64%); phone pairs
+  Wiza 60/79, Prospeo 31/44, Surfe 75/111 (whole run). Tiles use rows 1-97:
+  treg vs pipe0 replay same number 69/94 (email 59/94), Wiza 50/66, Surfe
+  65/94; Prospeo 26/37, LeadMagic 16/16. Baseline vs Amplemarket on the
+  same rows: Wiza 72, Prospeo 72, LeadMagic 73, Crustdata 70, Surfe 78,
+  Forager 87; vs Surfe: Wiza 77, LeadMagic 94, Prospeo 97, Forager 86,
+  Crustdata 62. Amplemarket 56/78 (agreement only, from its cached 237d/8d03/7f92
+  answers; its own coverage stays unpublished). Different answers: email
+  35/94, mobile 25/94.
+- Latency, averages over all rows: phone Treg 7.1 s vs replay 6.8 s; email
+  22.0 s vs 18.1 s. Phone cost per usable number: Treg $9.16 / 82 =
+  $0.112; pipe0 467 credits at $0.035 = $0.180, volume tier $0.135. Email
+  cost comparison deliberately not published (user decision 2026-10-17).
+- Amplemarket phone data never shown (see memory rule).
+- Architecture (source read 2026-10-17, superdesigndev/treg, Python/FastAPI):
+  /call/ is a faithful relay of the provider response; ~70 tables, all about
+  calls (holds, ledger, keys, audit, async tasks, rate limits, response
+  cache), none store user records. Routed contracts via adapters.yaml;
+  rank() in plan.py: own key > free route > treg key, prefer header, input
+  fit, expected cost per hit (price x billed chance / measured hit rate),
+  then speed. Response archive shared across teams as a cache. Hub
+  (composition) behind a flag, off by default.
+- Pricing and catalog: treg.to, treg.to/llms.txt, /billing response (top-up
+  $10-$2,000, bonus tiers 50:5, 100:10, 200:15), catalog endpoints for the
+  routed plans. Company: GitHub org superdesigndev ("Superdesign", repo
+  created 2026-07-15). Homepage says "100% open source" under AGPL; GitHub
+  license field reads NOASSERTION, so the license is not stated here.
+*/}
+
+## What is Treg?
+
+Treg is a catalog of APIs for AI agents: 4,000+ endpoints from 113
+providers, from SEO and social data to people and company enrichment,
+behind a single token. Superdesign, the team behind it, publishes the code
+on GitHub. You never sign up with the providers. Treg calls them with its
+own keys, or with keys you add, and bills a prepaid balance per call.
+
+Most of Treg is a relay: a call to a provider endpoint returns that
+provider's response unchanged. For a few common jobs, mostly finding an
+email or a phone number, Treg has routed endpoints. Ask
+`treg.people.email.find` or `treg.people.phone.find` for a person, and Treg
+tries the providers that can answer one at a time until one returns
+something. It ranks them on every call by expected cost per hit, your own
+keys first, using hit rates it measures across all its users. The response
+names the provider that answered, every provider tried before it, and what
+each one cost.
+
+## How it did in our test
+
+We ran Treg's routed lookups live on LinkedIn profiles from our provider
+benchmark and compared them with pipe0's default waterfalls on the same
+people.
+
+On coverage, Treg holds its own. It returned a mobile number for 94 of 97
+people and a work email for 103 of 120, about as many as our waterfalls.
+Its first provider, Blitz, is fast and accurate: it answered half the email
+lookups in under a second, and those answers matched other providers 96% of
+the time.
+
+The problem is what comes back when the first providers miss. Treg's
+waterfall takes the first answer from whichever provider is next in price
+order, and some of them return data that is plainly wrong.
+
+![Mobile numbers that were clearly wrong: pipe0 waterfall 4.2%, Treg
+12.8%](/media/reviews/charts/treg-wrong-phones.svg)
+
+Of Treg's 94 mobile numbers, 12 could not be dialled as mobiles: six were
+invalid or too short, three could not be parsed, two were landlines and one
+was a business line. Six of the twelve came from Aviato, which often
+returns US numbers without the +1, and Treg passes them on unchanged.
+
+![Work emails that were personal mailboxes: pipe0 waterfall 1.0%, Treg
+7.8%](/media/reviews/charts/treg-wrong-emails.svg)
+
+On email, 8 of 103 answers were personal mailboxes such as Gmail, Yahoo
+and Hotmail. LeadMagic's personal email finder sits inside Treg's work
+email route, and Tomba returned the rest.
+
+After removing those, Treg's usable coverage was 85% on mobile numbers and
+79% on work emails, against 94% and 83% for pipe0's default waterfalls.
+
+| Mobile numbers, 97 people | Treg | pipe0 waterfall |
+| --- | --- | --- |
+| Usable numbers | 82 (85%) | 91 (94%) |
+| Clearly wrong, removed | 12 | 4 |
+| Matched other providers' majority answer | 77% | 85% |
+| Average time per lookup | 7.1 s | 6.8 s |
+| Cost per usable number | $0.11 | $0.14 to $0.18 |
+
+## Do they return the same data?
+
+Often not. For the 94 people where both Treg and pipe0's waterfall
+returned a work email, they returned different addresses for 35 of them.
+For mobile numbers, 25 of 94 were different. When two waterfalls disagree
+on the same person, at most one of them is right.
+
+![pipe0 and Treg returned different answers: work emails 37%, mobile numbers
+27%](/media/reviews/charts/treg-different-answer.svg)
+
+How often a provider agrees with premium sources is the best signal of
+accuracy we have. Treg's mobile numbers matched Amplemarket's 72% of the
+time, a typical rate: Wiza, Prospeo and LeadMagic land at 72 to 73%. With
+Surfe it was 69%, lower than most providers we test, which match Surfe 77%
+of the time or more. And Treg agrees with low-cost providers about as
+often as with premium ones: nothing in its routing pulls its answers toward
+the sources we trust most.
+
+<Agreement />
+
+## Speed
+
+Speed depends on how far down the list a lookup goes. When the first
+provider answers, Treg returns in about a second. Each miss adds the next
+provider's time, and some of them are asynchronous, so a lookup that falls
+through five or more providers averaged 47 seconds in our email test, and 7
+of 120 ran past our 2-minute timeout. Mobile lookups were faster, at 7.1
+seconds on average.
+
+## What it costs
+
+There is no subscription. New accounts get $1 of credit, and after that
+you top up a prepaid balance from $10. Each answer costs exactly what the
+provider that found it charges, from $0.0005 for Blitz to $0.75 for Lusha
+on phones, and Treg adds no markup. Misses are free on all phone providers
+and all but one email provider, and a cost cap per call stops a lookup from
+reaching the expensive end of the list.
+
+For mobile numbers, that came to $0.11 per usable number in our test,
+below what pipe0 charges for its default waterfall. If you already pay for
+a provider, you can add your key and those calls run unmetered.
+
+## Treg for agents
+
+The gateway itself is well built. An agent sets itself up from one line,
+`set up treg - https://treg.to/llms.txt`, and gets an MCP server, a CLI and
+a guide written for it. Every call can carry a cost cap and an idempotency
+key, prices are shown before you spend, and an out-of-balance call is
+refused with a clear message instead of failing halfway.
+
+What sits behind it is less agent-friendly. Treg forwards each provider's
+response as it is: nothing is filtered, shortened or made uniform for an
+agent's context window, so the agent reads every vendor's full payload in
+every vendor's format. The real gain over separate MCP servers, or over
+teaching an agent each provider's API, is the single gateway: one token,
+one bill and one way to call.
+
+Documentation is thin for the same reason. Each endpoint has a catalog
+entry with its input fields, an example call and a link to the provider's
+own docs, but no Treg page that explains how to use it, and no description
+of what comes back, because what comes back is the provider's raw response.
+
+The bundling has a cost too. Thousands of endpoints sit behind one
+token, and apart from the few routed lookups, each returns its provider's
+own JSON in its own shape. An agent has to choose among all of them, and a
+team that wants a strongly typed API client has to model every response
+it uses itself. For a large list, the agent also stores, joins and re-runs
+every result on its own.
+
+## How Treg differs from pipe0
+
+Treg and pipe0 overlap on waterfalls, but they are built for different
+jobs. Treg is plumbing around a call: one token, billing, key management, a
+cache of past answers shared across its users, and the provider's raw
+response. Nothing in it stores the people or companies you look up, so your
+agent keeps the results, joins them to your list and decides when to look
+again.
+
+pipe0 is a stateless enrichment API too, but it wraps retrieval in a data
+model. Every lookup returns typed fields in the same shape whichever
+provider answered, and an agent can chain lookups, checks and
+transformations into multi-step automations in a single request. Default
+waterfalls are ordered for answer quality rather than price. Sheets are an
+optional cloud environment on top, for lists that need to persist or run
+on a schedule. Treg's catalog is far broader, with
+long-tail APIs from TikTok data to text to speech. pipe0's is narrower and
+goes deeper on sales data.
+
+## Who should use Treg
+
+Use Treg if you are building an agent that needs many data sources behind
+one token, and you check what comes back. Its catalog, pricing and tooling
+are hard to beat for that.
+
+Look elsewhere if the data goes straight into outreach. A waterfall ranked
+by cost needs a check after it, for valid numbers
+and real work addresses. pipe0 runs its waterfalls in a quality-first order,
+and lets an agent chain the checks that catch these errors into the same
+request.

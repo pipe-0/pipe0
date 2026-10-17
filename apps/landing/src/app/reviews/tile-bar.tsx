@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
  */
 export function TileRow({
   label,
+  tag,
   value,
   strong,
   total,
@@ -17,6 +18,8 @@ export function TileRow({
   skin,
 }: {
   label: string;
+  /** A short muted qualifier after the label, e.g. a provider's price tier. */
+  tag?: string;
   value: string;
   strong?: boolean;
   /** Segments in the bar. */
@@ -35,12 +38,17 @@ export function TileRow({
   return (
     <div
       title={`${label}: ${value}`}
-      className="grid gap-y-1.5 sm:grid-cols-[11rem_minmax(0,1fr)] sm:items-center sm:gap-x-6"
+      className="grid gap-y-1.5 sm:grid-cols-[14rem_minmax(0,1fr)] sm:items-center sm:gap-x-6"
     >
-      <p className="truncate text-[15px] text-fd-foreground">
+      <div className="truncate text-[15px] text-fd-foreground">
         <span className={cn(strong && "font-medium")}>{label}</span>{" "}
         <span className="text-fd-muted-foreground">({value})</span>
-      </p>
+        {tag && (
+          <span className="ml-2 text-[12.5px] text-fd-muted-foreground">
+            {tag}
+          </span>
+        )}
+      </div>
       <div aria-hidden className={cn("flex h-5", width > 60 ? "gap-px" : "gap-[2px]")}>
         {Array.from({ length: total }, (_, i) => (
           <span

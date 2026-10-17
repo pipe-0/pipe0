@@ -48,6 +48,7 @@ export function AgreementTiles({
           <TileRow
             key={pair.provider}
             label={pair.provider}
+            tag={pair.tier}
             value={`${rates[i]}%`}
             total={pair.compared}
             filled={pair.agreed}
