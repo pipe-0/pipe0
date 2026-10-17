@@ -21,7 +21,7 @@ scores:
       score and status on each answer. The free plan's limits are tight."
   dataQuality:
     score: 2.5
-    why: "6 of the 17 work emails it served through Treg were personal
+    why: "6 of the 17 work emails it returned were personal
       mailboxes, and 9 of its 22 phone numbers matched another provider's."
   pricingValue:
     score: 3.8
@@ -48,14 +48,14 @@ pros:
     body: "Tomba lists 13 official SDKs, a REST API, a CLI and an MCP server.
       Every answer carries a score, a verification status and its sources."
   - title: "Valid phone numbers"
-    body: "All 22 numbers it returned through Treg were real, well-formed
+    body: "All 22 numbers it returned were real, well-formed
       numbers, and 18 of them were mobiles."
   - title: "A working verifier"
     body: "It called all 10 real work addresses we checked valid, the same
       answer ZeroBounce gave."
 cons:
   - title: "Personal mailboxes as work emails"
-    body: "Of 17 work emails Tomba returned through Treg, 6 were Gmail, Yahoo,
+    body: "Of 17 work emails Tomba returned, 6 were Gmail, Yahoo,
       Hotmail or Outlook addresses, and only 3 were on the person's company
       domain."
   - title: "Phones that don't match"
@@ -120,9 +120,8 @@ benchmark:
   period: "October 2026"
   rows: []
   notes:
-    - "These answers reached us through Treg's routed phone lookup, which asks
-      Tomba only after cheaper providers miss, so they are the harder people
-      to find. 22 mobile numbers in total."
+    - "Tomba was asked only about people that cheaper providers had missed,
+      so these are the harder people to find. 22 mobile numbers in total."
   agreement:
     test: "LinkedIn URL to mobile"
     run: 20261017T205207Z-a09a
@@ -228,9 +227,8 @@ was a two-letter mailbox on a domain that accepts all mail. Its verifier
 called all 10 real work addresses we checked valid, the same verdict
 ZeroBounce gave.
 
-The second is through [Treg](/reviews/treg), whose waterfalls call Tomba
-after cheaper providers miss. There Tomba answered 17 work email lookups and
-22 mobile lookups. 6 of the 17 emails were personal mailboxes, such as
+The second covers people that cheaper providers had already missed. There
+Tomba answered 17 work email lookups and 22 mobile lookups. 6 of the 17 emails were personal mailboxes, such as
 `@gmail.com` and `@yahoo.com`, and only 3 were on the person's company
 domain. All 22 phone numbers were valid, 18 of them mobiles, but only 9
 matched a number another provider found for the same person.

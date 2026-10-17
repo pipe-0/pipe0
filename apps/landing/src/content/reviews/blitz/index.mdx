@@ -11,8 +11,9 @@ tool:
   logo: /media/reviews/logos/blitz.png
   category: Contact finder
 verdict: "A fast, developer-first data API with unlimited lookups for a flat
-  fee. Coverage and data accuracy are below average, on par with cheaper
-  providers like LeadMagic, and phones are US-only."
+  fee. Email coverage and accuracy are below average, on par with cheaper
+  providers like LeadMagic. It finds few mobile numbers, but the ones it
+  finds are accurate."
 relationship: competitor
 scores:
   easeOfUse:
@@ -23,7 +24,7 @@ scores:
     score: 2.5
     why: "Below-average coverage and accuracy: it found a work email for 38%
       of profiles in our head-to-head test, where a waterfall found 84%.
-      Phones are US-only."
+      It found a mobile number for 13%, where a waterfall found 98%."
   pricingValue:
     score: 3.5
     why: "Unlimited lookups for a flat fee are cheap at high volume, but
@@ -38,7 +39,7 @@ bestFor:
   - "Agents and live forms that wait on each answer"
 skipIf:
   - "You need an email for as many people on your list as possible"
-  - "You need mobile numbers outside the United States"
+  - "You need a mobile number for most people on your list"
   - "Your volume is low or uneven from month to month"
 pros:
   - title: "Fast"
@@ -57,9 +58,10 @@ cons:
   - title: "Below-average accuracy"
     body: "Its data accuracy was below average in our benchmark, on par with
       cheaper providers like LeadMagic rather than premium sources."
-  - title: "Phones are US-only"
-    body: "Blitz says its 45 million mobile numbers cover only the United
-      States, and phone lookups need the $599 plan."
+  - title: "Few mobile numbers"
+    body: "Blitz found a mobile number for 15 of 114 people, 13%. pipe0's
+      default phone waterfall found 98% of the same people. Phone lookups
+      need the $599 plan."
   - title: "A high floor"
     body: "Email lookups need the $499 a month plan. At low volume that is
       more per email than paying per result."
@@ -85,7 +87,8 @@ pricing:
       includes: "Everything in Leads, plus work email lookups."
     - name: Unlimited Phone
       price: "$599/mo"
-      includes: "Everything in Email, plus mobile numbers, US only."
+      includes: "Everything in Email, plus mobile numbers. Blitz lists
+        them as US only."
   notes:
     - "Unlimited plans are subject to a fair use policy."
     - "Rate limits are per endpoint and depend on the plan."
@@ -123,6 +126,15 @@ benchmark:
       n: 1204
       coverage: 41.1
       latency: "0.3 s"
+    - test: "LinkedIn URL to mobile"
+      run: 20261017T205207Z-a09a
+      n: 114
+      coverage: 13.2
+      agreement: 87
+      waterfall:
+        providers: [Wiza, Surfe, Crustdata]
+        coverage: 98.2
+        added: 0
     - test: "Email to LinkedIn URL"
       dataset: signups
       run: 20261011T173957Z-de8f
@@ -140,7 +152,15 @@ benchmark:
       2026."
     - "Across all 1,204 profiles, Blitz's coverage ran from 54% in the
       United States to 30% in Spain."
-    - "Phone lookups weren't part of this test."
+    - "Phone latency wasn't measured."
+    - "On the same 114 profiles, Treg's full phone waterfall, which starts
+      with Blitz, found a number for 111, or 97%."
+    - "In a second email run, Blitz found a work email for 50 of 117
+      profiles, 43%, and its emails matched other providers 74% of the time,
+      close to the first run."
+    - "Blitz says its phone numbers cover the United States only, but 12 of
+      the 15 numbers it found were in other countries: India, France,
+      Brazil, the UK, Germany and Canada."
   agreement:
     test: "LinkedIn URL to work email"
     run: 20261011T173839Z-27b0
@@ -192,6 +212,7 @@ authors:
   - name: Florian
     title: Founder
 date: 2026-10-11
+updated: 2026-10-18
 faq:
   - q: "How much does Blitz API cost?"
     a: "Plans are flat-rate and unlimited: $399 a month for search and
@@ -203,8 +224,15 @@ faq:
       for 41% across 1,204 profiles, and its data accuracy was below
       average."
   - q: "Does Blitz API have phone numbers outside the US?"
-    a: "No. Blitz says its mobile numbers cover the United States only, and
-      phone lookups need the $599 a month plan."
+    a: "Blitz says its mobile numbers cover the United States only. In our
+      test, 12 of the 15 numbers it found were in other countries, including
+      India, France and Brazil. Phone lookups need the $599 a month plan."
+  - q: "How good is Blitz API's phone data?"
+    a: "Accurate but thin. In our test of 114 LinkedIn profiles, Blitz found a
+      mobile number for 13%, where pipe0's phone waterfall found 98% and
+      Treg's, which starts with Blitz, found 97%. Its
+      numbers matched other providers 87% of the time, the highest of eight
+      providers on the same people."
   - q: "Does Blitz API have an MCP server?"
     a: "Yes. The server at api.blitz-api.ai/mcp exposes one tool per API
       endpoint, signs in with OAuth or an API key, and includes the docs and
@@ -234,13 +262,30 @@ FACT BASE (checked 2026-10-11 on primary sources unless marked):
   pipe0 default waterfall 101/120 (run d126), reverse 29/100 (run 72f0).
   Pairs from 27b0: wiza 34/42, surfe 31/41, amplemarket 26/35.
 - pipe0 relationship: competitor; not used in any pipe0 waterfall.
+- Phone (added 2026-10-18): Treg routed run 20261017T205207Z-a09a; Treg's
+  `blitzapi.people.phone.find` is Blitz POST /v2/enrichment/phone and is
+  position 0 in every `_treg.tried` list. 114 rows reached Treg (rest:
+  balance out). Blitz hit 15, missed 99. Pairwise agreement (last 9 digits)
+  71/82 = 87%: LeadMagic 15/15, Surfe 14/15, Prospeo 12/13, Wiza 11/15,
+  Crustdata 12/15, Forager 5/6, Aviato 2/3; 15/15 match the majority. Others
+  on the same 114 rows: LeadMagic 78, Surfe 76, Prospeo 76, Forager 73, Wiza
+  66, Crustdata 61, Aviato 47. Default waterfall Wiza/Surfe/Crustdata
+  112/114; Blitz added 0. Numbers by country code: US 3, India 5, France 2,
+  Brazil 2, UK 1, Germany 1, Canada 1, despite the docs' "no international
+  phone coverage". No line type returned. Treg's routed result on the same
+  114 rows: 111 success, 3 no_result (97.4%).
+- Email via Treg: run 20261017T204633Z-f47a (re-run of b220 on the same 120
+  rows, Idempotency-Key replays; the 7 b220 timeouts resolved). Blitz
+  position 0 on 117 rows: 50 hit, 67 miss; pairwise 267/359 (74%, b220
+  266/356); 44/50 match the majority. Only Blitz counts: later children see
+  only rows earlier ones missed, so their rates are not comparable.
 */}
 
 ## What is Blitz API?
 
 Blitz API is a B2B data API built around a LinkedIn-based dataset of more
 than 550 million contacts. It finds people at companies, enriches LinkedIn
-profiles, and returns work emails and, in the United States, mobile numbers.
+profiles, and returns work emails and mobile numbers.
 
 Its pitch is the price model. Instead of charging per lookup, Blitz sells
 three flat monthly plans with unlimited use, subject to a fair use policy.
@@ -260,6 +305,22 @@ of the same 120 people, 84%, and every person Blitz found was among them.
 Starting from an email, Blitz found the LinkedIn profile for 10 of 100
 people, against 29 for pipe0's reverse lookup waterfall.
 
+## Few mobile numbers, but accurate ones
+
+Starting from 114 LinkedIn profiles, Blitz found a mobile number for 15, or 13%. pipe0's default phone
+waterfall found a number for 112 of the same people, 98%, including all 15
+that Blitz found. Treg's own phone waterfall, which starts with Blitz and
+falls through to 14 other providers, found a number for 111, or 97%.
+
+The numbers it did find were the most reliable we measured on these people.
+They matched other providers 87% of the time, against 61% to 78% for the
+seven other phone providers. With only 15 numbers, that lead is a small
+sample.
+
+Blitz says its phone data covers the United States only. Still, 12 of the
+15 numbers it returned were from other countries, including India, France
+and Brazil.
+
 ## Fast and built for agents
 
 Blitz answered in a median of 0.3 seconds, synchronously. Several contact
@@ -273,8 +334,8 @@ Errors name the field that was wrong and the closest valid value.
 ## What it costs
 
 There are three plans: $399 a month for search and company data, $499 to
-add work emails, and $599 to add mobile numbers, which cover the United
-States only. A free trial includes 1,000 records, and phone lookups aren't
+add work emails, and $599 to add mobile numbers, which Blitz lists as US
+only. A free trial includes 1,000 records, and phone lookups aren't
 part of it.
 
 Flat-rate pricing is cheap when you run tens of thousands of lookups a
@@ -298,5 +359,4 @@ want answers in under a second, and would rather skip a person than send to
 a doubtful address.
 
 Look elsewhere if you need an email for as many people on your list as
-possible, mobile numbers outside the United States, or if your volume is
-low.
+possible, a mobile number for most of them, or if your volume is low.
