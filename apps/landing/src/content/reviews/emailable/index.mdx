@@ -1,0 +1,352 @@
+---
+title: "Emailable review (2026): fast and SOC 2, but cautious on work domains"
+description: "Emailable got every consumer address and dead domain right in our
+  test and answered in 0.3 seconds, with SOC 2 Type II behind it. On work
+  domains it called 12 of 30 real addresses catch-all, so it got 70 of 100
+  right. Use it for consumer and newsletter lists, not cold outbound to work
+  addresses."
+tool:
+  name: Emailable
+  url: https://emailable.com
+  logo: /media/reviews/logos/emailable.png
+  category: Email verification
+verdict: "Fast, easy, and SOC 2 certified, and flawless on consumer
+  addresses, but it calls many work addresses catch-all, so outbound lists
+  need a second check."
+relationship: neutral
+scores:
+  easeOfUse:
+    score: 4.5
+    why: "250 free credits, a clean web app, four plain states with a reason,
+      and official libraries for Ruby, Node, and Python."
+  dataQuality:
+    score: 3.2
+    why: "Perfect on Gmail, fake freemail, and dead domains, but 12 of 30
+      real work addresses came back catch-all. 70 of 100 right in our test."
+  pricingValue:
+    score: 3.8
+    why: "10,000 checks for $60, the same as Bouncer, which resolved far more
+      work addresses. Credits never expire and unknowns are refunded."
+  agentAccess:
+    score: 4
+    why: "A CLI with an agent skill for Claude Code and Codex, 25 requests a
+      second, and batches of 50,000, but no MCP server."
+bestFor:
+  - "Cleaning newsletter and consumer lists quickly"
+  - "Teams that need SOC 2 Type II paperwork from a mid-priced verifier"
+  - "Signup forms, where a 0.3 second check matters"
+skipIf:
+  - "Your list is mostly work addresses for cold outbound"
+  - "You need a definite answer on accept-all domains"
+  - "Price per check decides and accuracy on work domains doesn't"
+pros:
+  - title: "Flawless on the easy cases"
+    body: "It got all 20 real Gmail addresses, all 20 fake freemail addresses,
+      and all 10 addresses at nonexistent domains right in our test."
+  - title: "Fast"
+    body: "A median of 0.3 seconds per check, tied with ZeroBounce for the
+      fastest of the six verifiers we tested."
+  - title: "SOC 2 Type II"
+    body: "Emailable says it is SOC 2 Type II certified, with documents in a
+      trust center. Bouncer, at the same price, makes no such claim."
+  - title: "Fair billing"
+    body: "Credits never expire, and credits spent on unknown results and
+      duplicates in a list are returned once the list finishes."
+cons:
+  - title: "Catch-all on many work domains"
+    body: "It called 12 of 30 real work addresses and 14 of 20 fake ones
+      catch-all. Sending only its valid results kept 36 of 50 real
+      addresses; sending catch-alls too let 15 fakes through."
+  - title: "The deeper check made it worse"
+    body: "Turning on its optional accept-all check resolved none of the
+      catch-all verdicts and moved 6 more real work addresses to catch-all."
+  - title: "One fake passed as valid"
+    body: "A random mailbox at hubspot.com came back deliverable. Bouncer
+      passed it too; the other four verifiers rejected it."
+  - title: "No MCP server"
+    body: "Agents reach it through the CLI and its skill, which needs an agent
+      that can run shell commands."
+pricing:
+  asOf: 2026-10-17
+  source: https://emailable.com/pricing/
+  startingAt: 38
+  startingAtNote: "for 5,000 checks, pay as you go"
+  startingAtPeriod: one-time
+  freePlan: true
+  plans:
+    - name: Free
+      price: "$0"
+      includes: "250 credits on signup."
+    - name: Pay as you go
+      price: "$38 to $2,100"
+      includes: "5,000 checks for $38, 10,000 for $60, 100,000 for $420, 1
+        million for $2,100. Credits never expire."
+    - name: Monthly subscription
+      price: "15% off pay as you go"
+      includes: "The same credits every month at a 15% discount. Unused credits
+        roll over."
+  notes:
+    - "One credit per check, 5,000 minimum purchase. Credits for unknown
+      results and duplicates are returned when a list finishes verifying."
+    - "Emailable guarantees 99% deliverability (97% on Microsoft-hosted
+      addresses) on deliverable results, for opt-in lists of 1,000+ emailed
+      within 24 hours, refunding qualifying addresses."
+    - "Inbox placement reports and blacklist monitors spend the same
+      credits."
+facts:
+  - label: Founded
+    value: "2017 in New York, as Blaze Verify"
+    source: https://emailable.com/about-us/
+  - label: CEO
+    value: "Sean Heilweil"
+    source: https://emailable.com/about-us/
+  - label: Customers
+    value: "300,000+"
+    source: https://emailable.com/about-us/
+  - label: Verdicts
+    value: "deliverable, risky, undeliverable, unknown, with a reason"
+    source: https://emailable.com/docs/api/emails/
+  - label: API
+    value: "25 requests a second, batches up to 50,000"
+    source: https://emailable.com/docs/api/rate-limits/
+  - label: Agents
+    value: "CLI and agent skill, no MCP server"
+    source: https://emailable.com/agents/
+  - label: Compliance
+    value: "SOC 2 Type II, GDPR"
+    source: https://emailable.com/blog/emailable-is-now-soc-2-type-2-certified/
+benchmark:
+  period: "October 2026"
+  verification:
+    run: 20261017T173041Z-245c
+    n: 100
+    valid: 50
+    rows:
+      - provider: Emailable
+        accuracy: 70
+        validConfirmed: 36
+        invalidCaught: 34
+        falsePositives: 1
+        falseNegatives: 1
+        undetermined: 28
+        latency: "0.3 s"
+      - provider: LeadMagic
+        accuracy: 97
+        validConfirmed: 49
+        invalidCaught: 48
+        falsePositives: 0
+        falseNegatives: 1
+        undetermined: 2
+        latency: "2.0 s"
+      - provider: ZeroBounce
+        accuracy: 96
+        validConfirmed: 47
+        invalidCaught: 49
+        falsePositives: 0
+        falseNegatives: 2
+        undetermined: 2
+        latency: "0.3 s"
+      - provider: Bouncer
+        accuracy: 93
+        validConfirmed: 47
+        invalidCaught: 46
+        falsePositives: 1
+        falseNegatives: 2
+        undetermined: 4
+        latency: "0.5 s"
+      - provider: MixRank
+        accuracy: 93
+        validConfirmed: 47
+        invalidCaught: 46
+        falsePositives: 0
+        falseNegatives: 3
+        undetermined: 4
+        latency: "1.3 s"
+      - provider: MillionVerifier
+        accuracy: 66
+        validConfirmed: 31
+        invalidCaught: 35
+        falsePositives: 1
+        falseNegatives: 1
+        undetermined: 32
+        latency: "0.7 s"
+  notes:
+    - "Every verifier got all 20 fake Gmail and Outlook addresses and all 10
+      addresses at nonexistent domains right, and all but Bouncer got all 20
+      real Gmail addresses. The differences are on work domains."
+    - "Emailable was scored with its default settings. With its accept-all
+      check on, 6 more real work addresses came back catch-all and no
+      catch-all verdict was resolved."
+    - "One real address was rejected by every verifier. A sign-in 45 days
+      earlier proves the Google account then, not the address today, so it
+      may be a labelling error."
+    - "Median times are from uncached calls, but not all from the same run:
+      Bouncer and Emailable in October 17 runs, the others on October 6."
+  agreement:
+    test: "Email verification, 100 labelled addresses"
+    run: 20261017T173041Z-245c
+    unit: "verdict"
+    subject: addresses
+    pairs:
+      - provider: MillionVerifier
+        tier: Low-cost
+        compared: 100
+        agreed: 91
+      - provider: ZeroBounce
+        tier: Premium
+        compared: 100
+        agreed: 73
+      - provider: Bouncer
+        compared: 100
+        agreed: 73
+alternatives:
+  - name: Bouncer
+    href: /reviews/bouncer
+    why: "You want definite answers on work domains for the same price per
+      check."
+  - name: ZeroBounce
+    href: /reviews/zerobounce
+    why: "You need the most accurate verdicts on work addresses and broader
+      compliance paperwork, and can pay about twice as much."
+  - name: MillionVerifier
+    href: /reviews/millionverifier
+    why: "Your lists are mostly consumer addresses and the lowest price per
+      check decides."
+authors:
+  - name: Florian
+    title: Founder
+date: 2026-10-17
+faq:
+  - q: "Is Emailable accurate?"
+    a: "On consumer addresses and dead domains, yes: it got every Gmail, fake
+      freemail, and nonexistent-domain address in our test right. On work
+      domains it called many addresses catch-all, so it got 70 of 100
+      labelled addresses right, against 96 for ZeroBounce and 93 for
+      Bouncer."
+  - q: "How much does Emailable cost?"
+    a: "Pay-as-you-go starts at $38 for 5,000 checks. 10,000 cost $60 and a
+      million cost $2,100. A monthly subscription takes 15% off. Credits
+      never expire, and new accounts get 250 free credits."
+  - q: "Emailable or Bouncer: which is better?"
+    a: "They cost the same, $60 for 10,000 checks. Bouncer was more accurate
+      in our test, 93 against 70, because it gave definite answers on work
+      domains where Emailable said catch-all. Emailable has SOC 2 Type II;
+      Bouncer has no certification."
+  - q: "Should I turn on Emailable's accept-all check?"
+    a: "Not on our evidence. On 50 work addresses it resolved none of the
+      catch-all verdicts and moved 6 real addresses from deliverable to
+      catch-all. It also slows each check."
+  - q: "Does Emailable have an API and an MCP server?"
+    a: "It has a real-time API at 25 requests a second, a batch API for up to
+      50,000 addresses, and libraries for Ruby, Node, and Python. There is no
+      MCP server; agents use the Emailable CLI and its agent skill."
+---
+
+{/*
+FACT BASE (checked 2026-10-17 on primary sources):
+- Pricing: api.emailable.com/site/prices/credits?quantity=N (the pricing
+  page's calculator source; this request geolocated to EUR, and the page
+  rendered for the US shows the same 5k figure in USD): 5k $38, 10k
+  $60, 25k $141, 50k $245, 100k $420, 250k $750, 500k $1,350, 1M $2,100.
+  Subscription 15% off; unused credits roll over. 5,000 minimum. Credits
+  never expire; unknowns and duplicates returned after a list finishes
+  (pricing page). 250 free credits.
+- Guarantee (emailable.com/guarantee): 99%+ (97%+ Microsoft-managed),
+  lists of 1,000+, emailed within 24 h, own opt-in source, report within
+  72 h, refund of qualifying emails.
+- Company (about-us): 2017, CEO Sean Heilweil, New York with offices in
+  Miami, Los Angeles, Sao Paulo; 300K+ customers. Blaze Verify and
+  TheChecker merged and renamed Emailable in 2021 (newswire release).
+- Compliance: SOC 2 Type II (blog post, updated 2024-07-10; footer badge),
+  GDPR. No ISO 27001 or HIPAA claim. Hosting location not stated.
+- API (docs/api): verify 25 req/s, batch 5 req/s, batch up to 50,000;
+  timeout 2-10 s (default 5); accept_all default false; 249 = ask again,
+  free for 5 minutes. Libraries Ruby, Node, Python; CLI. Agents page: CLI
+  + skill for Claude Code, Codex, OpenCode; no MCP.
+- Benchmark: brain/positioning/evidence.md section G and closed
+  provider-benchmark README "Fourth run". Run 20261017T173041Z-245c
+  (default settings: timeout=10, accept_all=false), p50 0.28 s.
+  accept_all=true runs 20261017T173120Z-82cd and 20261017T173127Z-009a.
+  Agreement from verify-score 245c: emailable|millionverifier 91,
+  emailable|zerobounce 73, emailable|bouncer 73.
+- pipe0 relationship: none (no pipe routes to Emailable).
+*/}
+
+## What is Emailable?
+
+Emailable checks whether an email address will accept mail before you send
+to it. It started in New York in 2017 as Blaze Verify, merged with
+TheChecker and took the Emailable name in 2021, and says more than 300,000
+businesses use it.
+
+You can upload a list, call one endpoint per address, or add a widget to a
+signup form. Each check returns one of four states (deliverable, risky,
+undeliverable, or unknown) with a reason, such as `rejected_email` or
+`low_deliverability`. The same credits also buy inbox placement reports and
+blacklist monitoring.
+
+## How it did in our test
+
+We ran 100 labelled addresses through six verifiers. Fifty were real: pipe0
+users who had signed in with Google in the previous 45 days, 30 on work
+domains and 20 on Gmail. Fifty were fake: random mailboxes at Gmail, Outlook,
+and well-known company domains, and addresses at domains that don't exist.
+
+On the easy half, Emailable was perfect. All 20 real Gmail addresses came
+back deliverable, and all 20 fake freemail addresses and all 10 dead
+domains came back undeliverable, at a median of 0.3 seconds a check.
+
+Work addresses were different. Of 30 real work addresses, Emailable
+confirmed 16 and called 12 risky because the domain accepts all mail, which
+we count as catch-all. Of 20 fake ones, it caught 4 and called 14
+catch-all. Its verdicts matched MillionVerifier's on 91 of 100 addresses,
+against 73 for ZeroBounce and Bouncer, which resolved most of the same
+domains.
+
+That leaves two bad choices on a work list: send only to its deliverable
+results and lose 14 of 50 real leads, or send to the catch-alls as well
+and let 15 fakes through. One of its deliverable verdicts was itself a fake,
+a random mailbox at hubspot.com that Bouncer also passed.
+
+Emailable has an optional accept-all check that it says slows each request.
+We ran it on all 50 work addresses. It resolved none of the catch-all
+verdicts and moved 6 real addresses from deliverable to catch-all, so we
+scored the default.
+
+## What it costs
+
+Pay-as-you-go starts at $38 for 5,000 checks, the minimum purchase, and
+falls to $60 for 10,000 and $2,100 for a million. A monthly subscription
+takes 15% off, and unused credits roll over. New accounts get 250 free
+credits.
+
+At 10,000 checks it costs the same as [Bouncer](/reviews/bouncer), about
+half of ZeroBounce ($129), and more than MillionVerifier ($39). Credits
+never expire, and credits spent on unknown results and duplicates in a
+list come back when the list finishes.
+
+## Emailable for developers and agents
+
+The real-time API allows 25 requests a second and takes a timeout of 2 to
+10 seconds. When a check runs long, it answers with status 249 and asks you
+to send the request again, which is free for five minutes. A batch API
+takes up to 50,000 addresses. There are official libraries for Ruby, Node,
+and Python, and a CLI.
+
+There is no MCP server. Instead, the CLI installs an agent skill for Claude
+Code, Codex, and OpenCode, so an agent that can run shell commands can
+verify an address. Emailable says it is SOC 2 Type II certified, with
+documents in its trust center.
+
+## Who should buy Emailable
+
+Buy Emailable if you clean newsletter, ecommerce, or signup lists that are
+mostly consumer addresses, and you want a fast check with SOC 2 paperwork
+behind it.
+
+Look elsewhere if your list is work addresses for cold outbound. For the
+same price, [Bouncer](/reviews/bouncer) resolved far more of them;
+[ZeroBounce](/reviews/zerobounce) and [LeadMagic](/reviews/leadmagic) were
+more accurate still. For consumer lists where price decides,
+[MillionVerifier](/reviews/millionverifier) gives almost the same answers
+for less.

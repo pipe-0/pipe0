@@ -1,0 +1,269 @@
+---
+title: "BuiltWith review (2026): the most complete tech-stack data, if you filter it"
+description: "BuiltWith found a technology in three out of four prospecting
+  categories on 20 websites, with the cleanest live data of the tools we
+  tested, from about $0.01 per lookup. It also keeps technologies a site
+  dropped years ago, so ask for live data only."
+tool:
+  name: BuiltWith
+  url: https://builtwith.com
+  logo: /media/reviews/logos/builtwith.png
+  category: Technographics
+verdict: "The best tech-stack data we tested: CRM, payments, email and
+  pixels on most websites, from about $0.01 per lookup. Filter to live
+  technologies, or it lists tools a site dropped years ago."
+relationship: supplier
+disclosure: "pipe0 buys from BuiltWith and offers its Domain API as pipe0's
+  tech stack pipe. The scores come from our own benchmark, not from that
+  relationship."
+scope:
+  summary: "BuiltWith sells lead lists, market reports and an API built on
+    its crawl of the web. We reviewed the Domain API for one job: finding
+    the technologies a company uses, for qualifying and personalising
+    outreach."
+  tested:
+    - "Tech-stack lookups on 10 SaaS and 10 e-commerce websites"
+    - "Coverage of CRM, payments, email, reviews, analytics and ad pixels"
+    - "Stale and non-technology entries in the response"
+    - "Cost and coverage against DataForSEO and Amplemarket"
+  notTested:
+    - "Lead lists and market reports in the BuiltWith web app"
+    - "Relationships, trends, company-to-URL and other APIs"
+scores:
+  easeOfUse:
+    score: 3.5
+    why: "One GET request per domain with JSON back. Flag names mislead:
+      NOLIVE has nothing to do with live technologies, LIVEONLY does, and
+      the raw response mixes tools with rankings and server locations."
+  dataQuality:
+    score: 4
+    why: "The widest coverage we measured: 83% of SaaS and 76% of
+      e-commerce categories. By default it keeps technologies it last saw
+      years ago, and it can't see custom-built shop platforms."
+  pricingValue:
+    score: 4
+    why: "One credit per lookup: $0.0495 pay as you go, about $0.01 on the
+      $995 Team plan with 100,000 credits a month. DataForSEO costs $0.012
+      but found a technology in one in seven categories."
+  agentAccess:
+    score: 4
+    why: "A REST API with an llms.txt, a free account endpoint and pay-per-
+      use credits for agents. At most 8 requests at once and 10 per
+      second."
+bestFor:
+  - "Qualifying accounts on the CRM, shop platform or payment tools they use"
+  - "Personalising outreach with a company's marketing and analytics stack"
+  - "E-commerce prospecting: platform, BNPL, email and review apps"
+skipIf:
+  - "You need back-office software a website doesn't show"
+  - "Your targets build their shop or app on a custom platform"
+  - "You only need the website framework, which DataForSEO finds for less"
+pros:
+  - title: "Coverage"
+    body: "It found a CRM, payment, email, review or pixel tool in 76 to 83%
+      of the categories we checked on 20 websites, against 13 to 14% for
+      DataForSEO."
+  - title: "Live data on request"
+    body: "Each technology carries first- and last-detected dates, and
+      LIVEONLY returns only what BuiltWith saw since its latest full crawl."
+  - title: "E-commerce depth"
+    body: "Shop platform, BNPL, email and SMS, reviews and subscription apps:
+      Klarna, Afterpay, Attentive, Klaviyo and Yotpo on the stores we tested."
+  - title: "Simple credit pricing"
+    body: "One credit per lookup on any API version, with a free endpoint to
+      check the balance."
+cons:
+  - title: "It never forgets"
+    body: "Without LIVEONLY it still listed Magento for two Shopify stores,
+      last seen there in 2019 and 2020. Only 15 to 45% of all-time entries
+      were seen in the last 90 days."
+  - title: "Noise in the response"
+    body: "Popularity rankings, CDN edge locations, server countries,
+      currencies and copyright years arrive as technologies and need
+      filtering."
+  - title: "Blind to custom platforms"
+    body: "Stores on in-house or unrecognised platforms show no current shop
+      platform at all."
+  - title: "Confidence score misleads"
+    body: "Removed technologies keep a score of 1, and one gambling flag on
+      a site set every non-infrastructure score to 0."
+pricing:
+  asOf: 2026-10-17
+  source: https://builtwith.com/plans
+  startingAt: 295
+  startingAtPeriod: month
+  startingAtNote: "Basic plan for lists; API credits are bought separately"
+  freePlan: true
+  plans:
+    - name: Free
+      price: "$0"
+      includes: "Individual site lookups on builtwith.com."
+    - name: Basic
+      price: "$295/month"
+      includes: "Lead lists for two technologies."
+    - name: Pro
+      price: "$495/month"
+      includes: "Lead lists for unlimited technologies."
+    - name: Team
+      price: "$995/month"
+      includes: "Unlimited accounts and 100,000 API credits per month."
+    - name: API credits
+      price: "$0.0495 per lookup"
+      includes: "Pay as you go below 2,000 credits; larger packs cost less
+        per credit."
+  notes:
+    - "One Domain API lookup uses one credit; failed lookups use none."
+    - "The Trust flag uses an additional credit per lookup."
+facts:
+  - label: What it returns
+    value: "Technologies per domain, with first and last detection"
+    source: https://api.builtwith.com/domain-api
+  - label: Live definition
+    value: "Detected after the latest full crawl"
+    source: https://api.builtwith.com/domain-api
+  - label: Current API version
+    value: "Domain API v26"
+    source: https://api.builtwith.com/domain-api
+  - label: Rate limits
+    value: "8 requests at once, 10 per second"
+    source: https://api.builtwith.com/domain-api
+  - label: Agent docs
+    value: "llms.txt with pay-per-use credits"
+    source: https://api.builtwith.com/llms.txt
+  - label: Company
+    value: "BuiltWith Pty Ltd, Sydney"
+    source: https://builtwith.com/plans
+alternatives:
+  - name: pipe0 tech stack pipe
+    href: /docs/pipe-catalog/company:techstack:builtwith/2
+    why: "You want BuiltWith's data filtered to live technologies, without
+      the noise, in a sheet or through an agent."
+  - name: DataForSEO
+    href: /reviews/dataforseo
+    why: "You only need the website framework and want the lowest price
+      per lookup."
+  - name: Crustdata
+    href: /reviews/crustdata
+    why: "You want to find companies by technology in a company search, not
+      look up one domain at a time."
+authors:
+  - name: Florian
+    title: Founder
+date: 2026-10-17
+faq:
+  - q: "How much does the BuiltWith API cost?"
+    a: "One credit per Domain API lookup. Credits cost $0.0495 each below
+      2,000 and less in larger packs. The Team plan at $995 per month
+      includes 100,000 credits, about $0.01 per lookup."
+  - q: "Is BuiltWith data accurate?"
+    a: "Its live data named one shop platform for each store where it found
+      one, with no contradictions, but by default it also returns
+      technologies it last saw years ago. Ask for live technologies only
+      (LIVEONLY) before you filter on a tool."
+  - q: "What does BuiltWith's NOLIVE flag do?"
+    a: "It skips an on-the-fly crawl of domains BuiltWith hasn't indexed. It
+      doesn't remove dead technologies; LIVEONLY does that."
+  - q: "Is BuiltWith better than DataForSEO for tech-stack data?"
+    a: "Yes, in our October 2026 test. BuiltWith found a technology in 76 to
+      83% of prospecting categories on 20 websites, DataForSEO in 13 to 14%.
+      DataForSEO costs $0.012 per lookup; BuiltWith $0.0495 pay as you go,
+      or about $0.01 on its Team plan."
+  - q: "Can I use BuiltWith in pipe0?"
+    a: "Yes. pipe0's tech stack pipe calls BuiltWith's Domain API, returns
+      only technologies currently in use by default, and drops entries that
+      aren't tools. It costs 2 pipe0 credits per company."
+---
+
+{/*
+FACT BASE (pipe0 benchmark, 2026-10-17; closed repo session, scratchpad
+techbench):
+- 20 domains: SaaS pipedrive.com, linear.app, posthog.com, calendly.com,
+  airtable.com, attio.com, loom.com, clay.com, webflow.com, personio.de;
+  e-commerce allbirds.com, gymshark.com, glossier.com, brooklinen.com,
+  snocks.com, bombas.com, bergfreunde.de, mytheresa.com, cotopaxi.com,
+  hessnatur.com.
+- Category checks with at least one technology found (live = LastDetected
+  after the 2026-04-30 full-crawl cutoff from
+  api.builtwith.com/update/v1/api.json): BuiltWith SaaS 66/80, e-commerce
+  68/90; DataForSEO 10/80, 13/90; Amplemarket 62/80, 71/90.
+- Median technologies per domain, BuiltWith: live 246 (SaaS) / 219
+  (e-commerce), all-time 543 / 591. Share of all-time entries seen in the
+  last 90 days: 15-45% (allbirds 110/502, calendly 324/732).
+- Stale examples: Magento on allbirds.com (last seen 2020-11) and
+  snocks.com (2019-01); HubSpot on pipedrive.com (2024-05) and snocks.com
+  (2024-10); Intercom on pipedrive.com (2024-04).
+- Confidence (v26): dead technologies scored 1.0 (snocks Magento, pipedrive
+  HubSpot); allbirds.com carries "Gambling Content" and every
+  non-infrastructure technology scored 0.
+- Cost: 1 credit per lookup on v21 and v26 (balance 3,513 -> 3,519 over 6
+  calls); $0.0495 below 2,000 (api.builtwith.com/llms.txt). Plans $295 / $495 / $995 per month
+  (builtwith.com/plans); Team includes 100,000 API credits per month
+  (kb.builtwith.com plans-and-pricing-explained).
+- NOLIVE (v19 docs): "will not lookup the root domain website if we do not
+  have it in our database". LIVEONLY (v26): "Only return technologies
+  considered to be live".
+- pipe0 tech stack pipe after the 2026-10-17 change: allbirds.com 502 -> 124
+  technologies, snocks.com 424 -> 120.
+- Median technologies per company after pipe0's cleanup (live + noise rules):
+  BuiltWith 105 (SaaS) / 120 (stores); Amplemarket as returned, undated and
+  uncleaned, 161 / 117 (personio.de no match counted as 0); DataForSEO 8 / 6.
+*/}
+
+## What is BuiltWith?
+
+BuiltWith is an Australian company that crawls the web and records the
+technologies each website uses: shop platforms, CRMs, analytics, payment
+providers, ad pixels and hosting. It sells that data as lead lists, market
+reports and APIs.
+
+Its Domain API takes a domain and returns every technology BuiltWith has
+detected on it, each with the date it was first and last seen.
+
+## How good is BuiltWith's tech-stack data?
+
+The most complete we tested. On 10 SaaS companies and 10 online stores it
+found a technology in 83% and 76% of the prospecting categories we checked:
+CRM and marketing automation, payments, email, reviews, analytics and ad
+pixels. DataForSEO found one in 13 to 14%, mostly the website framework.
+Amplemarket came close on coverage but has no detection dates and listed
+conflicting shop platforms for three of the ten stores.
+
+<TechBenchmark highlight="builtwith" />
+
+## What should you watch out for?
+
+Old data. BuiltWith keeps every technology it has ever detected, so by
+default a Shopify store still shows the Magento it left years ago. Only 15
+to 45% of the entries were seen in the last 90 days. Ask for live
+technologies only, with the LIVEONLY flag, before you filter on a tool.
+
+Noise. Popularity rankings, CDN edge locations, server countries,
+currencies and copyright years come back as technologies. They aren't tools
+anyone chose, and they bury the ones that matter.
+
+## How much does BuiltWith cost?
+
+Every Domain API lookup uses one credit, and failed lookups use none.
+Credits cost $0.0495 each pay as you go and less in larger packs; the Team
+plan, $995 per month with 100,000 credits, works out to about $0.01 per
+lookup. The list plans from $295 per month are for building lead lists in
+BuiltWith's app.
+
+| | BuiltWith | Amplemarket | DataForSEO |
+| --- | --- | --- | --- |
+| Technologies per company (median, SaaS / stores) | 105 / 120 | 161 / 117 | 8 / 6 |
+| List price | $0.0495 per lookup, about $0.01 on Team | Part of a subscription | $0.012 per lookup |
+| Price in pipe0 | 2 credits | 1.5 credits | Not offered |
+
+BuiltWith counts are live technologies after pipe0's cleanup; Amplemarket's
+are its list as returned, without dates, and include entries like "SQL".
+
+## BuiltWith and pipe0
+
+pipe0 buys from BuiltWith and offers its Domain API as the
+[tech stack pipe](/docs/pipe-catalog/company:techstack:builtwith/2). It
+asks BuiltWith for technologies currently in use by default and drops the
+entries that aren't tools, so a company comes back as about 120
+recognisable tools instead of 400 to 500 entries, grouped by type. You can
+widen it to the last 12 months or the full history, and run it on every row
+of a sheet or through an agent.

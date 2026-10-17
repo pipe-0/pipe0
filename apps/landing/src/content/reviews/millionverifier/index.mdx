@@ -119,7 +119,7 @@ facts:
 benchmark:
   period: "October 2026"
   verification:
-    run: 20261006T201548Z-886a
+    run: 20261017T173041Z-245c
     n: 100
     valid: 50
     rows:
@@ -155,12 +155,31 @@ benchmark:
         falseNegatives: 1
         undetermined: 2
         latency: "2.0 s"
+      - provider: Bouncer
+        accuracy: 93
+        validConfirmed: 47
+        invalidCaught: 46
+        falsePositives: 1
+        falseNegatives: 2
+        undetermined: 4
+        latency: "0.5 s"
+      - provider: Emailable
+        accuracy: 70
+        validConfirmed: 36
+        invalidCaught: 34
+        falsePositives: 1
+        falseNegatives: 1
+        undetermined: 28
+        latency: "0.3 s"
   notes:
-    - "MillionVerifier rejected only 1 of the 50 real addresses, the fewest of
-      the three; most of its misses are catch-all verdicts, not errors."
+    - "MillionVerifier rejected only 1 of the 50 real addresses, tied for the
+      fewest; most of its misses are catch-all verdicts, not errors."
+    - "Emailable hedged the same way: its verdicts matched MillionVerifier's
+      on 91 of 100 addresses, against 66 to 67 for each of the other four."
     - "Its one fake passed as valid was a random mailbox at gitlab.com."
-    - "Median times come from the first, fully uncached run
-      (20261006T201402Z-a061)."
+    - "Median times are from uncached calls: the first four from the first,
+      fully uncached run (20261006T201402Z-a061), Bouncer and Emailable from
+      their own runs on October 17."
   latency:
     test: "Email verification"
     run: 20261006T201402Z-a061
@@ -176,6 +195,10 @@ alternatives:
     href: /reviews/zerobounce
     why: "Your list is mostly work addresses and you need a definite answer
       on domains that look catch-all."
+  - name: Bouncer
+    href: /reviews/bouncer
+    why: "You want definite answers on work domains at about half
+      ZeroBounce's price."
   - name: pipe0
     href: /docs/pipe-catalog
     why: "You want MillionVerifier for consumer lists and ZeroBounce for
@@ -234,8 +257,10 @@ FACT BASE (checked 2026-10-06 on primary sources unless marked):
   Google Gemini.
 - Company: GBD Software as a Service, Lakitelek, Hungary; CEO Tamás
   Hám-Szabó (DPA); 70,000+ businesses (homepage). Founding year unknown.
-- Benchmark: run 886a; see evidence.md section G. Agreement tiles left out:
-  same verdict 67/100 with both others (same send decision 81-83/100).
+- Benchmark: run 886a (first four), 245c (all six, incl. Bouncer and
+  Emailable; the scorecard's run); see evidence.md section G. Agreement tiles
+  left out: same verdict 66-67/100 with every verifier but Emailable
+  (91/100) in 245c.
 - pipe0 relationship: person:email:validate:millionverifier pipe.
 */}
 
@@ -252,7 +277,7 @@ There is no subscription. You buy a pack of credits, and they never expire.
 
 ## How it did in our test
 
-We ran 100 labelled addresses through four verifiers. Fifty were real
+We ran 100 labelled addresses through six verifiers. Fifty were real
 mailboxes, pipe0 users who had signed in with Google in the last 45 days.
 Fifty were fake: random mailboxes at Gmail, Outlook, and well-known company
 domains, and addresses at domains that don't exist.
@@ -264,8 +289,11 @@ came back invalid. For a consumer newsletter list, that is the job.
 Work addresses were different. Of 30 real work addresses, MillionVerifier
 confirmed 11 and called 18 catch-all. Of 20 fake ones, it caught 5 and again
 called 13 catch-all. It gives that verdict when a mail server accepts the
-test without confirming the mailbox, which many company domains do. The
-other verifiers resolved almost all of the same addresses.
+test without confirming the mailbox, which many company domains do.
+LeadMagic, ZeroBounce, Bouncer, and MixRank resolved almost all of the same
+addresses. [Emailable](/reviews/emailable) was the only other one to hedge
+like this: it called 12 of the 30 real work addresses catch-all, and its
+verdicts matched MillionVerifier's on 91 of 100.
 
 So the overall score, 66 of 100, says less about errors than about caution.
 MillionVerifier rejected only one real address, tied for the fewest. It
@@ -277,7 +305,8 @@ of 50 real leads, or send to catch-alls as well and let 14 fakes through.
 
 This is where MillionVerifier wins outright. 10,000 checks cost $39, 100,000
 cost $149, and a million cost $449. ZeroBounce charges $129, $649, and
-$3,199 for the same volumes. At 25 million and up, a check costs 0.02 cents.
+$3,199 for the same volumes; Bouncer and Emailable charge $60 for 10,000.
+At 25 million and up, a check costs 0.02 cents.
 Unknown and catch-all results are credited back as goodwill credits, which
 MillionVerifier's terms say it can withdraw.
 

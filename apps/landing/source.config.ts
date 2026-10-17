@@ -262,6 +262,7 @@ export const reviews = defineCollections({
         "Sales engagement",
         "Agent data tools",
         "List building",
+        "Technographics",
       ]),
     }),
     /**

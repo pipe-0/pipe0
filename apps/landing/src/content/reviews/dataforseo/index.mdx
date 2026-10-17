@@ -176,7 +176,8 @@ faq:
     a: "Only partly. On 20 SaaS and e-commerce websites in October 2026, its
       Domain Technologies API found a technology in 13 to 14% of the
       categories we checked, such as CRM, payments or email, against 76 to
-      83% for BuiltWith. It costs $0.012 per lookup, BuiltWith about $0.018."
+      83% for BuiltWith. It costs $0.012 per lookup; BuiltWith costs $0.0495
+      pay as you go, or about $0.01 on its Team plan."
   - q: "Does DataForSEO have an MCP server?"
     a: "Yes. DataForSEO publishes an official MCP server, hosted at
       mcp.dataforseo.com/mcp and available as open source."
@@ -206,13 +207,19 @@ FACT BASE (pipe0 benchmark, 2026-10-09 to 2026-10-14; duo session 0861a58c):
 - Legal entity from the terms page; Estonian register 14502291.
 - Technology lookups (2026-10-17, 20 domains: 10 SaaS, 10 e-commerce):
   domain_technologies/live $0.012 per lookup (balance-verified); BuiltWith
-  Domain API 1 credit = $0.018 (20k credits for $359). Category checks with
+  Domain API 1 credit per lookup (public: $0.0495 below 2,000 credits; Team
+  plan $995/month with 100,000 credits). Category checks with
   at least one technology found: SaaS DataForSEO 10/80, BuiltWith 66/80
   (live = LastDetected after the 2026-04-30 full-crawl cutoff); e-commerce
   13/90 vs 68/90. DataForSEO failed or empty on 2/20 (hessnatur.com
   "Redirected to Another Domain"; gymshark.com 0 technologies, only the
   checkout subdomain answered). Median technologies per domain: DataForSEO
   9 (SaaS) / 6 (e-commerce), BuiltWith live 246 / 219.
+- Amplemarket company enrichment, same 20 domains (pipe0 run
+  y89x7pl4qgstkvcr9uxllj8l): SaaS 62/80, e-commerce 71/90; personio.de no
+  match; conflicting shop platforms on 3 of 10 stores (bergfreunde.de
+  Magento+OXID+WooCommerce, cotopaxi.com Magento+Shopify+WooCommerce,
+  hessnatur.com Magento+SAP Commerce); no detection dates.
 */}
 
 ## What is DataForSEO?
@@ -290,13 +297,14 @@ from an agent than by hand.
 
 ## Can DataForSEO tell you a company's tech stack?
 
-Not well. Its Domain Technologies API is cheap at $0.012 per lookup, a
-third less than BuiltWith, but it mostly sees the website framework. On 20
+Not well. Its Domain Technologies API is cheap at $0.012 per lookup, but
+it mostly sees the website framework: a median of 6 to 8 technologies per
+company, against more than 100 for BuiltWith. On 20
 SaaS and e-commerce websites it found a CRM, payment provider, email tool
 or similar in about one in seven categories we checked. BuiltWith did in
 three out of four. For tech-stack data, use BuiltWith.
 
-<TechBenchmark />
+<TechBenchmark highlight="dataforseo" />
 
 ## DataForSEO and pipe0
 

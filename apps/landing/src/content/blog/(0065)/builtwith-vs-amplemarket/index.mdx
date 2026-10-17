@@ -1,0 +1,90 @@
+---
+title: "BuiltWith vs Amplemarket: Which Finds a Company's Tech Stack? (2026)"
+date: 2026-10-17
+category: Sales data
+cover: /media/blog/covers/builtwith-vs-amplemarket.jpg
+tags:
+    - technographics
+    - API
+excerpt: "We looked up the same 20 websites in both. Amplemarket matches BuiltWith on coverage, but it has no detection dates and listed conflicting shop platforms for three of ten stores."
+tldr: "BuiltWith wins on accuracy. On 10 SaaS and 10 e-commerce websites, BuiltWith found a technology in 76 to 83% of the categories that matter for prospecting (CRM, payments, email, reviews, ad pixels), Amplemarket in 78 to 79%. Amplemarket has no detection dates, so it listed conflicting shop platforms for 3 of 10 stores; BuiltWith's live data listed none. Use BuiltWith filtered to live technologies, and Amplemarket for back-office tools a website doesn't show."
+faq:
+    - q: "Is BuiltWith or Amplemarket better for technographics?"
+      a: "In our testing, BuiltWith won the comparison. We tested 20 websites in October 2026, BuiltWith found a technology in 76 to 83% of the prospecting categories we checked, Amplemarket in 78 to 79%. Amplemarket listed conflicting shop platforms for 3 of 10 stores, BuiltWith's live data for none."
+    - q: "How much does a BuiltWith or Amplemarket tech-stack lookup cost?"
+      a: "A BuiltWith Domain API lookup uses one credit: $0.0495 pay as you go, and about $0.01 on the Team plan at $995 per month for 100,000 credits. Amplemarket returns technologies as part of its company enrichment. In pipe0, BuiltWith's tech stack costs 2 credits per company and Amplemarket's company enrichment 1.5 credits."
+    - q: "Why does Amplemarket list several shop platforms for one store?"
+      a: "Amplemarket returns a flat list of technologies without detection dates, so a platform a store used years ago sits next to the one it runs today. On cotopaxi.com it listed Magento, Shopify and WooCommerce; BuiltWith's live data listed only Shopify."
+draft: false
+authors:
+    - name: Florian
+      title: Founder
+---
+
+Tech-stack data answers two questions in outreach: does this company use
+the tool I sell against, and what does its stack say about it? Both
+punish wrong answers more than missing ones. Telling a Shopify store "I
+saw you're on Magento" ends the conversation.
+
+We looked up the same 20 websites, 10 SaaS companies and 10 online stores,
+in BuiltWith's Domain API and Amplemarket's company enrichment. For each
+website we checked whether the tool found anything in the categories that
+matter for prospecting: CRM and marketing automation, payments, email and
+SMS, reviews, support, analytics and ad pixels.
+
+![Tech-stack categories found: SaaS companies BuiltWith 83%, Amplemarket 78%; online stores BuiltWith 76%, Amplemarket 79%.](/media/blog/charts/builtwith-vs-amplemarket-categories.svg)
+
+| | BuiltWith | Amplemarket |
+| --- | --- | --- |
+| Categories found, SaaS | 83% | 78% |
+| Categories found, online stores | 76% | 79% |
+| Technologies per company, SaaS (median) | 105 | 161 |
+| Technologies per company, online stores (median) | 120 | 117 |
+| Stores with conflicting shop platforms | 0 of 10 | 3 of 10 |
+| Lookups failed or empty | 0 of 20 | 1 of 20 |
+| Price in pipe0 | 2 credits | 1.5 credits |
+
+## Where Amplemarket falls short
+
+Amplemarket finds about as much as BuiltWith, and more than a website
+shows: NetSuite, Okta and Workday next to HubSpot and Klaviyo. But its
+list has no dates, so old and current tools look the same. It listed
+Magento, OXID and WooCommerce for one store, and Magento, Shopify and
+WooCommerce for another. Filtering on "uses Magento" would qualify both.
+
+## What to watch with BuiltWith
+
+BuiltWith finds the tools, but it never forgets them. It still listed
+Magento for two Shopify stores where it last saw Magento in 2019 and 2020,
+and HubSpot for companies where it hadn't seen HubSpot in two years. It
+also reports signals that aren't tools at all: popularity rankings, CDN
+edge locations, server countries and currencies.
+
+Ask BuiltWith for live technologies only (detected since its latest full
+crawl) before you filter on a tool, and drop the non-tool signals.
+
+## How do BuiltWith, Amplemarket and DataForSEO compare?
+
+| | BuiltWith | Amplemarket | DataForSEO |
+| --- | --- | --- | --- |
+| Categories found, SaaS | 83% | 78% | 13% |
+| Categories found, online stores | 76% | 79% | 14% |
+| Technologies per company, SaaS (median) | 105 | 161 | 8 |
+| Technologies per company, online stores (median) | 120 | 117 | 6 |
+| Stores with conflicting shop platforms | 0 of 10 | 3 of 10 | 0 of 10 |
+| List price | $0.0495 per lookup, about $0.01 on Team | Part of a subscription | $0.012 per lookup |
+| Price in pipe0 | 2 credits | 1.5 credits | Not offered |
+
+BuiltWith counts are live technologies after pipe0's cleanup. Amplemarket's
+are its list as returned, without dates, and include generic entries like
+"SQL" and "HTTP/3".
+
+## Using BuiltWith in pipe0
+
+pipe0's [tech stack pipe](/docs/pipe-catalog/company:techstack:builtwith/2)
+does both by default: it returns technologies currently in use, about 120
+recognisable tools per company instead of 400 to 500 entries, grouped by
+type. You can widen it to the last 12 months or the full history.
+Amplemarket's company enrichment runs in pipe0 too, if you want its
+back-office tools next to BuiltWith's live data. The full results are in
+our [BuiltWith review](/reviews/builtwith).
