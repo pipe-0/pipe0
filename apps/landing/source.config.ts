@@ -363,6 +363,27 @@ export const reviews = defineCollections({
             agreement: z.number().optional(),
             /** Median response time, e.g. "0.9 s". */
             latency: z.string().optional(),
+            /**
+             * pipe0's default waterfall on the same records, drawn next to
+             * the tool's coverage. Only when every default provider (bar
+             * ones known broken) ran on these records. Union of their
+             * results, from bench.db; record the derivation in evidence.md.
+             */
+            waterfall: z
+              .object({
+                /** Default order, display names, e.g. ["Wiza", "Surfe"]. */
+                providers: z.array(z.string()).min(2),
+                /** Share of records any of them found, in percent. */
+                coverage: z.number(),
+                /**
+                 * Records the tool found that the waterfall missed. Leave
+                 * out when the tool is one of the waterfall's providers.
+                 */
+                added: z.number().int().nonnegative().optional(),
+                /** A second run on the same inputs, when one provider's results come from it. */
+                run: z.string().optional(),
+              })
+              .optional(),
           }),
         )
           // Verifier reviews carry a `verification` scorecard instead.
@@ -383,6 +404,8 @@ export const reviews = defineCollections({
             unit: z.string(),
             /** What one tile stands for: a person looked up, or an address checked. */
             subject: z.enum(["people", "addresses"]).default("people"),
+            /** One sentence under the tiles: our accuracy verdict, e.g. "below average". */
+            conclusion: z.string().optional(),
             pairs: z
               .array(
                 z.object({

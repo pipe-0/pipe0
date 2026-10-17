@@ -1,8 +1,8 @@
 ---
-title: "Wiza review (2026): strong coverage on every input we tested"
-description: "Wiza is one of the most consistent contact APIs we tested,
-  strong from LinkedIn URLs and from names and domains, with cheap API
-  credits. Email reveals take seconds to minutes, so it is the weaker choice
+title: "Wiza review (2026): broad coverage, below-average accuracy"
+description: "Wiza finds contact data from every input we tested, LinkedIn URLs
+  and names and domains, with cheap API credits. Its data accuracy is below
+  average, and email reveals take seconds to minutes, so it is the weaker choice
   when you need an answer immediately. Use it for Sales Navigator prospecting
   and as a broad first provider in a waterfall."
 tool:
@@ -10,9 +10,9 @@ tool:
   url: https://wiza.co
   logo: /media/reviews/logos/wiza.png
   category: Contact finder
-verdict: "One of the most consistent contact data APIs we tested, strong
-  from LinkedIn URLs and from names and domains, with cheap API credits and
-  an MCP server. Email reveals take seconds to minutes."
+verdict: "Broad coverage from LinkedIn URLs and from names and domains, with
+  cheap API credits and an MCP server. Its data accuracy is below average,
+  and email reveals take seconds to minutes."
 relationship: supplier
 scores:
   easeOfUse:
@@ -20,9 +20,10 @@ scores:
     why: "Export a Sales Navigator search or a LinkedIn profile with the
       Chrome extension and get emails and phones back. A free plan to start."
   dataQuality:
-    score: 4.2
-    why: "73% on name and domain lookups, 66% on mobiles and work emails, and
-      level with the best on personal email in our benchmark."
+    score: 3.5
+    why: "Broad coverage: 73% on name and domain lookups, 66% on mobiles and
+      work emails, and level with the best on personal email. Its data
+      accuracy is below average."
   pricingValue:
     score: 4.2
     why: "API credits are cheap, about 5 cents an email and 12.5 cents a
@@ -40,7 +41,7 @@ skipIf:
   - "Your team is large and few people need data"
   - "You need company signals rather than contact details"
 pros:
-  - title: "Consistent across inputs"
+  - title: "Broad coverage"
     body: "From a name and domain, Wiza found 73 of 100 work emails. From
       LinkedIn profiles, it found 66% of work emails and 65% of mobiles, and
       tied for first on personal email."
@@ -96,24 +97,22 @@ pricing:
     - "Extra reveals on app plans cost $0.15 per email and $0.35 per phone."
 facts:
   - label: Customers
-    value: "50,000+ businesses, according to Wiza"
+    value: "50,000+ businesses"
     source: https://wiza.co/integrations
   - label: Database
-    value: "850M+ contacts, according to Wiza"
+    value: "850M+ contacts"
     source: https://wiza.co
   - label: Data
-    value: "Work email, personal email, and up to 3 mobiles per person"
+    value: "Work email, personal email, mobiles"
     source: https://wiza.co
   - label: API
-    value: "Async reveals with polling or webhooks; LinkedIn URL, name and
-      domain, or email as input"
+    value: "Async, with polling or webhooks"
     source: https://docs.wiza.co
   - label: MCP server
-    value: "mcp.wiza.co, OAuth or API key; Claude, Claude Code, and Codex"
+    value: "mcp.wiza.co"
     source: https://mcp.wiza.co/usage.html
   - label: Integrations
-    value: "Salesforce, HubSpot, Pipedrive, Attio, Outreach, Salesloft, Clay,
-      Zapier"
+    value: "Salesforce, HubSpot, Pipedrive, Clay, Zapier"
     source: https://wiza.co/integrations
 benchmark:
   period: "August and September 2026"
@@ -124,16 +123,26 @@ benchmark:
       n: 100
       coverage: 73
       agreement: 89
+      waterfall:
+        providers: [LeadMagic, Wiza, Prospeo, Amplemarket, Hunter]
+        coverage: 84
+        run: 20260731T122257Z-f809
     - test: "LinkedIn URL to work email"
       run: 20260814T095606Z-9ef2
       n: 120
       coverage: 65.8
+      waterfall:
+        providers: [Wiza, Amplemarket, Crustdata, Surfe]
+        coverage: 84.2
     - test: "LinkedIn URL to mobile"
       run: 20260804T202803Z-237d
       n: 150
       coverage: 65.3
       agreement: 70
       latency: "3.0 s"
+      waterfall:
+        providers: [Wiza, Surfe, Crustdata]
+        coverage: 96.7
     - test: "LinkedIn URL to personal email"
       run: 20260814T102434Z-7165
       n: 150
@@ -147,6 +156,7 @@ benchmark:
     test: "LinkedIn URL to mobile"
     run: 20260804T202803Z-237d
     unit: "mobile number"
+    conclusion: "Wiza's data accuracy is below average."
     pairs:
       - provider: Fiber AI
         compared: 94
@@ -185,9 +195,10 @@ authors:
 date: 2026-10-08
 faq:
   - q: "Is Wiza's data good?"
-    a: "In our benchmark Wiza was strong on most inputs: 73% of work
-      emails from names and domains, 66% of work emails and 65% of mobiles
-      from LinkedIn profiles, and tied for first on personal email at 52%."
+    a: "Its coverage is broad and its data accuracy below average. In our
+      benchmark it found 73% of work emails from names and domains, 66% of
+      work emails and 65% of mobiles from LinkedIn profiles, and tied for
+      first on personal email at 52%."
   - q: "How much does Wiza cost?"
     a: "Wiza has a free plan with 20 emails and 5 phones. App plans start at
       $49 per user a month. API credits are sold separately at 2.5 cents
@@ -201,9 +212,9 @@ faq:
       It says a work email reveal averages about 25 seconds; phone numbers
       came back in about 3 seconds in our test."
   - q: "Wiza or Surfe: which should I choose?"
-    a: "Surfe found more mobile numbers in our benchmark, 96% against 65%.
-      Wiza is the more consistent all-rounder across inputs, including names
-      and domains, and its API credits are cheaper per result."
+    a: "Surfe found more mobile numbers in our benchmark, 96% against 65%. Wiza
+      covers more inputs, including names and domains, and its API credits are
+      cheaper per result."
 ---
 
 {/*
@@ -240,7 +251,7 @@ emails, and up to three mobile numbers per person.
 Underneath is an API that does the same from a LinkedIn URL, a name and a
 company domain, or an email address, plus an MCP server for agents.
 
-## Consistent where others aren't
+## Strong on every input
 
 Most contact providers are good at one input and weak at another. Wiza was
 strong on most of them in our benchmark. Given the names and company

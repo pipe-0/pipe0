@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { TileRow } from "./tile-bar";
 
 type Pair = {
   provider: string;
@@ -8,10 +8,10 @@ type Pair = {
 };
 
 /**
- * Head-to-head agreement as unit tiles: one square per person both
- * providers answered for, filled when they returned the same value. The
- * count sits above each grid and a sentence below it, so the chart reads
- * without color and survives being quoted as text.
+ * Head-to-head agreement as unit tiles: a statement with the range, then
+ * one row per named provider (tile-bar), one segment for every person both
+ * providers answered for, filled when they returned the same value. Agreed segments come first so the share reads as a block, and
+ * one sentence of conclusion closes it. The .md twin spells every pair out as a sentence.
  */
 export function AgreementTiles({
   tool,
@@ -19,6 +19,7 @@ export function AgreementTiles({
   unit,
   subject = "people",
   pairs,
+  conclusion,
 }: {
   tool: string;
   test: string;
@@ -26,100 +27,35 @@ export function AgreementTiles({
   /** What a tile stands for: a person looked up, or an address checked. */
   subject?: "people" | "addresses";
   pairs: Pair[];
+  /** Our accuracy verdict, one sentence under the tiles. */
+  conclusion?: string;
 }) {
-  const one = subject === "people" ? "person" : "address";
+  const rates = pairs.map((p) => Math.round((p.agreed / p.compared) * 100));
+  const [lo, hi] = [Math.min(...rates), Math.max(...rates)];
+  const range = lo === hi ? `${lo}%` : `${lo} to ${hi}%`;
   return (
-    <figure className="mt-8">
+    <figure className="mt-14">
       <figcaption>
-        <p className="font-blog text-[17px] font-semibold text-fd-foreground">
-          How often {tool} agrees with other providers
+        <p className="font-blog text-[17px] font-semibold leading-snug text-fd-foreground text-balance">
+          {tool} returned the same {unit} as other providers {range} of the time
         </p>
-        <p className="mt-1 text-[14px] leading-relaxed text-fd-muted-foreground">
-          {test}. Each square is one {one} both providers returned a {unit}{" "}
-          for.
-        </p>
-        <div className="mt-3 flex flex-wrap gap-x-5 gap-y-1.5 text-[13px] text-fd-muted-foreground">
-          <span className="inline-flex items-center gap-1.5">
-            <Tile agreed />
-            Same {unit}
-          </span>
-          <span className="inline-flex items-center gap-1.5">
-            <Tile agreed={false} />
-            Different {unit}
-          </span>
-        </div>
       </figcaption>
 
-      <div
-        className={cn(
-          "mt-5 grid grid-cols-1 gap-4",
-          pairs.length > 1 && "sm:grid-cols-2",
-          pairs.length > 2 && "lg:grid-cols-3",
-        )}
-      >
-        {pairs.map((pair) => {
-          const rate = Math.round((pair.agreed / pair.compared) * 100);
-          const sentence = `${tool} and ${pair.provider} returned the same ${unit} for ${pair.agreed} of ${pair.compared} ${subject}.`;
-          return (
-            <div
-              key={pair.provider}
-              className="rounded-xl p-4 ring-1 ring-fd-border"
-            >
-              <div className="flex items-start justify-between gap-3">
-                <div className="min-w-0">
-                  <p className="text-[13px] text-fd-muted-foreground">
-                    {pair.tier ? `${pair.tier} provider` : "Compared with"}
-                  </p>
-                  <p className="font-blog truncate text-[16px] font-semibold text-fd-foreground">
-                    vs {pair.provider}
-                  </p>
-                </div>
-                <p className="text-right">
-                  <span className="font-blog text-[26px] font-bold leading-none tabular-nums text-fd-foreground">
-                    {rate}%
-                  </span>
-                  <span className="mt-1 block text-[12.5px] tabular-nums text-fd-muted-foreground">
-                    {pair.agreed} of {pair.compared}
-                  </span>
-                </p>
-              </div>
-
-              {/* Agreed tiles first, so the filled share reads as a block. */}
-              <div aria-hidden className="mt-4 flex flex-wrap gap-[3px]">
-                {Array.from({ length: pair.compared }, (_, i) => {
-                  const agreed = i < pair.agreed;
-                  return (
-                    <span
-                      key={i}
-                      title={`${one === "person" ? "Person" : "Address"} ${i + 1} of ${pair.compared}: ${agreed ? "same" : "different"} ${unit}`}
-                      className="transition-transform hover:scale-125"
-                    >
-                      <Tile agreed={agreed} />
-                    </span>
-                  );
-                })}
-              </div>
-
-              <p className="mt-4 text-[13.5px] leading-snug text-fd-muted-foreground">
-                {sentence}
-              </p>
-            </div>
-          );
-        })}
+      <div className="mt-6 space-y-4">
+        {pairs.map((pair, i) => (
+          <TileRow
+            key={pair.provider}
+            label={pair.provider}
+            value={`${rates[i]}%`}
+            total={pair.compared}
+            filled={pair.agreed}
+            skin="win"
+          />
+        ))}
       </div>
-    </figure>
-  );
-}
-
-function Tile({ agreed }: { agreed: boolean }) {
-  return (
-    <span
-      className={cn(
-        "block size-[11px] rounded-[2px]",
-        agreed
-          ? "bg-fd-primary"
-          : "bg-fd-foreground/[0.06] ring-1 ring-inset ring-fd-foreground/30",
+      {conclusion && (
+        <p className="mt-6 text-[15.5px] leading-[1.65] text-fd-foreground">{conclusion}</p>
       )}
-    />
+    </figure>
   );
 }

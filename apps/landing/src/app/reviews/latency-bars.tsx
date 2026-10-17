@@ -1,4 +1,7 @@
-import { cn } from "@/lib/utils";
+import { TileRow } from "./tile-bar";
+
+/** The slowest provider fills every segment; the rest are scaled to it. */
+const SEGMENTS = 40;
 
 type Entry = {
   provider: string;
@@ -17,10 +20,9 @@ function formatRatio(ratio: number) {
 }
 
 /**
- * Median response time as horizontal bars from a zero baseline, the
- * reviewed tool in the brand color and the comparison providers in a
- * neutral. Values are printed at each bar end, so the chart never relies
- * on color or on reading the axis.
+ * Median response time as a statement and tile rows on one shared scale,
+ * like the agreement chart: indigo for the reviewed tool, amber for the
+ * providers it is compared with, each value in brackets by its name.
  */
 export function LatencyBars({
   tool,
@@ -45,71 +47,28 @@ export function LatencyBars({
     .sort((a, b) => b.seconds - a.seconds)[0];
 
   return (
-    <figure className="mt-8">
+    <figure className="mt-14">
       <figcaption>
-        <p className="font-blog text-[17px] font-semibold text-fd-foreground">
-          How fast {tool} answers
-        </p>
-        <p className="mt-1 text-[14px] leading-relaxed text-fd-muted-foreground">
-          {test}. Median response time per lookup, lower is faster.
+        <p className="font-blog text-[17px] font-semibold leading-snug text-fd-foreground text-balance">
+          {slower
+            ? `${tool} answered in ${formatSeconds(seconds)}, ${formatRatio(slower.seconds / seconds)} faster than ${slower.provider}`
+            : `${tool} answered in ${formatSeconds(seconds)}`}
         </p>
       </figcaption>
-
-      <div className="mt-5 space-y-3.5 rounded-xl p-4 ring-1 ring-fd-border sm:p-5">
+      <div className="mt-6 space-y-4">
         {rows.map((row) => (
-          <div
+          <TileRow
             key={row.provider}
-            title={`${row.provider}: ${formatSeconds(row.seconds)} median`}
-            className="grid grid-cols-[minmax(0,7.5rem)_1fr] items-center gap-3 sm:grid-cols-[10rem_1fr]"
-          >
-            <div className="min-w-0">
-              <p
-                className={cn(
-                  "truncate text-[14px]",
-                  row.self
-                    ? "font-semibold text-fd-foreground"
-                    : "text-fd-foreground",
-                )}
-              >
-                {row.provider}
-              </p>
-              {row.tier && (
-                <p className="text-[12.5px] text-fd-muted-foreground">
-                  {row.tier}
-                </p>
-              )}
-            </div>
-            <div className="flex items-center gap-2.5">
-              <div className="h-3 min-w-0 flex-1">
-                <div
-                  className={cn(
-                    "h-full rounded-r-[4px]",
-                    row.self ? "bg-fd-primary" : "bg-fd-foreground/20",
-                  )}
-                  style={{ width: `${Math.max((row.seconds / max) * 100, 1.5)}%` }}
-                />
-              </div>
-              <span
-                className={cn(
-                  "w-12 shrink-0 text-right text-[13.5px] tabular-nums",
-                  row.self
-                    ? "font-semibold text-fd-foreground"
-                    : "text-fd-muted-foreground",
-                )}
-              >
-                {formatSeconds(row.seconds)}
-              </span>
-            </div>
-          </div>
+            label={row.provider}
+            value={formatSeconds(row.seconds)}
+            strong={row.self}
+            total={SEGMENTS}
+            filled={Math.max(1, Math.round((row.seconds / max) * SEGMENTS))}
+            skin={row.self ? "win" : "lose"}
+          />
         ))}
       </div>
-
-      {slower && (
-        <p className="mt-3 text-[13.5px] leading-snug text-fd-muted-foreground">
-          {tool} answered in {formatSeconds(seconds)}, {formatRatio(slower.seconds / seconds)}{" "}
-          faster than {slower.provider} on this test.
-        </p>
-      )}
     </figure>
   );
 }
+

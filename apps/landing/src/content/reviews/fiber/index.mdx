@@ -109,17 +109,16 @@ facts:
     value: "New York"
     source: https://www.ycombinator.com/companies/fiber-ai
   - label: Dataset
-    value: "850M+ people, 40M+ companies, and 30M+ jobs, according to Fiber"
+    value: "850M+ people, 40M+ companies, 30M+ jobs"
     source: https://www.fiber.ai/data-api
   - label: API
-    value: "OpenAPI spec, TypeScript and Python SDKs, webhooks for async jobs"
+    value: "REST, TypeScript and Python SDKs"
     source: https://api.fiber.ai/docs
   - label: Rate limits
-    value: "3,500 a minute for reverse email lookup, 200 for contact reveals"
+    value: "200 to 3,500 a minute, by endpoint"
     source: https://docs.fiber.ai
   - label: MCP servers
-    value: "Four at mcp.fiber.ai, with OAuth or an API key; Claude, ChatGPT,
-      Cursor, Codex, and VS Code"
+    value: "Four at mcp.fiber.ai"
     source: https://docs.fiber.ai/build/mcp
 benchmark:
   period: "August 2026"
@@ -137,6 +136,10 @@ benchmark:
       coverage: 76
       agreement: 59
       latency: "1.6 s"
+      waterfall:
+        providers: [Wiza, Amplemarket, Crustdata, Surfe]
+        coverage: 82
+        added: 2
     - test: "LinkedIn URL to personal email"
       run: 20260814T102434Z-7165
       n: 150
@@ -149,6 +152,10 @@ benchmark:
       coverage: 64.7
       agreement: 69
       latency: "9.7 s"
+      waterfall:
+        providers: [Wiza, Surfe, Crustdata]
+        coverage: 96.7
+        added: 0
   notes:
     - "The next best provider in the email to LinkedIn run found 24.7%. Surfe
       and Amplemarket were not part of that run."
@@ -168,6 +175,19 @@ benchmark:
         tier: Premium
         compared: 15
         agreed: 14
+  latency:
+    test: "LinkedIn URL to work email"
+    run: 20260814T124831Z-67f9
+    seconds: 1.6
+    others:
+      - provider: Wiza
+        tier: Low-cost
+        seconds: 3.2
+      - provider: Surfe
+        seconds: 6.6
+      - provider: Amplemarket
+        tier: Premium
+        seconds: 0.2
 alternatives:
   - name: pipe0
     href: /enrichment-api

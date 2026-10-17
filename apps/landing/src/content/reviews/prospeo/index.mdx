@@ -91,23 +91,22 @@ pricing:
     - "Top-ups start at 1,000 credits for $10."
 facts:
   - label: Founded
-    value: "2023 in Toronto, according to Prospeo"
+    value: "2023, Toronto"
     source: https://prospeo.io/llm-info
   - label: Customers
-    value: "15,000+ companies, according to Prospeo"
+    value: "15,000+ companies"
     source: https://prospeo.io
   - label: Database
-    value: "300M+ profiles, according to Prospeo"
+    value: "300M+ profiles"
     source: https://prospeo.io/our-data
   - label: API
-    value: "Synchronous enrich and search endpoints, bulk calls of 50"
+    value: "Synchronous, bulk calls of 50"
     source: https://prospeo.io/api-docs
   - label: MCP server
-    value: "mcp.prospeo.io, OAuth or API key; also a local npm package"
+    value: "mcp.prospeo.io"
     source: https://prospeo.io/api-docs/mcp
   - label: Integrations
-    value: "Salesforce, HubSpot, Pipedrive, Clay, Zapier, n8n, Make,
-      Instantly, Smartlead, Lemlist"
+    value: "Salesforce, HubSpot, Clay, Zapier, n8n, Instantly"
     source: https://prospeo.io/integrations
 benchmark:
   period: "August 2026"
@@ -118,6 +117,10 @@ benchmark:
       coverage: 45.8
       agreement: 71
       latency: "0.2 s"
+      waterfall:
+        providers: [Wiza, Amplemarket, Crustdata, Surfe]
+        coverage: 84.2
+        added: 0
     - test: "Email to LinkedIn URL"
       dataset: signups
       run: 20260804T165645Z-0041
@@ -131,6 +134,10 @@ benchmark:
       coverage: 32.7
       agreement: 72
       latency: "0.2 s"
+      waterfall:
+        providers: [Wiza, Surfe, Crustdata]
+        coverage: 96.7
+        added: 0
   notes:
     - "On email to LinkedIn, only one provider in that run found more:
       Fiber AI at 38%."
@@ -138,6 +145,7 @@ benchmark:
     test: "LinkedIn URL to mobile"
     run: 20260804T202803Z-237d
     unit: "mobile number"
+    conclusion: "Prospeo's data accuracy is above average."
     pairs:
       - provider: LeadMagic
         tier: Low-cost

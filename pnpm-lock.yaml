@@ -7,14 +7,14 @@ settings:
 catalogs:
   default:
     '@pipe0/base':
-      specifier: 1.0.39
-      version: 1.0.39
+      specifier: 1.0.40
+      version: 1.0.40
     '@pipe0/client':
-      specifier: 1.0.39
-      version: 1.0.39
+      specifier: 1.0.40
+      version: 1.0.40
     '@pipe0/react':
-      specifier: 1.0.39
-      version: 1.0.39
+      specifier: 1.0.40
+      version: 1.0.40
     eslint:
       specifier: ^9.30.1
       version: 9.32.0
@@ -67,16 +67,16 @@ importers:
         version: 16.2.10(@mdx-js/loader@3.1.0(acorn@8.15.0))(@mdx-js/react@3.1.0(@types/react@19.2.14)(react@19.2.7))
       '@pipe0/base':
         specifier: 'catalog:'
-        version: 1.0.39(zod@4.1.12)
+        version: 1.0.40(zod@4.1.12)
       '@pipe0/client':
         specifier: 'catalog:'
-        version: 1.0.39
+        version: 1.0.40
       '@pipe0/doc-links':
         specifier: workspace:*
         version: link:../../packages/docs-links
       '@pipe0/react':
         specifier: 'catalog:'
-        version: 1.0.39(@base-ui/react@1.6.0(@date-fns/tz@1.4.1)(@types/react@19.2.14)(date-fns@4.1.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@floating-ui/dom@1.7.6)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(zod@4.1.12)
+        version: 1.0.40(@base-ui/react@1.6.0(@date-fns/tz@1.4.1)(@types/react@19.2.14)(date-fns@4.1.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@floating-ui/dom@1.7.6)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(zod@4.1.12)
       '@radix-ui/react-accordion':
         specifier: ^1.2.3
         version: 1.2.3(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -2019,8 +2019,8 @@ packages:
   '@pipe0/base@0.0.12':
     resolution: {integrity: sha512-MC+6UIy3GrzKOIdpJd1oH6Hih9xbZ9//W8S8hYTyDadUkehkXTvOL6Tac2L2rVgz6ArNev2IphAQGle7zgYCyA==}
 
-  '@pipe0/base@1.0.39':
-    resolution: {integrity: sha512-X1ys1HTe+ugiCVgxhCaWm1X5x/tvFY5Mo0ljcXN9+4jfJzzr+3oLMzSjX2CZGzmWo0Tj3Ck+phXMJayf6nvjmw==}
+  '@pipe0/base@1.0.40':
+    resolution: {integrity: sha512-8tZ1cXT6U0buXsWr3ozrhehn9QnHiZbr14505rMNAXq+JOl/K820Scu2DpzrFNusdS1Q/8yMEmjTOtB5CuX2Rw==}
     peerDependencies:
       zod: ^4.0.0
 
@@ -2030,8 +2030,8 @@ packages:
   '@pipe0/client@1.0.35':
     resolution: {integrity: sha512-3EckGLga9itmbSZ33q+Pf8dFRDOje9BplSB+Ig8JlUU31c+5qOl1DZJsaqKTZYnSuf36tuv3KHA6Rf2DZVb8Iw==}
 
-  '@pipe0/client@1.0.39':
-    resolution: {integrity: sha512-XNKLDRkPgPyfl0R1L8KVGYiEmlIcjtliX/GlKlQmuFOnG/+JAqkKx4IGSVBRmZq2KUSToH1sMd1vkjy0kmJkzA==}
+  '@pipe0/client@1.0.40':
+    resolution: {integrity: sha512-7DGwIYuromfD/7FydAOwHDHF8M3+cqoEF4kbkzkVTl+4ziVGpzqUFnTxFLP6NNxwGgjdscllmrFEeDBKfUwyWw==}
 
   '@pipe0/react@0.0.12':
     resolution: {integrity: sha512-COuw557GX8wwzVOjBQuhrouEyNFELewjl2SIUdpSPM9ktnxmeuDZOrH93L9ADIBlqS32dgdqMEGYLKoylRyiCg==}
@@ -2059,8 +2059,8 @@ packages:
       '@types/react-dom':
         optional: true
 
-  '@pipe0/react@1.0.39':
-    resolution: {integrity: sha512-skCHAWLI4noXt9VTnMwgp9bo9cHdKZAlLbOTCrI58XeTWoHKUtY0upSGSTZMF4SYNPGL1Nn9Sq3Ybq4M7iZO1w==}
+  '@pipe0/react@1.0.40':
+    resolution: {integrity: sha512-xAPqPm4wJsAKN5kTWkPaf+xwSIbOw+q/voNugsmkC8xfrOjL7p/fDuJUJiDaX5A3GZIbuvj4tnD1UCiUVk2xpA==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
       '@base-ui/react': ^1.3.0
@@ -9164,10 +9164,10 @@ snapshots:
       xxhash-wasm: 1.1.0
       zod: 4.1.12
 
-  '@pipe0/base@1.0.39(zod@4.1.12)':
+  '@pipe0/base@1.0.40(zod@4.1.12)':
     dependencies:
       '@asteasolutions/zod-to-openapi': 8.1.0(zod@4.1.12)
-      '@pipe0/client': 1.0.39
+      '@pipe0/client': 1.0.40
       ajv: 8.17.1
       date-fns: 4.1.0
       immer: 10.2.0
@@ -9188,7 +9188,7 @@ snapshots:
     dependencies:
       openapi-fetch: 0.15.0
 
-  '@pipe0/client@1.0.39':
+  '@pipe0/client@1.0.40':
     dependencies:
       openapi-fetch: 0.15.0
 
@@ -9226,7 +9226,7 @@ snapshots:
       - '@date-fns/tz'
       - date-fns
 
-  '@pipe0/react@1.0.39(@base-ui/react@1.6.0(@date-fns/tz@1.4.1)(@types/react@19.2.14)(date-fns@4.1.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@floating-ui/dom@1.7.6)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(zod@4.1.12)':
+  '@pipe0/react@1.0.40(@base-ui/react@1.6.0(@date-fns/tz@1.4.1)(@types/react@19.2.14)(date-fns@4.1.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@floating-ui/dom@1.7.6)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(zod@4.1.12)':
     dependencies:
       '@base-ui/react': 1.6.0(@date-fns/tz@1.4.1)(@types/react@19.2.14)(date-fns@4.1.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@dnd-kit/core': 6.3.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -9236,7 +9236,7 @@ snapshots:
       '@hookform/resolvers': 5.2.2(react-hook-form@7.71.1(react@19.2.7))
       '@hugeicons/core-free-icons': 4.3.5
       '@hugeicons/react': 1.1.10(react@19.2.7)
-      '@pipe0/base': 1.0.39(zod@4.1.12)
+      '@pipe0/base': 1.0.40(zod@4.1.12)
       '@radix-ui/react-slot': 1.3.0(@types/react@19.2.14)(react@19.2.7)
       '@tanstack/match-sorter-utils': 8.19.4
       '@tanstack/react-table': 9.2.4(react-dom@19.2.7(react@19.2.7))(react@19.2.7)

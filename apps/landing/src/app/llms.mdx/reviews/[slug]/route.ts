@@ -7,6 +7,8 @@ import {
   formatStartingPrice,
   isVisible,
   overallScore,
+  testLabel,
+  waterfallSentence,
 } from "@/app/reviews/review-utils";
 import {
   listBenchmarkMarkdown,
@@ -124,7 +126,7 @@ export async function GET(
             : []),
           ...d.benchmark.rows.map(
             (r) =>
-              `| ${cell(r.test)} (${r.dataset === "signups" ? "signup emails" : "LinkedIn profiles"}) | ${r.n.toLocaleString("en-US")} | ${r.coverage}% | ${r.agreement !== undefined ? `${r.agreement}%` : "–"} | ${r.latency ?? "–"} | ${r.run} |`,
+              `| ${cell(testLabel(r.test, r.dataset))} | ${r.n.toLocaleString("en-US")} | ${r.coverage}% | ${r.agreement !== undefined ? `${r.agreement}%` : "–"} | ${r.latency ?? "–"} | ${r.run} |`,
           ),
           ...(d.benchmark.verification
             ? [
@@ -139,6 +141,18 @@ export async function GET(
                   (r) =>
                     `| ${r.provider} | ${Math.round(r.accuracy)}% | ${r.validConfirmed}/${d.benchmark!.verification!.valid} | ${r.invalidCaught}/${d.benchmark!.verification!.n - d.benchmark!.verification!.valid} | ${r.falsePositives} | ${r.falseNegatives} | ${r.undetermined} | ${r.latency ?? "–"} |`,
                 ),
+              ]
+            : []),
+          ...(d.benchmark.rows.some((r) => r.waterfall)
+            ? [
+                "",
+                `### ${tool} next to a waterfall`,
+                "",
+                "pipe0 sells this waterfall, so read it as a reference point, not a neutral score. Its coverage is the union of each provider's results in the same benchmark run, not a separate live run of the pipe.",
+                "",
+                ...d.benchmark.rows
+                  .filter((r) => r.waterfall)
+                  .map((r) => `- **${r.test}:** ${waterfallSentence(tool, r)}`),
               ]
             : []),
           ...(d.benchmark.latency
@@ -166,6 +180,9 @@ export async function GET(
                   (p) =>
                     `- ${p.provider}${p.tier ? ` (${p.tier.toLowerCase()})` : ""}: ${tool} and ${p.provider} returned the same ${d.benchmark!.agreement!.unit} for ${p.agreed} of ${p.compared} ${d.benchmark!.agreement!.subject} (${Math.round((p.agreed / p.compared) * 100)}%).`,
                 ),
+                ...(d.benchmark.agreement.conclusion
+                  ? ["", d.benchmark.agreement.conclusion]
+                  : []),
               ]
             : []),
           "",

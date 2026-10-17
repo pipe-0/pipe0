@@ -74,15 +74,19 @@ export function ListBenchmark({
  * (title, one line of method, the period on the right), the body, and an
  * optional legend and note band on the well colour.
  */
-function Frame({
+export function Frame({
   title,
   caption,
+  period = LIST_BENCHMARK_PERIOD,
   legend,
   note,
   children,
 }: {
   title: string;
-  caption: ReactNode;
+  /** How to read the chart, when the bars alone don't say; printed in the note band. */
+  caption?: ReactNode;
+  /** When the runs happened, shown on the right of the header band. */
+  period?: string;
   legend?: ReactNode;
   note?: ReactNode;
   children: ReactNode;
@@ -95,31 +99,30 @@ function Frame({
         <Cross className="-bottom-[6px] -left-[6px]" />
         <Cross className="-bottom-[6px] -right-[6px]" />
 
-        <figcaption className="flex flex-wrap items-start gap-x-6 gap-y-1.5 border-b border-[var(--rule)] px-4 py-4 sm:px-5">
+        <figcaption className="flex flex-wrap items-baseline gap-x-6 gap-y-1.5 border-b border-[var(--rule)] px-4 py-4 sm:px-5">
           <div className="min-w-0 flex-1 basis-[22rem]">
             <p className="text-[16px] font-medium leading-snug tracking-[-0.01em] text-fd-foreground">
               {title}
             </p>
-            <p className="mt-1 text-[13.5px] leading-relaxed text-fd-muted-foreground text-pretty">
-              {caption}
-            </p>
           </div>
-          <span className="font-mono text-[11px] uppercase tracking-[0.06em] text-fd-muted-foreground">
-            {LIST_BENCHMARK_PERIOD}
+          <span className="text-[12.5px] text-fd-muted-foreground">
+            {period}
           </span>
         </figcaption>
 
         {children}
 
-        {(legend || note) && (
+        {(legend || caption || note) && (
           <div className="space-y-1.5 border-t border-[var(--rule)] bg-[var(--well)] px-4 py-3 sm:px-5">
             {legend && (
               <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-[12.5px] text-fd-muted-foreground">
                 {legend}
               </div>
             )}
-            {note && (
+            {(caption || note) && (
               <p className="text-[12.5px] leading-snug text-fd-muted-foreground text-pretty">
+                {caption}
+                {caption && note && " "}
                 {note}
               </p>
             )}
@@ -131,7 +134,7 @@ function Frame({
 }
 
 /** Sections that share 1px walls: two columns from `sm`, stacked below. */
-function Cells({
+export function Cells({
   children,
   columns = 1,
 }: {
@@ -151,7 +154,7 @@ function Cells({
 }
 
 /** One section: a small heading row, then its bars. */
-function Cell({
+export function Cell({
   heading,
   aside,
   children,
@@ -198,7 +201,7 @@ const WIDE_COLUMNS =
   "grid-cols-[minmax(0,7.5rem)_minmax(0,1fr)_5.75rem] sm:grid-cols-[13rem_minmax(0,1fr)_6.5rem]";
 
 /** Label, a bordered well with its fills, and the value in a fixed column. */
-function Row({
+export function Row({
   label,
   sub,
   strong,
@@ -264,7 +267,7 @@ function Row({
 }
 
 /** A fill from `from` to `to`, as shares of the track (0 to 1). */
-function Fill({
+export function Fill({
   from = 0,
   to,
   skin,
@@ -298,7 +301,7 @@ function Marker({ at }: { at: number }) {
   );
 }
 
-function Swatch({ skin, children }: { skin: Skin; children: ReactNode }) {
+export function Swatch({ skin, children }: { skin: Skin; children: ReactNode }) {
   return (
     <span className="inline-flex items-center gap-1.5">
       <span
@@ -340,7 +343,7 @@ function RowsChart({ highlight }: { highlight?: Vendor }) {
   return (
     <Frame
       title="How many businesses each tool finds"
-      caption="Unique rows per list, one run each. All four panels share one scale, so a short bar is a short list."
+      caption="All four panels share one scale."
       legend={vendorLegend(highlight)}
       note="Company databases count every row they returned; most were neighbouring businesses such as suppliers, software and planners."
     >
@@ -470,7 +473,7 @@ function TimeChart({ highlight }: { highlight?: Vendor }) {
   return (
     <RangeChart
       title="How long a list takes"
-      caption="Time per run, from each vendor's own timestamps. Each bar spans the fastest and the slowest list."
+      caption="Each bar spans the fastest and the slowest list."
       note="The line marks 10 minutes. Past it, a run doesn't fit an interactive workflow or the step limit most automation tools set."
       highlight={highlight}
       measure={(r) => r.seconds}
@@ -494,7 +497,7 @@ function CostChart({ highlight }: { highlight?: Vendor }) {
   return (
     <RangeChart
       title="What 1,000 rows cost"
-      caption="Vendor price per 1,000 rows, before any reseller margin. Log scale: each tick is ten times the last."
+      caption="Vendor prices before any reseller margin, on a log scale."
       note="Per-run pricing makes a short list expensive per row. Parallel Entity is the cheapest per row, but its rows are company profiles without an address or a phone."
       highlight={highlight}
       measure={costPerThousand}
@@ -539,7 +542,7 @@ function NycChart({ highlight }: { highlight?: Vendor }) {
   return (
     <Frame
       title="New York City barbershops against the licence list"
-      caption={`New York State licenses ${format.int(NYC_LICENSED_BARBERSHOPS)} barbershops in the city, marked by the line.`}
+      caption={`The line marks the ${format.int(NYC_LICENSED_BARBERSHOPS)} barbershops New York State licenses in the city.`}
       legend={
         <>
           <Swatch skin="win">Matches a licensed shop</Swatch>
@@ -568,7 +571,6 @@ function FillChart() {
   return (
     <Frame
       title="DataForSEO rows ready to call or visit"
-      caption="Share of each list with a phone number and with a website. Tracks run to 100%."
       note="94% of NYC records and 98% of Dallas records had been updated in 2026. Each row also carries rating, review count, opening hours and whether the owner claimed the listing."
     >
       <Cells columns={2}>
@@ -594,7 +596,7 @@ function OverlapChart() {
   return (
     <Frame
       title="How much of Exa's list DataForSEO already had"
-      caption="Share of Exa's rows that DataForSEO also returned. The rest are businesses DataForSEO missed, or rows just outside its radius or category."
+      caption="The rest are businesses DataForSEO missed, or rows just outside its radius or category."
     >
       <Cells>
         <Cell heading="Exa rows also in DataForSEO">
@@ -625,7 +627,7 @@ function ShopifyChart() {
   return (
     <Frame
       title="Online brands: a filter beats a prompt"
-      caption="“US sustainable apparel brands with their own Shopify store.” A brand counts as verified when its domain serves a live Shopify store."
+      caption="Query: “US sustainable apparel brands with their own Shopify store.” Verified means the domain serves a live Shopify store."
       legend={
         <>
           <Swatch skin="win">Verified Shopify brands</Swatch>
@@ -660,7 +662,7 @@ function ExhibitorsChart() {
   return (
     <Frame
       title="A public directory: how much of it each tool returns"
-      caption={`Exhibitors at Natural Products Expo West 2026. The official list of ${format.int(EXHIBITORS.official)} sits on one public page; each track is the full list.`}
+      caption={`Each track is the full official list of ${format.int(EXHIBITORS.official)} Natural Products Expo West 2026 exhibitors.`}
       legend={
         <>
           <Swatch skin="win">Exa</Swatch>
@@ -728,7 +730,7 @@ function FitMatrix({ highlight }: { highlight?: Vendor }) {
   return (
     <Frame
       title="Which tool for which list"
-      caption="Every cell cites the measurement behind it. Company databases are Crustdata and Amplemarket, searched with their filters."
+      caption="Company databases are Crustdata and Amplemarket, searched with their filters."
       note="One run per scenario. “Not tested” means we didn't measure it, not that it fails."
     >
       <div className="overflow-x-auto">
@@ -757,9 +759,6 @@ function FitMatrix({ highlight }: { highlight?: Vendor }) {
               <tr key={row.job} className="border-t border-[var(--rule)] align-top">
                 <th scope="row" className="px-4 py-3 font-medium text-fd-foreground sm:px-5">
                   {row.job}
-                  <span className="mt-0.5 block text-[12px] font-normal text-fd-muted-foreground">
-                    {row.example}
-                  </span>
                 </th>
                 {FIT_COLUMNS.map((c) => {
                   const cell = row.cells[c.key];

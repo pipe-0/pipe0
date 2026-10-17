@@ -142,12 +142,69 @@ export function benchmarkCaveats(
           "The signup set is real pipe0 signup emails with no vendor involved in choosing them, a harder and more realistic population than the profile set.",
         ]
       : []),
+    ...(benchmark.rows.some((r) => r.waterfall)
+      ? [
+          "The pipe0 waterfall is pipe0's default provider order for each test. Its result combines those providers' results from the same run.",
+        ]
+      : []),
     ...(hasAgreement
       ? [
           "Agreement is the share of results that match what other providers returned for the same person. It is a proxy for accuracy, not ground truth.",
         ]
       : []),
   ];
+}
+
+type BenchmarkRow = NonNullable<ReviewPage["data"]["benchmark"]>["rows"][number];
+
+/** What a test returns, from its name: "LinkedIn URL to mobile" -> "mobile number". */
+export function resultUnit(test: string) {
+  const out = test.split(",")[0].split(" to ").at(-1) ?? "result";
+  if (out === "mobile") return "mobile number";
+  if (out === "LinkedIn URL") return "LinkedIn profile";
+  return out;
+}
+
+/**
+ * A test as a table label: "LinkedIn URL to work email, all profiles"
+ * reads "Find work email from LinkedIn URL (all profiles)". Signup tests
+ * name the signup email as the input, so no second line is needed.
+ */
+export function testLabel(test: string, dataset: "profiles" | "signups"): string {
+  const [base, qualifier] = test.split(", ");
+  const parts = base.split(" to ");
+  if (parts.length !== 2) return test;
+  const output = parts[1] === "mobile" ? "mobile number" : parts[1];
+  const input = dataset === "signups" && parts[0] === "Email" ? "signup email" : parts[0].replace(/^Name and domain$/, "name and domain");
+  return `Find ${output} from ${input}${qualifier ? ` (${qualifier})` : ""}`;
+}
+
+/** Whether the reviewed tool is itself one of the waterfall's providers. */
+export function inWaterfall(tool: string, providers: string[]) {
+  const first = tool.split(" ")[0].toLowerCase();
+  return providers.some((p) => p.toLowerCase().split(" ")[0] === first);
+}
+
+/**
+ * One plain sentence per waterfall comparison. The page prints it under
+ * the bars and the .md twin prints it alone, so the numbers read the same
+ * to people, crawlers, and answer engines.
+ */
+export function waterfallSentence(tool: string, row: BenchmarkRow): string {
+  const wf = row.waterfall!;
+  const unit = resultUnit(row.test);
+  const records = `${row.n.toLocaleString("en-US")} ${row.dataset === "signups" ? "signup emails" : "LinkedIn profiles"}`;
+  const hits = (coverage: number) => Math.round((coverage * row.n) / 100);
+  const member = inWaterfall(tool, wf.providers);
+  const added =
+    wf.added === undefined
+      ? ""
+      : ` ${tool} found ${wf.added === 0 ? "no" : wf.added} ${unit}${wf.added === 1 ? "" : "s"} that the waterfall missed.`;
+  return (
+    `On the same ${records}, ${tool} found a ${unit} for ${row.coverage}% (${hits(row.coverage)}). ` +
+    `pipe0's default waterfall (${wf.providers.join(", then ")}) found one for ${wf.coverage}% (${hits(wf.coverage)})` +
+    `${member ? `, with ${tool} as one of its ${wf.providers.length} providers` : ""}.${added}`
+  );
 }
 
 /** The disclosure line under the byline. */

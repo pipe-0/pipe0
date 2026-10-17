@@ -5,7 +5,7 @@ pipe0 is listed in the OpenAI Plugins directory. ChatGPT and Codex share one dir
 ## One-time setup
 
 1. At [platform.openai.com](https://platform.openai.com), give your account the **Apps Management: Write** permission (Settings > Organization > People > Roles).
-2. Complete individual verification under Settings > Organization > General. The listing's developer name comes from this identity; `author.name` and `interface.developerName` in `.codex-plugin/plugin.json` must match it.
+2. Complete business verification under Settings > Organization > General (done for PWLL UG, the company that operates pipe0). The listing's developer name comes from this identity; `author.name` and `interface.developerName` in `.codex-plugin/plugin.json` must match it, and the upload must use the business identity.
 3. Create a dedicated reviewer account on pipe0: email and password sign-in, email already verified, no MFA, and its own organization with enough credits for the test cases (production calls bill). Production only accepts work email addresses at sign-up, so use an address on a company domain.
 
 ## Submit

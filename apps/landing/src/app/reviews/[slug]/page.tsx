@@ -14,9 +14,9 @@ import {
 } from "@/components/seo/json-ld";
 import { authorUrl, getAuthor, type Author } from "@/lib/authors";
 import { reviews, type ReviewPage } from "@/lib/source";
-import { getBaseUrl } from "@/lib/utils";
+import { cn, getBaseUrl } from "@/lib/utils";
 import { getMDXComponents } from "@/mdx-components";
-import { ArrowUpRight, Check, Minus, X } from "lucide-react";
+import { ArrowUpRight, Check, ChevronDown, Minus, X } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -35,6 +35,7 @@ import {
   isVisible,
   overallScore,
   relatedReviews,
+  testLabel,
 } from "../review-utils";
 
 function getReview(slug: string): ReviewPage {
@@ -65,8 +66,7 @@ export default async function Review(props: {
   const related = relatedReviews(page, 3);
   const disclosure = disclosureFor(page);
   // Columns appear only when at least one test reports them.
-  const showAgreement = d.benchmark?.rows.some((r) => r.agreement !== undefined);
-  const showLatency = d.benchmark?.rows.some((r) => r.latency !== undefined);
+  const showWaterfall = d.benchmark?.rows.some((r) => r.waterfall !== undefined);
 
   return (
     <>
@@ -368,16 +368,11 @@ export default async function Review(props: {
                       Records
                     </th>
                     <th scope="col" className="px-4 py-2.5 font-medium">
-                      Coverage
+                      {tool}
                     </th>
-                    {showAgreement && (
+                    {showWaterfall && (
                       <th scope="col" className="px-4 py-2.5 font-medium">
-                        Agreement
-                      </th>
-                    )}
-                    {showLatency && (
-                      <th scope="col" className="px-4 py-2.5 font-medium">
-                        Median time
+                        pipe0 waterfall
                       </th>
                     )}
                   </tr>
@@ -386,12 +381,7 @@ export default async function Review(props: {
                   {d.benchmark.rows.map((row) => (
                     <tr key={row.run + row.test} className="border-t border-fd-border">
                       <th scope="row" className="px-4 py-3 font-medium text-fd-foreground">
-                        {row.test}
-                        <span className="block text-[12.5px] font-normal text-fd-muted-foreground">
-                          {row.dataset === "signups"
-                            ? "Signup emails"
-                            : "LinkedIn profiles"}
-                        </span>
+                        {testLabel(row.test, row.dataset)}
                       </th>
                       <td className="px-4 py-3 tabular-nums text-fd-muted-foreground">
                         {row.n.toLocaleString("en-US")}
@@ -399,14 +389,9 @@ export default async function Review(props: {
                       <td className="px-4 py-3 font-semibold tabular-nums text-fd-foreground">
                         {row.coverage}%
                       </td>
-                      {showAgreement && (
+                      {showWaterfall && (
                         <td className="px-4 py-3 tabular-nums text-fd-muted-foreground">
-                          {row.agreement !== undefined ? `${row.agreement}%` : "–"}
-                        </td>
-                      )}
-                      {showLatency && (
-                        <td className="px-4 py-3 whitespace-nowrap tabular-nums text-fd-muted-foreground">
-                          {row.latency ?? "–"}
+                          {row.waterfall ? `${row.waterfall.coverage}%` : "–"}
                         </td>
                       )}
                     </tr>
@@ -414,6 +399,16 @@ export default async function Review(props: {
                 </tbody>
               </table>
             </div>
+            )}
+            {d.benchmark.agreement && (
+              <AgreementTiles
+                tool={tool}
+                test={d.benchmark.agreement.test}
+                unit={d.benchmark.agreement.unit}
+                subject={d.benchmark.agreement.subject}
+                pairs={d.benchmark.agreement.pairs}
+                conclusion={d.benchmark.agreement.conclusion}
+              />
             )}
             {d.benchmark.latency && (
               <LatencyBars
@@ -423,16 +418,12 @@ export default async function Review(props: {
                 others={d.benchmark.latency.others}
               />
             )}
-            {d.benchmark.agreement && (
-              <AgreementTiles
-                tool={tool}
-                test={d.benchmark.agreement.test}
-                unit={d.benchmark.agreement.unit}
-                subject={d.benchmark.agreement.subject}
-                pairs={d.benchmark.agreement.pairs}
-              />
-            )}
-            <ul className="mt-5 list-disc space-y-2 pl-5 text-[14px] leading-[1.6] text-fd-muted-foreground">
+            <details className="group mt-10 border-t border-fd-border pt-4">
+              <summary className="flex cursor-pointer list-none items-center gap-1.5 text-[14px] font-medium text-fd-muted-foreground hover:text-fd-foreground [&::-webkit-details-marker]:hidden">
+                How we tested
+                <ChevronDown aria-hidden className="size-4 transition-transform group-open:rotate-180" />
+              </summary>
+            <ul className="mt-4 list-disc space-y-2 pl-5 text-[14px] leading-[1.6] text-fd-muted-foreground">
               {benchmarkCaveats(d.benchmark).map((note) => (
                 <li key={note}>{note}</li>
               ))}
@@ -441,7 +432,9 @@ export default async function Review(props: {
               Run ids:{" "}
               {[
                 ...new Set([
-                  ...d.benchmark.rows.map((r) => r.run),
+                  ...d.benchmark.rows.flatMap((r) =>
+                    r.waterfall?.run ? [r.run, r.waterfall.run] : [r.run],
+                  ),
                   ...(d.benchmark.verification ? [d.benchmark.verification.run] : []),
                 ]),
               ].map((run, i) => (
@@ -458,6 +451,7 @@ export default async function Review(props: {
                 How we test
               </Link>
             </p>
+            </details>
           </ReviewSection>
         )}
 

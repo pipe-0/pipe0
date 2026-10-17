@@ -98,19 +98,16 @@ facts:
     value: "Forager.ai, LLC"
     source: https://www.forager.ai/terms-conditions
   - label: Data
-    value: "850M+ person and company records, refreshed about every 2.5
-      weeks, according to Forager"
+    value: "850M+ records, refreshed every 2.5 weeks"
     source: https://www.forager.ai
   - label: Mobile numbers
-    value: "200M+, according to Forager"
+    value: "200M+"
     source: https://www.forager.ai
   - label: Delivery
-    value: "REST API, bulk feeds to S3, Google Cloud Storage, or Snowflake,
-      and a web app"
+    value: "REST API, bulk feeds, web app"
     source: https://www.forager.ai
   - label: API
-    value: "Mostly synchronous; work email lookups are async with polling or
-      a bulk webhook"
+    value: "Mostly synchronous"
     source: https://docs.forager.ai
   - label: GDPR
     value: "Describes itself as primarily a data processor"
@@ -124,6 +121,10 @@ benchmark:
       coverage: 43.3
       agreement: 72
       latency: "0.08 s"
+      waterfall:
+        providers: [Wiza, Surfe, Crustdata]
+        coverage: 96.7
+        added: 0
     - test: "LinkedIn URL to personal email"
       run: 20260814T102434Z-7165
       n: 150
@@ -135,6 +136,7 @@ benchmark:
     test: "LinkedIn URL to mobile"
     run: 20260804T202803Z-237d
     unit: "mobile number"
+    conclusion: "Forager's data accuracy is above average."
     pairs:
       - provider: Amplemarket
         tier: Premium

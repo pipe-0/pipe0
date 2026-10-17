@@ -1,8 +1,9 @@
 ---
 title: "AI Ark review (2026): cheap verified emails, but it finds fewer than half"
 description: "AI Ark is a B2B database and contact API that charges only for
-  verified emails it finds, at about a cent each. It found an email for 42 to
-  45% of the LinkedIn profiles we tested and answered in several seconds, so
+  verified emails it finds, at about a cent each. Its coverage and data
+  accuracy are below average: it found an email for 42 to 45% of the
+  LinkedIn profiles we tested, and it answered in several seconds, so
   it works best as a low-cost step in front of a broader waterfall."
 tool:
   name: AI Ark
@@ -10,7 +11,7 @@ tool:
   logo: /media/reviews/logos/ai-ark.png
   category: Contact finder
 verdict: "A cheap, pay-per-result contact API whose emails are verified as
-  they are returned. It found an email for 42 to 45% of people, and each
+  they are returned. Coverage and data accuracy are below average, and each
   lookup takes several seconds."
 relationship: competitor
 scope:
@@ -29,10 +30,9 @@ scores:
     why: "The docs list the credit cost of every endpoint and include a page
       written for AI agents. We tested the API only, not the web app."
   dataQuality:
-    score: 3
-    why: "It found a work email for 42% of our 120-profile test set, mid-pack
-      among 11 providers, and every email it found was also found by another
-      provider."
+    score: 2.5
+    why: "Below-average coverage and accuracy: it found a work email for 42%
+      of our 120-profile test set, where a waterfall found 84%."
   pricingValue:
     score: 4.5
     why: "One credit per verified email found, nothing on a miss, at about a
@@ -103,21 +103,19 @@ pricing:
       annually saves 20%."
 facts:
   - label: Database
-    value: "400M+ people and 70M+ companies, according to AI Ark"
+    value: "400M+ people, 70M+ companies"
     source: https://docs.ai-ark.com/docs/get-started
   - label: Email verification
-    value: "Every email is verified in real time by BounceBan, SMTP and
-      catch-all, when it is returned"
+    value: "Real-time, by BounceBan"
     source: https://docs.ai-ark.com/docs/get-started
   - label: API
-    value: "REST with an X-TOKEN header; email lookups by LinkedIn URL or AI
-      Ark person ID; 5 requests per second by default"
+    value: "REST, 5 requests per second"
     source: https://docs.ai-ark.com/docs/get-started
   - label: MCP server
-    value: "api.ai-ark.com/v1/mcp, with the API key passed in the URL"
+    value: "api.ai-ark.com/v1/mcp"
     source: https://docs.ai-ark.com/reference/mcp
   - label: CLI and integrations
-    value: "Open-source ark CLI; Clay templates"
+    value: "ark CLI, Clay"
     source: https://docs.ai-ark.com/reference/cli
 benchmark:
   period: "October 2026"
@@ -128,14 +126,16 @@ benchmark:
       coverage: 41.7
       agreement: 67
       latency: "9.3 s"
-    - test: "LinkedIn URL to work email, next profiles"
+      waterfall:
+        providers: [Wiza, Amplemarket, Crustdata, Surfe]
+        coverage: 84.2
+        added: 1
+    - test: "LinkedIn URL to work email, second batch"
       run: 20261016T102747Z-1e6c
       n: 111
       coverage: 45
       latency: "5.6 s"
   notes:
-    - "On the same 120 profiles, pipe0's default work email waterfall found
-      84%. AI Ark found 1 email that waterfall missed."
     - "On all 228 profiles AI Ark looked up, it found an email for 43.9%,
       against 41.7% for Blitz on the same people."
     - "The second run stopped after 111 profiles because the free credits ran
@@ -145,6 +145,7 @@ benchmark:
     test: "LinkedIn URL to work email"
     run: 20261016T094909Z-d3c3
     unit: "work email"
+    conclusion: "AI Ark's data accuracy is below average."
     pairs:
       - provider: Wiza
         compared: 46
@@ -156,6 +157,19 @@ benchmark:
         tier: Premium
         compared: 40
         agreed: 29
+  latency:
+    test: "LinkedIn URL to work email"
+    run: 20261016T094909Z-d3c3
+    seconds: 9.3
+    others:
+      - provider: Wiza
+        tier: Low-cost
+        seconds: 5.6
+      - provider: Surfe
+        seconds: 10.7
+      - provider: Amplemarket
+        tier: Premium
+        seconds: 0.5
 alternatives:
   - name: pipe0
     href: /enrichment-api
@@ -184,9 +198,8 @@ faq:
       cent on the $49 plan."
   - q: "How good is AI Ark's email data?"
     a: "In our test of 120 LinkedIn profiles, AI Ark found a work email for
-      42%, and for 45% of the next 111. When another provider also found one,
-      they agreed 67% of the time, mid-pack among the 11 providers we
-      tested."
+      42%, and for 45% of the next 111, and its data accuracy was below
+      average."
   - q: "How fast is the AI Ark API?"
     a: "Email lookups took a median of 6 seconds in our test, and up to 31
       seconds for the slowest tenth, because each email is verified during
@@ -242,9 +255,8 @@ found a work email for 50 of them, or 42%, which puts it in the middle of
 the field: Surfe found 69% and Wiza 66%, while Blitz found 38% and Hunter
 19%. On the next 111 profiles it found 45%.
 
-When AI Ark and another provider both found an email, they agreed 67% of
-the time, sixth of the eleven. Across all 228 profiles it looked up, AI Ark
-found slightly more than Blitz on the same people, 43.9% against 41.7%.
+Its data accuracy was below average. Across all 228 profiles it looked up, AI
+Ark found slightly more than Blitz on the same people, 43.9% against 41.7%.
 
 For comparison, pipe0's default work email waterfall found an email for 101
 of the same 120 people, 84%. AI Ark found one email that waterfall missed,

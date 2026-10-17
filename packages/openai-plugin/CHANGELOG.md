@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.3
+
+- Listing: developer is PWLL UG, the company that operates pipe0 and the business verified for this listing.
+
 ## 1.0.2
 
 - Listing: one starter prompt that shows the core flow, a people search with work emails and phone numbers.
