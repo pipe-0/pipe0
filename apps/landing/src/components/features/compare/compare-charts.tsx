@@ -59,7 +59,7 @@ export function CompareCharts({
                       className={
                         bar.ours
                           ? "text-right text-[20px] font-medium leading-none tracking-[-0.04em] text-primary"
-                          : "text-right text-[20px] font-medium leading-none tracking-[-0.04em] text-[var(--mark)]"
+                          : "text-right text-[20px] font-medium leading-none tracking-[-0.04em] text-[var(--mark-text)]"
                       }
                     >
                       {bar.display ?? `${bar.value}%`}

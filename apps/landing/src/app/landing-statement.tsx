@@ -7,7 +7,7 @@ import {
   useTransform,
   type MotionValue,
 } from "motion/react";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 /* The positioning statement — read once, on the way down from the hero.
    Each word darkens from a faint wash to full ink as it scrolls through the
@@ -15,7 +15,12 @@ import { useRef } from "react";
 
    One text node per word, with its colour animated, rather than a muted copy
    under a full-colour overlay: the overlay version put every word in the DOM
-   twice, which is what crawlers and answer engines then read. */
+   twice, which is what crawlers and answer engines then read.
+
+   Until the section is about to scroll into view, the words are full ink:
+   faint type nobody can see yet is still faint type to an accessibility
+   check, and the scroll-driven colours take over before the first word
+   reaches the screen. */
 const STATEMENT =
   "Coding agents sped up engineers. But GTM doesn't run on code. It runs on research, lists, and automations, and that is what pipe0 builds.";
 
@@ -27,6 +32,24 @@ const INK = "rgba(11, 13, 18, 1)";
 export function LandingStatement() {
   const targetRef = useRef<HTMLDivElement>(null);
   const reduced = useReducedMotion();
+  const [armed, setArmed] = useState(false);
+  useEffect(() => {
+    const el = targetRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (!e.isIntersecting) return;
+        setArmed(true);
+        io.disconnect();
+      },
+      // No look-ahead needed: the first word sits 160–280px below the
+      // section's top edge at every width, so the switch happens before
+      // any word is on screen.
+      { rootMargin: "0px" },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
   /* The section is pinned while the words light up, then the page carries on
      — done with sticky rather than by taking over the scroll: the outer
      element is tall, the inner one sticks, and progress is measured across
@@ -55,7 +78,7 @@ export function LandingStatement() {
                 last={i === WORDS.length - 1}
                 progress={scrollYProgress}
                 range={[start, start + 1 / WORDS.length]}
-                reduced={!!reduced}
+                still={!!reduced || !armed}
               >
                 {word}
               </Word>
@@ -71,19 +94,20 @@ function Word({
   children,
   progress,
   range,
-  reduced,
+  still,
   last,
 }: {
   children: string;
   last: boolean;
   progress: MotionValue<number>;
   range: [number, number];
-  reduced: boolean;
+  /** Full ink, no scroll animation. */
+  still: boolean;
 }) {
   const color = useTransform(progress, range, [FAINT, INK]);
   return (
     <>
-      <motion.span style={{ color: reduced ? INK : color }}>
+      <motion.span style={{ color: still ? INK : color }}>
         {children}
       </motion.span>
       {!last && " "}

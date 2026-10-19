@@ -56,6 +56,7 @@ export function CookieBanner() {
         We use cookies for analytics and ads, only if you accept.{" "}
         <Link
           href="/resources/legal/privacy-policy/20261008"
+          prefetch={false}
           className="text-muted-foreground underline decoration-[var(--rule-strong)] underline-offset-[3px] hover:text-foreground"
         >
           Cookie policy

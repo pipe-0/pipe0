@@ -249,9 +249,9 @@ export function Footer() {
             <div key={groups[0].heading} className="flex flex-col gap-10">
               {groups.map((group) => (
                 <div key={group.heading}>
-                  <h4 className="mb-4 text-[13px] font-semibold text-foreground">
+                  <h2 className="mb-4 text-[13px] font-semibold text-foreground">
                     {group.heading}
-                  </h4>
+                  </h2>
                   <ul className="space-y-2.5">
                     {group.links.map((link) => (
                       <li key={link.label}>

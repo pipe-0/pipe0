@@ -551,12 +551,17 @@ div[style*="--callout-color"] p:not([class*="font-medium"]) {
 /* ---- Line grid (components/grid.tsx) ----
    Rules are a cool neutral with a trace of the brand indigo in them, so the
    frame reads as part of the palette rather than as default grey borders.
-   --mark is the registration ink: crosses and corner brackets. */
+   --mark is the registration ink: crosses and corner brackets. Text set in
+   that grey uses the two text tones instead, the nearest shades that still
+   read as text: --mark-text-large clears 3:1 for type 24px and up (WCAG
+   large text), --mark-text clears 4.5:1 for anything smaller. */
 :root,
 .landing {
   --rule: hsl(228 22% 90%);
   --rule-strong: hsl(228 16% 82%);
   --mark: hsl(228 14% 62%);
+  --mark-text-large: hsl(228 14% 60%);
+  --mark-text: hsl(228 14% 50%);
   --well: hsl(228 33% 98%);
 }
 /* Fine diagonal hatch for media wells — a blueprint fill that says "this is

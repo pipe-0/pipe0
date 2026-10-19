@@ -178,7 +178,7 @@ function AgentBenchmark() {
                 className={
                   t.ours
                     ? "w-[4ch] text-right text-[clamp(20px,1.9vw,26px)] font-medium leading-none tracking-[-0.04em] text-primary"
-                    : "w-[4ch] text-right text-[clamp(20px,1.9vw,26px)] font-medium leading-none tracking-[-0.04em] text-[var(--mark)]"
+                    : "w-[4ch] text-right text-[clamp(20px,1.9vw,26px)] font-medium leading-none tracking-[-0.04em] text-[var(--mark-text)]"
                 }
               >
                 {t.found}

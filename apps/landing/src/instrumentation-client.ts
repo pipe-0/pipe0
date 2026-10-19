@@ -1,10 +1,10 @@
-import posthog from "posthog-js";
-
 /**
  * PostHog on the marketing site: session replay, pageviews, autocapture and
  * exception capture. Next runs this file once in the browser before
- * hydration (`instrumentation-client`), so `posthog` can be imported from
- * `posthog-js` anywhere on the client afterwards.
+ * hydration (`instrumentation-client`). The SDK itself is fetched only after
+ * the page has loaded and the main thread is idle, so it stays out of the
+ * first paint and hydration; anything that captures imports `posthog-js` on
+ * demand and checks `posthog.__loaded`.
  *
  * Same PostHog project as the dash (`apps/dash/src/lib/posthog.ts` in the
  * closed repo) so a visitor's anonymous session here merges into their
@@ -26,28 +26,39 @@ const UI_HOST = "https://eu.posthog.com";
 
 const PRODUCTION_HOSTS = new Set(["pipe0.com", "www.pipe0.com"]);
 
+function init() {
+  void import("posthog-js").then(({ default: posthog }) =>
+    posthog.init(PROJECT_TOKEN, {
+      api_host: API_HOST,
+      ui_host: UI_HOST,
+      // 2025-05-24+: pageviews on History API navigation (App Router links).
+      // 2025-11-30+: strictMinimumDuration for replay, so a bounce that
+      // refreshes the page is judged on buffered data, not session age.
+      defaults: "2026-05-30",
+      // Anonymous visitors get no person profile (cheaper); the dash's
+      // identify() upgrades them and back-links these events.
+      person_profiles: "identified_only",
+      capture_exceptions: {
+        capture_unhandled_errors: true,
+        capture_unhandled_rejections: true,
+        capture_console_errors: false,
+      },
+      // Replay itself is switched on by the project's remote config (Settings →
+      // Session replay); sampling and minimum duration live there too.
+      session_recording: {
+        // Project setting says the same; stated here so a project-level change
+        // can't silently unmask the email and Ask AI inputs.
+        maskAllInputs: true,
+      },
+    }),
+  );
+}
+
 if (PRODUCTION_HOSTS.has(window.location.hostname)) {
-  posthog.init(PROJECT_TOKEN, {
-    api_host: API_HOST,
-    ui_host: UI_HOST,
-    // 2025-05-24+: pageviews on History API navigation (App Router links).
-    // 2025-11-30+: strictMinimumDuration for replay, so a bounce that
-    // refreshes the page is judged on buffered data, not session age.
-    defaults: "2026-05-30",
-    // Anonymous visitors get no person profile (cheaper); the dash's
-    // identify() upgrades them and back-links these events.
-    person_profiles: "identified_only",
-    capture_exceptions: {
-      capture_unhandled_errors: true,
-      capture_unhandled_rejections: true,
-      capture_console_errors: false,
-    },
-    // Replay itself is switched on by the project's remote config (Settings →
-    // Session replay); sampling and minimum duration live there too.
-    session_recording: {
-      // Project setting says the same; stated here so a project-level change
-      // can't silently unmask the email and Ask AI inputs.
-      maskAllInputs: true,
-    },
-  });
+  const whenIdle = () =>
+    "requestIdleCallback" in window
+      ? requestIdleCallback(init, { timeout: 3000 })
+      : setTimeout(init, 0);
+  if (document.readyState === "complete") whenIdle();
+  else window.addEventListener("load", whenIdle, { once: true });
 }

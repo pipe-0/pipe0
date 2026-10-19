@@ -1,4 +1,5 @@
 import { Brackets, Cell, Cells, dotsStyle } from "@/components/grid";
+import { NearVideo } from "@/components/loop-video";
 import Image from "next/image";
 
 /**
@@ -65,7 +66,7 @@ export function LandingPaths() {
           {/* Animated scene (Blender, assets/illustrations/interface_anim.py):
               an agent's plug and a person's cursor dock into one screen and
               its rows light up. Same on every screen size. */}
-          <video
+          <NearVideo
             src="/media/website/illustrations/interface.mp4"
             autoPlay
             muted
@@ -95,7 +96,7 @@ export function LandingPaths() {
             className={
               row.ours
                 ? "flex items-center gap-2.5 text-[21px] font-medium leading-none tracking-[-0.035em] text-foreground"
-                : "flex items-center gap-2.5 text-[21px] font-medium leading-none tracking-[-0.035em] text-[var(--mark)]"
+                : "flex items-center gap-2.5 text-[21px] font-medium leading-none tracking-[-0.035em] text-[var(--mark-text)]"
             }
           >
             <Image
@@ -176,7 +177,7 @@ export function LandingPaths() {
                   className={
                     row.ours
                       ? "text-[clamp(20px,1.7vw,24px)] font-medium leading-none tracking-[-0.035em] text-foreground"
-                      : "text-[clamp(20px,1.7vw,24px)] font-medium leading-none tracking-[-0.035em] text-[var(--mark)]"
+                      : "text-[clamp(20px,1.7vw,24px)] font-medium leading-none tracking-[-0.035em] text-[var(--mark-text)]"
                   }
                 >
                   {row.tool}

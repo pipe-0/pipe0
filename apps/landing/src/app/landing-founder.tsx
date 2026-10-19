@@ -25,6 +25,7 @@ export function LandingFounder() {
               alt="Florian Martens"
               width={52}
               height={52}
+              loading="lazy"
               className="size-13 border border-[var(--rule)] object-cover grayscale"
             />
             <div>

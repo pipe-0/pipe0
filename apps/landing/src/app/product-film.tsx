@@ -2,7 +2,6 @@
 
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { XIcon } from "lucide-react";
-import posthog from "posthog-js";
 import { useRef, useState, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
@@ -73,9 +72,13 @@ function stamp(s: number) {
   return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
 }
 
+// posthog-js is imported on demand (see instrumentation-client.ts); this
+// resolves to the same instance the init used.
 function track(film: Film, where: string) {
-  if (posthog.__loaded)
-    posthog.capture("product_film_opened", { where, film: film.id });
+  void import("posthog-js").then(({ default: posthog }) => {
+    if (posthog.__loaded)
+      posthog.capture("product_film_opened", { where, film: film.id });
+  });
 }
 
 // ---------------------------------------------------------------------------
@@ -265,12 +268,14 @@ export function FilmButton({
       <button
         type="button"
         onClick={() => play()}
-        aria-label={`Play the ${film.label} (${film.duration})`}
         className="group inline-flex h-11 items-center gap-3 rounded-[6px] border border-[var(--rule-strong)] bg-background pl-1.5 pr-4 text-[14px] font-medium text-foreground outline-none transition-colors hover:bg-[var(--well)] focus-visible:ring-2 focus-visible:ring-primary"
       >
         <span className="grid size-8 place-items-center rounded-[4px] bg-primary text-white">
           <PlayGlyph className="size-3" />
         </span>
+        {/* The accessible name keeps the visible label in it, so voice
+            control users can say what they see. */}
+        <span className="sr-only">Play the {film.label}: </span>
         {children}
         <span className="font-mono text-[12px] tabular-nums text-muted-foreground">
           {film.duration}

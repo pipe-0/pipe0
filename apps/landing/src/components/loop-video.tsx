@@ -1,13 +1,37 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState, type ComponentProps, type RefObject } from "react";
 import { cn } from "@/lib/utils";
+
+/** True once the element has come within a screen of the viewport. */
+function useNear(ref: RefObject<HTMLElement | null>) {
+  const [near, setNear] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (!e.isIntersecting) return;
+        setNear(true);
+        io.disconnect();
+      },
+      { rootMargin: "100% 0px" },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [ref]);
+  return near;
+}
 
 /**
  * A Blender loop (assets/illustrations/*.py) standing in for a still
  * illustration. Rendered on white and multiplied onto the dotted stage; the
  * still is the poster, so nothing jumps while it loads. Plays only while on
  * screen, and not at all with reduced motion.
+ *
+ * Poster and video are both requested only once the element is within a
+ * screen of the viewport, so loops further down the page stay off the
+ * initial load.
  */
 export function LoopVideo({
   src,
@@ -21,6 +45,7 @@ export function LoopVideo({
   className?: string;
 }) {
   const ref = useRef<HTMLVideoElement>(null);
+  const near = useNear(ref);
 
   useEffect(() => {
     const v = ref.current;
@@ -47,11 +72,15 @@ export function LoopVideo({
       src={src}
       // The stills are large PNGs; serve the poster through the image
       // optimizer (a 1080w WebP) instead.
-      poster={`/_next/image?url=${encodeURIComponent(poster)}&w=1080&q=75`}
+      poster={
+        near
+          ? `/_next/image?url=${encodeURIComponent(poster)}&w=1080&q=75`
+          : undefined
+      }
       muted
       loop
       playsInline
-      preload="metadata"
+      preload={near ? "metadata" : "none"}
       aria-label={label}
       aria-hidden={label ? undefined : true}
       width={1000}
@@ -59,4 +88,15 @@ export function LoopVideo({
       className={cn("h-auto mix-blend-multiply", className)}
     />
   );
+}
+
+/**
+ * An autoplaying loop whose file is requested only once it comes within a
+ * screen of the viewport — `autoPlay` would otherwise fetch the whole file
+ * with the page, whatever `preload` says.
+ */
+export function NearVideo({ src, ...props }: ComponentProps<"video"> & { src: string }) {
+  const ref = useRef<HTMLVideoElement>(null);
+  const near = useNear(ref);
+  return <video ref={ref} src={near ? src : undefined} {...props} />;
 }

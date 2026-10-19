@@ -68,7 +68,7 @@ export function LandingProof() {
                   className={
                     bar.ours
                       ? "w-[3.2ch] text-right text-[clamp(22px,2.2vw,30px)] font-medium leading-none tracking-[-0.045em] text-primary"
-                      : "w-[3.2ch] text-right text-[clamp(22px,2.2vw,30px)] font-medium leading-none tracking-[-0.045em] text-[var(--mark)]"
+                      : "w-[3.2ch] text-right text-[clamp(22px,2.2vw,30px)] font-medium leading-none tracking-[-0.045em] text-[var(--mark-text)]"
                   }
                 >
                   {bar.value}%

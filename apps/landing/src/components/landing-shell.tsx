@@ -58,7 +58,7 @@ export function PageHero({
       <div className="flex flex-col items-center px-6 pb-12 pt-12 text-center sm:px-10 sm:pb-14 sm:pt-16 lg:px-12">
         <h1 className="font-medium">
           {kicker && (
-            <span className="block text-balance text-[clamp(24px,2.4vw,34px)] leading-[1.06] tracking-[-0.04em] text-[var(--mark)]">
+            <span className="block text-balance text-[clamp(24px,2.4vw,34px)] leading-[1.06] tracking-[-0.04em] text-[var(--mark-text-large)]">
               {kicker}
             </span>
           )}

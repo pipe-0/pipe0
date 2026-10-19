@@ -1,5 +1,16 @@
+"use client";
+
 import Image from "next/image";
-import { AISearch, AISearchPanel, AISearchTrigger } from "@/components/ai/search";
+import dynamic from "next/dynamic";
+import { useAskAiContext } from "@/components/ai/ask-ai-provider";
+import { cn } from "@/lib/utils";
+
+// The chat panel (AI SDK, zod, markdown) is fetched on intent rather than with
+// the page — see AskAiProvider.
+const AISearchPanelRoot = dynamic(
+  () => import("@/components/ai/search").then((m) => m.AISearchPanelRoot),
+  { ssr: false },
+);
 
 /**
  * Floating "Ask AI" button + chat panel.
@@ -32,11 +43,17 @@ export function AskAiButton({
   // from shifting when the panel opens and the page scrollbar is removed.
   const gap = "calc(1.5rem + var(--removed-body-scroll-bar-size, 0px))";
 
+  const { open, setOpen, panelWanted, wantPanel } = useAskAiContext();
+
   return (
-    <AISearch>
-      <AISearchPanel variant={variant} />
-      <AISearchTrigger
-        position="float"
+    <>
+      {panelWanted && <AISearchPanelRoot variant={variant} />}
+      <button
+        data-state={open ? "open" : "closed"}
+        onClick={() => setOpen(!open)}
+        onPointerEnter={wantPanel}
+        onTouchStart={wantPanel}
+        onFocus={wantPanel}
         style={{
           insetInlineEnd: `max(${gap}, calc((100vw - ${bound}) / 2 + ${gap}))`,
         }}
@@ -44,7 +61,11 @@ export function AskAiButton({
            character (assets/illustrations/buddy.py) in a round avatar. Its
            face is drawn here, not in the render, so it can blink; the whole
            character bobs gently. Both stop under reduced motion. */
-        className="group flex h-12 items-center gap-2.5 rounded-full border border-[var(--rule-strong)] bg-background/95 py-1 pl-1 pr-5 text-[15px] font-medium text-foreground shadow-[0_1px_2px_rgba(14,17,23,0.06),0_10px_30px_rgba(28,35,80,0.12)] backdrop-blur transition-[box-shadow,transform] hover:-translate-y-px hover:shadow-[0_1px_2px_rgba(14,17,23,0.06),0_14px_36px_rgba(28,35,80,0.18)]"
+        className={cn(
+          "fixed bottom-6 z-20 transition-[translate,opacity]",
+          open && "translate-y-10 opacity-0",
+          "group flex h-12 items-center gap-2.5 rounded-full border border-[var(--rule-strong)] bg-background/95 py-1 pl-1 pr-5 text-[15px] font-medium text-foreground shadow-[0_1px_2px_rgba(14,17,23,0.06),0_10px_30px_rgba(28,35,80,0.12)] backdrop-blur transition-[box-shadow,transform] hover:-translate-y-px hover:shadow-[0_1px_2px_rgba(14,17,23,0.06),0_14px_36px_rgba(28,35,80,0.18)]",
+        )}
       >
         <span className="relative size-10 shrink-0 overflow-hidden rounded-full border border-[var(--rule)] bg-[radial-gradient(circle_at_50%_30%,#ffffff_0%,#eef0ff_70%,#e2e6fb_100%)]">
           <span className="buddy-bob absolute left-1/2 top-[-1px] block size-[54px] -translate-x-1/2">
@@ -63,7 +84,7 @@ export function AskAiButton({
           </span>
         </span>
         Ask AI
-      </AISearchTrigger>
-    </AISearch>
+      </button>
+    </>
   );
 }

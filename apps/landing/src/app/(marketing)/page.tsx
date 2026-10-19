@@ -15,6 +15,7 @@ import {
   SectionHead,
 } from "@/components/grid";
 import { CloseBand, LandingShell } from "@/components/landing-shell";
+import { NearVideo } from "@/components/loop-video";
 import { createMetadata } from "@/lib/metadata";
 import {
   JsonLd,
@@ -106,7 +107,7 @@ export default function Home() {
           <h1 className="font-medium">
             {/* Phones: both lines one size, sized to the viewport so the
                 longer one still fits on one line. */}
-            <span className="block whitespace-nowrap text-[5.9vw] leading-[1.08] sm:whitespace-normal tracking-[-0.04em] text-[var(--mark)] sm:text-balance sm:text-[clamp(24px,2.4vw,34px)]">
+            <span className="block whitespace-nowrap text-[5.9vw] leading-[1.08] sm:whitespace-normal tracking-[-0.04em] text-[var(--mark-text-large)] sm:text-balance sm:text-[clamp(24px,2.4vw,34px)]">
               Agents make engineers 10x faster.
             </span>
             <span className="mt-1 block whitespace-nowrap text-[5.9vw] leading-[1.08] tracking-[-0.045em] text-foreground sm:whitespace-normal sm:text-balance sm:text-[clamp(26px,2.8vw,40px)] lg:whitespace-nowrap">
@@ -135,7 +136,7 @@ export default function Home() {
             {/* Blender loop (assets/illustrations/board_anim.py): cells of a
                 sheet fill in one by one, with gaps where nothing was found.
                 Rendered on white and multiplied onto the dotted stage. */}
-            <video
+            <NearVideo
               src="/media/website/illustrations/board.mp4"
               autoPlay
               muted

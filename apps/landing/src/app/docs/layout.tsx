@@ -1,6 +1,7 @@
 import { source } from "@/lib/source";
 import { DocsLayout } from "fumadocs-ui/layouts/docs";
 import { RootProvider } from "@/components/root-provider";
+import { monoPreloaded } from "@/lib/fonts/mono";
 import { baseOptions, linkItems } from "@/lib/layout.shared";
 import { LogoRawSmall } from "@/components/logo";
 import { CatalogAwareSidebarItem } from "@/components/features/docs/catalog-aware-sidebar-item";
@@ -68,7 +69,9 @@ export default function Layout({
           </span>
         ),
       }}
-      containerProps={{ className: "docs-layout-container" }}
+      containerProps={{
+        className: `docs-layout-container ${monoPreloaded.variable}`,
+      }}
       tabs={{
         transform(option, node) {
           if (!node.icon) return option;

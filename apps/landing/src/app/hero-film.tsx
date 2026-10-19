@@ -430,7 +430,7 @@ function Sheet({ frame }: { frame: number }) {
                 }}
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={f.provider.logo} alt="" width={10} height={10} aria-hidden />
+                <img src={f.provider.logo} alt="" width={10} height={10} loading="lazy" aria-hidden />
               </span>
             )}
             {f.tab}
@@ -599,7 +599,7 @@ function Waterfall({ frame }: { frame: number }) {
             }}
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={s.p.logo} alt="" width={17} height={17} aria-hidden />
+            <img src={s.p.logo} alt="" width={17} height={17} loading="lazy" aria-hidden />
           </span>
           <span style={{ flex: 1, fontSize: 17, color: s.ok ? C.ink : C.muted }}>
             {s.p.label}
@@ -706,7 +706,7 @@ function Slack({ frame }: { frame: number }) {
           }}
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo-small-light.svg" alt="" width={26} height={10} aria-hidden />
+          <img src="/logo-small-light.svg" alt="" width={26} height={10} loading="lazy" aria-hidden />
         </span>
         <div style={{ flex: 1 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 5 }}>

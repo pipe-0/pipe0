@@ -2,7 +2,6 @@
 import {
   type ComponentProps,
   createContext,
-  type ReactNode,
   type SyntheticEvent,
   use,
   useEffect,
@@ -13,8 +12,8 @@ import {
 import { Loader2, RefreshCw, SearchIcon, Send, Square, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { buttonVariants } from 'fumadocs-ui/components/ui/button';
-import { type UseChatHelpers } from '@ai-sdk/react';
-import { type Tool, type UIMessage, type UIToolInvocation } from 'ai';
+import { Chat, useChat, type UseChatHelpers } from '@ai-sdk/react';
+import { DefaultChatTransport, type Tool, type UIMessage, type UIToolInvocation } from 'ai';
 import { Markdown } from './markdown';
 import { Presence } from '@radix-ui/react-presence';
 import { useAskAiContext } from './ask-ai-provider';
@@ -348,34 +347,26 @@ function Message({
   );
 }
 
-export function AISearch({ children }: { children: ReactNode }) {
-  // Chat state (messages + open) is owned app-wide by AskAiProvider in the root
-  // layout, so it persists across navigations instead of resetting per page.
-  return <Context value={useAskAiContext()}>{children}</Context>;
-}
+// One Chat for the lifetime of the page session: this module is loaded once
+// and stays cached across client navigations, so the conversation survives
+// moving between the marketing pages and the docs.
+const chatInstance = new Chat<ChatUIMessage>({
+  id: 'ask-ai',
+  transport: new DefaultChatTransport({ api: '/api/chat' }),
+});
 
-export function AISearchTrigger({
-  position = 'default',
-  className,
-  ...props
-}: ComponentProps<'button'> & { position?: 'default' | 'float' }) {
-  const { open, setOpen } = useAISearchContext();
+/**
+ * The chat panel with its chat state. Loaded lazily by AskAiButton; the open
+ * state comes from AskAiProvider in the root layout.
+ */
+export function AISearchPanelRoot(props: ComponentProps<typeof AISearchPanel>) {
+  const { open, setOpen } = useAskAiContext();
+  const chat = useChat<ChatUIMessage>({ chat: chatInstance });
 
   return (
-    <button
-      data-state={open ? 'open' : 'closed'}
-      className={cn(
-        position === 'float' && [
-          'fixed bottom-6 gap-2 inset-e-[calc(--spacing(6)+var(--removed-body-scroll-bar-size,0px))] shadow-lg z-20 transition-[translate,opacity]',
-          open && 'translate-y-10 opacity-0',
-        ],
-        className,
-      )}
-      onClick={() => setOpen(!open)}
-      {...props}
-    >
-      {props.children}
-    </button>
+    <Context value={{ open, setOpen, chat }}>
+      <AISearchPanel {...props} />
+    </Context>
   );
 }
 
@@ -590,13 +581,9 @@ export function useHotKey() {
   const { open, setOpen } = useAISearchContext();
 
   const onKeyPress = useEffectEvent((e: KeyboardEvent) => {
+    // ⌘/ to open lives in AskAiProvider, which is loaded before this panel.
     if (e.key === 'Escape' && open) {
       setOpen(false);
-      e.preventDefault();
-    }
-
-    if (e.key === '/' && (e.metaKey || e.ctrlKey) && !open) {
-      setOpen(true);
       e.preventDefault();
     }
   });

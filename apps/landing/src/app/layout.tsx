@@ -17,14 +17,20 @@ import {
 } from "@/components/seo/json-ld";
 import "./globals.css";
 
+// Only Schibsted is preloaded here: it is what every marketing page paints
+// first, and each preload competes with it for the first paint. The other
+// families are declared on every page but fetched only where text uses them;
+// layouts that paint them above the fold preload them (lib/fonts/).
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
+  preload: false,
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+  preload: false,
 });
 
 const instrumentSerif = Instrument_Serif({
@@ -32,6 +38,7 @@ const instrumentSerif = Instrument_Serif({
   subsets: ["latin"],
   weight: "400",
   style: ["normal", "italic"],
+  preload: false,
 });
 
 // Blog sans.
@@ -39,6 +46,7 @@ const hankenGrotesk = Hanken_Grotesk({
   variable: "--font-hanken",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
+  preload: false,
 });
 
 // Marketing pages — display and body. A grotesk drawn for a news publisher:
