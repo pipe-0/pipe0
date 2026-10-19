@@ -66,6 +66,10 @@ const footerColumns: FooterGroup[][] = [
         { label: "Enrichment & search API", href: "/enrichment-api" },
         { label: "pipe0 Sheets", href: "/docs/sheets" },
         { label: "Slack integration", href: "/integrations/slack" },
+        {
+          label: "Google Workspace integration",
+          href: "/integrations/google-workspace",
+        },
         { label: "Pricing", href: "/pricing" },
         { label: "Sign up", href: appInfo.links.signupUrl, nofollow: true },
         { label: "Login", href: appInfo.links.loginUrl, nofollow: true },
