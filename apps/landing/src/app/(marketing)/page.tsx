@@ -182,7 +182,10 @@ export default function Home() {
                 alt={`${logo.alt} logo`}
                 width={logo.width}
                 height={logo.height}
-                className={logo.className}
+                // Fixed height in a narrow cell: the browser's max-width
+                // caps the width, and without object-contain the mark is
+                // squeezed rather than scaled down.
+                className={`${logo.className} max-w-full object-contain`}
               />
             </div>
           ))}

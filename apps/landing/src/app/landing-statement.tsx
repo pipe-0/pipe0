@@ -31,10 +31,11 @@ const INK = "rgba(11, 13, 18, 1)";
 
 export function LandingStatement() {
   const targetRef = useRef<HTMLDivElement>(null);
+  const textRef = useRef<HTMLParagraphElement>(null);
   const reduced = useReducedMotion();
   const [armed, setArmed] = useState(false);
   useEffect(() => {
-    const el = targetRef.current;
+    const el = textRef.current;
     if (!el) return;
     const io = new IntersectionObserver(
       ([e]) => {
@@ -42,9 +43,10 @@ export function LandingStatement() {
         setArmed(true);
         io.disconnect();
       },
-      // No look-ahead needed: the first word sits 160–280px below the
-      // section's top edge at every width, so the switch happens before
-      // any word is on screen.
+      // Watches the words themselves, not the tall section: the section's
+      // top can be in view on load while the text is still below the fold
+      // (how far depends on the window height). Scroll progress is still 0
+      // when the first line appears, so the switch lands on faint words.
       { rootMargin: "0px" },
     );
     io.observe(el);
@@ -69,7 +71,7 @@ export function LandingStatement() {
         {/* Normal text flow with real spaces between words — a flex row
             with a gap looked the same but left no spaces in the text, so
             crawlers read "Codingagentssped…". */}
-        <p className="mx-auto max-w-250 text-balance px-6 text-center text-[clamp(24px,2.5vw,36px)] font-medium leading-[1.12] tracking-[-0.04em]">
+        <p ref={textRef} className="mx-auto max-w-250 text-balance px-6 text-center text-[clamp(24px,2.5vw,36px)] font-medium leading-[1.12] tracking-[-0.04em]">
           {WORDS.map((word, i) => {
             const start = i / WORDS.length;
             return (
