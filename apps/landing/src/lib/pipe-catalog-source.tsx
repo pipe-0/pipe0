@@ -86,6 +86,10 @@ function generatePipeMarkdown(pipeId: PipeId): string {
   }
   lines.push(entry.description);
   lines.push("");
+  if (entry.notice) {
+    lines.push(`> ${entry.notice.text}`);
+    lines.push("");
+  }
 
   const inputFields = entry.defaultInputRequirement
     ? requirementToInputFields(entry.defaultInputRequirement)

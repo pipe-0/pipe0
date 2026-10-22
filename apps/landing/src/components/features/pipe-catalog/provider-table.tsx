@@ -9,6 +9,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { effectiveCredits } from "@/lib/pricing/effective-credits";
 import { type BillableOperationDef, providerCatalog } from "@pipe0/base";
+import { providerTileColor } from "@/lib/provider-tile";
 
 /**
  * Per-operation billing table. Shared by the pipe and search catalog headers:
@@ -39,7 +40,10 @@ export function ProviderTable({ entries }: { entries: [string, unknown][] }) {
               className="grid grid-cols-[minmax(0,1fr)_140px_140px_120px] items-center gap-4 px-3 py-2 text-sm hover:bg-muted/30 transition-colors"
             >
               <div className="flex items-center gap-2 min-w-0">
-                <Avatar className="size-7 rounded-md">
+                <Avatar
+                  className="size-7 rounded-md"
+                  style={{ backgroundColor: providerTileColor(provider) }}
+                >
                   <AvatarImage
                     src={provider.logoUrl}
                     alt={`${provider.label} logo`}

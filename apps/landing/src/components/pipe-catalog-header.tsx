@@ -17,6 +17,7 @@ import { FieldRow } from "@/components/features/pipe-catalog/field-row";
 import { HighVolumePriceCell } from "@/components/high-volume-price";
 import { effectiveCredits } from "@/lib/pricing/effective-credits";
 import { CatalogDeprecationAlert } from "@/components/catalog-deprecation-alert";
+import { CatalogNoticeAlert } from "@/components/catalog-notice-alert";
 import { resolveCurrentPipe } from "@/lib/catalog-lifecycle";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -286,6 +287,8 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
           startingPrice ? `from ${formatCredits(lowestPrice)} cr / result` : "Free"
         }
       />
+
+      <CatalogNoticeAlert notice={pipeEntry.notice} />
 
       {/* Deprecation alert */}
       {deprecatedOn && (

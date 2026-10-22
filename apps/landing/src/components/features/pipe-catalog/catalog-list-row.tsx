@@ -13,6 +13,7 @@ import { providerCatalog } from "@pipe0/base";
 import { ArrowRight, Copy } from "lucide-react";
 import Link from "next/link";
 import { useIntentPrefetch } from "@/hooks/use-intent-prefetch";
+import { providerTileColor } from "@/lib/provider-tile";
 
 export type CatalogFieldPill = {
   name: string;
@@ -82,7 +83,10 @@ export function ProviderTile({ providers }: { providers: readonly string[] }) {
           />
         );
       })}
-      <div className="absolute left-0 top-0 flex size-11 items-center justify-center overflow-hidden rounded-[10px] border border-[var(--rule)] bg-background shadow-[0_1px_2px_rgba(14,17,23,0.05)]">
+      <div
+        className="absolute left-0 top-0 flex size-11 items-center justify-center overflow-hidden rounded-[10px] border border-[var(--rule)] bg-background shadow-[0_1px_2px_rgba(14,17,23,0.05)]"
+        style={{ backgroundColor: providerTileColor(provider) }}
+      >
         {provider?.logoUrl ? (
           <Avatar className="size-7 rounded-md">
             <AvatarImage
@@ -142,7 +146,8 @@ export function ProviderTileStrip({
                 style={{
                   marginLeft: i === 0 ? 0 : -10,
                   zIndex: shown.length - i,
-                  backgroundColor: TILE_TONES[i % TILE_TONES.length],
+                  backgroundColor:
+                    providerTileColor(p) ?? TILE_TONES[i % TILE_TONES.length],
                   transform: `rotate(${i === 0 ? 0 : (i % 2 ? 2.5 : -2)}deg)`,
                 }}
               >

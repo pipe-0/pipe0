@@ -13,6 +13,7 @@ import { CloseBand, LandingShell, PageHero } from "@/components/landing-shell";
 import { JsonLd, softwareApplicationJsonLd } from "@/components/seo/json-ld";
 import { createMetadata } from "@/lib/metadata";
 import { providerCatalog } from "@pipe0/base";
+import { providerTileColor } from "@/lib/provider-tile";
 import Image from "next/image";
 import type { ReactNode } from "react";
 
@@ -250,7 +251,8 @@ export default function EnrichmentApiPage() {
                   src={provider.logoUrl}
                   alt=""
                   loading="lazy"
-                  className="size-6 object-contain"
+                  className="size-6 rounded-md object-contain"
+                  style={{ backgroundColor: providerTileColor(provider) }}
                 />
                 <span className="text-[13px] text-muted-foreground">
                   {provider.label}

@@ -78,6 +78,10 @@ function generateSearchMarkdown(searchId: SearchId): string {
   }
   lines.push(entry.description);
   lines.push("");
+  if (entry.notice) {
+    lines.push(`> ${entry.notice.text}`);
+    lines.push("");
+  }
 
   // Provider
   const provider = providerCatalog[entry.provider];

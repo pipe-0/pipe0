@@ -12,6 +12,7 @@ import { HeaderVideoSection } from "@/components/features/docs/header-video-sect
 import { formatCredits } from "@/lib/utils";
 import { lowestManagedCredit } from "@/lib/pricing/high-volume";
 import { CatalogDeprecationAlert } from "@/components/catalog-deprecation-alert";
+import { CatalogNoticeAlert } from "@/components/catalog-notice-alert";
 import { resolveCurrentSearch } from "@/lib/catalog-lifecycle";
 import { BandCard } from "@/components/features/pipe-catalog/band-card";
 import { FieldRow } from "@/components/features/pipe-catalog/field-row";
@@ -51,6 +52,7 @@ import Link from "next/link";
 import { useMemo } from "react";
 import { DynamicCodeBlock } from "@/components/features/docs/dynamic-code-block";
 import { SearchFormPreview } from "@/components/features/docs/search-form-preview";
+import { providerTileColor } from "@/lib/provider-tile";
 
 function findAllSearchVersions(searchId: SearchId) {
   const searchEntry = getSearchEntry(searchId);
@@ -248,6 +250,8 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
         }
       />
 
+      <CatalogNoticeAlert notice={searchEntry.notice} />
+
       {deprecatedOn && (
         <CatalogDeprecationAlert
           kind="search"
@@ -284,7 +288,10 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
               </div>
               <div className="grid grid-cols-[minmax(0,1fr)_140px_140px_140px] items-center gap-4 px-3 py-2.5 text-sm">
                 <div className="flex min-w-0 items-center gap-2">
-                  <Avatar className="size-7 rounded-md">
+                  <Avatar
+                    className="size-7 rounded-md"
+                    style={{ backgroundColor: providerTileColor(providerEntry) }}
+                  >
                     <AvatarImage
                       src={providerEntry.logoUrl}
                       alt={`${providerEntry.label} logo`}
