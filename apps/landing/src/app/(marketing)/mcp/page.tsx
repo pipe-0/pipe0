@@ -1,3 +1,4 @@
+import { AgentGlyph } from "@/app/agent-glyph";
 import { LandingEconomics } from "@/app/landing-economics";
 import { CopyCommand } from "@/components/copy-command";
 import {
@@ -45,12 +46,6 @@ export const metadata = createMetadata({
   path: "/mcp",
 });
 
-/* Kicker marks, the same files as the homepage's MCP pane. */
-const agentMarks = [
-  { src: "/media/website/logos/agent-claude.svg", name: "Claude Code" },
-  { src: "/media/website/logos/agent-cursor.svg", name: "Cursor" },
-  { src: "/media/website/logos/agent-openai.svg", name: "Codex" },
-];
 
 const MCP_URL = "https://api.pipe0.com/v1/mcp";
 const INSTALL = `claude mcp add --transport http pipe0 ${MCP_URL}`;
@@ -358,17 +353,13 @@ export default function McpPage() {
       <PageHero
         kicker={
           <>
-            {/* The agents as marks. Their names stay in the heading as
+            {/* The agent glyph (app/agent-glyph.tsx) changes from one kind
+                of agent into the next. The names stay in the heading as
                 visually hidden text, so search engines and screen readers
                 read the full line. */}
             GTM data for
-            <span className="sr-only"> Claude Code, Cursor, and Codex.</span>
-            <span aria-hidden className="ml-[0.35em] inline-flex items-center gap-[0.3em] align-[-0.12em]">
-              {agentMarks.map((m) => (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img key={m.src} src={m.src} alt="" className="size-[0.95em]" />
-              ))}
-            </span>
+            <span className="sr-only"> Claude Code, Cursor, and Codex.</span>{" "}
+            <AgentGlyph className="align-[-0.12em]" />
           </>
         }
         title="Ask your agent for a list. Get a list."

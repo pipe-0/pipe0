@@ -1,5 +1,4 @@
-import { AgentGlyph } from "@/app/agent-glyph";
-import { HeroCrawl } from "@/app/hero-crawl";
+import { HeroFilm } from "@/app/hero-film";
 import { LandingEconomics } from "@/app/landing-economics";
 import { LandingFaq, faqItems } from "@/app/landing-faq";
 import { LandingFounder } from "@/app/landing-founder";
@@ -102,13 +101,18 @@ export default function Home() {
             (headline → lede 32px, lede → buttons 36px, buttons → note 14px)
             so each element is visibly attached to the one above it. */}
         <div className="flex flex-col items-center px-6 pb-10 pt-10 text-center sm:px-10 sm:pb-12 sm:pt-12 lg:px-12 lg:pb-12 lg:pt-14">
-          {/* The name, with a small agent living in it: it greets,
-              gets to work, and changes into the next kind of agent
-              (app/agent-glyph.tsx). Held to one line everywhere. */}
-          <h1 className="whitespace-nowrap text-[8.6vw] font-medium leading-[1.08] tracking-[-0.045em] text-foreground sm:text-[clamp(40px,4.6vw,64px)]">
-            The Agentic{" "}
-            <AgentGlyph className="align-[-0.06em]" />{" "}
-            GTM Kit
+          {/* The second sentence is the point — the buyer's own situation —
+              so it carries the ink and the scale; the first is the muted
+              context it lands against. Two lines on desktop, never more. */}
+          <h1 className="font-medium">
+            {/* Phones: both lines one size, sized to the viewport so the
+                longer one still fits on one line. */}
+            <span className="block whitespace-nowrap text-[5.9vw] leading-[1.08] sm:whitespace-normal tracking-[-0.04em] text-[var(--mark-text-large)] sm:text-balance sm:text-[clamp(24px,2.4vw,34px)]">
+              Agents make engineers 10x faster.
+            </span>
+            <span className="mt-1 block whitespace-nowrap text-[5.9vw] leading-[1.08] tracking-[-0.045em] text-foreground sm:whitespace-normal sm:text-balance sm:text-[clamp(26px,2.8vw,40px)] lg:whitespace-nowrap">
+              GTM teams are still waiting.
+            </span>
           </h1>
           <p className="mt-6 max-w-[680px] text-[16px] max-sm:-mx-3 sm:mx-auto sm:text-balance leading-[1.55] text-muted-foreground sm:text-[19px]">
             Turn any GTM play or data idea into a production system with pipe0.
@@ -119,8 +123,8 @@ export default function Home() {
         </div>
       </Band>
 
-      {/* ===== Sheet crawl — the one saturated surface near the top.
-              Phones get an animated Blender board instead: the sheet's type
+      {/* ===== Product film — the one saturated surface near the top.
+              Phones get an animated Blender board instead: the film's type
               is unreadable that small. ===== */}
       <Band>
         <div className="px-4 py-4 sm:hidden">
@@ -151,8 +155,8 @@ export default function Home() {
             className="hero-sky pointer-events-none absolute inset-0 z-0"
             aria-hidden
           />
-          <div className="absolute inset-0 z-10">
-            <HeroCrawl />
+          <div className="relative z-10 flex flex-1 items-center px-4 py-10 sm:px-10">
+            <HeroFilm />
           </div>
           <Brackets inset={14} tone="inverse" />
         </div>
