@@ -578,13 +578,10 @@ export function PipeCatalogHeader({ pipeId }: PipeHeaderProps) {
     "Content-Type": "application/json",
   },
   body: JSON.stringify({
-    pipes: [{
-      pipe_id: "${pipeId}",
-      config: ${JSON.stringify(defaultPayload, null, 2).replace(
-        /\n/g,
-        "\n      ",
-      )}
-    }],
+    pipes: [${JSON.stringify(defaultPayload, null, 2).replace(
+      /\n/g,
+      "\n    ",
+    )}],
     input: [] // <- your inputs go here
   })
 });`}

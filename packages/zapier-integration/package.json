@@ -1,0 +1,22 @@
+{
+  "name": "@pipe0/zapier-integration",
+  "version": "1.0.0",
+  "private": true,
+  "description": "pipe0 integration for Zapier: find work emails, enrich companies, verify emails, and run any pipe0 pipe.",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "test": "node --test test/*.test.js",
+    "validate": "zapier validate",
+    "push": "zapier push"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "zapier-platform-core": "19.2.1"
+  },
+  "devDependencies": {
+    "zapier-platform-cli": "19.2.1"
+  }
+}

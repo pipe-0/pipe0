@@ -1,5 +1,5 @@
 import { AgentGlyph } from "@/app/agent-glyph";
-import { HeroFilm } from "@/app/hero-film";
+import { HeroCrawl } from "@/app/hero-crawl";
 import { LandingEconomics } from "@/app/landing-economics";
 import { LandingFaq, faqItems } from "@/app/landing-faq";
 import { LandingFounder } from "@/app/landing-founder";
@@ -119,8 +119,8 @@ export default function Home() {
         </div>
       </Band>
 
-      {/* ===== Product film — the one saturated surface near the top.
-              Phones get an animated Blender board instead: the film's type
+      {/* ===== Sheet crawl — the one saturated surface near the top.
+              Phones get an animated Blender board instead: the sheet's type
               is unreadable that small. ===== */}
       <Band>
         <div className="px-4 py-4 sm:hidden">
@@ -151,8 +151,8 @@ export default function Home() {
             className="hero-sky pointer-events-none absolute inset-0 z-0"
             aria-hidden
           />
-          <div className="relative z-10 flex flex-1 items-center px-4 py-10 sm:px-10">
-            <HeroFilm />
+          <div className="absolute inset-0 z-10">
+            <HeroCrawl />
           </div>
           <Brackets inset={14} tone="inverse" />
         </div>

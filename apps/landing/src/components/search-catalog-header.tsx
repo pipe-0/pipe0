@@ -423,13 +423,10 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
     "Content-Type": "application/json",
   },
   body: JSON.stringify({
-    search: {
-      search_id: "${searchId}",
-      config: ${JSON.stringify(defaultSearchPayload, null, 2).replace(
+    search: ${JSON.stringify(defaultSearchPayload, null, 2).replace(
                       /\n/g,
-                      "\n      ",
-                    )}
-    },
+                      "\n    ",
+                    )},
   })
 });`}
                     />
@@ -441,13 +438,10 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
 -H "Authorization: Bearer $API_KEY" \\
 -H "Content-Type: application/json" \\
 -d '{
-    "search": {
-      "search_id": "${searchId}",
-      "config": ${JSON.stringify(defaultSearchPayload, null, 2).replace(
+    "search": ${JSON.stringify(defaultSearchPayload, null, 2).replace(
                       /\n/g,
-                      "\n      ",
+                      "\n    ",
                     )}
-    }
 }'`}
                     />
                   </Tab>

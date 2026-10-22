@@ -492,12 +492,17 @@ function draw(ctx: CanvasRenderingContext2D, p: Pose, scale: number) {
 export function AgentGlyph({ className }: { className?: string }) {
   const ref = useRef<HTMLCanvasElement>(null);
 
+  const replay = useRef<() => void>(() => {});
+
   useEffect(() => {
     const canvas = ref.current;
     const ctx = canvas?.getContext("2d");
     if (!canvas || !ctx) return;
 
     const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    // One pass through the cast, ending as the buddy re-forms, then it
+    // rests so the film below is the only thing moving. Hover replays it.
+    const end = SEG * CHARACTERS.length + MORPH;
     // Starts mid-way into the first segment so the buddy greets on arrival.
     let clock = MORPH;
     let scale = 1;
@@ -516,15 +521,15 @@ export function AgentGlyph({ className }: { className?: string }) {
     };
     const frame = (now: number) => {
       // Capped step: a background tab or a long frame resumes, not skips.
-      clock += Math.min(0.05, (now - last) / 1000);
+      clock = Math.min(end, clock + Math.min(0.05, (now - last) / 1000));
       last = now;
       render();
-      raf = requestAnimationFrame(frame);
+      raf = clock < end ? requestAnimationFrame(frame) : 0;
     };
     const sync = () => {
       cancelAnimationFrame(raf);
       raf = 0;
-      if (still || !inView || document.hidden) return;
+      if (still || !inView || document.hidden || clock >= end) return;
       last = performance.now();
       raf = requestAnimationFrame(frame);
     };
@@ -537,6 +542,11 @@ export function AgentGlyph({ className }: { className?: string }) {
     });
     seen.observe(canvas);
     document.addEventListener("visibilitychange", sync);
+    replay.current = () => {
+      if (clock < end) return;
+      clock = MORPH;
+      sync();
+    };
     fit();
     sync();
 
@@ -553,6 +563,7 @@ export function AgentGlyph({ className }: { className?: string }) {
   return (
     <span
       aria-hidden
+      onPointerEnter={() => replay.current()}
       className={`relative inline-block h-[1em] w-[1em] ${className ?? ""}`}
     >
       <canvas

@@ -201,12 +201,7 @@ function generatePipeMarkdown(pipeId: PipeId): string {
   lines.push(
     JSON.stringify(
       {
-        pipes: [
-          {
-            pipe_id: pipeId,
-            config: defaultPayload,
-          },
-        ],
+        pipes: [defaultPayload],
         input: [],
       },
       null,

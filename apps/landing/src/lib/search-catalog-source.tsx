@@ -173,10 +173,7 @@ function generateSearchMarkdown(searchId: SearchId): string {
   lines.push(
     JSON.stringify(
       {
-        search: {
-          search_id: searchId,
-          config: defaultPayload,
-        },
+        search: defaultPayload,
       },
       null,
       2,
