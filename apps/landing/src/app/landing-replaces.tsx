@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 
 /* ---- The stack pipe0 collapses ----
 
-   Ten tools, one cell each, crossed off when the block scrolls into view.
+   Eight tools, one cell each, crossed off when the block scrolls into view.
    Logos are recognised before names are read, which is the whole point of a
    "simplify your stack" section. The rule is drawn over the lockup, leaving
    each third-party mark itself intact (no distortion or recolouring of the
@@ -13,12 +13,14 @@ import { useEffect, useRef, useState } from "react";
 
    One-shot on first view rather than scrubbed by scroll — the statement
    already owns the scroll-linked register. Reduced motion gets the end state
-   immediately; the end state, not the motion, carries the meaning. */
+   immediately; the end state, not the motion, carries the meaning.
+
+   Tools an agent-first buyer would compare us with (Deepline, Landbase)
+   stay off this list: crossing a direct competitor out reads as an attack,
+   and the compare pages make that case properly. */
 
 const tools = [
   { name: "Clay", src: "/media/website/logos/replaced-clay.png" },
-  { name: "Deepline", src: "/media/website/logos/replaced-deepline.png" },
-  { name: "Landbase", src: "/media/website/logos/replaced-landbase.png" },
   { name: "Zapier", src: "/media/website/logos/replaced-zapier.png" },
   { name: "n8n", src: "/media/website/logos/replaced-n8n.png" },
   { name: "Chili Piper", src: "/media/website/logos/replaced-chilipiper.png" },
@@ -68,10 +70,10 @@ export function LandingReplaces() {
   return (
     <div ref={host}>
       <div className="grid gap-6 px-6 pb-10 pt-12 sm:px-10 sm:pb-12 sm:pt-16 lg:grid-cols-12 lg:items-end lg:gap-12 lg:px-12">
-        <h2 className="text-[clamp(28px,2.3vw,32px)] font-medium leading-[1.02] tracking-[-0.04em] text-foreground lg:col-span-8">
+        <h2 className="text-[clamp(28px,2.3vw,32px)] font-medium leading-[1.02] tracking-[-0.04em] text-foreground lg:col-span-7">
           From a tangled stack to one platform.
         </h2>
-        <p className="max-w-[40ch] text-[17px] leading-relaxed text-muted-foreground lg:col-span-4 lg:justify-self-end lg:pb-2">
+        <p className="max-w-[48ch] text-[17px] leading-relaxed text-muted-foreground lg:col-span-5 lg:justify-self-end lg:pb-2">
           Enrichment, lists, routing, sync, and automations, orchestrated in
           one place instead of spread across tools like these.
         </p>
@@ -79,7 +81,7 @@ export function LandingReplaces() {
 
       <ul
         aria-label="Tools pipe0 replaces"
-        className="grid grid-cols-2 gap-px border-t border-[var(--rule)] bg-[var(--rule)] sm:grid-cols-5"
+        className="grid grid-cols-2 gap-px border-t border-[var(--rule)] bg-[var(--rule)] sm:grid-cols-4"
       >
         {tools.map((tool, i) => (
           <li

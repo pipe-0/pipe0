@@ -12,39 +12,39 @@ import Image from "next/image";
  *
  * Left: the illustration of exactly that (an agent's plug and a person's
  * cursor on one sheet). Right: the same claim as a three-row comparison.
- * Competitor lines stay factual and fair (positioning skill: never
- * disparage). Agents can use Clay; they struggle to build its tables well.
- * Deepline is stateless — data comes back, and the infrastructure around it
- * (storage, schedules, retries) costs engineering time.
+ *
+ * The rows are kinds of tool, not brands: the point is the choice buyers
+ * have learned to make, and naming a competitor beside a flaw turns that
+ * into an attack. Each line credits what the kind of tool is built for
+ * before saying where it stops; pipe0's line is the gain, not a feature.
+ * Brand-by-brand comparisons live on the compare pages.
  */
 
 const rows: {
   tool: string;
-  /** Unaltered mark, shown small beside the name to identify the tool. */
-  logo: string;
+  /** pipe0's mark beside its name; the kinds of tool have none. */
+  logo?: string;
   line: string;
   team: boolean;
   agents: boolean;
   ours?: boolean;
 }[] = [
   {
-    tool: "Clay",
-    logo: "/media/website/logos/replaced-clay.png",
-    line: "Built for people clicking. Agents can work in it, but struggle to build tables well.",
+    tool: "Table tools",
+    line: "Built for your team. Every table is clicked together by hand.",
     team: true,
     agents: false,
   },
   {
-    tool: "Deepline",
-    logo: "/media/website/logos/replaced-deepline.png",
-    line: "Built for agents calling. The infrastructure around the data takes engineering time.",
+    tool: "Data tools for agents",
+    line: "Built for your agent. The data comes back in the chat, and the rest is up to you.",
     team: false,
     agents: true,
   },
   {
     tool: "pipe0",
     logo: "/logo-small-light.svg",
-    line: "Native to both. The agent builds a system your team can see, change, and trust.",
+    line: "Built for both. Work in a sheet, a chat, or the API, and switch whenever you like.",
     team: true,
     agents: true,
     ours: true,
@@ -99,13 +99,15 @@ export function LandingPaths() {
                 : "flex items-center gap-2.5 text-[21px] font-medium leading-none tracking-[-0.035em] text-[var(--mark-text)]"
             }
           >
-            <Image
-              src={row.logo}
-              alt=""
-              width={22}
-              height={22}
-              className="size-[22px] rounded-[5px] object-contain"
-            />
+            {row.logo && (
+              <Image
+                src={row.logo}
+                alt=""
+                width={22}
+                height={22}
+                className="size-[22px] rounded-[5px] object-contain"
+              />
+            )}
             {row.tool}
           </p>
           <p className="mt-2.5 text-[15px] leading-relaxed text-muted-foreground">

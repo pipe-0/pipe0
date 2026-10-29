@@ -211,13 +211,14 @@ export default function Home() {
         <LandingStatement />
       </Band>
 
-      {/* ===== The payoff of the statement's last line: what "built for
-              people and agents alike" looks like, against the tools that
-              pick a side. ===== */}
+      {/* ===== The invitation after the statement's "something new": a
+              reference everyone knows (Bruce Lee's "be water"), then three
+              short beats that send people to try it. No specification here;
+              the table carries the detail. ===== */}
       <Band>
         <SectionHead
-          title="Your agent builds it. Your team can see it."
-          lede="Most GTM tools pick a side. On pipe0, both work on the same system, so nothing is rebuilt when work moves between them."
+          title="Be water, my friend."
+          lede="Empty your mind of tables and tools. Agentic GTM that makes sense the moment you try it. Anywhere."
         />
         <LandingPaths />
       </Band>

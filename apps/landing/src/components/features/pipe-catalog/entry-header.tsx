@@ -39,9 +39,11 @@ export function EntryHeader({
 }) {
   return (
     <div className="space-y-4">
-      <div className="flex items-start gap-4">
+      {/* The description hangs beside the title from sm; on a phone that
+          indent costs a fifth of the width, so it runs under the tile. */}
+      <div className="grid grid-cols-[auto_minmax(0,1fr)] items-start gap-x-4">
         <ProviderTile providers={providers} />
-        <div className="min-w-0 flex-1">
+        <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
             <h1
               className={cn(
@@ -68,10 +70,10 @@ export function EntryHeader({
               </div>
             )}
           </div>
-          <p className="mt-1.5 text-[15px] leading-relaxed text-muted-foreground">
-            {description}
-          </p>
         </div>
+        <p className="col-span-2 mt-3 text-[15px] leading-relaxed text-muted-foreground sm:col-span-1 sm:col-start-2 sm:mt-1.5">
+          {description}
+        </p>
       </div>
 
       <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-[13px] text-muted-foreground">

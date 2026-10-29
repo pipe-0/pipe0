@@ -83,6 +83,13 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
   let connections = [];
   if (searchEntry.hasManagedConnection) connections.push("Managed");
   if (searchEntry.allowsUserConnection) connections.push("User");
+  const billingLabel = usageMetered
+    ? "Usage"
+    : searchEntry.cost.mode === "per_result"
+      ? "Per result"
+      : searchEntry.cost.mode === "per_search"
+        ? "Per search"
+        : "Per page";
 
   const video = videoCatalog[searchId as keyof typeof videoCatalog] as
     | string
@@ -277,16 +284,18 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
           </AccordionTrigger>
           <AccordionContent className="pl-6">
             <div className="overflow-hidden rounded-[10px] border border-[var(--rule)]">
-              <div className="grid grid-cols-[minmax(0,1fr)_140px_140px_140px] items-center gap-4 border-b border-[var(--rule)] bg-[var(--well)] px-3 py-2 text-[12px] font-medium text-muted-foreground">
+              {/* Phones get provider and cost only; billing and connection
+                  move to a line under the provider. */}
+              <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 border-b border-[var(--rule)] bg-[var(--well)] px-3 py-2 text-[12px] font-medium text-muted-foreground sm:grid-cols-[minmax(0,1fr)_140px_140px_140px]">
                 <span>Provider</span>
-                <span>Billing</span>
-                <span>Connection</span>
+                <span className="max-sm:hidden">Billing</span>
+                <span className="max-sm:hidden">Connection</span>
                 <span className="flex items-center justify-end gap-1.5">
                   Cost
                   <InlineDocsBadge href={docsLinkPaths.searchBilling} />
                 </span>
               </div>
-              <div className="grid grid-cols-[minmax(0,1fr)_140px_140px_140px] items-center gap-4 px-3 py-2.5 text-sm">
+              <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-3 py-2.5 text-sm sm:grid-cols-[minmax(0,1fr)_140px_140px_140px]">
                 <div className="flex min-w-0 items-center gap-2">
                   <Avatar
                     className="size-7 rounded-md"
@@ -300,21 +309,22 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
                       {providerEntry.label.slice(0, 2)}
                     </AvatarFallback>
                   </Avatar>
-                  <span className="truncate font-medium">
-                    {providerEntry.label}
-                  </span>
-                  <Info>{providerEntry.description}</Info>
+                  <div className="min-w-0">
+                    <div className="flex min-w-0 items-center gap-2">
+                      <span className="truncate font-medium">
+                        {providerEntry.label}
+                      </span>
+                      <Info>{providerEntry.description}</Info>
+                    </div>
+                    <div className="text-[12px] text-muted-foreground sm:hidden">
+                      {billingLabel} · {connections.join(", ")}
+                    </div>
+                  </div>
                 </div>
-                <span className="text-muted-foreground">
-                  {usageMetered
-                    ? "Usage"
-                    : searchEntry.cost.mode === "per_result"
-                      ? "Per result"
-                      : searchEntry.cost.mode === "per_search"
-                        ? "Per search"
-                        : "Per page"}
+                <span className="text-muted-foreground max-sm:hidden">
+                  {billingLabel}
                 </span>
-                <span className="text-muted-foreground">
+                <span className="text-muted-foreground max-sm:hidden">
                   {connections.join(", ")}
                 </span>
                 <div className="text-right tabular-nums">

@@ -22,19 +22,23 @@ import { useEffect, useRef, useState } from "react";
    check, and the scroll-driven colours take over before the first word
    reaches the screen.
 
-   The shape: the question, one picture of the answer, then pipe0 as the
-   way there. The brand's first mention on the page is its small mark in
-   place of the word: the cube from the header, set in the line like a
+   The shape: the question, one picture of the answer, then two short
+   beats on why something new had to exist. It doesn't name pipe0; the
+   next section does. If it ever does, the brand appears as its small mark
+   in place of the word: the cube from the header, set in the line like a
    word. The word itself stays in the text, visually hidden, so it is what
    screen readers and crawlers read. */
 const STATEMENT =
   "We work backwards from one question: how should GTM work with agents? In that world, research takes minutes, every idea gets tested, and anyone can build production systems without being an engineer.";
 
+// "No\u00a0tool" and "So\u00a0we\u00a0built" are single tokens, so each
+// closing beat starts whole on its line instead of stranding a word.
 const WORDS = STATEMENT.split(" ");
 
 const FAINT = "rgba(11, 13, 18, 0.14)";
 const INK = "rgba(11, 13, 18, 1)";
-const BRAND = "pipe0,";
+/* The brand word, with whatever punctuation follows it. */
+const isBrand = (word: string | undefined) => !!word?.startsWith("pipe0");
 
 export function LandingStatement() {
   const targetRef = useRef<HTMLDivElement>(null);
@@ -85,11 +89,11 @@ export function LandingStatement() {
           {WORDS.map((word, i) =>
             // The word before the mark is drawn with it, so "With [mark],"
             // never splits across lines.
-            WORDS[i + 1] === BRAND ? null : (
+            isBrand(WORDS[i + 1]) ? null : (
               <Word
                 key={`${word}-${i}`}
                 last={i === WORDS.length - 1}
-                lead={word === BRAND ? WORDS[i - 1] : undefined}
+                lead={isBrand(word) ? WORDS[i - 1] : undefined}
                 progress={scrollYProgress}
                 range={[i / WORDS.length, (i + 1) / WORDS.length]}
                 still={!!reduced || !armed}
@@ -126,7 +130,7 @@ function Word({
   const opacity = useTransform(progress, range, [0.14, 1]);
   return (
     <>
-      {children === BRAND ? (
+      {isBrand(children) ? (
         <span className="whitespace-nowrap">
           <motion.span style={{ color: still ? INK : color }}>
             {lead}
@@ -142,7 +146,9 @@ function Word({
               className="inline-block h-[0.9em] w-auto align-[-0.14em]"
             />
             <span className="sr-only">pipe0</span>
-            <motion.span style={{ color: still ? INK : color }}>,</motion.span>
+            <motion.span style={{ color: still ? INK : color }}>
+              {children.slice("pipe0".length)}
+            </motion.span>
           </motion.span>
         </span>
       ) : (

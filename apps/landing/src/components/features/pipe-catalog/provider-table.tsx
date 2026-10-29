@@ -15,14 +15,19 @@ import { providerTileColor } from "@/lib/provider-tile";
  * Per-operation billing table. Shared by the pipe and search catalog headers:
  * a usage-metered search bills the same `BillableOperationDef` shape a pipe
  * does, so its operations render here rather than in a second table.
+ *
+ * Four fixed columns don't fit a phone: there the grid is provider and cost
+ * only, and billing and connection move to a line under the provider.
  */
+const COLS =
+  "grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 sm:grid-cols-[minmax(0,1fr)_140px_140px_120px]";
 export function ProviderTable({ entries }: { entries: [string, unknown][] }) {
   return (
     <div className="overflow-hidden rounded-[10px] border border-[var(--rule)]">
-      <div className="grid grid-cols-[minmax(0,1fr)_140px_140px_120px] items-center gap-4 border-b border-[var(--rule)] bg-[var(--well)] px-3 py-2 text-[12px] font-medium text-muted-foreground">
+      <div className={`${COLS} border-b border-[var(--rule)] bg-[var(--well)] px-3 py-2 text-[12px] font-medium text-muted-foreground`}>
         <span>Provider</span>
-        <span>Billing</span>
-        <span>Connection</span>
+        <span className="max-sm:hidden">Billing</span>
+        <span className="max-sm:hidden">Connection</span>
         <span className="text-right">Cost</span>
       </div>
       <div className="divide-y divide-[var(--rule)]">
@@ -33,11 +38,17 @@ export function ProviderTable({ entries }: { entries: [string, unknown][] }) {
           const connections: string[] = [];
           if (provider.hasManagedConnections) connections.push("Managed");
           if (provider.allowsUserConnections) connections.push("User");
+          const billing =
+            def.mode === "onSuccess"
+              ? "On success"
+              : def.mode === "always"
+                ? "Always"
+                : "n/a";
 
           return (
             <div
               key={billableOperation}
-              className="grid grid-cols-[minmax(0,1fr)_140px_140px_120px] items-center gap-4 px-3 py-2 text-sm hover:bg-muted/30 transition-colors"
+              className={`${COLS} px-3 py-2 text-sm hover:bg-muted/30 transition-colors`}
             >
               <div className="flex items-center gap-2 min-w-0">
                 <Avatar
@@ -67,16 +78,15 @@ export function ProviderTable({ entries }: { entries: [string, unknown][] }) {
                   >
                     {billableOperation}
                   </div>
+                  <div className="text-[12px] text-muted-foreground sm:hidden">
+                    {billing} · {connections.join(", ")}
+                  </div>
                 </div>
               </div>
-              <div className="text-muted-foreground">
-                {def.mode === "onSuccess"
-                  ? "On success"
-                  : def.mode === "always"
-                    ? "Always"
-                    : "n/a"}
+              <div className="text-muted-foreground max-sm:hidden">
+                {billing}
               </div>
-              <div className="text-muted-foreground">
+              <div className="text-muted-foreground max-sm:hidden">
                 {connections.join(", ")}
               </div>
               <div className="text-right tabular-nums">
