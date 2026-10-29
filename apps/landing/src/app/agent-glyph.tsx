@@ -22,7 +22,7 @@ type RGB = [number, number, number];
 
 type Eye = { x: number; y: number; w: number; h: number; happy: number };
 
-type Pose = {
+export type Pose = {
   // Always three outlines, filled as one union. Characters with one body
   // park the spares as specks inside it.
   shapes: [Poly, Poly, Poly];
@@ -202,7 +202,7 @@ function body(dy: number, s: number, rot: number, clock: number) {
 const WHITE: RGB = [255, 255, 255];
 
 // pipe0's own buddy: an indigo clay blob that waves a little nub, then reads.
-function buddy(t: number, clock: number): Pose {
+export function buddy(t: number, clock: number): Pose {
   const g = greetOf(t);
   const f = focusOf(t);
   const open = openOf(t);
@@ -238,7 +238,7 @@ function buddy(t: number, clock: number): Pose {
 
 // A pixel crab: square body, nub arms, four legs. Waves an arm, then squints
 // at the screen and taps its feet.
-function crab(t: number, clock: number): Pose {
+export function crab(t: number, clock: number): Pose {
   const g = greetOf(t);
   const f = focusOf(t);
   const open = openOf(t);
@@ -278,7 +278,7 @@ function crab(t: number, clock: number): Pose {
 }
 
 // A thinking dot: bounces hello, then splits into three typing dots.
-function dot(t: number, clock: number): Pose {
+export function dot(t: number, clock: number): Pose {
   const g = greetOf(t);
   const f = focusOf(t);
   const open = openOf(t);
@@ -315,7 +315,7 @@ function dot(t: number, clock: number): Pose {
 
 // A sparkle: twinkles hello, twirls a quarter turn, then two small sparkles
 // pop up beside it and it looks at them.
-function spark(t: number, clock: number): Pose {
+export function spark(t: number, clock: number): Pose {
   const g = greetOf(t);
   const f = focusOf(t);
   const open = openOf(t);
@@ -430,6 +430,13 @@ function draw(ctx: CanvasRenderingContext2D, p: Pose, scale: number) {
   ctx.setTransform(1, 0, 0, 1, 0, 0);
   ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
   ctx.setTransform(scale, 0, 0, scale, PAD * scale, PAD * scale);
+  paintPose(ctx, p);
+}
+
+/** Draws a pose in the current transform, in the character's 100×100 box.
+ *  Shared with the knife glyph, whose tools are these same characters. */
+export function paintPose(ctx: CanvasRenderingContext2D, p: Pose) {
+  ctx.save();
   ctx.translate(GROUND[0] + p.dx, GROUND[1] + p.dy);
   ctx.rotate(p.rot);
   ctx.scale(p.sx, p.sy);
@@ -447,7 +454,10 @@ function draw(ctx: CanvasRenderingContext2D, p: Pose, scale: number) {
   }
   ctx.fill();
 
-  if (p.face <= 0.01) return;
+  if (p.face <= 0.01) {
+    ctx.restore();
+    return;
+  }
   const ink = rgb(p.ink);
   ctx.fillStyle = ink;
   ctx.strokeStyle = ink;
@@ -487,6 +497,7 @@ function draw(ctx: CanvasRenderingContext2D, p: Pose, scale: number) {
     ctx.stroke();
   }
   ctx.globalAlpha = 1;
+  ctx.restore();
 }
 
 export function AgentGlyph({ className }: { className?: string }) {

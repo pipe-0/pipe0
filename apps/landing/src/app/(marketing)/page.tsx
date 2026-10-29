@@ -1,4 +1,5 @@
 import { HeroFilm } from "@/app/hero-film";
+import { KnifeLoop } from "@/app/knife-loop";
 import { LandingEconomics } from "@/app/landing-economics";
 import { LandingFaq, faqItems } from "@/app/landing-faq";
 import { LandingFounder } from "@/app/landing-founder";
@@ -93,7 +94,7 @@ export default function Home() {
         )}
       />
 
-      {/* ===== Hero — the problem as the headline, the answer as one
+      {/* ===== Hero — the claim as the headline, what it means as one
               sentence, then the way in. Nothing else competes. ===== */}
       <Band>
         {/* One left-aligned column on one spacing scale: headline, then
@@ -101,23 +102,20 @@ export default function Home() {
             (headline → lede 32px, lede → buttons 36px, buttons → note 14px)
             so each element is visibly attached to the one above it. */}
         <div className="flex flex-col items-center px-6 pb-10 pt-10 text-center sm:px-10 sm:pb-12 sm:pt-12 lg:px-12 lg:pb-12 lg:pt-14">
-          {/* The second sentence is the point — the buyer's own situation —
-              so it carries the ink and the scale; the first is the muted
-              context it lands against. Two lines on desktop, never more. */}
-          <h1 className="font-medium">
-            {/* Phones: both lines one size, sized to the viewport so the
-                longer one still fits on one line. */}
-            <span className="block whitespace-nowrap text-[5.9vw] leading-[1.08] sm:whitespace-normal tracking-[-0.04em] text-[var(--mark-text-large)] sm:text-balance sm:text-[clamp(24px,2.4vw,34px)]">
-              Agents make engineers 10x faster.
+          {/* The claim, with the knife living in it: its tools are agents,
+              and they flip out one by one (app/knife-loop.tsx). Two lines
+              from sm; phones wrap freely, but the knife stays with its
+              word. */}
+          <h1 className="text-balance text-[10.5vw] font-medium leading-[1.06] tracking-[-0.045em] text-foreground sm:text-[clamp(44px,5.4vw,76px)]">
+            The Swiss{" "}
+            <span className="whitespace-nowrap">
+              Army <KnifeLoop className="align-[-0.2em]" /> knife
             </span>
-            <span className="mt-1 block whitespace-nowrap text-[5.9vw] leading-[1.08] tracking-[-0.045em] text-foreground sm:whitespace-normal sm:text-balance sm:text-[clamp(26px,2.8vw,40px)] lg:whitespace-nowrap">
-              GTM teams are still waiting.
-            </span>
+            <br className="max-sm:hidden" /> for agentic GTM.
           </h1>
-          <p className="mt-6 max-w-[680px] text-[16px] max-sm:-mx-3 sm:mx-auto sm:text-balance leading-[1.55] text-muted-foreground sm:text-[19px]">
-            Turn any GTM play or data idea into a production system with pipe0.
-            Describe it, and the agent builds something you can see, change,
-            and trust.
+          <p className="mt-7 max-w-[680px] text-[16px] max-sm:-mx-3 sm:mx-auto sm:text-balance leading-[1.55] text-muted-foreground sm:text-[19px]">
+            Turn any GTM play or data idea into a production system. Describe it, and the agent builds
+            something you can see, change, and trust.
           </p>
           <GridCtas className="mt-8 justify-center" />
         </div>
@@ -213,11 +211,13 @@ export default function Home() {
         <LandingStatement />
       </Band>
 
-      {/* ===== The tradeoff, and the two surfaces it produces ===== */}
+      {/* ===== The payoff of the statement's last line: what "built for
+              people and agents alike" looks like, against the tools that
+              pick a side. ===== */}
       <Band>
         <SectionHead
-          title="One interface for your team and your agents."
-          lede="GTM tools are built for people or for agents. pipe0 is native to both: describe a play, and the agent builds a system you can see, change, and trust."
+          title="Your agent builds it. Your team can see it."
+          lede="Most GTM tools pick a side. On pipe0, both work on the same system, so nothing is rebuilt when work moves between them."
         />
         <LandingPaths />
       </Band>
