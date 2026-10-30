@@ -44,7 +44,7 @@ const rows: {
   {
     tool: "pipe0",
     logo: "/logo-small-light.svg",
-    line: "Built for both. Work in a sheet, a chat, or the API, and switch whenever you like.",
+    line: "Built for both. Your agent builds it, your team can see it, and nothing is rebuilt in between.",
     team: true,
     agents: true,
     ours: true,

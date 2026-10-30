@@ -94,8 +94,10 @@ export default function Home() {
         )}
       />
 
-      {/* ===== Hero — the claim as the headline, what it means as one
-              sentence, then the way in. Nothing else competes. ===== */}
+      {/* ===== Hero — the claim as the headline, then what the knife is
+              made of: three products GTM teams know by name, forged into
+              one. Three short sentences; the last is the invitation.
+              ===== */}
       <Band>
         {/* One left-aligned column on one spacing scale: headline, then
             the answer, then the way in. Gaps step down as the type does
@@ -114,8 +116,9 @@ export default function Home() {
             <br className="max-sm:hidden" /> for agentic GTM.
           </h1>
           <p className="mt-7 max-w-[680px] text-[16px] max-sm:-mx-3 sm:mx-auto sm:text-balance leading-[1.55] text-muted-foreground sm:text-[19px]">
-            Turn any GTM play or data idea into a production system. Describe it, and the agent builds
-            something you can see, change, and trust.
+            Clay-like tables, GTM MCPs, and data APIs used to be three
+            products. We forged them into one. It makes sense the moment you
+            try it.
           </p>
           <GridCtas className="mt-8 justify-center" />
         </div>
@@ -211,14 +214,13 @@ export default function Home() {
         <LandingStatement />
       </Band>
 
-      {/* ===== The invitation after the statement's "something new": a
-              reference everyone knows (Bruce Lee's "be water"), then three
-              short beats that send people to try it. No specification here;
-              the table carries the detail. ===== */}
+      {/* ===== A reference everyone knows (Bruce Lee's "be water"),
+              made concrete: the hero's "wherever you do" as a chat, a
+              sheet, or code. The table carries the detail. ===== */}
       <Band>
         <SectionHead
           title="Be water, my friend."
-          lede="Empty your mind of tables and tools. Agentic GTM that makes sense the moment you try it. Anywhere."
+          lede="Empty your mind of tables and tools. Ask in a chat, open it as a sheet, call it from code. Same list, any shape."
         />
         <LandingPaths />
       </Band>

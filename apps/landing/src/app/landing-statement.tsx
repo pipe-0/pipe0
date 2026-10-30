@@ -22,17 +22,15 @@ import { useEffect, useRef, useState } from "react";
    check, and the scroll-driven colours take over before the first word
    reaches the screen.
 
-   The shape: the question, one picture of the answer, then two short
-   beats on why something new had to exist. It doesn't name pipe0; the
-   next section does. If it ever does, the brand appears as its small mark
+   The shape: the question, then the answer as three pictures a GTM
+   team recognises from its own week (research, a campaign, routing), not
+   abstractions about speed. It doesn't name pipe0; the next section does. If it ever does, the brand appears as its small mark
    in place of the word: the cube from the header, set in the line like a
    word. The word itself stays in the text, visually hidden, so it is what
    screen readers and crawlers read. */
 const STATEMENT =
-  "We work backwards from one question: how should GTM work with agents? In that world, research takes minutes, every idea gets tested, and anyone can build production systems without being an engineer.";
+  "We work backwards from one question: how should GTM work with agents? In that world, account research takes minutes, every campaign idea runs on a real list the same day, and a marketer ships the lead routing an engineer used to build.";
 
-// "No\u00a0tool" and "So\u00a0we\u00a0built" are single tokens, so each
-// closing beat starts whole on its line instead of stranding a word.
 const WORDS = STATEMENT.split(" ");
 
 const FAINT = "rgba(11, 13, 18, 0.14)";
