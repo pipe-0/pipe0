@@ -4,7 +4,7 @@ import { docsHead } from "@/lib/docs-head";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/docs/search-catalog/")({
-  loader: () => getDocsPage({ data: ["search-catalog"] }),
+  loader: () => getDocsPage(["search-catalog"]),
   head: ({ loaderData }) => docsHead(loaderData),
   component: Page,
 });

@@ -6,7 +6,7 @@ export const Route = createFileRoute(
   "/_marketing/resources/legal/terms-of-service",
 )({
   beforeLoad: async () => {
-    const href = await getLatestLegalUrl({ data: "terms-of-service" });
+    const href = await getLatestLegalUrl("terms-of-service");
     throw redirect({ href, statusCode: 307 });
   },
 });

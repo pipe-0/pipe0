@@ -14,7 +14,7 @@ import { createFileRoute, redirect } from "@tanstack/react-router";
  */
 export const Route = createFileRoute("/_marketing/resources/legal/dpa")({
   beforeLoad: async () => {
-    const href = await getLatestLegalUrl({ data: "dpa" });
+    const href = await getLatestLegalUrl("dpa");
     throw redirect({ href, statusCode: 307 });
   },
 });

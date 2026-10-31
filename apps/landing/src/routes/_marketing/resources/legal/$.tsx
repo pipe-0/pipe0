@@ -19,9 +19,9 @@ const content = browserCollections.legal.createClientLoader({
 
 export const Route = createFileRoute("/_marketing/resources/legal/$")({
   loader: async ({ params }) => {
-    const page = await getLegalPage({
-      data: (params._splat ?? "").split("/").filter(Boolean),
-    });
+    const page = await getLegalPage(
+      (params._splat ?? "").split("/").filter(Boolean),
+    );
     await content.preload(page.path);
     return page;
   },

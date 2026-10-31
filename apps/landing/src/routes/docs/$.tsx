@@ -5,7 +5,7 @@ import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/docs/$")({
   loader: async ({ params }) => {
-    const page = await getDocsPage({ data: splatSlugs(params._splat) });
+    const page = await getDocsPage(splatSlugs(params._splat));
     await docsContent.preload(page.path);
     return page;
   },

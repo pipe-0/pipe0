@@ -5,7 +5,7 @@ import { seo } from "@/lib/seo";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/blog/category/$category")({
-  loader: ({ params }) => getBlogCategory({ data: params.category }),
+  loader: ({ params }) => getBlogCategory(params.category),
   head: ({ loaderData: view }) =>
     view
       ? {

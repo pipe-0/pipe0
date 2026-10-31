@@ -91,26 +91,6 @@ const primitives: {
   },
 ];
 
-/* Real marks from the provider catalog — the same source the docs use. */
-const providerIds = [
-  "amplemarket",
-  "crustdata",
-  "leadmagic",
-  "prospeo",
-  "hunter",
-  "surfe",
-  "wiza",
-  "zerobounce",
-  "exa",
-  "firecrawl",
-  "perplexity",
-  "openai",
-  "anthropic",
-  "gemini",
-  "hubspot",
-  "salesforce",
-] as const;
-
 const useCases = [
   {
     title: "CRMs",
@@ -147,7 +127,7 @@ function CodeCard({ children, file }: { children: ReactNode; file: string }) {
 }
 
 export const Route = createFileRoute("/_marketing/enrichment-api")({
-  loader: () => getProviderTiles({ data: [...providerIds] }),
+  loader: () => getProviderTiles(),
   head: () => ({
     ...seo({
       title: "Enrichment & Search API",

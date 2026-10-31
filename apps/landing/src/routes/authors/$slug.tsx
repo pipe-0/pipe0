@@ -13,7 +13,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { ArrowUpRight, Check } from "lucide-react";
 
 export const Route = createFileRoute("/authors/$slug")({
-  loader: ({ params }) => getAuthorPage({ data: params.slug }),
+  loader: ({ params }) => getAuthorPage(params.slug),
   head: ({ loaderData }) => {
     const author = loaderData && getAuthorBySlug(loaderData.slug);
     if (!author) return {};

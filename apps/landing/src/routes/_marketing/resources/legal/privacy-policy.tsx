@@ -17,7 +17,7 @@ export const Route = createFileRoute(
   "/_marketing/resources/legal/privacy-policy",
 )({
   beforeLoad: async () => {
-    const href = await getLatestLegalUrl({ data: "privacy-policy" });
+    const href = await getLatestLegalUrl("privacy-policy");
     throw redirect({ href, statusCode: 307 });
   },
 });

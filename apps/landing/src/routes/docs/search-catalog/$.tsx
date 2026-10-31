@@ -5,7 +5,7 @@ import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/docs/search-catalog/$")({
   loader: ({ params }) =>
-    getDocsPage({ data: ["search-catalog", ...splatSlugs(params._splat)] }),
+    getDocsPage(["search-catalog", ...splatSlugs(params._splat)]),
   head: ({ loaderData }) => docsHead(loaderData),
   component: Page,
 });

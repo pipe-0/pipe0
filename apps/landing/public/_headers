@@ -16,6 +16,10 @@
 /api/search
   Content-Type: application/json
 
+# Loader results for client navigation, not pages.
+/data/*
+  X-Robots-Tag: noindex
+
 # The default domain mirrors the site and must stay out of search results.
 https://pipe0-landing.florian-martens22.workers.dev/*
   X-Robots-Tag: noindex

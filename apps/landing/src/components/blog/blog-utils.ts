@@ -1,4 +1,4 @@
-import type { BlogPage } from "@/lib/source.server";
+import type { BlogPage } from "@/lib/collections.server";
 
 /* ---- Generated cover art ----
    Deterministic SVG scene derived from the post title: a saturated paper

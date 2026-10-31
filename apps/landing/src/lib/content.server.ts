@@ -1,7 +1,7 @@
 import type { PlainPage } from "./content";
 
 /**
- * A page's frontmatter, ready to cross the server function boundary. Compiled
+ * A page's frontmatter, ready to be a loader result. Compiled
  * content stays behind: routes render it from the browser collections.
  */
 export function plainPage<

@@ -5,17 +5,11 @@ import {
 } from "fumadocs-core/source";
 import { lucideIconsPlugin } from "fumadocs-core/source/lucide-icons";
 import { openapi } from "./openapi.server";
-import { toFumadocsSource } from "fumadocs-mdx/runtime/server";
 import {
   catalogEntryTreePlugin,
   catalogIconPlugin,
 } from "./catalog-sidebar-plugin";
-import {
-  blog as blogPosts,
-  docs,
-  legal as legalPages,
-  reviews as reviewPages,
-} from "collections/server";
+import { docs } from "collections/server";
 import { createPipeCatalogSource } from "./pipe-catalog-source";
 import { createSearchCatalogSource } from "./search-catalog-source";
 
@@ -45,27 +39,5 @@ export const source = loader(
   },
 );
 
-// Two posts use this slug. Production serves (0028); load order decided that
-// under Next and would flip it here, so the other one is left out on purpose.
-const SHADOWED_POST = "(0037)/what-is-waterfall-enrichment/index.mdx";
-
-export const blog = loader(
-  toFumadocsSource(
-    blogPosts.filter((post) => post.info.path !== SHADOWED_POST),
-    [],
-  ),
-  { baseUrl: "/blog" },
-);
-
-export const reviews = loader(toFumadocsSource(reviewPages, []), {
-  baseUrl: "/reviews",
-});
-
-export const legal = loader(toFumadocsSource(legalPages, []), {
-  baseUrl: "/resources/legal",
-});
-
 export type Page = InferPageType<typeof source>;
 export type Meta = InferMetaType<typeof source>;
-export type BlogPage = InferPageType<typeof blog>;
-export type ReviewPage = InferPageType<typeof reviews>;

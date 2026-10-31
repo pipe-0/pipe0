@@ -1,23 +1,16 @@
-import { isVisible } from "@/components/reviews/review-utils";
-import { plainPage } from "@/lib/content.server";
-import { relatedReviews, sortedReviews } from "@/lib/reviews.server";
-import { reviews } from "@/lib/source.server";
-import { notFound } from "@tanstack/react-router";
-import { createServerFn } from "@tanstack/react-start";
+import { createIsomorphicFn } from "@tanstack/react-start";
+import { found, readData } from "./static-data";
 
-export const getReviewsIndex = createServerFn({ method: "GET" }).handler(() => {
-  const all = sortedReviews();
-  if (all.length === 0) throw notFound();
-  return all.map(plainPage);
-});
+export const getReviewsIndex = createIsomorphicFn()
+  .server(async () => {
+    const { reviewsIndexData } = await import("./reviews.server");
+    return found(reviewsIndexData());
+  })
+  .client(() => readData("reviews-index"));
 
-export const getReview = createServerFn({ method: "GET" })
-  .validator((slug: string) => slug)
-  .handler(({ data }) => {
-    const page = reviews.getPage([data]);
-    if (!page || !isVisible(page)) throw notFound();
-    return {
-      review: plainPage(page),
-      related: relatedReviews(page, 3).map(plainPage),
-    };
-  });
+export const getReview = createIsomorphicFn()
+  .server(async (slug: string) => {
+    const { reviewData } = await import("./reviews.server");
+    return found(reviewData(slug));
+  })
+  .client((slug) => readData("review", slug));

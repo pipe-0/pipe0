@@ -52,10 +52,7 @@ export default createServerEntry({
       });
     }
 
-    if (
-      (request.method === "GET" || request.method === "HEAD") &&
-      !url.pathname.startsWith("/_serverFn")
-    ) {
+    if (request.method === "GET" || request.method === "HEAD") {
       const asset = await serveAsset(request, url);
       if (asset) return asset;
     }

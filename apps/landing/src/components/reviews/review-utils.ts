@@ -1,5 +1,5 @@
 import type { PlainPage } from "@/lib/content";
-import type { ReviewPage } from "@/lib/source.server";
+import type { ReviewPage } from "@/lib/collections.server";
 
 /** A review as it reaches the browser: frontmatter, no compiled content. */
 export type Review = PlainPage<ReviewPage>;

@@ -20,7 +20,7 @@ import { getCompare } from "@/lib/compare/compare.functions";
 import { seo } from "@/lib/seo";
 
 export const Route = createFileRoute("/_marketing/compare/$slug")({
-  loader: ({ params }) => getCompare({ data: params.slug }),
+  loader: ({ params }) => getCompare(params.slug),
   head: ({ loaderData: config }) =>
     config
       ? {

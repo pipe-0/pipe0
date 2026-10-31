@@ -1,49 +1,28 @@
 import { categoryFromSlug } from "@/components/blog/blog-utils";
-import { getAuthor, getAuthorBySlug } from "@/lib/authors";
-import {
-  blogIndexData,
-  postsByAuthor,
-  relatedPosts,
-  toFeedPost,
-} from "@/lib/blog.server";
-import { plainPage } from "@/lib/content.server";
-import { blog } from "@/lib/source.server";
-import { notFound } from "@tanstack/react-router";
-import { createServerFn } from "@tanstack/react-start";
+import { createIsomorphicFn } from "@tanstack/react-start";
+import { found, readData } from "./static-data";
 
-export const getBlogIndex = createServerFn({ method: "GET" }).handler(() =>
-  blogIndexData(),
-);
+export const getBlogIndex = createIsomorphicFn()
+  .server(async () => (await import("./blog.server")).blogIndexData())
+  .client(() => readData("blog-index"));
 
-export const getBlogCategory = createServerFn({ method: "GET" })
-  .validator((slug: string) => slug)
-  .handler(({ data }) => {
-    const category = categoryFromSlug(data);
-    if (!category) throw notFound();
-    return blogIndexData(category);
-  });
+export const getBlogCategory = createIsomorphicFn()
+  .server(async (slug: string) => {
+    const { blogIndexData } = await import("./blog.server");
+    return blogIndexData(found(categoryFromSlug(slug)));
+  })
+  .client((slug) => readData("blog-category", slug));
 
-export const getBlogPost = createServerFn({ method: "GET" })
-  .validator((slug: string) => slug)
-  .handler(({ data }) => {
-    const page = blog.getPage([data]);
-    // Drafts 404 like missing pages.
-    if (!page || page.data.draft === true) throw notFound();
-    return {
-      post: plainPage(page),
-      related: relatedPosts(page, 2).map(plainPage),
-    };
-  });
+export const getBlogPost = createIsomorphicFn()
+  .server(async (slug: string) => {
+    const { blogPostData } = await import("./blog.server");
+    return found(blogPostData(slug));
+  })
+  .client((slug) => readData("blog-post", slug));
 
-export const getAuthorPage = createServerFn({ method: "GET" })
-  .validator((slug: string) => slug)
-  .handler(({ data }) => {
-    const author = getAuthorBySlug(data);
-    if (!author) throw notFound();
-    const posts = postsByAuthor(author.key);
-    return {
-      slug: author.slug,
-      posts: posts.map((p) => toFeedPost(p, 2)),
-      newest: posts.map((p) => p.data.updated ?? p.data.date),
-    };
-  });
+export const getAuthorPage = createIsomorphicFn()
+  .server(async (slug: string) => {
+    const { authorPageData } = await import("./blog.server");
+    return found(authorPageData(slug));
+  })
+  .client((slug) => readData("author", slug));

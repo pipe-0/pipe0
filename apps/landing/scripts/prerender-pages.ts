@@ -41,6 +41,28 @@ export async function prerenderPages() {
 
   const posts = publishedSlugs("blog");
   const reviews = publishedSlugs("reviews");
+  const categories = ["thinking", "engineering", "sales-data"];
+  const legal = contentSlugs("legal");
+
+  // One file per `readData()` key; see src/routes/data/{$}[.]json.ts.
+  const data = [
+    "site-frame",
+    "docs-tree",
+    ...docs.map((path) => path.slice(1)),
+    "blog-index",
+    ...categories.map((category) => `blog-category/${category}`),
+    ...posts.map((slug) => `blog-post/${slug}`),
+    ...AUTHORS.map((author) => `author/${author.slug}`),
+    "reviews-index",
+    ...reviews.map((slug) => `review/${slug}`),
+    ...legal.map((slug) => `legal/${slug}`),
+    ...["dpa", "privacy-policy", "terms-of-service"].map(
+      (family) => `legal-latest/${family}`,
+    ),
+    ...compareConfigs.map((config) => `compare/${config.slug}`),
+    "provider-tiles",
+    "catalog-doc-paths",
+  ];
 
   const paths = [
     "/",
@@ -54,14 +76,12 @@ export async function prerenderPages() {
     "/resources/api-reference",
     "/tools/lemlist-api-key-encoder",
     ...compareConfigs.map((config) => `/compare/${config.slug}`),
-    ...contentSlugs("legal").map((slug) => `/resources/legal/${slug}`),
+    ...legal.map((slug) => `/resources/legal/${slug}`),
     ...docs,
     ...docs.map((path) => `${path}.mdx`),
     "/blog",
     "/blog/rss.xml",
-    ...["thinking", "engineering", "sales-data"].map(
-      (c) => `/blog/category/${c}`,
-    ),
+    ...categories.map((category) => `/blog/category/${category}`),
     ...posts.map((slug) => `/blog/${slug}`),
     ...posts.map((slug) => `/blog/${slug}.md`),
     "/reviews",
@@ -75,6 +95,7 @@ export async function prerenderPages() {
     "/api/search",
     "/api/chat-index.json",
     "/og-manifest.json",
+    ...data.map((key) => `/data/${key}.json`),
   ];
   return [...new Set(paths)].map((path) => ({ path }));
 }

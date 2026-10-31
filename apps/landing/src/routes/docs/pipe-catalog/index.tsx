@@ -4,7 +4,7 @@ import { docsHead } from "@/lib/docs-head";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/docs/pipe-catalog/")({
-  loader: () => getDocsPage({ data: ["pipe-catalog"] }),
+  loader: () => getDocsPage(["pipe-catalog"]),
   head: ({ loaderData }) => docsHead(loaderData),
   component: Page,
 });

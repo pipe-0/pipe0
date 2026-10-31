@@ -1,5 +1,6 @@
 import { isVisible, overallScore } from "@/components/reviews/review-utils";
-import { reviews, type ReviewPage } from "@/lib/source.server";
+import { plainPage } from "@/lib/content.server";
+import { reviews, type ReviewPage } from "@/lib/collections.server";
 
 /** Visible reviews, best score first, then by name. */
 export function sortedReviews(): ReviewPage[] {
@@ -31,4 +32,18 @@ export function relatedReviews(
         Number(a.data.tool.category === current.data.tool.category),
     )
     .slice(0, count);
+}
+
+export function reviewsIndexData() {
+  const all = sortedReviews();
+  return all.length > 0 ? all.map(plainPage) : undefined;
+}
+
+export function reviewData(slug: string) {
+  const page = reviews.getPage([slug]);
+  if (!page || !isVisible(page)) return undefined;
+  return {
+    review: plainPage(page),
+    related: relatedReviews(page, 3).map(plainPage),
+  };
 }

@@ -880,7 +880,7 @@ function Review() {
 
 export const Route = createFileRoute("/reviews/$slug")({
   loader: async ({ params }) => {
-    const data = await getReview({ data: params.slug });
+    const data = await getReview(params.slug);
     await content.preload(data.review.path);
     return data;
   },

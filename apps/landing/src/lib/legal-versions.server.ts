@@ -1,4 +1,4 @@
-import { legal } from "@/lib/source.server";
+import { legal } from "@/lib/collections.server";
 
 /** Version folders are date-stamped `YYYYMMDD`, which sorts chronologically. */
 const VERSION_SLUG = /^\d{8}$/;
@@ -22,4 +22,15 @@ export function latestLegalVersion(family: string) {
 
   versions.sort((a, b) => b.version.localeCompare(a.version));
   return versions[0]?.page;
+}
+
+export function legalPageData(slugs: string[]) {
+  const page = slugs.length > 0 ? legal.getPage(slugs) : undefined;
+  if (!page) return undefined;
+  return {
+    path: page.path,
+    url: page.url,
+    title: page.data.title,
+    description: page.data.description,
+  };
 }

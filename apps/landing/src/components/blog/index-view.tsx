@@ -1,4 +1,7 @@
-import { BLOG_DESCRIPTION, CATEGORY_DESCRIPTIONS } from "@/components/blog/blog-utils";
+import {
+  BLOG_DESCRIPTION,
+  CATEGORY_DESCRIPTIONS,
+} from "@/components/blog/blog-utils";
 import { SiteLink } from "@/components/link";
 import type { BlogIndexData } from "@/lib/blog.server";
 import { cn, getBaseUrl } from "@/lib/utils";
@@ -70,7 +73,7 @@ export function BlogIndexView({
               <>
                 Updated{" "}
                 <span className="font-medium text-fd-foreground">
-                  {monthYear(updated)}
+                  {monthYear(new Date(updated))}
                 </span>
                 {" · "}
               </>
@@ -84,12 +87,11 @@ export function BlogIndexView({
           </div>
         </header>
 
-        <nav
-          aria-label="Blog sections"
-          className="mt-8 flex flex-wrap gap-2"
-        >
+        <nav aria-label="Blog sections" className="mt-8 flex flex-wrap gap-2">
           {chips.map((chip) => {
-            const active = (chip.key === "all" && !activeCategory) || chip.key === activeCategory;
+            const active =
+              (chip.key === "all" && !activeCategory) ||
+              chip.key === activeCategory;
             return (
               <SiteLink
                 key={chip.key}

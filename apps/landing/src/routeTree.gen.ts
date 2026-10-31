@@ -35,6 +35,7 @@ import { Route as BlogIndexRouteImport } from './routes/blog/index'
 import { Route as BlogSlugRouteImport } from './routes/blog/$slug'
 import { Route as BlogRssDotxmlRouteImport } from './routes/blog/rss[.]xml'
 import { Route as BlogChar123slugChar125DotmdRouteImport } from './routes/blog/{$slug}[.]md'
+import { Route as DataChar123Char125DotjsonRouteImport } from './routes/data/{$}[.]json'
 import { Route as DocsIndexRouteImport } from './routes/docs/index'
 import { Route as DocsSplatRouteImport } from './routes/docs/$'
 import { Route as DocsChar123Char125DotmdxRouteImport } from './routes/docs/{$}[.]mdx'
@@ -189,6 +190,12 @@ const BlogChar123slugChar125DotmdRoute =
     path: '/{$slug}.md',
     getParentRoute: () => BlogRoute,
   } as any)
+const DataChar123Char125DotjsonRoute =
+  DataChar123Char125DotjsonRouteImport.update({
+    id: '/data/{$}.json',
+    path: '/data/{$}.json',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const DocsIndexRoute = DocsIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -341,6 +348,7 @@ export interface FileRoutesByFullPath {
   '/blog/$slug': typeof BlogSlugRoute
   '/blog/rss.xml': typeof BlogRssDotxmlRoute
   '/blog/{$slug}.md': typeof BlogChar123slugChar125DotmdRoute
+  '/data/{$}.json': typeof DataChar123Char125DotjsonRoute
   '/docs/$': typeof DocsSplatRoute
   '/docs/{$}.mdx': typeof DocsChar123Char125DotmdxRoute
   '/reviews/$slug': typeof ReviewsSlugRoute
@@ -386,6 +394,7 @@ export interface FileRoutesByTo {
   '/blog/$slug': typeof BlogSlugRoute
   '/blog/rss.xml': typeof BlogRssDotxmlRoute
   '/blog/{$slug}.md': typeof BlogChar123slugChar125DotmdRoute
+  '/data/{$}.json': typeof DataChar123Char125DotjsonRoute
   '/docs/$': typeof DocsSplatRoute
   '/docs/{$}.mdx': typeof DocsChar123Char125DotmdxRoute
   '/reviews/$slug': typeof ReviewsSlugRoute
@@ -438,6 +447,7 @@ export interface FileRoutesById {
   '/blog/$slug': typeof BlogSlugRoute
   '/blog/rss.xml': typeof BlogRssDotxmlRoute
   '/blog/{$slug}.md': typeof BlogChar123slugChar125DotmdRoute
+  '/data/{$}.json': typeof DataChar123Char125DotjsonRoute
   '/docs/$': typeof DocsSplatRoute
   '/docs/{$}.mdx': typeof DocsChar123Char125DotmdxRoute
   '/reviews/$slug': typeof ReviewsSlugRoute
@@ -491,6 +501,7 @@ export interface FileRouteTypes {
     | '/blog/$slug'
     | '/blog/rss.xml'
     | '/blog/{$slug}.md'
+    | '/data/{$}.json'
     | '/docs/$'
     | '/docs/{$}.mdx'
     | '/reviews/$slug'
@@ -536,6 +547,7 @@ export interface FileRouteTypes {
     | '/blog/$slug'
     | '/blog/rss.xml'
     | '/blog/{$slug}.md'
+    | '/data/{$}.json'
     | '/docs/$'
     | '/docs/{$}.mdx'
     | '/reviews/$slug'
@@ -587,6 +599,7 @@ export interface FileRouteTypes {
     | '/blog/$slug'
     | '/blog/rss.xml'
     | '/blog/{$slug}.md'
+    | '/data/{$}.json'
     | '/docs/$'
     | '/docs/{$}.mdx'
     | '/reviews/$slug'
@@ -630,6 +643,7 @@ export interface RootRouteChildren {
   ApiChatRoute: typeof ApiChatRoute
   ApiChatIndexDotjsonRoute: typeof ApiChatIndexDotjsonRoute
   ApiSearchRoute: typeof ApiSearchRoute
+  DataChar123Char125DotjsonRoute: typeof DataChar123Char125DotjsonRoute
   ToolsLemlistApiKeyEncoderRoute: typeof ToolsLemlistApiKeyEncoderRoute
 }
 
@@ -816,6 +830,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/blog/{$slug}.md'
       preLoaderRoute: typeof BlogChar123slugChar125DotmdRouteImport
       parentRoute: typeof BlogRoute
+    }
+    '/data/{$}.json': {
+      id: '/data/{$}.json'
+      path: '/data/{$}.json'
+      fullPath: '/data/{$}.json'
+      preLoaderRoute: typeof DataChar123Char125DotjsonRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/docs/': {
       id: '/docs/'
@@ -1125,6 +1146,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiChatRoute: ApiChatRoute,
   ApiChatIndexDotjsonRoute: ApiChatIndexDotjsonRoute,
   ApiSearchRoute: ApiSearchRoute,
+  DataChar123Char125DotjsonRoute: DataChar123Char125DotjsonRoute,
   ToolsLemlistApiKeyEncoderRoute: ToolsLemlistApiKeyEncoderRoute,
 }
 export const routeTree = rootRouteImport

@@ -26,7 +26,7 @@ import { authorUrl, getAuthor } from "@/lib/authors";
 import { getBlogPost } from "@/lib/blog.functions";
 import type { PlainPage } from "@/lib/content";
 import { seo } from "@/lib/seo";
-import type { BlogPage } from "@/lib/source.server";
+import type { BlogPage } from "@/lib/collections.server";
 import { getBaseUrl } from "@/lib/utils";
 import { getMDXComponents } from "@/mdx-components";
 import { createFileRoute, Link } from "@tanstack/react-router";
@@ -305,7 +305,7 @@ function BlogPost() {
 
 export const Route = createFileRoute("/blog/$slug")({
   loader: async ({ params }) => {
-    const data = await getBlogPost({ data: params.slug });
+    const data = await getBlogPost(params.slug);
     await content.preload(data.post.path);
     return data;
   },
