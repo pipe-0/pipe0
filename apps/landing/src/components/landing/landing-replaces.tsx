@@ -46,7 +46,6 @@ export function LandingReplaces() {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       // Jumping straight to the crossed-off end state IS the reduced-motion
       // behavior, not a derived value; set once on mount, no cascade.
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setStruck(true);
       return;
     }

@@ -121,7 +121,6 @@ function useFilmFrame(host: React.RefObject<HTMLDivElement | null>) {
     // server and branching on it in the render pass would break hydration.
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
     if (reduced.matches) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setStill(true);
       setFrame(STILL_FRAME);
       return;
