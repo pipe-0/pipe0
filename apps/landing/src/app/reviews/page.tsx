@@ -1,5 +1,5 @@
-import { lastRevised } from "@/app/blog/blog-utils";
-import { SummarizeActions } from "@/app/blog/[slug]/page.client";
+import { lastRevised } from "@/components/blog/blog-utils";
+import { SummarizeActions } from "@/components/blog/share-actions";
 import {
   JsonLd,
   breadcrumbJsonLd,
@@ -8,7 +8,8 @@ import {
 import { appInfo } from "@/lib/const";
 import { getBaseUrl } from "@/lib/utils";
 import type { Metadata } from "next";
-import Link from "next/link";
+import { Link } from "@tanstack/react-router";
+import { SiteLink } from "@/components/link";
 import { notFound } from "next/navigation";
 import { ScorePill, ToolLogo } from "./review-parts";
 import {
@@ -98,7 +99,7 @@ export default function ReviewsIndex() {
             aria-label="Breadcrumb"
             className="flex items-center gap-1.5 text-[13px] text-fd-muted-foreground"
           >
-            <Link href="/" className="transition-colors hover:text-fd-foreground">
+            <Link to="/" className="transition-colors hover:text-fd-foreground">
               pipe0
             </Link>
             <span aria-hidden>/</span>
@@ -187,7 +188,7 @@ export default function ReviewsIndex() {
                 {reviews.map((r) => (
                   <tr key={r.url} className="border-t border-fd-border">
                     <th scope="row" className="px-4 py-3 font-medium">
-                      <Link
+                      <SiteLink
                         href={r.url}
                         className="inline-flex items-center gap-2.5 text-fd-foreground transition-colors hover:text-fd-primary"
                       >
@@ -198,7 +199,7 @@ export default function ReviewsIndex() {
                           className="rounded-md"
                         />
                         {r.data.tool.name}
-                      </Link>
+                      </SiteLink>
                     </th>
                     <td className="px-4 py-3 text-fd-muted-foreground">
                       {r.data.tool.category}
@@ -277,7 +278,7 @@ function ListBuildingSection({
       <ul className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-3">
         {reviews.map((r) => (
           <li key={r.url}>
-            <Link
+            <SiteLink
               href={r.url}
               className="group flex items-center gap-3 rounded-xl p-3 ring-1 ring-fd-border transition-colors hover:bg-fd-accent/60"
             >
@@ -286,7 +287,7 @@ function ListBuildingSection({
                 {r.data.tool.name} review
               </span>
               <ScorePill score={overallScore(r.data.scores)} />
-            </Link>
+            </SiteLink>
           </li>
         ))}
       </ul>

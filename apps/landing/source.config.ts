@@ -1,5 +1,4 @@
-import { shikiConfig } from "@/lib/shiki";
-import { pipe0CodeTheme } from "@/lib/shiki-theme";
+import { pipe0CodeTheme } from "./src/lib/shiki-theme";
 import { pageSchema } from "fumadocs-core/source/schema";
 import {
   applyMdxPreset,
@@ -9,7 +8,6 @@ import {
 } from "fumadocs-mdx/config";
 import jsonSchema from "fumadocs-mdx/plugins/json-schema";
 import lastModified from "fumadocs-mdx/plugins/last-modified";
-import { RemarkAutoTypeTableOptions } from "fumadocs-typescript";
 import type { ElementContent } from "hast";
 import type { ShikiTransformer } from "shiki";
 import { z } from "zod";
@@ -37,6 +35,9 @@ function transformerEscape(): ShikiTransformer {
 export const docs = defineDocs({
   dir: "src/content/docs",
   docs: {
+    // Compiled pages load on demand, so the first server function in a Worker
+    // isolate does not evaluate every doc.
+    async: true,
     postprocess: {
       includeProcessedMarkdown: true,
     },
@@ -45,24 +46,7 @@ export const docs = defineDocs({
         await import("fumadocs-core/mdx-plugins/rehype-code");
       const { remarkSteps } =
         await import("fumadocs-core/mdx-plugins/remark-steps");
-      const { transformerTwoslash } = await import("fumadocs-twoslash");
-      const { createFileSystemTypesCache } =
-        await import("fumadocs-twoslash/cache-fs");
-      const { remarkTypeScriptToJavaScript } =
-        await import("fumadocs-docgen/remark-ts2js");
-      const { default: rehypeKatex } = await import("rehype-katex");
-      const {
-        remarkAutoTypeTable,
-        createGenerator,
-        createFileSystemGeneratorCache,
-      } = await import("fumadocs-typescript");
 
-      const typeTableOptions: RemarkAutoTypeTableOptions = {
-        generator: createGenerator({
-          cache: createFileSystemGeneratorCache(".next/fumadocs-typescript"),
-        }),
-        shiki: shikiConfig,
-      };
       return applyMdxPreset({
         rehypeCodeOptions: isLint
           ? false
@@ -75,12 +59,11 @@ export const docs = defineDocs({
               },
               transformers: [
                 ...(rehypeCodeDefaultOptions.transformers ?? []),
-                transformerTwoslash({
-                  typesCache: createFileSystemTypesCache(),
-                }),
                 transformerEscape(),
               ],
             },
+        // Keeps /media URLs and writes width and height at compile time.
+        remarkImageOptions: { useImport: false },
         remarkCodeTabOptions: {
           parseMdx: true,
         },
@@ -110,14 +93,7 @@ export const docs = defineDocs({
             id: "package-manager",
           },
         },
-        remarkPlugins: isLint
-          ? []
-          : [
-              remarkSteps,
-              [remarkAutoTypeTable, typeTableOptions],
-              remarkTypeScriptToJavaScript,
-            ],
-        rehypePlugins: (v) => [rehypeKatex, ...v],
+        remarkPlugins: isLint ? [] : [remarkSteps],
       })(environment);
     },
   },
@@ -142,6 +118,7 @@ async function articleMdxOptions(environment: Parameters<ReturnType<typeof apply
     await import("fumadocs-core/mdx-plugins/remark-steps");
 
   return applyMdxPreset({
+    remarkImageOptions: { useImport: false },
     rehypeCodeOptions: isLint
       ? false
       : {
@@ -167,10 +144,21 @@ async function articleMdxOptions(environment: Parameters<ReturnType<typeof apply
   })(environment);
 }
 
+/** Word-count estimate from the raw MDX, frontmatter stripped. */
+function readingMinutes(source: string) {
+  const words = source
+    .replace(/^---[\s\S]*?---/, "")
+    .split(/\s+/)
+    .filter(Boolean).length;
+  return Math.max(1, Math.round(words / 220));
+}
+
 export const blog = defineCollections({
   type: "doc",
   dir: "src/content/blog",
-  schema: pageSchema.extend({
+  schema: ({ source }) => pageSchema.extend({
+    /** Filled in at compile time; the Worker has no files to read. */
+    minutes: z.number().default(readingMinutes(source)),
     authors: z
       .array(z.object({ name: z.string(), title: z.string() }))
       .optional(),

@@ -1,5 +1,5 @@
-import { source } from "@/lib/source";
-import { getLLMText } from "@/lib/get-llm-text";
+import { source } from "@/lib/source.server";
+import { getLLMText } from "@/lib/get-llm-text.server";
 import { deprecatedCatalogPage } from "@/lib/catalog-lifecycle";
 
 // cached forever

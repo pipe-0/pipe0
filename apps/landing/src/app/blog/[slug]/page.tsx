@@ -4,7 +4,7 @@ import {
   lastRevised,
   postCover,
   relatedPosts,
-} from "@/app/blog/blog-utils";
+} from "@/components/blog/blog-utils";
 import {
   JsonLd,
   ORG_ID,
@@ -13,12 +13,13 @@ import {
   personRefJsonLd,
 } from "@/components/seo/json-ld";
 import { authorUrl, getAuthor } from "@/lib/authors";
-import { blog, type BlogPage } from "@/lib/source";
+import { blog, type BlogPage } from "@/lib/source.server";
 import { getBaseUrl } from "@/lib/utils";
 import { getMDXComponents } from "@/mdx-components";
 import { ArrowLeft } from "lucide-react";
 import type { Metadata } from "next";
-import Link from "next/link";
+import { Link } from "@tanstack/react-router";
+import { SiteLink } from "@/components/link";
 import { notFound } from "next/navigation";
 import fs from "node:fs/promises";
 import { AuthorAvatar } from "../author-avatar";
@@ -103,7 +104,7 @@ export default async function BlogPost(props: {
         {/* Share rail — back to the index, then the share actions */}
         <aside className="sticky top-24 hidden w-9 shrink-0 flex-col items-center gap-1.5 md:flex">
           <Link
-            href="/blog"
+            to="/blog"
             title="All posts"
             aria-label="All posts"
             className="grid size-8 place-items-center rounded-full text-fd-muted-foreground ring-1 ring-fd-foreground/10 transition-colors hover:bg-fd-accent hover:text-fd-foreground"
@@ -122,7 +123,7 @@ export default async function BlogPost(props: {
           {/* Mobile bar — the rail's actions, folded into one row */}
           <div className="mb-6 flex items-center gap-1.5 md:hidden">
             <Link
-              href="/blog"
+              to="/blog"
               className="inline-flex items-center gap-1.5 text-[13px] text-fd-muted-foreground transition-colors hover:text-fd-foreground"
             >
               <ArrowLeft className="size-3.5" />
@@ -148,12 +149,12 @@ export default async function BlogPost(props: {
               {page.data.category && (
                 <>
                   {" · "}
-                  <Link
+                  <SiteLink
                     href={`/blog/category/${categorySlug(page.data.category)}`}
                     className="transition-colors hover:text-fd-foreground"
                   >
                     {page.data.category}
-                  </Link>
+                  </SiteLink>
                 </>
               )}
               {minutes !== null && <> · {minutes} min read</>}
@@ -201,13 +202,13 @@ export default async function BlogPost(props: {
                         <span key={a.name}>
                           {i > 0 && " · "}
                           {managed ? (
-                            <Link
+                            <SiteLink
                               href={authorUrl(managed)}
                               rel="author"
                               className="font-medium text-fd-foreground transition-colors hover:text-fd-primary"
                             >
                               {label}
-                            </Link>
+                            </SiteLink>
                           ) : (
                             label
                           )}
@@ -230,7 +231,6 @@ export default async function BlogPost(props: {
 
           {page.data.cover && (
             <figure className="mt-10 sm:mt-12">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={page.data.cover}
                 alt=""
@@ -289,8 +289,7 @@ export default async function BlogPost(props: {
 
 function RelatedCard({ post }: { post: BlogPage }) {
   return (
-    <Link href={post.url} className="group flex flex-col">
-      {/* eslint-disable-next-line @next/next/no-img-element */}
+    <SiteLink href={post.url} className="group flex flex-col">
       <img
         src={postCover(post, 2)}
         alt=""
@@ -309,7 +308,7 @@ function RelatedCard({ post }: { post: BlogPage }) {
           {formatDate(post.data.date)}
         </p>
       )}
-    </Link>
+    </SiteLink>
   );
 }
 

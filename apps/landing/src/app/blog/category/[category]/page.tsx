@@ -4,7 +4,7 @@ import {
   categorySlug,
   sortedPosts,
   usedCategories,
-} from "@/app/blog/blog-utils";
+} from "@/components/blog/blog-utils";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { BlogIndexView } from "../../index-view";

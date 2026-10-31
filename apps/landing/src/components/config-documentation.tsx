@@ -1,5 +1,3 @@
-"use client";
-
 import { OptionsSection } from "@/components/config-documentation-options-section";
 import { DynamicCodeBlock } from "@/components/features/docs/dynamic-code-block";
 import { TextLink } from "@/components/text-link";

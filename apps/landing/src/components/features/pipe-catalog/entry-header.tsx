@@ -1,5 +1,3 @@
-"use client";
-
 import { ProviderTile } from "@/components/features/pipe-catalog/catalog-list-row";
 import { TextLink } from "@/components/text-link";
 import { Button } from "@/components/ui/button";

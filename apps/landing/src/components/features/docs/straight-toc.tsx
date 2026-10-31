@@ -1,5 +1,3 @@
-"use client";
-
 import * as Primitive from "fumadocs-core/toc";
 import { TOCScrollArea, useTOCItems } from "fumadocs-ui/components/toc";
 import { Text } from "lucide-react";

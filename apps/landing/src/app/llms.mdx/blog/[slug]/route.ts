@@ -1,6 +1,6 @@
-import { formatDate, lastRevised } from "@/app/blog/blog-utils";
+import { formatDate, lastRevised } from "@/components/blog/blog-utils";
 import { authorDisplayName, authorUrl, getAuthor } from "@/lib/authors";
-import { blog } from "@/lib/source";
+import { blog } from "@/lib/source.server";
 import { getBaseUrl } from "@/lib/utils";
 import { notFound } from "next/navigation";
 

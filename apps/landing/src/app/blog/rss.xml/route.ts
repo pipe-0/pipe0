@@ -1,4 +1,4 @@
-import { sortedPosts } from "@/app/blog/blog-utils";
+import { sortedPosts } from "@/components/blog/blog-utils";
 import { authorDisplayName } from "@/lib/authors";
 import { getBaseUrl } from "@/lib/utils";
 

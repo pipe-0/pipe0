@@ -1,4 +1,4 @@
-import { source } from "@/lib/source";
+import { source } from "@/lib/source.server";
 import { DocsLayout } from "fumadocs-ui/layouts/docs";
 import { RootProvider } from "@/components/root-provider";
 import { monoPreloaded } from "@/lib/fonts/mono";

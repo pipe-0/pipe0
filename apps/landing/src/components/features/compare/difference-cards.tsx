@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { SiteLink } from "@/components/link";
 import { Cell, Cells, SectionHead } from "@/components/grid";
 import { cn } from "@/lib/utils";
 import type { DifferenceCard } from "@/lib/compare/types";
@@ -31,12 +31,12 @@ export function DifferenceCards({
             {card.link && (
               // mt-auto pins every cell's link to the same baseline across the row.
               <p className="mt-auto pt-4">
-                <Link
+                <SiteLink
                   href={card.link.href}
                   className="text-[15px] font-medium text-primary underline decoration-primary/30 underline-offset-4 hover:decoration-primary"
                 >
                   {card.link.label}
-                </Link>
+                </SiteLink>
               </p>
             )}
           </Cell>

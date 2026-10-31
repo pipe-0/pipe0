@@ -1,5 +1,3 @@
-"use client";
-
 import { UiExampleCard } from "@/components/features/docs/ui-example-card";
 import {
   type FieldAnnotationsType,
@@ -10,18 +8,25 @@ import {
   validatePipesOrError,
   collectRequirementFields,
 } from "@pipe0/base";
-import dynamic from "next/dynamic";
-import { useMemo } from "react";
+import { ClientOnly } from "@tanstack/react-router";
+import { lazy, Suspense, useMemo } from "react";
 import "@pipe0/react/styles";
 import { ClientPipesPayload } from "@pipe0/client";
 
-const PipeFormComponents = dynamic(
-  () => import("./pipe-form-inner").then((mod) => mod.PipeFormInner),
-  {
-    ssr: false,
-    loading: () => <FormSkeleton />,
-  },
+const PipeFormComponentsLazy = lazy(() =>
+  import("./pipe-form-inner").then((mod) => ({ default: mod.PipeFormInner })),
 );
+
+/** The form reads browser state, so it renders after hydration. */
+function PipeFormComponents(props: React.ComponentProps<typeof PipeFormComponentsLazy>) {
+  return (
+    <ClientOnly fallback={<FormSkeleton />}>
+      <Suspense fallback={<FormSkeleton />}>
+        <PipeFormComponentsLazy {...props} />
+      </Suspense>
+    </ClientOnly>
+  );
+}
 
 function FormSkeleton() {
   return (

@@ -1,5 +1,3 @@
-"use client";
-
 import { TextLink } from "@/components/text-link";
 import {
   Popover,

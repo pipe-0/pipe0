@@ -1,4 +1,4 @@
-import { BLOG_DESCRIPTION } from "@/app/blog/blog-utils";
+import { BLOG_DESCRIPTION } from "@/components/blog/blog-utils";
 import type { Metadata } from "next";
 import { BlogIndexView } from "./index-view";
 

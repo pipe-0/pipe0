@@ -1,8 +1,8 @@
-import { lastRevised, postsByAuthor } from "@/app/blog/blog-utils";
-import { AuthorAvatar } from "@/app/blog/author-avatar";
-import { toFeedPost } from "@/app/blog/index-view";
-import { PostFeed } from "@/app/blog/page.client";
-import { PreferredSourceButton } from "@/app/blog/preferred-source-button";
+import { lastRevised, postsByAuthor } from "@/components/blog/blog-utils";
+import { AuthorAvatar } from "@/components/blog/author-avatar";
+import { toFeedPost } from "@/components/blog/index-view";
+import { PostFeed } from "@/components/blog/post-feed";
+import { PreferredSourceButton } from "@/components/blog/preferred-source-button";
 import {
   JsonLd,
   breadcrumbJsonLd,

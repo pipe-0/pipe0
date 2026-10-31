@@ -1,10 +1,10 @@
-import { formatDate, lastRevised } from "@/app/blog/blog-utils";
-import { SummarizeActions } from "@/app/blog/[slug]/page.client";
-import { AuthorAvatar } from "@/app/blog/author-avatar";
-import { AuthorCard } from "@/app/blog/author-card";
-import { PreferredSourceButton } from "@/app/blog/preferred-source-button";
-import { BlogCta } from "@/app/blog/blog-cta";
-import { PostFaq } from "@/app/blog/post-faq";
+import { formatDate, lastRevised } from "@/components/blog/blog-utils";
+import { SummarizeActions } from "@/components/blog/share-actions";
+import { AuthorAvatar } from "@/components/blog/author-avatar";
+import { AuthorCard } from "@/components/blog/author-card";
+import { PreferredSourceButton } from "@/components/blog/preferred-source-button";
+import { BlogCta } from "@/components/blog/blog-cta";
+import { PostFaq } from "@/components/blog/post-faq";
 import {
   JsonLd,
   breadcrumbJsonLd,
@@ -13,12 +13,13 @@ import {
   softwareReviewJsonLd,
 } from "@/components/seo/json-ld";
 import { authorUrl, getAuthor, type Author } from "@/lib/authors";
-import { reviews, type ReviewPage } from "@/lib/source";
+import { reviews, type ReviewPage } from "@/lib/source.server";
 import { cn, getBaseUrl } from "@/lib/utils";
 import { getMDXComponents } from "@/mdx-components";
 import { ArrowUpRight, Check, ChevronDown, Minus, X } from "lucide-react";
 import type { Metadata } from "next";
-import Link from "next/link";
+import { Link } from "@tanstack/react-router";
+import { SiteLink } from "@/components/link";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 import { AgreementTiles } from "../agreement-tiles";
@@ -122,12 +123,12 @@ export default async function Review(props: {
           aria-label="Breadcrumb"
           className="flex items-center gap-1.5 text-[13px] text-fd-muted-foreground"
         >
-          <Link href="/" className="transition-colors hover:text-fd-foreground">
+          <Link to="/" className="transition-colors hover:text-fd-foreground">
             pipe0
           </Link>
           <span aria-hidden>/</span>
           <Link
-            href="/reviews"
+            to="/reviews"
             className="transition-colors hover:text-fd-foreground"
           >
             Reviews
@@ -175,13 +176,13 @@ export default async function Review(props: {
                   <span key={a.name}>
                     {i > 0 && " · "}
                     {managed ? (
-                      <Link
+                      <SiteLink
                         href={authorUrl(managed)}
                         rel="author"
                         className="font-medium text-fd-foreground transition-colors hover:text-fd-primary"
                       >
                         {managed.name}
-                      </Link>
+                      </SiteLink>
                     ) : (
                       a.name
                     )}
@@ -199,7 +200,7 @@ export default async function Review(props: {
           <p className="mt-3 text-[13px] leading-relaxed text-fd-muted-foreground">
             {disclosure}{" "}
             <Link
-              href="/reviews#methodology"
+              to="/reviews" hash="methodology"
               className="underline underline-offset-[3px] transition-colors hover:text-fd-foreground"
             >
               How we review
@@ -450,7 +451,7 @@ export default async function Review(props: {
               ))}
               .{" "}
               <Link
-                href="/reviews#methodology"
+                to="/reviews" hash="methodology"
                 className="underline underline-offset-[3px] hover:text-fd-foreground"
               >
                 How we test
@@ -566,12 +567,12 @@ export default async function Review(props: {
                 {d.alternatives.map((alt) => (
                   <tr key={alt.name} className="border-t border-fd-border align-top">
                     <th scope="row" className="px-4 py-3 font-medium whitespace-nowrap">
-                      <Link
+                      <SiteLink
                         href={alt.href}
                         className="text-fd-foreground underline underline-offset-[3px] hover:text-fd-primary"
                       >
                         {alt.name}
-                      </Link>
+                      </SiteLink>
                     </th>
                     <td className="px-4 py-3 text-fd-muted-foreground">
                       {alt.why}
@@ -584,12 +585,12 @@ export default async function Review(props: {
           {d.compare && (
             <p className="mt-4 text-[15px] text-fd-muted-foreground">
               Side by side, feature by feature:{" "}
-              <Link
+              <SiteLink
                 href={d.compare}
                 className="text-fd-foreground underline underline-offset-[3px] hover:text-fd-primary"
               >
                 pipe0 vs {tool}
-              </Link>
+              </SiteLink>
               .
             </p>
           )}
@@ -610,7 +611,7 @@ export default async function Review(props: {
             </h2>
             <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-3">
               {related.map((r) => (
-                <Link
+                <SiteLink
                   key={r.url}
                   href={r.url}
                   className="group flex items-center gap-3 rounded-xl p-3 ring-1 ring-fd-border transition-colors hover:bg-fd-accent/60"
@@ -620,7 +621,7 @@ export default async function Review(props: {
                     {r.data.tool.name}
                   </span>
                   <ScorePill score={overallScore(r.data.scores)} />
-                </Link>
+                </SiteLink>
               ))}
             </div>
           </footer>
@@ -727,13 +728,13 @@ function ReviewRail({
             <div className="mt-3 flex items-center gap-3">
               <AuthorAvatar name={author.key} className="size-10" />
               <div className="min-w-0">
-                <Link
+                <SiteLink
                   href={authorUrl(author)}
                   rel="author"
                   className="font-blog text-[15px] font-semibold leading-tight text-fd-foreground transition-colors hover:text-fd-primary"
                 >
                   {author.name}
-                </Link>
+                </SiteLink>
                 <p className="text-[13px] text-fd-muted-foreground">
                   {author.jobTitle}, pipe0
                 </p>

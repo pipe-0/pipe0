@@ -1,5 +1,3 @@
-"use client";
-
 import { LogoSmall } from "@/components/logo";
 import { Loader, Pause, Play, X } from "lucide-react";
 import { ReactNode, useEffect, useRef, useState, useCallback } from "react";

@@ -1,5 +1,3 @@
-"use client";
-
 import { CatalogBanner } from "@/components/features/pipe-catalog/catalog-banner";
 import { ConditionalWrapper } from "@/components/conditional-wrapper";
 import {
@@ -75,8 +73,7 @@ import {
   Building2,
   UserRound,
 } from "lucide-react";
-import Link from "next/link";
-import { useIntentPrefetch } from "@/hooks/use-intent-prefetch";
+import { SiteLink } from "@/components/link";
 import { type ComponentType, type ReactNode, useMemo } from "react";
 
 const FEATURED_SEARCHES_IDS = [] satisfies SearchId[];
@@ -370,10 +367,9 @@ const SearchCard = ({ tableEntry }: { tableEntry: SearchCatalogTableData }) => {
   const isNew = (tableEntry.tags as string[]).includes("new");
   const { lowest: cost, isDiscounted } = getSearchCost(tableEntry);
   const href = getSearchDocsURI(searchId);
-  const intentPrefetch = useIntentPrefetch(href);
 
   return (
-    <Link href={href} {...intentPrefetch}>
+    <SiteLink href={href}>
       <Card className="relative flex h-full min-h-[230px] flex-col justify-stretch border-[var(--rule)] transition-colors hover:border-[var(--rule-strong)] hover:bg-[var(--well)]">
         <span className="absolute right-3 top-3 inline-flex gap-1 text-muted-foreground text-xs items-center">
           {/* A usage-metered search prices variable work (model tokens, per-call
@@ -474,7 +470,7 @@ const SearchCard = ({ tableEntry }: { tableEntry: SearchCatalogTableData }) => {
           </div>
         </CardFooter>
       </Card>
-    </Link>
+    </SiteLink>
   );
 };
 

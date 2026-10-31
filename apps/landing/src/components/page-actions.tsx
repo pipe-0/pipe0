@@ -1,4 +1,3 @@
-"use client";
 import { useMemo, useState } from "react";
 import { Check, ChevronDown, Copy, ExternalLinkIcon } from "lucide-react";
 import { useCopyButton } from "fumadocs-ui/utils/use-copy-button";

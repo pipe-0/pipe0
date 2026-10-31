@@ -1,13 +1,13 @@
 import { deprecatedCatalogPage } from "@/lib/catalog-lifecycle";
-import { sortedPosts } from "@/app/blog/blog-utils";
+import { sortedPosts } from "@/components/blog/blog-utils";
 import {
   formatScore,
   overallScore,
   publishedReviews,
-} from "@/app/reviews/review-utils";
+} from "@/components/reviews/review-utils";
 import { AUTHORS } from "@/lib/authors";
 import { compareConfigs } from "@/lib/compare/registry";
-import { source } from "@/lib/source";
+import { source } from "@/lib/source.server";
 
 export const revalidate = false;
 

@@ -1,0 +1,39 @@
+@import "@fontsource-variable/schibsted-grotesk/wght.css";
+@import "@fontsource-variable/geist-mono/wght.css";
+@import "@fontsource-variable/hanken-grotesk/wght.css";
+
+/* Metric-adjusted fallbacks: the values next/font generated, so text keeps its
+   layout while the web fonts load. */
+@font-face {
+  font-family: "Schibsted Grotesk Fallback";
+  src: local(Arial);
+  ascent-override: 93.46%;
+  descent-override: 24.67%;
+  line-gap-override: 0%;
+  size-adjust: 104.49%;
+}
+@font-face {
+  font-family: "Geist Mono Fallback";
+  src: local(Arial);
+  ascent-override: 74.67%;
+  descent-override: 21.92%;
+  line-gap-override: 0%;
+  size-adjust: 134.59%;
+}
+@font-face {
+  font-family: "Hanken Grotesk Fallback";
+  src: local(Arial);
+  ascent-override: 99.07%;
+  descent-override: 30.02%;
+  line-gap-override: 0%;
+  size-adjust: 100.94%;
+}
+
+/* On body, not :root. The base font on html resolves these variables and must
+   not see them: pages outside .landing use the system font stack, and setting
+   these any higher would swap that for Schibsted. */
+body {
+  --font-schibsted: "Schibsted Grotesk Variable", "Schibsted Grotesk Fallback";
+  --font-geist-mono: "Geist Mono Variable", "Geist Mono Fallback";
+  --font-hanken: "Hanken Grotesk Variable", "Hanken Grotesk Fallback";
+}

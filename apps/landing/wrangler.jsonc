@@ -1,0 +1,25 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "pipe0-landing",
+  "main": "./src/server.ts",
+  "compatibility_date": "2026-10-01",
+  "compatibility_flags": ["nodejs_compat"],
+  // The rewrite runs on its default workers.dev URL until a custom domain is
+  // attached, unlike the other pipe0 Workers.
+  "workers_dev": true,
+  "observability": { "enabled": true },
+  "assets": {
+    "directory": "./dist/client",
+    "binding": "ASSETS",
+    "html_handling": "drop-trailing-slash",
+    // Assets are served before the Worker by default. These paths need code
+    // first: markdown negotiation on /docs and /blog, raw-colon catalog URLs,
+    // and the /blog?category= redirect, which an asset would answer otherwise.
+    "run_worker_first": ["/docs", "/docs/*", "/blog", "/blog/*"]
+  },
+  // Replaces the per-instance limiter in /api/chat: isolates do not share
+  // memory, so an in-process counter would not limit anything here.
+  "ratelimits": [
+    { "name": "CHAT_RATE_LIMIT", "namespace_id": "1001", "simple": { "limit": 20, "period": 60 } }
+  ]
+}

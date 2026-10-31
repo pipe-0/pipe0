@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { SiteLink } from "@/components/link";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 const dateFormatter = new Intl.DateTimeFormat("en-US", {
@@ -35,9 +35,9 @@ export function CatalogDeprecationAlert({
         {successor ? (
           <p>
             Use{" "}
-            <Link href={successor.docPath} className="font-mono underline">
+            <SiteLink href={successor.docPath} className="font-mono underline">
               {successor.id}
-            </Link>{" "}
+            </SiteLink>{" "}
             instead. This {kind} keeps running only for sheets and integrations
             that already use it and can be removed without notice.
           </p>

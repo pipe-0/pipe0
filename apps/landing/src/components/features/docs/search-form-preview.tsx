@@ -1,18 +1,23 @@
-"use client";
-
 import { UiExampleCard } from "@/components/features/docs/ui-example-card";
 import type { SearchId, SearchPayload } from "@pipe0/base";
-import dynamic from "next/dynamic";
-import { useMemo } from "react";
+import { ClientOnly } from "@tanstack/react-router";
+import { lazy, Suspense, useMemo } from "react";
 import "@pipe0/react/styles";
 
-const SearchFormComponents = dynamic(
-  () => import("./search-form-inner").then((mod) => mod.SearchFormInner),
-  {
-    ssr: false,
-    loading: () => <FormSkeleton />,
-  },
+const SearchFormComponentsLazy = lazy(() =>
+  import("./search-form-inner").then((mod) => ({ default: mod.SearchFormInner })),
 );
+
+/** The form reads browser state, so it renders after hydration. */
+function SearchFormComponents(props: React.ComponentProps<typeof SearchFormComponentsLazy>) {
+  return (
+    <ClientOnly fallback={<FormSkeleton />}>
+      <Suspense fallback={<FormSkeleton />}>
+        <SearchFormComponentsLazy {...props} />
+      </Suspense>
+    </ClientOnly>
+  );
+}
 
 function FormSkeleton() {
   return (

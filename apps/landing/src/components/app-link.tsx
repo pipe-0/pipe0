@@ -2,7 +2,7 @@
 import { docsLinkPaths, DocsLinkKey } from "@pipe0/doc-links";
 import { cn } from "@/lib/utils";
 import { ArrowUpRight } from "lucide-react";
-import Link from "next/link";
+import { SiteLink } from "@/components/link";
 import { PropsWithChildren } from "react";
 
 export default function AppLink({
@@ -14,7 +14,7 @@ export default function AppLink({
 
   const isExternal = value.startsWith("http");
   return (
-    <Link
+    <SiteLink
       href={value}
       className={cn("underline text-fd-foreground", {
         "inline-flex gap-1": isExternal,
@@ -22,6 +22,6 @@ export default function AppLink({
     >
       {children}
       {isExternal && <ArrowUpRight className="size-4" />}
-    </Link>
+    </SiteLink>
   );
 }

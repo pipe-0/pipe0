@@ -1,5 +1,3 @@
-"use client";
-
 import type { SearchId, SearchPayload } from "@pipe0/base";
 import {
   SearchForm,

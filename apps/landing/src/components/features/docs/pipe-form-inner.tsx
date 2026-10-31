@@ -1,5 +1,3 @@
-"use client";
-
 import type { PipeId, PipePayload, ValidationContext } from "@pipe0/base";
 import {
   PipeForm,

@@ -1,5 +1,3 @@
-"use client";
-
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -18,7 +16,7 @@ import { toast } from "sonner";
 
 import { RequiredAsterisk } from "@/components/required-asterisk";
 import { docsLinkPaths } from "@pipe0/doc-links";
-import Link from "next/link";
+
 import { vscDarkPlus } from "react-syntax-highlighter/dist/cjs/styles/prism";
 import {
   Tooltip,

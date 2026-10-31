@@ -1,4 +1,4 @@
-import { source, getPageImage } from "@/lib/source";
+import { source, getPageImage } from "@/lib/source.server";
 import { ImageResponse } from "next/og";
 import { notFound } from "next/navigation";
 import { generate, getImageResponseOptions } from "./generate";

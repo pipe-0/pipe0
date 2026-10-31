@@ -1,6 +1,5 @@
-"use client";
-
 import { useEffect, useRef, useState, type ComponentProps, type RefObject } from "react";
+import { imageUrl } from "@/components/image";
 import { cn } from "@/lib/utils";
 
 /** True once the element has come within a screen of the viewport. */
@@ -70,13 +69,8 @@ export function LoopVideo({
     <video
       ref={ref}
       src={src}
-      // The stills are large PNGs; serve the poster through the image
-      // optimizer (a 1080w WebP) instead.
-      poster={
-        near
-          ? `/_next/image?url=${encodeURIComponent(poster)}&w=1080&q=75`
-          : undefined
-      }
+      // The stills are large PNGs; serve a 1080w AVIF or WebP instead.
+      poster={near ? imageUrl(poster, 1080) : undefined}
       muted
       loop
       playsInline

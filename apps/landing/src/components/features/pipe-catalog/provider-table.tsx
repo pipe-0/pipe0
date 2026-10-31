@@ -1,5 +1,3 @@
-"use client";
-
 import { HighVolumePriceCell } from "@/components/high-volume-price";
 import {
   Tooltip,

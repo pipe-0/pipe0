@@ -1,5 +1,3 @@
-"use client";
-
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -11,8 +9,7 @@ import {
 import { cn, copyToClipboard, formatCredits } from "@/lib/utils";
 import { providerCatalog } from "@pipe0/base";
 import { ArrowRight, Copy } from "lucide-react";
-import Link from "next/link";
-import { useIntentPrefetch } from "@/hooks/use-intent-prefetch";
+import { SiteLink } from "@/components/link";
 import { providerTileColor } from "@/lib/provider-tile";
 
 export type CatalogFieldPill = {
@@ -152,7 +149,6 @@ export function ProviderTileStrip({
                 }}
               >
                 {p?.logoUrl ? (
-                  // eslint-disable-next-line @next/next/no-img-element
                   <img
                     src={p.logoUrl}
                     alt={p.label}
@@ -266,7 +262,6 @@ export function CatalogListRow({
   isNew,
   isDeprecated,
 }: CatalogListRowProps) {
-  const intentPrefetch = useIntentPrefetch(href);
   const inputs = inputFields ?? [];
   const outputs = normalizeOutputFields(outputFields);
   const showFieldRow =
@@ -281,9 +276,8 @@ export function CatalogListRow({
     outputs === "dynamic" || (Array.isArray(outputs) && outputs.length > 0);
 
   return (
-    <Link
+    <SiteLink
       href={href}
-      {...intentPrefetch}
       className="group -mx-3 flex gap-4 rounded-[10px] border-b border-[var(--rule)] px-3 py-3.5 transition-colors last:border-b-0 hover:bg-[var(--well)]"
     >
       <ProviderTile providers={providers} />
@@ -360,6 +354,6 @@ export function CatalogListRow({
       >
         <Copy className="size-3" />
       </Button>
-    </Link>
+    </SiteLink>
   );
 }

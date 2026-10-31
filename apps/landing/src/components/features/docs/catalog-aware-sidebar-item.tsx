@@ -1,5 +1,3 @@
-"use client";
-
 import Link from "fumadocs-core/link";
 import { usePathname } from "fumadocs-core/framework";
 import type { FC } from "react";

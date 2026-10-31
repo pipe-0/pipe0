@@ -1,7 +1,7 @@
 import { Brackets, dotsStyle } from "@/components/grid";
 import { ArrowUpRight } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
+import { Image } from "@/components/image";
+import { SiteLink } from "@/components/link";
 
 /**
  * Head of a catalog index: title, one sentence, the request link, and the
@@ -30,13 +30,13 @@ export function CatalogBanner({
         <p className="mt-2 max-w-[56ch] text-[15px] leading-relaxed text-muted-foreground">
           {description}
         </p>
-        <Link
+        <SiteLink
           href={requestHref}
           className="mt-5 inline-flex w-fit items-center gap-1 text-[14px] font-medium text-primary underline decoration-primary/30 underline-offset-4 hover:decoration-primary"
         >
           {requestLabel}
           <ArrowUpRight className="size-3.5" />
-        </Link>
+        </SiteLink>
       </div>
       <div
         style={dotsStyle}

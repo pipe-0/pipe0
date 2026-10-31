@@ -1,16 +1,11 @@
-"use client";
-
 import type { ComponentProps } from "react";
-import { RootProvider as FumadocsRootProvider } from "fumadocs-ui/provider/next";
+import { RootProvider as FumadocsRootProvider } from "fumadocs-ui/provider/tanstack";
+import { Image } from "@/components/image";
+import { SiteLink } from "@/components/link";
 import { themeScriptProps } from "@/lib/theme-script";
 
 /**
  * fumadocs' RootProvider with the site-wide settings applied.
- *
- * This has to be a client module: `themeScriptProps` picks the script type by
- * checking for `window`, which only works where it is evaluated. Imported
- * from a server layout, it is always the server value, and the browser gets a
- * live <script> that React warns about.
  *
  * Search runs on a static index built with the site (/api/search, see that
  * route) and is queried in the browser, so typing never calls a function.
@@ -26,6 +21,7 @@ export function RootProvider({
   return (
     <FumadocsRootProvider
       {...props}
+      components={{ Image, Link: SiteLink }}
       theme={{
         ...theme,
         forcedTheme: "light",

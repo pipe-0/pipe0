@@ -1,4 +1,4 @@
-import { source } from "@/lib/source";
+import { source } from "@/lib/source.server";
 import { createFromSource } from "fumadocs-core/search/server";
 import type { StructuredData } from "fumadocs-core/mdx-plugins";
 

@@ -1,3 +1,8 @@
-import nextConfig from "eslint-config-next";
+import pluginRouter from "@tanstack/eslint-plugin-router";
+import tseslint from "typescript-eslint";
 
-export default [...nextConfig];
+export default tseslint.config(
+  { ignores: ["dist/**", ".source/**", ".wrangler/**", "src/routeTree.gen.ts"] },
+  { files: ["**/*.{ts,tsx}"], languageOptions: { parser: tseslint.parser } },
+  ...pluginRouter.configs["flat/recommended"],
+);

@@ -4,11 +4,11 @@ import {
   lastRevised,
   sortedPosts,
   usedCategories,
-} from "@/app/blog/blog-utils";
-import { publishedReviews } from "@/app/reviews/review-utils";
+} from "@/components/blog/blog-utils";
+import { publishedReviews } from "@/components/reviews/review-utils";
 import { AUTHORS, authorUrl } from "@/lib/authors";
 import { compareConfigs } from "@/lib/compare/registry";
-import { source, blog, legal } from "@/lib/source";
+import { source, blog, legal } from "@/lib/source.server";
 import { getBaseUrl } from "@/lib/utils";
 
 export const revalidate = false;

@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import Link from "next/link";
+import { SiteLink } from "@/components/link";
 import { ComponentProps } from "react";
 
 export function TextLink({
@@ -7,14 +7,14 @@ export function TextLink({
   children,
   className,
   ...rest
-}: ComponentProps<typeof Link>) {
+}: ComponentProps<typeof SiteLink>) {
   return (
-    <Link
+    <SiteLink
       href={href}
       className={cn("text-primary hover:underline", className)}
       {...rest}
     >
       {children}
-    </Link>
+    </SiteLink>
   );
 }

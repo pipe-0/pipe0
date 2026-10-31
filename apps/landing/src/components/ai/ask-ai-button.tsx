@@ -1,15 +1,12 @@
-"use client";
-
-import Image from "next/image";
-import dynamic from "next/dynamic";
+import { Image } from "@/components/image";
+import { lazy, Suspense } from "react";
 import { useAskAiContext } from "@/components/ai/ask-ai-provider";
 import { cn } from "@/lib/utils";
 
 // The chat panel (AI SDK, zod, markdown) is fetched on intent rather than with
 // the page — see AskAiProvider.
-const AISearchPanelRoot = dynamic(
-  () => import("@/components/ai/search").then((m) => m.AISearchPanelRoot),
-  { ssr: false },
+const AISearchPanelRoot = lazy(() =>
+  import("@/components/ai/search").then((m) => ({ default: m.AISearchPanelRoot })),
 );
 
 /**
@@ -47,7 +44,11 @@ export function AskAiButton({
 
   return (
     <>
-      {panelWanted && <AISearchPanelRoot variant={variant} />}
+      {panelWanted && (
+        <Suspense fallback={null}>
+          <AISearchPanelRoot variant={variant} />
+        </Suspense>
+      )}
       <button
         data-state={open ? "open" : "closed"}
         onClick={() => setOpen(!open)}

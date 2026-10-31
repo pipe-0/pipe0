@@ -1,6 +1,6 @@
 import { Brackets, dotsStyle } from "@/components/grid";
-import Image from "next/image";
-import Link from "next/link";
+import { Image } from "@/components/image";
+import { SiteLink } from "@/components/link";
 
 /**
  * The three quickstart entry points, in the site's line-grid language: cells
@@ -33,7 +33,7 @@ export function QuickstartCards() {
   return (
     <div className="not-prose mb-8 mt-5 grid grid-cols-1 gap-px overflow-hidden rounded-[10px] border border-[var(--rule)] bg-[var(--rule)] sm:grid-cols-3">
       {entries.map((entry) => (
-        <Link
+        <SiteLink
           key={entry.href}
           href={entry.href}
           className="group flex flex-col bg-fd-background no-underline transition-colors hover:bg-[var(--well)]"
@@ -66,7 +66,7 @@ export function QuickstartCards() {
               {entry.description}
             </span>
           </div>
-        </Link>
+        </SiteLink>
       ))}
     </div>
   );

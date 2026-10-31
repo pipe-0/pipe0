@@ -1,4 +1,4 @@
-import { formatDate, lastRevised } from "@/app/blog/blog-utils";
+import { formatDate, lastRevised } from "@/components/blog/blog-utils";
 import {
   benchmarkCaveats,
   CRITERIA,
@@ -9,14 +9,14 @@ import {
   overallScore,
   testLabel,
   waterfallSentence,
-} from "@/app/reviews/review-utils";
+} from "@/components/reviews/review-utils";
 import {
   listBenchmarkMarkdown,
   type ChartName,
-} from "@/app/reviews/list-benchmark";
+} from "@/components/reviews/list-benchmark";
 import { authorDisplayName, authorUrl, getAuthor } from "@/lib/authors";
-import { techBenchmarkMarkdown } from "@/app/reviews/tech-benchmark";
-import { reviews } from "@/lib/source";
+import { techBenchmarkMarkdown } from "@/components/reviews/tech-benchmark";
+import { reviews } from "@/lib/source.server";
 import { getBaseUrl } from "@/lib/utils";
 import { notFound } from "next/navigation";
 

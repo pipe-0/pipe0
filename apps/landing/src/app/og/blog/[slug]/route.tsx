@@ -1,5 +1,5 @@
 import { generate, getImageResponseOptions } from "@/app/og/docs/[...slug]/generate";
-import { blog } from "@/lib/source";
+import { blog } from "@/lib/source.server";
 import { ImageResponse } from "next/og";
 import { notFound } from "next/navigation";
 

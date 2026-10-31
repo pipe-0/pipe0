@@ -1,11 +1,9 @@
-"use client";
-
 import { ChevronDown, Menu } from "lucide-react";
-import Link from "next/link";
+import { SiteLink } from "@/components/link";
 import { useEffect, useRef, useState } from "react";
 
 import { Brackets, buttonSkin, dotsStyle, frame } from "@/components/grid";
-import Image from "next/image";
+import { Image } from "@/components/image";
 import { LinkLogoSmall } from "@/components/logo";
 import {
   Sheet,
@@ -125,7 +123,7 @@ function ProductsMenu({ active }: { active: boolean }) {
           </div>
           <div className="p-1.5">
             {products.map((product, i) => (
-              <Link
+              <SiteLink
                 key={product.href}
                 href={product.href}
                 onClick={() => setOpen(false)}
@@ -147,7 +145,7 @@ function ProductsMenu({ active }: { active: boolean }) {
                 >
                   &rarr;
                 </span>
-              </Link>
+              </SiteLink>
             ))}
           </div>
         </div>
@@ -178,26 +176,26 @@ export function Header({ page }: { page: Page }) {
           <nav className="hidden items-center gap-1 text-[14.5px] font-semibold text-foreground md:flex [&>*]:rounded-[8px] [&>*]:px-3 [&>*]:py-1.5 [&>*]:transition-colors [&>*:hover]:bg-[var(--well)]">
             <ProductsMenu active={page === "api" || page === "mcp"} />
             {navigationItems.map((item) => (
-              <Link
+              <SiteLink
                 key={item.href}
                 href={item.href}
                 className={cn(item.page === page && "bg-[var(--well)]")}
               >
                 {item.label}
-              </Link>
+              </SiteLink>
             ))}
           </nav>
         </div>
 
         <div className="hidden items-center gap-2 md:flex">
-          <Link
+          <SiteLink
             href={`${appInfo.links.loginUrl}`}
             rel="nofollow"
             className="rounded-[8px] px-3 py-1.5 text-[14.5px] font-semibold text-foreground transition-colors hover:bg-[var(--well)]"
           >
             Log in
-          </Link>
-          <Link
+          </SiteLink>
+          <SiteLink
             href={`${appInfo.links.signupUrl}`}
             rel="nofollow"
             className={cn(
@@ -206,14 +204,14 @@ export function Header({ page }: { page: Page }) {
             )}
           >
             Start free
-          </Link>
+          </SiteLink>
         </div>
 
         {/* Mobile */}
         {/* Mobile: the primary action and the menu, both at the logo's
             36px height so the bar balances. */}
         <div className="flex items-center gap-2 md:hidden">
-          <Link
+          <SiteLink
             href={`${appInfo.links.signupUrl}`}
             rel="nofollow"
             className={cn(
@@ -222,7 +220,7 @@ export function Header({ page }: { page: Page }) {
             )}
           >
             Start free
-          </Link>
+          </SiteLink>
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
               <button
@@ -254,7 +252,7 @@ export function Header({ page }: { page: Page }) {
                 <p className="px-1 text-[13px] text-muted-foreground">Products</p>
                 <div className="mt-3 space-y-2.5">
                   {products.map((product) => (
-                    <Link
+                    <SiteLink
                       key={product.href}
                       href={product.href}
                       onClick={() => setIsOpen(false)}
@@ -281,14 +279,14 @@ export function Header({ page }: { page: Page }) {
                           {product.description}
                         </span>
                       </span>
-                    </Link>
+                    </SiteLink>
                   ))}
                 </div>
 
                 <ul className="mt-6 border-t border-[var(--rule)]">
                   {navigationItems.map((item) => (
                     <li key={item.href} className="border-b border-[var(--rule)]">
-                      <Link
+                      <SiteLink
                         href={item.href}
                         onClick={() => setIsOpen(false)}
                         className={cn(
@@ -300,14 +298,14 @@ export function Header({ page }: { page: Page }) {
                         <span aria-hidden className="text-muted-foreground">
                           &rarr;
                         </span>
-                      </Link>
+                      </SiteLink>
                     </li>
                   ))}
                 </ul>
               </div>
 
               <div className="grid grid-cols-2 gap-2.5 border-t border-[var(--rule)] bg-[var(--well)] p-4">
-                <Link
+                <SiteLink
                   href={`${appInfo.links.loginUrl}`}
                   rel="nofollow"
                   className={cn(
@@ -316,8 +314,8 @@ export function Header({ page }: { page: Page }) {
                   )}
                 >
                   Log in
-                </Link>
-                <Link
+                </SiteLink>
+                <SiteLink
                   href={`${appInfo.links.signupUrl}`}
                   rel="nofollow"
                   className={cn(
@@ -326,7 +324,7 @@ export function Header({ page }: { page: Page }) {
                   )}
                 >
                   Start free
-                </Link>
+                </SiteLink>
               </div>
             </SheetContent>
           </Sheet>

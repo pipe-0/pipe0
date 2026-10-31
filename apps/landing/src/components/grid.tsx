@@ -1,7 +1,7 @@
 import CalButton from "@/components/cal-button";
 import { appInfo } from "@/lib/const";
 import { cn } from "@/lib/utils";
-import Link from "next/link";
+import { SiteLink } from "@/components/link";
 import type { ReactNode } from "react";
 
 /**
@@ -240,7 +240,7 @@ export function RowLink({
   className?: string;
 }) {
   return (
-    <Link
+    <SiteLink
       href={href}
       className={cn(
         "group flex h-14 items-center justify-between border-t border-[var(--rule)] px-6 text-[14.5px] font-medium text-foreground transition-colors hover:bg-[var(--well)] sm:px-10 lg:px-12",
@@ -254,7 +254,7 @@ export function RowLink({
       >
         &rarr;
       </span>
-    </Link>
+    </SiteLink>
   );
 }
 
@@ -291,12 +291,12 @@ export function ButtonLink({
   className?: string;
 }) {
   return (
-    <Link
+    <SiteLink
       href={href}
       className={cn(btn, buttonSkin[tone], className)}
     >
       {children}
-    </Link>
+    </SiteLink>
   );
 }
 
@@ -312,7 +312,7 @@ export function GridCtas({
   const inverse = tone === "inverse";
   return (
     <div className={cn("flex flex-wrap items-center gap-3", className)}>
-      <Link
+      <SiteLink
         href={appInfo.links.signupUrl}
         rel="nofollow"
         className={cn(
@@ -321,7 +321,7 @@ export function GridCtas({
         )}
       >
         Start free
-      </Link>
+      </SiteLink>
       {/* CalButton renders a <Button>; the classes win via tailwind-merge. */}
       <CalButton
         variant="ghost"

@@ -11,10 +11,36 @@ import * as FilesComponents from "fumadocs-ui/components/files";
 import * as TabsComponents from "fumadocs-ui/components/tabs";
 import { Accordion, Accordions } from "fumadocs-ui/components/accordion";
 import { Step, Steps } from "fumadocs-ui/components/steps";
-import * as icons from "lucide-react";
+import {
+  ArrowRightLeft,
+  BarChart3,
+  Bell,
+  Bot,
+  Braces,
+  Clock,
+  CreditCard,
+  Eraser,
+  Gauge,
+  GitBranch,
+  Grid3x3,
+  History,
+  Import,
+  KeyRound,
+  Layers,
+  LayoutTemplate,
+  Link,
+  Mail,
+  Plug,
+  Rocket,
+  Search,
+  Send,
+  Slack,
+  Terminal,
+  Type,
+  Zap,
+} from "lucide-react";
 import { YoutubeEmbed } from "@/components/features/mdx/youtube-embed";
 
-//test
 declare global {
   type MDXProvidedComponents = ReturnType<typeof getMDXComponents>;
 }
@@ -29,7 +55,34 @@ export const themeMdxComponents = {
   QuickstartCards,
   DocsIllustration,
   YoutubeEmbed,
-  ...(icons as unknown as MDXComponents),
+  // Icons MDX uses in <Card icon={...}>. MDX renders in the browser, so this
+  // list stays explicit: all of lucide would land on every docs page.
+  ArrowRightLeft,
+  BarChart3,
+  Bell,
+  Bot,
+  Braces,
+  Clock,
+  CreditCard,
+  Eraser,
+  Gauge,
+  GitBranch,
+  Grid3x3,
+  History,
+  Import,
+  KeyRound,
+  Layers,
+  LayoutTemplate,
+  Link,
+  Mail,
+  Plug,
+  Rocket,
+  Search,
+  Send,
+  Slack,
+  Terminal,
+  Type,
+  Zap,
   ...defaultMdxComponents,
   ...TabsComponents,
   ...FilesComponents,

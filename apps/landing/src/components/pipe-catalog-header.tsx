@@ -1,5 +1,3 @@
-"use client";
-
 import AppLink from "@/components/app-link";
 import { PayloadDocumenation } from "@/components/config-documentation";
 import { ApiRequestCodeExample } from "@/components/features/docs/api-request-code-example";

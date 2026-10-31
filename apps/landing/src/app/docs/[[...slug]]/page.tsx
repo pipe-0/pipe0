@@ -1,4 +1,4 @@
-import { getPageImage, source } from "@/lib/source";
+import { getPageImage, source } from "@/lib/source.server";
 import {
   DocsBody,
   DocsPage,
@@ -8,7 +8,7 @@ import { notFound } from "next/navigation";
 import { getMDXComponents } from "@/mdx-components";
 import type { Metadata } from "next";
 import { createRelativeLink } from "fumadocs-ui/mdx";
-import { openapi, trimPreloaded } from "@/lib/openapi";
+import { openapi, trimPreloaded } from "@/lib/openapi.server";
 import { APIPage } from "@/components/api-page";
 import type { OpenAPIPageProps_Preloaded } from "fumadocs-openapi/ui";
 import { LLMCopyButton } from "@/components/page-actions";

@@ -1,8 +1,9 @@
 import { LogoRaw } from "@/components/logo";
-import { sortedReviews } from "@/app/reviews/review-utils";
+import { getRouteApi } from "@tanstack/react-router";
 import { appInfo } from "@/lib/const";
 import { Linkedin } from "lucide-react";
-import Link from "next/link";
+import { Link } from "@tanstack/react-router";
+import { SiteLink } from "@/components/link";
 import type { ReactNode } from "react";
 
 type FooterLink = {
@@ -16,32 +17,30 @@ type FooterGroup = {
   links: FooterLink[];
 };
 
-// Reviews, A to Z. The footer lists the first ten and links to the index;
-// the group appears with the first published review (drafts count in dev,
-// like on /reviews).
+// Reviews, A to Z. The footer lists the first ten and links to the index.
 const REVIEW_LINK_LIMIT = 10;
-const footerReviews = sortedReviews().sort((a, b) =>
-  a.data.tool.name.localeCompare(b.data.tool.name),
-);
-const reviewGroup: FooterGroup[] =
-  footerReviews.length > 0
-    ? [
-        {
-          heading: "Tool reviews",
-          links: [
-            ...footerReviews.slice(0, REVIEW_LINK_LIMIT).map((r) => ({
-              label: `${r.data.tool.name} review`,
-              href: r.url,
-            })),
-            { label: "All tool reviews", href: "/reviews" },
-          ],
-        },
-      ]
-    : [];
+
+const siteFrame = getRouteApi("__root__");
+
+function reviewGroup(reviews: { name: string; url: string }[]): FooterGroup[] {
+  if (reviews.length === 0) return [];
+  return [
+    {
+      heading: "Tool reviews",
+      links: [
+        ...reviews.slice(0, REVIEW_LINK_LIMIT).map((r) => ({
+          label: `${r.name} review`,
+          href: r.url,
+        })),
+        { label: "All tool reviews", href: "/reviews" },
+      ],
+    },
+  ];
+}
 
 /* Columns hold stacked groups (Ferndesk pattern): tall lists sit at the
    edges, short groups stack in the middle so column heights stay level. */
-const footerColumns: FooterGroup[][] = [
+const footerColumns = (reviews: { name: string; url: string }[]): FooterGroup[][] => [
   [
     {
       heading: "Developers",
@@ -55,7 +54,7 @@ const footerColumns: FooterGroup[][] = [
       ],
     },
     // Up to 11 links: stacked under the shortest group to keep columns level.
-    ...reviewGroup,
+    ...reviewGroup(reviews),
   ],
   [
     {
@@ -193,17 +192,18 @@ function FooterAnchor({
     );
   }
   return (
-    <Link
+    <SiteLink
       href={link.href}
       rel={link.nofollow ? "nofollow" : undefined}
       className={className}
     >
       {children}
-    </Link>
+    </SiteLink>
   );
 }
 
 export function Footer() {
+  const { reviews, year } = siteFrame.useLoaderData();
   return (
     /* Sits inside the landing frame (LandingShell) on a muted band: the link
        grid is one white panel; the copyright row below it is muted and its
@@ -213,7 +213,7 @@ export function Footer() {
         <div className="grid grid-cols-2 gap-x-6 gap-y-10 bg-background px-6 pb-14 pt-14 sm:px-10 md:grid-cols-[1.4fr_1fr_1fr_1.1fr] md:gap-x-8 lg:px-12">
           {/* Brand */}
           <div className="col-span-2 flex flex-col gap-4 md:col-span-1">
-            <Link href="/" className="inline-flex">
+            <Link to="/" className="inline-flex">
               <LogoRaw />
             </Link>
             <p className="max-w-[240px] text-sm leading-relaxed text-muted-foreground">
@@ -245,7 +245,7 @@ export function Footer() {
           </div>
 
           {/* Link columns, each a stack of groups */}
-          {footerColumns.map((groups) => (
+          {footerColumns(reviews).map((groups) => (
             <div key={groups[0].heading} className="flex flex-col gap-10">
               {groups.map((group) => (
                 <div key={group.heading}>
@@ -267,7 +267,7 @@ export function Footer() {
 
         <div className="flex flex-col gap-2 border-t border-[var(--rule)] bg-[var(--well)] px-6 py-6 text-[13px] text-muted-foreground sm:flex-row sm:justify-between sm:px-10 lg:px-12">
           <span>
-            © {new Date().getFullYear()} {appInfo.productName}. All rights
+            © {year} {appInfo.productName}. All rights
             reserved. Other trademarks belong to their owners.
           </span>
           <span>Built quietly.</span>

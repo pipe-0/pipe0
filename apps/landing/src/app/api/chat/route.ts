@@ -9,8 +9,8 @@ import {
 import { readFileSync } from "node:fs";
 import { z } from "zod";
 import { Document, type DocumentData } from "flexsearch";
-import { source } from "@/lib/source";
-import { getLLMText } from "@/lib/get-llm-text";
+import { source } from "@/lib/source.server";
+import { getLLMText } from "@/lib/get-llm-text.server";
 
 // A turn is a few tool rounds plus the answer; 30s cut long answers off
 // mid-stream when the provider was slow.
