@@ -55,6 +55,7 @@
     "motion": "^12.6.3",
     "next-themes": "^0.4.4",
     "oas": "^28.1.0",
+    "path-browserify": "^1.0.1",
     "posthog-js": "^1.434.3",
     "react": "19.2.7",
     "react-dom": "19.2.7",
@@ -69,6 +70,7 @@
     "tailwindcss": "^4.3.2",
     "tailwindcss-animate": "^1.0.7",
     "unist-util-visit": "^5.0.0",
+    "url": "^0.11.4",
     "zod": "catalog:"
   },
   "devDependencies": {

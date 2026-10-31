@@ -33,13 +33,15 @@ const enrichCode = (
   <>
     <span className={kw}>const</span> result = <span className={kw}>await</span>{" "}
     pipe0.pipes.pipe({"{"}
-    {"\n"} pipes: [{"{"} pipe_id:{" "}
+    {"\n  "}pipes: [{"{"} pipe_id:{" "}
     <span className={str}>&quot;person:workemail:waterfall@1&quot;</span> {"}"}
     ],
-    {"\n"} input: [{"{"}
-    {"\n"} id: <span className={str}>&quot;1&quot;</span>,{"\n"} name:{" "}
-    <span className={str}>&quot;Lena Brandt&quot;</span>,{"\n"} company_domain:{" "}
-    <span className={str}>&quot;heliolabs.io&quot;</span>,{"\n"} {"}"}],{"\n"}
+    {"\n  "}input: [{"{"}
+    {"\n    "}id: <span className={str}>&quot;1&quot;</span>,{"\n    "}name:{" "}
+    <span className={str}>&quot;Lena Brandt&quot;</span>,{"\n    "}
+    company_domain: <span className={str}>&quot;heliolabs.io&quot;</span>,
+    {"\n  "}
+    {"}"}],{"\n"}
     {"}"});{"\n\n"}
     result.records[<span className={str}>&quot;1&quot;</span>
     ].fields.work_email.value
@@ -53,15 +55,17 @@ const searchCode = (
   <>
     <span className={kw}>const</span> result = <span className={kw}>await</span>{" "}
     pipe0.searches.search({"{"}
-    {"\n"} search: {"{"}
-    {"\n"} search_id:{" "}
-    <span className={str}>&quot;people:profiles:crustdata@3&quot;</span>,{"\n"}{" "}
-    config: {"{"}
-    {"\n"} limit: 25,
-    {"\n"} filters: {"{"}
-    {"\n"} current_employment_job_titles: {"{"} include: [
-    <span className={str}>&quot;Head of RevOps&quot;</span>] {"}"},{"\n"} {"}"},
-    {"\n"} {"}"},{"\n"} {"}"},{"\n"}
+    {"\n  "}search: {"{"}
+    {"\n    "}search_id:{" "}
+    <span className={str}>&quot;people:profiles:crustdata@3&quot;</span>,
+    {"\n    "}config: {"{"}
+    {"\n      "}limit: 25,
+    {"\n      "}filters: {"{"}
+    {"\n        "}current_employment_job_titles: {"{"} include: [
+    <span className={str}>&quot;Head of RevOps&quot;</span>] {"}"},{"\n      "}
+    {"}"},{"\n    "}
+    {"}"},{"\n  "}
+    {"}"},{"\n"}
     {"}"});
   </>
 );

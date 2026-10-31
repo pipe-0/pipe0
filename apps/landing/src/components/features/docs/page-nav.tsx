@@ -7,7 +7,7 @@ import { SiteLink } from "@/components/link";
  * Replaces fumadocs' footer cards. Each side is a ruled cell: a quiet direction label, the page title, and an
  * arrow tile that turns glossy indigo on hover — the site's button material.
  */
-export type PageNavItem = { name: string; url: string };
+export type PageNavItem = { html: string; url: string };
 
 export function PageNav({
   previous,
@@ -29,7 +29,13 @@ export function PageNav({
   );
 }
 
-function NavCell({ item, dir }: { item: PageNavItem; dir: "previous" | "next" }) {
+function NavCell({
+  item,
+  dir,
+}: {
+  item: PageNavItem;
+  dir: "previous" | "next";
+}) {
   const isNext = dir === "next";
   const Arrow = isNext ? ArrowRight : ArrowLeft;
   return (
@@ -46,9 +52,10 @@ function NavCell({ item, dir }: { item: PageNavItem; dir: "previous" | "next" })
         <span className="block text-[12.5px] text-muted-foreground">
           {isNext ? "Next" : "Previous"}
         </span>
-        <span className="block truncate text-[15px] font-medium tracking-[-0.01em] text-foreground">
-          {item.name}
-        </span>
+        <span
+          className="block truncate text-[15px] font-medium tracking-[-0.01em] text-foreground"
+          dangerouslySetInnerHTML={{ __html: item.html }}
+        />
       </span>
     </SiteLink>
   );

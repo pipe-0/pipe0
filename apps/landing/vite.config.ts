@@ -3,6 +3,7 @@ import tailwindcss from "@tailwindcss/vite";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import viteReact from "@vitejs/plugin-react";
 import mdx from "fumadocs-mdx/vite";
+import { createRequire, isBuiltin } from "node:module";
 import { defineConfig, type Plugin } from "vite";
 import { prerenderPages } from "./scripts/prerender-pages";
 import * as MdxConfig from "./source.config";
@@ -24,6 +25,32 @@ function patchBaseForWorkerd(): Plugin {
   };
 }
 
+/**
+ * The snippet libraries on catalog pages import Node's `url` and `path`. Next
+ * polyfilled those in the browser. Vite replaces them with an empty module,
+ * which only fails at the first call, so any other Node import stops the build
+ * here. The server keeps the real modules.
+ */
+function browserNodeShims(): Plugin {
+  const { resolve } = createRequire(import.meta.url);
+  const shims: Record<string, string> = {
+    url: resolve("url/"),
+    path: resolve("path-browserify"),
+  };
+  return {
+    name: "pipe0:browser-node-shims",
+    enforce: "pre",
+    applyToEnvironment: (environment) => environment.name === "client",
+    resolveId(id, importer) {
+      if (shims[id]) return shims[id];
+      // Declared in json-schema-ref-parser's `browser` field, for local files.
+      if (id !== "fs" && isBuiltin(id)) {
+        this.error(`${id} in the browser, from ${importer}`);
+      }
+    },
+  };
+}
+
 export default defineConfig(async () => ({
   server: { port: 3000 },
   resolve: {
@@ -34,6 +61,7 @@ export default defineConfig(async () => ({
   },
   plugins: [
     patchBaseForWorkerd(),
+    browserNodeShims(),
     mdx(MdxConfig),
     tailwindcss(),
     cloudflare({ viteEnvironment: { name: "ssr" } }),

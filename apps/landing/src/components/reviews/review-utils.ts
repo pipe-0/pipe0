@@ -9,7 +9,7 @@ export const REVIEWS_DESCRIPTION =
   "what it costs, and who should skip it. Scored on four fixed criteria, " +
   "with every price and fact sourced and dated.";
 
-/** Drafts render in `next dev` (with a banner) and nowhere else. */
+/** Drafts render in `vite dev` (with a banner) and nowhere else. */
 export const SHOW_DRAFTS = process.env.NODE_ENV === "development";
 
 export type CriterionKey = keyof ReviewPage["data"]["scores"];

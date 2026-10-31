@@ -15,6 +15,7 @@ import {
 import { getBreadcrumbItems } from "fumadocs-core/breadcrumb";
 import type * as PageTree from "fumadocs-core/page-tree";
 import { flattenTree, getPageTreeRoots } from "fumadocs-core/page-tree";
+import { renderToString } from "react-dom/server.edge";
 
 type Page = NonNullable<ReturnType<typeof source.getPage>>;
 
@@ -65,15 +66,9 @@ export async function docsTree() {
   };
 }
 
-/** Item names can be JSX (catalog index pages), so titles come from the page. */
+/** Item names can be JSX (method labels, catalog icons), so they travel as HTML. */
 const navItem = (item: PageTree.Item | undefined) =>
-  item && {
-    name:
-      typeof item.name === "string"
-        ? item.name
-        : (source.getPageByHref(item.url)?.page.data.title ?? ""),
-    url: item.url,
-  };
+  item && { html: renderToString(item.name), url: item.url };
 
 /**
  * Previous and next page within the current section (Documentation, Sheets,
