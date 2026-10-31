@@ -1,6 +1,6 @@
+import { SiteLink } from "@/components/link";
 import { FilmButton } from "@/components/landing/product-film";
 import { Cell, Cells } from "@/components/grid";
-import { Link } from "@tanstack/react-router";
 
 /**
  * Founder note — who is behind this, and the invitation to test.
@@ -28,12 +28,12 @@ export function LandingFounder() {
               className="size-13 border border-[var(--rule)] object-cover grayscale"
             />
             <div>
-              <Link
-                to="/authors/florian-martens"
+              <SiteLink
+                href="/authors/florian-martens"
                 className="text-[15.5px] font-medium text-foreground underline-offset-4 hover:underline"
               >
                 Florian Martens
-              </Link>
+              </SiteLink>
               <p className="text-[13.5px] text-muted-foreground">
                 Founder · Berlin and San Francisco
               </p>

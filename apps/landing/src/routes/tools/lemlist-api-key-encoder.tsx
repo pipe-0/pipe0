@@ -33,6 +33,14 @@ export const Route = createFileRoute("/tools/lemlist-api-key-encoder")({
       path: "/tools/lemlist-api-key-encoder",
       image: null,
       siteName: false,
+      keywords: [
+        "lemlist api key encoder",
+        "lemlist api key",
+        "lemlist authentication",
+        "lemlist base64",
+        "lemlist basic auth",
+        "encode lemlist api key",
+      ].join(","),
     }),
     scripts: [jsonLd(faqJsonLd(faqs))],
   }),
@@ -62,7 +70,10 @@ function LemlistApiKeyEncoderPage() {
           <div className="max-w-2xl space-y-4 text-[16px] leading-relaxed text-muted-foreground">
             <p>
               The Lemlist API uses HTTP Basic authentication. Basic auth encodes
-              a <code className="font-mono text-foreground">username:password</code>{" "}
+              a{" "}
+              <code className="font-mono text-foreground">
+                username:password
+              </code>{" "}
               pair in base64, but Lemlist expects the{" "}
               <strong className="font-medium text-foreground">
                 username to always be empty
@@ -71,9 +82,9 @@ function LemlistApiKeyEncoderPage() {
             </p>
             <p>
               That means the string you encode is{" "}
-              <code className="font-mono text-foreground">:YourApiKey</code> — with
-              the leading colon kept. After base64-encoding it, you send the
-              result in the request header:
+              <code className="font-mono text-foreground">:YourApiKey</code> —
+              with the leading colon kept. After base64-encoding it, you send
+              the result in the request header:
             </p>
             <pre className="overflow-x-auto border border-[var(--rule)] bg-[var(--well)] p-4 font-mono text-sm text-foreground">
               Authorization: Basic &lt;base64-encoded-value&gt;

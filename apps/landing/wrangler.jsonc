@@ -13,9 +13,10 @@
     "binding": "ASSETS",
     "html_handling": "drop-trailing-slash",
     // Assets are served before the Worker by default. These paths need code
-    // first: markdown negotiation on /docs and /blog, raw-colon catalog URLs,
-    // and the /blog?category= redirect, which an asset would answer otherwise.
-    "run_worker_first": ["/docs", "/docs/*", "/blog", "/blog/*"]
+    // first: markdown negotiation on /docs and /blog, raw-colon catalog URLs
+    // and their cards, and the /blog?category= redirect, which the /blog asset
+    // would answer otherwise.
+    "run_worker_first": ["/docs", "/docs/*", "/docs.mdx", "/blog", "/blog/*", "/og/docs/*"]
   },
   // Replaces the per-instance limiter in /api/chat: isolates do not share
   // memory, so an in-process counter would not limit anything here.

@@ -45,9 +45,17 @@ export const source = loader(
   },
 );
 
-export const blog = loader(toFumadocsSource(blogPosts, []), {
-  baseUrl: "/blog",
-});
+// Two posts use this slug. Production serves (0028); load order decided that
+// under Next and would flip it here, so the other one is left out on purpose.
+const SHADOWED_POST = "(0037)/what-is-waterfall-enrichment/index.mdx";
+
+export const blog = loader(
+  toFumadocsSource(
+    blogPosts.filter((post) => post.info.path !== SHADOWED_POST),
+    [],
+  ),
+  { baseUrl: "/blog" },
+);
 
 export const reviews = loader(toFumadocsSource(reviewPages, []), {
   baseUrl: "/reviews",

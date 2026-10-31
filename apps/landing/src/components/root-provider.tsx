@@ -21,7 +21,8 @@ export function RootProvider({
   return (
     <FumadocsRootProvider
       {...props}
-      components={{ Image, Link: SiteLink }}
+      // MDX images are plain URLs here (`useImport: false` in source.config).
+      components={{ Image: Image as never, Link: SiteLink }}
       theme={{
         ...theme,
         forcedTheme: "light",

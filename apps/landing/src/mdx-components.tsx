@@ -1,6 +1,5 @@
 import AppLink from "@/components/app-link";
 import { SandboxPreview } from "@/components/features/docs/sandbox-preview";
-import { RequestExample, SearchEnrichExample } from "@/components/features/docs/request-example";
 import { QuickstartCards } from "@/components/features/docs/quickstart-cards";
 import { DocsIllustration } from "@/components/features/docs/docs-illustration";
 import { Card, Cards } from "@/components/features/docs/next-steps-cards";
@@ -50,8 +49,6 @@ export const mdxComponents: MDXComponents = {};
 export const themeMdxComponents = {
   AppLink: AppLink,
   SandboxPreview: SandboxPreview,
-  RequestExample,
-  SearchEnrichExample,
   QuickstartCards,
   DocsIllustration,
   YoutubeEmbed,

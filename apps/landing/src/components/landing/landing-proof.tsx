@@ -1,5 +1,5 @@
+import { SiteLink } from "@/components/link";
 import { barSkin } from "@/components/grid";
-import { Link } from "@tanstack/react-router";
 
 /**
  * Proof — one benchmark, as three bars.
@@ -83,12 +83,12 @@ export function LandingProof() {
         route, August 2026. The traditional waterfall asks the cheapest
         provider first. pipe0 paid about 12¢ per number found. A
         traditional waterfall costs around 52¢ per result.{" "}
-        <Link
-          to="/blog/cheapest-first-waterfall"
+        <SiteLink
+          href="/blog/cheapest-first-waterfall"
           className="font-medium text-primary underline decoration-primary/30 underline-offset-4 hover:decoration-primary"
         >
           Method and data
-        </Link>
+        </SiteLink>
       </p>
     </>
   );

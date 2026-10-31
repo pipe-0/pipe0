@@ -3,43 +3,52 @@ import {
   formatDate,
   lastRevised,
   postCover,
-  relatedPosts,
 } from "@/components/blog/blog-utils";
+import { AuthorAvatar } from "@/components/blog/author-avatar";
+import { AuthorCard } from "@/components/blog/author-card";
+import { BlogCta } from "@/components/blog/blog-cta";
+import { PostFaq } from "@/components/blog/post-faq";
+import { PostToc } from "@/components/blog/post-toc";
 import {
-  JsonLd,
+  ShareActions,
+  SummarizeActions,
+} from "@/components/blog/share-actions";
+import { Image } from "@/components/image";
+import { SiteLink } from "@/components/link";
+import {
   ORG_ID,
   breadcrumbJsonLd,
   faqJsonLd,
+  jsonLd,
   personRefJsonLd,
 } from "@/components/seo/json-ld";
 import { authorUrl, getAuthor } from "@/lib/authors";
-import { blog, type BlogPage } from "@/lib/source.server";
+import { getBlogPost } from "@/lib/blog.functions";
+import type { PlainPage } from "@/lib/content";
+import { seo } from "@/lib/seo";
+import type { BlogPage } from "@/lib/source.server";
 import { getBaseUrl } from "@/lib/utils";
 import { getMDXComponents } from "@/mdx-components";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import browserCollections from "collections/browser";
+import type { TOCItemType } from "fumadocs-core/toc";
 import { ArrowLeft } from "lucide-react";
-import type { Metadata } from "next";
-import { Link } from "@tanstack/react-router";
-import { SiteLink } from "@/components/link";
-import { notFound } from "next/navigation";
-import fs from "node:fs/promises";
-import { AuthorAvatar } from "../author-avatar";
-import { AuthorCard } from "../author-card";
-import { BlogCta } from "../blog-cta";
-import { PostFaq } from "../post-faq";
-import { PostToc } from "../post-toc";
-import { ShareActions, SummarizeActions } from "./page.client";
+import type { MDXProps } from "mdx/types";
+import type { FC } from "react";
 
-export default async function BlogPost(props: {
-  params: Promise<{ slug: string }>;
+type Post = PlainPage<BlogPage>;
+
+function Article({
+  Mdx,
+  toc,
+  page,
+  related,
+}: {
+  Mdx: FC<MDXProps>;
+  toc: TOCItemType[];
+  page: Post;
+  related: Post[];
 }) {
-  const { slug } = await props.params;
-  const page = blog.getPage([slug]);
-  // Drafts 404 like missing pages — dynamicParams would otherwise render them
-  // on demand even though generateStaticParams skips them.
-  if (!page || page.data.draft === true) notFound();
-
-  const { body: Mdx, toc } = await page.data.load();
-  const minutes = await readingTime(page.absolutePath);
   const lede = page.data.description ?? page.data.excerpt;
   const authors = page.data.authors ?? [];
   const author = authors[0];
@@ -47,8 +56,8 @@ export default async function BlogPost(props: {
   const managedAuthor = authors
     .map((a) => getAuthor(a.name))
     .find((a) => a !== undefined);
+  const minutes = page.data.minutes;
   const updated = page.data.updated;
-  const related = relatedPosts(page, 2);
   const shareUrl = `${getBaseUrl()}${page.url}`;
   // Both are opt-in per post; older posts don't carry them and render as
   // before.
@@ -57,48 +66,10 @@ export default async function BlogPost(props: {
 
   return (
     <>
-      <JsonLd
-        data={{
-          "@context": "https://schema.org",
-          "@type": "BlogPosting",
-          headline: page.data.title,
-          description: lede,
-          ...(tldr && { abstract: tldr }),
-          articleSection: page.data.category,
-          datePublished: page.data.date,
-          dateModified: lastRevised(page).toISOString().slice(0, 10),
-          url: shareUrl,
-          mainEntityOfPage: shareUrl,
-          image: `${getBaseUrl()}${postShareImage(page)}`,
-          author: authors.length
-            ? authors.map((a) => {
-                const managed = getAuthor(a.name);
-                return managed
-                  ? personRefJsonLd(managed)
-                  : { "@type": "Person", name: a.name, jobTitle: a.title };
-              })
-            : { "@id": ORG_ID },
-          publisher: { "@id": ORG_ID },
-          ...(page.data.tags?.length && { keywords: page.data.tags }),
-          inLanguage: "en",
-        }}
-      />
-      <JsonLd
-        data={breadcrumbJsonLd([
-          { name: "pipe0", url: "/" },
-          { name: "Blog", url: "/blog" },
-          ...(page.data.category
-            ? [
-                {
-                  name: page.data.category,
-                  url: `/blog/category/${categorySlug(page.data.category)}`,
-                },
-              ]
-            : []),
-          { name: page.data.title, url: page.url },
-        ])}
-      />
-      {faq.length > 0 && <JsonLd data={faqJsonLd(faq)} />}
+      {/* Repeated property, which head() would dedupe to its last value. */}
+      {page.data.tags?.map((tag) => (
+        <meta key={tag} property="article:tag" content={tag} />
+      ))}
 
       <main className="mx-auto flex w-full max-w-[980px] items-start gap-11 px-5 pt-8 sm:px-8 md:pt-11">
         {/* Share rail — back to the index, then the share actions */}
@@ -157,7 +128,7 @@ export default async function BlogPost(props: {
                   </SiteLink>
                 </>
               )}
-              {minutes !== null && <> · {minutes} min read</>}
+              <> · {minutes} min read</>
               {updated && (
                 <>
                   {" · "}
@@ -231,9 +202,11 @@ export default async function BlogPost(props: {
 
           {page.data.cover && (
             <figure className="mt-10 sm:mt-12">
-              <img
+              <Image
                 src={page.data.cover}
                 alt=""
+                sizes="(max-width: 980px) 100vw, 900px"
+                priority
                 className="w-full object-cover"
               />
             </figure>
@@ -287,12 +260,13 @@ export default async function BlogPost(props: {
   );
 }
 
-function RelatedCard({ post }: { post: BlogPage }) {
+function RelatedCard({ post }: { post: Post }) {
   return (
     <SiteLink href={post.url} className="group flex flex-col">
-      <img
+      <Image
         src={postCover(post, 2)}
         alt=""
+        sizes="(max-width: 640px) 100vw, 440px"
         className="aspect-[2/1] w-full object-cover transition-opacity group-hover:opacity-90"
       />
       <p className="font-blog mt-3 text-[17px] font-semibold leading-[1.25] text-fd-foreground text-pretty transition-colors group-hover:text-fd-primary">
@@ -313,74 +287,101 @@ function RelatedCard({ post }: { post: BlogPage }) {
 }
 
 /** Cover when the post has one, otherwise its rendered title card. */
-function postShareImage(page: BlogPage): string {
+function postShareImage(page: Post): string {
   return page.data.cover ?? `/og/blog/${page.slugs[0]}`;
 }
 
-/** Word-count estimate from the raw MDX, frontmatter stripped. */
-async function readingTime(absolutePath?: string): Promise<number | null> {
-  if (!absolutePath) return null;
-  try {
-    const raw = await fs.readFile(absolutePath, "utf8");
-    const words = raw
-      .replace(/^---[\s\S]*?---/, "")
-      .split(/\s+/)
-      .filter(Boolean).length;
-    return Math.max(1, Math.round(words / 220));
-  } catch {
-    return null;
-  }
+const content = browserCollections.blog.createClientLoader({
+  id: "blog",
+  component({ default: Mdx, toc }, props: { page: Post; related: Post[] }) {
+    return <Article Mdx={Mdx} toc={toc} {...props} />;
+  },
+});
+
+function BlogPost() {
+  const { post, related } = Route.useLoaderData();
+  return content.useContent(post.path, { page: post, related });
 }
 
-// Every param is enumerated by generateStaticParams, so there is nothing to
-// render on demand. Pinning this keeps unknown paths on the 404 route instead
-// of waking a function for them.
-export const dynamicParams = false;
-
-export function generateStaticParams() {
-  return blog
-    .getPages()
-    .filter((page) => page.data.draft !== true)
-    .map((page) => ({
-      slug: page.slugs[0],
-    }));
-}
-
-export async function generateMetadata(props: {
-  params: Promise<{ slug: string }>;
-}): Promise<Metadata> {
-  const { slug } = await props.params;
-  const page = blog.getPage([slug]);
-  if (!page || page.data.draft === true) notFound();
-
-  return {
-    title: page.data.title,
-    description: page.data.description ?? page.data.excerpt,
-    alternates: {
-      canonical: page.data.canonicalUrl ?? page.url,
-      // Plain-markdown twin for answer engines and agents.
-      types: { "text/markdown": `${page.url}.md` },
-    },
-    openGraph: {
-      type: "article",
-      url: page.url,
-      title: page.data.title,
-      description: page.data.description ?? page.data.excerpt,
-      publishedTime: page.data.date
-        ? new Date(page.data.date).toISOString()
-        : undefined,
-      modifiedTime: lastRevised(page).toISOString(),
-      section: page.data.category,
-      authors: page.data.authors?.map((a) => {
-        const managed = getAuthor(a.name);
-        return managed ? `${getBaseUrl()}${authorUrl(managed)}` : a.name;
+export const Route = createFileRoute("/blog/$slug")({
+  loader: async ({ params }) => {
+    const data = await getBlogPost({ data: params.slug });
+    await content.preload(data.post.path);
+    return data;
+  },
+  head: ({ loaderData }) => {
+    if (!loaderData) return {};
+    const page = loaderData.post;
+    const lede = page.data.description ?? page.data.excerpt;
+    const authors = page.data.authors ?? [];
+    const shareUrl = `${getBaseUrl()}${page.url}`;
+    const faq = page.data.faq ?? [];
+    return {
+      ...seo({
+        title: page.data.title,
+        description: lede,
+        path: page.url,
+        canonical: page.data.canonicalUrl,
+        ogType: "article",
+        siteName: false,
+        image: postShareImage(page),
+        og: {
+          "article:published_time": page.data.date
+            ? new Date(page.data.date).toISOString()
+            : undefined,
+          "article:modified_time": lastRevised(page).toISOString(),
+          "article:author": authors.map((a) => {
+            const managed = getAuthor(a.name);
+            return managed ? `${getBaseUrl()}${authorUrl(managed)}` : a.name;
+          }),
+          "article:section": page.data.category,
+        },
+        // Plain-markdown twin for answer engines and agents.
+        alternates: { "text/markdown": `${page.url}.md` },
       }),
-      tags: page.data.tags,
-      // Real cover when the post has one; the generated data-URI SVG
-      // fallback is rejected by social scrapers, so those posts get a
-      // rendered title card instead.
-      images: [postShareImage(page)],
-    },
-    twitter: { card: "summary_large_image" },
-  };
-}
+      scripts: [
+        jsonLd({
+          "@context": "https://schema.org",
+          "@type": "BlogPosting",
+          headline: page.data.title,
+          description: lede,
+          ...(page.data.tldr && { abstract: page.data.tldr }),
+          articleSection: page.data.category,
+          datePublished: page.data.date,
+          dateModified: lastRevised(page).toISOString().slice(0, 10),
+          url: shareUrl,
+          mainEntityOfPage: shareUrl,
+          image: `${getBaseUrl()}${postShareImage(page)}`,
+          author: authors.length
+            ? authors.map((a) => {
+                const managed = getAuthor(a.name);
+                return managed
+                  ? personRefJsonLd(managed)
+                  : { "@type": "Person", name: a.name, jobTitle: a.title };
+              })
+            : { "@id": ORG_ID },
+          publisher: { "@id": ORG_ID },
+          ...(page.data.tags?.length && { keywords: page.data.tags }),
+          inLanguage: "en",
+        }),
+        jsonLd(
+          breadcrumbJsonLd([
+            { name: "pipe0", url: "/" },
+            { name: "Blog", url: "/blog" },
+            ...(page.data.category
+              ? [
+                  {
+                    name: page.data.category,
+                    url: `/blog/category/${categorySlug(page.data.category)}`,
+                  },
+                ]
+              : []),
+            { name: page.data.title, url: page.url },
+          ]),
+        ),
+        ...(faq.length > 0 ? [jsonLd(faqJsonLd(faq))] : []),
+      ],
+    };
+  },
+  component: BlogPost,
+});

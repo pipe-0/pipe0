@@ -10,7 +10,6 @@ import {
 } from "@pipe0/base";
 import { ClientOnly } from "@tanstack/react-router";
 import { lazy, Suspense, useMemo } from "react";
-import "@pipe0/react/styles";
 import { ClientPipesPayload } from "@pipe0/client";
 
 const PipeFormComponentsLazy = lazy(() =>
@@ -75,7 +74,6 @@ function generateExampleCode(pipeId: PipeId, pipeLabel: string): string {
   usePipeForm,
 } from "@pipe0/react";
 import { getPipeDefaultPayload } from "@pipe0/base";
-import "@pipe0/react/styles";
 
 export function ${toComponentName(pipeId)}Form() {
   const pipeForm = usePipeForm({

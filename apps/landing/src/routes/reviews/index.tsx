@@ -1,60 +1,89 @@
 import { lastRevised } from "@/components/blog/blog-utils";
 import { SummarizeActions } from "@/components/blog/share-actions";
+import { SiteLink } from "@/components/link";
+import { LIST_BENCHMARK_PERIOD } from "@/components/reviews/list-benchmark";
+import { ListBenchmark } from "@/components/reviews/list-benchmark-charts";
+import { ScorePill, ToolLogo } from "@/components/reviews/review-parts";
 import {
-  JsonLd,
+  ReviewsGrid,
+  type ReviewCard,
+} from "@/components/reviews/reviews-grid";
+import {
   breadcrumbJsonLd,
   collectionPageJsonLd,
+  jsonLd,
 } from "@/components/seo/json-ld";
 import { appInfo } from "@/lib/const";
+import { getReviewsIndex } from "@/lib/reviews.functions";
+import { seo } from "@/lib/seo";
 import { getBaseUrl } from "@/lib/utils";
-import type { Metadata } from "next";
-import { Link } from "@tanstack/react-router";
-import { SiteLink } from "@/components/link";
-import { notFound } from "next/navigation";
-import { ScorePill, ToolLogo } from "./review-parts";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   CRITERIA,
   REVIEWS_DESCRIPTION,
   formatScore,
   formatStartingPrice,
   overallScore,
-  sortedReviews,
-} from "./review-utils";
-import { ReviewsGrid, type ReviewCard } from "./reviews-grid";
-import { ListBenchmark } from "./list-benchmark-charts";
-import { LIST_BENCHMARK_PERIOD } from "./list-benchmark";
+  type Review,
+} from "@/components/reviews/review-utils";
 
 const TITLE = "GTM tool reviews";
 
-export const metadata: Metadata = {
-  title: { absolute: "GTM and sales data tool reviews (2026) | pipe0" },
-  description: REVIEWS_DESCRIPTION,
-  alternates: { canonical: "/reviews" },
-  openGraph: {
-    type: "website",
-    url: "/reviews",
-    title: "GTM and sales data tool reviews",
-    description: REVIEWS_DESCRIPTION,
-    images: ["/opengraph-image"],
-  },
-  twitter: { card: "summary_large_image" },
-};
-
 function monthYear(date: Date) {
-  return date.toLocaleDateString("en-US", { month: "long", year: "numeric" });
+  return date.toLocaleDateString("en-US", {
+    month: "long",
+    year: "numeric",
+    timeZone: "UTC",
+  });
 }
 
 function shortMonth(date: Date) {
-  return date.toLocaleDateString("en-US", { month: "short", year: "numeric" });
+  return date.toLocaleDateString("en-US", {
+    month: "short",
+    year: "numeric",
+    timeZone: "UTC",
+  });
 }
 
 /**
  * /reviews: what the section is and how fresh it is, a dense grid of every
  * review, one comparison table across all of them, and the scoring method.
  */
-export default function ReviewsIndex() {
-  const reviews = sortedReviews();
-  if (reviews.length === 0) notFound();
+export const Route = createFileRoute("/reviews/")({
+  loader: () => getReviewsIndex(),
+  head: ({ loaderData: reviews = [] }) => ({
+    ...seo({
+      title: "GTM and sales data tool reviews",
+      documentTitle: "GTM and sales data tool reviews (2026) | pipe0",
+      description: REVIEWS_DESCRIPTION,
+      path: "/reviews",
+      siteName: false,
+    }),
+    scripts: [
+      jsonLd(
+        breadcrumbJsonLd([
+          { name: "pipe0", url: "/" },
+          { name: "Reviews", url: "/reviews" },
+        ]),
+      ),
+      jsonLd(
+        collectionPageJsonLd({
+          url: "/reviews",
+          name: TITLE,
+          description: REVIEWS_DESCRIPTION,
+          items: reviews.map((r) => ({
+            name: `${r.data.tool.name} review`,
+            url: r.url,
+          })),
+        }),
+      ),
+    ],
+  }),
+  component: ReviewsIndex,
+});
+
+function ReviewsIndex() {
+  const reviews = Route.useLoaderData();
 
   const updated = reviews
     .map(lastRevised)
@@ -75,24 +104,6 @@ export default function ReviewsIndex() {
 
   return (
     <>
-      <JsonLd
-        data={breadcrumbJsonLd([
-          { name: "pipe0", url: "/" },
-          { name: "Reviews", url: "/reviews" },
-        ])}
-      />
-      <JsonLd
-        data={collectionPageJsonLd({
-          url: "/reviews",
-          name: TITLE,
-          description: REVIEWS_DESCRIPTION,
-          items: reviews.map((r) => ({
-            name: `${r.data.tool.name} review`,
-            url: r.url,
-          })),
-        })}
-      />
-
       <main className="mx-auto w-full max-w-(--fd-layout-width) px-4 py-10 md:py-12">
         <header className="border-b border-fd-border pb-8">
           <nav
@@ -129,16 +140,15 @@ export default function ReviewsIndex() {
             </a>
           </p>
 
-          <SummarizeActions
-            url={`${getBaseUrl()}/reviews`}
-            className="mt-6"
-          />
+          <SummarizeActions url={`${getBaseUrl()}/reviews`} className="mt-6" />
         </header>
 
         <ReviewsGrid cards={cards} />
 
         <ListBuildingSection
-          reviews={reviews.filter((r) => r.data.tool.category === "List building")}
+          reviews={reviews.filter(
+            (r) => r.data.tool.category === "List building",
+          )}
         />
 
         {/* One table across every review: the answer to "which tool is best
@@ -151,8 +161,8 @@ export default function ReviewsIndex() {
             All tools at a glance
           </h2>
           <p className="mt-2 max-w-[680px] text-[15px] leading-relaxed text-fd-muted-foreground">
-            Every reviewed tool with its overall score, the four criteria
-            behind it, and its cheapest paid plan.
+            Every reviewed tool with its overall score, the four criteria behind
+            it, and its cheapest paid plan.
           </p>
           <div className="mt-5 overflow-x-auto rounded-xl ring-1 ring-fd-border">
             <table className="w-full min-w-[760px] text-left text-[14px]">
@@ -239,11 +249,7 @@ export default function ReviewsIndex() {
  * says up front what they were tested for: these tools do far more than
  * build GTM lists, and their scores only speak to that job.
  */
-function ListBuildingSection({
-  reviews,
-}: {
-  reviews: ReturnType<typeof sortedReviews>;
-}) {
+function ListBuildingSection({ reviews }: { reviews: Review[] }) {
   if (reviews.length === 0) return null;
   return (
     <section
@@ -259,20 +265,21 @@ function ListBuildingSection({
       </h2>
       <div className="mt-3 max-w-[680px] space-y-3 text-[15.5px] leading-[1.65] text-fd-muted-foreground">
         <p>
-          Exa, Parallel and DataForSEO are broad platforms: web search, crawling,
-          research agents, SEO data. We reviewed them for one job, the one sales
-          and marketing teams ask us about most: building a prospect list. That
-          means local businesses by category and city, companies a filter can
-          describe, and lists an outside source defines, such as trade-show
-          exhibitors.
+          Exa, Parallel and DataForSEO are broad platforms: web search,
+          crawling, research agents, SEO data. We reviewed them for one job, the
+          one sales and marketing teams ask us about most: building a prospect
+          list. That means local businesses by category and city, companies a
+          filter can describe, and lists an outside source defines, such as
+          trade-show exhibitors.
         </p>
         <p>
-          We ran the same scenarios through every tool in {LIST_BENCHMARK_PERIOD},
-          next to the filter-based company databases Crustdata and Amplemarket,
-          and checked the results against public ground truth where it exists:
-          New York State&apos;s barbershop licences, a show&apos;s official
-          exhibitor list, live Shopify stores. Their scores speak to list
-          building, not to everything these products do.
+          We ran the same scenarios through every tool in{" "}
+          {LIST_BENCHMARK_PERIOD}, next to the filter-based company databases
+          Crustdata and Amplemarket, and checked the results against public
+          ground truth where it exists: New York State&apos;s barbershop
+          licences, a show&apos;s official exhibitor list, live Shopify stores.
+          Their scores speak to list building, not to everything these products
+          do.
         </p>
       </div>
       <ul className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-3">
@@ -315,9 +322,9 @@ function Methodology() {
           Every tool is scored from 1 to 5 on the same four criteria, to one
           decimal. The overall score is the plain average of the four, rounded
           to one decimal. A criterion that doesn&apos;t apply, such as pricing
-          value for data sold only inside a platform, shows N/A and stays out
-          of the average. We don&apos;t weight it and we don&apos;t adjust it
-          by hand, so you can check the math on every page.
+          value for data sold only inside a platform, shows N/A and stays out of
+          the average. We don&apos;t weight it and we don&apos;t adjust it by
+          hand, so you can check the math on every page.
         </p>
       </div>
 
@@ -342,34 +349,34 @@ function Methodology() {
           ourselves, the review says so.
         </p>
         <p>
-          For data providers, the data quality score rests on our own
-          benchmark: the same 50 to 150 records run through every provider
-          we test, with coverage, agreement with other providers, and
-          response time counted per test. Each review prints its numbers, the
-          run ids, and the caveats: small samples, a pre-filtered profile set
-          that runs high in absolute terms, and agreement as a proxy for
-          accuracy rather than proof of it.
+          For data providers, the data quality score rests on our own benchmark:
+          the same 50 to 150 records run through every provider we test, with
+          coverage, agreement with other providers, and response time counted
+          per test. Each review prints its numbers, the run ids, and the
+          caveats: small samples, a pre-filtered profile set that runs high in
+          absolute terms, and agreement as a proxy for accuracy rather than
+          proof of it.
         </p>
         <p>
           For search and list-building tools, we run the same list requests
           through each one and count unique rows, time per run from the
           vendor&apos;s own timestamps, and what we paid. Quality is checked
-          against ground truth where one exists (a licence registry, an
-          official exhibitor list, a live store) and by spot checks where it
+          against ground truth where one exists (a licence registry, an official
+          exhibitor list, a live store) and by spot checks where it
           doesn&apos;t. Each scenario ran once, so read small differences as
           noise and large ones as signal.
         </p>
         <p>
           pipe0 sells data enrichment, so many of the tools reviewed here
-          compete with us, and others sell us the data our waterfalls run
-          on. Each review says which at the top, credits the tool where it is
-          better than pipe0, and links to the full side-by-side comparison
-          where one exists.
+          compete with us, and others sell us the data our waterfalls run on.
+          Each review says which at the top, credits the tool where it is better
+          than pipe0, and links to the full side-by-side comparison where one
+          exists.
         </p>
         <p>
-          We re-check prices and scores when a vendor changes its plans or
-          ships something that moves a criterion, and update the date on the
-          page when we do. Spotted something out of date? Email{" "}
+          We re-check prices and scores when a vendor changes its plans or ships
+          something that moves a criterion, and update the date on the page when
+          we do. Spotted something out of date? Email{" "}
           <a
             href={`mailto:${appInfo.emails.support}`}
             className="text-fd-foreground underline underline-offset-[3px]"

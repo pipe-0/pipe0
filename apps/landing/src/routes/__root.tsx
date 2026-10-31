@@ -1,7 +1,12 @@
 import { Toaster } from "@/components/ui/toaster";
 import { AskAiProvider } from "@/components/ai/ask-ai-provider";
-import { jsonLd, organizationJsonLd, webSiteJsonLd } from "@/components/seo/json-ld";
+import {
+  jsonLd,
+  organizationJsonLd,
+  webSiteJsonLd,
+} from "@/components/seo/json-ld";
 import { preloadSchibsted } from "@/lib/fonts";
+import { DEFAULT_TITLE, SITE_DESCRIPTION } from "@/lib/seo";
 import { getSiteFrame } from "@/lib/site.functions";
 import {
   createRootRoute,
@@ -17,6 +22,8 @@ export const Route = createRootRoute({
   head: () => ({
     meta: [
       { charSet: "utf-8" },
+      { title: DEFAULT_TITLE },
+      { name: "description", content: SITE_DESCRIPTION },
       {
         // interactive-widget makes the software keyboard shrink the layout
         // viewport instead of floating over it, so a fixed panel such as the
@@ -30,9 +37,19 @@ export const Route = createRootRoute({
     ],
     links: [
       preloadSchibsted,
-      { rel: "icon", href: "/favicon.ico", sizes: "48x48", type: "image/x-icon" },
+      {
+        rel: "icon",
+        href: "/favicon.ico",
+        sizes: "48x48",
+        type: "image/x-icon",
+      },
       { rel: "icon", href: "/icon.png", sizes: "192x192", type: "image/png" },
-      { rel: "apple-touch-icon", href: "/apple-icon.png", sizes: "180x180", type: "image/png" },
+      {
+        rel: "apple-touch-icon",
+        href: "/apple-icon.png",
+        sizes: "180x180",
+        type: "image/png",
+      },
     ],
     scripts: [jsonLd(organizationJsonLd()), jsonLd(webSiteJsonLd())],
   }),
@@ -60,7 +77,9 @@ function RootDocument() {
 function NotFound() {
   return (
     <main className="flex min-h-screen items-center justify-center text-sm">
-      <h1 className="border-r border-[var(--rule)] pr-5 text-2xl font-medium">404</h1>
+      <h1 className="border-r border-[var(--rule)] pr-5 text-2xl font-medium">
+        404
+      </h1>
       <p className="pl-5">This page could not be found.</p>
     </main>
   );

@@ -10,18 +10,50 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as MarketingRouteImport } from './routes/_marketing'
+import { Route as AiInstructionsDotmdRouteImport } from './routes/ai-instructions[.]md'
+import { Route as AuthorsRouteImport } from './routes/authors'
+import { Route as BlogRouteImport } from './routes/blog'
+import { Route as DocsRouteImport } from './routes/docs'
+import { Route as DocsDotmdxRouteImport } from './routes/docs[.]mdx'
+import { Route as LlmsFullDottxtRouteImport } from './routes/llms-full[.]txt'
+import { Route as LlmsDottxtRouteImport } from './routes/llms[.]txt'
+import { Route as OgManifestDotjsonRouteImport } from './routes/og-manifest[.]json'
+import { Route as ReviewsRouteImport } from './routes/reviews'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as MarketingIndexRouteImport } from './routes/_marketing/index'
 import { Route as MarketingAiInstructionsRouteImport } from './routes/_marketing/ai-instructions'
 import { Route as MarketingEnrichmentApiRouteImport } from './routes/_marketing/enrichment-api'
 import { Route as MarketingMcpRouteImport } from './routes/_marketing/mcp'
 import { Route as MarketingPricingRouteImport } from './routes/_marketing/pricing'
 import { Route as MarketingSupportRouteImport } from './routes/_marketing/support'
+import { Route as ApiChatRouteImport } from './routes/api/chat'
+import { Route as ApiChatIndexDotjsonRouteImport } from './routes/api/chat-index[.]json'
+import { Route as ApiSearchRouteImport } from './routes/api/search'
+import { Route as AuthorsIndexRouteImport } from './routes/authors/index'
+import { Route as AuthorsSlugRouteImport } from './routes/authors/$slug'
+import { Route as BlogIndexRouteImport } from './routes/blog/index'
+import { Route as BlogSlugRouteImport } from './routes/blog/$slug'
+import { Route as BlogRssDotxmlRouteImport } from './routes/blog/rss[.]xml'
+import { Route as BlogChar123slugChar125DotmdRouteImport } from './routes/blog/{$slug}[.]md'
+import { Route as DocsIndexRouteImport } from './routes/docs/index'
+import { Route as DocsSplatRouteImport } from './routes/docs/$'
+import { Route as DocsChar123Char125DotmdxRouteImport } from './routes/docs/{$}[.]mdx'
+import { Route as ReviewsIndexRouteImport } from './routes/reviews/index'
+import { Route as ReviewsSlugRouteImport } from './routes/reviews/$slug'
+import { Route as ReviewsChar123slugChar125DotmdRouteImport } from './routes/reviews/{$slug}[.]md'
 import { Route as ToolsLemlistApiKeyEncoderRouteImport } from './routes/tools/lemlist-api-key-encoder'
 import { Route as MarketingCompareSlugRouteImport } from './routes/_marketing/compare/$slug'
 import { Route as MarketingIntegrationsGoogleWorkspaceRouteImport } from './routes/_marketing/integrations/google-workspace'
 import { Route as MarketingIntegrationsSlackRouteImport } from './routes/_marketing/integrations/slack'
 import { Route as MarketingResourcesApiReferenceRouteImport } from './routes/_marketing/resources/api-reference'
 import { Route as MarketingResourcesLegalRouteImport } from './routes/_marketing/resources/legal'
+import { Route as BlogCategoryCategoryRouteImport } from './routes/blog/category/$category'
+import { Route as DocsPipeCatalogIndexRouteImport } from './routes/docs/pipe-catalog/index'
+import { Route as DocsPipeCatalogSplatRouteImport } from './routes/docs/pipe-catalog/$'
+import { Route as DocsPipeCatalogChar123Char125DotmdxRouteImport } from './routes/docs/pipe-catalog/{$}[.]mdx'
+import { Route as DocsSearchCatalogIndexRouteImport } from './routes/docs/search-catalog/index'
+import { Route as DocsSearchCatalogSplatRouteImport } from './routes/docs/search-catalog/$'
+import { Route as DocsSearchCatalogChar123Char125DotmdxRouteImport } from './routes/docs/search-catalog/{$}[.]mdx'
 import { Route as MarketingResourcesLegalSplatRouteImport } from './routes/_marketing/resources/legal/$'
 import { Route as MarketingResourcesLegalDpaRouteImport } from './routes/_marketing/resources/legal/dpa'
 import { Route as MarketingResourcesLegalPrivacyPolicyRouteImport } from './routes/_marketing/resources/legal/privacy-policy'
@@ -29,6 +61,56 @@ import { Route as MarketingResourcesLegalTermsOfServiceRouteImport } from './rou
 
 const MarketingRoute = MarketingRouteImport.update({
   id: '/_marketing',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AiInstructionsDotmdRoute = AiInstructionsDotmdRouteImport.update({
+  id: '/ai-instructions.md',
+  path: '/ai-instructions.md',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthorsRoute = AuthorsRouteImport.update({
+  id: '/authors',
+  path: '/authors',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogRoute = BlogRouteImport.update({
+  id: '/blog',
+  path: '/blog',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DocsRoute = DocsRouteImport.update({
+  id: '/docs',
+  path: '/docs',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DocsDotmdxRoute = DocsDotmdxRouteImport.update({
+  id: '/docs.mdx',
+  path: '/docs.mdx',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LlmsFullDottxtRoute = LlmsFullDottxtRouteImport.update({
+  id: '/llms-full.txt',
+  path: '/llms-full.txt',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LlmsDottxtRoute = LlmsDottxtRouteImport.update({
+  id: '/llms.txt',
+  path: '/llms.txt',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OgManifestDotjsonRoute = OgManifestDotjsonRouteImport.update({
+  id: '/og-manifest.json',
+  path: '/og-manifest.json',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReviewsRoute = ReviewsRouteImport.update({
+  id: '/reviews',
+  path: '/reviews',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MarketingIndexRoute = MarketingIndexRouteImport.update({
@@ -61,6 +143,84 @@ const MarketingSupportRoute = MarketingSupportRouteImport.update({
   path: '/support',
   getParentRoute: () => MarketingRoute,
 } as any)
+const ApiChatRoute = ApiChatRouteImport.update({
+  id: '/api/chat',
+  path: '/api/chat',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiChatIndexDotjsonRoute = ApiChatIndexDotjsonRouteImport.update({
+  id: '/api/chat-index.json',
+  path: '/api/chat-index.json',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiSearchRoute = ApiSearchRouteImport.update({
+  id: '/api/search',
+  path: '/api/search',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthorsIndexRoute = AuthorsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthorsRoute,
+} as any)
+const AuthorsSlugRoute = AuthorsSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => AuthorsRoute,
+} as any)
+const BlogIndexRoute = BlogIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => BlogRoute,
+} as any)
+const BlogSlugRoute = BlogSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => BlogRoute,
+} as any)
+const BlogRssDotxmlRoute = BlogRssDotxmlRouteImport.update({
+  id: '/rss.xml',
+  path: '/rss.xml',
+  getParentRoute: () => BlogRoute,
+} as any)
+const BlogChar123slugChar125DotmdRoute =
+  BlogChar123slugChar125DotmdRouteImport.update({
+    id: '/{$slug}.md',
+    path: '/{$slug}.md',
+    getParentRoute: () => BlogRoute,
+  } as any)
+const DocsIndexRoute = DocsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => DocsRoute,
+} as any)
+const DocsSplatRoute = DocsSplatRouteImport.update({
+  id: '/$',
+  path: '/$',
+  getParentRoute: () => DocsRoute,
+} as any)
+const DocsChar123Char125DotmdxRoute =
+  DocsChar123Char125DotmdxRouteImport.update({
+    id: '/{$}.mdx',
+    path: '/{$}.mdx',
+    getParentRoute: () => DocsRoute,
+  } as any)
+const ReviewsIndexRoute = ReviewsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ReviewsRoute,
+} as any)
+const ReviewsSlugRoute = ReviewsSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => ReviewsRoute,
+} as any)
+const ReviewsChar123slugChar125DotmdRoute =
+  ReviewsChar123slugChar125DotmdRouteImport.update({
+    id: '/{$slug}.md',
+    path: '/{$slug}.md',
+    getParentRoute: () => ReviewsRoute,
+  } as any)
 const ToolsLemlistApiKeyEncoderRoute =
   ToolsLemlistApiKeyEncoderRouteImport.update({
     id: '/tools/lemlist-api-key-encoder',
@@ -95,6 +255,43 @@ const MarketingResourcesLegalRoute = MarketingResourcesLegalRouteImport.update({
   path: '/resources/legal',
   getParentRoute: () => MarketingRoute,
 } as any)
+const BlogCategoryCategoryRoute = BlogCategoryCategoryRouteImport.update({
+  id: '/category/$category',
+  path: '/category/$category',
+  getParentRoute: () => BlogRoute,
+} as any)
+const DocsPipeCatalogIndexRoute = DocsPipeCatalogIndexRouteImport.update({
+  id: '/pipe-catalog/',
+  path: '/pipe-catalog/',
+  getParentRoute: () => DocsRoute,
+} as any)
+const DocsPipeCatalogSplatRoute = DocsPipeCatalogSplatRouteImport.update({
+  id: '/pipe-catalog/$',
+  path: '/pipe-catalog/$',
+  getParentRoute: () => DocsRoute,
+} as any)
+const DocsPipeCatalogChar123Char125DotmdxRoute =
+  DocsPipeCatalogChar123Char125DotmdxRouteImport.update({
+    id: '/pipe-catalog/{$}.mdx',
+    path: '/pipe-catalog/{$}.mdx',
+    getParentRoute: () => DocsRoute,
+  } as any)
+const DocsSearchCatalogIndexRoute = DocsSearchCatalogIndexRouteImport.update({
+  id: '/search-catalog/',
+  path: '/search-catalog/',
+  getParentRoute: () => DocsRoute,
+} as any)
+const DocsSearchCatalogSplatRoute = DocsSearchCatalogSplatRouteImport.update({
+  id: '/search-catalog/$',
+  path: '/search-catalog/$',
+  getParentRoute: () => DocsRoute,
+} as any)
+const DocsSearchCatalogChar123Char125DotmdxRoute =
+  DocsSearchCatalogChar123Char125DotmdxRouteImport.update({
+    id: '/search-catalog/{$}.mdx',
+    path: '/search-catalog/{$}.mdx',
+    getParentRoute: () => DocsRoute,
+  } as any)
 const MarketingResourcesLegalSplatRoute =
   MarketingResourcesLegalSplatRouteImport.update({
     id: '/$',
@@ -122,35 +319,95 @@ const MarketingResourcesLegalTermsOfServiceRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof MarketingIndexRoute
+  '/ai-instructions.md': typeof AiInstructionsDotmdRoute
+  '/authors': typeof AuthorsRouteWithChildren
+  '/blog': typeof BlogRouteWithChildren
+  '/docs': typeof DocsRouteWithChildren
+  '/docs.mdx': typeof DocsDotmdxRoute
+  '/llms-full.txt': typeof LlmsFullDottxtRoute
+  '/llms.txt': typeof LlmsDottxtRoute
+  '/og-manifest.json': typeof OgManifestDotjsonRoute
+  '/reviews': typeof ReviewsRouteWithChildren
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/ai-instructions': typeof MarketingAiInstructionsRoute
   '/enrichment-api': typeof MarketingEnrichmentApiRoute
   '/mcp': typeof MarketingMcpRoute
   '/pricing': typeof MarketingPricingRoute
   '/support': typeof MarketingSupportRoute
+  '/api/chat': typeof ApiChatRoute
+  '/api/chat-index.json': typeof ApiChatIndexDotjsonRoute
+  '/api/search': typeof ApiSearchRoute
+  '/authors/$slug': typeof AuthorsSlugRoute
+  '/blog/$slug': typeof BlogSlugRoute
+  '/blog/rss.xml': typeof BlogRssDotxmlRoute
+  '/blog/{$slug}.md': typeof BlogChar123slugChar125DotmdRoute
+  '/docs/$': typeof DocsSplatRoute
+  '/docs/{$}.mdx': typeof DocsChar123Char125DotmdxRoute
+  '/reviews/$slug': typeof ReviewsSlugRoute
+  '/reviews/{$slug}.md': typeof ReviewsChar123slugChar125DotmdRoute
   '/tools/lemlist-api-key-encoder': typeof ToolsLemlistApiKeyEncoderRoute
+  '/authors/': typeof AuthorsIndexRoute
+  '/blog/': typeof BlogIndexRoute
+  '/docs/': typeof DocsIndexRoute
+  '/reviews/': typeof ReviewsIndexRoute
   '/compare/$slug': typeof MarketingCompareSlugRoute
   '/integrations/google-workspace': typeof MarketingIntegrationsGoogleWorkspaceRoute
   '/integrations/slack': typeof MarketingIntegrationsSlackRoute
   '/resources/api-reference': typeof MarketingResourcesApiReferenceRoute
   '/resources/legal': typeof MarketingResourcesLegalRouteWithChildren
+  '/blog/category/$category': typeof BlogCategoryCategoryRoute
+  '/docs/pipe-catalog/$': typeof DocsPipeCatalogSplatRoute
+  '/docs/pipe-catalog/{$}.mdx': typeof DocsPipeCatalogChar123Char125DotmdxRoute
+  '/docs/search-catalog/$': typeof DocsSearchCatalogSplatRoute
+  '/docs/search-catalog/{$}.mdx': typeof DocsSearchCatalogChar123Char125DotmdxRoute
+  '/docs/pipe-catalog/': typeof DocsPipeCatalogIndexRoute
+  '/docs/search-catalog/': typeof DocsSearchCatalogIndexRoute
   '/resources/legal/$': typeof MarketingResourcesLegalSplatRoute
   '/resources/legal/dpa': typeof MarketingResourcesLegalDpaRoute
   '/resources/legal/privacy-policy': typeof MarketingResourcesLegalPrivacyPolicyRoute
   '/resources/legal/terms-of-service': typeof MarketingResourcesLegalTermsOfServiceRoute
 }
 export interface FileRoutesByTo {
+  '/ai-instructions.md': typeof AiInstructionsDotmdRoute
+  '/docs.mdx': typeof DocsDotmdxRoute
+  '/llms-full.txt': typeof LlmsFullDottxtRoute
+  '/llms.txt': typeof LlmsDottxtRoute
+  '/og-manifest.json': typeof OgManifestDotjsonRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/ai-instructions': typeof MarketingAiInstructionsRoute
   '/enrichment-api': typeof MarketingEnrichmentApiRoute
   '/mcp': typeof MarketingMcpRoute
   '/pricing': typeof MarketingPricingRoute
   '/support': typeof MarketingSupportRoute
+  '/api/chat': typeof ApiChatRoute
+  '/api/chat-index.json': typeof ApiChatIndexDotjsonRoute
+  '/api/search': typeof ApiSearchRoute
+  '/authors/$slug': typeof AuthorsSlugRoute
+  '/blog/$slug': typeof BlogSlugRoute
+  '/blog/rss.xml': typeof BlogRssDotxmlRoute
+  '/blog/{$slug}.md': typeof BlogChar123slugChar125DotmdRoute
+  '/docs/$': typeof DocsSplatRoute
+  '/docs/{$}.mdx': typeof DocsChar123Char125DotmdxRoute
+  '/reviews/$slug': typeof ReviewsSlugRoute
+  '/reviews/{$slug}.md': typeof ReviewsChar123slugChar125DotmdRoute
   '/tools/lemlist-api-key-encoder': typeof ToolsLemlistApiKeyEncoderRoute
   '/': typeof MarketingIndexRoute
+  '/authors': typeof AuthorsIndexRoute
+  '/blog': typeof BlogIndexRoute
+  '/docs': typeof DocsIndexRoute
+  '/reviews': typeof ReviewsIndexRoute
   '/compare/$slug': typeof MarketingCompareSlugRoute
   '/integrations/google-workspace': typeof MarketingIntegrationsGoogleWorkspaceRoute
   '/integrations/slack': typeof MarketingIntegrationsSlackRoute
   '/resources/api-reference': typeof MarketingResourcesApiReferenceRoute
   '/resources/legal': typeof MarketingResourcesLegalRouteWithChildren
+  '/blog/category/$category': typeof BlogCategoryCategoryRoute
+  '/docs/pipe-catalog/$': typeof DocsPipeCatalogSplatRoute
+  '/docs/pipe-catalog/{$}.mdx': typeof DocsPipeCatalogChar123Char125DotmdxRoute
+  '/docs/search-catalog/$': typeof DocsSearchCatalogSplatRoute
+  '/docs/search-catalog/{$}.mdx': typeof DocsSearchCatalogChar123Char125DotmdxRoute
+  '/docs/pipe-catalog': typeof DocsPipeCatalogIndexRoute
+  '/docs/search-catalog': typeof DocsSearchCatalogIndexRoute
   '/resources/legal/$': typeof MarketingResourcesLegalSplatRoute
   '/resources/legal/dpa': typeof MarketingResourcesLegalDpaRoute
   '/resources/legal/privacy-policy': typeof MarketingResourcesLegalPrivacyPolicyRoute
@@ -159,18 +416,50 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_marketing': typeof MarketingRouteWithChildren
+  '/ai-instructions.md': typeof AiInstructionsDotmdRoute
+  '/authors': typeof AuthorsRouteWithChildren
+  '/blog': typeof BlogRouteWithChildren
+  '/docs': typeof DocsRouteWithChildren
+  '/docs.mdx': typeof DocsDotmdxRoute
+  '/llms-full.txt': typeof LlmsFullDottxtRoute
+  '/llms.txt': typeof LlmsDottxtRoute
+  '/og-manifest.json': typeof OgManifestDotjsonRoute
+  '/reviews': typeof ReviewsRouteWithChildren
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/_marketing/ai-instructions': typeof MarketingAiInstructionsRoute
   '/_marketing/enrichment-api': typeof MarketingEnrichmentApiRoute
   '/_marketing/mcp': typeof MarketingMcpRoute
   '/_marketing/pricing': typeof MarketingPricingRoute
   '/_marketing/support': typeof MarketingSupportRoute
+  '/api/chat': typeof ApiChatRoute
+  '/api/chat-index.json': typeof ApiChatIndexDotjsonRoute
+  '/api/search': typeof ApiSearchRoute
+  '/authors/$slug': typeof AuthorsSlugRoute
+  '/blog/$slug': typeof BlogSlugRoute
+  '/blog/rss.xml': typeof BlogRssDotxmlRoute
+  '/blog/{$slug}.md': typeof BlogChar123slugChar125DotmdRoute
+  '/docs/$': typeof DocsSplatRoute
+  '/docs/{$}.mdx': typeof DocsChar123Char125DotmdxRoute
+  '/reviews/$slug': typeof ReviewsSlugRoute
+  '/reviews/{$slug}.md': typeof ReviewsChar123slugChar125DotmdRoute
   '/tools/lemlist-api-key-encoder': typeof ToolsLemlistApiKeyEncoderRoute
   '/_marketing/': typeof MarketingIndexRoute
+  '/authors/': typeof AuthorsIndexRoute
+  '/blog/': typeof BlogIndexRoute
+  '/docs/': typeof DocsIndexRoute
+  '/reviews/': typeof ReviewsIndexRoute
   '/_marketing/compare/$slug': typeof MarketingCompareSlugRoute
   '/_marketing/integrations/google-workspace': typeof MarketingIntegrationsGoogleWorkspaceRoute
   '/_marketing/integrations/slack': typeof MarketingIntegrationsSlackRoute
   '/_marketing/resources/api-reference': typeof MarketingResourcesApiReferenceRoute
   '/_marketing/resources/legal': typeof MarketingResourcesLegalRouteWithChildren
+  '/blog/category/$category': typeof BlogCategoryCategoryRoute
+  '/docs/pipe-catalog/$': typeof DocsPipeCatalogSplatRoute
+  '/docs/pipe-catalog/{$}.mdx': typeof DocsPipeCatalogChar123Char125DotmdxRoute
+  '/docs/search-catalog/$': typeof DocsSearchCatalogSplatRoute
+  '/docs/search-catalog/{$}.mdx': typeof DocsSearchCatalogChar123Char125DotmdxRoute
+  '/docs/pipe-catalog/': typeof DocsPipeCatalogIndexRoute
+  '/docs/search-catalog/': typeof DocsSearchCatalogIndexRoute
   '/_marketing/resources/legal/$': typeof MarketingResourcesLegalSplatRoute
   '/_marketing/resources/legal/dpa': typeof MarketingResourcesLegalDpaRoute
   '/_marketing/resources/legal/privacy-policy': typeof MarketingResourcesLegalPrivacyPolicyRoute
@@ -180,35 +469,95 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/ai-instructions.md'
+    | '/authors'
+    | '/blog'
+    | '/docs'
+    | '/docs.mdx'
+    | '/llms-full.txt'
+    | '/llms.txt'
+    | '/og-manifest.json'
+    | '/reviews'
+    | '/sitemap.xml'
     | '/ai-instructions'
     | '/enrichment-api'
     | '/mcp'
     | '/pricing'
     | '/support'
+    | '/api/chat'
+    | '/api/chat-index.json'
+    | '/api/search'
+    | '/authors/$slug'
+    | '/blog/$slug'
+    | '/blog/rss.xml'
+    | '/blog/{$slug}.md'
+    | '/docs/$'
+    | '/docs/{$}.mdx'
+    | '/reviews/$slug'
+    | '/reviews/{$slug}.md'
     | '/tools/lemlist-api-key-encoder'
+    | '/authors/'
+    | '/blog/'
+    | '/docs/'
+    | '/reviews/'
     | '/compare/$slug'
     | '/integrations/google-workspace'
     | '/integrations/slack'
     | '/resources/api-reference'
     | '/resources/legal'
+    | '/blog/category/$category'
+    | '/docs/pipe-catalog/$'
+    | '/docs/pipe-catalog/{$}.mdx'
+    | '/docs/search-catalog/$'
+    | '/docs/search-catalog/{$}.mdx'
+    | '/docs/pipe-catalog/'
+    | '/docs/search-catalog/'
     | '/resources/legal/$'
     | '/resources/legal/dpa'
     | '/resources/legal/privacy-policy'
     | '/resources/legal/terms-of-service'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/ai-instructions.md'
+    | '/docs.mdx'
+    | '/llms-full.txt'
+    | '/llms.txt'
+    | '/og-manifest.json'
+    | '/sitemap.xml'
     | '/ai-instructions'
     | '/enrichment-api'
     | '/mcp'
     | '/pricing'
     | '/support'
+    | '/api/chat'
+    | '/api/chat-index.json'
+    | '/api/search'
+    | '/authors/$slug'
+    | '/blog/$slug'
+    | '/blog/rss.xml'
+    | '/blog/{$slug}.md'
+    | '/docs/$'
+    | '/docs/{$}.mdx'
+    | '/reviews/$slug'
+    | '/reviews/{$slug}.md'
     | '/tools/lemlist-api-key-encoder'
     | '/'
+    | '/authors'
+    | '/blog'
+    | '/docs'
+    | '/reviews'
     | '/compare/$slug'
     | '/integrations/google-workspace'
     | '/integrations/slack'
     | '/resources/api-reference'
     | '/resources/legal'
+    | '/blog/category/$category'
+    | '/docs/pipe-catalog/$'
+    | '/docs/pipe-catalog/{$}.mdx'
+    | '/docs/search-catalog/$'
+    | '/docs/search-catalog/{$}.mdx'
+    | '/docs/pipe-catalog'
+    | '/docs/search-catalog'
     | '/resources/legal/$'
     | '/resources/legal/dpa'
     | '/resources/legal/privacy-policy'
@@ -216,18 +565,50 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/_marketing'
+    | '/ai-instructions.md'
+    | '/authors'
+    | '/blog'
+    | '/docs'
+    | '/docs.mdx'
+    | '/llms-full.txt'
+    | '/llms.txt'
+    | '/og-manifest.json'
+    | '/reviews'
+    | '/sitemap.xml'
     | '/_marketing/ai-instructions'
     | '/_marketing/enrichment-api'
     | '/_marketing/mcp'
     | '/_marketing/pricing'
     | '/_marketing/support'
+    | '/api/chat'
+    | '/api/chat-index.json'
+    | '/api/search'
+    | '/authors/$slug'
+    | '/blog/$slug'
+    | '/blog/rss.xml'
+    | '/blog/{$slug}.md'
+    | '/docs/$'
+    | '/docs/{$}.mdx'
+    | '/reviews/$slug'
+    | '/reviews/{$slug}.md'
     | '/tools/lemlist-api-key-encoder'
     | '/_marketing/'
+    | '/authors/'
+    | '/blog/'
+    | '/docs/'
+    | '/reviews/'
     | '/_marketing/compare/$slug'
     | '/_marketing/integrations/google-workspace'
     | '/_marketing/integrations/slack'
     | '/_marketing/resources/api-reference'
     | '/_marketing/resources/legal'
+    | '/blog/category/$category'
+    | '/docs/pipe-catalog/$'
+    | '/docs/pipe-catalog/{$}.mdx'
+    | '/docs/search-catalog/$'
+    | '/docs/search-catalog/{$}.mdx'
+    | '/docs/pipe-catalog/'
+    | '/docs/search-catalog/'
     | '/_marketing/resources/legal/$'
     | '/_marketing/resources/legal/dpa'
     | '/_marketing/resources/legal/privacy-policy'
@@ -236,6 +617,19 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   MarketingRoute: typeof MarketingRouteWithChildren
+  AiInstructionsDotmdRoute: typeof AiInstructionsDotmdRoute
+  AuthorsRoute: typeof AuthorsRouteWithChildren
+  BlogRoute: typeof BlogRouteWithChildren
+  DocsRoute: typeof DocsRouteWithChildren
+  DocsDotmdxRoute: typeof DocsDotmdxRoute
+  LlmsFullDottxtRoute: typeof LlmsFullDottxtRoute
+  LlmsDottxtRoute: typeof LlmsDottxtRoute
+  OgManifestDotjsonRoute: typeof OgManifestDotjsonRoute
+  ReviewsRoute: typeof ReviewsRouteWithChildren
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  ApiChatRoute: typeof ApiChatRoute
+  ApiChatIndexDotjsonRoute: typeof ApiChatIndexDotjsonRoute
+  ApiSearchRoute: typeof ApiSearchRoute
   ToolsLemlistApiKeyEncoderRoute: typeof ToolsLemlistApiKeyEncoderRoute
 }
 
@@ -246,6 +640,76 @@ declare module '@tanstack/react-router' {
       path: ''
       fullPath: '/'
       preLoaderRoute: typeof MarketingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ai-instructions.md': {
+      id: '/ai-instructions.md'
+      path: '/ai-instructions.md'
+      fullPath: '/ai-instructions.md'
+      preLoaderRoute: typeof AiInstructionsDotmdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/authors': {
+      id: '/authors'
+      path: '/authors'
+      fullPath: '/authors'
+      preLoaderRoute: typeof AuthorsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog': {
+      id: '/blog'
+      path: '/blog'
+      fullPath: '/blog'
+      preLoaderRoute: typeof BlogRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/docs': {
+      id: '/docs'
+      path: '/docs'
+      fullPath: '/docs'
+      preLoaderRoute: typeof DocsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/docs.mdx': {
+      id: '/docs.mdx'
+      path: '/docs.mdx'
+      fullPath: '/docs.mdx'
+      preLoaderRoute: typeof DocsDotmdxRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/llms-full.txt': {
+      id: '/llms-full.txt'
+      path: '/llms-full.txt'
+      fullPath: '/llms-full.txt'
+      preLoaderRoute: typeof LlmsFullDottxtRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/llms.txt': {
+      id: '/llms.txt'
+      path: '/llms.txt'
+      fullPath: '/llms.txt'
+      preLoaderRoute: typeof LlmsDottxtRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/og-manifest.json': {
+      id: '/og-manifest.json'
+      path: '/og-manifest.json'
+      fullPath: '/og-manifest.json'
+      preLoaderRoute: typeof OgManifestDotjsonRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reviews': {
+      id: '/reviews'
+      path: '/reviews'
+      fullPath: '/reviews'
+      preLoaderRoute: typeof ReviewsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_marketing/': {
@@ -290,6 +754,111 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MarketingSupportRouteImport
       parentRoute: typeof MarketingRoute
     }
+    '/api/chat': {
+      id: '/api/chat'
+      path: '/api/chat'
+      fullPath: '/api/chat'
+      preLoaderRoute: typeof ApiChatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/chat-index.json': {
+      id: '/api/chat-index.json'
+      path: '/api/chat-index.json'
+      fullPath: '/api/chat-index.json'
+      preLoaderRoute: typeof ApiChatIndexDotjsonRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/search': {
+      id: '/api/search'
+      path: '/api/search'
+      fullPath: '/api/search'
+      preLoaderRoute: typeof ApiSearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/authors/': {
+      id: '/authors/'
+      path: '/'
+      fullPath: '/authors/'
+      preLoaderRoute: typeof AuthorsIndexRouteImport
+      parentRoute: typeof AuthorsRoute
+    }
+    '/authors/$slug': {
+      id: '/authors/$slug'
+      path: '/$slug'
+      fullPath: '/authors/$slug'
+      preLoaderRoute: typeof AuthorsSlugRouteImport
+      parentRoute: typeof AuthorsRoute
+    }
+    '/blog/': {
+      id: '/blog/'
+      path: '/'
+      fullPath: '/blog/'
+      preLoaderRoute: typeof BlogIndexRouteImport
+      parentRoute: typeof BlogRoute
+    }
+    '/blog/$slug': {
+      id: '/blog/$slug'
+      path: '/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof BlogSlugRouteImport
+      parentRoute: typeof BlogRoute
+    }
+    '/blog/rss.xml': {
+      id: '/blog/rss.xml'
+      path: '/rss.xml'
+      fullPath: '/blog/rss.xml'
+      preLoaderRoute: typeof BlogRssDotxmlRouteImport
+      parentRoute: typeof BlogRoute
+    }
+    '/blog/{$slug}.md': {
+      id: '/blog/{$slug}.md'
+      path: '/{$slug}.md'
+      fullPath: '/blog/{$slug}.md'
+      preLoaderRoute: typeof BlogChar123slugChar125DotmdRouteImport
+      parentRoute: typeof BlogRoute
+    }
+    '/docs/': {
+      id: '/docs/'
+      path: '/'
+      fullPath: '/docs/'
+      preLoaderRoute: typeof DocsIndexRouteImport
+      parentRoute: typeof DocsRoute
+    }
+    '/docs/$': {
+      id: '/docs/$'
+      path: '/$'
+      fullPath: '/docs/$'
+      preLoaderRoute: typeof DocsSplatRouteImport
+      parentRoute: typeof DocsRoute
+    }
+    '/docs/{$}.mdx': {
+      id: '/docs/{$}.mdx'
+      path: '/{$}.mdx'
+      fullPath: '/docs/{$}.mdx'
+      preLoaderRoute: typeof DocsChar123Char125DotmdxRouteImport
+      parentRoute: typeof DocsRoute
+    }
+    '/reviews/': {
+      id: '/reviews/'
+      path: '/'
+      fullPath: '/reviews/'
+      preLoaderRoute: typeof ReviewsIndexRouteImport
+      parentRoute: typeof ReviewsRoute
+    }
+    '/reviews/$slug': {
+      id: '/reviews/$slug'
+      path: '/$slug'
+      fullPath: '/reviews/$slug'
+      preLoaderRoute: typeof ReviewsSlugRouteImport
+      parentRoute: typeof ReviewsRoute
+    }
+    '/reviews/{$slug}.md': {
+      id: '/reviews/{$slug}.md'
+      path: '/{$slug}.md'
+      fullPath: '/reviews/{$slug}.md'
+      preLoaderRoute: typeof ReviewsChar123slugChar125DotmdRouteImport
+      parentRoute: typeof ReviewsRoute
+    }
     '/tools/lemlist-api-key-encoder': {
       id: '/tools/lemlist-api-key-encoder'
       path: '/tools/lemlist-api-key-encoder'
@@ -331,6 +900,55 @@ declare module '@tanstack/react-router' {
       fullPath: '/resources/legal'
       preLoaderRoute: typeof MarketingResourcesLegalRouteImport
       parentRoute: typeof MarketingRoute
+    }
+    '/blog/category/$category': {
+      id: '/blog/category/$category'
+      path: '/category/$category'
+      fullPath: '/blog/category/$category'
+      preLoaderRoute: typeof BlogCategoryCategoryRouteImport
+      parentRoute: typeof BlogRoute
+    }
+    '/docs/pipe-catalog/': {
+      id: '/docs/pipe-catalog/'
+      path: '/pipe-catalog'
+      fullPath: '/docs/pipe-catalog/'
+      preLoaderRoute: typeof DocsPipeCatalogIndexRouteImport
+      parentRoute: typeof DocsRoute
+    }
+    '/docs/pipe-catalog/$': {
+      id: '/docs/pipe-catalog/$'
+      path: '/pipe-catalog/$'
+      fullPath: '/docs/pipe-catalog/$'
+      preLoaderRoute: typeof DocsPipeCatalogSplatRouteImport
+      parentRoute: typeof DocsRoute
+    }
+    '/docs/pipe-catalog/{$}.mdx': {
+      id: '/docs/pipe-catalog/{$}.mdx'
+      path: '/pipe-catalog/{$}.mdx'
+      fullPath: '/docs/pipe-catalog/{$}.mdx'
+      preLoaderRoute: typeof DocsPipeCatalogChar123Char125DotmdxRouteImport
+      parentRoute: typeof DocsRoute
+    }
+    '/docs/search-catalog/': {
+      id: '/docs/search-catalog/'
+      path: '/search-catalog'
+      fullPath: '/docs/search-catalog/'
+      preLoaderRoute: typeof DocsSearchCatalogIndexRouteImport
+      parentRoute: typeof DocsRoute
+    }
+    '/docs/search-catalog/$': {
+      id: '/docs/search-catalog/$'
+      path: '/search-catalog/$'
+      fullPath: '/docs/search-catalog/$'
+      preLoaderRoute: typeof DocsSearchCatalogSplatRouteImport
+      parentRoute: typeof DocsRoute
+    }
+    '/docs/search-catalog/{$}.mdx': {
+      id: '/docs/search-catalog/{$}.mdx'
+      path: '/search-catalog/{$}.mdx'
+      fullPath: '/docs/search-catalog/{$}.mdx'
+      preLoaderRoute: typeof DocsSearchCatalogChar123Char125DotmdxRouteImport
+      parentRoute: typeof DocsRoute
     }
     '/_marketing/resources/legal/$': {
       id: '/_marketing/resources/legal/$'
@@ -418,8 +1036,95 @@ const MarketingRouteWithChildren = MarketingRoute._addFileChildren(
   MarketingRouteChildren,
 )
 
+interface AuthorsRouteChildren {
+  AuthorsSlugRoute: typeof AuthorsSlugRoute
+  AuthorsIndexRoute: typeof AuthorsIndexRoute
+}
+
+const AuthorsRouteChildren: AuthorsRouteChildren = {
+  AuthorsSlugRoute: AuthorsSlugRoute,
+  AuthorsIndexRoute: AuthorsIndexRoute,
+}
+
+const AuthorsRouteWithChildren =
+  AuthorsRoute._addFileChildren(AuthorsRouteChildren)
+
+interface BlogRouteChildren {
+  BlogSlugRoute: typeof BlogSlugRoute
+  BlogRssDotxmlRoute: typeof BlogRssDotxmlRoute
+  BlogChar123slugChar125DotmdRoute: typeof BlogChar123slugChar125DotmdRoute
+  BlogIndexRoute: typeof BlogIndexRoute
+  BlogCategoryCategoryRoute: typeof BlogCategoryCategoryRoute
+}
+
+const BlogRouteChildren: BlogRouteChildren = {
+  BlogSlugRoute: BlogSlugRoute,
+  BlogRssDotxmlRoute: BlogRssDotxmlRoute,
+  BlogChar123slugChar125DotmdRoute: BlogChar123slugChar125DotmdRoute,
+  BlogIndexRoute: BlogIndexRoute,
+  BlogCategoryCategoryRoute: BlogCategoryCategoryRoute,
+}
+
+const BlogRouteWithChildren = BlogRoute._addFileChildren(BlogRouteChildren)
+
+interface DocsRouteChildren {
+  DocsSplatRoute: typeof DocsSplatRoute
+  DocsChar123Char125DotmdxRoute: typeof DocsChar123Char125DotmdxRoute
+  DocsIndexRoute: typeof DocsIndexRoute
+  DocsPipeCatalogSplatRoute: typeof DocsPipeCatalogSplatRoute
+  DocsPipeCatalogChar123Char125DotmdxRoute: typeof DocsPipeCatalogChar123Char125DotmdxRoute
+  DocsSearchCatalogSplatRoute: typeof DocsSearchCatalogSplatRoute
+  DocsSearchCatalogChar123Char125DotmdxRoute: typeof DocsSearchCatalogChar123Char125DotmdxRoute
+  DocsPipeCatalogIndexRoute: typeof DocsPipeCatalogIndexRoute
+  DocsSearchCatalogIndexRoute: typeof DocsSearchCatalogIndexRoute
+}
+
+const DocsRouteChildren: DocsRouteChildren = {
+  DocsSplatRoute: DocsSplatRoute,
+  DocsChar123Char125DotmdxRoute: DocsChar123Char125DotmdxRoute,
+  DocsIndexRoute: DocsIndexRoute,
+  DocsPipeCatalogSplatRoute: DocsPipeCatalogSplatRoute,
+  DocsPipeCatalogChar123Char125DotmdxRoute:
+    DocsPipeCatalogChar123Char125DotmdxRoute,
+  DocsSearchCatalogSplatRoute: DocsSearchCatalogSplatRoute,
+  DocsSearchCatalogChar123Char125DotmdxRoute:
+    DocsSearchCatalogChar123Char125DotmdxRoute,
+  DocsPipeCatalogIndexRoute: DocsPipeCatalogIndexRoute,
+  DocsSearchCatalogIndexRoute: DocsSearchCatalogIndexRoute,
+}
+
+const DocsRouteWithChildren = DocsRoute._addFileChildren(DocsRouteChildren)
+
+interface ReviewsRouteChildren {
+  ReviewsSlugRoute: typeof ReviewsSlugRoute
+  ReviewsChar123slugChar125DotmdRoute: typeof ReviewsChar123slugChar125DotmdRoute
+  ReviewsIndexRoute: typeof ReviewsIndexRoute
+}
+
+const ReviewsRouteChildren: ReviewsRouteChildren = {
+  ReviewsSlugRoute: ReviewsSlugRoute,
+  ReviewsChar123slugChar125DotmdRoute: ReviewsChar123slugChar125DotmdRoute,
+  ReviewsIndexRoute: ReviewsIndexRoute,
+}
+
+const ReviewsRouteWithChildren =
+  ReviewsRoute._addFileChildren(ReviewsRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   MarketingRoute: MarketingRouteWithChildren,
+  AiInstructionsDotmdRoute: AiInstructionsDotmdRoute,
+  AuthorsRoute: AuthorsRouteWithChildren,
+  BlogRoute: BlogRouteWithChildren,
+  DocsRoute: DocsRouteWithChildren,
+  DocsDotmdxRoute: DocsDotmdxRoute,
+  LlmsFullDottxtRoute: LlmsFullDottxtRoute,
+  LlmsDottxtRoute: LlmsDottxtRoute,
+  OgManifestDotjsonRoute: OgManifestDotjsonRoute,
+  ReviewsRoute: ReviewsRouteWithChildren,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
+  ApiChatRoute: ApiChatRoute,
+  ApiChatIndexDotjsonRoute: ApiChatIndexDotjsonRoute,
+  ApiSearchRoute: ApiSearchRoute,
   ToolsLemlistApiKeyEncoderRoute: ToolsLemlistApiKeyEncoderRoute,
 }
 export const routeTree = rootRouteImport

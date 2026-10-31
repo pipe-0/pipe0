@@ -1,12 +1,16 @@
-import { PageNav } from "@/components/features/docs/page-nav";
-import { getSearchEntryMap } from "@/lib/get-searches";
+import { PageNav, type PageNavItem } from "@/components/features/docs/page-nav";
+import type { SearchEntryMap } from "@/lib/get-searches";
 import { SearchCatalogIndex } from "@/components/features/docs/search-catalog-index";
 import { DocsPage } from "fumadocs-ui/layouts/docs/page";
 import { Suspense } from "react";
 
-export async function SearchCatalogIndexPage() {
-  const searchEntryMap = await getSearchEntryMap();
-
+export function SearchCatalogIndexPage({
+  searchEntryMap,
+  nav,
+}: {
+  searchEntryMap: SearchEntryMap;
+  nav: { previous?: PageNavItem; next?: PageNavItem };
+}) {
   return (
     <DocsPage
       tableOfContent={{ enabled: false, component: null }}
@@ -17,7 +21,7 @@ export async function SearchCatalogIndexPage() {
         <Suspense>
           <SearchCatalogIndex searchEntryMap={searchEntryMap} />
         </Suspense>
-        <PageNav url="/docs/search-catalog" />
+        <PageNav {...nav} />
       </div>
     </DocsPage>
   );

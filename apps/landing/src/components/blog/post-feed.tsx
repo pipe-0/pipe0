@@ -2,6 +2,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { SiteLink } from "@/components/link";
 import { useState } from "react";
+import { Image } from "@/components/image";
 import { AuthorAvatar } from "./author-avatar";
 
 /** Serialized card data — computed server-side, rendered client-side. */
@@ -53,9 +54,10 @@ export function PostFeed({ posts }: { posts: FeedPost[] }) {
 function PostCard({ post }: { post: FeedPost }) {
   return (
     <SiteLink href={post.url} className="group flex flex-col">
-      <img
+      <Image
         src={post.cover}
         alt=""
+        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
         className="aspect-[2/1] w-full rounded-lg object-cover ring-1 ring-fd-foreground/10 transition-opacity group-hover:opacity-90"
       />
       {post.category && (

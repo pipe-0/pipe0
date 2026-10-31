@@ -1,3 +1,4 @@
+import { SiteLink } from "@/components/link";
 import { searchMiniSpec } from "@/lib/search/snippet-catalog";
 import { videoCatalog } from "@/lib/search/video-catalog";
 import { PayloadDocumenation } from "@/components/config-documentation";
@@ -46,7 +47,6 @@ import {
 } from "@pipe0/base";
 import { Callout } from "fumadocs-ui/components/callout";
 import { Tabs, Tab } from "fumadocs-ui/components/tabs";
-import { Link } from "@tanstack/react-router";
 import { useMemo } from "react";
 import { DynamicCodeBlock } from "@/components/features/docs/dynamic-code-block";
 import { SearchFormPreview } from "@/components/features/docs/search-form-preview";
@@ -167,19 +167,19 @@ export function SearchCatalogHeader({ searchId }: PipeHeaderProps) {
         <Callout type="info" title="Dynamic output fields">
           This search&apos;s output columns are determined at run time and
           depend on the data source. Enable{" "}
-          <Link
-            to="/docs/search/request-payload" hash="configfield_definitionsenabled"
+          <SiteLink
+            href="/docs/search/request-payload#configfield_definitionsenabled"
             className="text-primary underline"
           >
             <code>config.field_definitions.enabled</code>
-          </Link>{" "}
+          </SiteLink>{" "}
           to receive the columns alongside your results in the response{" "}
-          <Link
-            to="/docs/search/response-object" hash="field_definitions"
+          <SiteLink
+            href="/docs/search/response-object#field_definitions"
             className="text-primary underline"
           >
             <code>field_definitions</code>
-          </Link>
+          </SiteLink>
           .
         </Callout>
       );

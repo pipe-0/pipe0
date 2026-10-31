@@ -1,4 +1,8 @@
+import type { PlainPage } from "@/lib/content";
 import type { ReviewPage } from "@/lib/source.server";
+
+/** A review as it reaches the browser: frontmatter, no compiled content. */
+export type Review = PlainPage<ReviewPage>;
 
 export const REVIEWS_DESCRIPTION =
   "Hands-on reviews of sales data and GTM tools: what each one is good at, " +
@@ -67,16 +71,16 @@ export function overallScore(scores: ReviewPage["data"]["scores"]): number {
 
 export { formatScore } from "./score";
 
-export function isVisible(review: ReviewPage): boolean {
+export function isVisible(review: Pick<Review, "data">): boolean {
   return SHOW_DRAFTS || review.data.draft !== true;
 }
 
-export function reviewSlug(review: ReviewPage): string {
+export function reviewSlug(review: Pick<Review, "slugs">): string {
   return review.slugs[0];
 }
 
 /** "$49/mo", "$39" for a one-time credit pack, "Free" when the cheapest paid plan is $0. */
-export function formatStartingPrice(review: ReviewPage): string {
+export function formatStartingPrice(review: Pick<Review, "data">): string {
   const { startingAt, startingAtPeriod } = review.data.pricing;
   if (startingAt === 0) return "Free";
   return startingAtPeriod === "one-time" ? `$${startingAt}` : `$${startingAt}/mo`;
@@ -183,7 +187,7 @@ export function waterfallSentence(tool: string, row: BenchmarkRow): string {
 }
 
 /** The disclosure line under the byline. */
-export function disclosureFor(review: ReviewPage): string {
+export function disclosureFor(review: Pick<Review, "data">): string {
   const { disclosure, relationship, tool } = review.data;
   if (disclosure) return disclosure;
   switch (relationship) {

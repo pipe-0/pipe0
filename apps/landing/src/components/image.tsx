@@ -33,7 +33,10 @@ function candidates(width: number | undefined, sizes: string | undefined) {
   return { widths: [...new Set([fit(width), fit(width * 2)])], kind: "x" };
 }
 
-type ImageProps = Omit<ComponentPropsWithoutRef<"img">, "src" | "width" | "height"> & {
+type ImageProps = Omit<
+  ComponentPropsWithoutRef<"img">,
+  "src" | "width" | "height"
+> & {
   src: string;
   // Strings arrive from MDX images.
   width?: number | string;
@@ -60,7 +63,10 @@ export const Image = forwardRef<HTMLImageElement, ImageProps>(function Image(
   if (transformed) {
     const { widths, kind } = candidates(w, sizes);
     srcSet = widths
-      .map((size, i) => `${imageUrl(src, size)} ${kind === "w" ? size : i + 1}${kind}`)
+      .map(
+        (size, i) =>
+          `${imageUrl(src, size)} ${kind === "w" ? size : i + 1}${kind}`,
+      )
       .join(", ");
     url = imageUrl(src, widths.at(-1)!);
   }

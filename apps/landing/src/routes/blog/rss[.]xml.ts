@@ -1,8 +1,7 @@
-import { sortedPosts } from "@/components/blog/blog-utils";
+import { createFileRoute } from "@tanstack/react-router";
+import { sortedPosts } from "@/lib/blog.server";
 import { authorDisplayName } from "@/lib/authors";
 import { getBaseUrl } from "@/lib/utils";
-
-export const revalidate = false;
 
 function escape(text: string) {
   return text
@@ -13,7 +12,7 @@ function escape(text: string) {
 }
 
 /** RSS 2.0 feed of published posts, newest first. */
-export function GET() {
+function GET() {
   const base = getBaseUrl();
   const posts = sortedPosts();
 
@@ -56,3 +55,7 @@ ${posts[0] ? `    <lastBuildDate>${new Date(posts[0].data.date).toUTCString()}</
     headers: { "Content-Type": "application/rss+xml; charset=utf-8" },
   });
 }
+
+export const Route = createFileRoute("/blog/rss.xml")({
+  server: { handlers: { GET } },
+});

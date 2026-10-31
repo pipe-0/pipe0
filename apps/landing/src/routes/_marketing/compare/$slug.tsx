@@ -32,7 +32,9 @@ export const Route = createFileRoute("/_marketing/compare/$slug")({
           }),
           scripts: [
             jsonLd(faqJsonLd(config.faqs)),
-            ...(config.media?.videos ?? []).map((video) => jsonLd(videoJsonLd(video))),
+            ...(config.media?.videos ?? []).map((video) =>
+              jsonLd(videoJsonLd(video)),
+            ),
             jsonLd(
               breadcrumbJsonLd([
                 { name: "pipe0", url: "/" },
@@ -67,7 +69,10 @@ function ComparePage() {
 
       {config.charts && (
         <Band>
-          <SectionHead title={config.charts.heading} lede={config.charts.lede} />
+          <SectionHead
+            title={config.charts.heading}
+            lede={config.charts.lede}
+          />
           <CompareCharts
             charts={config.charts.charts}
             footnote={config.charts.footnote}

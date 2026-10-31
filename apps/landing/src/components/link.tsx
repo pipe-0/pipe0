@@ -13,25 +13,28 @@ type SiteLinkProps = Omit<ComponentPropsWithoutRef<"a">, "href"> & {
  * The router's `to` takes a path only, so search and hash go separately, and
  * a same-page anchor stays a native link because the router drops its hash.
  */
-export const SiteLink = forwardRef<HTMLAnchorElement, SiteLinkProps>(function SiteLink(
-  { href = "", prefetch = true, ...props },
-  ref,
-) {
-  const router = useRouter();
+export const SiteLink = forwardRef<HTMLAnchorElement, SiteLinkProps>(
+  function SiteLink({ href = "", prefetch = true, ...props }, ref) {
+    const router = useRouter();
 
-  if (!href.startsWith("/")) return <a ref={ref} href={href} {...props} />;
+    if (!href.startsWith("/")) return <a ref={ref} href={href} {...props} />;
 
-  const [pathAndSearch = "", hash] = href.split("#", 2);
-  const [path = "", search] = pathAndSearch.split("?", 2);
+    const [pathAndSearch = "", hash] = href.split("#", 2);
+    const [path = "", search] = pathAndSearch.split("?", 2);
 
-  return (
-    <RouterLink
-      ref={ref}
-      to={path as never}
-      search={(search ? router.options.parseSearch(`?${search}`) : undefined) as never}
-      hash={hash}
-      preload={prefetch ? "intent" : false}
-      {...props}
-    />
-  );
-});
+    return (
+      <RouterLink
+        ref={ref}
+        to={path as never}
+        search={
+          (search
+            ? router.options.parseSearch(`?${search}`)
+            : undefined) as never
+        }
+        hash={hash}
+        preload={prefetch ? "intent" : false}
+        {...props}
+      />
+    );
+  },
+);

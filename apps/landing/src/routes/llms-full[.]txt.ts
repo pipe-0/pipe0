@@ -1,11 +1,11 @@
+import { createFileRoute } from "@tanstack/react-router";
 import { source } from "@/lib/source.server";
 import { getLLMText } from "@/lib/get-llm-text.server";
 import { deprecatedCatalogPage } from "@/lib/catalog-lifecycle";
 
 // cached forever
-export const revalidate = false;
 
-export async function GET() {
+async function GET() {
   // Deprecated catalog pages go last, so a reader meets the current version of
   // a pipe or search before the deprecated ones that share its label.
   const pages = source.getPages();
@@ -21,3 +21,7 @@ export async function GET() {
 
   return new Response(scanned.join("\n\n"));
 }
+
+export const Route = createFileRoute("/llms-full.txt")({
+  server: { handlers: { GET } },
+});

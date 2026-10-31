@@ -1,6 +1,6 @@
+import { SiteLink } from "@/components/link";
 import { buttonSkin } from "@/components/grid";
 import { cn } from "@/lib/utils";
-import { Link } from "@tanstack/react-router";
 import { useSyncExternalStore } from "react";
 
 const KEY = "pipe0-cookie-choice";
@@ -52,12 +52,12 @@ export function CookieBanner() {
     >
       <p className="text-[15px] leading-snug text-foreground">
         We use cookies for analytics and ads, only if you accept.{" "}
-        <Link
-          to="/resources/legal/privacy-policy/20261008" preload={false}
+        <SiteLink
+          href="/resources/legal/privacy-policy/20261008" prefetch={false}
           className="text-muted-foreground underline decoration-[var(--rule-strong)] underline-offset-[3px] hover:text-foreground"
         >
           Cookie policy
-        </Link>
+        </SiteLink>
       </p>
       <div className="mt-4 grid grid-cols-2 gap-2.5">
         <button

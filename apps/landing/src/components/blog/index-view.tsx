@@ -1,46 +1,20 @@
-import {
-  BLOG_DESCRIPTION,
-  CATEGORY_DESCRIPTIONS,
-  categorySlug,
-  formatDate,
-  lastRevised,
-  postCover,
-  sortedPosts,
-  usedCategories,
-  type Category,
-} from "@/components/blog/blog-utils";
-import { JsonLd, breadcrumbJsonLd } from "@/components/seo/json-ld";
-import { authorDisplayName } from "@/lib/authors";
-import type { BlogPage } from "@/lib/source.server";
+import { BLOG_DESCRIPTION, CATEGORY_DESCRIPTIONS } from "@/components/blog/blog-utils";
+import { SiteLink } from "@/components/link";
+import type { BlogIndexData } from "@/lib/blog.server";
 import { cn, getBaseUrl } from "@/lib/utils";
 import { Link } from "@tanstack/react-router";
-import { SiteLink } from "@/components/link";
-import { SummarizeActions } from "./share-actions";
+import { Image } from "@/components/image";
 import { PostByline, PostFeed, type FeedPost } from "./post-feed";
+import { SummarizeActions } from "./share-actions";
 import { PreferredSourceButton } from "./preferred-source-button";
-
-export function toFeedPost(post: BlogPage, ratio: number): FeedPost {
-  const author = post.data.authors?.[0];
-  return {
-    url: post.url,
-    title: post.data.title,
-    excerpt: post.data.excerpt,
-    cover: postCover(post, ratio),
-    authorName: author ? authorDisplayName(author.name) : "pipe0 team",
-    authorMeta:
-      [
-        author?.title ?? null,
-        post.data.date ? formatDate(post.data.date) : null,
-      ]
-        .filter(Boolean)
-        .join(" · ") || undefined,
-    category: post.data.category,
-  };
-}
 
 /** "Sep 2026" — the index states freshness to the month. */
 function monthYear(date: Date) {
-  return date.toLocaleDateString("en-US", { month: "long", year: "numeric" });
+  return date.toLocaleDateString("en-US", {
+    month: "long",
+    year: "numeric",
+    timeZone: "UTC",
+  });
 }
 
 /**
@@ -49,49 +23,12 @@ function monthYear(date: Date) {
  * section chips, the editors' pick, and a three-column grid.
  */
 export function BlogIndexView({
-  activeCategory,
+  view: { activeCategory, path, postCount, updated, chips, hero, feed },
 }: {
-  activeCategory?: Category;
+  view: BlogIndexData;
 }) {
-  const posts = sortedPosts();
-  const categories = usedCategories(posts);
-
-  const filtered = activeCategory
-    ? posts.filter((post) => post.data.category === activeCategory)
-    : posts;
-
-  // The hero is the view's freshest editors' pick (falling back to the
-  // newest post); everything else flows into the grid, newest first.
-  const hero = filtered.find((p) => p.data.highlight) ?? filtered[0];
-  const rest = filtered.filter((p) => p !== hero);
-
-  const updated = filtered
-    .map(lastRevised)
-    .sort((a, b) => b.getTime() - a.getTime())[0];
-  const path = activeCategory
-    ? `/blog/category/${categorySlug(activeCategory)}`
-    : "/blog";
-
-  const chips = [
-    { key: "all", label: "All", count: posts.length, href: "/blog" },
-    ...categories.map((category) => ({
-      key: category,
-      label: category,
-      count: posts.filter((p) => p.data.category === category).length,
-      href: `/blog/category/${categorySlug(category)}`,
-    })),
-  ];
-
   return (
     <>
-      <JsonLd
-        data={breadcrumbJsonLd([
-          { name: "pipe0", url: "/" },
-          { name: "Blog", url: "/blog" },
-          ...(activeCategory ? [{ name: activeCategory, url: path }] : []),
-        ])}
-      />
-
       {/* Same container as the HomeLayout header: --fd-layout-width + px-4 */}
       <main className="mx-auto w-full max-w-(--fd-layout-width) px-4 py-10 md:py-12">
         <header className="border-b border-fd-border pb-8">
@@ -138,7 +75,7 @@ export function BlogIndexView({
                 {" · "}
               </>
             )}
-            {filtered.length} posts
+            {postCount} posts
           </p>
 
           <div className="mt-6 flex flex-wrap items-center gap-x-8 gap-y-4">
@@ -177,16 +114,13 @@ export function BlogIndexView({
         {hero && (
           <>
             <div className="mt-10">
-              <FeaturedPost post={toFeedPost(hero, 16 / 9)} />
+              <FeaturedPost post={hero} />
             </div>
             <hr className="mt-10 border-fd-border" />
           </>
         )}
 
-        <PostFeed
-          key={activeCategory ?? "all"}
-          posts={rest.map((p) => toFeedPost(p, 2))}
-        />
+        <PostFeed key={activeCategory ?? "all"} posts={feed} />
       </main>
     </>
   );
@@ -198,9 +132,11 @@ function FeaturedPost({ post }: { post: FeedPost }) {
       href={post.url}
       className="group flex flex-wrap items-center gap-8 lg:gap-12"
     >
-      <img
+      <Image
         src={post.cover}
         alt=""
+        sizes="(max-width: 1024px) 100vw, 700px"
+        priority
         className="aspect-[16/9] w-full min-w-0 flex-[1.1_1_360px] rounded-lg object-cover ring-1 ring-fd-foreground/10 transition-opacity group-hover:opacity-90"
       />
       <div className="flex flex-[1_1_300px] flex-col">

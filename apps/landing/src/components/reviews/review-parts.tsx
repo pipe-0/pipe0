@@ -1,3 +1,4 @@
+import { Image } from "@/components/image";
 import { cn } from "@/lib/utils";
 import { formatScore } from "./score";
 
@@ -22,12 +23,11 @@ export function ToolLogo({
   );
   if (logo) {
     return (
-      <img
+      <Image
         src={logo}
         alt=""
         width={size}
         height={size}
-        loading="lazy"
         className={cn(tile, "object-contain p-1")}
         style={{ width: size, height: size }}
       />

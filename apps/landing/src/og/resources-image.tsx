@@ -1,10 +1,8 @@
 import { readFile } from "fs/promises";
-import { ImageResponse } from "next/og";
 import { join } from "path";
+import { renderPng } from "./render";
 
-export const runtime = "nodejs";
-export const alt = "pipe0";
-export const size = {
+const size = {
   width: 1200,
   height: 630,
 };
@@ -14,9 +12,7 @@ type OgElement = {
   description: string;
 };
 
-export const contentType = "image/png";
-
-export default async function Image() {
+export async function resourcesImage() {
   const interLight = await readFile(
     join(process.cwd(), "assets/inter-light.ttf"),
   );
@@ -24,13 +20,15 @@ export default async function Image() {
     join(process.cwd(), "assets/cal-sans-semibold.ttf"),
   );
 
+  const logo = await readFile(join(process.cwd(), "public/logo-dark.svg"));
+
   const element: OgElement = {
     title: "pipe0 | Documentation",
     description:
       "Enrich people and company data in infinite ways with one mighty API. Powered by AI.",
   };
 
-  return new ImageResponse(
+  return renderPng(
     <div
       style={{
         backgroundColor: "#0E172A",
@@ -44,7 +42,11 @@ export default async function Image() {
         padding: "0px 128px",
       }}
     >
-      <img src="https://pipe0.com/logo-dark.svg" alt="pipe0 Logo" height={64} />
+      <img
+        src={`data:image/svg+xml;base64,${logo.toString("base64")}`}
+        alt="pipe0 Logo"
+        height={64}
+      />
       <div style={{ color: "white", fontSize: 64, fontFamily: "Inter" }}>
         {element.title}
       </div>

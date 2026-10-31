@@ -34,11 +34,11 @@ const channels = [
 export const Route = createFileRoute("/_marketing/support")({
   head: () => ({
     ...seo({
-  title: "Support",
-  description:
-    "Get help with pipe0: email support with a two-business-day response commitment, community Discord, GitHub Discussions, and documentation.",
-  path: "/support",
-}),
+      title: "Support",
+      description:
+        "Get help with pipe0: email support with a two-business-day response commitment, community Discord, GitHub Discussions, and documentation.",
+      path: "/support",
+    }),
   }),
   component: Support,
 });
@@ -59,7 +59,10 @@ function Support() {
         </div>
         <Cells className="border-t border-[var(--rule)] sm:grid-cols-2">
           {channels.map((c) => (
-            <Cell key={c.title} className="flex flex-col px-6 py-10 sm:px-10 lg:px-12">
+            <Cell
+              key={c.title}
+              className="flex flex-col px-6 py-10 sm:px-10 lg:px-12"
+            >
               <h2 className="text-[17px] font-medium tracking-[-0.015em] text-foreground">
                 {c.title}
               </h2>

@@ -13,7 +13,9 @@ import { createFileRoute, redirect } from "@tanstack/react-router";
  * `/resources/legal/privacy-policy#6-data-sharing-and-processors` lands on the
  * sub-processor table of whichever version is current.
  */
-export const Route = createFileRoute("/_marketing/resources/legal/privacy-policy")({
+export const Route = createFileRoute(
+  "/_marketing/resources/legal/privacy-policy",
+)({
   beforeLoad: async () => {
     const href = await getLatestLegalUrl({ data: "privacy-policy" });
     throw redirect({ href, statusCode: 307 });

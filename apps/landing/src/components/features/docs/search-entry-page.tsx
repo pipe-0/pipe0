@@ -3,7 +3,7 @@ import { SearchCatalogHeader } from "@/components/search-catalog-header";
 import { DocsPage } from "fumadocs-ui/layouts/docs/page";
 import type { SearchId } from "@pipe0/base";
 
-export async function SearchEntryPage({ searchId }: { searchId: string }) {
+export function SearchEntryPage({ searchId }: { searchId: string }) {
   return (
     <DocsPage
       tableOfContent={{ enabled: false, component: null }}

@@ -18,11 +18,7 @@ import { authorDisplayName, authorUrl, getAuthor } from "@/lib/authors";
 import { techBenchmarkMarkdown } from "@/components/reviews/tech-benchmark";
 import { reviews } from "@/lib/source.server";
 import { getBaseUrl } from "@/lib/utils";
-import { notFound } from "next/navigation";
-
-export const revalidate = false;
-
-export const dynamicParams = false;
+import { createFileRoute, notFound } from "@tanstack/react-router";
 
 /** Escapes a value for a markdown table cell. */
 function cell(value: string) {
@@ -34,13 +30,9 @@ function cell(value: string) {
  * parts the HTML page renders around the prose (score table, verdict,
  * facts, pros and cons, pricing, alternatives, FAQ), in the same order.
  */
-export async function GET(
-  _req: Request,
-  { params }: RouteContext<"/llms.mdx/reviews/[slug]">,
-) {
-  const { slug } = await params;
+async function GET({ params: { slug } }: { params: { slug: string } }) {
   const page = reviews.getPage([slug]);
-  if (!page || !isVisible(page)) notFound();
+  if (!page || !isVisible(page)) throw notFound();
 
   const d = page.data;
   const tool = d.tool.name;
@@ -78,7 +70,12 @@ export async function GET(
       "",
       ...d.scope.tested.map((item) => `- ${item}`),
       ...(d.scope.notTested
-        ? ["", "Not scored here:", "", ...d.scope.notTested.map((item) => `- ${item}`)]
+        ? [
+            "",
+            "Not scored here:",
+            "",
+            ...d.scope.notTested.map((item) => `- ${item}`),
+          ]
         : []),
     );
   }
@@ -108,7 +105,8 @@ export async function GET(
     `## ${tool} at a glance`,
     "",
     ...d.facts.map(
-      (f) => `- **${f.label}:** ${f.value}${f.source ? ` ([source](${f.source}))` : ""}`,
+      (f) =>
+        `- **${f.label}:** ${f.value}${f.source ? ` ([source](${f.source}))` : ""}`,
     ),
     ...(d.benchmark
       ? [
@@ -187,9 +185,7 @@ export async function GET(
               ]
             : []),
           "",
-          ...benchmarkCaveats(d.benchmark).map(
-            (n) => `- ${n}`,
-          ),
+          ...benchmarkCaveats(d.benchmark).map((n) => `- ${n}`),
         ]
       : []),
     "",
@@ -248,9 +244,6 @@ export async function GET(
   });
 }
 
-export function generateStaticParams() {
-  return reviews
-    .getPages()
-    .filter(isVisible)
-    .map((page) => ({ slug: page.slugs[0] }));
-}
+export const Route = createFileRoute("/reviews/{$slug}.md")({
+  server: { handlers: { GET } },
+});

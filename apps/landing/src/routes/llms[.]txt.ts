@@ -1,15 +1,11 @@
+import { createFileRoute } from "@tanstack/react-router";
 import { deprecatedCatalogPage } from "@/lib/catalog-lifecycle";
-import { sortedPosts } from "@/components/blog/blog-utils";
-import {
-  formatScore,
-  overallScore,
-  publishedReviews,
-} from "@/components/reviews/review-utils";
+import { sortedPosts } from "@/lib/blog.server";
+import { publishedReviews } from "@/lib/reviews.server";
+import { formatScore, overallScore } from "@/components/reviews/review-utils";
 import { AUTHORS } from "@/lib/authors";
 import { compareConfigs } from "@/lib/compare/registry";
 import { source } from "@/lib/source.server";
-
-export const revalidate = false;
 
 const SECTION_LABELS: Record<string, string> = {
   docs: "Docs",
@@ -24,7 +20,7 @@ function sectionOf(url: string): string {
   return second && SECTION_LABELS[second] ? second : "docs";
 }
 
-export async function GET() {
+async function GET() {
   const lines: string[] = [];
 
   lines.push("# pipe0");
@@ -157,3 +153,7 @@ export async function GET() {
 
   return new Response(lines.join("\n"));
 }
+
+export const Route = createFileRoute("/llms.txt")({
+  server: { handlers: { GET } },
+});

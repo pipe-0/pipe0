@@ -1,8 +1,7 @@
+import { createFileRoute } from "@tanstack/react-router";
 import { source } from "@/lib/source.server";
 import { createFromSource } from "fumadocs-core/search/server";
 import type { StructuredData } from "fumadocs-core/mdx-plugins";
-
-export const revalidate = false;
 
 type IndexedData = {
   title?: string;
@@ -16,7 +15,7 @@ type IndexedData = {
 // queries it in the browser (`type: "static"` in components/root-provider).
 // The dynamic GET would run a function per keystroke and rebuild the index on
 // every cold start.
-export const { staticGET: GET } = createFromSource(source, {
+const { staticGET } = createFromSource(source, {
   async buildIndex(page) {
     const data = page.data as IndexedData;
     // Pipe and search catalog entries are over half the docs, and their
@@ -44,7 +43,9 @@ export const { staticGET: GET } = createFromSource(source, {
       ...(isCatalogEntry && {
         breadcrumbs: [
           "Docs",
-          data._virtualType === "pipe-entry" ? "Pipe Catalog" : "Search Catalog",
+          data._virtualType === "pipe-entry"
+            ? "Pipe Catalog"
+            : "Search Catalog",
         ],
       }),
       title: data.title ?? page.url,
@@ -54,4 +55,8 @@ export const { staticGET: GET } = createFromSource(source, {
       structuredData,
     };
   },
+});
+
+export const Route = createFileRoute("/api/search")({
+  server: { handlers: { GET: () => staticGET() } },
 });

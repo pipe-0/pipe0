@@ -366,8 +366,9 @@ a:has(> [data-slot="button"]),
 }
 
 /* On the glossy active item, coloured trailing badges (POST, GET) go white
-   so they stay legible on the indigo. */
-#nd-sidebar a.btn-glossy span {
+   so they stay legible on the indigo. Two levels down: the page tree wraps
+   each item's name in a span of its own. */
+#nd-sidebar a.btn-glossy span span {
   color: rgb(255 255 255 / 0.82);
 }
 
@@ -536,7 +537,7 @@ div[style*="--callout-color"] p:not([class*="font-medium"]) {
    Scoped to `.landing`. Layout primitives live in
    components/grid.tsx and components/landing-shell.tsx.
    ============================================================ */
-/* Plain CSS names the next/font variable directly: font variables declared
+/* Plain CSS names the font variable directly: font variables declared
    in `@theme inline` are inlined into utilities and never emitted as custom
    properties, so `var(--font-body)` here used to be invalid at computed-value
    time and the landing fell back to each OS's system font.

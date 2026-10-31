@@ -1,45 +1,60 @@
-import { lastRevised, postsByAuthor } from "@/components/blog/blog-utils";
 import { AuthorAvatar } from "@/components/blog/author-avatar";
-import { toFeedPost } from "@/components/blog/index-view";
 import { PostFeed } from "@/components/blog/post-feed";
 import { PreferredSourceButton } from "@/components/blog/preferred-source-button";
 import {
-  JsonLd,
   breadcrumbJsonLd,
+  jsonLd,
   profilePageJsonLd,
 } from "@/components/seo/json-ld";
-import { AUTHORS, authorUrl, getAuthorBySlug } from "@/lib/authors";
+import { authorUrl, getAuthorBySlug } from "@/lib/authors";
+import { getAuthorPage } from "@/lib/blog.functions";
+import { seo } from "@/lib/seo";
+import { createFileRoute } from "@tanstack/react-router";
 import { ArrowUpRight, Check } from "lucide-react";
-import type { Metadata } from "next";
-import { notFound } from "next/navigation";
 
-export default async function AuthorPage(props: {
-  params: Promise<{ slug: string }>;
-}) {
-  const { slug } = await props.params;
-  const author = getAuthorBySlug(slug);
-  if (!author) notFound();
+export const Route = createFileRoute("/authors/$slug")({
+  loader: ({ params }) => getAuthorPage({ data: params.slug }),
+  head: ({ loaderData }) => {
+    const author = loaderData && getAuthorBySlug(loaderData.slug);
+    if (!author) return {};
+    const newest = loaderData.newest
+      .map((date) => new Date(date))
+      .sort((a, b) => b.getTime() - a.getTime())[0];
+    return {
+      ...seo({
+        title: `${author.name}, ${author.jobTitle}`,
+        description: author.bio,
+        path: authorUrl(author),
+        ogType: "profile",
+        image: author.avatar,
+        siteName: false,
+        twitterCard: "summary",
+      }),
+      scripts: [
+        jsonLd(
+          profilePageJsonLd(author, {
+            dateModified: newest?.toISOString().slice(0, 10),
+          }),
+        ),
+        jsonLd(
+          breadcrumbJsonLd([
+            { name: "pipe0", url: "/" },
+            { name: "Blog", url: "/blog" },
+            { name: author.name, url: authorUrl(author) },
+          ]),
+        ),
+      ],
+    };
+  },
+  component: AuthorPage,
+});
 
-  const posts = postsByAuthor(author.key);
-  const newest = posts
-    .map(lastRevised)
-    .sort((a, b) => b.getTime() - a.getTime())[0];
+function AuthorPage() {
+  const { slug, posts } = Route.useLoaderData();
+  const author = getAuthorBySlug(slug)!;
 
   return (
     <>
-      <JsonLd
-        data={profilePageJsonLd(author, {
-          dateModified: newest?.toISOString().slice(0, 10),
-        })}
-      />
-      <JsonLd
-        data={breadcrumbJsonLd([
-          { name: "pipe0", url: "/" },
-          { name: "Blog", url: "/blog" },
-          { name: author.name, url: authorUrl(author) },
-        ])}
-      />
-
       {/* Same container as the HomeLayout header: --fd-layout-width + px-4 */}
       <main className="mx-auto w-full max-w-(--fd-layout-width) px-4 py-12 md:py-14">
         <header className="mx-auto max-w-[680px]">
@@ -94,39 +109,10 @@ export default async function AuthorPage(props: {
               Posts by {author.name.split(" ")[0]}{" "}
               <span className="text-fd-muted-foreground">· {posts.length}</span>
             </h2>
-            <PostFeed posts={posts.map((p) => toFeedPost(p, 2))} />
+            <PostFeed posts={posts} />
           </section>
         )}
       </main>
     </>
   );
-}
-
-export const dynamicParams = false;
-
-export function generateStaticParams() {
-  return AUTHORS.map((author) => ({ slug: author.slug }));
-}
-
-export async function generateMetadata(props: {
-  params: Promise<{ slug: string }>;
-}): Promise<Metadata> {
-  const { slug } = await props.params;
-  const author = getAuthorBySlug(slug);
-  if (!author) notFound();
-
-  const title = `${author.name}, ${author.jobTitle}`;
-  return {
-    title,
-    description: author.bio,
-    alternates: { canonical: authorUrl(author) },
-    openGraph: {
-      type: "profile",
-      url: authorUrl(author),
-      title,
-      description: author.bio,
-      images: [author.avatar],
-    },
-    twitter: { card: "summary" },
-  };
 }

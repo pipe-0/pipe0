@@ -1,7 +1,10 @@
 import { getBaseUrl } from "./base-url";
 
 const SITE_NAME = "pipe0";
-const DEFAULT_TITLE = `${SITE_NAME} | Turn any GTM play into a production system with AI`;
+const SITE_CARD = "/opengraph-image";
+const SITE_CARD_ALT = "pipe0 — Give your GTM team its AI moment";
+
+export const DEFAULT_TITLE = `${SITE_NAME} | Turn any GTM play into a production system with AI`;
 
 export const absoluteUrl = (path: string) =>
   path.startsWith("http") ? path : `${getBaseUrl()}${path === "/" ? "" : path}`;
@@ -19,6 +22,8 @@ type SeoOptions = {
   description?: string;
   /** Route path, the canonical URL and og:url. `null` for pages with neither. */
   path: string | null;
+  /** Points near-duplicate pages at the one that should rank. */
+  canonical?: string;
   ogType?: "website" | "article" | "profile" | null;
   /** Defaults to the site card. `null` leaves it out. */
   image?: string | null;
@@ -28,6 +33,7 @@ type SeoOptions = {
   og?: Record<string, string | string[] | undefined>;
   twitterCard?: string;
   robots?: string;
+  keywords?: string;
   /**
    * For pages that set only title, description and canonical: social tags
    * repeat the full title and carry the site card's details, with no og:url.
@@ -43,15 +49,18 @@ export function seo({
   documentTitle,
   description,
   path,
+  canonical,
   ogType = "website",
-  image = "/opengraph-image",
+  image = SITE_CARD,
   siteName = true,
   og = {},
   twitterCard = "summary_large_image",
   robots,
+  keywords,
   inherited,
   alternates = {},
 }: SeoOptions) {
+  const imageAlt = image === SITE_CARD ? SITE_CARD_ALT : SITE_NAME;
   const fullTitle = documentTitle ?? (title ? pageTitle(title) : DEFAULT_TITLE);
   const social = inherited ? fullTitle : (title ?? DEFAULT_TITLE);
   const imageUrl = image === null ? undefined : absoluteUrl(image);
@@ -64,10 +73,14 @@ export function seo({
     meta: [
       { title: fullTitle },
       ...named("description", description),
+      ...named("keywords", keywords),
       ...named("robots", robots),
       ...tag("og:title", social),
       ...tag("og:description", description),
-      ...tag("og:url", path === null || inherited ? undefined : absoluteUrl(path)),
+      ...tag(
+        "og:url",
+        path === null || inherited ? undefined : absoluteUrl(path),
+      ),
       ...(siteName ? tag("og:site_name", SITE_NAME) : []),
       ...tag("og:image", imageUrl),
       ...(inherited
@@ -75,7 +88,7 @@ export function seo({
             ...tag("og:image:type", "image/png"),
             ...tag("og:image:width", "1200"),
             ...tag("og:image:height", "630"),
-            ...tag("og:image:alt", SITE_NAME),
+            ...tag("og:image:alt", imageAlt),
           ]
         : []),
       ...(ogType ? tag("og:type", ogType) : []),
@@ -88,7 +101,7 @@ export function seo({
       ...named("twitter:image", imageUrl),
       ...(inherited
         ? [
-            ...named("twitter:image:alt", SITE_NAME),
+            ...named("twitter:image:alt", imageAlt),
             ...named("twitter:image:type", "image/png"),
             ...named("twitter:image:width", "1200"),
             ...named("twitter:image:height", "630"),
@@ -96,7 +109,9 @@ export function seo({
         : []),
     ],
     links: [
-      ...(path === null ? [] : [{ rel: "canonical", href: absoluteUrl(path) }]),
+      ...(path === null
+        ? []
+        : [{ rel: "canonical", href: absoluteUrl(canonical ?? path) }]),
       ...Object.entries(alternates).map(([type, href]) => ({
         rel: "alternate",
         type,

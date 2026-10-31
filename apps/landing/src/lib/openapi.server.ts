@@ -36,7 +36,7 @@ function collectRefs(node: unknown, out: Set<string>) {
 /**
  * Narrows a preloaded document to the operations one page renders, plus the
  * components they reach through `$ref`. The client <APIPage> receives the
- * whole document as a prop, so without this every API page (and every RSC
+ * whole document as a prop, so without this every API page (and every navigation
  * prefetch of one) ships the full ~1 MB spec.
  */
 export function trimPreloaded(

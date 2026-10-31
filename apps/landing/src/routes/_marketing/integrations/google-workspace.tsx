@@ -59,7 +59,8 @@ const products: {
   {
     name: "Gmail",
     logo: "https://imagedelivery.net/3B3AWuP94-S3Ro5eEac6JA/8da8ab6b-7f7e-4c42-6abf-212ea537db00/icon",
-    summary: "Send or draft the emails your workflow writes, from your own address.",
+    summary:
+      "Send or draft the emails your workflow writes, from your own address.",
     operations: [
       {
         id: "email:send:gmail@1",
@@ -131,25 +132,31 @@ const scopes = [
   },
 ];
 
-export const Route = createFileRoute("/_marketing/integrations/google-workspace")({
+export const Route = createFileRoute(
+  "/_marketing/integrations/google-workspace",
+)({
   loader: () =>
     getCatalogDocPaths({
       data: products.flatMap((p) => p.operations.map((op) => op.id)),
     }),
   head: () => ({
     ...seo({
-  title: "pipe0 for Google Workspace",
-  description:
-    "Connect Google Sheets, Gmail, and Google Calendar to pipe0: read and write spreadsheets, send and draft email, list and create calendar events. What each permission is for and how Google data is handled.",
-  path: "/integrations/google-workspace",
-}),
-    scripts: [jsonLd(breadcrumbJsonLd([
+      title: "pipe0 for Google Workspace",
+      description:
+        "Connect Google Sheets, Gmail, and Google Calendar to pipe0: read and write spreadsheets, send and draft email, list and create calendar events. What each permission is for and how Google data is handled.",
+      path: "/integrations/google-workspace",
+    }),
+    scripts: [
+      jsonLd(
+        breadcrumbJsonLd([
           { name: "Home", url: "/" },
           {
             name: "Google Workspace integration",
             url: "/integrations/google-workspace",
           },
-        ]))],
+        ]),
+      ),
+    ],
   }),
   component: GoogleWorkspaceIntegration,
 });
@@ -158,7 +165,6 @@ function GoogleWorkspaceIntegration() {
   const docPaths = Route.useLoaderData();
   return (
     <LandingShell page="product">
-
       {/* ===== Hero ===== */}
       <PageHero
         title="pipe0 for Google Workspace."
@@ -167,9 +173,12 @@ function GoogleWorkspaceIntegration() {
           <div className="flex flex-col items-center gap-6">
             <div className="flex flex-col items-center gap-4 sm:flex-row">
               <ButtonLink href={appInfo.links.signupUrl}>Start free</ButtonLink>
-              <Link to="/docs/connections" className={`text-[15px] ${link}`}>
+              <SiteLink
+                href="/docs/connections"
+                className={`text-[15px] ${link}`}
+              >
                 How connections work
-              </Link>
+              </SiteLink>
             </div>
             <p className="max-w-[480px] text-[13.5px] text-muted-foreground">
               You connect each product with your Google account from the pipe0
@@ -272,13 +281,12 @@ function GoogleWorkspaceIntegration() {
               >
                 Google API Services User Data Policy
               </a>
-              , including the Limited Use requirements. Google user data is
-              used only to provide the features you invoke. It is never used
-              for advertising, never transferred except to provide those
-              features or to comply with law, and never used to train
-              generalized AI models. When you run an AI pipe on it, it is
-              processed transiently by the AI providers listed in the privacy
-              policy.
+              , including the Limited Use requirements. Google user data is used
+              only to provide the features you invoke. It is never used for
+              advertising, never transferred except to provide those features or
+              to comply with law, and never used to train generalized AI models.
+              When you run an AI pipe on it, it is processed transiently by the
+              AI providers listed in the privacy policy.
             </p>
           </Cell>
           <Cell className="px-6 py-10 sm:px-10 lg:px-12">
@@ -286,17 +294,20 @@ function GoogleWorkspaceIntegration() {
               Security &amp; data
             </h2>
             <p className="mt-2 text-[15px] leading-relaxed text-muted-foreground">
-              pipe0 stores each connection&apos;s OAuth tokens encrypted at
-              rest (AES-256-GCM) and talks to Google only over TLS. Per
-              connection, it keeps the Google account&apos;s ID, email, name,
-              and profile picture, and the scopes you granted. Rows a run reads
-              go where you send them, a pipe0 sheet or an API response, and
-              follow the retention in the{" "}
-              <Link className={link} to="/resources/legal/privacy-policy">
+              pipe0 stores each connection&apos;s OAuth tokens encrypted at rest
+              (AES-256-GCM) and talks to Google only over TLS. Per connection,
+              it keeps the Google account&apos;s ID, email, name, and profile
+              picture, and the scopes you granted. Rows a run reads go where you
+              send them, a pipe0 sheet or an API response, and follow the
+              retention in the{" "}
+              <SiteLink className={link} href="/resources/legal/privacy-policy">
                 privacy policy
-              </Link>
+              </SiteLink>
               . Deleting the connection, or removing pipe0 in your{" "}
-              <a className={link} href="https://myaccount.google.com/permissions">
+              <a
+                className={link}
+                href="https://myaccount.google.com/permissions"
+              >
                 Google account
               </a>
               , deletes the tokens.
@@ -316,8 +327,8 @@ function GoogleWorkspaceIntegration() {
         </div>
         <p className="border-t border-[var(--rule)] px-6 py-5 text-[12px] leading-relaxed text-muted-foreground sm:px-10 lg:px-12">
           Google Workspace, Google Sheets, Gmail, and Google Calendar are
-          trademarks of Google LLC. pipe0 is not created by, affiliated with,
-          or endorsed by Google LLC.
+          trademarks of Google LLC. pipe0 is not created by, affiliated with, or
+          endorsed by Google LLC.
         </p>
       </Band>
     </LandingShell>

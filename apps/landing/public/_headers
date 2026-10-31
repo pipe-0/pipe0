@@ -1,0 +1,24 @@
+# Fingerprinted by the build, so they can be cached for good.
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Image Transformations inherit their cache lifetime from these originals.
+/media/*
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+
+# Extensionless files keep their URLs from the Next.js site.
+/opengraph-image
+  Content-Type: image/png
+/resources/opengraph-image-5fam9d
+  Content-Type: image/png
+/og/blog/*
+  Content-Type: image/png
+/api/search
+  Content-Type: application/json
+
+# The default domain mirrors the site and must stay out of search results.
+https://pipe0-landing.florian-martens22.workers.dev/*
+  X-Robots-Tag: noindex
+
+/*
+  Strict-Transport-Security: max-age=63072000

@@ -2,7 +2,6 @@ import { UiExampleCard } from "@/components/features/docs/ui-example-card";
 import type { SearchId, SearchPayload } from "@pipe0/base";
 import { ClientOnly } from "@tanstack/react-router";
 import { lazy, Suspense, useMemo } from "react";
-import "@pipe0/react/styles";
 
 const SearchFormComponentsLazy = lazy(() =>
   import("./search-form-inner").then((mod) => ({ default: mod.SearchFormInner })),
@@ -49,7 +48,6 @@ function generateExampleCode(searchId: SearchId, searchLabel: string): string {
   useSearchForm,
 } from "@pipe0/react";
 import { getSearchDefaultPayload } from "@pipe0/base";
-import "@pipe0/react/styles";
 
 export function ${toComponentName(searchId)}Form() {
   const searchForm = useSearchForm({

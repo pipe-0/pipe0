@@ -1,3 +1,4 @@
+import { remarkRequestExample } from "./src/lib/mdx/remark-request-example";
 import { pipe0CodeTheme } from "./src/lib/shiki-theme";
 import { pageSchema } from "fumadocs-core/source/schema";
 import {
@@ -93,7 +94,7 @@ export const docs = defineDocs({
             id: "package-manager",
           },
         },
-        remarkPlugins: isLint ? [] : [remarkSteps],
+        remarkPlugins: isLint ? [] : [remarkSteps, remarkRequestExample],
       })(environment);
     },
   },
@@ -140,7 +141,7 @@ async function articleMdxOptions(environment: Parameters<ReturnType<typeof apply
         id: "package-manager",
       },
     },
-    remarkPlugins: isLint ? [] : [remarkSteps],
+    remarkPlugins: isLint ? [] : [remarkSteps, remarkRequestExample],
   })(environment);
 }
 

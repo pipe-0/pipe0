@@ -19,7 +19,8 @@ import {
 } from "@/components/grid";
 import { CloseBand, LandingShell } from "@/components/landing-shell";
 import { NearVideo } from "@/components/loop-video";
-import { jsonLd,
+import {
+  jsonLd,
   faqJsonLd,
   softwareApplicationJsonLd,
 } from "@/components/seo/json-ld";
@@ -79,12 +80,13 @@ const trustedLogos = [
 export const Route = createFileRoute("/_marketing/")({
   head: () => ({
     ...seo({
-  description: homeDescription,
-  path: "/",
-}),
-    scripts: [jsonLd(softwareApplicationJsonLd({ description: homeDescription })), jsonLd(faqJsonLd(
-          faqItems.map((f) => ({ q: f.q, a: f.a })),
-        ))],
+      description: homeDescription,
+      path: "/",
+    }),
+    scripts: [
+      jsonLd(softwareApplicationJsonLd({ description: homeDescription })),
+      jsonLd(faqJsonLd(faqItems.map((f) => ({ q: f.q, a: f.a })))),
+    ],
   }),
   component: Home,
 });
@@ -92,7 +94,6 @@ export const Route = createFileRoute("/_marketing/")({
 function Home() {
   return (
     <LandingShell page="product">
-
       {/* ===== Hero — the claim as the headline, then what the knife is
               made of: three products GTM teams know by name, forged into
               one. Three short sentences; the last is the invitation.
@@ -115,9 +116,8 @@ function Home() {
             <br className="max-sm:hidden" /> for agentic GTM.
           </h1>
           <p className="mt-7 max-w-[680px] text-[16px] max-sm:-mx-3 sm:mx-auto sm:text-balance leading-[1.55] text-muted-foreground sm:text-[19px]">
-            Clay-like tables, GTM MCPs, and data APIs used to be three
-            products. We forged them into one. It makes sense the moment you
-            try it.
+            Clay-like tables, GTM MCPs, and data APIs used to be three products.
+            We forged them into one. It makes sense the moment you try it.
           </p>
           <GridCtas className="mt-8 justify-center" />
         </div>

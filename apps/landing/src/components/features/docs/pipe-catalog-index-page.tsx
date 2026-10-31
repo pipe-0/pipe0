@@ -1,9 +1,13 @@
-import { PageNav } from "@/components/features/docs/page-nav";
+import { PageNav, type PageNavItem } from "@/components/features/docs/page-nav";
 import { PipeCatalogIndex } from "@/components/features/docs/pipes-catalog-index";
 import { DocsPage } from "fumadocs-ui/layouts/docs/page";
 import { Suspense } from "react";
 
-export async function PipeCatalogIndexPage() {
+export function PipeCatalogIndexPage({
+  nav,
+}: {
+  nav: { previous?: PageNavItem; next?: PageNavItem };
+}) {
   return (
     <DocsPage
       tableOfContent={{ enabled: false, component: null }}
@@ -14,7 +18,7 @@ export async function PipeCatalogIndexPage() {
         <Suspense>
           <PipeCatalogIndex />
         </Suspense>
-        <PageNav url="/docs/pipe-catalog" />
+        <PageNav {...nav} />
       </div>
     </DocsPage>
   );

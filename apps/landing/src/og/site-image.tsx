@@ -1,15 +1,11 @@
 import { readFile } from "fs/promises";
-import { ImageResponse } from "next/og";
 import { join } from "path";
+import { renderPng } from "./render";
 
-export const runtime = "nodejs";
-export const alt = "pipe0 — Give your GTM team its AI moment";
-export const size = {
+const size = {
   width: 1200,
   height: 630,
 };
-
-export const contentType = "image/png";
 
 /* The card mirrors the landing hero: white page, dark headline over a muted
    subhead, and below them the blue sky panel with the globe scene and the
@@ -323,7 +319,7 @@ const whiten = (svg: string) =>
 const svgSrc = (svg: string) =>
   `data:image/svg+xml;base64,${Buffer.from(svg).toString("base64")}`;
 
-export default async function Image() {
+export async function siteImage() {
   const [interLight, interSemiBold, logo, pie, lightfield, augusta, aries] =
     await Promise.all([
       readFile(join(process.cwd(), "assets/inter-light.ttf")),
@@ -355,7 +351,7 @@ export default async function Image() {
     { src: svgSrc(whiten(aries)), width: 66, height: 26 },
   ];
 
-  return new ImageResponse(
+  return renderPng(
     <div
       style={{
         /* Not pure white: unfurls often sit on white pages, and a card with

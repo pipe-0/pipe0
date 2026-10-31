@@ -33,15 +33,16 @@ const enrichCode = (
   <>
     <span className={kw}>const</span> result = <span className={kw}>await</span>{" "}
     pipe0.pipes.pipe({"{"}
-    {"\n"}  pipes: [{"{"} pipe_id:{" "}
-    <span className={str}>&quot;person:workemail:waterfall@1&quot;</span> {"}"}],
-    {"\n"}  input: [{"{"}
-    {"\n"}    id: <span className={str}>&quot;1&quot;</span>,
-    {"\n"}    name: <span className={str}>&quot;Lena Brandt&quot;</span>,
-    {"\n"}    company_domain: <span className={str}>&quot;heliolabs.io&quot;</span>,
-    {"\n"}  {"}"}],{"\n"}
+    {"\n"} pipes: [{"{"} pipe_id:{" "}
+    <span className={str}>&quot;person:workemail:waterfall@1&quot;</span> {"}"}
+    ],
+    {"\n"} input: [{"{"}
+    {"\n"} id: <span className={str}>&quot;1&quot;</span>,{"\n"} name:{" "}
+    <span className={str}>&quot;Lena Brandt&quot;</span>,{"\n"} company_domain:{" "}
+    <span className={str}>&quot;heliolabs.io&quot;</span>,{"\n"} {"}"}],{"\n"}
     {"}"});{"\n\n"}
-    result.records[<span className={str}>&quot;1&quot;</span>].fields.work_email.value
+    result.records[<span className={str}>&quot;1&quot;</span>
+    ].fields.work_email.value
     {"\n"}
     <span className={dim}>{"// → "}</span>
     <span className={str}>&quot;lena@heliolabs.io&quot;</span>
@@ -52,17 +53,15 @@ const searchCode = (
   <>
     <span className={kw}>const</span> result = <span className={kw}>await</span>{" "}
     pipe0.searches.search({"{"}
-    {"\n"}  search: {"{"}
-    {"\n"}    search_id: <span className={str}>&quot;people:profiles:crustdata@3&quot;</span>,
-    {"\n"}    config: {"{"}
-    {"\n"}      limit: 25,
-    {"\n"}      filters: {"{"}
-    {"\n"}        current_employment_job_titles: {"{"} include: [
-    <span className={str}>&quot;Head of RevOps&quot;</span>] {"}"},
-    {"\n"}      {"}"},
-    {"\n"}    {"}"},
-    {"\n"}  {"}"},
-    {"\n"}
+    {"\n"} search: {"{"}
+    {"\n"} search_id:{" "}
+    <span className={str}>&quot;people:profiles:crustdata@3&quot;</span>,{"\n"}{" "}
+    config: {"{"}
+    {"\n"} limit: 25,
+    {"\n"} filters: {"{"}
+    {"\n"} current_employment_job_titles: {"{"} include: [
+    <span className={str}>&quot;Head of RevOps&quot;</span>] {"}"},{"\n"} {"}"},
+    {"\n"} {"}"},{"\n"} {"}"},{"\n"}
     {"}"});
   </>
 );
@@ -148,13 +147,13 @@ function CodeCard({ children, file }: { children: ReactNode; file: string }) {
 }
 
 export const Route = createFileRoute("/_marketing/enrichment-api")({
-  loader: () => getProviderTiles({ data: providerIds }),
+  loader: () => getProviderTiles({ data: [...providerIds] }),
   head: () => ({
     ...seo({
-  title: "Enrichment & Search API",
-  description,
-  path: "/enrichment-api",
-}),
+      title: "Enrichment & Search API",
+      description,
+      path: "/enrichment-api",
+    }),
     scripts: [jsonLd(softwareApplicationJsonLd({ description }))],
   }),
   component: EnrichmentApiPage,
@@ -163,7 +162,6 @@ export const Route = createFileRoute("/_marketing/enrichment-api")({
 function EnrichmentApiPage() {
   return (
     <LandingShell page="api">
-
       <PageHero
         kicker="Enrichment and search API."
         title="Every provider behind one call."
@@ -255,7 +253,7 @@ function EnrichmentApiPage() {
                   alt=""
                   loading="lazy"
                   className="size-6 rounded-md object-contain"
-                  style={{ backgroundColor: provider.tileColor }}
+                  style={{ backgroundColor: provider.tileColor ?? undefined }}
                 />
                 <span className="text-[13px] text-muted-foreground">
                   {provider.label}

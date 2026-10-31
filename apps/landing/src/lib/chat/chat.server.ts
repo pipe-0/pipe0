@@ -6,19 +6,10 @@ import {
   tool,
   type UIMessage,
 } from "ai";
-import { readFileSync } from "node:fs";
+import { env } from "cloudflare:workers";
 import { z } from "zod";
 import { Document, type DocumentData } from "flexsearch";
-import { source } from "@/lib/source.server";
-import { getLLMText } from "@/lib/get-llm-text.server";
-
-// A turn is a few tool rounds plus the answer; 30s cut long answers off
-// mid-stream when the provider was slow.
-export const maxDuration = 60;
-
-const gateway = createGateway({
-  apiKey: process.env.AI_GATEWAY_API_KEY,
-});
+import systemPrompt from "./ask-ai-instructions.md?raw";
 
 interface IndexedDocument extends DocumentData {
   url: string;
@@ -27,24 +18,21 @@ interface IndexedDocument extends DocumentData {
   content: string;
 }
 
-// The full pipe0 assistant instructions live in a co-located markdown file so they
-// stay easy to edit. `new URL(..., import.meta.url)` is the bundler-traceable pattern,
-// so the file ships with the serverless function in production.
-const systemPrompt = readFileSync(
-  new URL("./ask-ai-instructions.md", import.meta.url),
-  "utf8",
-);
-
-// Build the flexsearch index once per server instance, lazily. Each page is
+// Build the flexsearch index once per Worker isolate, lazily. Each page is
 // indexed on its full text (the same text /llms-full.txt serves), not just its
 // title and description, so a question can match what a page actually says.
+// The text comes from a prerendered asset, which keeps the docs out of this
+// code path.
 let index: Promise<Document<IndexedDocument>> | undefined;
-function getIndex() {
-  index ??= buildIndex();
+function getIndex(request: Request) {
+  index ??= buildIndex(request).catch((error) => {
+    index = undefined;
+    throw error;
+  });
   return index;
 }
 
-async function buildIndex() {
+async function buildIndex(request: Request) {
   const built = new Document<IndexedDocument>({
     // Recall-friendly config. `forward` tokenization indexes word prefixes so
     // partial/inflected terms still match (e.g. "email" matches "emails"),
@@ -57,16 +45,9 @@ async function buildIndex() {
     },
   });
 
-  const pages = source.getPages();
-  const texts = await Promise.all(pages.map(getLLMText));
-  pages.forEach((page, i) => {
-    built.add({
-      url: page.url,
-      title: page.data.title ?? "",
-      description: page.data.description ?? "",
-      content: texts[i] ?? "",
-    });
-  });
+  const res = await env.ASSETS.fetch(new URL("/api/chat-index.json", request.url));
+  if (!res.ok) throw new Error(`Chat index unavailable: ${res.status}`);
+  for (const page of (await res.json()) as IndexedDocument[]) built.add(page);
 
   return built;
 }
@@ -100,7 +81,7 @@ const limitReached = {
   note: "TOOL LIMIT REACHED. Do not call search or read_page again. Write your complete final answer now using the results already gathered.",
 };
 
-function createTools() {
+function createTools(request: Request) {
   let calls = 0;
 
   const search = tool({
@@ -115,7 +96,7 @@ function createTools() {
       // `suggest: true` relaxes flexsearch's default "all query terms must
       // match" so a multi-word question returns its best partial matches
       // instead of 0 results — the main cause of the model's search loops.
-      const results = await (await getIndex()).searchAsync(query, {
+      const results = await (await getIndex(request)).searchAsync(query, {
         limit,
         suggest: true,
         merge: true,
@@ -137,7 +118,7 @@ function createTools() {
     async execute({ url }) {
       if (++calls > MAX_TOOL_CALLS) return limitReached;
       const path = url.replace(/^https?:\/\/[^/]+/, "").split("#")[0];
-      const doc = (await getIndex()).get(path);
+      const doc = (await getIndex(request)).get(path);
       if (!doc) return { error: `No page at ${path}. Use a url from a search result.` };
       const content = doc.content as string;
       return {
@@ -155,58 +136,19 @@ function createTools() {
 
 export type SearchTool = ReturnType<typeof createTools>["search"];
 
-// Simple in-memory IP rate limiter (20 requests / minute / IP).
-const rateLimitWindowMs = 60 * 1000;
-const rateLimitMaxRequests = 20;
-const rateLimitBuckets = new Map<string, { count: number; resetAt: number }>();
-
-function getClientIp(req: Request): string {
-  const forwardedFor = req.headers.get("x-forwarded-for");
-  if (forwardedFor) {
-    const [clientIp] = forwardedFor.split(",");
-    if (clientIp) return clientIp.trim();
-  }
-  return (
-    req.headers.get("cf-connecting-ip") ??
-    req.headers.get("x-real-ip") ??
-    "unknown"
-  );
-}
-
-function checkRateLimit(
-  req: Request,
-): { success: true } | { success: false; retryAfter: number } {
-  const now = Date.now();
-  const ip = getClientIp(req);
-  const bucket = rateLimitBuckets.get(ip);
-
-  if (!bucket || bucket.resetAt <= now) {
-    rateLimitBuckets.set(ip, { count: 1, resetAt: now + rateLimitWindowMs });
-    for (const [key, value] of rateLimitBuckets) {
-      if (value.resetAt <= now) rateLimitBuckets.delete(key);
-    }
-    return { success: true };
-  }
-
-  if (bucket.count >= rateLimitMaxRequests) {
-    return {
-      success: false,
-      retryAfter: Math.ceil((bucket.resetAt - now) / 1000),
-    };
-  }
-
-  bucket.count++;
-  return { success: true };
-}
-
-export async function POST(req: Request) {
-  const rateLimit = checkRateLimit(req);
-  if (!rateLimit.success) {
+export async function handleChat(req: Request) {
+  // 20 requests a minute per client, enforced across isolates.
+  const key = req.headers.get("cf-connecting-ip") ?? "unknown";
+  const { success } = await env.CHAT_RATE_LIMIT.limit({ key });
+  if (!success) {
     return new Response("Too many requests", {
       status: 429,
-      headers: { "Retry-After": String(rateLimit.retryAfter) },
+      headers: { "Retry-After": "60" },
     });
   }
+
+  // Built per request: env values are set when a request runs, not at load.
+  const gateway = createGateway({ apiKey: env.AI_GATEWAY_API_KEY });
 
   const { messages }: { messages: UIMessage[] } = await req.json();
 
@@ -217,7 +159,7 @@ export async function POST(req: Request) {
     model: gateway("zai/glm-5.3-fast"),
     providerOptions: { gateway: { models: ["zai/glm-5.2"] } },
     system: systemPrompt,
-    tools: createTools(),
+    tools: createTools(req),
     toolChoice: "auto",
     // Headroom for a few search rounds plus the final answer. The "never end on a
     // tool call" rule in the system prompt is what makes the model stop searching

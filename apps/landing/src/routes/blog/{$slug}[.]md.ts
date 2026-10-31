@@ -2,26 +2,16 @@ import { formatDate, lastRevised } from "@/components/blog/blog-utils";
 import { authorDisplayName, authorUrl, getAuthor } from "@/lib/authors";
 import { blog } from "@/lib/source.server";
 import { getBaseUrl } from "@/lib/utils";
-import { notFound } from "next/navigation";
-
-export const revalidate = false;
-
-// Every param is enumerated by generateStaticParams, so there is nothing to
-// render on demand.
-export const dynamicParams = false;
+import { createFileRoute, notFound } from "@tanstack/react-router";
 
 /**
  * A post as plain markdown — /blog/<slug>.md and `Accept: text/markdown`
  * both land here. The header carries what the HTML page shows around the
  * body (author, dates, canonical URL) so a quote keeps its attribution.
  */
-export async function GET(
-  _req: Request,
-  { params }: RouteContext<"/llms.mdx/blog/[slug]">,
-) {
-  const { slug } = await params;
+async function GET({ params: { slug } }: { params: { slug: string } }) {
   const page = blog.getPage([slug]);
-  if (!page || page.data.draft === true) notFound();
+  if (!page || page.data.draft === true) throw notFound();
 
   const url = `${getBaseUrl()}${page.url}`;
   const byline = (page.data.authors ?? [])
@@ -61,9 +51,6 @@ export async function GET(
   });
 }
 
-export function generateStaticParams() {
-  return blog
-    .getPages()
-    .filter((page) => page.data.draft !== true)
-    .map((page) => ({ slug: page.slugs[0] }));
-}
+export const Route = createFileRoute("/blog/{$slug}.md")({
+  server: { handlers: { GET } },
+});

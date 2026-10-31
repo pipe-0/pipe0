@@ -2,7 +2,7 @@ import { PipeCatalogHeader } from "@/components/pipe-catalog-header";
 import type { PipeId } from "@pipe0/base";
 import { DocsPage } from "fumadocs-ui/layouts/docs/page";
 
-export async function PipeEntryPage({ pipeId }: { pipeId: string }) {
+export function PipeEntryPage({ pipeId }: { pipeId: string }) {
   return (
     <DocsPage
       tableOfContent={{ enabled: false, component: null }}

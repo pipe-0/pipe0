@@ -1,7 +1,7 @@
 /**
  * PostHog on the marketing site: session replay, pageviews, autocapture and
- * exception capture. Next runs this file once in the browser before
- * hydration (`instrumentation-client`). The SDK itself is fetched only after
+ * exception capture. The client entry imports this file, so it runs once in
+ * the browser before hydration. The SDK itself is fetched only after
  * the page has loaded and the main thread is idle, so it stays out of the
  * first paint and hydration; anything that captures imports `posthog-js` on
  * demand and checks `posthog.__loaded`.
@@ -31,7 +31,7 @@ function init() {
     posthog.init(PROJECT_TOKEN, {
       api_host: API_HOST,
       ui_host: UI_HOST,
-      // 2025-05-24+: pageviews on History API navigation (App Router links).
+      // 2025-05-24+: pageviews on History API navigation (router links).
       // 2025-11-30+: strictMinimumDuration for replay, so a bounce that
       // refreshes the page is judged on buffered data, not session age.
       defaults: "2026-05-30",

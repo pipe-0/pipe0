@@ -1,36 +1,57 @@
-import type { MetadataRoute } from "next";
 import {
   categorySlug,
   lastRevised,
-  sortedPosts,
   usedCategories,
 } from "@/components/blog/blog-utils";
-import { publishedReviews } from "@/components/reviews/review-utils";
+import { sortedPosts } from "@/lib/blog.server";
+import { publishedReviews } from "@/lib/reviews.server";
+import { createFileRoute } from "@tanstack/react-router";
 import { AUTHORS, authorUrl } from "@/lib/authors";
 import { compareConfigs } from "@/lib/compare/registry";
 import { source, blog, legal } from "@/lib/source.server";
 import { getBaseUrl } from "@/lib/utils";
 
-export const revalidate = false;
+type Entry = {
+  url: string;
+  lastModified?: Date;
+  changeFrequency: "weekly" | "monthly" | "yearly";
+  priority: number;
+};
 
-export default function sitemap(): MetadataRoute.Sitemap {
+const toXml = (entries: Entry[]) =>
+  [
+    `<?xml version="1.0" encoding="UTF-8"?>`,
+    `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`,
+    ...entries.map(
+      (entry) =>
+        `<url>\n<loc>${entry.url}</loc>\n${
+          entry.lastModified
+            ? `<lastmod>${entry.lastModified.toISOString()}</lastmod>\n`
+            : ""
+        }<changefreq>${entry.changeFrequency}</changefreq>\n<priority>${entry.priority}</priority>\n</url>`,
+    ),
+    `</urlset>`,
+  ].join("\n");
+
+async function entries(): Promise<Entry[]> {
   const baseUrl = getBaseUrl();
   const url = (path: string): string => new URL(path, baseUrl).toString();
 
-  const docPages = source.getPages().map((page) => {
-    const isVirtual = "_isVirtual" in page.data && page.data._isVirtual;
-    const lastModified =
-      "lastModified" in page.data && page.data.lastModified
-        ? { lastModified: page.data.lastModified as Date }
-        : {};
-    return {
-      url: url(page.url),
-      changeFrequency: "weekly" as const,
-      // Authored docs pages carry more weight than generated catalog entries.
-      priority: isVirtual ? 0.5 : 0.6,
-      ...lastModified,
-    };
-  });
+  const docPages = await Promise.all(
+    source.getPages().map(async (page) => {
+      const isVirtual = "_isVirtual" in page.data && page.data._isVirtual;
+      // Behind load() on async collections; virtual pages have neither.
+      const modified =
+        "load" in page.data ? (await page.data.load()).lastModified : undefined;
+      return {
+        url: url(page.url),
+        changeFrequency: "weekly" as const,
+        // Authored docs pages carry more weight than generated catalog entries.
+        priority: isVirtual ? 0.5 : 0.6,
+        ...(modified ? { lastModified: new Date(modified) } : {}),
+      };
+    }),
+  );
 
   const blogPages = blog
     .getPages()
@@ -72,10 +93,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }));
 
   const blogCategoryPages = usedCategories(sortedPosts()).map((category) => ({
-      url: url(`/blog/category/${categorySlug(category)}`),
-      changeFrequency: "weekly" as const,
-      priority: 0.5,
-    }));
+    url: url(`/blog/category/${categorySlug(category)}`),
+    changeFrequency: "weekly" as const,
+    priority: 0.5,
+  }));
 
   const legalPages = legal.getPages().map((page) => ({
     url: url(page.url),
@@ -157,3 +178,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...legalPages,
   ];
 }
+
+export const Route = createFileRoute("/sitemap.xml")({
+  server: {
+    handlers: {
+      GET: async () =>
+        new Response(toXml(await entries()), {
+          headers: { "Content-Type": "application/xml" },
+        }),
+    },
+  },
+});

@@ -1,3 +1,4 @@
+import { SiteLink } from "@/components/link";
 import { seo } from "@/lib/seo";
 import { createFileRoute } from "@tanstack/react-router";
 import { AgentGlyph } from "@/components/landing/agent-glyph";
@@ -16,7 +17,6 @@ import {
 import { CloseBand, LandingShell, PageHero } from "@/components/landing-shell";
 import { LoopVideo } from "@/components/loop-video";
 import { jsonLd, softwareApplicationJsonLd } from "@/components/seo/json-ld";
-import { Link } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 
 /**
@@ -90,7 +90,10 @@ function SessionCard() {
         {/* What the agent did, one tool call per line. */}
         <ol className="space-y-2.5 border-l border-[var(--rule-strong)] pl-4">
           {session.map((s) => (
-            <li key={s.tool + s.arg} className="font-mono text-[11.5px] leading-[1.6] sm:text-[12.5px]">
+            <li
+              key={s.tool + s.arg}
+              className="font-mono text-[11.5px] leading-[1.6] sm:text-[12.5px]"
+            >
               <span className="text-[#2c37a4]">{s.tool}</span>{" "}
               <span className="text-[#5b6478]">{s.arg}</span>
               <span className="block text-emerald-700">→ {s.result}</span>
@@ -123,9 +126,9 @@ function AgentBenchmark() {
     <figure className="border-t border-[var(--rule)] px-6 py-12 sm:px-10 sm:py-14 lg:px-12">
       <figcaption className="sr-only">
         Mobile numbers found from 20 records through each tool&apos;s agent:
-        pipe0 18 of 20 at 14 cents per mobile in 17 seconds per phone,
-        Landbase 13 of 20 at 43 cents in 62 seconds, Deepline 12 of 20 at 41
-        cents in about 145 seconds.
+        pipe0 18 of 20 at 14 cents per mobile in 17 seconds per phone, Landbase
+        13 of 20 at 43 cents in 62 seconds, Deepline 12 of 20 at 41 cents in
+        about 145 seconds.
       </figcaption>
       {/* Column heads, desktop only; phones label the numbers inline. */}
       <div className="hidden grid-cols-[9rem_minmax(0,1fr)_7rem_7rem] gap-8 pb-5 text-[14px] text-muted-foreground lg:grid">
@@ -206,13 +209,22 @@ function RecordsCard() {
       <code>
         <span className="text-[#98a1b5]">{"// records, back in the call"}</span>
         {"\n"}
-        {"{"} name: <span className="text-emerald-700">&quot;Lena Brandt&quot;</span>,{"\n"}
-        {"  "}company_domain: <span className="text-emerald-700">&quot;heliolabs.io&quot;</span>,{"\n"}
-        {"  "}work_email: <span className="text-emerald-700">&quot;lena@heliolabs.io&quot;</span> {"}"}
+        {"{"} name:{" "}
+        <span className="text-emerald-700">&quot;Lena Brandt&quot;</span>,{"\n"}
+        {"  "}company_domain:{" "}
+        <span className="text-emerald-700">&quot;heliolabs.io&quot;</span>,
         {"\n"}
-        {"{"} name: <span className="text-emerald-700">&quot;Jonas Weber&quot;</span>,{"\n"}
-        {"  "}company_domain: <span className="text-emerald-700">&quot;payfold.de&quot;</span>,{"\n"}
-        {"  "}work_email: <span className="text-emerald-700">&quot;jonas@payfold.de&quot;</span> {"}"}
+        {"  "}work_email:{" "}
+        <span className="text-emerald-700">&quot;lena@heliolabs.io&quot;</span>{" "}
+        {"}"}
+        {"\n"}
+        {"{"} name:{" "}
+        <span className="text-emerald-700">&quot;Jonas Weber&quot;</span>,{"\n"}
+        {"  "}company_domain:{" "}
+        <span className="text-emerald-700">&quot;payfold.de&quot;</span>,{"\n"}
+        {"  "}work_email:{" "}
+        <span className="text-emerald-700">&quot;jonas@payfold.de&quot;</span>{" "}
+        {"}"}
       </code>
     </pre>
   );
@@ -240,16 +252,29 @@ function SheetCard() {
         <thead className="text-muted-foreground">
           <tr className="border-b border-[var(--rule)]">
             <th className="px-4 py-2 font-normal">Name</th>
-            <th className="hidden px-4 py-2 font-normal sm:table-cell">Domain</th>
+            <th className="hidden px-4 py-2 font-normal sm:table-cell">
+              Domain
+            </th>
             <th className="px-4 py-2 font-normal">Work email</th>
           </tr>
         </thead>
         <tbody>
           {sheetRows.map((r) => (
-            <tr key={r[0]} className="border-b border-[var(--rule)] last:border-b-0">
+            <tr
+              key={r[0]}
+              className="border-b border-[var(--rule)] last:border-b-0"
+            >
               <td className="px-4 py-2 text-foreground">{r[0]}</td>
-              <td className="hidden px-4 py-2 text-muted-foreground sm:table-cell">{r[1]}</td>
-              <td className={r[2] === "—" ? "px-4 py-2 text-muted-foreground" : "px-4 py-2 text-foreground"}>
+              <td className="hidden px-4 py-2 text-muted-foreground sm:table-cell">
+                {r[1]}
+              </td>
+              <td
+                className={
+                  r[2] === "—"
+                    ? "px-4 py-2 text-muted-foreground"
+                    : "px-4 py-2 text-foreground"
+                }
+              >
                 {r[2]}
               </td>
             </tr>
@@ -285,14 +310,16 @@ function ValidationCard() {
       </div>
       <div className="space-y-3 px-5 py-5 font-mono text-[11.5px] leading-[1.7] sm:text-[12.5px]">
         <p className="text-[#5b6478]">
-          filters.locations: <span className="text-foreground">&quot;Berlin, DE&quot;</span>
+          filters.locations:{" "}
+          <span className="text-foreground">&quot;Berlin, DE&quot;</span>
         </p>
         <p className="flex items-start gap-2 text-[#b4541a]">
           <span aria-hidden>✕</span>
           <span>Not a known value. Nothing ran, nothing billed.</span>
         </p>
         <p className="text-[#5b6478]">
-          closest: <span className="text-emerald-700">&quot;Berlin, Germany&quot;</span>
+          closest:{" "}
+          <span className="text-emerald-700">&quot;Berlin, Germany&quot;</span>
         </p>
         <p className="border-t border-[var(--rule)] pt-3 text-[#5b6478]">
           <span className="text-[#2c37a4]">retry</span> → 25 people
@@ -309,10 +336,12 @@ const clients: { name: string; how: ReactNode }[] = [
     name: "Claude Code",
     how: (
       <>
-        <code className="break-all font-mono text-[12.5px] text-foreground">{INSTALL}</code>
+        <code className="break-all font-mono text-[12.5px] text-foreground">
+          {INSTALL}
+        </code>
         <span className="mt-1.5 block">
-          Then run <code className="font-mono text-[12.5px]">/mcp</code> and choose
-          Authenticate.
+          Then run <code className="font-mono text-[12.5px]">/mcp</code> and
+          choose Authenticate.
         </span>
       </>
     ),
@@ -321,9 +350,10 @@ const clients: { name: string; how: ReactNode }[] = [
     name: "Cursor",
     how: (
       <>
-        Add the URL under <code className="font-mono text-[12.5px]">mcpServers</code>{" "}
-        in <code className="font-mono text-[12.5px]">.cursor/mcp.json</code>, then sign
-        in from Settings, MCP.
+        Add the URL under{" "}
+        <code className="font-mono text-[12.5px]">mcpServers</code> in{" "}
+        <code className="font-mono text-[12.5px]">.cursor/mcp.json</code>, then
+        sign in from Settings, MCP.
       </>
     ),
   },
@@ -333,7 +363,9 @@ const clients: { name: string; how: ReactNode }[] = [
   },
   {
     name: "Codex and other clients",
-    how: <>Any client with streamable HTTP and OAuth connects with the same URL.</>,
+    how: (
+      <>Any client with streamable HTTP and OAuth connects with the same URL.</>
+    ),
   },
 ];
 
@@ -342,10 +374,10 @@ const clients: { name: string; how: ReactNode }[] = [
 export const Route = createFileRoute("/_marketing/mcp")({
   head: () => ({
     ...seo({
-  title: "Enrichment MCP server for coding agents",
-  description,
-  path: "/mcp",
-}),
+      title: "Enrichment MCP server for coding agents",
+      description,
+      path: "/mcp",
+    }),
     scripts: [jsonLd(softwareApplicationJsonLd({ description }))],
   }),
   component: McpPage,
@@ -354,7 +386,6 @@ export const Route = createFileRoute("/_marketing/mcp")({
 function McpPage() {
   return (
     <LandingShell page="mcp">
-
       <PageHero
         kicker={
           <>
@@ -363,7 +394,10 @@ function McpPage() {
                 visually hidden text, so search engines and screen readers
                 read the full line. */}
             GTM data for
-            <span className="sr-only"> Claude Code, Cursor, and Codex.</span>{" "}
+            <span className="sr-only">
+              {" "}
+              Claude Code, Cursor, and Codex.
+            </span>{" "}
             <AgentGlyph className="align-[-0.12em]" />
           </>
         }
@@ -373,7 +407,9 @@ function McpPage() {
           <div className="flex w-full min-w-0 flex-col items-center gap-4">
             <CopyCommand command={INSTALL} />
             <div className="flex flex-wrap justify-center gap-3">
-              <ButtonLink href="/docs/sdks/mcp">Set up in two minutes</ButtonLink>
+              <ButtonLink href="/docs/sdks/mcp">
+                Set up in two minutes
+              </ButtonLink>
               <ButtonLink href="/docs/pipe-catalog" tone="secondary">
                 Browse the tools
               </ButtonLink>
@@ -418,12 +454,12 @@ function McpPage() {
         <AgentBenchmark />
         <p className="border-t border-[var(--rule)] px-6 py-5 text-[13.5px] leading-relaxed text-muted-foreground sm:px-10 lg:px-12">
           20 records, one run each, September 2026. Test it on your own list.{" "}
-          <Link
-            to="/blog/deepline-alternatives"
+          <SiteLink
+            href="/blog/deepline-alternatives"
             className="font-medium text-primary underline decoration-primary/30 underline-offset-4 hover:decoration-primary"
           >
             Method and data
-          </Link>
+          </SiteLink>
         </p>
       </Band>
 
@@ -506,15 +542,21 @@ function McpPage() {
                 "grid gap-2 px-6 py-6 sm:px-10 lg:grid-cols-[14rem_minmax(0,1fr)] lg:items-baseline lg:gap-10 lg:px-12"
               }
             >
-              <span className="text-[16px] font-medium text-foreground">{c.name}</span>
+              <span className="text-[16px] font-medium text-foreground">
+                {c.name}
+              </span>
               <div className="min-w-0 text-[15px] leading-relaxed text-muted-foreground">
                 {c.how}
               </div>
             </div>
           ))}
           <div className="grid gap-2 border-t border-[var(--rule)] bg-[var(--well)] px-6 py-5 sm:px-10 lg:grid-cols-[14rem_minmax(0,1fr)] lg:items-baseline lg:gap-10 lg:px-12">
-            <span className="text-[14px] text-muted-foreground">Server URL</span>
-            <code className="break-all font-mono text-[13px] text-foreground">{MCP_URL}</code>
+            <span className="text-[14px] text-muted-foreground">
+              Server URL
+            </span>
+            <code className="break-all font-mono text-[13px] text-foreground">
+              {MCP_URL}
+            </code>
           </div>
         </div>
       </Band>

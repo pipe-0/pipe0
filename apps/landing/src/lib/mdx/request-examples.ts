@@ -1,19 +1,10 @@
-import { Tabs, Tab } from "fumadocs-ui/components/tabs";
-import { StaticCodeBlock } from "@/components/features/docs/static-code-block";
-
 /**
- * A request example rendered in three flavours — pipe0 SDK, Python and cURL —
- * generated from a single request `payload`. Use it for self-contained,
- * single-request examples so the three tabs never drift out of sync.
- *
- * @example
- * export const payload = { pipes: [...], input: [...] };
- * <RequestExample kind="pipes" payload={payload} />
+ * The code behind <RequestExample> and <SearchEnrichExample>. A remark plugin
+ * calls these at compile time (see ./remark-request-example), so the three
+ * tabs come from one payload and never drift out of sync.
  */
-type RequestKind = "pipes" | "search";
-type RequestTab = "sdk" | "python" | "curl";
-
-const TAB_INDEX: Record<RequestTab, number> = { sdk: 0, python: 1, curl: 2 };
+export type RequestKind = "pipes" | "search";
+export type RequestCode = { sdk: string; python: string; curl: string };
 
 const SYNC_ENDPOINT: Record<RequestKind, string> = {
   pipes: "https://api.pipe0.com/v1/pipes/run/sync",
@@ -96,16 +87,7 @@ function toCurlBody(value: unknown): string {
   return JSON.stringify(value, null, 2).replace(/'/g, `'\\''`);
 }
 
-export function RequestExample({
-  kind = "pipes",
-  payload,
-  defaultTab = "sdk",
-}: {
-  kind?: RequestKind;
-  payload: unknown;
-  /** Tab shown first. Blog posts default to cURL so no language looks required. */
-  defaultTab?: RequestTab;
-}) {
+export function requestExampleCode(kind: RequestKind, payload: unknown): RequestCode {
   const url = SYNC_ENDPOINT[kind];
   const method = SDK_METHOD[kind];
 
@@ -136,19 +118,7 @@ export function RequestExample({
     `  -d '${toCurlBody(payload)}'`,
   ].join("\n");
 
-  return (
-    <Tabs items={["pipe0 SDK", "Python", "cURL"]} defaultIndex={TAB_INDEX[defaultTab]}>
-      <Tab value="pipe0 SDK">
-        <StaticCodeBlock lang="typescript" code={sdk} />
-      </Tab>
-      <Tab value="Python">
-        <StaticCodeBlock lang="python" code={python} />
-      </Tab>
-      <Tab value="cURL">
-        <StaticCodeBlock lang="bash" code={curl} />
-      </Tab>
-    </Tabs>
-  );
+  return { sdk, python, curl };
 }
 
 /**
@@ -156,19 +126,11 @@ export function RequestExample({
  * response feeds the pipe's `input`**, so each tab keeps that wiring explicit
  * (`search.results` in the SDK, `search["results"]` in Python, a piped
  * `$RESULTS` in cURL).
- *
- * @example
- * export const search = { search: { search_id: "...", config: {...} } };
- * export const enrich = { pipes: [{ pipe_id: "..." }] };
- * <SearchEnrichExample search={search} enrich={enrich} />
  */
-export function SearchEnrichExample({
-  search,
-  enrich,
-}: {
-  search: unknown;
-  enrich: { config?: unknown; pipes: unknown };
-}) {
+export function searchEnrichCode(
+  search: unknown,
+  enrich: { config?: unknown; pipes: unknown },
+): RequestCode {
   const searchUrl = SYNC_ENDPOINT.search;
   const pipesUrl = SYNC_ENDPOINT.pipes;
   const { config: enrichConfig, pipes: enrichPipes } = enrich;
@@ -237,17 +199,5 @@ export function SearchEnrichExample({
     `  -d "$(jq -n --argjson rows "$RESULTS" '${toCurlBody(enrichBody)} + { input: $rows }')"`,
   ].join("\n");
 
-  return (
-    <Tabs items={["pipe0 SDK", "Python", "cURL"]}>
-      <Tab value="pipe0 SDK">
-        <StaticCodeBlock lang="typescript" code={sdk} />
-      </Tab>
-      <Tab value="Python">
-        <StaticCodeBlock lang="python" code={python} />
-      </Tab>
-      <Tab value="cURL">
-        <StaticCodeBlock lang="bash" code={curl} />
-      </Tab>
-    </Tabs>
-  );
+  return { sdk, python, curl };
 }

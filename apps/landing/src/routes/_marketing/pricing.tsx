@@ -3,13 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { LandingEconomics } from "@/components/landing/landing-economics";
 import { LandingFaq, type Faq } from "@/components/landing/landing-faq";
 import CalButton from "@/components/cal-button";
-import {
-  Band,
-  Cell,
-  Cells,
-  SectionHead,
-  buttonSkin,
-} from "@/components/grid";
+import { Band, Cell, Cells, SectionHead, buttonSkin } from "@/components/grid";
 import { CloseBand, LandingShell, PageHero } from "@/components/landing-shell";
 import { jsonLd, faqJsonLd } from "@/components/seo/json-ld";
 import { appInfo } from "@/lib/const";
@@ -36,7 +30,11 @@ const plans: Plan[] = [
     cadence: "to start",
     credits: "Buy credits when you need them",
     perCredit: "$0.035 per credit",
-    points: ["Credits never expire", "No subscription", "Sandbox runs are free"],
+    points: [
+      "Credits never expire",
+      "No subscription",
+      "Sandbox runs are free",
+    ],
     featured: true,
   },
   {
@@ -101,11 +99,11 @@ const faqs: Faq[] = [
 export const Route = createFileRoute("/_marketing/pricing")({
   head: () => ({
     ...seo({
-  title: "Pricing — Pay as you go, no subscription",
-  description:
-    "Premium enrichment data, pay as you go. Buy credits that never expire, or pick a monthly plan for a lower price per credit. Every waterfall bills only the provider that found the data.",
-  path: "/pricing",
-}),
+      title: "Pricing — Pay as you go, no subscription",
+      description:
+        "Premium enrichment data, pay as you go. Buy credits that never expire, or pick a monthly plan for a lower price per credit. Every waterfall bills only the provider that found the data.",
+      path: "/pricing",
+    }),
     scripts: [jsonLd(faqJsonLd(faqs.map(({ q, a }) => ({ q, a }))))],
   }),
   component: Pricing,
@@ -114,7 +112,6 @@ export const Route = createFileRoute("/_marketing/pricing")({
 function Pricing() {
   return (
     <LandingShell page="pricing">
-
       <PageHero
         kicker="No subscription required."
         title="Premium enrichment data, pay as you go."
@@ -170,7 +167,9 @@ function Pricing() {
 
         {/* Shared by every plan — said once instead of on every card. */}
         <div className="flex flex-col gap-3 border-t border-[var(--rule)] px-6 py-5 text-[14.5px] sm:px-8 lg:flex-row lg:items-center lg:gap-8">
-          <span className="font-medium text-foreground">Every plan includes</span>
+          <span className="font-medium text-foreground">
+            Every plan includes
+          </span>
           <span className="text-muted-foreground">{included.join(" · ")}</span>
         </div>
 

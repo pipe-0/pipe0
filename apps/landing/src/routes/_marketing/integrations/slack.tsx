@@ -1,3 +1,4 @@
+import { SiteLink } from "@/components/link";
 import { seo } from "@/lib/seo";
 import { createFileRoute } from "@tanstack/react-router";
 import { Band, Cell, Cells, SectionHead } from "@/components/grid";
@@ -48,15 +49,19 @@ const steps = [
 export const Route = createFileRoute("/_marketing/integrations/slack")({
   head: () => ({
     ...seo({
-  title: "pipe0 for Slack",
-  description:
-    "Connect pipe0 to Slack: post enrichment results and pipeline alerts into channels, list channel members with verified emails, send direct messages, and work with the @pipe0 agent.",
-  path: "/integrations/slack",
-}),
-    scripts: [jsonLd(breadcrumbJsonLd([
+      title: "pipe0 for Slack",
+      description:
+        "Connect pipe0 to Slack: post enrichment results and pipeline alerts into channels, list channel members with verified emails, send direct messages, and work with the @pipe0 agent.",
+      path: "/integrations/slack",
+    }),
+    scripts: [
+      jsonLd(
+        breadcrumbJsonLd([
           { name: "Home", url: "/" },
           { name: "Slack integration", url: "/integrations/slack" },
-        ]))],
+        ]),
+      ),
+    ],
   }),
   component: SlackIntegration,
 });
@@ -64,7 +69,6 @@ export const Route = createFileRoute("/_marketing/integrations/slack")({
 function SlackIntegration() {
   return (
     <LandingShell page="product">
-
       {/* ===== Hero ===== */}
       <Band>
         <div className="flex flex-col items-center px-6 pb-12 pt-12 text-center sm:px-10 sm:pb-14 sm:pt-16 lg:px-12">
@@ -87,11 +91,12 @@ function SlackIntegration() {
                 srcSet="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x"
               />
             </a>
-            <Link to="/docs/sdks/integrations/slack-agent"
+            <SiteLink
+              href="/docs/sdks/integrations/slack-agent"
               className="text-[15px] font-medium text-primary underline decoration-primary/30 underline-offset-4 hover:decoration-primary"
             >
               Read the docs
-            </Link>
+            </SiteLink>
           </div>
           <p className="mx-auto mt-6 max-w-[480px] text-[13.5px] text-muted-foreground">
             Installing requires a free pipe0 account. The app posts what you
@@ -124,9 +129,12 @@ function SlackIntegration() {
           lede={
             <>
               Full setup and usage details live in the{" "}
-              <Link className={link} to="/docs/sdks/integrations/slack-agent">
+              <SiteLink
+                className={link}
+                href="/docs/sdks/integrations/slack-agent"
+              >
                 Slack agent guide
-              </Link>
+              </SiteLink>
               .
             </>
           }
@@ -134,7 +142,9 @@ function SlackIntegration() {
         <Cells className="border-t border-[var(--rule)] sm:grid-cols-3">
           {steps.map((step, i) => (
             <Cell key={step.title} className="px-6 py-10 sm:px-8 lg:px-12">
-              <p className="text-[13.5px] text-muted-foreground">Step {i + 1}</p>
+              <p className="text-[13.5px] text-muted-foreground">
+                Step {i + 1}
+              </p>
               <h3 className="mt-2 text-[17px] font-medium tracking-[-0.015em] text-foreground">
                 {step.title}
               </h3>
@@ -175,13 +185,16 @@ function SlackIntegration() {
               connection, pipe0 keeps the workspace name and ID, the app&apos;s
               bot user ID, and the granted permissions. Deleting the connection
               (or removing the app from Slack) deletes the token. See the{" "}
-              <Link className={link} to="/resources/legal/privacy-policy">
+              <SiteLink className={link} href="/resources/legal/privacy-policy">
                 privacy policy
-              </Link>{" "}
+              </SiteLink>{" "}
               and{" "}
-              <Link className={link} to="/resources/legal/terms-of-service">
+              <SiteLink
+                className={link}
+                href="/resources/legal/terms-of-service"
+              >
                 terms of service
-              </Link>
+              </SiteLink>
               .
             </p>
           </Cell>
