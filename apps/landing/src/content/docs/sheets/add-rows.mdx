@@ -30,25 +30,146 @@ Searches into your own systems make a sheet a working surface for CRM data. Pull
 
 Sheets accept rows from outside pipe0 too. The `row:append:sheet@1` pipe appends its input record to a sheet, so anything that can make an HTTP request can feed a sheet: a signup webhook, a backend job, a script.
 
-export const appendPayload = {
+<Tabs items={["pipe0 SDK", "Python", "cURL"]}>
+<Tab value="pipe0 SDK">
+
+```typescript
+import { Pipe0 } from "@pipe0/client";
+
+const pipe0 = new Pipe0({ apiKey: process.env.PIPE0_API_KEY });
+
+const result = await pipe0.pipes.pipe({
   pipes: [
     {
       pipe_id: "row:append:sheet@1",
       connector: {
         strategy: "first",
-        connections: [{ type: "vault", connection: "pipe0_123" }],
+        connections: [
+          {
+            type: "vault",
+            connection: "pipe0_123",
+          },
+        ],
       },
       config: {
         project: "gtm",
         sheet: "inbound-signups",
-        write_fields: [{ field_name: "name" }, { field_name: "email" }],
+        write_fields: [
+          {
+            field_name: "name",
+          },
+          {
+            field_name: "email",
+          },
+        ],
       },
     },
   ],
-  input: [{ id: "1", name: "Jane Doe", email: "jane@pipe0.com" }],
-};
+  input: [
+    {
+      id: "1",
+      name: "Jane Doe",
+      email: "jane@pipe0.com",
+    },
+  ],
+});
+console.log(result);
+```
 
-<RequestExample kind="pipes" payload={appendPayload} />
+</Tab>
+<Tab value="Python">
+
+```python
+import requests
+
+response = requests.post(
+    "https://api.pipe0.com/v1/pipes/run/sync",
+    headers={"Authorization": f"Bearer {API_KEY}"},
+    json={
+        "pipes": [
+            {
+                "pipe_id": "row:append:sheet@1",
+                "connector": {
+                    "strategy": "first",
+                    "connections": [
+                        {
+                            "type": "vault",
+                            "connection": "pipe0_123",
+                        },
+                    ],
+                },
+                "config": {
+                    "project": "gtm",
+                    "sheet": "inbound-signups",
+                    "write_fields": [
+                        {
+                            "field_name": "name",
+                        },
+                        {
+                            "field_name": "email",
+                        },
+                    ],
+                },
+            },
+        ],
+        "input": [
+            {
+                "id": "1",
+                "name": "Jane Doe",
+                "email": "jane@pipe0.com",
+            },
+        ],
+    },
+)
+print(response.json())
+```
+
+</Tab>
+<Tab value="cURL">
+
+```bash
+curl -X POST "https://api.pipe0.com/v1/pipes/run/sync" \
+  -H "Authorization: Bearer $API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "pipes": [
+    {
+      "pipe_id": "row:append:sheet@1",
+      "connector": {
+        "strategy": "first",
+        "connections": [
+          {
+            "type": "vault",
+            "connection": "pipe0_123"
+          }
+        ]
+      },
+      "config": {
+        "project": "gtm",
+        "sheet": "inbound-signups",
+        "write_fields": [
+          {
+            "field_name": "name"
+          },
+          {
+            "field_name": "email"
+          }
+        ]
+      }
+    }
+  ],
+  "input": [
+    {
+      "id": "1",
+      "name": "Jane Doe",
+      "email": "jane@pipe0.com"
+    }
+  ]
+}'
+```
+
+</Tab>
+</Tabs>
 
 The destination is addressed by project and sheet slug, and `write_fields` lists exactly the columns the destination consumes. By default the destination sheet runs its own pipes over the new row on arrival, so appending a signup means the sheet enriches it without anyone opening the app. The pipe needs a pipe0 <AppLink linkType="connections">connection</AppLink>.
 

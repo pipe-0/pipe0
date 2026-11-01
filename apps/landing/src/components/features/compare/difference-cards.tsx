@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@tanstack/react-router";
 import { Cell, Cells, SectionHead } from "@/components/grid";
 import { cn } from "@/lib/utils";
 import type { DifferenceCard } from "@/lib/compare/types";
@@ -32,7 +32,7 @@ export function DifferenceCards({
               // mt-auto pins every cell's link to the same baseline across the row.
               <p className="mt-auto pt-4">
                 <Link
-                  href={card.link.href}
+                  to={card.link.href}
                   className="text-[15px] font-medium text-primary underline decoration-primary/30 underline-offset-4 hover:decoration-primary"
                 >
                   {card.link.label}

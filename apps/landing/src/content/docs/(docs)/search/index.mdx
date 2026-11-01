@@ -10,19 +10,89 @@ While pipes add fields to records you already have, search creates the records. 
 
 This request fetches a list of people from the [`people:profiles:crustdata@3`](/docs/search-catalog/people:profiles:crustdata/3) dataset. Each request takes a single search. `limit` sets the page size; use <AppLink linkType="pagination">pagination</AppLink> for more results.
 
-export const searchPayload = {
+<Tabs items={["pipe0 SDK", "Python", "cURL"]}>
+<Tab value="pipe0 SDK">
+
+```typescript
+import { Pipe0 } from "@pipe0/client";
+
+const pipe0 = new Pipe0({ apiKey: process.env.PIPE0_API_KEY });
+
+const result = await pipe0.searches.search({
   search: {
     search_id: "people:profiles:crustdata@3",
     config: {
       limit: 25,
       filters: {
-        current_employment_job_titles: { include: ["Software Engineer", "Developer"] },
+        current_employment_job_titles: {
+          include: [
+            "Software Engineer",
+            "Developer",
+          ],
+        },
       },
     },
   },
-};
+});
+console.log(result);
+```
 
-<RequestExample kind="search" payload={searchPayload} />
+</Tab>
+<Tab value="Python">
+
+```python
+import requests
+
+response = requests.post(
+    "https://api.pipe0.com/v1/search/run/sync",
+    headers={"Authorization": f"Bearer {API_KEY}"},
+    json={
+        "search": {
+            "search_id": "people:profiles:crustdata@3",
+            "config": {
+                "limit": 25,
+                "filters": {
+                    "current_employment_job_titles": {
+                        "include": [
+                            "Software Engineer",
+                            "Developer",
+                        ],
+                    },
+                },
+            },
+        },
+    },
+)
+print(response.json())
+```
+
+</Tab>
+<Tab value="cURL">
+
+```bash
+curl -X POST "https://api.pipe0.com/v1/search/run/sync" \
+  -H "Authorization: Bearer $API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "search": {
+    "search_id": "people:profiles:crustdata@3",
+    "config": {
+      "limit": 25,
+      "filters": {
+        "current_employment_job_titles": {
+          "include": [
+            "Software Engineer",
+            "Developer"
+          ]
+        }
+      }
+    }
+  }
+}'
+```
+
+</Tab>
+</Tabs>
 
 The response contains one result object per match, with the same field shape pipes use:
 

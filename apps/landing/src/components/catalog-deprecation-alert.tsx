@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@tanstack/react-router";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 const dateFormatter = new Intl.DateTimeFormat("en-US", {
@@ -35,7 +35,7 @@ export function CatalogDeprecationAlert({
         {successor ? (
           <p>
             Use{" "}
-            <Link href={successor.docPath} className="font-mono underline">
+            <Link to={successor.docPath} className="font-mono underline">
               {successor.id}
             </Link>{" "}
             instead. This {kind} keeps running only for sheets and integrations

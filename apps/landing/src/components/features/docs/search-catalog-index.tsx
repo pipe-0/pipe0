@@ -1,25 +1,12 @@
-"use client";
-
 import { CatalogBanner } from "@/components/features/pipe-catalog/catalog-banner";
 import { ConditionalWrapper } from "@/components/conditional-wrapper";
 import {
-  ProviderTileStrip,
   CatalogFieldList,
   CatalogListRow,
 } from "@/components/features/pipe-catalog/catalog-list-row";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
@@ -31,23 +18,21 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { appInfo } from "@/lib/const";
-import { SearchEntryMap } from "@/lib/get-searches";
 import { getSearchDocsURI } from "@/lib/search/get-search-docs-uri";
 import { hasHighVolume, lowestManagedCredit } from "@/lib/pricing/high-volume";
 import {
   isUsageMeteredSearch,
   USAGE_METERED_LABEL,
 } from "@/lib/pricing/usage-metered";
-import { cn, copyToClipboard, formatCredits } from "@/lib/utils";
+import {
+  cn,
+} from "@/lib/utils";
 import {
   getDefaultSearchOutputFields,
-  getSearchEntry,
-  getSearchVersion,
   searchCatalog,
   SearchCatalogEntry,
   SearchCatalogTableData,
   SearchCategory,
-  SearchId,
   sortSearchCatalogByBaseSearch,
 } from "@pipe0/base";
 import {
@@ -64,9 +49,7 @@ import {
   useSearchCatalogTable,
 } from "@pipe0/react";
 import {
-  ArrowDown,
   ChevronDown,
-  Copy,
   Search,
   X,
   Archive,
@@ -75,12 +58,8 @@ import {
   Building2,
   UserRound,
 } from "lucide-react";
-import Link from "next/link";
-import { useIntentPrefetch } from "@/hooks/use-intent-prefetch";
 import { type ComponentType, type ReactNode, useMemo } from "react";
-
-const FEATURED_SEARCHES_IDS = [] satisfies SearchId[];
-const FEATURED_SEARCHES_ID_SET = new Set<string>(FEATURED_SEARCHES_IDS);
+import "@pipe0/react/styles";
 
 function getSearchCost(entry: SearchCatalogTableData): {
   lowest: number;
@@ -365,157 +344,6 @@ function DocsActiveFiltersStrip({
   );
 }
 
-const SearchCard = ({ tableEntry }: { tableEntry: SearchCatalogTableData }) => {
-  const searchId = tableEntry.searchId;
-  const isNew = (tableEntry.tags as string[]).includes("new");
-  const { lowest: cost, isDiscounted } = getSearchCost(tableEntry);
-  const href = getSearchDocsURI(searchId);
-  const intentPrefetch = useIntentPrefetch(href);
-
-  return (
-    <Link href={href} {...intentPrefetch}>
-      <Card className="relative flex h-full min-h-[230px] flex-col justify-stretch border-[var(--rule)] transition-colors hover:border-[var(--rule-strong)] hover:bg-[var(--well)]">
-        <span className="absolute right-3 top-3 inline-flex gap-1 text-muted-foreground text-xs items-center">
-          {/* A usage-metered search prices variable work (model tokens, per-call
-              provider tools), so `cost.credits.default` is 0 and reading it here
-              printed "Free" for a search that bills real credits. There is no
-              single per-unit number to show — the detail page breaks it down. */}
-          {isUsageMeteredSearch(tableEntry) ? (
-            <span>{USAGE_METERED_LABEL}</span>
-          ) : (
-            <>
-              {cost ? (
-                <span>
-                  {isDiscounted ? "from " : ""}
-                  {formatCredits(cost)} cr
-                </span>
-              ) : (
-                "Free"
-              )}
-              {cost ? (
-                <span className="text-muted-foreground/70">
-                  / {getSearchUnit(tableEntry)}
-                </span>
-              ) : null}
-            </>
-          )}
-        </span>
-        <CardHeader className="pb-1.5">
-          <div className="flex items-start gap-3">
-            <div className="min-w-0 pr-24">
-              <CardTitle className="flex items-center gap-2 text-[15px] font-medium leading-snug tracking-[-0.01em]">
-                <span className="truncate">{tableEntry.label}</span>
-                {isNew && (
-                  <Badge
-                    variant="default"
-                    className="shrink-0 bg-primary px-1.5 py-0 text-[10px] leading-none text-white"
-                  >
-                    New
-                  </Badge>
-                )}
-              </CardTitle>
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent className="grow text-[13.5px] leading-relaxed text-muted-foreground">
-          <p className="line-clamp-3">{tableEntry.description}</p>
-        </CardContent>
-        <CardFooter className="flex flex-col items-stretch gap-2.5 px-6 pb-3 pt-0">
-          <div className="-mr-6 py-1">
-            <ProviderTileStrip providers={[tableEntry.provider]} />
-          </div>
-          <div className="flex items-center gap-1.5 text-[12px] text-muted-foreground">
-            <span className="truncate">{searchId}</span>
-            <Button
-              size="icon"
-              className="size-5 shrink-0"
-              variant="ghost"
-              onClick={(e) => {
-                e.stopPropagation();
-                e.preventDefault();
-                copyToClipboard(searchId || "");
-              }}
-            >
-              <Copy className="size-3" />
-            </Button>
-          </div>
-          <div className="flex gap-1 items-center -mx-2">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  className="text-muted-foreground text-xs hover:text-foreground h-7 px-2"
-                >
-                  <ArrowDown className="size-3" /> Outputs
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                align="start"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  e.preventDefault();
-                }}
-              >
-                <DropdownMenuGroup>
-                  {getDefaultSearchOutputFields(tableEntry.searchId).map(
-                    (field) => (
-                      <DropdownMenuItem
-                        key={field}
-                        className="py-1 cursor-pointer block text-muted-foreground hover:text-foreground"
-                      >
-                        {field}
-                      </DropdownMenuItem>
-                    ),
-                  )}
-                </DropdownMenuGroup>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
-        </CardFooter>
-      </Card>
-    </Link>
-  );
-};
-
-function Featured({ searchEntryMap }: { searchEntryMap: SearchEntryMap }) {
-  const { category, globalFilterInput, table } = useSearchCatalogContext();
-  const showFeatured =
-    category === null &&
-    globalFilterInput === "" &&
-    table.state.columnFilters.length === 0;
-
-  const featuredEntries = useMemo(() => {
-    return FEATURED_SEARCHES_IDS.map((searchId) => {
-      const searchEntry = searchEntryMap[searchId];
-      if (!searchEntry) return null;
-      return {
-        ...getSearchEntry(searchId),
-        searchId,
-        latestVersion: getSearchVersion(searchId),
-      } as unknown as SearchCatalogTableData;
-    }).filter((e): e is SearchCatalogTableData => e !== null);
-  }, [searchEntryMap]);
-
-  if (!showFeatured || featuredEntries.length === 0) return null;
-
-  return (
-    <div className="space-y-3">
-      <div className="flex items-baseline gap-2">
-        <h2 className="text-lg font-semibold tracking-tight">Featured</h2>
-        <span className="text-xs text-muted-foreground">
-          · Most-used searches.
-        </span>
-      </div>
-      <div className="grid gap-3 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-        {featuredEntries.map((entry) => (
-          <SearchCard key={entry.searchId} tableEntry={entry} />
-        ))}
-      </div>
-    </div>
-  );
-}
-
 // Single catalog row, shared by the grouped browse view and the flat
 // search/filter results view so both render identically.
 function CatalogRow({ card }: { card: SearchCardData }) {
@@ -556,13 +384,7 @@ function GroupedList({ cards }: { cards: ReadonlyArray<SearchCardData> }) {
   const isFiltering =
     category !== null || globalFilterInput !== "" || columnFilters.length > 0;
 
-  const visible = useMemo(
-    () =>
-      isFiltering
-        ? cards
-        : cards.filter((c) => !FEATURED_SEARCHES_ID_SET.has(c.searchId)),
-    [cards, isFiltering],
-  );
+  const visible = cards;
 
   // Each search is placed in the first matching category (deprecated last).
   const groupedRows = useMemo(() => {
@@ -638,11 +460,7 @@ function GroupedList({ cards }: { cards: ReadonlyArray<SearchCardData> }) {
   );
 }
 
-export function SearchCatalogIndex({
-  searchEntryMap,
-}: {
-  searchEntryMap: SearchEntryMap;
-}) {
+export function SearchCatalogIndex() {
   const ctx = useSearchCatalogTable();
 
   return (
@@ -733,9 +551,6 @@ export function SearchCatalogIndex({
           <DocsActiveFiltersStrip filters={activeFilters} />
         )}
       />
-
-      {/* Featured section */}
-      <Featured searchEntryMap={searchEntryMap} />
 
       {/* Grouped list view */}
       <SearchCatalogList

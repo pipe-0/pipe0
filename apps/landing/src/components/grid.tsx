@@ -1,8 +1,12 @@
+import { createLink } from "@tanstack/react-router";
 import CalButton from "@/components/cal-button";
 import { appInfo } from "@/lib/const";
 import { cn } from "@/lib/utils";
-import Link from "next/link";
-import type { ReactNode } from "react";
+import {
+  forwardRef,
+  type ComponentPropsWithoutRef,
+  type ReactNode,
+} from "react";
 
 /**
  * The landing page's line grid.
@@ -190,14 +194,18 @@ export function SectionHead({
 }) {
   return (
     <div className="grid gap-6 px-6 pb-10 pt-12 sm:bg-background sm:px-10 sm:pb-12 sm:pt-16 lg:grid-cols-12 lg:items-end lg:gap-12 lg:px-12">
-      <h2 data-reveal="up" className="text-balance text-[clamp(28px,2.3vw,32px)] font-medium leading-[1.02] tracking-[-0.04em] text-foreground lg:col-span-7">
+      <h2
+        data-reveal="up"
+        className="text-balance text-[clamp(28px,2.3vw,32px)] font-medium leading-[1.02] tracking-[-0.04em] text-foreground lg:col-span-7"
+      >
         {title}
       </h2>
       {lede && (
         <p
           data-reveal="up"
           style={{ ["--reveal-delay" as string]: "90ms" }}
-          className="max-w-[48ch] text-pretty text-[17px] leading-relaxed text-muted-foreground lg:col-span-5 lg:justify-self-end lg:pb-2">
+          className="max-w-[48ch] text-pretty text-[17px] leading-relaxed text-muted-foreground lg:col-span-5 lg:justify-self-end lg:pb-2"
+        >
           {lede}
         </p>
       )}
@@ -223,40 +231,43 @@ export function Brackets({
     <span aria-hidden className="pointer-events-none absolute inset-0 z-10">
       <span style={s} className={cn(arm, "left-0 top-0 border-l border-t")} />
       <span style={s} className={cn(arm, "right-0 top-0 border-r border-t")} />
-      <span style={s} className={cn(arm, "bottom-0 left-0 border-b border-l")} />
-      <span style={s} className={cn(arm, "bottom-0 right-0 border-b border-r")} />
+      <span
+        style={s}
+        className={cn(arm, "bottom-0 left-0 border-b border-l")}
+      />
+      <span
+        style={s}
+        className={cn(arm, "bottom-0 right-0 border-b border-r")}
+      />
     </span>
   );
 }
 
-/** A link that runs the full width of its cell, as the cell's last row. */
-export function RowLink({
-  href,
-  children,
-  className,
-}: {
-  href: string;
-  children: ReactNode;
-  className?: string;
-}) {
-  return (
-    <Link
-      href={href}
-      className={cn(
-        "group flex h-14 items-center justify-between border-t border-[var(--rule)] px-6 text-[14.5px] font-medium text-foreground transition-colors hover:bg-[var(--well)] sm:px-10 lg:px-12",
-        className,
-      )}
-    >
-      {children}
-      <span
-        aria-hidden
-        className="text-muted-foreground transition-transform duration-200 group-hover:translate-x-0.5"
+const RowAnchor = forwardRef<HTMLAnchorElement, ComponentPropsWithoutRef<"a">>(
+  function RowAnchor({ children, className, ...props }, ref) {
+    return (
+      <a
+        ref={ref}
+        className={cn(
+          "group flex h-14 items-center justify-between border-t border-[var(--rule)] px-6 text-[14.5px] font-medium text-foreground transition-colors hover:bg-[var(--well)] sm:px-10 lg:px-12",
+          className,
+        )}
+        {...props}
       >
-        &rarr;
-      </span>
-    </Link>
-  );
-}
+        {children}
+        <span
+          aria-hidden
+          className="text-muted-foreground transition-transform duration-200 group-hover:translate-x-0.5"
+        >
+          &rarr;
+        </span>
+      </a>
+    );
+  },
+);
+
+/** A link that runs the full width of its cell, as the cell's last row. */
+export const RowLink = createLink(RowAnchor);
 
 const btn =
   "inline-flex h-11 items-center justify-center rounded-[8px] border px-5 text-[15px] font-medium transition-[background,border-color] outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2";
@@ -277,28 +288,18 @@ export const buttonSkin = {
     "border-white/30 bg-white/[0.07] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.18)] hover:border-white/50 hover:bg-white/[0.12] hover:text-white",
 } as const;
 
+const ButtonAnchor = forwardRef<
+  HTMLAnchorElement,
+  ComponentPropsWithoutRef<"a"> & { tone?: "primary" | "secondary" }
+>(function ButtonAnchor({ tone = "primary", className, ...props }, ref) {
+  return (
+    <a ref={ref} className={cn(btn, buttonSkin[tone], className)} {...props} />
+  );
+});
+
 /** A link styled as a grid button, for pages whose actions aren't the
  *  Start free / Book a demo pair. */
-export function ButtonLink({
-  href,
-  children,
-  tone = "primary",
-  className,
-}: {
-  href: string;
-  children: ReactNode;
-  tone?: "primary" | "secondary";
-  className?: string;
-}) {
-  return (
-    <Link
-      href={href}
-      className={cn(btn, buttonSkin[tone], className)}
-    >
-      {children}
-    </Link>
-  );
-}
+export const ButtonLink = createLink(ButtonAnchor);
 
 /** Primary + demo pair. */
 export function GridCtas({
@@ -312,7 +313,7 @@ export function GridCtas({
   const inverse = tone === "inverse";
   return (
     <div className={cn("flex flex-wrap items-center gap-3", className)}>
-      <Link
+      <a
         href={appInfo.links.signupUrl}
         rel="nofollow"
         className={cn(
@@ -321,7 +322,7 @@ export function GridCtas({
         )}
       >
         Start free
-      </Link>
+      </a>
       {/* CalButton renders a <Button>; the classes win via tailwind-merge. */}
       <CalButton
         variant="ghost"

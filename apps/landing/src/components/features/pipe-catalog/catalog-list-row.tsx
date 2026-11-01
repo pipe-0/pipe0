@@ -1,6 +1,5 @@
-"use client";
-
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Link } from "@tanstack/react-router";
+import { ProviderTile } from "@/components/features/pipe-catalog/provider-tile";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,8 +10,6 @@ import {
 import { cn, copyToClipboard, formatCredits } from "@/lib/utils";
 import { providerCatalog } from "@pipe0/base";
 import { ArrowRight, Copy } from "lucide-react";
-import Link from "next/link";
-import { useIntentPrefetch } from "@/hooks/use-intent-prefetch";
 import { providerTileColor } from "@/lib/provider-tile";
 
 export type CatalogFieldPill = {
@@ -46,65 +43,6 @@ type CatalogListRowProps = {
 
 const FIELD_PILL_LIMIT = 3;
 const PROVIDER_STACK_LIMIT = 4;
-
-/**
- * The entry's provider tile. With more than one provider it is drawn as a
- * physical stack: blank cards fanned out to the right behind the front one,
- * one per extra provider (up to three), so the count reads at a glance
- * without a "+N" badge.
- */
-export function ProviderTile({ providers }: { providers: readonly string[] }) {
-  const primary = providers[0];
-  const behind = Math.min(Math.max(providers.length - 1, 0), 3);
-  const provider = primary
-    ? providerCatalog[primary as keyof typeof providerCatalog]
-    : undefined;
-
-  return (
-    <div
-      className="relative shrink-0"
-      style={{ width: 44 + behind * 8, height: 44 }}
-      title={`${providers.length} provider${providers.length === 1 ? "" : "s"}`}
-    >
-      {Array.from({ length: behind }, (_, k) => {
-        const depth = behind - k; // furthest card first
-        return (
-          <span
-            key={depth}
-            aria-hidden
-            className="absolute top-0 size-11 rounded-[10px] border border-[var(--rule-strong)] bg-background"
-            style={{
-              left: depth * 8,
-              transform: `rotate(${depth * 5}deg) scale(${1 - depth * 0.06})`,
-              transformOrigin: "bottom left",
-              backgroundColor: `hsl(228 33% ${100 - depth * 2}%)`,
-              boxShadow: "0 1px 2px rgba(14,17,23,0.05)",
-            }}
-          />
-        );
-      })}
-      <div
-        className="absolute left-0 top-0 flex size-11 items-center justify-center overflow-hidden rounded-[10px] border border-[var(--rule)] bg-background shadow-[0_1px_2px_rgba(14,17,23,0.05)]"
-        style={{ backgroundColor: providerTileColor(provider) }}
-      >
-        {provider?.logoUrl ? (
-          <Avatar className="size-7 rounded-md">
-            <AvatarImage
-              src={provider.logoUrl}
-              alt={provider.label}
-              className="object-contain"
-            />
-            <AvatarFallback className="rounded-md text-[10px]">
-              {(provider.label ?? primary ?? "P").slice(0, 2)}
-            </AvatarFallback>
-          </Avatar>
-        ) : (
-          <span className="text-xs font-medium text-muted-foreground">P</span>
-        )}
-      </div>
-    </div>
-  );
-}
 
 /* Grey tones for the tiles, light to slightly darker, cycled per tile. */
 const TILE_TONES = [
@@ -152,7 +90,6 @@ export function ProviderTileStrip({
                 }}
               >
                 {p?.logoUrl ? (
-                  // eslint-disable-next-line @next/next/no-img-element
                   <img
                     src={p.logoUrl}
                     alt={p.label}
@@ -266,7 +203,6 @@ export function CatalogListRow({
   isNew,
   isDeprecated,
 }: CatalogListRowProps) {
-  const intentPrefetch = useIntentPrefetch(href);
   const inputs = inputFields ?? [];
   const outputs = normalizeOutputFields(outputFields);
   const showFieldRow =
@@ -275,6 +211,7 @@ export function CatalogListRow({
     outputs === "dynamic" ||
     (Array.isArray(outputs) && outputs.length > 0);
   const providerCount = providers.length;
+  const provider = providerCatalog[providers[0] as keyof typeof providerCatalog];
   const inHasContent =
     inputs === "dynamic" || (Array.isArray(inputs) && inputs.length > 0);
   const outHasContent =
@@ -282,11 +219,15 @@ export function CatalogListRow({
 
   return (
     <Link
-      href={href}
-      {...intentPrefetch}
+      to={href}
       className="group -mx-3 flex gap-4 rounded-[10px] border-b border-[var(--rule)] px-3 py-3.5 transition-colors last:border-b-0 hover:bg-[var(--well)]"
     >
-      <ProviderTile providers={providers} />
+      <ProviderTile
+        provider={
+          provider && { ...provider, tileColor: providerTileColor(provider) }
+        }
+        count={providers.length}
+      />
 
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2 min-w-0">

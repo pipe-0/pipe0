@@ -1,5 +1,3 @@
-"use client";
-
 import type { SearchId, SearchPayload } from "@pipe0/base";
 import {
   SearchForm,
@@ -12,6 +10,7 @@ import {
   SearchFormTitle,
   useSearchForm,
 } from "@pipe0/react";
+import "@pipe0/react/styles";
 
 export function SearchFormInner({
   searchId,

@@ -12,27 +12,148 @@ to a pipes request to enrich every row.
 This example finds senior software-development people, then resolves a work email and mobile number
 for each of them.
 
-export const search = {
+<Tabs items={["pipe0 SDK", "Python", "cURL"]}>
+<Tab value="pipe0 SDK">
+
+```typescript
+import { Pipe0 } from "@pipe0/client";
+
+const pipe0 = new Pipe0({ apiKey: process.env.PIPE0_API_KEY });
+
+// 1. Search for records.
+const search = await pipe0.searches.search({
   search: {
     search_id: "people:profiles:amplemarket@2",
     config: {
       limit: 10,
       filters: {
-        current_employer_linkedin_industries: ["Software Development"],
-        current_seniority_levels: ["C-Suite", "VP", "Head", "Director"],
+        current_employer_linkedin_industries: [
+          "Software Development",
+        ],
+        current_seniority_levels: [
+          "C-Suite",
+          "VP",
+          "Head",
+          "Director",
+        ],
       },
     },
   },
-};
+});
 
-export const enrich = {
+// 2. Feed the search results straight into the enrichment request.
+const enriched = await pipe0.pipes.pipe({
   pipes: [
-    { pipe_id: "person:workemail:profileurl:waterfall@1" },
-    { pipe_id: "person:mobile:profileurl:waterfall@1" },
+    {
+      pipe_id: "person:workemail:profileurl:waterfall@1",
+    },
+    {
+      pipe_id: "person:mobile:profileurl:waterfall@1",
+    },
   ],
-};
+  input: search.results,
+});
+console.log(enriched);
+```
 
-<SearchEnrichExample search={search} enrich={enrich} />
+</Tab>
+<Tab value="Python">
+
+```python
+import requests
+
+headers = {"Authorization": f"Bearer {API_KEY}", "Content-Type": "application/json"}
+
+# 1. Search for records.
+search = requests.post(
+    "https://api.pipe0.com/v1/search/run/sync",
+    headers=headers,
+    json={
+        "search": {
+            "search_id": "people:profiles:amplemarket@2",
+            "config": {
+                "limit": 10,
+                "filters": {
+                    "current_employer_linkedin_industries": [
+                        "Software Development",
+                    ],
+                    "current_seniority_levels": [
+                        "C-Suite",
+                        "VP",
+                        "Head",
+                        "Director",
+                    ],
+                },
+            },
+        },
+    },
+).json()
+
+# 2. Feed the search results straight into the enrichment request.
+enriched = requests.post(
+    "https://api.pipe0.com/v1/pipes/run/sync",
+    headers=headers,
+    json={
+        "pipes": [
+            {
+                "pipe_id": "person:workemail:profileurl:waterfall@1",
+            },
+            {
+                "pipe_id": "person:mobile:profileurl:waterfall@1",
+            },
+        ],
+        "input": search["results"],
+    },
+).json()
+print(enriched)
+```
+
+</Tab>
+<Tab value="cURL">
+
+```bash
+# 1. Search and capture the results array.
+RESULTS=$(curl -s -X POST "https://api.pipe0.com/v1/search/run/sync" \
+  -H "Authorization: Bearer $API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "search": {
+    "search_id": "people:profiles:amplemarket@2",
+    "config": {
+      "limit": 10,
+      "filters": {
+        "current_employer_linkedin_industries": [
+          "Software Development"
+        ],
+        "current_seniority_levels": [
+          "C-Suite",
+          "VP",
+          "Head",
+          "Director"
+        ]
+      }
+    }
+  }
+}' | jq '.results')
+
+# 2. Enrich, feeding the search results in as the input array.
+curl -X POST "https://api.pipe0.com/v1/pipes/run/sync" \
+  -H "Authorization: Bearer $API_KEY" \
+  -H "Content-Type: application/json" \
+  -d "$(jq -n --argjson rows "$RESULTS" '{
+  "pipes": [
+    {
+      "pipe_id": "person:workemail:profileurl:waterfall@1"
+    },
+    {
+      "pipe_id": "person:mobile:profileurl:waterfall@1"
+    }
+  ]
+} + { input: $rows }')"
+```
+
+</Tab>
+</Tabs>
 
 ## How it fits together
 

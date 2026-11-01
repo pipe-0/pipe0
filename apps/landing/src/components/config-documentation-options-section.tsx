@@ -1,9 +1,7 @@
-"use client";
-
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { copyToClipboard } from "@/lib/utils";
-import { StoreOption } from "@pipe0/base";
+import type { StoreOption } from "@pipe0/base";
 import { Copy } from "lucide-react";
 
 /**

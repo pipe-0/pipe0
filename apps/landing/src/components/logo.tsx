@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
-import Image from "next/image";
-import Link from "next/link";
+import { Image } from "@/components/image";
+import { Link } from "@tanstack/react-router";
 
 export function LogoRaw() {
   return (
@@ -46,7 +46,7 @@ export function LogoRawSmall({ className }: { className?: string }) {
 
 export function LinkLogoSmall() {
   return (
-    <Link href="/" className="inline-flex" aria-label="pipe0 home">
+    <Link to="/" className="inline-flex" aria-label="pipe0 home">
       {/* As tall as the header buttons (36px). */}
       <LogoRawSmall className="h-9 w-auto" />
     </Link>
@@ -55,7 +55,7 @@ export function LinkLogoSmall() {
 
 export function LogoSmall({ className }: { className?: string }) {
   return (
-    <Link href="/" className="text-xl font-bold font-mono">
+    <Link to="/" className="text-xl font-bold font-mono">
       <Image
         src="/logo-small-dark.svg"
         width={50}

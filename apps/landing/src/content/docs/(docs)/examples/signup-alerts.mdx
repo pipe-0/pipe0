@@ -16,9 +16,19 @@ The pipeline runs in one request:
 5. `message:write@1`: draft the alert (only for ICP matches).
 6. `message:send:slack@1`: post the drafted message to Slack.
 
-export const signupAlertPayload = {
+<Tabs items={["pipe0 SDK", "Python", "cURL"]}>
+<Tab value="pipe0 SDK">
+
+```typescript
+import { Pipe0 } from "@pipe0/client";
+
+const pipe0 = new Pipe0({ apiKey: process.env.PIPE0_API_KEY });
+
+const result = await pipe0.pipes.pipe({
   pipes: [
-    { pipe_id: "email:iswork@1" },
+    {
+      pipe_id: "email:iswork@1",
+    },
     {
       pipe_id: "company:domain:workemail@1",
       run_if: {
@@ -26,14 +36,26 @@ export const signupAlertPayload = {
         when: {
           logic: "and",
           conditions: [
-            { field_name: "is_work_email", operator: "eq", property: "value", value: true },
+            {
+              field_name: "is_work_email",
+              operator: "eq",
+              property: "value",
+              value: true,
+            },
           ],
         },
       },
-      // The pipe expects a `work_email` field. Point it at the signup `email`.
-      config: { input_fields: { work_email: { alias: "email" } } },
+      config: {
+        input_fields: {
+          work_email: {
+            alias: "email",
+          },
+        },
+      },
     },
-    { pipe_id: "company:overview@3" },
+    {
+      pipe_id: "company:overview@3",
+    },
     {
       pipe_id: "prompt:run@1",
       config: {
@@ -78,7 +100,12 @@ Estimated revenue: {{ estimated_revenue | default: "" }}
         when: {
           logic: "and",
           conditions: [
-            { field_name: "is_icp_fit", property: "value", operator: "eq", value: true },
+            {
+              field_name: "is_icp_fit",
+              property: "value",
+              operator: "eq",
+              value: true,
+            },
           ],
         },
       },
@@ -101,22 +128,302 @@ Reason why it is a high-value customer: {{ reason | default: "" }}
         when: {
           logic: "and",
           conditions: [
-            { field_name: "is_icp_fit", property: "value", operator: "eq", value: true },
+            {
+              field_name: "is_icp_fit",
+              property: "value",
+              operator: "eq",
+              value: true,
+            },
           ],
         },
       },
       connector: {
         strategy: "first",
-        connections: [{ type: "vault", connection: "slack_abcd123" }],
+        connections: [
+          {
+            type: "vault",
+            connection: "slack_abcd123",
+          },
+        ],
       },
-      // `message:write@1` stored its output in the `message` field.
-      config: { channel_id: "C0123456789", message: "{{ message }}" },
+      config: {
+        channel_id: "C0123456789",
+        message: "{{ message }}",
+      },
     },
   ],
-  input: [{ id: 1, name: "<NAME>", email: "<EMAIL>" }],
-};
+  input: [
+    {
+      id: 1,
+      name: "<NAME>",
+      email: "<EMAIL>",
+    },
+  ],
+});
+console.log(result);
+```
 
-<RequestExample kind="pipes" payload={signupAlertPayload} />
+</Tab>
+<Tab value="Python">
+
+```python
+import requests
+
+response = requests.post(
+    "https://api.pipe0.com/v1/pipes/run/sync",
+    headers={"Authorization": f"Bearer {API_KEY}"},
+    json={
+        "pipes": [
+            {
+                "pipe_id": "email:iswork@1",
+            },
+            {
+                "pipe_id": "company:domain:workemail@1",
+                "run_if": {
+                    "action": "run",
+                    "when": {
+                        "logic": "and",
+                        "conditions": [
+                            {
+                                "field_name": "is_work_email",
+                                "operator": "eq",
+                                "property": "value",
+                                "value": True,
+                            },
+                        ],
+                    },
+                },
+                "config": {
+                    "input_fields": {
+                        "work_email": {
+                            "alias": "email",
+                        },
+                    },
+                },
+            },
+            {
+                "pipe_id": "company:overview@3",
+            },
+            {
+                "pipe_id": "prompt:run@1",
+                "config": {
+                    "model": "google-low",
+                    "prompt": {
+                        "template": """
+Your task is to determine if the user's current employer aligns with the ideal customer profile for our business, pipe0.
+
+[Business Description]
+pipe0 is an enrichment framework designed to help businesses add features around data enrichment into their own software applications.
+
+[Ideal Customer Attributes]
+
+The company either offers or is involved in developing products that can benefit from data enrichment.
+
+Such companies often target use cases around: AI agents, customer relationship management, applicant tracking, account research, investor intelligence, or
+workflow automation.
+
+Alternatively, the user can be a go-to-market professional using data enrichment to automate their own
+go-to-market workflows.
+
+The user's employer should have a need for prospecting, lead generation, or sales intelligence tools.
+
+[Available Information]
+To make your assessment, use the following information:
+Company description: {{ company_description | default: "" }}
+Company industry: {{ company_industry | default: "" }}
+Company headcount: {{ headcount | default: "" }}
+Estimated revenue: {{ estimated_revenue | default: "" }}
+
+[Output]
+{% output is_icp_fit, type: "boolean", description: "A boolean flag indicating if the latest employer matches the ICP profile of the business. If no information is found or the user has no current employer, set to false." %}
+{% output reason, type: "string", description: "An explanation of how you arrived at your conclusion." %}
+          """,
+                    },
+                },
+            },
+            {
+                "pipe_id": "message:write@1",
+                "run_if": {
+                    "action": "run",
+                    "when": {
+                        "logic": "and",
+                        "conditions": [
+                            {
+                                "field_name": "is_icp_fit",
+                                "property": "value",
+                                "operator": "eq",
+                                "value": True,
+                            },
+                        ],
+                    },
+                },
+                "config": {
+                    "model": "google-low",
+                    "template": """
+Notify the pipe0 team that a high-value customer signed up to the platform.
+
+Give the team the following information:
+Name of the user: {{ name | default: "" }}
+Company the user works for: {{ company_domain | default: "" }}
+Reason why it is a high-value customer: {{ reason | default: "" }}
+        """,
+                },
+            },
+            {
+                "pipe_id": "message:send:slack@1",
+                "run_if": {
+                    "action": "run",
+                    "when": {
+                        "logic": "and",
+                        "conditions": [
+                            {
+                                "field_name": "is_icp_fit",
+                                "property": "value",
+                                "operator": "eq",
+                                "value": True,
+                            },
+                        ],
+                    },
+                },
+                "connector": {
+                    "strategy": "first",
+                    "connections": [
+                        {
+                            "type": "vault",
+                            "connection": "slack_abcd123",
+                        },
+                    ],
+                },
+                "config": {
+                    "channel_id": "C0123456789",
+                    "message": "{{ message }}",
+                },
+            },
+        ],
+        "input": [
+            {
+                "id": 1,
+                "name": "<NAME>",
+                "email": "<EMAIL>",
+            },
+        ],
+    },
+)
+print(response.json())
+```
+
+</Tab>
+<Tab value="cURL">
+
+```bash
+curl -X POST "https://api.pipe0.com/v1/pipes/run/sync" \
+  -H "Authorization: Bearer $API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "pipes": [
+    {
+      "pipe_id": "email:iswork@1"
+    },
+    {
+      "pipe_id": "company:domain:workemail@1",
+      "run_if": {
+        "action": "run",
+        "when": {
+          "logic": "and",
+          "conditions": [
+            {
+              "field_name": "is_work_email",
+              "operator": "eq",
+              "property": "value",
+              "value": true
+            }
+          ]
+        }
+      },
+      "config": {
+        "input_fields": {
+          "work_email": {
+            "alias": "email"
+          }
+        }
+      }
+    },
+    {
+      "pipe_id": "company:overview@3"
+    },
+    {
+      "pipe_id": "prompt:run@1",
+      "config": {
+        "model": "google-low",
+        "prompt": {
+          "template": "\nYour task is to determine if the user'\''s current employer aligns with the ideal customer profile for our business, pipe0.\n\n[Business Description]\npipe0 is an enrichment framework designed to help businesses add features around data enrichment into their own software applications.\n\n[Ideal Customer Attributes]\n\nThe company either offers or is involved in developing products that can benefit from data enrichment.\n\nSuch companies often target use cases around: AI agents, customer relationship management, applicant tracking, account research, investor intelligence, or\nworkflow automation.\n\nAlternatively, the user can be a go-to-market professional using data enrichment to automate their own\ngo-to-market workflows.\n\nThe user'\''s employer should have a need for prospecting, lead generation, or sales intelligence tools.\n\n[Available Information]\nTo make your assessment, use the following information:\nCompany description: {{ company_description | default: \"\" }}\nCompany industry: {{ company_industry | default: \"\" }}\nCompany headcount: {{ headcount | default: \"\" }}\nEstimated revenue: {{ estimated_revenue | default: \"\" }}\n\n[Output]\n{% output is_icp_fit, type: \"boolean\", description: \"A boolean flag indicating if the latest employer matches the ICP profile of the business. If no information is found or the user has no current employer, set to false.\" %}\n{% output reason, type: \"string\", description: \"An explanation of how you arrived at your conclusion.\" %}\n          "
+        }
+      }
+    },
+    {
+      "pipe_id": "message:write@1",
+      "run_if": {
+        "action": "run",
+        "when": {
+          "logic": "and",
+          "conditions": [
+            {
+              "field_name": "is_icp_fit",
+              "property": "value",
+              "operator": "eq",
+              "value": true
+            }
+          ]
+        }
+      },
+      "config": {
+        "model": "google-low",
+        "template": "\nNotify the pipe0 team that a high-value customer signed up to the platform.\n\nGive the team the following information:\nName of the user: {{ name | default: \"\" }}\nCompany the user works for: {{ company_domain | default: \"\" }}\nReason why it is a high-value customer: {{ reason | default: \"\" }}\n        "
+      }
+    },
+    {
+      "pipe_id": "message:send:slack@1",
+      "run_if": {
+        "action": "run",
+        "when": {
+          "logic": "and",
+          "conditions": [
+            {
+              "field_name": "is_icp_fit",
+              "property": "value",
+              "operator": "eq",
+              "value": true
+            }
+          ]
+        }
+      },
+      "connector": {
+        "strategy": "first",
+        "connections": [
+          {
+            "type": "vault",
+            "connection": "slack_abcd123"
+          }
+        ]
+      },
+      "config": {
+        "channel_id": "C0123456789",
+        "message": "{{ message }}"
+      }
+    }
+  ],
+  "input": [
+    {
+      "id": 1,
+      "name": "<NAME>",
+      "email": "<EMAIL>"
+    }
+  ]
+}'
+```
+
+</Tab>
+</Tabs>
 
 Replace `slack_abcd123` with your Slack vault connection ID, copied exactly as the vault lists it,
 and `C0123456789` with the target channel ID (see [Connections](/docs/connections)).

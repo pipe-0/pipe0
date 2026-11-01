@@ -1,4 +1,4 @@
-import { getBaseUrl } from "@/lib/utils";
+import { getBaseUrl } from "./base-url";
 
 /**
  * Blog authors we manage. Frontmatter names an author by `name` (the short

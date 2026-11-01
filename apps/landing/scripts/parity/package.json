@@ -1,0 +1,9 @@
+{
+  "name": "landing-parity",
+  "private": true,
+  "type": "module",
+  "description": "Checks that compare a candidate deployment with production. Run `npm install` here first; kept out of the workspace so the site build never installs them.",
+  "dependencies": {
+    "playwright": "^1.56.0"
+  }
+}

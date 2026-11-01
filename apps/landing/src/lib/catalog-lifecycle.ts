@@ -1,11 +1,4 @@
-import {
-  getPipeEntry,
-  getSearchEntry,
-  pipeCatalog,
-  PipeId,
-  searchCatalog,
-  SearchId,
-} from "@pipe0/base";
+import { pipeCatalog, PipeId, searchCatalog, SearchId } from "@pipe0/base";
 
 type LifecycleEntry = {
   lifecycle?: { deprecatedOn?: string; replacedBy?: string | null } | null;
@@ -46,36 +39,4 @@ export function resolveCurrentSearch(searchId: SearchId): SearchId | null {
     searchId,
     searchCatalog as Record<string, LifecycleEntry>,
   ) as SearchId | null;
-}
-
-/**
- * For a deprecated catalog page, the id and its final current successor.
- * llms.txt and llms-full.txt move these pages out of the catalog listings:
- * listed next to the current version under the same label, agents pick them
- * up as if they were current.
- */
-export function deprecatedCatalogPage(
-  data: Record<string, unknown>,
-): { id: string; successor: string | null; successorPath: string | null } | null {
-  if (typeof data._pipeId === "string") {
-    const id = data._pipeId as PipeId;
-    if (!getPipeEntry(id).lifecycle?.deprecatedOn) return null;
-    const successor = resolveCurrentPipe(id);
-    return {
-      id,
-      successor,
-      successorPath: successor ? getPipeEntry(successor).docPath : null,
-    };
-  }
-  if (typeof data._searchId === "string") {
-    const id = data._searchId as SearchId;
-    if (!getSearchEntry(id).lifecycle?.deprecatedOn) return null;
-    const successor = resolveCurrentSearch(id);
-    return {
-      id,
-      successor,
-      successorPath: successor ? getSearchEntry(successor).docPath : null,
-    };
-  }
-  return null;
 }

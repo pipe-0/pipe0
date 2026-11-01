@@ -1,0 +1,62 @@
+# Old URLs, answered by the asset layer. On the paths that run the Worker first,
+# src/server.ts reaches these rules through the ASSETS binding, with colons
+# encoded as %3A. Plain paths come first: rules after the first wildcard no
+# longer count as static.
+
+# Blog slugs corrected (2026-08): both paths shipped with a typo in the folder
+# name, so the old URLs stay redirected.
+/blog/the-history-of-slob           /blog/the-history-of-slop            308
+/blog/nextra-use-blog-and-docs-them /blog/nextra-use-blog-and-docs-theme 308
+
+# The two 2025 Clay comparison posts were folded into the maintained compare
+# page (2026-10) so one URL ranks for "pipe0 vs Clay".
+/blog/clay-vs-pipe0   /compare/pipe0-vs-clay 308
+/blog/clay-vs-pipe0-2 /compare/pipe0-vs-clay 308
+
+# Integration pages moved under /docs/sdks/integrations (2026-10). The Vercel AI
+# SDK and TanStack AI pages were removed afterwards, so their URLs point at the
+# integrations overview.
+/docs/sdks/ai-sdk                   /docs/sdks/integrations             307
+/docs/sdks/integrations/ai-sdk      /docs/sdks/integrations             307
+/docs/sdks/integrations/tanstack-ai /docs/sdks/integrations             307
+/docs/sdks/slack-agent              /docs/sdks/integrations/slack-agent 308
+
+# Catalog indexes moved to the top of the docs.
+/docs/pipes/pipes-catalog   /docs/pipe-catalog   308
+/docs/pipes-catalog         /docs/pipe-catalog   308
+/docs/search/search-catalog /docs/search-catalog 308
+
+# Docs restructure (2026-07): flattened pipes/search folders, examples promoted
+# to a top-level section.
+/docs/pipes/advanced/pipes-concepts          /docs/pipes/concepts         308
+/docs/pipes/advanced/pipes-inputs            /docs/pipes/inputs           308
+/docs/pipes/advanced/pipes-request-payload   /docs/pipes/request-payload  308
+/docs/pipes/advanced/pipes-response-object   /docs/pipes/response-object  308
+/docs/pipes/examples                         /docs/examples               308
+/docs/search/examples                        /docs/examples               308
+/docs/search/advanced/pagination             /docs/search/pagination      308
+/docs/search/advanced/search-request-payload /docs/search/request-payload 308
+/docs/search/advanced/search-response-object /docs/search/response-object 308
+
+# Pipe renames (catalog 0.5.x): sheet:row:* became row:*:sheet.
+/docs/pipe-catalog/sheet%3Arow%3Aappend       /docs/pipe-catalog/row:append:sheet       308
+/docs/pipe-catalog/sheet%3Arow%3Aexpandappend /docs/pipe-catalog/row:expandappend:sheet 308
+
+# The markdown twins were served from these paths before.
+/llms.mdx/docs /docs.mdx 308
+
+# One canonical form: no page ends in a slash.
+/*/ /:splat 308
+
+/docs/pipes/pipes-catalog/*   /docs/pipe-catalog/:splat   308
+/docs/pipes-catalog/*         /docs/pipe-catalog/:splat   308
+/docs/search/search-catalog/* /docs/search-catalog/:splat 308
+/docs/pipes/examples/*        /docs/examples/:splat       308
+/docs/search/examples/*       /docs/examples/:splat       308
+
+/docs/pipe-catalog/sheet%3Arow%3Aappend/*       /docs/pipe-catalog/row:append:sheet/:splat       308
+/docs/pipe-catalog/sheet%3Arow%3Aexpandappend/* /docs/pipe-catalog/row:expandappend:sheet/:splat 308
+
+/llms.mdx/docs/*      /docs/:splat.mdx  308
+/llms.mdx/blog/:slug  /blog/:slug.md    308
+/llms.mdx/reviews/:slug /reviews/:slug.md 308

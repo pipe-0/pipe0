@@ -7,14 +7,9 @@ import {
 import { appInfo } from "@/lib/const";
 import { getBaseUrl } from "@/lib/utils";
 
-/** Renders a schema.org JSON-LD script tag. Keep all structured data on this path. */
-export function JsonLd({ data }: { data: Record<string, unknown> }) {
-  return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
-    />
-  );
+/** A schema.org JSON-LD block for a route's head().scripts. */
+export function jsonLd(data: Record<string, unknown>) {
+  return { type: "application/ld+json", children: JSON.stringify(data) };
 }
 
 export const ORG_ID = "https://pipe0.com/#organization";

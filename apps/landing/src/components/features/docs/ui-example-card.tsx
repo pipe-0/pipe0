@@ -1,11 +1,9 @@
-"use client";
-
+import { Link } from "@tanstack/react-router";
 import { DynamicCodeBlock } from "@/components/features/docs/dynamic-code-block";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 import { Code2, ExternalLink, Eye, ZoomIn, ZoomOut } from "lucide-react";
-import Link from "next/link";
 import { ReactNode, useState } from "react";
 
 const ZOOM_LEVELS = [0.75, 0.85, 1];
@@ -82,7 +80,7 @@ export function UiExampleCard({
             </>
           )}
           <Button variant="ghost" size="sm" asChild className="h-7 gap-1.5">
-            <Link href={docsHref}>
+            <Link to={docsHref}>
               <span className="text-xs">Docs</span>
               <ExternalLink className="size-3" />
             </Link>

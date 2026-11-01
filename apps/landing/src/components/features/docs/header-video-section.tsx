@@ -1,8 +1,6 @@
-"use client";
-
 import { LogoSmall } from "@/components/logo";
-import { Loader, Pause, Play, X } from "lucide-react";
-import { ReactNode, useEffect, useRef, useState, useCallback } from "react";
+import { Loader, Play, X } from "lucide-react";
+import { useRef, useState, useCallback } from "react";
 
 // Utility function to extract YouTube video ID from URL
 function getYouTubeVideoId(url: string): string | null {
@@ -22,15 +20,6 @@ export function HeaderVideoSection({ videoUrl }: { videoUrl: string }) {
 
   const videoId = getYouTubeVideoId(videoUrl);
 
-  useEffect(() => {
-    if (!(window as any).YT) {
-      const tag = document.createElement("script");
-      tag.src = "https://www.youtube.com/iframe_api";
-      const firstScriptTag = document.getElementsByTagName("script")[0];
-      firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag);
-    }
-  }, []);
-
   const handlePlay = useCallback(async () => {
     if (!videoId) return;
 
@@ -44,13 +33,6 @@ export function HeaderVideoSection({ videoUrl }: { videoUrl: string }) {
     }, 300); // Match this with your CSS transition duration
   }, [videoId]);
 
-  // Construct YouTube embed URL with parameters
-  const embedUrl = videoId
-    ? `https://www.youtube.com/embed/${videoId}?enablejsapi=1&origin=${
-        typeof window !== "undefined" ? window.location.origin : ""
-      }&autoplay=${isPlaying ? 1 : 0}&rel=0&modestbranding=1`
-    : "";
-
   return (
     <div>
       <div
@@ -61,10 +43,10 @@ export function HeaderVideoSection({ videoUrl }: { videoUrl: string }) {
       >
         <div className="rounded-3xl border-2 border-input bg-background h-[600px] relative">
           {/* YouTube iframe - only render when playing */}
-          {isPlaying && embedUrl && (
+          {isPlaying && videoId && (
             <iframe
               ref={videoRef}
-              src={embedUrl}
+              src={`https://www.youtube.com/embed/${videoId}?origin=${window.location.origin}&autoplay=1&rel=0&modestbranding=1`}
               className="absolute inset-4 w-[calc(100%-2rem)] h-[calc(100%-2rem)] rounded-2xl"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen

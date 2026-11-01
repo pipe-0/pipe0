@@ -1,5 +1,5 @@
 import { Brackets, dotsStyle } from "@/components/grid";
-import Image from "next/image";
+import { Image } from "@/components/image";
 
 /**
  * A still Blender line drawing (assets/illustrations/lineart.py) on the

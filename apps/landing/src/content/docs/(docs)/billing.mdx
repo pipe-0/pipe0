@@ -106,13 +106,39 @@ for the enrichment performed up to the failure.
 ## One-off purchases
 
 You can buy credits at any time, with or without a subscription. Go to "Dashboard" > "Billing" and click
-"Buy credits", enter an amount between $10 and $5,000, and pay through Stripe. Credits land in your balance
+"Buy credits", enter an amount between $10 and $1,000, and pay through Stripe. Credits land in your balance
 within seconds of returning to the dashboard, and the receipt is available from the billing portal.
 
 One-off credits cost $0.035 per credit ($35 per 1,000 credits), about 15% more than credits included in a
 subscription. They never expire and are not subject to the credit rollover cap.
 
 When you spend credits, subscription credits are used first and purchased credits last.
+
+## Auto-recharge
+
+Auto-recharge tops up your balance when it runs low, so your runs keep going. It works with or without a
+subscription. Go to "Dashboard" > "Billing", find "Pay-as-you-go credits", click "Set up" next to Auto-recharge, choose
+a threshold in credits and a recharge amount between $50 and $500, and save a card through Stripe.
+
+When your credits drop below your threshold, we charge your saved card the amount you chose and add credits at the
+one-off price. Stripe emails a receipt for every charge, and each recharge appears in your billing history.
+
+- **Set your threshold for your busiest spend.** The balance is checked about once a minute, so choose a threshold
+  that covers around two minutes of your heaviest usage.
+- **Large runs can still be refused.** A run is refused before it starts if its estimated cost is more than your
+  balance, and that doesn't trigger a recharge. Buy credits first for a run bigger than your balance.
+- **Recharges are limited to five attempts a day.** After that, your balance can run out like any other.
+- **A failed payment turns auto-recharge off.** We email your organization's owners and admins, and you can turn it
+  back on with a working card.
+
+To change your card or add a VAT ID, use the billing portal. You can change the amounts or turn auto-recharge off at
+any time on the same page.
+
+## Low balance emails
+
+On an active subscription, we email your organization's owners and admins once per billing period when your balance
+drops below 25% of your plan's monthly credits. We email them again if a run is refused for lack of credits.
+Organizations with auto-recharge don't get the 25% email.
 
 ## Credit rollover
 

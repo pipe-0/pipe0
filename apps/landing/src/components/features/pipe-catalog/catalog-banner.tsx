@@ -1,7 +1,7 @@
+import { Link } from "@tanstack/react-router";
 import { Brackets, dotsStyle } from "@/components/grid";
 import { ArrowUpRight } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
+import { Image } from "@/components/image";
 
 /**
  * Head of a catalog index: title, one sentence, the request link, and the
@@ -31,7 +31,7 @@ export function CatalogBanner({
           {description}
         </p>
         <Link
-          href={requestHref}
+          to={requestHref}
           className="mt-5 inline-flex w-fit items-center gap-1 text-[14px] font-medium text-primary underline decoration-primary/30 underline-offset-4 hover:decoration-primary"
         >
           {requestLabel}

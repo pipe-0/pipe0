@@ -1,5 +1,4 @@
-"use client";
-
+import { Link } from "@tanstack/react-router";
 import { CatalogBanner } from "@/components/features/pipe-catalog/catalog-banner";
 import { ConditionalWrapper } from "@/components/conditional-wrapper";
 import {
@@ -77,9 +76,8 @@ import {
   Building2,
   UserRound,
 } from "lucide-react";
-import Link from "next/link";
-import { useIntentPrefetch } from "@/hooks/use-intent-prefetch";
 import { type ComponentType, type ReactNode, useMemo } from "react";
+import "@pipe0/react/styles";
 
 const dateFormatter = new Intl.DateTimeFormat("en-US", {
   month: "short",
@@ -406,10 +404,9 @@ const PipeCard = ({
   const isNew = (tableEntry.tags as string[]).includes("new");
   const providers = getPipeProvidersInWaterfallOrder(pipeId);
   const href = getPipeDocsURI(pipeId);
-  const intentPrefetch = useIntentPrefetch(href);
 
   return (
-    <Link href={href} {...intentPrefetch}>
+    <Link to={href}>
       <Card className="relative flex h-full min-h-[230px] flex-col justify-stretch border-[var(--rule)] transition-colors hover:border-[var(--rule-strong)] hover:bg-[var(--well)]">
         <CardHeader className="pb-1.5">
           <div className="flex items-start justify-between gap-3">

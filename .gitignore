@@ -21,6 +21,8 @@ bower_components/
 # Build artifacts
 .next/
 .turbo
+.tanstack/
+.output/
 out/
 build/
 .source

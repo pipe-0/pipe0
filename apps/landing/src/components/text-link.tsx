@@ -1,20 +1,17 @@
 import { cn } from "@/lib/utils";
-import Link from "next/link";
-import { ComponentProps } from "react";
+import { createLink } from "@tanstack/react-router";
+import { forwardRef, type ComponentPropsWithoutRef } from "react";
 
-export function TextLink({
-  href,
-  children,
-  className,
-  ...rest
-}: ComponentProps<typeof Link>) {
-  return (
-    <Link
-      href={href}
-      className={cn("text-primary hover:underline", className)}
-      {...rest}
-    >
-      {children}
-    </Link>
-  );
-}
+const TextAnchor = forwardRef<HTMLAnchorElement, ComponentPropsWithoutRef<"a">>(
+  function TextAnchor({ className, ...props }, ref) {
+    return (
+      <a
+        ref={ref}
+        className={cn("text-primary hover:underline", className)}
+        {...props}
+      />
+    );
+  },
+);
+
+export const TextLink = createLink(TextAnchor);

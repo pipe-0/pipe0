@@ -1,5 +1,3 @@
-"use client";
-
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -9,48 +7,25 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { cn, copyToClipboard } from "@/lib/utils";
-import { fieldCatalog, RecordFieldType } from "@pipe0/base";
-import { Check, Copy, X } from "lucide-react";
-import { ReactNode, useState } from "react";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { toast } from "sonner";
-
-import { RequiredAsterisk } from "@/components/required-asterisk";
-import { docsLinkPaths } from "@pipe0/doc-links";
-import Link from "next/link";
-import { vscDarkPlus } from "react-syntax-highlighter/dist/cjs/styles/prism";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import type { FieldRowData } from "@/lib/catalog-entry.server";
+import { cn, copyToClipboard } from "@/lib/utils";
+import { Check, Copy } from "lucide-react";
+import { lazy, Suspense, useState } from "react";
+import { toast } from "sonner";
 
-export function findFieldByName(fieldName: string) {
-  return (Object.entries(fieldCatalog).find(([name]) => name === fieldName) ||
-    [])[1];
-}
+const JsonExample = lazy(() => import("./json-example"));
 
-export function FieldRow({
-  fieldName,
-  fieldType,
-  description,
-  required,
-  rightAction,
-  leftAction,
-}: {
-  fieldName: string;
-  fieldType: RecordFieldType;
-  description: string;
-  required?: boolean;
-  rightAction?: ReactNode;
-  leftAction?: ReactNode;
-}) {
-  const jsonExample = findFieldByName(fieldName)?.jsonMeta?.exampleValue;
+export function FieldRow({ field }: { field: FieldRowData }) {
+  const { name, type, description, jsonExample } = field;
 
   const [showSuccess, setShowSuccess] = useState(false);
   const handleCopyToClipboard = () => {
-    copyToClipboard(fieldName);
+    copyToClipboard(name);
     toast("✅ Copied");
     setShowSuccess(true);
     setTimeout(() => {
@@ -63,17 +38,11 @@ export function FieldRow({
       <div className="flex items-center gap-1 min-w-0">
         <Tooltip>
           <TooltipTrigger asChild>
-            <span className="text-sm truncate cursor-default">{fieldName}</span>
+            <span className="text-sm truncate cursor-default">{name}</span>
           </TooltipTrigger>
           <TooltipContent>{description}</TooltipContent>
         </Tooltip>
-        {required === true && (
-          <RequiredAsterisk>This field is required</RequiredAsterisk>
-        )}
-        {required === false && (
-          <span className="text-xs text-muted-foreground">(optional)</span>
-        )}
-        {jsonExample && (
+        {jsonExample ? (
           <Sheet>
             <SheetTrigger asChild>
               <Button
@@ -89,13 +58,13 @@ export function FieldRow({
                 <SheetTitle>Json Example</SheetTitle>
               </SheetHeader>
               <div className="grow overflow-auto">
-                <SyntaxHighlighter language="json" style={vscDarkPlus}>
-                  {JSON.stringify(jsonExample, null, 2)}
-                </SyntaxHighlighter>
+                <Suspense>
+                  <JsonExample value={jsonExample} />
+                </Suspense>
               </div>
             </SheetContent>
           </Sheet>
-        )}
+        ) : null}
         <Button
           onClick={handleCopyToClipboard}
           variant="ghost"
@@ -114,14 +83,12 @@ export function FieldRow({
         </Button>
       </div>
       <div className="flex items-center gap-1.5 shrink-0">
-        {leftAction}
         <Badge
           variant="secondary"
           className="text-xs font-normal h-5 px-1.5 py-0 rounded-md text-muted-foreground w-14 text-center justify-center"
         >
-          {fieldType}
+          {type}
         </Badge>
-        {rightAction}
       </div>
     </div>
   );

@@ -1,5 +1,3 @@
-"use client";
-
 import Link from "fumadocs-core/link";
 import { usePathname } from "fumadocs-core/framework";
 import type { FC } from "react";
@@ -54,14 +52,6 @@ export const CatalogAwareSidebarItem: FC<{ item: PageTree.Item }> = ({
   const depth = useFolderDepth();
   const nested = NESTED_MATCH_URLS.has(item.url);
   const active = isActive(item.url, pathname, nested);
-
-  // Catalog entry pages are injected into the tree so the sidebar can resolve
-  // its root on detail pages (see catalogEntryTreePlugin), but only the
-  // catalog index links should be visible.
-  const isHiddenCatalogEntry = [...NESTED_MATCH_URLS].some((url) =>
-    item.url.startsWith(`${url}/`),
-  );
-  if (isHiddenCatalogEntry) return null;
 
   return (
     <Link

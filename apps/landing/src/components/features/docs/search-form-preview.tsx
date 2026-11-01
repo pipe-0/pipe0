@@ -1,37 +1,17 @@
-"use client";
-
-import { UiExampleCard } from "@/components/features/docs/ui-example-card";
+import {
+  FormPreview,
+  toComponentName,
+} from "@/components/features/docs/form-preview";
 import type { SearchId, SearchPayload } from "@pipe0/base";
-import dynamic from "next/dynamic";
-import { useMemo } from "react";
-import "@pipe0/react/styles";
+import { lazy } from "react";
 
-const SearchFormComponents = dynamic(
-  () => import("./search-form-inner").then((mod) => mod.SearchFormInner),
-  {
-    ssr: false,
-    loading: () => <FormSkeleton />,
-  },
+const SearchFormInner = lazy(() =>
+  import("./search-form-inner").then((mod) => ({
+    default: mod.SearchFormInner,
+  })),
 );
 
-function FormSkeleton() {
-  return (
-    <div className="flex flex-col h-full">
-      <div className="h-12 border-b bg-muted/30 animate-pulse" />
-      <div className="flex-1 p-4 space-y-3">
-        <div className="h-4 w-1/3 rounded bg-muted animate-pulse" />
-        <div className="h-9 rounded bg-muted animate-pulse" />
-        <div className="h-4 w-1/4 rounded bg-muted animate-pulse" />
-        <div className="h-24 rounded bg-muted animate-pulse" />
-      </div>
-      <div className="border-t p-3">
-        <div className="h-9 rounded bg-muted animate-pulse" />
-      </div>
-    </div>
-  );
-}
-
-function generateExampleCode(searchId: SearchId, searchLabel: string): string {
+function exampleCode(searchId: SearchId, searchLabel: string) {
   return `import {
   SearchForm,
   SearchFormContent,
@@ -44,7 +24,6 @@ function generateExampleCode(searchId: SearchId, searchLabel: string): string {
   useSearchForm,
 } from "@pipe0/react";
 import { getSearchDefaultPayload } from "@pipe0/base";
-import "@pipe0/react/styles";
 
 export function ${toComponentName(searchId)}Form() {
   const searchForm = useSearchForm({
@@ -61,7 +40,7 @@ export function ${toComponentName(searchId)}Form() {
       className="flex flex-col h-full"
     >
       <SearchFormHeader className="shrink-0 border-b border-input px-4 py-3">
-        <SearchFormTitle label="${escape(searchLabel)}" className="text-sm font-semibold m-0" />
+        <SearchFormTitle label="${searchLabel.replace(/"/g, '\\"')}" className="text-sm font-semibold m-0" />
       </SearchFormHeader>
       <SearchFormContent className="flex-1 overflow-auto min-h-0 p-4 max-h-120">
         {searchForm.sections.map((section) => (
@@ -81,19 +60,6 @@ export function ${toComponentName(searchId)}Form() {
 `;
 }
 
-function toComponentName(searchId: string): string {
-  return searchId
-    .replace(/@.*$/, "")
-    .split(/[:_-]/)
-    .filter(Boolean)
-    .map((s) => s.charAt(0).toUpperCase() + s.slice(1))
-    .join("");
-}
-
-function escape(s: string): string {
-  return s.replace(/"/g, '\\"');
-}
-
 export function SearchFormPreview({
   searchId,
   searchLabel,
@@ -105,22 +71,13 @@ export function SearchFormPreview({
   defaultValues: SearchPayload;
   docsHref: string;
 }) {
-  const code = useMemo(
-    () => generateExampleCode(searchId, searchLabel),
-    [searchId, searchLabel],
-  );
-
   return (
-    <UiExampleCard
-      docsHref={docsHref}
-      code={code}
-      preview={
-        <SearchFormComponents
-          searchId={searchId}
-          searchLabel={searchLabel}
-          defaultValues={defaultValues}
-        />
-      }
-    />
+    <FormPreview docsHref={docsHref} code={exampleCode(searchId, searchLabel)}>
+      <SearchFormInner
+        searchId={searchId}
+        searchLabel={searchLabel}
+        defaultValues={defaultValues}
+      />
+    </FormPreview>
   );
 }
