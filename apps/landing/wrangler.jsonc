@@ -11,6 +11,8 @@
   "routes": [{ "pattern": "pipe0.com/*", "zone_name": "pipe0.com" }],
   "workers_dev": true,
   "observability": { "enabled": true },
+  // Stack traces in Workers logs point at src/ rather than the bundle.
+  "upload_source_maps": true,
   "assets": {
     "directory": "./dist/client",
     "binding": "ASSETS",
