@@ -1,8 +1,7 @@
-import {
+import type {
   FormSection,
   GeneratedInputMeta,
   GeneratedInputMetaMap,
-  inputGuards,
 } from "@pipe0/base";
 
 type StaticOption = { value: string; label?: string };
@@ -194,24 +193,24 @@ export function exampleValueForField(
   if (direct !== undefined) return direct;
 
   if (
-    inputGuards.include_exclude_input(field) ||
-    inputGuards.include_exclude_select_input(field) ||
-    inputGuards.async_include_exclude_select_input(field)
+    field.type === "include_exclude_input" ||
+    field.type === "include_exclude_select_input" ||
+    field.type === "async_include_exclude_select_input"
   ) {
     return { include: deriveIncludeExcludeValues(field), exclude: [] };
   }
 
-  if (inputGuards.range_input(field)) {
+  if (field.type === "range_input") {
     const f = field as GeneratedInputMetaMap["range_input"];
     return { from: f.min ?? 0, to: f.max ?? 100 };
   }
 
-  if (inputGuards.exact_range_input(field)) {
+  if (field.type === "exact_range_input") {
     const f = field as GeneratedInputMetaMap["exact_range_input"];
     return { gt: f.min ?? 0, lt: f.max ?? 100 };
   }
 
-  if (inputGuards.date_range_input(field)) {
+  if (field.type === "date_range_input") {
     return {
       gt: "2024-01-01T00:00:00Z",
       lt: "2024-12-31T23:59:59Z",
@@ -219,16 +218,16 @@ export function exampleValueForField(
   }
 
   if (
-    inputGuards.boolean_input(field) ||
-    inputGuards.nullable_boolean_input(field)
+    field.type === "boolean_input" ||
+    field.type === "nullable_boolean_input"
   ) {
     return true;
   }
 
   if (
-    inputGuards.text_input(field) ||
-    inputGuards.textarea_input(field) ||
-    inputGuards.tagged_text_input(field)
+    field.type === "text_input" ||
+    field.type === "textarea_input" ||
+    field.type === "tagged_text_input"
   ) {
     if ("placeholder" in field && field.placeholder) {
       return String(field.placeholder);
@@ -236,7 +235,7 @@ export function exampleValueForField(
     return placeholderFor(field, "text");
   }
 
-  if (inputGuards.template_input(field) || inputGuards.prompt_input(field)) {
+  if (field.type === "template_input" || field.type === "prompt_input") {
     // Templates use the Liquid subset: {{ field }} refs and, for prompts,
     // {% output %} declarations. Show the syntax, not a bare placeholder.
     const firstInput =
@@ -247,13 +246,13 @@ export function exampleValueForField(
           )?.resolvedName
         : undefined;
     const ref = firstInput ?? "name";
-    if (inputGuards.prompt_input(field)) {
+    if (field.type === "prompt_input") {
       return `Summarize what we know about {{ ${ref} }}. {% output summary, type: "string", description: "A one-line summary" %}`;
     }
     return `Write a short note about {{ ${ref} }}.`;
   }
 
-  if (inputGuards.select_input(field)) {
+  if (field.type === "select_input") {
     const opts = (field as GeneratedInputMetaMap["select_input"]).options;
     if (Array.isArray(opts) && opts.length > 0) {
       return (opts[0] as StaticOption).value;
@@ -261,7 +260,7 @@ export function exampleValueForField(
     return placeholderFor(field, "option");
   }
 
-  if (inputGuards.multi_select_input(field)) {
+  if (field.type === "multi_select_input") {
     const opts = (field as GeneratedInputMetaMap["multi_select_input"]).options;
     if (Array.isArray(opts) && opts.length > 0) {
       return pickStaticValues(opts as StaticOption[], 2);
@@ -269,31 +268,31 @@ export function exampleValueForField(
     return [placeholderFor(field, "option")];
   }
 
-  if (inputGuards.async_multi_select_input(field)) {
+  if (field.type === "async_multi_select_input") {
     return [placeholderFor(field, "option")];
   }
 
   if (
-    inputGuards.ordered_multi_create_input(field) ||
-    inputGuards.multi_create_input(field) ||
-    inputGuards.tagged_ordered_multi_create_input(field)
+    field.type === "ordered_multi_create_input" ||
+    field.type === "multi_create_input" ||
+    field.type === "tagged_ordered_multi_create_input"
   ) {
     return [placeholderFor(field, fieldHint(field, "value"))];
   }
 
-  if (inputGuards.min_max_int_input(field)) {
+  if (field.type === "min_max_int_input") {
     const f = field as GeneratedInputMetaMap["min_max_int_input"];
     return { min: f.min ?? 0, max: f.max ?? 100 };
   }
 
-  if (inputGuards.loose_object_input(field)) {
+  if (field.type === "loose_object_input") {
     const f = field as GeneratedInputMetaMap["loose_object_input"];
     const key = ("keyPlaceholder" in f && f.keyPlaceholder) || "key";
     const value = ("valuePlaceholder" in f && f.valuePlaceholder) || "value";
     return { [String(key)]: String(value) };
   }
 
-  if (inputGuards.fields_select_input(field)) {
+  if (field.type === "fields_select_input") {
     const f = field as GeneratedInputMetaMap["fields_select_input"];
     const min = ("minItems" in f && f.minItems) || 1;
     const names =
@@ -303,7 +302,7 @@ export function exampleValueForField(
     return names.map((field_name) => ({ field_name }));
   }
 
-  if (inputGuards.condition_block_input(field)) {
+  if (field.type === "condition_block_input") {
     const f = field as GeneratedInputMetaMap["condition_block_input"];
     const fieldName =
       ("fieldNamePlaceholder" in f && f.fieldNamePlaceholder) || "email";
@@ -320,7 +319,7 @@ export function exampleValueForField(
     };
   }
 
-  if (inputGuards.context_select_input(field)) {
+  if (field.type === "context_select_input") {
     const def = getOptionsDef(field) as
       | { requires?: { connection?: string } }
       | undefined;
@@ -330,19 +329,19 @@ export function exampleValueForField(
       : `<provider-resolved value>`;
   }
 
-  if (inputGuards.int_input(field) || inputGuards.number_input(field)) {
+  if (field.type === "int_input" || field.type === "number_input") {
     const f = field as
       | GeneratedInputMetaMap["int_input"]
       | GeneratedInputMetaMap["number_input"];
     if (f.min !== undefined && f.min !== null) return f.min;
-    return inputGuards.int_input(field) ? 10 : 1;
+    return field.type === "int_input" ? 10 : 1;
   }
 
-  if (inputGuards.output_field_input(field)) {
+  if (field.type === "output_field_input") {
     return { enabled: true, alias: "" };
   }
 
-  if (inputGuards.json_extraction_input(field)) {
+  if (field.type === "json_extraction_input") {
     return {
       extractions: [
         {
@@ -358,7 +357,7 @@ export function exampleValueForField(
     };
   }
 
-  if (inputGuards.json_schema_input(field)) {
+  if (field.type === "json_schema_input") {
     return {
       type: "object",
       properties: { foo: { type: "string" } },
@@ -366,7 +365,7 @@ export function exampleValueForField(
     };
   }
 
-  if (inputGuards.providers_input(field)) {
+  if (field.type === "providers_input") {
     // Options carry the pipe's real provider order.
     if ("options" in field && Array.isArray(field.options)) {
       const providers = (field.options as StaticOption[])
@@ -377,7 +376,7 @@ export function exampleValueForField(
     return [{ provider: "<provider>" }];
   }
 
-  if (inputGuards.connector_input(field)) {
+  if (field.type === "connector_input") {
     // A made-up connection string fails the vault format validation, so keep
     // the fallback shape empty. Catalog pages inject a provider-prefixed
     // example via the payload when the pipe accepts user connections.
@@ -386,7 +385,7 @@ export function exampleValueForField(
     return { strategy: "first", connections: [] };
   }
 
-  if (inputGuards.pipes_run_if_input(field)) {
+  if (field.type === "pipes_run_if_input") {
     return {
       action: "run",
       when: {

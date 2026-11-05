@@ -1,6 +1,6 @@
+import { Link } from "@tanstack/react-router";
 import { Brackets, dotsStyle } from "@/components/grid";
-import Image from "next/image";
-import Link from "next/link";
+import { Image } from "@/components/image";
 
 /**
  * The three quickstart entry points, in the site's line-grid language: cells
@@ -35,7 +35,7 @@ export function QuickstartCards() {
       {entries.map((entry) => (
         <Link
           key={entry.href}
-          href={entry.href}
+          to={entry.href}
           className="group flex flex-col bg-fd-background no-underline transition-colors hover:bg-[var(--well)]"
         >
           <div

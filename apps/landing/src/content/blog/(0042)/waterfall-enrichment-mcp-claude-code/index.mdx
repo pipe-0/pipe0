@@ -90,12 +90,80 @@ asked and none had it. Misses cost nothing.
 
 The same request works outside Claude Code too:
 
-export const payload = {
-  pipes: [{ pipe_id: "person:workemail:profileurl:waterfall@1" }],
-  input: [{ id: "1", profile_url: "https://www.linkedin.com/in/jane-doe" }],
-};
+<Tabs items={["pipe0 SDK", "Python", "cURL"]} defaultIndex={2}>
+<Tab value="pipe0 SDK">
 
-<RequestExample kind="pipes" payload={payload} defaultTab="curl" />
+```typescript
+import { Pipe0 } from "@pipe0/client";
+
+const pipe0 = new Pipe0({ apiKey: process.env.PIPE0_API_KEY });
+
+const result = await pipe0.pipes.pipe({
+  pipes: [
+    {
+      pipe_id: "person:workemail:profileurl:waterfall@1",
+    },
+  ],
+  input: [
+    {
+      id: "1",
+      profile_url: "https://www.linkedin.com/in/jane-doe",
+    },
+  ],
+});
+console.log(result);
+```
+
+</Tab>
+<Tab value="Python">
+
+```python
+import requests
+
+response = requests.post(
+    "https://api.pipe0.com/v1/pipes/run/sync",
+    headers={"Authorization": f"Bearer {API_KEY}"},
+    json={
+        "pipes": [
+            {
+                "pipe_id": "person:workemail:profileurl:waterfall@1",
+            },
+        ],
+        "input": [
+            {
+                "id": "1",
+                "profile_url": "https://www.linkedin.com/in/jane-doe",
+            },
+        ],
+    },
+)
+print(response.json())
+```
+
+</Tab>
+<Tab value="cURL">
+
+```bash
+curl -X POST "https://api.pipe0.com/v1/pipes/run/sync" \
+  -H "Authorization: Bearer $API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "pipes": [
+    {
+      "pipe_id": "person:workemail:profileurl:waterfall@1"
+    }
+  ],
+  "input": [
+    {
+      "id": "1",
+      "profile_url": "https://www.linkedin.com/in/jane-doe"
+    }
+  ]
+}'
+```
+
+</Tab>
+</Tabs>
 
 ## Change the provider order
 

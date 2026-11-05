@@ -1,0 +1,29 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "pipe0-landing",
+  "main": "./src/server.ts",
+  "compatibility_date": "2026-10-01",
+  "compatibility_flags": ["nodejs_compat"],
+  // The apex serves the site through a route on its proxied DNS record, which
+  // let the cutover from Vercel happen without a DNS gap. www still redirects
+  // to it from Vercel. The workers.dev URL stays for testing; public/_headers
+  // keeps it out of search.
+  "routes": [{ "pattern": "pipe0.com/*", "zone_name": "pipe0.com" }],
+  "workers_dev": true,
+  "observability": { "enabled": true },
+  "assets": {
+    "directory": "./dist/client",
+    "binding": "ASSETS",
+    "html_handling": "drop-trailing-slash",
+    // Assets are served before the Worker by default. These paths need code
+    // first: markdown negotiation on /docs and /blog, raw-colon catalog URLs
+    // and their cards, and the /blog?category= redirect, which the /blog asset
+    // would answer otherwise.
+    "run_worker_first": ["/docs", "/docs/*", "/blog", "/blog/*", "/og/docs/pipe-catalog/*", "/og/docs/search-catalog/*"]
+  },
+  // Replaces the per-instance limiter in /api/chat: isolates do not share
+  // memory, so an in-process counter would not limit anything here.
+  "ratelimits": [
+    { "name": "CHAT_RATE_LIMIT", "namespace_id": "1001", "simple": { "limit": 20, "period": 60 } }
+  ]
+}

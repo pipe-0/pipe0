@@ -1,63 +1,15 @@
-"use client";
-
-import { UiExampleCard } from "@/components/features/docs/ui-example-card";
 import {
-  type FieldAnnotationsType,
-  getPipeInstances,
-  pipesSnippetCatalog,
-  type PipeId,
-  type PipePayload,
-  validatePipesOrError,
-  collectRequirementFields,
-} from "@pipe0/base";
-import dynamic from "next/dynamic";
-import { useMemo } from "react";
-import "@pipe0/react/styles";
-import { ClientPipesPayload } from "@pipe0/client";
+  FormPreview,
+  toComponentName,
+} from "@/components/features/docs/form-preview";
+import type { PipeId } from "@pipe0/base";
+import { lazy } from "react";
 
-const PipeFormComponents = dynamic(
-  () => import("./pipe-form-inner").then((mod) => mod.PipeFormInner),
-  {
-    ssr: false,
-    loading: () => <FormSkeleton />,
-  },
+const PipeFormInner = lazy(() =>
+  import("./pipe-form-inner").then((mod) => ({ default: mod.PipeFormInner })),
 );
 
-function FormSkeleton() {
-  return (
-    <div className="flex flex-col h-full">
-      <div className="h-12 border-b bg-muted/30 animate-pulse" />
-      <div className="flex-1 p-4 space-y-3">
-        <div className="h-4 w-1/3 rounded bg-muted animate-pulse" />
-        <div className="h-9 rounded bg-muted animate-pulse" />
-        <div className="h-4 w-1/4 rounded bg-muted animate-pulse" />
-        <div className="h-24 rounded bg-muted animate-pulse" />
-      </div>
-      <div className="border-t p-3">
-        <div className="h-9 rounded bg-muted animate-pulse" />
-      </div>
-    </div>
-  );
-}
-
-function getFieldAnnotations(payload: PipePayload): FieldAnnotationsType {
-  const [instance] = getPipeInstances([payload]);
-  if (!instance) return {};
-  const annotations: FieldAnnotationsType = {};
-  for (const { field } of collectRequirementFields(
-    instance.getInputRequirement(),
-  )) {
-    annotations[field.resolvedName] = {
-      type: typeof field.type === "function" ? "unknown" : field.type,
-      format: typeof field.format === "function" ? null : field.format,
-      json_metadata: null,
-      label: field.label,
-    };
-  }
-  return annotations;
-}
-
-function generateExampleCode(pipeId: PipeId, pipeLabel: string): string {
+function exampleCode(pipeId: PipeId, pipeLabel: string) {
   return `import {
   PipeForm,
   PipeFormContent,
@@ -70,7 +22,6 @@ function generateExampleCode(pipeId: PipeId, pipeLabel: string): string {
   usePipeForm,
 } from "@pipe0/react";
 import { getPipeDefaultPayload } from "@pipe0/base";
-import "@pipe0/react/styles";
 
 export function ${toComponentName(pipeId)}Form() {
   const pipeForm = usePipeForm({
@@ -86,7 +37,7 @@ export function ${toComponentName(pipeId)}Form() {
       className="flex flex-col h-full"
     >
       <PipeFormHeader className="shrink-0 border-b border-input px-4 py-3">
-        <PipeFormTitle label="${escape(pipeLabel)}" className="text-sm font-semibold m-0" />
+        <PipeFormTitle label="${pipeLabel.replace(/"/g, '\\"')}" className="text-sm font-semibold m-0" />
       </PipeFormHeader>
       <PipeFormContent className="flex-1 overflow-auto min-h-0 p-4 max-h-120">
         {pipeForm.sections.map((section) => (
@@ -106,19 +57,6 @@ export function ${toComponentName(pipeId)}Form() {
 `;
 }
 
-function toComponentName(pipeId: string): string {
-  return pipeId
-    .replace(/@.*$/, "")
-    .split(/[:_-]/)
-    .filter(Boolean)
-    .map((s) => s.charAt(0).toUpperCase() + s.slice(1))
-    .join("");
-}
-
-function escape(s: string): string {
-  return s.replace(/"/g, '\\"');
-}
-
 export function PipeFormPreview({
   pipeId,
   pipeLabel,
@@ -128,40 +66,9 @@ export function PipeFormPreview({
   pipeLabel: string;
   docsHref: string;
 }) {
-  const preview = useMemo(() => {
-    try {
-      const payload = pipesSnippetCatalog[pipeId]?.[0]?.pipes?.[0];
-      if (!payload) return null;
-      const validationContext = validatePipesOrError({
-        config: { environment: "production" },
-        pipes: [payload],
-        field_annotations: getFieldAnnotations(payload),
-      });
-      return { payload, validationContext };
-    } catch {
-      return null;
-    }
-  }, [pipeId]);
-
-  const code = useMemo(
-    () => generateExampleCode(pipeId, pipeLabel),
-    [pipeId, pipeLabel],
-  );
-
-  if (!preview) return null;
-
   return (
-    <UiExampleCard
-      docsHref={docsHref}
-      code={code}
-      preview={
-        <PipeFormComponents
-          pipeId={pipeId}
-          pipeLabel={pipeLabel}
-          defaultValues={preview.payload}
-          validationContext={preview.validationContext}
-        />
-      }
-    />
+    <FormPreview docsHref={docsHref} code={exampleCode(pipeId, pipeLabel)}>
+      <PipeFormInner pipeId={pipeId} pipeLabel={pipeLabel} />
+    </FormPreview>
   );
 }

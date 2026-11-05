@@ -1,9 +1,10 @@
-import { SearchPage } from "@/components/features/docs/search-page";
 import { SearchCatalogHeader } from "@/components/search-catalog-header";
 import { DocsPage } from "fumadocs-ui/layouts/docs/page";
-import type { SearchId } from "@pipe0/base";
+import type { ComponentProps } from "react";
 
-export async function SearchEntryPage({ searchId }: { searchId: string }) {
+export function SearchEntryPage(
+  props: ComponentProps<typeof SearchCatalogHeader>,
+) {
   return (
     <DocsPage
       tableOfContent={{ enabled: false, component: null }}
@@ -11,9 +12,7 @@ export async function SearchEntryPage({ searchId }: { searchId: string }) {
       breadcrumb={{ enabled: false }}
       className="lg:col-[main-start/toc-end] max-w-6xl"
     >
-      <SearchPage searchId={searchId as SearchId}>
-        <SearchCatalogHeader searchId={searchId as SearchId} />
-      </SearchPage>
+      <SearchCatalogHeader {...props} />
     </DocsPage>
   );
 }

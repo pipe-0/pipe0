@@ -1,15 +1,12 @@
-"use client";
-
+import { docLink } from "@/lib/doc-link";
 import { TextLink } from "@/components/text-link";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { hasHighVolume, lowestManagedCredit } from "@/lib/pricing/high-volume";
+import type { PriceView } from "@/lib/catalog-entry.server";
 import { formatCredits } from "@/lib/utils";
-import { listTiers, type ManagedCredits } from "@pipe0/base";
-import { docsLinkPaths } from "@pipe0/doc-links";
 import { Info } from "lucide-react";
 
 /**
@@ -20,20 +17,20 @@ import { Info } from "lucide-react";
  * left-aligned for searches).
  */
 export function HighVolumePriceCell({
-  credits,
+  price,
   unit = "credits",
 }: {
-  credits: ManagedCredits | null;
+  price: PriceView;
   unit?: string;
 }) {
-  if (credits === null) {
+  if (price === null) {
     return <span className="text-muted-foreground">n/a</span>;
   }
 
-  if (!hasHighVolume(credits)) {
+  if (!price.highVolume) {
     return (
       <div>
-        {formatCredits(credits.default) || "Free"}
+        {formatCredits(price.standard) || "Free"}
         <span className="text-muted-foreground ml-1">{unit}</span>
       </div>
     );
@@ -42,14 +39,14 @@ export function HighVolumePriceCell({
   return (
     <div className="space-y-0.5">
       <div className="text-xs text-muted-foreground line-through">
-        {formatCredits(credits.default)} {unit}
+        {formatCredits(price.standard)} {unit}
       </div>
       <div className="inline-flex items-center gap-1">
         <span>
-          {formatCredits(lowestManagedCredit(credits))}
+          {formatCredits(price.lowest)}
           <span className="text-muted-foreground ml-1">{unit}</span>
         </span>
-        <HighVolumePricePopover credits={credits} unit={unit} />
+        <HighVolumePricePopover price={price} unit={unit} />
       </div>
     </div>
   );
@@ -59,14 +56,13 @@ export function HighVolumePriceCell({
  * Info trigger + popover with the full high-volume tier breakdown. Renders
  * nothing when the operation declares no tiers.
  */
-export function HighVolumePricePopover({
-  credits,
-  unit = "credits",
+function HighVolumePricePopover({
+  price: { standard, tiers },
+  unit,
 }: {
-  credits: ManagedCredits;
-  unit?: string;
+  price: NonNullable<PriceView>;
+  unit: string;
 }) {
-  const tiers = listTiers(credits);
   if (tiers.length === 0) return null;
 
   return (
@@ -89,7 +85,7 @@ export function HighVolumePricePopover({
           </p>
         </div>
         <div className="divide-y">
-          <TierRow label="Default" price={credits.default} unit={unit} muted />
+          <TierRow label="Default" price={standard} unit={unit} muted />
           {tiers.map((tier) => (
             <TierRow
               key={tier.level}
@@ -101,7 +97,7 @@ export function HighVolumePricePopover({
           ))}
         </div>
         <div className="border-t p-3">
-          <TextLink href={docsLinkPaths.highUsageBilling} className="text-xs">
+          <TextLink {...docLink("highUsageBilling")} className="text-xs">
             Learn more
           </TextLink>
         </div>

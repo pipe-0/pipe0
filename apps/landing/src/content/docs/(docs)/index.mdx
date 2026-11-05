@@ -20,12 +20,83 @@ You need an API key to run the examples.
 
 Send one record and one pipe. The `person:workemail:waterfall@1` pipe reads `name` and `company_domain` and adds a `work_email` field. You don't configure anything; the pipe knows its inputs and uses the default provider order.
 
-export const enrichPayload = {
-  pipes: [{ pipe_id: "person:workemail:waterfall@1" }],
-  input: [{ id: "1", name: "Jane Doe", company_domain: "pipe0.com" }],
-};
+<Tabs items={["pipe0 SDK", "Python", "cURL"]}>
+<Tab value="pipe0 SDK">
 
-<RequestExample kind="pipes" payload={enrichPayload} />
+```typescript
+import { Pipe0 } from "@pipe0/client";
+
+const pipe0 = new Pipe0({ apiKey: process.env.PIPE0_API_KEY });
+
+const result = await pipe0.pipes.pipe({
+  pipes: [
+    {
+      pipe_id: "person:workemail:waterfall@1",
+    },
+  ],
+  input: [
+    {
+      id: "1",
+      name: "Jane Doe",
+      company_domain: "pipe0.com",
+    },
+  ],
+});
+console.log(result);
+```
+
+</Tab>
+<Tab value="Python">
+
+```python
+import requests
+
+response = requests.post(
+    "https://api.pipe0.com/v1/pipes/run/sync",
+    headers={"Authorization": f"Bearer {API_KEY}"},
+    json={
+        "pipes": [
+            {
+                "pipe_id": "person:workemail:waterfall@1",
+            },
+        ],
+        "input": [
+            {
+                "id": "1",
+                "name": "Jane Doe",
+                "company_domain": "pipe0.com",
+            },
+        ],
+    },
+)
+print(response.json())
+```
+
+</Tab>
+<Tab value="cURL">
+
+```bash
+curl -X POST "https://api.pipe0.com/v1/pipes/run/sync" \
+  -H "Authorization: Bearer $API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "pipes": [
+    {
+      "pipe_id": "person:workemail:waterfall@1"
+    }
+  ],
+  "input": [
+    {
+      "id": "1",
+      "name": "Jane Doe",
+      "company_domain": "pipe0.com"
+    }
+  ]
+}'
+```
+
+</Tab>
+</Tabs>
 
 The response contains your record with the new field, and what the run cost:
 
@@ -56,19 +127,86 @@ The response contains your record with the new field, and what the run cost:
 
 While pipes add fields to records you already have, search creates the records. Use it when you start from a filter ("software engineers in Berlin") instead of a list.
 
-export const searchPayload = {
+<Tabs items={["pipe0 SDK", "Python", "cURL"]}>
+<Tab value="pipe0 SDK">
+
+```typescript
+import { Pipe0 } from "@pipe0/client";
+
+const pipe0 = new Pipe0({ apiKey: process.env.PIPE0_API_KEY });
+
+const result = await pipe0.searches.search({
   search: {
     search_id: "people:profiles:crustdata@3",
     config: {
       limit: 25,
       filters: {
-        current_employment_job_titles: { include: ["Software Engineer"] },
+        current_employment_job_titles: {
+          include: [
+            "Software Engineer",
+          ],
+        },
       },
     },
   },
-};
+});
+console.log(result);
+```
 
-<RequestExample kind="search" payload={searchPayload} />
+</Tab>
+<Tab value="Python">
+
+```python
+import requests
+
+response = requests.post(
+    "https://api.pipe0.com/v1/search/run/sync",
+    headers={"Authorization": f"Bearer {API_KEY}"},
+    json={
+        "search": {
+            "search_id": "people:profiles:crustdata@3",
+            "config": {
+                "limit": 25,
+                "filters": {
+                    "current_employment_job_titles": {
+                        "include": [
+                            "Software Engineer",
+                        ],
+                    },
+                },
+            },
+        },
+    },
+)
+print(response.json())
+```
+
+</Tab>
+<Tab value="cURL">
+
+```bash
+curl -X POST "https://api.pipe0.com/v1/search/run/sync" \
+  -H "Authorization: Bearer $API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "search": {
+    "search_id": "people:profiles:crustdata@3",
+    "config": {
+      "limit": 25,
+      "filters": {
+        "current_employment_job_titles": {
+          "include": [
+            "Software Engineer"
+          ]
+        }
+      }
+    }
+  }
+}'
+```
+
+</Tab>
+</Tabs>
 
 Search and pipe ids end in a version (`@3`). Use the newest version that is not deprecated. See [Versions and deprecation](/docs/versions).
 
@@ -78,17 +216,95 @@ The `results` array of a search response is a valid `input` for a pipes request,
 
 Stack pipes in one request. Each pipe reads the output of the pipes before it:
 
-export const composePayload = {
+<Tabs items={["pipe0 SDK", "Python", "cURL"]}>
+<Tab value="pipe0 SDK">
+
+```typescript
+import { Pipe0 } from "@pipe0/client";
+
+const pipe0 = new Pipe0({ apiKey: process.env.PIPE0_API_KEY });
+
+const result = await pipe0.pipes.pipe({
   pipes: [
-    { pipe_id: "person:name:join@1" },
-    { pipe_id: "person:workemail:waterfall@1" },
+    {
+      pipe_id: "person:name:join@1",
+    },
+    {
+      pipe_id: "person:workemail:waterfall@1",
+    },
   ],
   input: [
-    { id: "1", first_name: "Jane", last_name: "Doe", company_domain: "pipe0.com" },
+    {
+      id: "1",
+      first_name: "Jane",
+      last_name: "Doe",
+      company_domain: "pipe0.com",
+    },
   ],
-};
+});
+console.log(result);
+```
 
-<RequestExample kind="pipes" payload={composePayload} />
+</Tab>
+<Tab value="Python">
+
+```python
+import requests
+
+response = requests.post(
+    "https://api.pipe0.com/v1/pipes/run/sync",
+    headers={"Authorization": f"Bearer {API_KEY}"},
+    json={
+        "pipes": [
+            {
+                "pipe_id": "person:name:join@1",
+            },
+            {
+                "pipe_id": "person:workemail:waterfall@1",
+            },
+        ],
+        "input": [
+            {
+                "id": "1",
+                "first_name": "Jane",
+                "last_name": "Doe",
+                "company_domain": "pipe0.com",
+            },
+        ],
+    },
+)
+print(response.json())
+```
+
+</Tab>
+<Tab value="cURL">
+
+```bash
+curl -X POST "https://api.pipe0.com/v1/pipes/run/sync" \
+  -H "Authorization: Bearer $API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "pipes": [
+    {
+      "pipe_id": "person:name:join@1"
+    },
+    {
+      "pipe_id": "person:workemail:waterfall@1"
+    }
+  ],
+  "input": [
+    {
+      "id": "1",
+      "first_name": "Jane",
+      "last_name": "Doe",
+      "company_domain": "pipe0.com"
+    }
+  ]
+}'
+```
+
+</Tab>
+</Tabs>
 
 The second pipe read `name` even though your input never contained it: `person:name:join@1` created it from `first_name` and `last_name`. Pipes see each other's output. Two pipes can do what one can't.
 

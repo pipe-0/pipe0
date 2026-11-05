@@ -1,0 +1,91 @@
+import AppLink from "@/components/app-link";
+import { SandboxPreview } from "@/components/features/docs/sandbox-preview";
+import { QuickstartCards } from "@/components/features/docs/quickstart-cards";
+import { DocsIllustration } from "@/components/features/docs/docs-illustration";
+import { Card, Cards } from "@/components/features/docs/next-steps-cards";
+import type { MDXComponents } from "mdx/types";
+
+import defaultMdxComponents from "fumadocs-ui/mdx";
+import * as FilesComponents from "fumadocs-ui/components/files";
+import * as TabsComponents from "fumadocs-ui/components/tabs";
+import { Accordion, Accordions } from "fumadocs-ui/components/accordion";
+import { Step, Steps } from "fumadocs-ui/components/steps";
+import {
+  ArrowRightLeft,
+  BarChart3,
+  Bell,
+  Bot,
+  Braces,
+  Clock,
+  CreditCard,
+  Eraser,
+  Gauge,
+  GitBranch,
+  Grid3x3,
+  History,
+  Import,
+  KeyRound,
+  Layers,
+  LayoutTemplate,
+  Link,
+  Mail,
+  Plug,
+  Rocket,
+  Search,
+  Send,
+  Slack,
+  Terminal,
+  Type,
+  Zap,
+} from "lucide-react";
+import { YoutubeEmbed } from "@/components/features/mdx/youtube-embed";
+
+const mdxComponents = {
+  AppLink: AppLink,
+  SandboxPreview: SandboxPreview,
+  QuickstartCards,
+  DocsIllustration,
+  YoutubeEmbed,
+  // Icons MDX uses in <Card icon={...}>. MDX renders in the browser, so this
+  // list stays explicit: all of lucide would land on every docs page.
+  ArrowRightLeft,
+  BarChart3,
+  Bell,
+  Bot,
+  Braces,
+  Clock,
+  CreditCard,
+  Eraser,
+  Gauge,
+  GitBranch,
+  Grid3x3,
+  History,
+  Import,
+  KeyRound,
+  Layers,
+  LayoutTemplate,
+  Link,
+  Mail,
+  Plug,
+  Rocket,
+  Search,
+  Send,
+  Slack,
+  Terminal,
+  Type,
+  Zap,
+  ...defaultMdxComponents,
+  ...TabsComponents,
+  ...FilesComponents,
+  Accordion,
+  Accordions,
+  Step,
+  Steps,
+  // Override the fumadocs default Card/Cards with our "next steps" list.
+  Card,
+  Cards,
+} satisfies MDXComponents;
+
+export function getMDXComponents(components?: MDXComponents): MDXComponents {
+  return { ...mdxComponents, ...components };
+}

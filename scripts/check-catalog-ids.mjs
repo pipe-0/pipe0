@@ -18,12 +18,12 @@ const base = await import(
 const ROOTS = [
   "apps/landing/src/content",
   "apps/landing/src/components",
-  "apps/landing/src/app",
+  "apps/landing/src/routes",
   "apps/landing/src/lib",
   "examples",
 ];
 const EXTENSIONS = /\.(mdx?|tsx?|mjs|js|json)$/;
-const SKIP_DIRS = new Set(["node_modules", "dist", ".next", ".source"]);
+const SKIP_DIRS = new Set(["node_modules", "dist", ".source"]);
 
 // Files that name deprecated ids on purpose. Keep each entry justified.
 const ALLOW_DEPRECATED = new Set([
@@ -32,7 +32,7 @@ const ALLOW_DEPRECATED = new Set([
   // Doc comment illustrating a replacedBy chain.
   "apps/landing/src/lib/catalog-lifecycle.ts",
   // Ask AI prompt: explains that @2 and @3 of a pipe coexist.
-  "apps/landing/src/app/api/chat/ask-ai-instructions.md",
+  "apps/landing/src/lib/chat/ask-ai-instructions.md",
 ]);
 
 // A pipe or search id: lowercase segments joined by ":" and a version.

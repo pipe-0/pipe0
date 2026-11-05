@@ -3,7 +3,7 @@ import { PipeCatalogIndex } from "@/components/features/docs/pipes-catalog-index
 import { DocsPage } from "fumadocs-ui/layouts/docs/page";
 import { Suspense } from "react";
 
-export async function PipeCatalogIndexPage() {
+export function PipeCatalogIndexPage() {
   return (
     <DocsPage
       tableOfContent={{ enabled: false, component: null }}
@@ -14,7 +14,7 @@ export async function PipeCatalogIndexPage() {
         <Suspense>
           <PipeCatalogIndex />
         </Suspense>
-        <PageNav url="/docs/pipe-catalog" />
+        <PageNav />
       </div>
     </DocsPage>
   );

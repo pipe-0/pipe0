@@ -3,7 +3,6 @@ import type {
   LinkItemType,
 } from "fumadocs-ui/layouts/shared";
 import { AlbumIcon, BookOpen, Star } from "lucide-react";
-import { sortedReviews } from "@/app/reviews/review-utils";
 import { LogoRawSmall } from "@/components/logo";
 
 export function getSection(path: string | undefined) {
@@ -33,17 +32,12 @@ export const linkItems: LinkItemType[] = [
     url: "/blog",
     active: "nested-url",
   },
-  // Shown once the first review is published (drafts count in dev).
-  ...(sortedReviews().length > 0
-    ? [
-        {
-          icon: <Star />,
-          text: "Reviews",
-          url: "/reviews",
-          active: "nested-url" as const,
-        },
-      ]
-    : []),
+  {
+    icon: <Star />,
+    text: "Reviews",
+    url: "/reviews",
+    active: "nested-url",
+  },
   {
     type: "icon",
     url: "https://github.com/pipe-0/pipe0",

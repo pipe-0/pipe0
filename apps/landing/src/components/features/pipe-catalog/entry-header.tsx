@@ -1,12 +1,9 @@
-"use client";
-
-import { ProviderTile } from "@/components/features/pipe-catalog/catalog-list-row";
+import { ProviderTile } from "@/components/features/pipe-catalog/provider-tile";
 import { TextLink } from "@/components/text-link";
 import { Button } from "@/components/ui/button";
 import { cn, copyToClipboard } from "@/lib/utils";
-import type { ProviderName } from "@pipe0/base";
 import { Copy } from "lucide-react";
-import { Fragment, type ReactNode } from "react";
+import { type ComponentProps, Fragment, type ReactNode } from "react";
 import { toast } from "sonner";
 
 /**
@@ -19,7 +16,8 @@ export function EntryHeader({
   id,
   label,
   description,
-  providers,
+  provider,
+  providerCount,
   badge,
   deprecated,
   versions,
@@ -29,7 +27,8 @@ export function EntryHeader({
   id: string;
   label: string;
   description: string;
-  providers: readonly ProviderName[];
+  provider: ComponentProps<typeof ProviderTile>["provider"];
+  providerCount: number;
   badge?: ReactNode;
   deprecated?: boolean;
   versions: { displayValue: string; link: string; isDeprecated: boolean }[];
@@ -42,7 +41,7 @@ export function EntryHeader({
       {/* The description hangs beside the title from sm; on a phone that
           indent costs a fifth of the width, so it runs under the tile. */}
       <div className="grid grid-cols-[auto_minmax(0,1fr)] items-start gap-x-4">
-        <ProviderTile providers={providers} />
+        <ProviderTile provider={provider} count={providerCount} />
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
             <h1
@@ -60,7 +59,7 @@ export function EntryHeader({
                   <Fragment key={e.link + index}>
                     <TextLink
                       className={cn("text-[13px]", e.isDeprecated && "line-through")}
-                      href={e.link}
+                      to={e.link}
                     >
                       {e.displayValue}
                     </TextLink>
@@ -95,11 +94,7 @@ export function EntryHeader({
           </Button>
         </div>
         <span>{price}</span>
-        {providers.length > 1 && (
-          <span>
-            {providers.length} providers
-          </span>
-        )}
+        {providerCount > 1 && <span>{providerCount} providers</span>}
       </div>
     </div>
   );

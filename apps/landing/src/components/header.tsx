@@ -1,11 +1,9 @@
-"use client";
-
+import { Link, linkOptions, useMatchRoute } from "@tanstack/react-router";
 import { ChevronDown, Menu } from "lucide-react";
-import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
 import { Brackets, buttonSkin, dotsStyle, frame } from "@/components/grid";
-import Image from "next/image";
+import { Image } from "@/components/image";
 import { LinkLogoSmall } from "@/components/logo";
 import {
   Sheet,
@@ -18,14 +16,12 @@ import { appInfo } from "@/lib/const";
 import { products } from "@/lib/products";
 import { cn } from "@/lib/utils";
 
-type Page = "product" | "api" | "mcp" | "documentation" | "pricing";
-
 /* The API lives in the Products menu; a second top-level entry for it read
    as a duplicate. */
-const navigationItems: { href: string; label: string; page: Page }[] = [
-  { href: "/docs", label: "Docs", page: "documentation" },
-  { href: "/pricing", label: "Pricing", page: "pricing" },
-];
+const navigationItems = linkOptions([
+  { to: "/docs", label: "Docs" },
+  { to: "/pricing", label: "Pricing" },
+]);
 
 /**
  * Products menu.
@@ -127,7 +123,7 @@ function ProductsMenu({ active }: { active: boolean }) {
             {products.map((product, i) => (
               <Link
                 key={product.href}
-                href={product.href}
+                to={product.href}
                 onClick={() => setOpen(false)}
                 onMouseEnter={() => setShown(i)}
                 onFocus={() => setShown(i)}
@@ -156,8 +152,9 @@ function ProductsMenu({ active }: { active: boolean }) {
   );
 }
 
-export function Header({ page }: { page: Page }) {
+export function Header() {
   const [isOpen, setIsOpen] = useState(false);
+  const matchRoute = useMatchRoute();
 
   return (
     <header className="landing sticky top-0 z-50 w-full border-b border-[var(--rule)] bg-background/85 backdrop-blur-lg">
@@ -176,12 +173,19 @@ export function Header({ page }: { page: Page }) {
           </span>
           {/* Dark, semibold labels with a soft pill on hover. */}
           <nav className="hidden items-center gap-1 text-[14.5px] font-semibold text-foreground md:flex [&>*]:rounded-[8px] [&>*]:px-3 [&>*]:py-1.5 [&>*]:transition-colors [&>*:hover]:bg-[var(--well)]">
-            <ProductsMenu active={page === "api" || page === "mcp"} />
+            <ProductsMenu
+              active={
+                !!matchRoute({ to: "/enrichment-api" }) ||
+                !!matchRoute({ to: "/mcp" })
+              }
+            />
             {navigationItems.map((item) => (
               <Link
-                key={item.href}
-                href={item.href}
-                className={cn(item.page === page && "bg-[var(--well)]")}
+                key={item.to}
+                to={item.to}
+                className={cn(
+                  matchRoute({ to: item.to }) && "bg-[var(--well)]",
+                )}
               >
                 {item.label}
               </Link>
@@ -190,15 +194,15 @@ export function Header({ page }: { page: Page }) {
         </div>
 
         <div className="hidden items-center gap-2 md:flex">
-          <Link
-            href={`${appInfo.links.loginUrl}`}
+          <a
+            href={appInfo.links.loginUrl}
             rel="nofollow"
             className="rounded-[8px] px-3 py-1.5 text-[14.5px] font-semibold text-foreground transition-colors hover:bg-[var(--well)]"
           >
             Log in
-          </Link>
-          <Link
-            href={`${appInfo.links.signupUrl}`}
+          </a>
+          <a
+            href={appInfo.links.signupUrl}
             rel="nofollow"
             className={cn(
               "inline-flex h-9 items-center rounded-[8px] border px-4 text-[14.5px] font-medium",
@@ -206,15 +210,15 @@ export function Header({ page }: { page: Page }) {
             )}
           >
             Start free
-          </Link>
+          </a>
         </div>
 
         {/* Mobile */}
         {/* Mobile: the primary action and the menu, both at the logo's
             36px height so the bar balances. */}
         <div className="flex items-center gap-2 md:hidden">
-          <Link
-            href={`${appInfo.links.signupUrl}`}
+          <a
+            href={appInfo.links.signupUrl}
             rel="nofollow"
             className={cn(
               "inline-flex h-9 items-center rounded-[8px] border px-3.5 text-[14.5px] font-medium",
@@ -222,7 +226,7 @@ export function Header({ page }: { page: Page }) {
             )}
           >
             Start free
-          </Link>
+          </a>
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
               <button
@@ -251,12 +255,14 @@ export function Header({ page }: { page: Page }) {
               </SheetHeader>
 
               <div className="flex-1 overflow-y-auto px-4 pb-6 pt-5">
-                <p className="px-1 text-[13px] text-muted-foreground">Products</p>
+                <p className="px-1 text-[13px] text-muted-foreground">
+                  Products
+                </p>
                 <div className="mt-3 space-y-2.5">
                   {products.map((product) => (
                     <Link
                       key={product.href}
-                      href={product.href}
+                      to={product.href}
                       onClick={() => setIsOpen(false)}
                       className="flex items-stretch overflow-hidden rounded-[12px] border border-[var(--rule)] transition-colors active:bg-[var(--well)]"
                     >
@@ -287,13 +293,13 @@ export function Header({ page }: { page: Page }) {
 
                 <ul className="mt-6 border-t border-[var(--rule)]">
                   {navigationItems.map((item) => (
-                    <li key={item.href} className="border-b border-[var(--rule)]">
+                    <li key={item.to} className="border-b border-[var(--rule)]">
                       <Link
-                        href={item.href}
+                        to={item.to}
                         onClick={() => setIsOpen(false)}
                         className={cn(
                           "flex h-12 items-center justify-between px-1 text-[16px] font-medium text-foreground",
-                          item.page === page && "text-primary",
+                          matchRoute({ to: item.to }) && "text-primary",
                         )}
                       >
                         {item.label}
@@ -307,8 +313,8 @@ export function Header({ page }: { page: Page }) {
               </div>
 
               <div className="grid grid-cols-2 gap-2.5 border-t border-[var(--rule)] bg-[var(--well)] p-4">
-                <Link
-                  href={`${appInfo.links.loginUrl}`}
+                <a
+                  href={appInfo.links.loginUrl}
                   rel="nofollow"
                   className={cn(
                     "inline-flex h-11 items-center justify-center rounded-[8px] border text-[15px] font-medium",
@@ -316,9 +322,9 @@ export function Header({ page }: { page: Page }) {
                   )}
                 >
                   Log in
-                </Link>
-                <Link
-                  href={`${appInfo.links.signupUrl}`}
+                </a>
+                <a
+                  href={appInfo.links.signupUrl}
                   rel="nofollow"
                   className={cn(
                     "inline-flex h-11 items-center justify-center rounded-[8px] border text-[15px] font-medium",
@@ -326,7 +332,7 @@ export function Header({ page }: { page: Page }) {
                   )}
                 >
                   Start free
-                </Link>
+                </a>
               </div>
             </SheetContent>
           </Sheet>

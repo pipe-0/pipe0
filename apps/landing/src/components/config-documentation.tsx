@@ -1,5 +1,3 @@
-"use client";
-
 import { OptionsSection } from "@/components/config-documentation-options-section";
 import { DynamicCodeBlock } from "@/components/features/docs/dynamic-code-block";
 import { TextLink } from "@/components/text-link";
@@ -26,17 +24,12 @@ import {
   optionsDefSummary,
 } from "@/lib/docs/build-populated-example";
 import { copyToClipboard } from "@/lib/utils";
-import { docsLinkPaths } from "@pipe0/doc-links";
-import {
+import type { ConfigVocabulary } from "@/lib/catalog-entry.server";
+import type {
   FormSection,
   GeneratedInputMeta,
   GeneratedInputMetaMap,
   IconKey,
-  inputGuards,
-  RECORD_FIELD_FORMATS,
-  RECORD_FIELD_TYPES,
-  RUN_IF_OPERATOR_LABELS,
-  RUN_IF_VALUE_OPERATORS,
 } from "@pipe0/base";
 import {
   Activity,
@@ -85,12 +78,22 @@ import {
   Workflow,
 } from "lucide-react";
 import {
+  createContext,
   PropsWithChildren,
+  use,
   useCallback,
   useEffect,
   useMemo,
   useState,
 } from "react";
+import { useLocation, useNavigate } from "@tanstack/react-router";
+import { docLink } from "@/lib/doc-link";
+
+/** What every field of one config reference reads. */
+const ReferenceContext = createContext<{
+  vocabulary: ConfigVocabulary;
+  examplePayload?: ExamplePayload;
+}>(null!);
 
 const isNumericField = (
   field: GeneratedInputMeta,
@@ -98,9 +101,9 @@ const isNumericField = (
   | GeneratedInputMetaMap["range_input"]
   | GeneratedInputMetaMap["int_input"]
   | GeneratedInputMetaMap["number_input"] =>
-  inputGuards.range_input(field) ||
-  inputGuards.int_input(field) ||
-  inputGuards.number_input(field);
+  field.type === "range_input" ||
+  field.type === "int_input" ||
+  field.type === "number_input";
 
 function FieldIcon({
   type,
@@ -248,7 +251,7 @@ function getConstraintInfo(field: GeneratedInputMeta): string[] {
   const constraints: string[] = [];
 
   if (isNumericField(field)) {
-    const unit = inputGuards.range_input(field) ? field.unit || "" : "";
+    const unit = field.type === "range_input" ? field.unit || "" : "";
 
     if (field.min !== undefined && field.max !== undefined) {
       constraints.push(`${field.min}-${field.max}${unit ? ` ${unit}` : ""}`);
@@ -259,15 +262,15 @@ function getConstraintInfo(field: GeneratedInputMeta): string[] {
     }
   }
 
-  if (inputGuards.min_max_int_input(field)) {
+  if (field.type === "min_max_int_input") {
     if (field.min !== undefined && field.max !== undefined) {
       constraints.push(`${field.min}-${field.max}`);
     }
   }
 
   if (
-    inputGuards.include_exclude_input(field) ||
-    inputGuards.include_exclude_select_input(field)
+    field.type === "include_exclude_input" ||
+    field.type === "include_exclude_select_input"
   ) {
     if (field.maxItems) {
       constraints.push(`max: ${field.maxItems} items`);
@@ -275,9 +278,9 @@ function getConstraintInfo(field: GeneratedInputMeta): string[] {
   }
 
   if (
-    inputGuards.multi_create_input(field) ||
-    inputGuards.ordered_multi_create_input(field) ||
-    inputGuards.tagged_ordered_multi_create_input(field)
+    field.type === "multi_create_input" ||
+    field.type === "ordered_multi_create_input" ||
+    field.type === "tagged_ordered_multi_create_input"
   ) {
     if ("minItems" in field && field.minItems) {
       constraints.push(`min: ${field.minItems} items`);
@@ -287,19 +290,19 @@ function getConstraintInfo(field: GeneratedInputMeta): string[] {
     }
   }
 
-  if (inputGuards.fields_select_input(field)) {
+  if (field.type === "fields_select_input") {
     if ("minItems" in field && field.minItems) {
       constraints.push(`min: ${field.minItems} fields`);
     }
   }
 
-  if (inputGuards.loose_object_input(field)) {
+  if (field.type === "loose_object_input") {
     if ("maxKeys" in field && field.maxKeys) {
       constraints.push(`max: ${field.maxKeys} keys`);
     }
   }
 
-  if (inputGuards.multi_select_input(field)) {
+  if (field.type === "multi_select_input") {
     constraints.push("multiple");
   }
 
@@ -406,16 +409,17 @@ function ConstraintsConfig({ field }: { field: GeneratedInputMeta }) {
 
 function ConfigurationSection({ field }: { field: GeneratedInputMeta }) {
   if (isNumericField(field)) return <NumericConfig field={field} />;
-  if (inputGuards.date_range_input(field))
+  if (field.type === "date_range_input")
     return <DateRangeConfig field={field} />;
-  if (inputGuards.text_input(field) && (field.minLength || field.maxLength))
+  if (field.type === "text_input" && (field.minLength || field.maxLength))
     return <TextConfig field={field} />;
   return <ConstraintsConfig field={field} />;
 }
 
 function ReferencesSection({ field }: { field: GeneratedInputMeta }) {
-  const showFieldFormatOptions = inputGuards.json_extraction_input(field);
-  const showTypeOptions = inputGuards.json_extraction_input(field);
+  const { vocabulary } = use(ReferenceContext);
+  const showFieldFormatOptions = field.type === "json_extraction_input";
+  const showTypeOptions = field.type === "json_extraction_input";
 
   if (!showFieldFormatOptions && !showTypeOptions) return null;
 
@@ -426,7 +430,7 @@ function ReferencesSection({ field }: { field: GeneratedInputMeta }) {
           <h4 className="text-sm font-medium mb-3">Field Format options</h4>
           <div className="max-h-32 overflow-y-auto border rounded-lg p-3">
             <div className="flex flex-wrap gap-1.5">
-              {RECORD_FIELD_FORMATS.map((format, idx) => (
+              {vocabulary.formats.map((format, idx) => (
                 <Badge
                   key={idx}
                   variant="secondary"
@@ -444,7 +448,7 @@ function ReferencesSection({ field }: { field: GeneratedInputMeta }) {
           <h4 className="text-sm font-medium mb-3">Field type options</h4>
           <div className="max-h-32 overflow-y-auto border rounded-lg p-3">
             <div className="flex flex-wrap gap-1.5">
-              {RECORD_FIELD_TYPES.map((type, idx) => (
+              {vocabulary.types.map((type, idx) => (
                 <Badge
                   key={idx}
                   variant="secondary"
@@ -475,26 +479,22 @@ const DATE_OPERATOR_INFO = [
   { symbol: "lte", description: "On or before" },
 ];
 
-const CONDITION_OPERATOR_INFO = RUN_IF_VALUE_OPERATORS.map((symbol) => ({
-  symbol,
-  description: RUN_IF_OPERATOR_LABELS[symbol] ?? symbol,
-}));
-
 function OperatorsSection({ field }: { field: GeneratedInputMeta }) {
+  const { vocabulary } = use(ReferenceContext);
   const isCondition =
-    inputGuards.condition_block_input(field) ||
-    inputGuards.pipes_run_if_input(field);
+    field.type === "condition_block_input" ||
+    field.type === "pipes_run_if_input";
 
   if (
-    !inputGuards.exact_range_input(field) &&
-    !inputGuards.date_range_input(field) &&
+    field.type !== "exact_range_input" &&
+    field.type !== "date_range_input" &&
     !isCondition
   )
     return null;
 
   const operators = isCondition
-    ? CONDITION_OPERATOR_INFO
-    : inputGuards.date_range_input(field)
+    ? vocabulary.conditionOperators
+    : field.type === "date_range_input"
       ? DATE_OPERATOR_INFO
       : OPERATOR_INFO;
 
@@ -512,7 +512,7 @@ function OperatorsSection({ field }: { field: GeneratedInputMeta }) {
             </div>
           ))}
         </div>
-        {inputGuards.date_range_input(field) && (
+        {field.type === "date_range_input" && (
           <p className="text-xs text-muted-foreground mt-2">
             Use ISO 8601 format: YYYY-MM-DDTHH:mm:ssZ
           </p>
@@ -567,7 +567,7 @@ function AutocompleteRequest({
           </>
         )}{" "}
         Resolve them with your{" "}
-        <TextLink href={docsLinkPaths.autocomplete}>public key</TextLink>.
+        <TextLink {...docLink("autocomplete")}>public key</TextLink>.
       </p>
       <DynamicCodeBlock lang="bash" code={code} />
       <p className="text-xs text-muted-foreground mt-2">
@@ -577,13 +577,8 @@ function AutocompleteRequest({
   );
 }
 
-function FieldDocumentation({
-  field,
-  examplePayload,
-}: {
-  field: GeneratedInputMeta;
-  examplePayload?: ExamplePayload;
-}) {
+function FieldDocumentation({ field }: { field: GeneratedInputMeta }) {
+  const { examplePayload } = use(ReferenceContext);
   const codeExample = generateFieldExampleSnippet(field, examplePayload);
   const sourceSummary = optionsDefSummary(field);
   const source = autocompleteSourceFor(field);
@@ -648,16 +643,20 @@ function FieldAnchorButton({
   onCopied?: () => void;
 }) {
   const [copied, setCopied] = useState(false);
+  const navigate = useNavigate();
 
   const trigger = (e: React.SyntheticEvent) => {
     e.stopPropagation();
     e.preventDefault();
-    if (typeof window === "undefined") return;
     const url = `${window.location.origin}${window.location.pathname}#${fieldPath}`;
     void navigator.clipboard?.writeText(url);
-    if (window.history && window.location.hash !== `#${fieldPath}`) {
-      window.history.replaceState(null, "", `#${fieldPath}`);
-    }
+    void navigate({
+      to: ".",
+      hash: fieldPath,
+      replace: true,
+      resetScroll: false,
+      hashScrollIntoView: false,
+    });
     setCopied(true);
     onCopied?.();
     setTimeout(() => setCopied(false), 1200);
@@ -688,13 +687,7 @@ function FieldAnchorButton({
   );
 }
 
-function FieldAccordionItem({
-  field,
-  examplePayload,
-}: {
-  field: GeneratedInputMeta;
-  examplePayload?: ExamplePayload;
-}) {
+function FieldAccordionItem({ field }: { field: GeneratedInputMeta }) {
   const hasRequired = "required" in field && field.required;
   const hasAutocomplete = Boolean(autocompleteSourceFor(field));
 
@@ -741,7 +734,7 @@ function FieldAccordionItem({
         </div>
       </AccordionTrigger>
       <AccordionContent className="px-2.5 pt-4 pb-6">
-        <FieldDocumentation field={field} examplePayload={examplePayload} />
+        <FieldDocumentation field={field} />
       </AccordionContent>
     </AccordionItem>
   );
@@ -749,7 +742,7 @@ function FieldAccordionItem({
 
 interface FilterDocumentationProps {
   formConfig: FormSection[];
-  searchable?: boolean;
+  vocabulary: ConfigVocabulary;
   /**
    * The payload the page is documenting (a pipe's snippet payload or a
    * search's snippet payload). Field examples prefer the real value found at
@@ -828,11 +821,9 @@ function buildFilteredSections(
 function GroupBlock({
   group,
   forceOpenFieldPaths,
-  examplePayload,
 }: {
   group: FilteredGroup;
   forceOpenFieldPaths: Set<string>;
-  examplePayload?: ExamplePayload;
 }) {
   const [userOpenItems, setUserOpenItems] = useState<string[] | null>(null);
 
@@ -875,11 +866,7 @@ function GroupBlock({
         className="px-3"
       >
         {group.fields.map((field) => (
-          <FieldAccordionItem
-            key={field.path}
-            field={field}
-            examplePayload={examplePayload}
-          />
+          <FieldAccordionItem key={field.path} field={field} />
         ))}
       </Accordion>
     </div>
@@ -888,22 +875,11 @@ function GroupBlock({
 
 export function PayloadDocumenation({
   formConfig,
-  searchable,
+  vocabulary,
   examplePayload,
 }: FilterDocumentationProps) {
   const [query, setQuery] = useState("");
-  const [hashField, setHashField] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const apply = () => {
-      const hash = window.location.hash.replace(/^#/, "");
-      setHashField(hash || null);
-    };
-    apply();
-    window.addEventListener("hashchange", apply);
-    return () => window.removeEventListener("hashchange", apply);
-  }, []);
+  const hashField = useLocation({ select: (location) => location.hash });
 
   useEffect(() => {
     if (!hashField) return;
@@ -952,10 +928,15 @@ export function PayloadDocumenation({
     copyToClipboard(JSON.stringify(populated, null, 2));
   }, [formConfig, examplePayload]);
 
+  const reference = useMemo(
+    () => ({ vocabulary, examplePayload }),
+    [vocabulary, examplePayload],
+  );
+
   return (
-    <div className="space-y-4">
-      <div className="flex flex-wrap items-center gap-2">
-        {searchable && (
+    <ReferenceContext value={reference}>
+      <div className="space-y-4">
+        <div className="flex flex-wrap items-center gap-2">
           <div className="relative flex-1 min-w-[200px]">
             <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground" />
             <Input
@@ -966,68 +947,67 @@ export function PayloadDocumenation({
               className="h-8 pl-8 text-sm"
             />
           </div>
-        )}
-        <div className="flex items-center gap-2 ml-auto">
-          <Button
-            variant="outline"
-            size="sm"
-            className="h-8 gap-1.5"
-            onClick={handleCopyAll}
-          >
-            <Copy className="size-3.5" />
-            Copy example
-          </Button>
-        </div>
-      </div>
-
-      {visibleFields === 0 ? (
-        <div className="rounded-md border border-dashed py-6 text-center text-xs text-muted-foreground">
-          {query.trim()
-            ? `No config keys match "${query}".`
-            : "No config keys."}
-        </div>
-      ) : (
-        <div className="space-y-6">
-          {sections.map((section) => (
-            <section
-              key={section.path}
-              id={`section-${section.path}`}
-              className="space-y-3"
+          <div className="flex items-center gap-2 ml-auto">
+            <Button
+              variant="outline"
+              size="sm"
+              className="h-8 gap-1.5"
+              onClick={handleCopyAll}
             >
-              {(section.label || section.description) && (
-                <div className="space-y-0.5">
-                  {section.label && (
-                    <h3 className="text-base font-semibold tracking-tight">
-                      {section.label}
-                    </h3>
-                  )}
-                  {section.description && (
-                    <p className="text-xs text-muted-foreground">
-                      {section.description}
-                    </p>
-                  )}
-                </div>
-              )}
-              <div className="space-y-3">
-                {section.groups.map((group) => (
-                  <GroupBlock
-                    key={group.groupPath}
-                    group={group}
-                    forceOpenFieldPaths={forceOpenFieldPaths}
-                    examplePayload={examplePayload}
-                  />
-                ))}
-              </div>
-            </section>
-          ))}
+              <Copy className="size-3.5" />
+              Copy example
+            </Button>
+          </div>
         </div>
-      )}
 
-      {searchable && query.trim() && visibleFields > 0 && (
-        <p className="text-[11px] text-muted-foreground">
-          Showing {visibleFields} of {totalFields} fields.
-        </p>
-      )}
-    </div>
+        {visibleFields === 0 ? (
+          <div className="rounded-md border border-dashed py-6 text-center text-xs text-muted-foreground">
+            {query.trim()
+              ? `No config keys match "${query}".`
+              : "No config keys."}
+          </div>
+        ) : (
+          <div className="space-y-6">
+            {sections.map((section) => (
+              <section
+                key={section.path}
+                id={`section-${section.path}`}
+                className="space-y-3"
+              >
+                {(section.label || section.description) && (
+                  <div className="space-y-0.5">
+                    {section.label && (
+                      <h3 className="text-base font-semibold tracking-tight">
+                        {section.label}
+                      </h3>
+                    )}
+                    {section.description && (
+                      <p className="text-xs text-muted-foreground">
+                        {section.description}
+                      </p>
+                    )}
+                  </div>
+                )}
+                <div className="space-y-3">
+                  {section.groups.map((group) => (
+                    <GroupBlock
+                      key={group.groupPath}
+                      group={group}
+                      forceOpenFieldPaths={forceOpenFieldPaths}
+                    />
+                  ))}
+                </div>
+              </section>
+            ))}
+          </div>
+        )}
+
+        {query.trim() && visibleFields > 0 && (
+          <p className="text-[11px] text-muted-foreground">
+            Showing {visibleFields} of {totalFields} fields.
+          </p>
+        )}
+      </div>
+    </ReferenceContext>
   );
 }

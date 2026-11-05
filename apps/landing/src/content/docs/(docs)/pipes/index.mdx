@@ -12,12 +12,83 @@ Pipes add fields to your input records: a work email, a phone number, a full com
 
 This request enriches one <AppLink linkType="inputObject">input object</AppLink>. The pipe `person:workemail:waterfall@1` reads `name` and `company_domain` and adds a `work_email` field.
 
-export const runPayload = {
-  pipes: [{ pipe_id: "person:workemail:waterfall@1" }],
-  input: [{ id: "1", name: "Jane Doe", company_domain: "pipe0.com" }],
-};
+<Tabs items={["pipe0 SDK", "Python", "cURL"]}>
+<Tab value="pipe0 SDK">
 
-<RequestExample kind="pipes" payload={runPayload} />
+```typescript
+import { Pipe0 } from "@pipe0/client";
+
+const pipe0 = new Pipe0({ apiKey: process.env.PIPE0_API_KEY });
+
+const result = await pipe0.pipes.pipe({
+  pipes: [
+    {
+      pipe_id: "person:workemail:waterfall@1",
+    },
+  ],
+  input: [
+    {
+      id: "1",
+      name: "Jane Doe",
+      company_domain: "pipe0.com",
+    },
+  ],
+});
+console.log(result);
+```
+
+</Tab>
+<Tab value="Python">
+
+```python
+import requests
+
+response = requests.post(
+    "https://api.pipe0.com/v1/pipes/run/sync",
+    headers={"Authorization": f"Bearer {API_KEY}"},
+    json={
+        "pipes": [
+            {
+                "pipe_id": "person:workemail:waterfall@1",
+            },
+        ],
+        "input": [
+            {
+                "id": "1",
+                "name": "Jane Doe",
+                "company_domain": "pipe0.com",
+            },
+        ],
+    },
+)
+print(response.json())
+```
+
+</Tab>
+<Tab value="cURL">
+
+```bash
+curl -X POST "https://api.pipe0.com/v1/pipes/run/sync" \
+  -H "Authorization: Bearer $API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "pipes": [
+    {
+      "pipe_id": "person:workemail:waterfall@1"
+    }
+  ],
+  "input": [
+    {
+      "id": "1",
+      "name": "Jane Doe",
+      "company_domain": "pipe0.com"
+    }
+  ]
+}'
+```
+
+</Tab>
+</Tabs>
 
 The response contains one record per input object. `credits.spent` is what the run cost:
 
@@ -50,17 +121,95 @@ The full response carries more metadata than shown here. See the <AppLink linkTy
 
 Stack pipes in one request to build workflows. Each pipe reads the output of the pipes before it:
 
-export const stackPayload = {
+<Tabs items={["pipe0 SDK", "Python", "cURL"]}>
+<Tab value="pipe0 SDK">
+
+```typescript
+import { Pipe0 } from "@pipe0/client";
+
+const pipe0 = new Pipe0({ apiKey: process.env.PIPE0_API_KEY });
+
+const result = await pipe0.pipes.pipe({
   pipes: [
-    { pipe_id: "person:name:join@1" },
-    { pipe_id: "person:workemail:waterfall@1" },
+    {
+      pipe_id: "person:name:join@1",
+    },
+    {
+      pipe_id: "person:workemail:waterfall@1",
+    },
   ],
   input: [
-    { id: "1", first_name: "Jane", last_name: "Doe", company_domain: "pipe0.com" },
+    {
+      id: "1",
+      first_name: "Jane",
+      last_name: "Doe",
+      company_domain: "pipe0.com",
+    },
   ],
-};
+});
+console.log(result);
+```
 
-<RequestExample kind="pipes" payload={stackPayload} />
+</Tab>
+<Tab value="Python">
+
+```python
+import requests
+
+response = requests.post(
+    "https://api.pipe0.com/v1/pipes/run/sync",
+    headers={"Authorization": f"Bearer {API_KEY}"},
+    json={
+        "pipes": [
+            {
+                "pipe_id": "person:name:join@1",
+            },
+            {
+                "pipe_id": "person:workemail:waterfall@1",
+            },
+        ],
+        "input": [
+            {
+                "id": "1",
+                "first_name": "Jane",
+                "last_name": "Doe",
+                "company_domain": "pipe0.com",
+            },
+        ],
+    },
+)
+print(response.json())
+```
+
+</Tab>
+<Tab value="cURL">
+
+```bash
+curl -X POST "https://api.pipe0.com/v1/pipes/run/sync" \
+  -H "Authorization: Bearer $API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "pipes": [
+    {
+      "pipe_id": "person:name:join@1"
+    },
+    {
+      "pipe_id": "person:workemail:waterfall@1"
+    }
+  ],
+  "input": [
+    {
+      "id": "1",
+      "first_name": "Jane",
+      "last_name": "Doe",
+      "company_domain": "pipe0.com"
+    }
+  ]
+}'
+```
+
+</Tab>
+</Tabs>
 
 `person:name:join@1` creates `name` from `first_name` and `last_name`; the email pipe then reads `name` even though your input never contained it. Add <AppLink linkType="pipeline">`run_if` conditions</AppLink> to run pipes only for records that match, or <AppLink linkType="templateTags">templates</AppLink> to feed record fields into LLM prompts.
 

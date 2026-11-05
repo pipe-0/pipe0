@@ -1,5 +1,3 @@
-"use client";
-
 import { useShiki } from "fumadocs-core/highlight/client";
 import { CodeBlock, Pre } from "fumadocs-ui/components/codeblock";
 import { Fragment, Suspense } from "react";

@@ -1,38 +1,26 @@
-"use client";
-
 import type { ComponentProps } from "react";
-import { RootProvider as FumadocsRootProvider } from "fumadocs-ui/provider/next";
-import { themeScriptProps } from "@/lib/theme-script";
+import { RootProvider as FumadocsRootProvider } from "fumadocs-ui/provider/tanstack";
+import { Image } from "@/components/image";
+import { MdxLink } from "@/components/mdx-link";
 
 /**
  * fumadocs' RootProvider with the site-wide settings applied.
  *
- * This has to be a client module: `themeScriptProps` picks the script type by
- * checking for `window`, which only works where it is evaluated. Imported
- * from a server layout, it is always the server value, and the browser gets a
- * live <script> that React warns about.
- *
  * Search runs on a static index built with the site (/api/search, see that
  * route) and is queried in the browser, so typing never calls a function.
  *
- * One theme for the whole site: light is forced everywhere (docs, blog,
- * marketing), and the layouts hide the theme switch.
+ * The site has one light theme, so there is no theme provider.
  */
 export function RootProvider({
-  theme,
   search,
   ...props
 }: ComponentProps<typeof FumadocsRootProvider>) {
   return (
     <FumadocsRootProvider
       {...props}
-      theme={{
-        ...theme,
-        forcedTheme: "light",
-        defaultTheme: "light",
-        enableSystem: false,
-        scriptProps: themeScriptProps,
-      }}
+      // MDX images are plain URLs here (`useImport: false` in source.config).
+      components={{ Image: Image as never, Link: MdxLink }}
+      theme={{ enabled: false }}
       search={{ ...search, options: { type: "static", ...search?.options } }}
     />
   );

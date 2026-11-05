@@ -6,6 +6,13 @@ hold, then sink back so the loop restarts cleanly. Rendered on white so the
 page can lay it on the dotted stage with mix-blend-mode: multiply.
 
 blender -b -P board_anim.py -- out.mp4 [resolution]
+
+The poster, board.webp, is this video's first frame. Re-export it with a new
+render. These flags keep its colors close to how browsers draw the video, so
+nothing shifts when playback takes over:
+
+ffmpeg -i out.mp4 -frames:v 1 -vf "scale=in_color_matrix=bt709:in_range=tv:out_color_matrix=bt709:out_range=pc:flags=accurate_rnd+full_chroma_int+full_chroma_inp+bilinear,format=rgb24" f0.png
+cwebp -q 75 -m 6 -sharp_yuv f0.png -o board.webp
 """
 import bpy, bmesh, math, sys
 from mathutils import Vector

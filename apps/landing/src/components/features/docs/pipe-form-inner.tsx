@@ -1,6 +1,5 @@
-"use client";
-
-import type { PipeId, PipePayload, ValidationContext } from "@pipe0/base";
+import { validateSnippet } from "@/lib/pipes/validate-snippet";
+import { type PipeId, pipesSnippetCatalog } from "@pipe0/base";
 import {
   PipeForm,
   PipeFormContent,
@@ -13,21 +12,25 @@ import {
   usePipeForm,
 } from "@pipe0/react";
 
+import { useMemo } from "react";
+import "@pipe0/react/styles";
+
 export function PipeFormInner({
   pipeId,
   pipeLabel,
-  defaultValues,
-  validationContext,
 }: {
   pipeId: PipeId;
   pipeLabel: string;
-  defaultValues: PipePayload;
-  validationContext?: ValidationContext;
 }) {
+  const { payload, validationContext } = useMemo(() => {
+    const payload = pipesSnippetCatalog[pipeId]![0]!.pipes[0]!;
+    return { payload, validationContext: validateSnippet(payload) };
+  }, [pipeId]);
+
   const pipeForm = usePipeForm({
     pipeId,
     publicKey: "pk_docs_preview",
-    defaultValues,
+    defaultValues: payload,
     validationContext,
   });
 

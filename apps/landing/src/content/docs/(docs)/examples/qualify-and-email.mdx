@@ -14,11 +14,19 @@ This example takes a list of LinkedIn profile URLs and, in a single request:
 
 The last three pipes are gated with [`run_if`](/docs/pipes/run-if), so non-matches never trigger an enrichment, a draft, or a send.
 
-export const qualifyAndEmailPayload = {
+<Tabs items={["pipe0 SDK", "Python", "cURL"]}>
+<Tab value="pipe0 SDK">
+
+```typescript
+import { Pipe0 } from "@pipe0/client";
+
+const pipe0 = new Pipe0({ apiKey: process.env.PIPE0_API_KEY });
+
+const result = await pipe0.pipes.pipe({
   pipes: [
-    // 1. Enrich the full LinkedIn profile from the profile URL.
-    { pipe_id: "person:profile:waterfall@2" },
-    // 2. Decide if the person is an ICP fit, based on the enriched profile.
+    {
+      pipe_id: "person:profile:waterfall@2",
+    },
     {
       pipe_id: "prompt:run@1",
       config: {
@@ -41,7 +49,6 @@ benefit from data enrichment (sales intelligence, prospecting, lead generation).
         },
       },
     },
-    // 3. ICP matches only: resolve a work email from the profile URL.
     {
       pipe_id: "person:workemail:profileurl:waterfall@1",
       run_if: {
@@ -49,12 +56,16 @@ benefit from data enrichment (sales intelligence, prospecting, lead generation).
         when: {
           logic: "and",
           conditions: [
-            { field_name: "is_icp_fit", property: "value", operator: "eq", value: true },
+            {
+              field_name: "is_icp_fit",
+              property: "value",
+              operator: "eq",
+              value: true,
+            },
           ],
         },
       },
     },
-    // 4. ICP matches only: draft a personalized email.
     {
       pipe_id: "email:write@1",
       run_if: {
@@ -62,7 +73,12 @@ benefit from data enrichment (sales intelligence, prospecting, lead generation).
         when: {
           logic: "and",
           conditions: [
-            { field_name: "is_icp_fit", property: "value", operator: "eq", value: true },
+            {
+              field_name: "is_icp_fit",
+              property: "value",
+              operator: "eq",
+              value: true,
+            },
           ],
         },
       },
@@ -83,7 +99,6 @@ Keep it under 120 words and end with a soft call to action to book a quick call.
         `,
       },
     },
-    // 5. Send the drafted email, but only once we actually have a work email.
     {
       pipe_id: "email:send:gmail@1",
       run_if: {
@@ -91,23 +106,295 @@ Keep it under 120 words and end with a soft call to action to book a quick call.
         when: {
           logic: "and",
           conditions: [
-            { field_name: "is_icp_fit", property: "value", operator: "eq", value: true },
-            { field_name: "work_email", property: "status", operator: "eq", value: "completed" },
+            {
+              field_name: "is_icp_fit",
+              property: "value",
+              operator: "eq",
+              value: true,
+            },
+            {
+              field_name: "work_email",
+              property: "status",
+              operator: "eq",
+              value: "completed",
+            },
           ],
         },
       },
       connector: {
         strategy: "first",
-        connections: [{ type: "vault", connection: "gmail_abcd123" }],
+        connections: [
+          {
+            type: "vault",
+            connection: "gmail_abcd123",
+          },
+        ],
       },
-      // To, subject, and body are templated. Reference the upstream fields.
-      config: { to: "{{ work_email }}", reply_to: null, subject: "{{ email_subject }}", body: "{{ email_body }}" },
+      config: {
+        to: "{{ work_email }}",
+        reply_to: null,
+        subject: "{{ email_subject }}",
+        body: "{{ email_body }}",
+      },
     },
   ],
-  input: [{ id: 1, profile_url: "https://www.linkedin.com/in/<HANDLE>" }],
-};
+  input: [
+    {
+      id: 1,
+      profile_url: "https://www.linkedin.com/in/<HANDLE>",
+    },
+  ],
+});
+console.log(result);
+```
 
-<RequestExample kind="pipes" payload={qualifyAndEmailPayload} />
+</Tab>
+<Tab value="Python">
+
+```python
+import requests
+
+response = requests.post(
+    "https://api.pipe0.com/v1/pipes/run/sync",
+    headers={"Authorization": f"Bearer {API_KEY}"},
+    json={
+        "pipes": [
+            {
+                "pipe_id": "person:profile:waterfall@2",
+            },
+            {
+                "pipe_id": "prompt:run@1",
+                "config": {
+                    "model": "google-low",
+                    "prompt": {
+                        "template": """
+You are qualifying a person against our Ideal Customer Profile (ICP).
+
+[Our ICP]
+Go-to-market, RevOps, or founder/leadership roles at B2B software companies that would
+benefit from data enrichment (sales intelligence, prospecting, lead generation).
+
+[The person]
+{{ person_profile_match }}
+
+[Output]
+{% output is_icp_fit, type: "boolean", description: "true only if this person matches the ICP" %}
+{% output reason, type: "string", description: "one short sentence justifying the decision" %}
+          """,
+                    },
+                },
+            },
+            {
+                "pipe_id": "person:workemail:profileurl:waterfall@1",
+                "run_if": {
+                    "action": "run",
+                    "when": {
+                        "logic": "and",
+                        "conditions": [
+                            {
+                                "field_name": "is_icp_fit",
+                                "property": "value",
+                                "operator": "eq",
+                                "value": True,
+                            },
+                        ],
+                    },
+                },
+            },
+            {
+                "pipe_id": "email:write@1",
+                "run_if": {
+                    "action": "run",
+                    "when": {
+                        "logic": "and",
+                        "conditions": [
+                            {
+                                "field_name": "is_icp_fit",
+                                "property": "value",
+                                "operator": "eq",
+                                "value": True,
+                            },
+                        ],
+                    },
+                },
+                "config": {
+                    "model": "google-low",
+                    "persona": "sales",
+                    "signature": "Jane from pipe0",
+                    "template": """
+Write a short, friendly outbound email introducing pipe0, an enrichment framework that helps
+teams add data enrichment into their own products and go-to-market workflows.
+
+Personalize it using what we know about the person:
+{{ person_profile_match }}
+
+Reason they are a good fit: {{ reason | default: "" }}
+
+Keep it under 120 words and end with a soft call to action to book a quick call.
+        """,
+                },
+            },
+            {
+                "pipe_id": "email:send:gmail@1",
+                "run_if": {
+                    "action": "run",
+                    "when": {
+                        "logic": "and",
+                        "conditions": [
+                            {
+                                "field_name": "is_icp_fit",
+                                "property": "value",
+                                "operator": "eq",
+                                "value": True,
+                            },
+                            {
+                                "field_name": "work_email",
+                                "property": "status",
+                                "operator": "eq",
+                                "value": "completed",
+                            },
+                        ],
+                    },
+                },
+                "connector": {
+                    "strategy": "first",
+                    "connections": [
+                        {
+                            "type": "vault",
+                            "connection": "gmail_abcd123",
+                        },
+                    ],
+                },
+                "config": {
+                    "to": "{{ work_email }}",
+                    "reply_to": None,
+                    "subject": "{{ email_subject }}",
+                    "body": "{{ email_body }}",
+                },
+            },
+        ],
+        "input": [
+            {
+                "id": 1,
+                "profile_url": "https://www.linkedin.com/in/<HANDLE>",
+            },
+        ],
+    },
+)
+print(response.json())
+```
+
+</Tab>
+<Tab value="cURL">
+
+```bash
+curl -X POST "https://api.pipe0.com/v1/pipes/run/sync" \
+  -H "Authorization: Bearer $API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "pipes": [
+    {
+      "pipe_id": "person:profile:waterfall@2"
+    },
+    {
+      "pipe_id": "prompt:run@1",
+      "config": {
+        "model": "google-low",
+        "prompt": {
+          "template": "\nYou are qualifying a person against our Ideal Customer Profile (ICP).\n\n[Our ICP]\nGo-to-market, RevOps, or founder/leadership roles at B2B software companies that would\nbenefit from data enrichment (sales intelligence, prospecting, lead generation).\n\n[The person]\n{{ person_profile_match }}\n\n[Output]\n{% output is_icp_fit, type: \"boolean\", description: \"true only if this person matches the ICP\" %}\n{% output reason, type: \"string\", description: \"one short sentence justifying the decision\" %}\n          "
+        }
+      }
+    },
+    {
+      "pipe_id": "person:workemail:profileurl:waterfall@1",
+      "run_if": {
+        "action": "run",
+        "when": {
+          "logic": "and",
+          "conditions": [
+            {
+              "field_name": "is_icp_fit",
+              "property": "value",
+              "operator": "eq",
+              "value": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "pipe_id": "email:write@1",
+      "run_if": {
+        "action": "run",
+        "when": {
+          "logic": "and",
+          "conditions": [
+            {
+              "field_name": "is_icp_fit",
+              "property": "value",
+              "operator": "eq",
+              "value": true
+            }
+          ]
+        }
+      },
+      "config": {
+        "model": "google-low",
+        "persona": "sales",
+        "signature": "Jane from pipe0",
+        "template": "\nWrite a short, friendly outbound email introducing pipe0, an enrichment framework that helps\nteams add data enrichment into their own products and go-to-market workflows.\n\nPersonalize it using what we know about the person:\n{{ person_profile_match }}\n\nReason they are a good fit: {{ reason | default: \"\" }}\n\nKeep it under 120 words and end with a soft call to action to book a quick call.\n        "
+      }
+    },
+    {
+      "pipe_id": "email:send:gmail@1",
+      "run_if": {
+        "action": "run",
+        "when": {
+          "logic": "and",
+          "conditions": [
+            {
+              "field_name": "is_icp_fit",
+              "property": "value",
+              "operator": "eq",
+              "value": true
+            },
+            {
+              "field_name": "work_email",
+              "property": "status",
+              "operator": "eq",
+              "value": "completed"
+            }
+          ]
+        }
+      },
+      "connector": {
+        "strategy": "first",
+        "connections": [
+          {
+            "type": "vault",
+            "connection": "gmail_abcd123"
+          }
+        ]
+      },
+      "config": {
+        "to": "{{ work_email }}",
+        "reply_to": null,
+        "subject": "{{ email_subject }}",
+        "body": "{{ email_body }}"
+      }
+    }
+  ],
+  "input": [
+    {
+      "id": 1,
+      "profile_url": "https://www.linkedin.com/in/<HANDLE>"
+    }
+  ]
+}'
+```
+
+</Tab>
+</Tabs>
 
 How the pipes connect:
 

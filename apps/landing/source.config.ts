@@ -1,5 +1,5 @@
-import { shikiConfig } from "@/lib/shiki";
-import { pipe0CodeTheme } from "@/lib/shiki-theme";
+import { pipe0CodeTheme } from "./src/lib/shiki-theme";
+import { remarkSteps } from "fumadocs-core/mdx-plugins/remark-steps";
 import { pageSchema } from "fumadocs-core/source/schema";
 import {
   applyMdxPreset,
@@ -9,121 +9,65 @@ import {
 } from "fumadocs-mdx/config";
 import jsonSchema from "fumadocs-mdx/plugins/json-schema";
 import lastModified from "fumadocs-mdx/plugins/last-modified";
-import { RemarkAutoTypeTableOptions } from "fumadocs-typescript";
-import type { ElementContent } from "hast";
-import type { ShikiTransformer } from "shiki";
 import { z } from "zod";
 
-function transformerEscape(): ShikiTransformer {
-  return {
-    name: "@shikijs/transformers:remove-notation-escape",
-    code(hast) {
-      function replace(node: ElementContent) {
-        if (node.type === "text") {
-          node.value = node.value.replace("[\\!code", "[!code");
-        } else if ("children" in node) {
-          for (const child of node.children) {
-            replace(child);
-          }
-        }
-      }
-
-      replace(hast);
-      return hast;
-    },
-  };
-}
+/** Shared by the collections that show code and images. */
+const contentOptions = {
+  rehypeCodeOptions: {
+    themes: { light: pipe0CodeTheme, dark: pipe0CodeTheme },
+  },
+  // Keeps /media URLs and writes width and height at compile time.
+  remarkImageOptions: { useImport: false },
+  remarkNpmOptions: { persist: { id: "package-manager" } },
+  remarkPlugins: [remarkSteps],
+};
 
 export const docs = defineDocs({
   dir: "src/content/docs",
   docs: {
+    schema: pageSchema.extend({
+      /** API pages: what <APIPage> needs loaded before it renders. */
+      _openapi: z
+        .looseObject({
+          preload: z.array(z.string()).min(1),
+          operations: z
+            .array(z.object({ path: z.string(), method: z.string() }))
+            .min(1),
+        })
+        .optional(),
+    }),
+    // Compiled pages load on demand, so the first server function in a Worker
+    // isolate does not evaluate every doc.
+    async: true,
     postprocess: {
       includeProcessedMarkdown: true,
     },
-    async mdxOptions(environment) {
-      const { rehypeCodeDefaultOptions } =
-        await import("fumadocs-core/mdx-plugins/rehype-code");
-      const { remarkSteps } =
-        await import("fumadocs-core/mdx-plugins/remark-steps");
-      const { transformerTwoslash } = await import("fumadocs-twoslash");
-      const { createFileSystemTypesCache } =
-        await import("fumadocs-twoslash/cache-fs");
-      const { remarkTypeScriptToJavaScript } =
-        await import("fumadocs-docgen/remark-ts2js");
-      const { default: rehypeKatex } = await import("rehype-katex");
-      const {
-        remarkAutoTypeTable,
-        createGenerator,
-        createFileSystemGeneratorCache,
-      } = await import("fumadocs-typescript");
+    mdxOptions: applyMdxPreset({
+      ...contentOptions,
+      remarkStructureOptions: {
+        stringify: {
+          filterElement(node) {
+            switch (node.type) {
+              case "mdxJsxFlowElement":
+              case "mdxJsxTextElement":
+                switch (node.name) {
+                  case "File":
+                  case "TypeTable":
+                  case "Callout":
+                  case "Card":
+                  case "Custom":
+                    return true;
+                }
+                return "children-only";
+            }
 
-      const typeTableOptions: RemarkAutoTypeTableOptions = {
-        generator: createGenerator({
-          cache: createFileSystemGeneratorCache(".next/fumadocs-typescript"),
-        }),
-        shiki: shikiConfig,
-      };
-      return applyMdxPreset({
-        rehypeCodeOptions: isLint
-          ? false
-          : {
-              langs: ["ts", "js", "html", "tsx", "mdx", "json"],
-              inline: "tailing-curly-colon",
-              themes: {
-                light: pipe0CodeTheme,
-                dark: pipe0CodeTheme,
-              },
-              transformers: [
-                ...(rehypeCodeDefaultOptions.transformers ?? []),
-                transformerTwoslash({
-                  typesCache: createFileSystemTypesCache(),
-                }),
-                transformerEscape(),
-              ],
-            },
-        remarkCodeTabOptions: {
-          parseMdx: true,
-        },
-        remarkStructureOptions: {
-          stringify: {
-            filterElement(node) {
-              switch (node.type) {
-                case "mdxJsxFlowElement":
-                case "mdxJsxTextElement":
-                  switch (node.name) {
-                    case "File":
-                    case "TypeTable":
-                    case "Callout":
-                    case "Card":
-                    case "Custom":
-                      return true;
-                  }
-                  return "children-only";
-              }
-
-              return true;
-            },
+            return true;
           },
         },
-        remarkNpmOptions: {
-          persist: {
-            id: "package-manager",
-          },
-        },
-        remarkPlugins: isLint
-          ? []
-          : [
-              remarkSteps,
-              [remarkAutoTypeTable, typeTableOptions],
-              remarkTypeScriptToJavaScript,
-            ],
-        rehypePlugins: (v) => [rehypeKatex, ...v],
-      })(environment);
-    },
+      },
+    }),
   },
 });
-
-const isLint = process.env.LINT === "1";
 
 export const legal = defineCollections({
   type: "doc",
@@ -134,43 +78,22 @@ export const legal = defineCollections({
   async: true,
 });
 
-/** MDX options shared by the editorial collections (blog, reviews). */
-async function articleMdxOptions(environment: Parameters<ReturnType<typeof applyMdxPreset>>[0]) {
-  const { rehypeCodeDefaultOptions } =
-    await import("fumadocs-core/mdx-plugins/rehype-code");
-  const { remarkSteps } =
-    await import("fumadocs-core/mdx-plugins/remark-steps");
-
-  return applyMdxPreset({
-    rehypeCodeOptions: isLint
-      ? false
-      : {
-          inline: "tailing-curly-colon",
-          themes: {
-            light: pipe0CodeTheme,
-            dark: pipe0CodeTheme,
-          },
-          transformers: [
-            ...(rehypeCodeDefaultOptions.transformers ?? []),
-            transformerEscape(),
-          ],
-        },
-    remarkCodeTabOptions: {
-      parseMdx: true,
-    },
-    remarkNpmOptions: {
-      persist: {
-        id: "package-manager",
-      },
-    },
-    remarkPlugins: isLint ? [] : [remarkSteps],
-  })(environment);
+/** Word-count estimate from the raw MDX. A reader reads one tab of a code example. */
+function readingMinutes(source: string) {
+  const words = source
+    .replace(/^---[\s\S]*?---/, "")
+    .replace(/<\/Tab>[\s\S]*?<\/Tabs>/g, "")
+    .split(/\s+/)
+    .filter(Boolean).length;
+  return Math.max(1, Math.round(words / 220));
 }
 
 export const blog = defineCollections({
   type: "doc",
   dir: "src/content/blog",
-  schema: pageSchema.extend({
+  schema: ({ source }) => pageSchema.extend({
+    /** Filled in at compile time; the Worker has no files to read. */
+    minutes: z.number().default(readingMinutes(source)),
     authors: z
       .array(z.object({ name: z.string(), title: z.string() }))
       .optional(),
@@ -220,7 +143,7 @@ export const blog = defineCollections({
   postprocess: {
     includeProcessedMarkdown: true,
   },
-  mdxOptions: articleMdxOptions,
+  mdxOptions: applyMdxPreset(contentOptions),
 });
 
 const criterion = z.object({
@@ -494,7 +417,7 @@ export const reviews = defineCollections({
   postprocess: {
     includeProcessedMarkdown: true,
   },
-  mdxOptions: articleMdxOptions,
+  mdxOptions: applyMdxPreset(contentOptions),
 });
 
 export default defineConfig({

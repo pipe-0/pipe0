@@ -1,38 +1,5 @@
-import { AskAiButton } from "@/components/ai/ask-ai-button";
-import { CookieBanner } from "@/components/cookie-banner";
-import { Footer } from "@/components/footer";
 import { Band, Brackets, GridCtas } from "@/components/grid";
-import { Header } from "@/components/header";
-import { RevealRoot } from "@/components/reveal-root";
 import type { ReactNode } from "react";
-
-/**
- * The frame every marketing page lives in: the grid header, the page's
- * bands, the footer inside the frame, and the Ask AI button bounded to the
- * frame width. Pages only supply their bands.
- */
-export function LandingShell({
-  page,
-  children,
-}: {
-  page: "product" | "api" | "mcp" | "pricing" | "documentation";
-  children: ReactNode;
-}) {
-  return (
-    <div className="landing min-h-screen overflow-x-clip bg-background">
-      <Header page={page} />
-      {children}
-      {/* Muted ground outside the rails; the footer draws its own white
-          panel and muted copyright row inside them. */}
-      <Band tone="muted" className="border-b-0">
-        <Footer />
-      </Band>
-      <AskAiButton bound="1320px" variant="overlay" />
-      <RevealRoot />
-      <CookieBanner />
-    </div>
-  );
-}
 
 /**
  * A centred page hero: an optional muted lead-in, the title, one sentence,

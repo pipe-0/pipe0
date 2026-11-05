@@ -24,7 +24,6 @@ User-agent: Meta-ExternalAgent
 User-agent: Bytespider
 User-agent: cohere-training-data-crawler
 Disallow: /docs/api
-Disallow: /llms.mdx/docs/api
 Disallow: /llms-full.txt
 Allow: /
 

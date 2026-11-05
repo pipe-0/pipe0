@@ -1,0 +1,7 @@
+{
+  "$schema": "../../../../.source/json-schema/docs.meta.json",
+  "root": true,
+  "title": "Search Catalog",
+  "description": "Browse search datasets",
+  "icon": "Library"
+}

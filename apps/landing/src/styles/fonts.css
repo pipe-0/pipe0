@@ -1,0 +1,53 @@
+@import "@fontsource-variable/geist-mono/wght.css";
+@import "@fontsource-variable/hanken-grotesk/wght.css";
+
+/* next/font loaded 400 to 600, latin only, so bold text rendered at 600. The
+   font's real 700 is wider and rewraps text. */
+@font-face {
+  font-family: "Schibsted Grotesk Variable";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400 600;
+  src: url("@fontsource-variable/schibsted-grotesk/files/schibsted-grotesk-latin-wght-normal.woff2")
+    format("woff2-variations");
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+    U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212,
+    U+2215, U+FEFF, U+FFFD;
+}
+
+/* Metric-adjusted fallbacks: the values next/font generated, so text keeps its
+   layout while the web fonts load. */
+@font-face {
+  font-family: "Schibsted Grotesk Fallback";
+  src: local(Arial);
+  ascent-override: 93.46%;
+  descent-override: 24.67%;
+  line-gap-override: 0%;
+  size-adjust: 104.49%;
+}
+@font-face {
+  font-family: "Geist Mono Fallback";
+  src: local(Arial);
+  ascent-override: 74.67%;
+  descent-override: 21.92%;
+  line-gap-override: 0%;
+  size-adjust: 134.59%;
+}
+@font-face {
+  font-family: "Hanken Grotesk Fallback";
+  src: local(Arial);
+  ascent-override: 99.07%;
+  descent-override: 30.02%;
+  line-gap-override: 0%;
+  size-adjust: 100.94%;
+}
+
+/* On body, not :root. The base font on html resolves these variables and must
+   not see them: pages outside .landing use the system font stack, and setting
+   these any higher would swap that for Schibsted. */
+body {
+  --font-schibsted: "Schibsted Grotesk Variable", "Schibsted Grotesk Fallback";
+  --font-geist-mono: "Geist Mono Variable", "Geist Mono Fallback";
+  --font-hanken: "Hanken Grotesk Variable", "Hanken Grotesk Fallback";
+}
