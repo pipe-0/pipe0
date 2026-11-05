@@ -4,8 +4,11 @@
   "main": "./src/server.ts",
   "compatibility_date": "2026-10-01",
   "compatibility_flags": ["nodejs_compat"],
-  // The rewrite runs on its default workers.dev URL until a custom domain is
-  // attached, unlike the other pipe0 Workers.
+  // The apex serves the site through a route on its proxied DNS record, which
+  // let the cutover from Vercel happen without a DNS gap. www still redirects
+  // to it from Vercel. The workers.dev URL stays for testing; public/_headers
+  // keeps it out of search.
+  "routes": [{ "pattern": "pipe0.com/*", "zone_name": "pipe0.com" }],
   "workers_dev": true,
   "observability": { "enabled": true },
   "assets": {

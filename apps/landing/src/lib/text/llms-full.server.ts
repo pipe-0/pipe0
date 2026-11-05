@@ -2,9 +2,7 @@ import { catalogPages } from "@/lib/catalog.server";
 import { getLLMText } from "@/lib/get-llm-text.server";
 import { source } from "@/lib/source.server";
 
-// cached forever
-
-export async function GET() {
+export async function llmsFullTxt() {
   const docs = await Promise.all(source.getPages().map(getLLMText));
   // Deprecated catalog pages go last, so a reader meets the current version of
   // a pipe or search before the deprecated ones that share its label.

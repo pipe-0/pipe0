@@ -14,6 +14,6 @@ export async function docsMarkdown(slugs: string[]) {
   const text = await markdown(slugs);
   if (text === undefined) return new Response(null, { status: 404 });
   return new Response(text, {
-    headers: { "Content-Type": "text/markdown" },
+    headers: { "Content-Type": "text/markdown; charset=utf-8" },
   });
 }

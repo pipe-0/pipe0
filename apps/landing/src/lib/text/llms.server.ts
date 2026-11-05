@@ -19,7 +19,7 @@ function sectionOf(url: string): string {
   return second && SECTION_LABELS[second] ? second : "docs";
 }
 
-export async function GET() {
+export async function llmsTxt() {
   const lines: string[] = [];
 
   lines.push("# pipe0");

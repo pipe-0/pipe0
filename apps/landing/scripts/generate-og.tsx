@@ -3,7 +3,7 @@
  * because Start's prerenderer reads every response as text, which corrupts
  * PNGs. Cards never change between deploys, so no Worker renders them.
  */
-import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { generate, getImageResponseOptions } from "../src/og/generate";
 import { renderPng } from "../src/og/render";
@@ -30,5 +30,6 @@ for (const { path, title, description } of cards) {
   await write(path, await renderPng(generate({ title, description }), options));
 }
 
-await rm(MANIFEST);
+// The manifest stays in the output. Without the file, each request for it
+// would reach the route, and building the list loads @pipe0/base.
 console.log(`Wrote ${cards.length + 2} social cards`);

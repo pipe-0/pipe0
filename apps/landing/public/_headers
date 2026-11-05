@@ -16,18 +16,23 @@
 /api/search
   Content-Type: application/json
 
-# The extension alone would give text/mdx and application/xml.
-/docs/*.mdx
-  Content-Type: text/markdown
+# Prerendering keeps a response's body but not its headers, so the text routes'
+# types are restated here. Without these, .mdx goes out as text/mdx, and
+# markdown and plain text go out with no charset, which Chrome reads as
+# windows-1252.
+/*.md
+  Content-Type: text/markdown; charset=utf-8
+/*.mdx
+  Content-Type: text/markdown; charset=utf-8
+/*.txt
+  Content-Type: text/plain; charset=utf-8
 /blog/rss.xml
   Content-Type: application/rss+xml; charset=utf-8
 
-# One URL, two representations: src/server.ts picks the twin by Accept. A path
-# can only appear once in this file, so /docs.mdx keeps both of its headers here.
+# One URL, two representations: src/server.ts picks the twin by Accept.
 /docs
   Vary: Accept
 /docs.mdx
-  Content-Type: text/markdown
   Vary: Accept
 /docs/*
   Vary: Accept

@@ -11,9 +11,13 @@ export const source = loader(docs.toFumadocsSource(), {
 
 export type Page = InferPageType<typeof source>;
 
+// Checked against the list vite.config.ts embeds: on the Worker, a catalog URL
+// only gets this far when no prerendered file matched it, and loading the
+// catalog to say no costs two seconds and the isolate.
+const catalogDocPaths = new Set(__CATALOG_DOC_PATHS__);
+
 export const isCatalogEntry = (slugs: string[]) =>
-  slugs.length > 1 &&
-  (slugs[0] === "pipe-catalog" || slugs[0] === "search-catalog");
+  catalogDocPaths.has(`/docs/${slugs.join("/")}`);
 
 /** The social card of a docs URL. */
 export const docsImage = (url: string) => `/og${url}/image.png`;

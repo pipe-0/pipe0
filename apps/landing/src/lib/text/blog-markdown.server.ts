@@ -8,7 +8,7 @@ import { getBaseUrl } from "@/lib/utils";
  * both land here. The header carries what the HTML page shows around the
  * body (author, dates, canonical URL) so a quote keeps its attribution.
  */
-export async function GET({ params: { slug } }: { params: { slug: string } }) {
+export async function blogMarkdown(slug: string) {
   const page = blog.getPage([slug]);
   if (!page || page.data.draft === true) return new Response(null, { status: 404 });
 

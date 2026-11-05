@@ -21,6 +21,15 @@ function publishedSlugs(dir: string) {
     .map((file) => file.split("/").at(-2)!);
 }
 
+/** The page of every pipe and search in the installed catalog. */
+export async function catalogDocPaths() {
+  const { pipeCatalog, searchCatalog } = await import("@pipe0/base");
+  return [
+    ...Object.values(pipeCatalog).map((entry) => entry.docPath),
+    ...Object.values(searchCatalog).map((entry) => entry.docPath),
+  ];
+}
+
 /**
  * The paths Start cannot find on its own. It discovers routes without params,
  * and a crawl stops at pages nothing links to and never sees files outside an
@@ -32,14 +41,11 @@ function publishedSlugs(dir: string) {
  * importing app modules, which would restart the dev server on every edit.
  */
 export async function prerenderPages() {
-  const { pipeCatalog, searchCatalog } = await import("@pipe0/base");
-
   const docs = [
     "/docs/pipe-catalog",
     "/docs/search-catalog",
     ...contentSlugs("docs").map((slug) => (slug ? `/docs/${slug}` : "/docs")),
-    ...Object.values(pipeCatalog).map((entry) => entry.docPath),
-    ...Object.values(searchCatalog).map((entry) => entry.docPath),
+    ...(await catalogDocPaths()),
   ];
 
   const posts = publishedSlugs("blog");

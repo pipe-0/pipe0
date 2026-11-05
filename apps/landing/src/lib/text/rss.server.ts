@@ -11,7 +11,7 @@ function escape(text: string) {
 }
 
 /** RSS 2.0 feed of published posts, newest first. */
-export function GET() {
+export function rssFeed() {
   const base = getBaseUrl();
   const posts = sortedPosts();
 

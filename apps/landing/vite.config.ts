@@ -4,10 +4,13 @@ import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import viteReact from "@vitejs/plugin-react";
 import mdx from "fumadocs-mdx/vite";
 import { defineConfig } from "vite";
-import { prerenderPages } from "./scripts/prerender-pages.ts";
+import { catalogDocPaths, prerenderPages } from "./scripts/prerender-pages.ts";
 
 export default defineConfig(async ({ command }) => ({
   server: { port: 3000 },
+  // The catalog's pages, fixed at build time, so a URL that names none gets
+  // its 404 without loading @pipe0/base (src/lib/source.server.ts).
+  define: { __CATALOG_DOC_PATHS__: JSON.stringify(await catalogDocPaths()) },
   resolve: {
     tsconfigPaths: true,
     // fumadocs-ui depends on a newer lucide-react than the app. Two copies

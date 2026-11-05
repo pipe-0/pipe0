@@ -6,7 +6,7 @@ import { docsImage, source } from "@/lib/source.server";
  * Every social card the build renders. The prerenderer writes text only, so
  * this list reaches scripts/generate-og.tsx, which writes the PNGs.
  */
-export function GET() {
+export function ogManifest() {
   return Response.json([
     ...source.getPages().map((page) => ({
       path: docsImage(page.url),

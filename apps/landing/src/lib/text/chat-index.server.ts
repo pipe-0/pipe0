@@ -3,7 +3,7 @@ import { getLLMText } from "@/lib/get-llm-text.server";
 import { source } from "@/lib/source.server";
 
 /** Docs text for Ask AI, prerendered so the chat Worker reads a file. */
-export async function GET() {
+export async function chatIndex() {
   const docs = await Promise.all(
     source.getPages().map(async (page) => ({
       url: page.url,

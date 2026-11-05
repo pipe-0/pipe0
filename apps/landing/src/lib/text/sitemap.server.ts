@@ -184,7 +184,7 @@ async function entries(): Promise<Entry[]> {
   ];
 }
 
-export async function GET() {
+export async function sitemapXml() {
   return new Response(toXml(await entries()), {
     headers: { "Content-Type": "application/xml" },
   });

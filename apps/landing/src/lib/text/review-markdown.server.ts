@@ -29,7 +29,7 @@ function cell(value: string) {
  * parts the HTML page renders around the prose (score table, verdict,
  * facts, pros and cons, pricing, alternatives, FAQ), in the same order.
  */
-export async function GET({ params: { slug } }: { params: { slug: string } }) {
+export async function reviewMarkdown(slug: string) {
   const page = reviews.getPage([slug]);
   if (!page || !isVisible(page)) return new Response(null, { status: 404 });
 
