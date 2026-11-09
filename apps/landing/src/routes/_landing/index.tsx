@@ -1,5 +1,6 @@
 import { seo } from "@/lib/seo";
 import { createFileRoute } from "@tanstack/react-router";
+import { EventPill } from "@/components/landing/event-pill";
 import { HeroFilm } from "@/components/landing/hero-film";
 import { KnifeLoop } from "@/components/landing/knife-loop";
 import { LandingEconomics } from "@/components/landing/landing-economics";
@@ -121,6 +122,7 @@ function Home() {
             (headline → lede 32px, lede → buttons 36px, buttons → note 14px)
             so each element is visibly attached to the one above it. */}
         <div className="flex flex-col items-center px-6 pb-10 pt-10 text-center sm:px-10 sm:pb-12 sm:pt-12 lg:px-12 lg:pb-12 lg:pt-14">
+          <EventPill />
           {/* The claim, with the knife living in it: its tools are agents,
               and they flip out one by one (app/knife-loop.tsx). Two lines
               from sm; phones wrap freely, but the knife stays with its

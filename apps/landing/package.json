@@ -8,7 +8,7 @@
     "preview": "vite preview",
     "deploy": "pnpm build && wrangler deploy",
     "cf-typegen": "wrangler types",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "fumadocs-mdx && tsc --noEmit",
     "lint": "eslint .",
     "pipe0-deps": "pnpm update @pipe0/base@latest @pipe0/react@latest"
   },
