@@ -14,7 +14,7 @@ type CatalogDeprecationAlertProps = {
   /** The final current successor, resolved through any deprecated hops. */
   successor: { id: string; docPath: string } | null;
 };
-
+// test
 /**
  * Mirrors the markdown notice in the catalog sources, so a reader of the HTML
  * page (human or agent) gets the same instruction: do not use this id, use
