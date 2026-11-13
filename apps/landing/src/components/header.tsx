@@ -2,7 +2,7 @@ import { Link, linkOptions, useMatchRoute } from "@tanstack/react-router";
 import { ChevronDown, Menu } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
-import { Brackets, buttonSkin, dotsStyle, frame } from "@/components/grid";
+import { buttonSkin, frame } from "@/components/grid";
 import { Image } from "@/components/image";
 import { LinkLogoSmall } from "@/components/logo";
 import {
@@ -86,9 +86,9 @@ function ProductsMenu({ active }: { active: boolean }) {
         />
       </button>
 
-      {/* A small mega-menu: the hovered product's Blender drawing on a
-          dotted stage on the left, the products on the right. Anchored to
-          the trigger's left edge so it never runs off the page. */}
+      {/* A small mega-menu: the hovered product's still on the left, the
+          products on the right. Anchored to the trigger's left edge so it
+          never runs off the page. */}
       <div
         className={cn(
           "absolute left-0 top-full z-50 w-[560px] -translate-x-3 pt-3 transition-[opacity,transform] duration-200 ease-out",
@@ -100,20 +100,18 @@ function ProductsMenu({ active }: { active: boolean }) {
         <div className="grid grid-cols-[200px_minmax(0,1fr)] overflow-hidden rounded-[12px] border border-[var(--rule-strong)] bg-background font-normal shadow-[0_1px_2px_rgba(14,17,23,0.06),0_18px_44px_rgba(28,35,80,0.14)]">
           <div
             aria-hidden
-            style={dotsStyle}
-            className="relative border-r border-[var(--rule)]"
+            className="relative border-r border-[var(--rule)] bg-background"
           >
-            <Brackets />
             {products.map((product, i) => (
               <Image
                 key={product.href}
                 src={product.illustration}
                 alt=""
-                width={1600}
-                height={1200}
+                width={1000}
+                height={750}
                 sizes="200px"
                 className={cn(
-                  "absolute inset-0 m-auto h-auto w-[86%] transition-opacity duration-300",
+                  "absolute inset-0 m-auto h-auto w-[92%] mix-blend-multiply transition-opacity duration-300",
                   i === shown ? "opacity-100" : "opacity-0",
                 )}
               />
@@ -130,10 +128,10 @@ function ProductsMenu({ active }: { active: boolean }) {
                 className="group/item flex items-start justify-between gap-4 rounded-[8px] px-4 py-3.5 transition-colors hover:bg-[var(--well)] focus-visible:bg-[var(--well)] focus-visible:outline-none"
               >
                 <span>
-                  <span className="block text-[15px] font-medium text-foreground">
+                  <span className="block text-[16px] font-medium text-foreground">
                     {product.name}
                   </span>
-                  <span className="mt-1 block text-[13.5px] leading-relaxed text-muted-foreground">
+                  <span className="mt-1 block text-[14px] leading-relaxed text-muted-foreground">
                     {product.description}
                   </span>
                 </span>
@@ -172,7 +170,7 @@ export function Header() {
             <LinkLogoSmall />
           </span>
           {/* Dark, semibold labels with a soft pill on hover. */}
-          <nav className="hidden items-center gap-1 text-[14.5px] font-semibold text-foreground md:flex [&>*]:rounded-[8px] [&>*]:px-3 [&>*]:py-1.5 [&>*]:transition-colors [&>*:hover]:bg-[var(--well)]">
+          <nav className="hidden items-center gap-1 text-[14px] font-semibold text-foreground md:flex [&>*]:rounded-[8px] [&>*]:px-3 [&>*]:py-1.5 [&>*]:transition-colors [&>*:hover]:bg-[var(--well)]">
             <ProductsMenu
               active={
                 !!matchRoute({ to: "/enrichment-api" }) ||
@@ -197,7 +195,7 @@ export function Header() {
           <a
             href={appInfo.links.loginUrl}
             rel="nofollow"
-            className="rounded-[8px] px-3 py-1.5 text-[14.5px] font-semibold text-foreground transition-colors hover:bg-[var(--well)]"
+            className="rounded-[8px] px-3 py-1.5 text-[14px] font-semibold text-foreground transition-colors hover:bg-[var(--well)]"
           >
             Log in
           </a>
@@ -205,7 +203,7 @@ export function Header() {
             href={appInfo.links.signupUrl}
             rel="nofollow"
             className={cn(
-              "inline-flex h-9 items-center rounded-[8px] border px-4 text-[14.5px] font-medium",
+              "inline-flex h-9 items-center rounded-[8px] border px-4 text-[14px] font-medium",
               buttonSkin.primary,
             )}
           >
@@ -221,7 +219,7 @@ export function Header() {
             href={appInfo.links.signupUrl}
             rel="nofollow"
             className={cn(
-              "inline-flex h-9 items-center rounded-[8px] border px-3.5 text-[14.5px] font-medium",
+              "inline-flex h-9 items-center rounded-[8px] border px-3.5 text-[14px] font-medium",
               buttonSkin.primary,
             )}
           >
@@ -242,7 +240,7 @@ export function Header() {
               </button>
             </SheetTrigger>
             {/* Mobile menu: the products as illustrated cards (the same
-                Blender drawings as the desktop Products menu), the plain
+                stills as the desktop Products menu), the plain
                 pages as ruled rows, and the two actions pinned to the
                 bottom where a thumb reaches them. */}
             <SheetContent
@@ -255,7 +253,7 @@ export function Header() {
               </SheetHeader>
 
               <div className="flex-1 overflow-y-auto px-4 pb-6 pt-5">
-                <p className="px-1 text-[13px] text-muted-foreground">
+                <p className="px-1 text-[14px] text-muted-foreground">
                   Products
                 </p>
                 <div className="mt-3 space-y-2.5">
@@ -266,24 +264,21 @@ export function Header() {
                       onClick={() => setIsOpen(false)}
                       className="flex items-stretch overflow-hidden rounded-[12px] border border-[var(--rule)] transition-colors active:bg-[var(--well)]"
                     >
-                      <span
-                        style={dotsStyle}
-                        className="relative flex w-[88px] shrink-0 items-center justify-center border-r border-[var(--rule)]"
-                      >
+                      <span className="relative flex w-[88px] shrink-0 items-center justify-center border-r border-[var(--rule)] bg-background">
                         <Image
                           src={product.illustration}
                           alt=""
-                          width={1600}
-                          height={1200}
+                          width={1000}
+                          height={750}
                           sizes="88px"
-                          className="h-auto w-[76px]"
+                          className="h-auto w-[80px] mix-blend-multiply"
                         />
                       </span>
                       <span className="min-w-0 px-3.5 py-3">
-                        <span className="block text-[15px] font-medium text-foreground">
+                        <span className="block text-[16px] font-medium text-foreground">
                           {product.name}
                         </span>
-                        <span className="mt-0.5 block text-[13px] leading-snug text-muted-foreground">
+                        <span className="mt-0.5 block text-[14px] leading-snug text-muted-foreground">
                           {product.description}
                         </span>
                       </span>
@@ -317,7 +312,7 @@ export function Header() {
                   href={appInfo.links.loginUrl}
                   rel="nofollow"
                   className={cn(
-                    "inline-flex h-11 items-center justify-center rounded-[8px] border text-[15px] font-medium",
+                    "inline-flex h-11 items-center justify-center rounded-[8px] border text-[16px] font-medium",
                     buttonSkin.secondary,
                   )}
                 >
@@ -327,7 +322,7 @@ export function Header() {
                   href={appInfo.links.signupUrl}
                   rel="nofollow"
                   className={cn(
-                    "inline-flex h-11 items-center justify-center rounded-[8px] border text-[15px] font-medium",
+                    "inline-flex h-11 items-center justify-center rounded-[8px] border text-[16px] font-medium",
                     buttonSkin.primary,
                   )}
                 >

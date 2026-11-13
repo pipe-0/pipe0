@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { FilmButton } from "@/components/landing/product-film";
-import { Cell, Cells } from "@/components/grid";
+import { Cell, Cells, type } from "@/components/grid";
+import { cn } from "@/lib/utils";
 
 /**
  * Founder note — who is behind this, and the invitation to test.
@@ -30,16 +31,16 @@ export function LandingFounder() {
             <div>
               <Link
                 to="/authors/$slug" params={{ slug: "florian-martens" }}
-                className="text-[15.5px] font-medium text-foreground underline-offset-4 hover:underline"
+                className="text-[16px] font-medium text-foreground underline-offset-4 hover:underline"
               >
                 Florian Martens
               </Link>
-              <p className="text-[13.5px] text-muted-foreground">
+              <p className={cn(type.small, "leading-snug")}>
                 Founder · Berlin and San Francisco
               </p>
             </div>
           </div>
-          <p className="mt-6 text-[14.5px] leading-relaxed text-muted-foreground">
+          <p className={cn("mt-6", type.body)}>
             Built data pipelines at Cloudflare, then joined Cursor as its first
             growth engineering hire and built its GTM data platform.
           </p>
@@ -52,7 +53,7 @@ export function LandingFounder() {
       </Cell>
 
       <Cell className="flex items-center px-6 py-14 sm:px-10 sm:py-20 lg:col-span-8 lg:px-16">
-        <blockquote className="text-balance text-[clamp(20px,1.8vw,24px)] font-medium leading-[1.25] tracking-[-0.03em] text-foreground">
+        <blockquote className={cn("max-w-[42ch] text-pretty", type.heading)}>
           &ldquo;Don&apos;t trust any vendor&apos;s find rate, ours included.
           Run a real list through pipe0 next to your current tool. If the
           difference isn&apos;t obvious, we did something wrong.&rdquo;

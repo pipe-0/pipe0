@@ -1,4 +1,6 @@
-import { Band, Brackets, GridCtas } from "@/components/grid";
+import { Band, Brackets, GridCtas, type } from "@/components/grid";
+import { WellSheet } from "@/components/well-sheet";
+import { cn } from "@/lib/utils";
 import type { ReactNode } from "react";
 
 /**
@@ -34,7 +36,9 @@ export function PageHero({
           </span>
         </h1>
         {lede && (
-          <p className="mx-auto mt-6 max-w-[680px] text-balance text-[17px] leading-[1.55] text-muted-foreground sm:text-[19px]">
+          <p
+            className={cn("mx-auto mt-6 max-w-[680px] text-balance", type.lede)}
+          >
             {lede}
           </p>
         )}
@@ -70,17 +74,28 @@ export function CloseBand({
               "radial-gradient(90% 120% at 88% 0%, rgba(120, 140, 255, 0.45) 0%, transparent 60%), linear-gradient(165deg, #232b94 0%, #2c37b8 55%, #3846d6 100%)",
           }}
         />
+        {/* The well from the homepage, in white: the page ends where its
+            argument does. */}
+        <WellSheet
+          view={{ x: -700, y: -352, w: 1400, h: 560 }}
+          tone="inverse"
+          className="opacity-70"
+        />
         <Brackets inset={14} tone="inverse" />
-        <div className="relative z-10 grid gap-10 lg:grid-cols-12 lg:items-end">
-          <h2 className="text-balance text-[clamp(28px,2.8vw,40px)] font-medium leading-[0.98] tracking-[-0.05em] text-white lg:col-span-8">
-            {title}
-          </h2>
-          <div className="lg:col-span-4">
-            <p className="max-w-[40ch] text-[17px] leading-relaxed text-white/80">
-              {lede}
-            </p>
-            <GridCtas tone="inverse" className="mt-7" />
-          </div>
+        {/* The hero's shape, in white: a centred title, the sentence
+            under it a step smaller, then the way in. */}
+        <div className="relative z-10 sm:mx-auto sm:max-w-[820px] sm:text-center">
+          <h2 className={cn(type.title, "text-white")}>{title}</h2>
+          <p
+            className={cn(
+              "mt-3 max-w-[52ch] text-pretty sm:mx-auto sm:mt-4 sm:text-balance",
+              type.lede,
+              "text-white/75",
+            )}
+          >
+            {lede}
+          </p>
+          <GridCtas tone="inverse" className="mt-8 sm:justify-center" />
         </div>
       </div>
     </Band>

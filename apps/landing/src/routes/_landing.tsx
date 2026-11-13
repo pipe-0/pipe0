@@ -3,12 +3,7 @@ import { CookieBanner } from "@/components/cookie-banner";
 import { Footer } from "@/components/footer";
 import { Band } from "@/components/grid";
 import { Header } from "@/components/header";
-import { RevealRoot } from "@/components/reveal-root";
-import {
-  createFileRoute,
-  Outlet,
-  useRouterState,
-} from "@tanstack/react-router";
+import { createFileRoute, Outlet } from "@tanstack/react-router";
 
 /**
  * The frame every marketing page lives in: the grid header, the page's bands,
@@ -20,12 +15,6 @@ export const Route = createFileRoute("/_landing")({
 });
 
 function LandingLayout() {
-  // The page that has rendered, not the one being loaded: `location` changes
-  // before the next page is in the DOM, so a reveal keyed on it scans the old
-  // page and leaves the new one hidden.
-  const pathname = useRouterState({
-    select: (state) => state.resolvedLocation?.pathname,
-  });
   return (
     <div className="landing min-h-screen overflow-x-clip bg-background">
       <Header />
@@ -36,8 +25,6 @@ function LandingLayout() {
         <Footer />
       </Band>
       <AskAiButton bound="1320px" variant="overlay" />
-      {/* Each page brings its own elements to reveal. */}
-      <RevealRoot key={pathname} />
       <CookieBanner />
     </div>
   );

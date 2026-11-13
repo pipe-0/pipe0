@@ -14,7 +14,7 @@ import { barSkin } from "@/components/grid";
  * show; a number that is simply there reads as a measurement.
  */
 
-const bars: { label: string; value: number; ours?: boolean; worst?: boolean }[] = [
+export const bars: { label: string; value: number; ours?: boolean; worst?: boolean }[] = [
   { label: "pipe0 waterfall", value: 94, ours: true },
   { label: "Traditional waterfall", value: 72 },
   { label: "Two cheap providers", value: 36, worst: true },
@@ -41,8 +41,8 @@ export function LandingProof() {
               <span
                 className={
                   bar.ours
-                    ? "text-[16px] font-medium text-foreground sm:text-[17px]"
-                    : "text-[16px] text-muted-foreground sm:text-[17px]"
+                    ? "text-[16px] font-medium text-foreground"
+                    : "text-[16px] text-muted-foreground"
                 }
               >
                 {bar.label}
@@ -51,9 +51,9 @@ export function LandingProof() {
                 <div className="relative h-10 flex-1 sm:h-14">
                   {/* The track runs to 100%, so every bar reads against the
                       whole list, not against the longest bar. */}
-                  <div className="absolute inset-0 rounded-[3px] border border-[var(--rule)] bg-[var(--well)]" />
+                  <div className="absolute inset-0 rounded-[4px] border border-[var(--rule)] bg-[var(--well)]" />
                   <div
-                    className="absolute inset-y-0 left-0 rounded-[3px]"
+                    className="absolute inset-y-0 left-0 rounded-[4px]"
                     style={{
                       width: `${bar.value}%`,
                       ...(bar.ours
@@ -67,8 +67,8 @@ export function LandingProof() {
                 <span
                   className={
                     bar.ours
-                      ? "w-[3.2ch] text-right text-[clamp(22px,2.2vw,30px)] font-medium leading-none tracking-[-0.045em] text-primary"
-                      : "w-[3.2ch] text-right text-[clamp(22px,2.2vw,30px)] font-medium leading-none tracking-[-0.045em] text-[var(--mark-text)]"
+                      ? "w-[3.2ch] text-right text-[22px] font-medium leading-none tracking-[-0.045em] text-primary"
+                      : "w-[3.2ch] text-right text-[22px] font-medium leading-none tracking-[-0.045em] text-[var(--mark-text)]"
                   }
                 >
                   {bar.value}%
@@ -78,7 +78,7 @@ export function LandingProof() {
           ))}
         </div>
       </figure>
-      <p className="border-t border-[var(--rule)] px-6 py-5 text-[13.5px] leading-relaxed text-muted-foreground sm:px-10 lg:px-12">
+      <p className="border-t border-[var(--rule)] px-6 py-5 text-[14px] leading-relaxed text-muted-foreground sm:px-10 lg:px-12">
         Mobile numbers found from 150 LinkedIn profiles, same rows for every
         route, August 2026. The traditional waterfall asks the cheapest
         provider first. pipe0 paid about 12¢ per number found. A

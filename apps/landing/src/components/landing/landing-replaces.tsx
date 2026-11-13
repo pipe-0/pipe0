@@ -66,16 +66,6 @@ export function LandingReplaces() {
 
   return (
     <div ref={host}>
-      <div className="grid gap-6 px-6 pb-10 pt-12 sm:px-10 sm:pb-12 sm:pt-16 lg:grid-cols-12 lg:items-end lg:gap-12 lg:px-12">
-        <h2 className="text-[clamp(28px,2.3vw,32px)] font-medium leading-[1.02] tracking-[-0.04em] text-foreground lg:col-span-7">
-          From a tangled stack to one platform.
-        </h2>
-        <p className="max-w-[48ch] text-[17px] leading-relaxed text-muted-foreground lg:col-span-5 lg:justify-self-end lg:pb-2">
-          Enrichment, lists, routing, sync, and automations, orchestrated in
-          one place instead of spread across tools like these.
-        </p>
-      </div>
-
       <ul
         aria-label="Tools pipe0 replaces"
         className="grid grid-cols-2 gap-px border-t border-[var(--rule)] bg-[var(--rule)] sm:grid-cols-4"
@@ -100,9 +90,9 @@ export function LandingReplaces() {
                 alt=""
                 width={32}
                 height={32}
-                className="size-6 shrink-0 rounded-[5px] object-contain"
+                className="size-6 shrink-0 rounded-[4px] object-contain"
               />
-              <span className="text-[17px] font-medium tracking-[-0.015em] text-foreground sm:text-[18px]">
+              <span className="text-[16px] font-medium tracking-[-0.015em] text-foreground">
                 {tool.name}
               </span>
               {/* The strike — over the whole lockup, a little past both

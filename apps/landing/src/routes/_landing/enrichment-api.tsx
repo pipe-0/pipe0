@@ -3,13 +3,11 @@ import { createFileRoute } from "@tanstack/react-router";
 import { LandingProof } from "@/components/landing/landing-proof";
 import {
   Band,
-  Brackets,
   ButtonLink,
   Cell,
   Cells,
   RowLink,
   SectionHead,
-  dotsStyle,
 } from "@/components/grid";
 import { CloseBand, PageHero } from "@/components/landing-shell";
 import { jsonLd, softwareApplicationJsonLd } from "@/components/seo/json-ld";
@@ -139,25 +137,20 @@ function EnrichmentApiPage() {
         }
       />
 
-      {/* ===== The illustration, on the dotted stage — the code itself
-              follows in the primitives section. ===== */}
+      {/* ===== The illustration — the code itself follows in the
+              primitives section. A still from the scene set, on the page
+              itself like every figure on the site. ===== */}
       <Band>
-        <div className="px-6 py-10 sm:px-10 sm:py-12 lg:px-12">
-          <div
-            style={dotsStyle}
-            className="relative flex justify-center border border-[var(--rule)] px-4 py-8 sm:py-10"
-          >
-            <Brackets />
-            <Image
-              src="/media/website/illustrations/api.png"
-              alt="Layers of data threaded on a single pipe"
-              width={1600}
-              height={1200}
-              priority
-              sizes="(min-width: 1024px) 520px, 80vw"
-              className="h-auto w-full max-w-[520px]"
-            />
-          </div>
+        <div className="flex justify-center px-6 py-8 sm:px-10 sm:py-10 lg:px-12">
+          <Image
+            src="/media/website/illustrations/scene-api.webp"
+            alt="An agent building a tower of blocks, about to add one marked with curly braces"
+            width={1000}
+            height={750}
+            priority
+            sizes="(min-width: 1024px) 520px, 80vw"
+            className="h-auto w-full max-w-[520px] mix-blend-multiply"
+          />
         </div>
       </Band>
 

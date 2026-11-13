@@ -1,25 +1,27 @@
 import { seo } from "@/lib/seo";
 import { createFileRoute } from "@tanstack/react-router";
 import { EventPill } from "@/components/landing/event-pill";
-import { HeroFilm } from "@/components/landing/hero-film";
+import { HeroMorph } from "@/components/landing/hero-morph";
 import { KnifeLoop } from "@/components/landing/knife-loop";
-import { LandingEconomics } from "@/components/landing/landing-economics";
 import { LandingFaq, faqItems } from "@/components/landing/landing-faq";
 import { LandingFounder } from "@/components/landing/landing-founder";
-import { LandingPaths } from "@/components/landing/landing-paths";
-import { LandingProof } from "@/components/landing/landing-proof";
 import { LandingReplaces } from "@/components/landing/landing-replaces";
-import { LandingSpotlight } from "@/components/landing/landing-spotlight";
-import { LandingStatement } from "@/components/landing/landing-statement";
+// Off the homepage for now; see where it used to render, below.
+// import { LandingSpotlight } from "@/components/landing/landing-spotlight";
+import { LandingLevels } from "@/components/landing/landing-story";
+import { LandingWell } from "@/components/landing/landing-well";
+import { LandingValue } from "@/components/landing/landing-value";
 import {
   Band,
   Brackets,
+  Break,
+  BreakHead,
   GridCtas,
-  dotsStyle,
   SectionHead,
+  type,
 } from "@/components/grid";
+import { cn } from "@/lib/utils";
 import { CloseBand } from "@/components/landing-shell";
-import { NearVideo } from "@/components/loop-video";
 import {
   jsonLd,
   faqJsonLd,
@@ -30,11 +32,9 @@ import { Image } from "@/components/image";
 const homeDescription =
   "Turns any GTM play or data idea into a production system with pipe0. Find and enrich B2B contacts across 50+ providers, build Clay-like tables, and run automations from an agent, the API, or MCP. Pay only for results.";
 
-/* The cost multiple vs Clay, approved in the positioning evidence file. */
-const CLAY_MULTIPLE = "6–12x";
-
-/* The first frame of board.mp4, which is the largest paint on phones. */
-const BOARD_POSTER = "/media/website/illustrations/board.webp";
+/* The cost multiple vs Clay, approved in the positioning evidence file. The
+   word joiner after the dash keeps "6–" from ending a line on a phone. */
+const CLAY_MULTIPLE = "6–\u206012x";
 
 const trustedLogos = [
   {
@@ -89,17 +89,6 @@ export const Route = createFileRoute("/_landing/")({
     });
     return {
       ...page,
-      links: [
-        ...page.links,
-        // Phones only: the band that shows it is hidden from `sm` up.
-        {
-          rel: "preload",
-          as: "image",
-          href: BOARD_POSTER,
-          media: "(width < 40rem)",
-          fetchPriority: "high",
-        },
-      ],
       scripts: [
         jsonLd(softwareApplicationJsonLd({ description: homeDescription })),
         jsonLd(faqJsonLd(faqItems.map((f) => ({ q: f.q, a: f.a })))),
@@ -127,58 +116,41 @@ function Home() {
               and they flip out one by one (app/knife-loop.tsx). Two lines
               from sm; phones wrap freely, but the knife stays with its
               word. */}
-          <h1 className="text-balance text-[10.5vw] font-medium leading-[1.06] tracking-[-0.045em] text-foreground sm:text-[clamp(44px,5.4vw,76px)]">
+          <h1 className="text-balance text-[9.4vw] font-medium leading-[1.06] tracking-[-0.045em] text-foreground sm:text-[clamp(40px,4.4vw,62px)]">
             The Swiss{" "}
             <span className="whitespace-nowrap">
               Army <KnifeLoop className="align-[-0.2em]" /> knife
             </span>
             <br className="max-sm:hidden" /> for agentic GTM.
           </h1>
-          <p className="mt-7 max-w-[680px] text-[16px] max-sm:-mx-3 sm:mx-auto sm:text-balance leading-[1.55] text-muted-foreground sm:text-[19px]">
-            Clay-like tables, GTM MCPs, and data APIs used to be three products.
-            We forged them into one. It makes sense the moment you try it.
+          {/* What it is, in the three names buyers already use, then what
+              that is for, then the invitation. */}
+          <p
+            className={cn(
+              "mt-6 max-w-170 max-sm:-mx-3 sm:mx-auto sm:text-balance",
+              type.lede,
+            )}
+          >
+            Clay-like tables, a GTM MCP, and a B2B data API, forged into one
+            system for every level of GTM. It makes sense the moment you
+            try it.
           </p>
           <GridCtas className="mt-8 justify-center" />
         </div>
       </Band>
 
       {/* ===== Product film — the one saturated surface near the top.
-              Phones get an animated Blender board instead: the film's type
-              is unreadable that small. ===== */}
-      <Band>
-        <div className="px-4 py-4 sm:hidden">
-          <div
-            style={dotsStyle}
-            className="relative flex aspect-[4/3] items-center justify-center overflow-hidden rounded-[14px] border border-[var(--rule)]"
-          >
-            <Brackets />
-            {/* Blender loop (assets/illustrations/board_anim.py): cells of a
-                sheet fill in one by one, with gaps where nothing was found.
-                Rendered on white and multiplied onto the dotted stage. The
-                file only starts loading after hydration, so the poster is
-                what paints first. */}
-            <NearVideo
-              src="/media/website/illustrations/board.mp4"
-              poster={BOARD_POSTER}
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload="auto"
-              aria-label="Cells of a sheet filling in as data is found"
-              width={800}
-              height={600}
-              className="h-auto w-[92%] mix-blend-multiply"
-            />
-          </div>
-        </div>
-        <div className="relative hidden min-h-[calc(min(100vw-3rem,1320px)/2.3)] flex-col overflow-hidden sm:flex">
+              Not on phones: its type is unreadable that small, and the
+              headline already carries a picture. The page goes straight
+              from the hero to who uses it. ===== */}
+      <Band className="max-sm:hidden">
+        <div className="relative flex min-h-[calc(min(100vw-3rem,1320px)/2.3)] flex-col overflow-hidden">
           <div
             className="hero-sky pointer-events-none absolute inset-0 z-0"
             aria-hidden
           />
           <div className="relative z-10 flex flex-1 items-center px-4 py-10 sm:px-10">
-            <HeroFilm />
+            <HeroMorph />
           </div>
           <Brackets inset={14} tone="inverse" />
         </div>
@@ -190,7 +162,7 @@ function Home() {
             fill even rows (2 or 3 across). */}
         <div className="grid grid-cols-2 gap-px bg-[var(--rule)] sm:grid-cols-3 lg:grid-cols-[1.4fr_repeat(7,1fr)]">
           <div className="col-span-2 flex items-center bg-background px-6 py-5 sm:col-span-3 sm:px-10 lg:col-span-1 lg:px-8">
-            <span className="text-[14px] leading-snug text-muted-foreground">
+            <span className={cn(type.small, "leading-snug")}>
               Used by GTM and product teams at
             </span>
           </div>
@@ -221,7 +193,7 @@ function Home() {
                 height={20}
                 className="block h-5 w-auto"
               />
-              <span className="text-[19px] font-semibold tracking-[-0.02em] text-black">
+              <span className="text-[18px] font-semibold tracking-[-0.02em] text-black">
                 Mercor
               </span>
             </span>
@@ -229,66 +201,58 @@ function Home() {
         </div>
       </Band>
 
-      {/* ===== Statement — pinned, revealed word by word. One of the page's
-              two pinned sections; keep it to two. ===== */}
-      <Band>
-        <LandingStatement />
-      </Band>
-
-      {/* ===== A reference everyone knows (Bruce Lee's "be water"),
-              made concrete: the hero's "wherever you do" as a chat, a
-              sheet, or code. The table carries the detail. ===== */}
+      {/* ===== What pipe0 is, said early: the three levels go-to-market
+              work happens on, and one figure for each. ===== */}
       <Band>
         <SectionHead
-          title="Be water, my friend."
-          lede="Empty your mind of tables and tools. Ask in a chat, open it as a sheet, call it from code. Same list, any shape."
+          title="Go-to-market happens on three levels."
+          lede="A system that speeds up all three changes how big a team has to be."
         />
-        <LandingPaths />
+        <LandingLevels />
       </Band>
 
-      {/* ===== The stack it replaces ===== */}
+      {/* ===== The moment: the three building blocks of agentic GTM
+              falling into one product. A head and one drawing, in the
+              page's own hairlines. ===== */}
       <Band>
+        <SectionHead
+          title="Every GTM team is looking for its AI moment."
+          lede="It happens when the building blocks of agentic GTM converge in one product."
+        />
+        <LandingWell />
+      </Band>
+
+      {/* ===== Surfaces ("Work anywhere."): the row of interface cards that
+              moves sideways as the page scrolls. Commented out on purpose
+              (Florian, 2026-11-13): the section is good, it just doesn't
+              sit well on this page. The component is complete and unused,
+              ready for another page: components/landing/landing-spotlight.
+              It draws its own ground and rules, so it is not a Band.
+
+      <LandingSpotlight />
+          ===== */}
+
+      {/* ===== The stack it replaces. Its second line is also where the
+              page says, once and plainly, what pipe0 is. ===== */}
+      <Band>
+        <SectionHead
+          title="From a tangled stack to one platform."
+          lede="pipe0 is one system that builds GTM automation with AI. Enrichment, lists, routing, and sync in one place instead of spread across tools like these."
+        />
         <LandingReplaces />
       </Band>
 
-      {/* ===== Coverage ===== */}
-      <Band>
-        <SectionHead
-          title="More of your list, found."
-          lede="Same 150 people, two waterfalls. The difference is which providers ask first."
+      {/* ===== Proof — a new part of the page, so a break from the grid:
+              how much comes back and what it costs, on one screen. Its
+              ground settles into the well, which the closing run of the
+              page (founder, questions) stands on. ===== */}
+      <Break into="well">
+        <BreakHead
+          title="More of your list found, for less."
+          lede={`Higher coverage than traditional waterfalls, ${CLAY_MULTIPLE} more cost\u2011efficient.`}
         />
-        <LandingProof />
-      </Band>
-
-      {/* ===== Surfaces — the page's second pinned section ===== */}
-      <Band>
-        <SectionHead
-          title="Work anywhere."
-          lede="The app, your coding agent, Slack, or your own code. Every surface runs on the same data model."
-        />
-        {/* No side padding and no rule of its own: the folder's tab row
-            is the boundary under the heading, and its pages share the
-            rails. */}
-        <div className="sm:-mt-8">
-          <LandingSpotlight />
-        </div>
-      </Band>
-
-      {/* ===== Cost ===== */}
-      <Band>
-        <SectionHead
-          title={`${CLAY_MULTIPLE} more cost\u2011efficient than Clay.`}
-          lede="Premium enrichment data, pay as you go. No subscription required, and you pay only for data a provider found."
-        />
-        <LandingEconomics />
-      </Band>
-
-      {/* ===== A pause: a real gap after pricing, then the closing run of
-              the page (founder, questions) on the muted well. ===== */}
-      <div
-        aria-hidden
-        className="h-16 border-b border-[var(--rule)] bg-[var(--well)] sm:h-24"
-      />
+        <LandingValue />
+      </Break>
 
       {/* ===== Founder ===== */}
       <Band tone="muted">

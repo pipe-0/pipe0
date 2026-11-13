@@ -53,7 +53,10 @@ export function Band({
     <section
       id={id}
       className={cn(
-        "relative border-b border-[var(--rule)]",
+        // On phones a band of cells is a stack of bordered cards; a rule
+        // right under the last card would be a second line doing the same
+        // job, so the band drops it there.
+        "relative border-b border-[var(--rule)] max-sm:has-[[data-cells]]:border-b-0",
         tone === "muted" && "bg-[var(--well)]",
         className,
       )}
@@ -106,8 +109,11 @@ export function Cells({
        rounded cards with breathing room — hairline walls alone don't give
        enough separation on a narrow screen. */
     <div
+      data-cells
       className={cn(
-        "grid gap-px bg-[var(--rule)] max-sm:gap-3 max-sm:bg-transparent max-sm:px-4 max-sm:py-4",
+        // Most callers add a rule above the cells. On phones the cards
+        // carry their own border, so that rule goes too.
+        "grid gap-px bg-[var(--rule)] max-sm:gap-3 max-sm:!border-t-0 max-sm:bg-transparent max-sm:px-4 max-sm:pb-6 max-sm:pt-0",
         className,
       )}
     >
@@ -146,11 +152,23 @@ export const dotsStyle = {
   backgroundSize: "8px 8px",
 } as const;
 
+/* Everything pipe0 is compared against is one grey: a neutral with a trace
+   of the brand's indigo in it, strong enough to read as a bar and not as an
+   empty track. */
+const compared = {
+  background: "linear-gradient(180deg, #a3a9bd 0%, #8a91a8 60%)",
+  border: "1px solid #747c95",
+  boxShadow:
+    "inset 0 1px 0 rgba(255,255,255,0.3), inset 0 -1px 0 rgba(0,0,0,0.08), 0 1px 2px rgba(14,17,23,0.1)",
+} as const;
+
 /**
  * Bar fills for comparison charts, in the glossy button language (top
- * highlight, darker edge, soft vertical gradient): indigo for pipe0, a
- * soft amber for whatever it is compared against. Inline styles, like
- * `dotsStyle`, so they don't depend on globals.css.
+ * highlight, darker edge, soft vertical gradient). Two colours only: indigo
+ * for pipe0, grey for everything else. Colour on this site means "pipe0" or
+ * "you can press this"; a chart that used yellow and coral for the others
+ * was louder than its own message. Inline styles, like `dotsStyle`, so they
+ * don't depend on globals.css.
  */
 export const barSkin = {
   win: {
@@ -159,32 +177,92 @@ export const barSkin = {
     boxShadow:
       "inset 0 1px 0 rgba(255,255,255,0.34), inset 0 -1px 0 rgba(0,0,0,0.12), 0 1px 2px rgba(14,17,23,0.18)",
   },
-  /* The comparison: a soft amber, distinct from pipe0's indigo without the
-     alarm of red. */
-  lose: {
-    background: "linear-gradient(180deg, #fdf0c8 0%, #f8e2a0 60%)",
-    border: "1px solid #e8cb76",
-    boxShadow:
-      "inset 0 1px 0 rgba(255,255,255,0.7), 0 1px 2px rgba(14,17,23,0.05)",
-  },
-  /* The weakest result, one step past amber: a pale coral at the same
-     lightness, so the row reads "worse" without reading "error". */
-  worst: {
-    background: "linear-gradient(180deg, #fde4df 0%, #f8cbc3 60%)",
-    border: "1px solid #eaa598",
-    boxShadow:
-      "inset 0 1px 0 rgba(255,255,255,0.7), 0 1px 2px rgba(14,17,23,0.05)",
-  },
+  lose: compared,
+  /* Kept as its own key for the charts that mark their weakest row; it is
+     the same grey, and the bar's length says the rest. */
+  worst: compared,
+  /* The far end of a range ("25 to 100¢"): flat and pale, behind the solid
+     bar that marks where the range starts. */
+  range: { background: "hsl(228 16% 87%)" },
 } as const;
 
 /** Standard cell padding. */
 export const pad = "px-6 py-10 sm:px-10 sm:py-12 lg:px-12";
 
 /**
- * A section's head: the title on the left and, optionally, one sentence of
- * lede on the right, bottom-aligned so the two read as a pair across the
- * gutter. No eyebrow, no index — the rule above already says "new section".
+ * The type scale of the marketing pages: 14, 16, 18 and 22 pixels, a
+ * section title, and the hero's headline (set where it is used). Nothing
+ * else. On phones the two largest text steps come down one (18 to 16, 22 to
+ * 20). A new size is almost never the answer; pick the nearest step. Before
+ * this existed the homepage alone used twenty sizes, and it showed.
+ *
+ * Each step carries its own tone and leading, so a component only adds
+ * layout (margins, max-widths). Override the colour with `cn(type.x, ...)`.
+ * Controls (buttons, the nav) are 14 or 16 and medium.
  */
+export const type = {
+  /** A section's title. */
+  title:
+    "text-balance text-[clamp(26px,2.3vw,32px)] font-medium leading-[1.14] tracking-[-0.035em] text-foreground",
+  /** The sentence under a title, and under the hero's headline. */
+  lede: "text-[16px] leading-[1.55] text-muted-foreground sm:text-[18px]",
+  /** The title of a card or a cell, and a quote. */
+  heading:
+    "text-[20px] font-medium leading-[1.2] tracking-[-0.03em] text-foreground sm:text-[22px]",
+  /** A smaller title where many stand together: a question in a list. */
+  subheading:
+    "text-[18px] font-medium leading-snug tracking-[-0.015em] text-foreground",
+  /** Running text. */
+  body: "text-[16px] leading-relaxed text-muted-foreground",
+  /** Captions, labels and notes. */
+  small: "text-[14px] leading-relaxed text-muted-foreground",
+} as const;
+
+/** Corner radii: a card, a control, a bar. Nothing else on the page is
+ *  rounded (product UI shown inside a card keeps its own). */
+export const radius = {
+  card: "rounded-[14px]",
+  control: "rounded-[8px]",
+  bar: "rounded-[4px]",
+} as const;
+
+/**
+ * A section's head: the title, and under it one or two sentences, a clear
+ * step smaller and in grey. Centred from tablet width up, like the hero, so
+ * every section opens the same way the page does; on phones it stays on the
+ * left edge with the cards under it. No eyebrow, no index: the rule above
+ * already says "new section".
+ *
+ * Keep the title short. The line under it is where the sentence goes.
+ *
+ * A head is simply there when it scrolls into view. It used to fade and
+ * rise into place; that read as a template effect, and was removed.
+ */
+function Head({ title, lede }: { title: ReactNode; lede?: ReactNode }) {
+  return (
+    <div className="sm:mx-auto sm:max-w-[820px] sm:text-center">
+      <h2 className={type.title}>{title}</h2>
+      {lede && (
+        <p
+          className={cn(
+            "mt-3 max-w-[58ch] text-pretty sm:mx-auto sm:mt-4 sm:text-balance",
+            type.lede,
+          )}
+        >
+          {lede}
+        </p>
+      )}
+    </div>
+  );
+}
+
+/** The space a head stands in: generous above, so a section starts with
+ *  air, and a little less below, so the head belongs to what follows. */
+const headSpace = "pb-9 pt-12 sm:pb-14 sm:pt-20";
+/** The same with less of it, for a head inside a pinned stage, where every
+ *  pixel of height is taken from the content under it. */
+const headSpaceTight = "pb-8 pt-12";
+
 export function SectionHead({
   title,
   lede,
@@ -193,22 +271,89 @@ export function SectionHead({
   lede?: ReactNode;
 }) {
   return (
-    <div className="grid gap-6 px-6 pb-10 pt-12 sm:bg-background sm:px-10 sm:pb-12 sm:pt-16 lg:grid-cols-12 lg:items-end lg:gap-12 lg:px-12">
-      <h2
-        data-reveal="up"
-        className="text-balance text-[clamp(28px,2.3vw,32px)] font-medium leading-[1.02] tracking-[-0.04em] text-foreground lg:col-span-7"
-      >
-        {title}
-      </h2>
-      {lede && (
-        <p
-          data-reveal="up"
-          style={{ ["--reveal-delay" as string]: "90ms" }}
-          className="max-w-[48ch] text-pretty text-[17px] leading-relaxed text-muted-foreground lg:col-span-5 lg:justify-self-end lg:pb-2"
-        >
-          {lede}
-        </p>
-      )}
+    <div className={cn("px-6 sm:bg-background sm:px-10 lg:px-12", headSpace)}>
+      <Head title={title} lede={lede} />
+    </div>
+  );
+}
+
+/* ---- Breaks from the grid ------------------------------------------------
+   Most of the page is hairlines and shared walls. A break is a section
+   where the rails stop: the ground fades from white into a muted tone,
+   and what stands on it are white cards with a radius and a shadow,
+   objects rather than cells. It marks a change of subject. Use it
+   sparingly; a page of breaks has no grid to break from. */
+
+/** The ground of a break: a step more muted than the well, so a white card
+ *  reads against it. */
+export const ground = "hsl(228 33% 96.4%)";
+
+/** A white card on the ground of a break. */
+export const card = cn(
+  radius.card,
+  "border border-[var(--rule)] bg-white shadow-[0_1px_2px_rgba(16,24,40,0.04),0_18px_44px_-20px_rgba(28,35,80,0.2)]",
+);
+
+/**
+ * A full-bleed section without rails. The ground fades in from white at the
+ * top. At the bottom it fades back to white, or, with `into="well"`, settles
+ * into the well colour when the bands that follow are muted ones.
+ *
+ * A section that tints its own ground (the surfaces row does, while its
+ * cards move) passes it as `tint`: the section is then white, and the tint
+ * is drawn behind its content.
+ */
+export function Break({
+  children,
+  into = "background",
+  tint,
+  id,
+}: {
+  children: ReactNode;
+  into?: "background" | "well";
+  tint?: ReactNode;
+  id?: string;
+}) {
+  return (
+    <section
+      id={id}
+      className="relative isolate border-b border-[var(--rule)] bg-background"
+      style={
+        tint
+          ? undefined
+          : {
+              background: `linear-gradient(to bottom, var(--background) 0, ${ground} 11rem, ${ground} calc(100% - 10rem), var(--${into}) calc(100% - 1rem))`,
+            }
+      }
+    >
+      {tint}
+      {/* The marks where the rails of the band above come to an end. */}
+      <div aria-hidden className={cn(frame, "h-0 border-transparent")}>
+        <Cross className="-left-[6px] -top-[6px]" />
+        <Cross className="-right-[6px] -top-[6px]" />
+      </div>
+      {children}
+    </section>
+  );
+}
+
+/** The frame's box with no rails drawn: content in a break stands on the
+ *  same left and right edges as content in a band. */
+export const breakFrame = cn(frame, "border-transparent px-6 sm:px-10 lg:px-12");
+
+/** A section head inside a break. */
+export function BreakHead({
+  title,
+  lede,
+  tight = false,
+}: {
+  title: ReactNode;
+  lede?: ReactNode;
+  tight?: boolean;
+}) {
+  return (
+    <div className={cn(breakFrame, tight ? headSpaceTight : headSpace)}>
+      <Head title={title} lede={lede} />
     </div>
   );
 }
@@ -249,7 +394,7 @@ const RowAnchor = forwardRef<HTMLAnchorElement, ComponentPropsWithoutRef<"a">>(
       <a
         ref={ref}
         className={cn(
-          "group flex h-14 items-center justify-between border-t border-[var(--rule)] px-6 text-[14.5px] font-medium text-foreground transition-colors hover:bg-[var(--well)] sm:px-10 lg:px-12",
+          "group flex h-14 items-center justify-between border-t border-[var(--rule)] px-6 text-[16px] font-medium text-foreground transition-colors hover:bg-[var(--well)] sm:px-10 lg:px-12",
           className,
         )}
         {...props}
@@ -270,7 +415,7 @@ const RowAnchor = forwardRef<HTMLAnchorElement, ComponentPropsWithoutRef<"a">>(
 export const RowLink = createLink(RowAnchor);
 
 const btn =
-  "inline-flex h-11 items-center justify-center rounded-[8px] border px-5 text-[15px] font-medium transition-[background,border-color] outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2";
+  "inline-flex h-11 items-center justify-center rounded-[8px] border px-5 text-[16px] font-medium transition-[background,border-color] outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2";
 
 /**
  * Button skins. The two default ones are the glossy treatment from the

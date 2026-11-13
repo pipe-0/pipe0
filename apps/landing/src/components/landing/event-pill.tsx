@@ -3,20 +3,29 @@ import { ArrowRight } from "lucide-react";
 /* A small link above the hero headline that promotes one upcoming live
    event. It hides itself once the event has ended, so a stale date never
    stays on the homepage. To promote the next event, edit `EVENT`: the
-   calendar icon draws its month and day from `startsAt`. */
+   circled date is drawn from `startsAt`.
+
+   It used to be a pill with a calendar icon and a round button in it, which
+   is where the name comes from (and the UTM campaign, kept so registrations
+   stay comparable). Now it is one line with nothing around it: the date,
+   circled the way you would circle it on a wall calendar, then what the
+   event is, then an arrow. */
 
 const EVENT = {
-  /* The Luma event page. The pill stays hidden while this is empty. */
+  /* The Luma event page. The link stays hidden while this is empty. */
   url: "https://luma.com/zh6nerls",
   kind: "Workshop",
   title: "Agentic GTM for PLG Companies",
   /* Luma's start_at and end_at. */
   startsAt: "2026-11-19T17:00:00Z",
   endsAt: "2026-11-19T18:00:00Z",
-  /* The calendar shows the date as it falls here (Luma's event timezone),
-     the same on the server and in every visitor's browser. */
+  /* The date is shown as it falls here (Luma's event timezone), the same
+     on the server and in every visitor's browser. */
   timeZone: "Europe/Zurich",
 };
+
+/* The crayon: the coral of the illustrations. */
+const CRAYON = "#f0593f";
 
 export function EventPill() {
   if (!EVENT.url || Date.now() >= Date.parse(EVENT.endsAt)) return null;
@@ -35,65 +44,93 @@ export function EventPill() {
      can be told apart from other sources. */
   const href = `${EVENT.url}?utm_source=pipe0&utm_medium=homepage&utm_campaign=hero-pill`;
 
-  /* Reads left to right: when (the calendar), what, go. The whole pill is
-     the link; the round button only gives the click a visible target.
-     The button sets the pill's height and sits 4px in from the top, right
-     and bottom, so its circle is concentric with the pill's round end.
-     Everything else is kept at most 32px tall so it never stretches the
-     pill: on phones the title wraps onto two 16px lines. */
+  /* Reads left to right: when, what, go. The whole line is the link. */
   return (
     <a
       href={href}
       target="_blank"
       rel="noopener"
-      className="group mb-7 inline-flex max-w-full items-center gap-2.5 rounded-full border border-[var(--rule)] bg-background p-1 pl-2.5 text-left shadow-[0_1px_2px_rgba(16,24,40,0.04),0_4px_14px_-4px_rgba(59,73,224,0.18)] transition-[box-shadow,transform] duration-200 hover:-translate-y-px hover:shadow-[0_1px_2px_rgba(16,24,40,0.05),0_8px_22px_-6px_rgba(59,73,224,0.3)] motion-reduce:transition-none motion-reduce:hover:translate-y-0"
+      className="group mb-7 inline-flex max-w-full items-center gap-3 rounded-[8px] text-left text-[14px] leading-5 text-foreground/75 outline-none transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4"
     >
-      <CalendarIcon month={month} day={day} />
-      <span className="min-w-0 text-[14px] leading-4 text-foreground/80 max-sm:text-[13px] sm:whitespace-nowrap">
-        <span className="sr-only">
-          {month} {day}.{" "}
-        </span>
+      <span className="relative grid h-[38px] w-[74px] shrink-0 place-items-center text-[14px] font-semibold tracking-[-0.01em] text-foreground">
+        {month} {day}
+        <CrayonCircle />
+      </span>
+      <span className="min-w-0 sm:whitespace-nowrap">
         <span className="font-semibold text-foreground">{EVENT.kind}:</span>{" "}
         {EVENT.title}
       </span>
-      {/* The site's secondary button skin (.btn-glossy-outline), round. */}
-      <span
+      <ArrowRight
         aria-hidden
-        className="btn-glossy-outline grid size-8 shrink-0 place-items-center rounded-full border text-foreground transition-[background,border-color] group-hover:border-[rgba(14,17,23,0.34)] group-hover:bg-white"
-      >
-        <ArrowRight
-          className="size-4 transition-transform duration-200 group-hover:translate-x-px motion-reduce:transition-none"
-          strokeWidth={2}
-        />
-      </span>
+        className="size-4 shrink-0 text-foreground/60 transition-transform duration-200 group-hover:translate-x-1 group-hover:text-foreground motion-reduce:transition-none motion-reduce:group-hover:translate-x-0"
+        strokeWidth={2}
+      />
     </a>
   );
 }
 
-/* A small desk calendar in CSS: a glossy brand-blue band with the month,
-   a white page with the day, two steel rings on top. Gradients and inset
-   edges give it the same raised, slightly 3D feel as the site's buttons. */
-function CalendarIcon({ month, day }: { month: string; day: string }) {
+/* A ring drawn by hand: it starts at the top left, goes once around, and
+   runs on past its own start, the way a quick circle does. The filter
+   roughens the line's edge and knocks small specks out of it, which is what
+   makes it read as wax crayon rather than as a vector stroke. Drawn at its
+   own size, never stretched: stretching would smear the grain. */
+function CrayonCircle() {
   return (
-    <span
+    <svg
       aria-hidden
-      className="relative mt-[2px] block w-[26px] shrink-0 transition-transform duration-200 group-hover:-rotate-6 motion-reduce:transition-none"
+      viewBox="0 0 74 38"
+      className="pointer-events-none absolute inset-0 size-full overflow-visible"
     >
-      <span className="block overflow-hidden rounded-[6px] border border-[rgba(14,17,23,0.14)] shadow-[0_1px_1px_rgba(14,17,23,0.06),0_3px_6px_-2px_rgba(14,17,23,0.22)]">
-        <span className="block bg-[linear-gradient(180deg,#6c75f2_0%,#3b49e0_55%,#2c37c6_100%)] py-px text-center text-[9.5px] font-semibold leading-[12px] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.35)]">
-          {month}
-        </span>
-        <span className="block bg-[linear-gradient(180deg,#ffffff_0%,#f1f2f7_100%)] pb-px text-center text-[12px] font-semibold leading-[13px] tracking-[-0.02em] text-foreground tabular-nums shadow-[inset_0_-1.5px_0_rgba(14,17,23,0.06)]">
-          {day}
-        </span>
-      </span>
-      {[6, 17].map((left) => (
-        <span
-          key={left}
-          className="absolute -top-[2px] h-[5px] w-[3px] rounded-full bg-[linear-gradient(90deg,#9aa0ad_0%,#eef0f4_50%,#9aa0ad_100%)] shadow-[0_0_0_0.5px_rgba(14,17,23,0.25)]"
-          style={{ left }}
-        />
-      ))}
-    </span>
+      <defs>
+        <filter
+          id="event-crayon"
+          filterUnits="userSpaceOnUse"
+          x="-6"
+          y="-6"
+          width="86"
+          height="50"
+        >
+          <feTurbulence
+            type="fractalNoise"
+            baseFrequency="0.85"
+            numOctaves="2"
+            seed="4"
+            result="wobble"
+          />
+          <feDisplacementMap
+            in="SourceGraphic"
+            in2="wobble"
+            scale="1.6"
+            xChannelSelector="R"
+            yChannelSelector="G"
+            result="line"
+          />
+          <feTurbulence
+            type="fractalNoise"
+            baseFrequency="1.7"
+            numOctaves="1"
+            seed="11"
+            result="grain"
+          />
+          {/* Alpha from the noise: mostly solid, with specks let through. */}
+          <feColorMatrix
+            in="grain"
+            type="matrix"
+            values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  3.4 0 0 0 -0.75"
+            result="specks"
+          />
+          <feComposite in="line" in2="specks" operator="in" />
+        </filter>
+      </defs>
+      <path
+        d="M14 8.5C26 1.8 52 0.6 64 7.2c9.4 5 9.6 18-0.8 23.8C50 38.2 22 38 9 31 0.4 26 1 13 12.4 7.4 22.5 2.6 40 2 56 5.4"
+        fill="none"
+        stroke={CRAYON}
+        strokeWidth="2.3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        filter="url(#event-crayon)"
+      />
+    </svg>
   );
 }

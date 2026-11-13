@@ -881,18 +881,11 @@ div[style*="--callout-color"] p:not([class*="font-medium"]) {
   }
 }
 
-/* Scroll reveals (components/reveal-root.tsx). Only active once the observer
-   has set html.reveal-on; reduced motion never sets it. */
-.reveal-on [data-reveal="up"] {
-  opacity: 0;
-  translate: 0 14px;
-  transition:
-    opacity 0.7s ease var(--reveal-delay, 0ms),
-    translate 0.8s cubic-bezier(0.22, 0.8, 0.24, 1) var(--reveal-delay, 0ms);
-}
-.reveal-on [data-reveal="up"][data-in] {
-  opacity: 1;
-  translate: 0 0;
+/* ---- The sheet (components/well-sheet.tsx) ----
+   --well-line is the grid's own rule, a step stronger, so a curved hairline
+   holds against white. */
+.landing {
+  --well-line: hsl(228 20% 80%);
 }
 
 /* The site has one light theme, so form controls and scrollbars match it. */

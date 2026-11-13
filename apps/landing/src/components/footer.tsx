@@ -248,7 +248,7 @@ export function Footer() {
             <div key={groups[0].heading} className="flex flex-col gap-10">
               {groups.map((group) => (
                 <div key={group.heading}>
-                  <h2 className="mb-4 text-[13px] font-semibold text-foreground">
+                  <h2 className="mb-4 text-[14px] font-semibold text-foreground">
                     {group.heading}
                   </h2>
                   <ul className="space-y-2.5">
@@ -264,7 +264,7 @@ export function Footer() {
           ))}
         </div>
 
-        <div className="flex flex-col gap-2 border-t border-[var(--rule)] bg-[var(--well)] px-6 py-6 text-[13px] text-muted-foreground sm:flex-row sm:justify-between sm:px-10 lg:px-12">
+        <div className="flex flex-col gap-2 border-t border-[var(--rule)] bg-[var(--well)] px-6 py-6 text-[14px] text-muted-foreground sm:flex-row sm:justify-between sm:px-10 lg:px-12">
           <span>
             © {year} {appInfo.productName}. All rights
             reserved. Other trademarks belong to their owners.

@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
-import { Cell, Cells, pad } from "@/components/grid";
+import { Cell, Cells, pad, type } from "@/components/grid";
+import { cn } from "@/lib/utils";
 
 /**
  * Questions buyers ask before they switch, answered in place.
@@ -64,10 +65,8 @@ export function LandingFaq({ items = faqItems }: { items?: Faq[] }) {
     <Cells className="border-t border-[var(--rule)] sm:grid-cols-2">
       {items.map((item) => (
         <Cell key={item.q} className={pad}>
-          <h3 className="text-[18px] font-medium leading-snug tracking-[-0.015em] text-foreground">
-            {item.q}
-          </h3>
-          <p className="mt-3 text-[15.5px] leading-relaxed text-muted-foreground">
+          <h3 className={type.subheading}>{item.q}</h3>
+          <p className={cn("mt-3 max-w-[60ch]", type.body)}>
             {item.a}
             {item.link && (
               <>

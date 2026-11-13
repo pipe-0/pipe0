@@ -1,21 +1,19 @@
 import { seo } from "@/lib/seo";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { AgentGlyph } from "@/components/landing/agent-glyph";
+import { Scene } from "@/components/landing/landing-story";
 import { LandingEconomics } from "@/components/landing/landing-economics";
 import { CodeSample } from "@/components/code-sample";
 import { CopyCommand } from "@/components/copy-command";
 import {
   Band,
-  Brackets,
   ButtonLink,
   Cell,
   Cells,
   SectionHead,
   barSkin,
-  dotsStyle,
 } from "@/components/grid";
 import { CloseBand, PageHero } from "@/components/landing-shell";
-import { LoopVideo } from "@/components/loop-video";
 import { jsonLd, softwareApplicationJsonLd } from "@/components/seo/json-ld";
 import type { ReactNode } from "react";
 
@@ -417,19 +415,12 @@ function McpPage() {
           <Cell className="px-6 py-10 sm:px-10 lg:col-span-7 lg:px-12">
             <SessionCard />
           </Cell>
-          <Cell className="p-6 sm:p-10 lg:col-span-5 lg:p-12">
-            <div
-              style={dotsStyle}
-              className="relative flex aspect-[4/3] items-center justify-center border border-[var(--rule)] lg:aspect-auto lg:h-full"
-            >
-              <Brackets />
-              <LoopVideo
-                src="/media/website/illustrations/mcp.mp4"
-                poster="/media/website/illustrations/mcp.png"
-                label="An agent calling tools through one hub"
-                className="w-[92%]"
-              />
-            </div>
+          <Cell className="flex items-center justify-center p-6 sm:p-10 lg:col-span-5 lg:p-8">
+            <Scene
+              name="mcp"
+              alt="Three agents, each plugged into one hub by its own cable"
+              className="w-full max-w-[460px]"
+            />
           </Cell>
         </Cells>
       </Band>

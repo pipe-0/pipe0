@@ -33,7 +33,7 @@ import { useState, type ReactNode } from "react";
 /** Track length as a multiple of the top of the typical range. */
 const HEADROOM = 1.15;
 
-const rows = [
+export const rows = [
   {
     label: "Mobile number",
     ours: { volume: 10, standard: 14 },
@@ -50,12 +50,12 @@ const rows = [
   },
 ];
 
-const tabs = [
+export const tabs = [
   { key: "volume", label: "With high-volume pricing", short: "High-volume" },
   { key: "standard", label: "Without high-volume pricing", short: "Standard" },
 ] as const;
 
-type Tier = (typeof tabs)[number]["key"];
+export type Tier = (typeof tabs)[number]["key"];
 
 export function LandingEconomics({
   pricingLink = true,
@@ -87,7 +87,7 @@ export function LandingEconomics({
               aria-controls={`economics-panel-${tab.key}`}
               onClick={() => setActive(tab.key)}
               className={cn(
-                "flex min-h-14 items-center gap-2.5 px-6 py-3 text-left text-[14.5px] font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary sm:px-10 lg:px-12",
+                "flex min-h-14 items-center gap-2.5 px-6 py-3 text-left text-[14px] font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary sm:px-10 lg:px-12",
                 on
                   ? "bg-background text-foreground"
                   : "bg-[var(--well)] text-muted-foreground hover:text-foreground",
@@ -123,21 +123,21 @@ export function LandingEconomics({
           the plan condition as a footnote in the tile's corner. */}
       <div className="relative grid gap-6 border-t border-[var(--rule)] px-6 pb-12 pt-10 sm:px-10 sm:pt-12 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center lg:gap-10 lg:px-12">
         <div>
-          <p className="text-[17px] font-medium text-foreground">Actions</p>
-          <p className="mt-1 max-w-[56ch] text-[15px] leading-relaxed text-muted-foreground">
+          <p className="text-[18px] font-medium text-foreground">Actions</p>
+          <p className="mt-1 max-w-[56ch] text-[16px] leading-relaxed text-muted-foreground">
             CRM writes, Slack messages, and sequence enrollments on your own
             connections. No second meter that grows with every step.
           </p>
         </div>
         <p className="lg:text-right">
-          <span className="whitespace-nowrap text-[clamp(22px,2vw,28px)] font-medium leading-none tracking-[-0.04em] text-foreground">
+          <span className="whitespace-nowrap text-[22px] font-medium leading-none tracking-[-0.04em] text-foreground">
             $3<span className="text-muted-foreground">*</span>
           </span>
           <span className="mt-1 block text-[14px] text-muted-foreground">
             per 100k actions
           </span>
         </p>
-        <p className="absolute bottom-3 right-6 text-[12px] text-muted-foreground sm:right-10 lg:right-12">
+        <p className="absolute bottom-3 right-6 text-[14px] text-muted-foreground sm:right-10 lg:right-12">
           * On plans above $300/mo
         </p>
       </div>
@@ -160,10 +160,10 @@ function ResultRows({ tier }: { tier: Tier }) {
             className="grid gap-6 border-t border-[var(--rule)] px-6 py-10 sm:px-10 sm:py-12 lg:grid-cols-[13rem_minmax(0,1fr)] lg:items-center lg:gap-10 lg:px-12"
           >
             <div>
-              <p className="text-[17px] font-medium text-foreground">
+              <p className="text-[18px] font-medium text-foreground">
                 {row.label}
               </p>
-              <p className="mt-1 text-[15px] text-muted-foreground">
+              <p className="mt-1 text-[14px] text-muted-foreground">
                 average cost per result
               </p>
             </div>
@@ -171,13 +171,13 @@ function ResultRows({ tier }: { tier: Tier }) {
             <dl className="space-y-3">
               <Bar label="pipe0" value={`${row.ours[tier]}¢`} ours>
                 <span
-                  className="absolute inset-y-0 left-0 rounded-[3px]"
+                  className="absolute inset-y-0 left-0 rounded-[4px]"
                   style={{ width: pct(row.ours[tier]), ...barSkin.win }}
                 />
               </Bar>
               <Bar label="Typical" value={row.range}>
                 <span
-                  className="absolute inset-y-0 left-0 rounded-[3px]"
+                  className="absolute inset-y-0 left-0 rounded-[4px]"
                   style={{
                     width: pct(row.high),
                     ...barSkin.lose,
@@ -213,20 +213,20 @@ function Bar({
       <dt
         className={
           ours
-            ? "text-[15px] font-medium text-foreground"
-            : "text-[15px] text-muted-foreground"
+            ? "text-[14px] font-medium text-foreground"
+            : "text-[14px] text-muted-foreground"
         }
       >
         {label}
       </dt>
-      <dd className="relative h-8 rounded-[3px] border border-[var(--rule)] bg-[var(--well)] sm:h-9">
+      <dd className="relative h-8 rounded-[4px] border border-[var(--rule)] bg-[var(--well)] sm:h-9">
         {children}
       </dd>
       <dd
         className={
           ours
-            ? "whitespace-nowrap text-right text-[17px] font-medium text-foreground"
-            : "whitespace-nowrap text-right text-[15px] text-muted-foreground"
+            ? "whitespace-nowrap text-right text-[18px] font-medium text-foreground"
+            : "whitespace-nowrap text-right text-[14px] text-muted-foreground"
         }
       >
         {value}
