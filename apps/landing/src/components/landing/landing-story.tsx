@@ -88,13 +88,9 @@ export function LandingLevels() {
   return (
     <Cells className="border-t border-[var(--rule)] lg:grid-cols-3">
       {levels.map((level) => (
-        // On phones the cells are stacked cards on a white page; a muted
-        // ground sets each one apart. The pictures are multiplied onto it,
-        // so their white takes the card's colour.
-        <Cell
-          key={level.key}
-          className="flex flex-col max-sm:bg-[var(--well)]"
-        >
+        // The cards sit on the muted ground at every width. The pictures
+        // are multiplied onto it, so their white takes the card's colour.
+        <Cell key={level.key} className="flex flex-col bg-[var(--well)]">
           {/* The picture is an accent above the words, with air around
               it. At full cell width three of them in a row were louder
               than the story they illustrate. One picture per cell, and
@@ -107,7 +103,8 @@ export function LandingLevels() {
               className="w-[min(62%,236px)]"
             />
           </div>
-          <div className="flex flex-1 flex-col px-6 pb-10 pt-7 sm:px-10 sm:pb-12 lg:px-12">
+          {/* Air under the picture before the words start. */}
+          <div className="flex flex-1 flex-col px-6 pb-10 pt-11 sm:px-10 sm:pb-12 sm:pt-14 lg:px-12">
             <h3 className={type.heading}>{level.name}</h3>
             <p className={cn("mt-3 max-w-[36ch] text-pretty", type.body)}>
               {level.what}

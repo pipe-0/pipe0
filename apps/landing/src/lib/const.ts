@@ -2,8 +2,13 @@ export const appInfo = {
   productName: "pipe0",
   emails: {
     support: "support@pipe0.com",
+    privacy: "privacy@pipe0.com",
   },
   links: {
+    /** core. The local server in development, so forms can be tried without touching production. */
+    apiUrl: import.meta.env.DEV
+      ? "http://localhost:8080"
+      : "https://api.pipe0.com",
     appUrl: "https://app.pipe0.com",
     signupUrl: `https://app.pipe0.com/signup`,
     loginUrl: `https://app.pipe0.com/login`,

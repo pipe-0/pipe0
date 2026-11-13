@@ -23,6 +23,7 @@ import { Route as LandingAiInstructionsRouteImport } from './routes/_landing/ai-
 import { Route as LandingEnrichmentApiRouteImport } from './routes/_landing/enrichment-api'
 import { Route as LandingMcpRouteImport } from './routes/_landing/mcp'
 import { Route as LandingPricingRouteImport } from './routes/_landing/pricing'
+import { Route as LandingPrivacyRequestRouteImport } from './routes/_landing/privacy-request'
 import { Route as LandingSupportRouteImport } from './routes/_landing/support'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
 import { Route as ApiChatIndexDotjsonRouteImport } from './routes/api/chat-index[.]json'
@@ -124,6 +125,11 @@ const LandingMcpRoute = LandingMcpRouteImport.update({
 const LandingPricingRoute = LandingPricingRouteImport.update({
   id: '/pricing',
   path: '/pricing',
+  getParentRoute: () => LandingRoute,
+} as any)
+const LandingPrivacyRequestRoute = LandingPrivacyRequestRouteImport.update({
+  id: '/privacy-request',
+  path: '/privacy-request',
   getParentRoute: () => LandingRoute,
 } as any)
 const LandingSupportRoute = LandingSupportRouteImport.update({
@@ -322,6 +328,7 @@ export interface FileRoutesByFullPath {
   '/enrichment-api': typeof LandingEnrichmentApiRoute
   '/mcp': typeof LandingMcpRoute
   '/pricing': typeof LandingPricingRoute
+  '/privacy-request': typeof LandingPrivacyRequestRoute
   '/support': typeof LandingSupportRoute
   '/api/chat': typeof ApiChatRoute
   '/api/chat-index.json': typeof ApiChatIndexDotjsonRoute
@@ -369,6 +376,7 @@ export interface FileRoutesByTo {
   '/enrichment-api': typeof LandingEnrichmentApiRoute
   '/mcp': typeof LandingMcpRoute
   '/pricing': typeof LandingPricingRoute
+  '/privacy-request': typeof LandingPrivacyRequestRoute
   '/support': typeof LandingSupportRoute
   '/api/chat': typeof ApiChatRoute
   '/api/chat-index.json': typeof ApiChatIndexDotjsonRoute
@@ -419,6 +427,7 @@ export interface FileRoutesById {
   '/_landing/enrichment-api': typeof LandingEnrichmentApiRoute
   '/_landing/mcp': typeof LandingMcpRoute
   '/_landing/pricing': typeof LandingPricingRoute
+  '/_landing/privacy-request': typeof LandingPrivacyRequestRoute
   '/_landing/support': typeof LandingSupportRoute
   '/api/chat': typeof ApiChatRoute
   '/api/chat-index.json': typeof ApiChatIndexDotjsonRoute
@@ -470,6 +479,7 @@ export interface FileRouteTypes {
     | '/enrichment-api'
     | '/mcp'
     | '/pricing'
+    | '/privacy-request'
     | '/support'
     | '/api/chat'
     | '/api/chat-index.json'
@@ -517,6 +527,7 @@ export interface FileRouteTypes {
     | '/enrichment-api'
     | '/mcp'
     | '/pricing'
+    | '/privacy-request'
     | '/support'
     | '/api/chat'
     | '/api/chat-index.json'
@@ -566,6 +577,7 @@ export interface FileRouteTypes {
     | '/_landing/enrichment-api'
     | '/_landing/mcp'
     | '/_landing/pricing'
+    | '/_landing/privacy-request'
     | '/_landing/support'
     | '/api/chat'
     | '/api/chat-index.json'
@@ -719,6 +731,13 @@ declare module '@tanstack/react-router' {
       path: '/pricing'
       fullPath: '/pricing'
       preLoaderRoute: typeof LandingPricingRouteImport
+      parentRoute: typeof LandingRoute
+    }
+    '/_landing/privacy-request': {
+      id: '/_landing/privacy-request'
+      path: '/privacy-request'
+      fullPath: '/privacy-request'
+      preLoaderRoute: typeof LandingPrivacyRequestRouteImport
       parentRoute: typeof LandingRoute
     }
     '/_landing/support': {
@@ -998,6 +1017,7 @@ interface LandingRouteChildren {
   LandingEnrichmentApiRoute: typeof LandingEnrichmentApiRoute
   LandingMcpRoute: typeof LandingMcpRoute
   LandingPricingRoute: typeof LandingPricingRoute
+  LandingPrivacyRequestRoute: typeof LandingPrivacyRequestRoute
   LandingSupportRoute: typeof LandingSupportRoute
   LandingIndexRoute: typeof LandingIndexRoute
   LandingCompareSlugRoute: typeof LandingCompareSlugRoute
@@ -1011,6 +1031,7 @@ const LandingRouteChildren: LandingRouteChildren = {
   LandingEnrichmentApiRoute: LandingEnrichmentApiRoute,
   LandingMcpRoute: LandingMcpRoute,
   LandingPricingRoute: LandingPricingRoute,
+  LandingPrivacyRequestRoute: LandingPrivacyRequestRoute,
   LandingSupportRoute: LandingSupportRoute,
   LandingIndexRoute: LandingIndexRoute,
   LandingCompareSlugRoute: LandingCompareSlugRoute,

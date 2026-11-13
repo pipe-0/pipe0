@@ -53,7 +53,7 @@ export function CookieBanner() {
       <p className="text-[15px] leading-snug text-foreground">
         We use cookies for analytics and ads, only if you accept.{" "}
         <Link
-          to="/resources/legal/$" params={{ _splat: "privacy-policy/20261008" }} preload={false}
+          to="/resources/legal/$" params={{ _splat: "privacy-policy/20261113" }} preload={false}
           className="text-muted-foreground underline decoration-[var(--rule-strong)] underline-offset-[3px] hover:text-foreground"
         >
           Cookie policy

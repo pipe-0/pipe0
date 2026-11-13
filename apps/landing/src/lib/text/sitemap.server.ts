@@ -150,6 +150,11 @@ async function entries(): Promise<Entry[]> {
       priority: 0.5,
     },
     {
+      url: url("/privacy-request"),
+      changeFrequency: "yearly",
+      priority: 0.3,
+    },
+    {
       url: url("/blog"),
       changeFrequency: "weekly",
       priority: 0.8,

@@ -117,6 +117,7 @@ const footerColumns = (reviews: { name: string; url: string }[]): FooterGroup[][
       links: [
         { label: "Privacy", href: "/resources/legal/privacy-policy" },
         { label: "Terms", href: "/resources/legal/terms-of-service" },
+        { label: "Privacy request", href: "/privacy-request" },
       ],
     },
   ],
