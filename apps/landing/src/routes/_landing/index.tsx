@@ -36,49 +36,142 @@ const homeDescription =
    word joiner after the dash keeps "6–" from ending a line on a phone. */
 const CLAY_MULTIPLE = "6–\u206012x";
 
-const trustedLogos = [
-  {
-    src: "/media/website/logos/zeroclick.svg",
-    alt: "ZeroClick",
-    className: "block h-5 w-auto",
-    width: 159,
-    height: 30,
-  },
-  {
-    src: "/media/website/logos/lightfield.svg",
-    alt: "Lightfield",
-    className: "block h-[18px] w-auto",
-    width: 87,
-    height: 16,
-  },
-  {
-    src: "/media/website/logos/augusta-dark.svg",
-    alt: "Augusta Labs",
-    className: "block h-[18px] w-auto",
-    width: 4288,
-    height: 924,
-  },
-  {
-    src: "/media/website/logos/aries-light.svg",
-    alt: "Aries",
-    className: "block h-5 w-auto",
-    width: 28,
-    height: 11,
-  },
-  {
-    src: "/media/website/logos/tempo.svg",
-    alt: "Tempo",
-    className: "block h-[18px] w-auto",
-    width: 141,
-    height: 30,
-  },
-  {
-    src: "/media/website/logos/fulfillment.webp",
-    alt: "Fulfillment.com",
-    className: "block h-7 w-auto",
-    width: 360,
-    height: 96,
-  },
+type Logo = {
+  src: string;
+  alt: string;
+  className: string;
+  width: number;
+  height: number;
+  /** For a company that publishes only a mark: its name, set beside it. */
+  name?: string;
+  /** Already drawn in black and white, so it is not flattened to black. */
+  asIs?: boolean;
+  /** Left out below lg, so the marks that remain fill even rows. */
+  wide?: boolean;
+};
+
+/* Two rows on desktop: seven beside the label, then eight across the full
+   width, on the same columns. */
+const trustedLogos: Logo[][] = [
+  [
+    {
+      src: "/media/website/logos/zeroclick.svg",
+      alt: "ZeroClick",
+      className: "block h-5 w-auto",
+      width: 159,
+      height: 30,
+    },
+    {
+      src: "/media/website/logos/lightfield.svg",
+      alt: "Lightfield",
+      className: "block h-[18px] w-auto",
+      width: 87,
+      height: 16,
+    },
+    {
+      src: "/media/website/logos/augusta-dark.svg",
+      alt: "Augusta Labs",
+      className: "block h-[18px] w-auto",
+      width: 4288,
+      height: 924,
+    },
+    {
+      src: "/media/website/logos/aries-light.svg",
+      alt: "Aries",
+      className: "block h-5 w-auto",
+      width: 28,
+      height: 11,
+      wide: true,
+    },
+    {
+      src: "/media/website/logos/tempo.svg",
+      alt: "Tempo",
+      className: "block h-[18px] w-auto",
+      width: 141,
+      height: 30,
+    },
+    {
+      src: "/media/website/logos/fulfillment.webp",
+      alt: "Fulfillment.com",
+      className: "block h-7 w-auto",
+      width: 360,
+      height: 96,
+    },
+    {
+      src: "/media/website/logos/mercor-mark.svg",
+      alt: "Mercor",
+      className: "block h-5 w-auto",
+      width: 22,
+      height: 20,
+      name: "Mercor",
+    },
+  ],
+  [
+    {
+      src: "/media/website/logos/thecompany.svg",
+      alt: "The Company Company",
+      className: "block h-[26px] w-auto",
+      width: 986,
+      height: 200,
+    },
+    {
+      src: "/media/website/logos/expand.svg",
+      alt: "Expand",
+      className: "block h-4 w-auto",
+      width: 115,
+      height: 20,
+    },
+    {
+      src: "/media/website/logos/zeroprime.svg",
+      alt: "Zero Prime",
+      className: "block h-5 w-auto",
+      width: 160,
+      height: 31,
+      wide: true,
+    },
+    {
+      src: "/media/website/logos/taleva-mark.png",
+      alt: "Taleva",
+      className: "block h-[22px] w-auto",
+      width: 398,
+      height: 419,
+      name: "Taleva",
+    },
+    {
+      src: "/media/website/logos/imdigital-mark.svg",
+      alt: "IM Digital",
+      className: "block h-6 w-auto",
+      width: 121,
+      height: 45,
+    },
+    {
+      src: "/media/website/logos/continual-mark.svg",
+      alt: "Continual",
+      className: "block h-5 w-auto",
+      width: 24,
+      height: 24,
+      name: "Continual",
+    },
+    {
+      // One colour, with the white of its mascot's face kept.
+      src: "/media/website/logos/qodo.svg",
+      alt: "Qodo",
+      className: "block h-8 w-auto",
+      width: 135,
+      height: 46,
+      asIs: true,
+    },
+    {
+      // Greyscale, so the U stays cut out of its square.
+      src: "/media/website/logos/usermotion.png",
+      alt: "UserMotion",
+      className: "block h-4 w-auto",
+      width: 560,
+      height: 76,
+      asIs: true,
+      wide: true,
+    },
+  ],
 ];
 
 export const Route = createFileRoute("/_landing/")({
@@ -158,22 +251,20 @@ function Home() {
 
       {/* ===== Customers — one cell per mark ===== */}
       <Band>
-        {/* Label plus seven marks on desktop; below lg Aries drops so six
-            fill even rows (2 or 3 across). */}
+        {/* On desktop the label and seven marks make the first row, and
+            eight marks the second, on the same columns. Below lg three
+            marks drop, so twelve fill even rows (2 or 3 across). */}
         <div className="grid grid-cols-2 gap-px bg-[var(--rule)] sm:grid-cols-3 lg:grid-cols-[1.4fr_repeat(7,1fr)]">
           <div className="col-span-2 flex items-center bg-background px-6 py-5 sm:col-span-3 sm:px-10 lg:col-span-1 lg:px-8">
             <span className={cn(type.small, "leading-snug")}>
               Used by GTM and product teams at
             </span>
           </div>
-          {trustedLogos.map((logo) => (
-            <div
-              key={logo.alt}
-              className={`flex h-24 items-center justify-center bg-background px-4 [&_img]:opacity-70 [&_img]:brightness-0${logo.alt === "Aries" ? " max-lg:hidden" : ""}`}
-            >
+          {trustedLogos.flat().map((logo) => {
+            const mark = (
               <Image
                 src={logo.src}
-                alt={`${logo.alt} logo`}
+                alt={logo.name ? "" : `${logo.alt} logo`}
                 width={logo.width}
                 height={logo.height}
                 // Fixed height in a narrow cell: the browser's max-width
@@ -181,23 +272,30 @@ function Home() {
                 // squeezed rather than scaled down.
                 className={`${logo.className} max-w-full object-contain`}
               />
-            </div>
-          ))}
-          {/* Mercor publishes only its mark, so it is set with its name. */}
-          <div className="flex h-24 items-center justify-center bg-background px-4">
-            <span className="flex items-center gap-2 opacity-70 [&_img]:brightness-0">
-              <Image
-                src="/media/website/logos/mercor-mark.svg"
-                alt=""
-                width={22}
-                height={20}
-                className="block h-5 w-auto"
-              />
-              <span className="text-[18px] font-semibold tracking-[-0.02em] text-black">
-                Mercor
-              </span>
-            </span>
-          </div>
+            );
+            return (
+              <div
+                key={logo.alt}
+                className={cn(
+                  "flex h-24 items-center justify-center bg-background px-4",
+                  !logo.asIs && "[&_img]:brightness-0",
+                  logo.wide && "max-lg:hidden",
+                )}
+              >
+                {logo.name ? (
+                  // A mark without a wordmark is set with its name.
+                  <span className="flex items-center gap-2 opacity-70">
+                    {mark}
+                    <span className="text-[18px] font-semibold tracking-[-0.02em] text-black">
+                      {logo.name}
+                    </span>
+                  </span>
+                ) : (
+                  <span className="contents [&_img]:opacity-70">{mark}</span>
+                )}
+              </div>
+            );
+          })}
         </div>
       </Band>
 
