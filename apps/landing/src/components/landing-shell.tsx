@@ -1,4 +1,4 @@
-import { Band, Brackets, GridCtas, type } from "@/components/grid";
+import { Band, GridCtas, type } from "@/components/grid";
 import { WellSheet } from "@/components/well-sheet";
 import { cn } from "@/lib/utils";
 import type { ReactNode } from "react";
@@ -52,13 +52,16 @@ export function PageHero({
   );
 }
 
-const defaultCloseLede =
-  "Run a few rows of a list you already enriched somewhere else. Compare the hit rate and the cost per contact.";
-
-/** Closing indigo band — the page ends on the same colour it opens with. */
+/**
+ * Closing indigo band — the page ends on the colour it opens with. It sits
+ * inside the rails like every other band (a rounded panel wider than the
+ * rails, matching the homepage's film, was tried on 2026-11-17 and taken
+ * back the same day). No corner marks, and no sentence under the title
+ * unless a page passes one.
+ */
 export function CloseBand({
   title = "Give your GTM team its AI moment.",
-  lede = defaultCloseLede,
+  lede,
 }: {
   title?: ReactNode;
   lede?: ReactNode;
@@ -81,20 +84,21 @@ export function CloseBand({
           tone="inverse"
           className="opacity-70"
         />
-        <Brackets inset={14} tone="inverse" />
-        {/* The hero's shape, in white: a centred title, the sentence
-            under it a step smaller, then the way in. */}
+        {/* The hero's shape, in white: a centred title and the way in. A
+            page may add one sentence between them. */}
         <div className="relative z-10 sm:mx-auto sm:max-w-[820px] sm:text-center">
           <h2 className={cn(type.title, "text-white")}>{title}</h2>
-          <p
-            className={cn(
-              "mt-3 max-w-[52ch] text-pretty sm:mx-auto sm:mt-4 sm:text-balance",
-              type.lede,
-              "text-white/75",
-            )}
-          >
-            {lede}
-          </p>
+          {lede && (
+            <p
+              className={cn(
+                "mt-3 max-w-[52ch] text-pretty sm:mx-auto sm:mt-4 sm:text-balance",
+                type.lede,
+                "text-white/75",
+              )}
+            >
+              {lede}
+            </p>
+          )}
           <GridCtas tone="inverse" className="mt-8 sm:justify-center" />
         </div>
       </div>

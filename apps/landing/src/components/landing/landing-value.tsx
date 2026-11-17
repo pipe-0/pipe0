@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { barSkin, breakFrame, card, radius, type } from "@/components/grid";
+import { barSkin, Cell, Cells, pad, radius, type } from "@/components/grid";
 import { rows as products } from "@/components/landing/landing-economics";
 import { bars as coverage } from "@/components/landing/landing-proof";
 import { cn } from "@/lib/utils";
@@ -8,13 +8,14 @@ import { useState, type ReactNode } from "react";
 /**
  * Proof — what comes back, and what it costs, side by side.
  *
- * The page changes subject here, from what pipe0 is to how good it is, so
- * the section is a break from the grid: two white cards on the muted
- * ground. One answers "how much of my list do you find", the other "what
- * does a result cost".
+ * The page changes subject here, from what pipe0 is to how good it is. Two
+ * cells that share a wall, like every other pair on the page (they were
+ * rounded cards with shadows on a muted break until 2026-11-17; the only
+ * ones on the page, so they went). One answers "how much of my list do you
+ * find", the other "what does a result cost".
  *
- * The two cards are one design used twice: a title, one line of context,
- * bars, one line with a link. Every bar in both is the same height on the
+ * The two cells are one design used twice: a title, bars, one line with a
+ * link. Every bar in both is the same height on the
  * same columns, so the pair reads as a set. The cost card shows one result
  * at a time, picked by the switch in its head; its title names the result,
  * so the chart needs no label of its own.
@@ -27,7 +28,7 @@ import { useState, type ReactNode } from "react";
  * carry these charts at full size on the other pages (landing-proof,
  * landing-economics), which also document their sources, so a figure can
  * only be changed in one place. Cost is pipe0's high-volume price, the one
- * most teams end up on, and the line under the title says so. /pricing
+ * most teams end up on. /pricing
  * shows both.
  *
  * Static bars, no draw-in: a number that animates into place reads as a
@@ -50,17 +51,14 @@ export function LandingValue() {
   const [shown, setShown] = useState(0);
 
   return (
-    <div className={cn(breakFrame, "pb-14 sm:pb-20")}>
-      <div className="grid gap-4 sm:gap-6 lg:grid-cols-2">
+    <Cells className="border-t border-[var(--rule)] lg:grid-cols-2">
         {/* ---- Coverage ---- */}
-        <figure className={cn(card, "flex flex-col p-7 sm:p-9")}>
+        <Cell className={cn(pad, "flex")}>
+        <figure className="flex min-w-0 flex-1 flex-col">
           <figcaption>
             <div className={titleRow}>
               <h3 className={type.heading}>Mobile numbers found</h3>
             </div>
-            <p className={note}>
-              The same 150 LinkedIn profiles through each route, August 2026.
-            </p>
           </figcaption>
           <dl className={chart}>
             {coverage.map((bar) => (
@@ -90,9 +88,11 @@ export function LandingValue() {
             </Link>
           </Foot>
         </figure>
+        </Cell>
 
         {/* ---- Cost ---- */}
-        <figure className={cn(card, "flex flex-col p-7 sm:p-9")}>
+        <Cell className={cn(pad, "flex")}>
+        <figure className="flex min-w-0 flex-1 flex-col">
           <figcaption>
             <div className={titleRow}>
               <h3 className={type.heading}>
@@ -130,10 +130,6 @@ export function LandingValue() {
                 })}
               </div>
             </div>
-            <p className={note}>
-              Average per result with high-volume pricing, against typical
-              waterfalls.
-            </p>
           </figcaption>
           {/* Both results stay in the page; the one not chosen is hidden. */}
           {products.map((product, i) => {
@@ -174,8 +170,8 @@ export function LandingValue() {
             </Link>
           </Foot>
         </figure>
-      </div>
-    </div>
+        </Cell>
+    </Cells>
   );
 }
 
@@ -183,7 +179,6 @@ export function LandingValue() {
    cards, so the two titles stand on one line. */
 const titleRow =
   "flex min-h-[34px] flex-wrap items-center justify-between gap-x-4 gap-y-3";
-const note = cn("mt-1.5", type.small);
 const chart = "mt-8 space-y-4 sm:space-y-6";
 
 /** One bar: what it is, the bar on a track, and its value. Used by both

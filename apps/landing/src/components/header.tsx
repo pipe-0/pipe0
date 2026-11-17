@@ -153,13 +153,29 @@ function ProductsMenu({ active }: { active: boolean }) {
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const matchRoute = useMatchRoute();
+  /* The homepage's top has no rails: they start in the film's sky. Its
+     header has no rule either until the page scrolls under it. */
+  const isHome = Boolean(matchRoute({ to: "/" }));
+  const [scrolled, setScrolled] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 0);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
-    <header className="landing sticky top-0 z-50 w-full border-b border-[var(--rule)] bg-background/85 backdrop-blur-lg">
+    <header
+      className={cn(
+        "landing sticky top-0 z-50 w-full border-b border-[var(--rule)] bg-background/85 backdrop-blur-lg transition-colors",
+        isHome && !scrolled && "border-transparent",
+      )}
+    >
       <div
         className={cn(
           "mx-auto flex h-16 max-w-330 items-center justify-between px-3 sm:px-5",
           frame,
+          isHome && "sm:border-x-0",
         )}
       >
         {/* Logo and nav as one group on the left; actions on the right. No

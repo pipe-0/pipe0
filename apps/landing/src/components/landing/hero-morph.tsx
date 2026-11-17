@@ -1209,7 +1209,7 @@ export function HeroMorph() {
   return (
     <div
       ref={host}
-      className="hero-scene mx-auto w-full min-w-0 max-w-[1200px]"
+      className="hero-scene mx-auto w-full min-w-0 max-w-[var(--film-max,1200px)]"
       role="img"
       aria-label="In a terminal, an agent finds a list of people through pipe0. Asked to move it to a sheet, the terminal becomes one, and its cursor turns into a small helper that fills in each person's work email and why to write now. Asked to reach out to two people a day, the sheet gets an alarm clock; overnight nobody is there, and in the morning the helper sends the day's two on its own."
     >
@@ -1224,12 +1224,14 @@ export function HeroMorph() {
           </span>
         ))}
 
-        {/* Night, over the whole band, behind everything. */}
+        {/* Night, over the whole band, behind everything. The band runs
+            edge to edge, so this reaches far past the scene on both sides;
+            the stars stay where they were (x is offset by the extra 1500). */}
         <div
           style={abs({
-            left: -900,
+            left: -2400,
             top: -400,
-            width: 3000,
+            width: 6000,
             height: 1500,
             opacity: night,
             background:
@@ -1248,7 +1250,7 @@ export function HeroMorph() {
             <span
               key={x}
               style={abs({
-                left: x,
+                left: x + 1500,
                 top: y,
                 width: r * 2,
                 height: r * 2,

@@ -1,6 +1,5 @@
 import { seo } from "@/lib/seo";
 import { createFileRoute } from "@tanstack/react-router";
-import { EventPill } from "@/components/landing/event-pill";
 import { HeroMorph } from "@/components/landing/hero-morph";
 import { KnifeLoop } from "@/components/landing/knife-loop";
 import { LandingFaq, faqItems } from "@/components/landing/landing-faq";
@@ -13,10 +12,8 @@ import { LandingWell } from "@/components/landing/landing-well";
 import { LandingValue } from "@/components/landing/landing-value";
 import {
   Band,
-  Brackets,
-  Break,
-  BreakHead,
   GridCtas,
+  panel,
   SectionHead,
   type,
 } from "@/components/grid";
@@ -194,69 +191,73 @@ export const Route = createFileRoute("/_landing/")({
 function Home() {
   return (
     <>
-      {/* ===== Hero — the claim as the headline, then what the knife is
-              made of: three products GTM teams know by name, forged into
-              one. Three short sentences; the last is the invitation.
-              ===== */}
-      <Band>
-        {/* One left-aligned column on one spacing scale: headline, then
-            the answer, then the way in. Gaps step down as the type does
-            (headline → lede 32px, lede → buttons 36px, buttons → note 14px)
-            so each element is visibly attached to the one above it. */}
-        <div className="flex flex-col items-center px-6 pb-10 pt-10 text-center sm:px-10 sm:pb-12 sm:pt-12 lg:px-12 lg:pb-12 lg:pt-14">
-          <EventPill />
+      {/* ===== Hero — the claim and the way in, nothing else. The film
+              under it is the explanation, so the hero is kept short: its
+              padding follows the screen's height, and gives the film the
+              rest of the first screen. ===== */}
+      <Band className="sm:border-b-0" inner="sm:border-x-0" marks={false}>
+        <div className="flex flex-col items-center px-6 pb-[clamp(2rem,5svh,3.5rem)] pt-[clamp(2rem,5.5svh,4rem)] text-center sm:px-10 lg:px-12">
           {/* The claim, with the knife living in it: its tools are agents,
               and they flip out one by one (app/knife-loop.tsx). Two lines
-              from sm; phones wrap freely, but the knife stays with its
-              word. */}
+              from sm. On a phone the first wraps once more, and the knife
+              stays with its word: "The Swiss / Army knife / for agentic
+              GTM." */}
           <h1 className="text-balance text-[9.4vw] font-medium leading-[1.06] tracking-[-0.045em] text-foreground sm:text-[clamp(40px,4.4vw,62px)]">
             The Swiss{" "}
             <span className="whitespace-nowrap">
               Army <KnifeLoop className="align-[-0.2em]" /> knife
             </span>
-            <br className="max-sm:hidden" /> for agentic GTM.
+            <br /> for agentic GTM.
           </h1>
-          {/* What it is, in the three names buyers already use, then what
-              that is for, then the invitation. */}
-          <p
-            className={cn(
-              "mt-6 max-w-170 max-sm:-mx-3 sm:mx-auto sm:text-balance",
-              type.lede,
-            )}
-          >
-            Clay-like tables, a GTM MCP, and a B2B data API, forged into one
-            system for every level of GTM. It makes sense the moment you
-            try it.
-          </p>
           <GridCtas className="mt-8 justify-center" />
         </div>
       </Band>
 
-      {/* ===== Product film — the one saturated surface near the top.
+      {/* ===== Product film — the one saturated surface near the top, and
+              nothing on it but the film. Below 2xl the sky runs edge to
+              edge. From 2xl it is a rounded panel, 95% of the screen and
+              always wider than the rails. There is no rule above or below
+              it at any width: the sky's own edges are where the sections
+              end, and the page's grid starts under it (see the customers
+              band).
+
+              The film's size follows the screen's height. Up to about
+              1060px of height it is the 1200px it always was. On taller
+              screens it grows into the room the hero leaves (--film-max:
+              what is left of the screen under the header, the hero and the
+              panel's own padding, at the film's 12:5), up to 1400px.
+
               Not on phones: its type is unreadable that small, and the
               headline already carries a picture. The page goes straight
               from the hero to who uses it. ===== */}
-      <Band className="max-sm:hidden">
-        <div className="relative flex min-h-[calc(min(100vw-3rem,1320px)/2.3)] flex-col overflow-hidden">
+      <section className="relative max-sm:hidden">
+        <div className={panel}>
           <div
             className="hero-sky pointer-events-none absolute inset-0 z-0"
             aria-hidden
           />
-          <div className="relative z-10 flex flex-1 items-center px-4 py-10 sm:px-10">
+          <div className="relative z-10 flex items-center px-4 py-[clamp(2.5rem,6svh,5rem)] [--film-max:clamp(1200px,calc((100svh_-_35rem)_*_2.4),1400px)] sm:px-10">
             <HeroMorph />
           </div>
-          <Brackets inset={14} tone="inverse" />
         </div>
-      </Band>
+      </section>
 
-      {/* ===== Customers — one cell per mark ===== */}
-      <Band>
+      {/* ===== Customers — one cell per mark. This is where the page's
+              grid begins, and it begins gradually: no rule and no crosses
+              above it; the rails and the cells' walls fade in from white
+              under the film. The marks and the label stand above the fade,
+              so only the lines are affected. ===== */}
+      <Band marks={false} inner="sm:pt-3">
+        <span
+          aria-hidden
+          className="pointer-events-none absolute -inset-x-px top-0 z-10 h-28 bg-gradient-to-b from-background to-transparent max-sm:hidden"
+        />
         {/* On desktop the label and seven marks make the first row, and
             eight marks the second, on the same columns. Below lg three
             marks drop, so twelve fill even rows (2 or 3 across). */}
         <div className="grid grid-cols-2 gap-px bg-[var(--rule)] sm:grid-cols-3 lg:grid-cols-[1.4fr_repeat(7,1fr)]">
           <div className="col-span-2 flex items-center bg-background px-6 py-5 sm:col-span-3 sm:px-10 lg:col-span-1 lg:px-8">
-            <span className={cn(type.small, "leading-snug")}>
+            <span className={cn(type.small, "relative z-20 leading-snug")}>
               Used by GTM and product teams at
             </span>
           </div>
@@ -284,14 +285,16 @@ function Home() {
               >
                 {logo.name ? (
                   // A mark without a wordmark is set with its name.
-                  <span className="flex items-center gap-2 opacity-70">
+                  <span className="relative z-20 flex items-center gap-2 opacity-70">
                     {mark}
                     <span className="text-[18px] font-semibold tracking-[-0.02em] text-black">
                       {logo.name}
                     </span>
                   </span>
                 ) : (
-                  <span className="contents [&_img]:opacity-70">{mark}</span>
+                  <span className="contents [&_img]:relative [&_img]:z-20 [&_img]:opacity-70">
+                    {mark}
+                  </span>
                 )}
               </div>
             );
@@ -299,25 +302,23 @@ function Home() {
         </div>
       </Band>
 
-      {/* ===== What pipe0 is, said early: the three levels go-to-market
-              work happens on, and one figure for each. ===== */}
+      {/* ===== What pipe0 is, first under the customers: the three kinds
+              of product it combines, by name, falling into one. A head
+              and one drawing, in the page's own hairlines. ===== */}
       <Band>
         <SectionHead
-          title="Go-to-market happens on three levels."
-          lede="A system that speeds up all three changes how big a team has to be."
-        />
-        <LandingLevels />
-      </Band>
-
-      {/* ===== The moment: the three building blocks of agentic GTM
-              falling into one product. A head and one drawing, in the
-              page's own hairlines. ===== */}
-      <Band>
-        <SectionHead
-          title="Every GTM team is looking for its AI moment."
-          lede="It happens when the building blocks of agentic GTM converge in one product."
+          title={`Tables, MCP servers, and data APIs, forged into one\u00a0product. It makes sense the first time you try\u00a0it.`}
         />
         <LandingWell />
+      </Band>
+
+      {/* ===== What that makes possible: the three levels go-to-market
+              work happens on, and what pipe0 does on each. ===== */}
+      <Band>
+        <SectionHead
+          title="One framework for three levels of GTM. Faster and more accurate than any tool you've tried."
+        />
+        <LandingLevels />
       </Band>
 
       {/* ===== Surfaces ("Work anywhere."): the row of interface cards that
@@ -330,27 +331,23 @@ function Home() {
       <LandingSpotlight />
           ===== */}
 
-      {/* ===== The stack it replaces. Its second line is also where the
-              page says, once and plainly, what pipe0 is. ===== */}
-      <Band>
+      {/* ===== The stack it replaces. No crosses: the levels' indigo row
+              ends on this band's top corners. ===== */}
+      <Band marks={false}>
         <SectionHead
-          title="From a tangled stack to one platform."
-          lede="pipe0 is one system that builds GTM automation with AI. Enrichment, lists, routing, and sync in one place instead of spread across tools like these."
+          title="pipe0 replaces a tangled stack of tools like these with one system that builds GTM automation with AI."
         />
         <LandingReplaces />
       </Band>
 
-      {/* ===== Proof — a new part of the page, so a break from the grid:
-              how much comes back and what it costs, on one screen. Its
-              ground settles into the well, which the closing run of the
-              page (founder, questions) stands on. ===== */}
-      <Break into="well">
-        <BreakHead
-          title="More of your list found, for less."
-          lede={`Higher coverage than traditional waterfalls, ${CLAY_MULTIPLE} more cost\u2011efficient.`}
+      {/* ===== Proof: how much comes back and what it costs, side by
+              side. From here the page stands on the muted ground. ===== */}
+      <Band tone="muted">
+        <SectionHead
+          title={`Higher coverage than traditional waterfalls and ${CLAY_MULTIPLE} more cost\u2011efficient.`}
         />
         <LandingValue />
-      </Break>
+      </Band>
 
       {/* ===== Founder ===== */}
       <Band tone="muted">

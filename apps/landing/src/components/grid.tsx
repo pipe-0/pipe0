@@ -35,6 +35,7 @@ export function Band({
   className,
   inner,
   marks = true,
+  marksClassName,
   id,
   tone = "default",
 }: {
@@ -47,6 +48,8 @@ export function Band({
   inner?: string;
   /** Crosses where the band's top edge meets the rails. */
   marks?: boolean;
+  /** Classes for both crosses, e.g. to hide them where no rule is drawn. */
+  marksClassName?: string;
   id?: string;
 }) {
   return (
@@ -64,8 +67,8 @@ export function Band({
       <div className={cn(frame, inner)}>
         {marks && (
           <>
-            <Cross className="-left-[6px] -top-[6px]" />
-            <Cross className="-right-[6px] -top-[6px]" />
+            <Cross className={cn("-left-[6px] -top-[6px]", marksClassName)} />
+            <Cross className={cn("-right-[6px] -top-[6px]", marksClassName)} />
           </>
         )}
         {children}
@@ -85,6 +88,7 @@ export function Cross({ className }: { className?: string }) {
   return (
     <span
       aria-hidden
+      data-cross
       className={cn(
         "pointer-events-none absolute z-20 size-[11px] max-sm:hidden",
         className,
@@ -218,13 +222,24 @@ export const type = {
   small: "text-[14px] leading-relaxed text-muted-foreground",
 } as const;
 
-/** Corner radii: a card, a control, a bar. Nothing else on the page is
- *  rounded (product UI shown inside a card keeps its own). */
+/** Corner radii: the film's panel, a card, a control, a bar. Nothing else on
+ *  the page is rounded (product UI shown inside a card keeps its own). */
 export const radius = {
+  panel: "rounded-[28px]",
   card: "rounded-[14px]",
   control: "rounded-[8px]",
   bar: "rounded-[4px]",
 } as const;
+
+/**
+ * The shape of the homepage's product film: edge to edge up to 2xl, and
+ * from there a rounded panel, 95% of the screen and always wider than the
+ * rails. It has no rule above or below it, no corner marks and no rails:
+ * its own edges are where the sections around it end. The closing band is
+ * not this shape; it stays inside the rails.
+ */
+export const panel =
+  "relative overflow-hidden 2xl:mx-auto 2xl:w-[max(95%,1320px+5rem)] 2xl:rounded-[28px]";
 
 /**
  * A section's head: the title, and under it one or two sentences, a clear
