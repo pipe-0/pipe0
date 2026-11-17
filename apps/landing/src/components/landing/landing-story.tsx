@@ -11,7 +11,10 @@ import { cn } from "@/lib/utils";
  *
  * The section is a small sheet: three columns, two rows. The upper row is
  * the work (a picture, the level's name, what it is, in grey). The lower
- * row is pipe0's: what it does about each level, led by the claim. The
+ * row is pipe0's: what it does about each level, in one sentence set as a
+ * heading. (Each cell used to open with a short claim, "Answer any research
+ * question." and so on, above that sentence. The claims only repeated the
+ * level's name from the cell above, so they went, 2026-11-17.) The
  * whole row is in the glossy indigo of pipe0's bars in the charts
  * (`barSkin.win`: the lit face, the darker rim, the highlight along the
  * top), with the words in white, and a tab at its corner in the same
@@ -74,44 +77,40 @@ const levels: {
   key: string;
   name: string;
   what: string;
-  /** What pipe0 makes possible on this level: Florian's words (2026-11-17). */
-  claim: string;
+  /** What pipe0 does about this level: the one line in its cell. */
   here: string;
   alt: string;
   still: { left: number; bottom: number; scale: number };
 }[] = [
-  {
-    key: "research",
-    name: "Research",
-    what: "What a rep needs before a call or an email: who this is, what changed, why now.",
-    claim: "Answer any research question.",
-    /* Florian's figure, from his own testing (2026-11-13). */
-    here: "Get the answer with AI about 17x faster than with competing systems.",
-    alt: "A profile card under a magnifying glass",
-    /* The card is white on white: its left corner is at 64, far left
-       of the first coloured pixel. */
-    still: { left: 64, bottom: 628, scale: 0.27 },
-  },
-  {
-    key: "systems",
-    name: "Systems",
-    what: "Plays that scale one person to work a whole market, like drafting a hundred emails a day.",
-    claim: "Build any system.",
-    /* A non-breaking hyphen: "non-" must not end a line. */
-    here: "Building blocks for technical and non\u2011technical users to create any GTM play.",
-    alt: "A small machine turning out a row of envelopes",
-    still: { left: 171, bottom: 698, scale: 0.26 },
-  },
-  {
-    key: "infrastructure",
-    name: "Infrastructure",
-    what: "What the whole company runs on: signal engines, CRM enrichment, lead routing.",
-    claim: "Run your most involved infrastructure.",
-    here: "Tables up to 2M records, signals, webhooks, and a stateless API to power production.",
-    alt: "A helper in a hard hat beside a pipe that drops coloured balls into a bin",
-    still: { left: 177, bottom: 696, scale: 0.26 },
-  },
-];
+    {
+      key: "research",
+      name: "Research",
+      what: "What a rep needs before a call or an email: who this is, what changed, why now.",
+      /* Florian's figure, from his own testing (2026-11-13). */
+      here: "Answers any research question up to 17x faster than competing systems.",
+      alt: "A profile card under a magnifying glass",
+      /* The card is white on white: its left corner is at 64, far left
+         of the first coloured pixel. */
+      still: { left: 64, bottom: 628, scale: 0.27 },
+    },
+    {
+      key: "systems",
+      name: "Systems",
+      what: "Plays that scale one person to work a whole market, like drafting a hundred emails a day.",
+      /* A non-breaking hyphen: "non-" must not end a line. */
+      here: "Technical and non\u2011technical users create any GTM play or automation with pipe0.",
+      alt: "A small machine turning out a row of envelopes",
+      still: { left: 171, bottom: 698, scale: 0.26 },
+    },
+    {
+      key: "infrastructure",
+      name: "Infrastructure",
+      what: "What the whole company runs on: signal engines, CRM enrichment, lead routing.",
+      here: "Tables up to 2M records, signals, webhooks, and a stateless API to power production.",
+      alt: "A helper in a hard hat beside a pipe that drops coloured balls into a bin",
+      still: { left: 177, bottom: 696, scale: 0.26 },
+    },
+  ];
 
 /* Explicit columns from lg, so the two cells of a level sit one above the
    other while the DOM keeps them together (a phone shows them as one card). */
@@ -194,18 +193,20 @@ export function LandingLevels() {
               "relative z-10 min-w-0 py-8 max-sm:rounded-b-[14px] sm:-m-px sm:py-9 lg:row-start-2",
               glossy,
               cellPad,
+              // The line may run closer to the wall than the grey text
+              // above it: that is what lets it stand on two lines.
+              "lg:pr-4",
               column[i],
             )}
           >
             {/* One tab for the row. Below lg the levels are stacked, so
                 each answer carries its own. */}
             <Tab className={i > 0 ? "lg:hidden" : undefined} />
-            <p className={cn(type.subheading, "text-white")}>{level.claim}</p>
             <p
               className={cn(
-                "mt-2 max-w-[36ch] text-pretty",
-                type.body,
-                "text-white/85",
+                "max-w-[38ch] text-balance lg:max-w-none",
+                type.subheading,
+                "text-white",
               )}
             >
               {level.here}
