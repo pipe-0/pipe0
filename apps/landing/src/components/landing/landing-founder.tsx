@@ -54,7 +54,7 @@ export function LandingFounder() {
 
       <Cell className="flex items-center px-6 py-14 sm:px-10 sm:py-20 lg:col-span-8 lg:px-16">
         <blockquote className={cn("max-w-[42ch] text-pretty", type.heading)}>
-          &ldquo;Don&apos;t trust any vendor&apos;s find rate, ours included.
+          &ldquo;Don&apos;t trust any vendor&apos;s find rate.
           Run a real list through pipe0 next to your current tool. If the
           difference isn&apos;t obvious, we did something wrong.&rdquo;
         </blockquote>

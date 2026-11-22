@@ -307,7 +307,7 @@ function Home() {
               and one drawing, in the page's own hairlines. ===== */}
       <Band>
         <SectionHead
-          title={`Tables, MCP servers, and data APIs, forged into one\u00a0product. It makes sense the first time you try\u00a0it.`}
+          title={`Tables, MCP servers, and data APIs, forged into one product. It makes sense the moment you try it.`}
         />
         <LandingWell />
       </Band>
@@ -316,7 +316,7 @@ function Home() {
               work happens on, and what pipe0 does on each. ===== */}
       <Band>
         <SectionHead
-          title="One framework for three levels of GTM. Faster and more accurate than any tool you've tried."
+          title="One framework for three levels of GTM."
         />
         <LandingLevels />
       </Band>
@@ -335,7 +335,7 @@ function Home() {
               ends on this band's top corners. ===== */}
       <Band marks={false}>
         <SectionHead
-          title="pipe0 replaces a tangled stack of tools like these with one system that builds GTM automation with AI."
+          title="Replace a tangled stack with one system."
         />
         <LandingReplaces />
       </Band>
@@ -344,7 +344,7 @@ function Home() {
               side. From here the page stands on the muted ground. ===== */}
       <Band tone="muted">
         <SectionHead
-          title={`Higher coverage than traditional waterfalls and ${CLAY_MULTIPLE} more cost\u2011efficient.`}
+          title={`Companies running data-quality benchmarks choose pipe0 9 out of 10 times.`}
         />
         <LandingValue />
       </Band>

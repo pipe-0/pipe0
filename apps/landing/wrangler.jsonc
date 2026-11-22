@@ -5,10 +5,14 @@
   "compatibility_date": "2026-10-01",
   "compatibility_flags": ["nodejs_compat"],
   // The apex serves the site through a route on its proxied DNS record, which
-  // let the cutover from Vercel happen without a DNS gap. www still redirects
-  // to it from Vercel. The workers.dev URL stays for testing; public/_headers
-  // keeps it out of search.
-  "routes": [{ "pattern": "pipe0.com/*", "zone_name": "pipe0.com" }],
+  // let the cutover from Vercel happen without a DNS gap. www is a custom
+  // domain on the same Worker and serves the same site; canonicals point at
+  // the apex. The workers.dev URL stays for testing; public/_headers keeps it
+  // out of search.
+  "routes": [
+    { "pattern": "pipe0.com/*", "zone_name": "pipe0.com" },
+    { "pattern": "www.pipe0.com", "custom_domain": true }
+  ],
   "workers_dev": true,
   "observability": { "enabled": true },
   // Stack traces in Workers logs point at src/ rather than the bundle.
