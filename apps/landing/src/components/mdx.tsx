@@ -39,6 +39,7 @@ import {
   Zap,
 } from "lucide-react";
 import { YoutubeEmbed } from "@/components/features/mdx/youtube-embed";
+import { ClayCostCalculator } from "@/components/blog/clay-cost-calculator";
 
 const mdxComponents = {
   AppLink: AppLink,
@@ -46,6 +47,7 @@ const mdxComponents = {
   QuickstartCards,
   DocsIllustration,
   YoutubeEmbed,
+  ClayCostCalculator,
   // Icons MDX uses in <Card icon={...}>. MDX renders in the browser, so this
   // list stays explicit: all of lucide would land on every docs page.
   ArrowRightLeft,

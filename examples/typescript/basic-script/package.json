@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "client:generate": "npx openapi-typescript https://api.pipe0.com/doc -o ./src/schema.ts"
+    "client:generate": "npx openapi-typescript https://openapi-proxy.app/v/pipe0/public.json -o ./src/schema.ts"
   },
   "dependencies": {
     "@pipe0/client": "0.0.36"

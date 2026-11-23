@@ -4,7 +4,7 @@ description: POST /v1/pipes/run — run data enrichment pipes asynchronously ove
 full: true
 _openapi:
   preload:
-    - https://api.pipe0.com/openapi
+    - https://openapi-proxy.app/v/pipe0/public.json
   method: POST
   operations:
     - path: /v1/pipes/run
@@ -21,4 +21,4 @@ _openapi:
 
 Enrich data asynchronously. Create an enrichment task. Check this task by polling the `/check` endpoint until the status becomes `completed` or `failed`. Requests accept at most 100 input records; send larger workloads in chunks.
 
-<APIPage document={"https://api.pipe0.com/openapi"} operations={[{"path":"/v1/pipes/run","method":"post"}]} />
+<APIPage document={"https://openapi-proxy.app/v/pipe0/public.json"} operations={[{"path":"/v1/pipes/run","method":"post"}]} />

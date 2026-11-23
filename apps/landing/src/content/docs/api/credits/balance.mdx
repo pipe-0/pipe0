@@ -4,7 +4,7 @@ description: GET /v1/credit-balance returns the credits your organization has le
 full: true
 _openapi:
   preload:
-    - https://api.pipe0.com/openapi
+    - https://openapi-proxy.app/v/pipe0/public.json
   method: GET
   operations:
     - path: /v1/credit-balance
@@ -23,4 +23,4 @@ Get the credits your organization has left. The API key tells pipe0 which organi
 
 `balance` is the total you can spend. `purchased_balance` is the part of it you bought as one-off credit purchases. Plan credits are spent first.
 
-<APIPage document={"https://api.pipe0.com/openapi"} operations={[{"path":"/v1/credit-balance","method":"get"}]} />
+<APIPage document={"https://openapi-proxy.app/v/pipe0/public.json"} operations={[{"path":"/v1/credit-balance","method":"get"}]} />

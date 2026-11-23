@@ -4,7 +4,7 @@ description: Run a people or company search and get results in one synchronous A
 full: true
 _openapi:
   preload:
-    - https://api.pipe0.com/openapi
+    - https://openapi-proxy.app/v/pipe0/public.json
   method: POST
   operations:
     - path: /v1/search/run/sync
@@ -22,4 +22,4 @@ _openapi:
 
 Search for companies and leads synchronously. This endpoint waits for the search to complete before returning a result. If the search takes longer than 3 minutes, the endpoint returns `408` with the run id in the error detail; the search continues, and you can recover the result from the `/check` endpoint.
 
-<APIPage document={"https://api.pipe0.com/openapi"} operations={[{"path":"/v1/search/run/sync","method":"post"}]} />
+<APIPage document={"https://openapi-proxy.app/v/pipe0/public.json"} operations={[{"path":"/v1/search/run/sync","method":"post"}]} />

@@ -4,7 +4,7 @@ description: POST /v1/search/run — find people and companies with asynchronous
 full: true
 _openapi:
   preload:
-    - https://api.pipe0.com/openapi
+    - https://openapi-proxy.app/v/pipe0/public.json
   method: POST
   operations:
     - path: /v1/search/run
@@ -21,4 +21,4 @@ _openapi:
 
 Use a data source to search for people and company data. This endpoint creates a search task and returns immediately with status `pending`; poll the `/check` endpoint until the status becomes `completed` or `failed`.
 
-<APIPage document={"https://api.pipe0.com/openapi"} operations={[{"path":"/v1/search/run","method":"post"}]} />
+<APIPage document={"https://openapi-proxy.app/v/pipe0/public.json"} operations={[{"path":"/v1/search/run","method":"post"}]} />

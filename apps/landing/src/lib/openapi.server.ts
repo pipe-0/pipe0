@@ -1,6 +1,6 @@
 import { createOpenAPI } from "fumadocs-openapi/server";
 
-const OPENAPI_URL = "https://api.pipe0.com/openapi";
+const OPENAPI_URL = "https://openapi-proxy.app/v/pipe0/public.json";
 
 // fumadocs-openapi v11 resolves string inputs as file paths only, so remote
 // schemas are fetched via a document factory. The key doubles as the schema id

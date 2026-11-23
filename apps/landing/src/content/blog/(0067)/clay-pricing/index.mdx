@@ -1,0 +1,230 @@
+---
+title: "Clay Pricing in 2026: Plans, Credits, and What a Record Really Costs"
+date: 2026-11-23
+category: Sales data
+excerpt: "Clay costs $185 a month on Launch and $495 on Growth, or $167 and
+  $446 billed annually. What you actually pay depends on two meters, Data
+  Credits and Actions. Here is how both work, what a record costs, and a
+  calculator for your own bill."
+tags:
+  - Clay
+  - data enrichment
+  - pricing
+tldr: "Clay has a Free plan, Launch from $185 a month, Growth from $495 and
+  custom Enterprise. Since March 2026 every plan meters two things: Data
+  Credits (about 4 to 5 cents each) buy the data, and Actions (under half a
+  cent each) pay for every enrichment, AI run, and export. A fully enriched
+  record runs 6 to 20 Data Credits, so roughly 30 cents to a dollar."
+faq:
+  - q: "How much does Clay cost?"
+    a: "Clay has a Free plan, Launch from $185 a month, Growth from $495 a
+      month, and custom Enterprise pricing. Billed annually, Launch is $167 a
+      month and Growth is $446. Both paid plans can be sized up with larger
+      Actions and Data Credits tiers, so many teams pay more than the
+      starting price."
+  - q: "What is the difference between Data Credits and Actions in Clay?"
+    a: "Data Credits pay for data and AI bought from Clay's marketplace and
+      cost about 4 to 5 cents each. Actions pay for the work Clay does: each
+      enrichment, AI run, CRM push, HTTP call, or export of a record is one
+      Action, at under half a cent. Using your own API key removes the Data
+      Credit cost but still uses an Action."
+  - q: "How much does it cost to enrich one contact in Clay?"
+    a: "Clay says a fully enriched record typically costs 6 to 20 Data
+      Credits. At Launch prices that is roughly 30 cents to a dollar per
+      record, plus a few Actions. A light enrichment, such as a LinkedIn
+      profile and a work email, can cost about one Data Credit, or 5 cents."
+  - q: "Do Clay credits roll over?"
+    a: "Data Credits do, up to twice the monthly amount on monthly Launch and
+      Growth plans; annual plans roll over 15% at renewal. Actions never roll
+      over and can't be topped up, so running out of Actions means moving to
+      a larger tier."
+  - q: "Which Clay plan do I need for HubSpot or Salesforce sync?"
+    a: "Growth. CRM integrations, HTTP API calls, and webhooks are not part of
+      the Free or Launch plans, so any workflow that syncs to a CRM starts at
+      $495 a month, or $446 billed annually."
+draft: false
+authors:
+  - name: Florian
+    title: Founder
+---
+
+{/*
+Sources (2026-11-23): clay.com/pricing (plan cards, tier lists, comparison
+table, FAQ); university.clay.com/docs/actions-data-credits (what consumes an
+Action, 6 to 20 credits per full record, 0.5 per profile and per email in the
+worked example, rollover, top-ups); university.clay.com/docs/credit-refunds
+(no-data refunds by action, "invalid" verification charged);
+university.clay.com/docs/ai-pricing (model table, variable pricing);
+clay.com/blog/introducing-clays-new-pricing and
+clay.com/blog/clay-pricing-memo-internal (2026-03-11: two meters, 50 to 90%
+lower data cost, ~10% revenue cost to Clay, Pro was $800, 90% never hit
+Action limits). Tier prices are mirrored in
+src/components/blog/clay-cost-calculator.tsx: change both together.
+Per-credit rates below are tier price / tier quantity.
+*/}
+
+The plan price is the floor, not the bill. Since March 11, 2026, every Clay
+plan meters two separate things, and both can be sized up. What you pay comes
+down to how many records you enrich and how much data each one needs. There
+is also a Free plan, and Enterprise is priced on request.
+
+## Clay's plans at a glance
+
+| | Free | Launch | Growth | Enterprise |
+| --- | --- | --- | --- | --- |
+| Monthly billing | $0 | from $185 | from $495 | Custom |
+| Annual billing, per month | $0 | from $167 | from $446 | Custom |
+| Data Credits a month | 100 | 2,500 | 6,000 | 100,000+ |
+| Actions a month | 500 | 15,000 | 40,000 | 200,000+ |
+| Rows per table | 200 | 50,000 | 50,000 | 50,000, bulk above |
+| Phone numbers, signals, schedules | No | Yes | Yes | Yes |
+| CRM sync, HTTP API, webhooks | No | No | Yes | Yes |
+| SSO, data warehouses | No | No | No | Yes |
+
+Every plan has unlimited seats and tables, multi-provider waterfalls,
+Claygent, and bring-your-own API keys. The old Starter, Explorer, and Pro
+plans ($149, $349, and $800 a month) are closed to new customers; existing
+customers can keep them.
+
+## Two meters: Data Credits and Actions
+
+Clay used to sell one credit for everything. Now it sells two.
+
+_Data Credits_ buy data and AI from the providers in Clay's marketplace: an
+email address, a phone number, a company profile, a Claygent run. They cost
+about 4 to 5 cents each, and the price of an enrichment varies by provider and
+data type, from half a credit to ten or more.
+
+_Actions_ pay for the work. Every record enriched is one Action, whichever
+provider answers. So is every AI run, every push to a CRM, every HTTP call,
+and every record sent to a sequencer or an ad platform. An Action costs under
+half a cent.
+
+Some work costs nothing on either meter: importing your own data, CRM and
+webhook imports, formulas, filters, and exporting a CSV. Searching for people
+or companies to start a list uses no Actions.
+
+Two rules shape the bill more than the prices do:
+
+- Your own API key removes the Data Credit cost of an enrichment, but the
+  Action is still charged.
+- Actions can't be topped up and don't roll over. Run out, and the only way
+  forward is a larger tier. Data Credits can be topped up and partly roll
+  over.
+
+## What a credit costs at each tier
+
+Both meters come in fixed tiers. A larger tier is cheaper per unit, but not
+by much: the largest Data Credit tier costs 15% less per credit than the
+smallest.
+
+| Data Credits a month | Monthly | Per credit | Annual, per month | Per credit |
+| --- | --- | --- | --- | --- |
+| 2,500 (Launch only) | $125 | 5.0¢ | $113 | 4.5¢ |
+| 6,000 | $290 | 4.8¢ | $261 | 4.4¢ |
+| 10,000 | $460 | 4.6¢ | $414 | 4.1¢ |
+| 20,000 | $880 | 4.4¢ | $792 | 4.0¢ |
+| 50,000 | $2,125 | 4.3¢ | $1,913 | 3.8¢ |
+
+Actions are cheap enough that the tier rarely matters for the total. Launch
+starts at 15,000 Actions for $60 ($4 per thousand) and goes up to 200,000 for
+$540. Growth starts at 40,000 for $205, and at every tier its Actions cost 37%
+to 57% more than Launch's.
+
+Annual billing saves 10% on both. Top-ups, the way to buy more Data Credits
+without changing tier, cost 30% more than your plan's rate.
+
+## What one enriched record costs
+
+Clay's own figure: a fully enriched record typically costs 6 to 20 Data
+Credits. At 4 to 5 cents a credit, that is 30 cents to a dollar a record,
+before Actions. A light enrichment is far cheaper. In Clay's example, a
+LinkedIn profile costs half a credit and a work email another half, so a
+profile plus an email lands near 5 cents.
+
+At small volumes, the plan's minimum decides the bill. 1,000 records with a
+profile and an email each need 1,000 Data Credits and maybe 5,000 Actions.
+Launch covers that, so you pay $185, or 18.5 cents a record. The same records
+fully enriched need 6,000 Data Credits, which moves Launch to the 6,000 tier
+and the bill to $350. Add a HubSpot sync and you are on Growth at $495.
+
+Set your own numbers here. The calculator picks the cheapest mix of tiers and
+top-ups from Clay's published prices.
+
+<ClayCostCalculator />
+
+The inputs that move the result most are Data Credits per record and the CRM
+checkbox. Count one Action for each enrichment, AI step, and export a record
+goes through; most tables land between three and eight.
+
+## The costs that surprise people
+
+### CRM sync starts at $495
+
+HubSpot and Salesforce integrations, HTTP API
+calls, and webhooks are Growth features. A team that only needed Launch's
+volume pays the Growth price the day it wants records in its CRM.
+
+### Phone numbers are the expensive line
+
+Clay calls them the costly data
+type, and they are where a record climbs toward the top of the 6 to 20 range.
+Free plans can't enrich phone numbers at all.
+
+### Empty results are free only for finders
+
+When an email or phone finder
+comes back empty, Clay refunds the Data Credits and the Action. Many other
+enrichments charge whether or not the provider finds a match, and a
+verification result of "invalid" counts as an answer, so it is charged.
+
+### AI depends on the model
+
+Most models cost a flat number of Data Credits
+per row: 0.4 for GPT-5 Mini, 1.5 for Claude 4.5 Sonnet, 7.5 for Claude 4.6
+Opus. The heaviest reasoning models are billed on the tokens they use, so the
+cost per row is known only after the run. Every AI run is also an Action.
+
+### Tables stop at 50,000 rows
+
+Larger lists mean splitting them across
+tables, or Enterprise, which runs bulk enrichment above 50,000 records at
+once.
+
+### Rollover has a ceiling
+
+Unused Data Credits on monthly Launch and Growth
+plans bank up to twice the monthly amount; annual plans carry 15% into the
+renewal. Unused Actions vanish at the end of every cycle.
+
+## Five ways to pay less on Clay
+
+1. Bring your own keys for the providers you already pay for. The Data
+   Credits disappear; only the Action stays.
+2. Size the Data Credit tier before you need top-ups. Top-up credits cost 30%
+   more than your tier's rate, while the next tier costs less per credit.
+3. Bill annually once your volume is steady: 10% off both meters, with all
+   credits up front.
+4. Gate expensive columns, like phone numbers, with run conditions, so they
+   only run on rows that passed the cheap checks.
+5. Pick finders that refund empty results, so a miss costs nothing.
+
+## Is Clay worth the price?
+
+Clay is the most complete visual workbench for GTM data, with the largest
+template library and community in the category. If your team builds in the
+browser, needs dozens of providers, and enriches a few thousand records a
+month, the bill is predictable once you know your credits per record.
+
+It gets expensive in three situations: a workflow that needs CRM sync at
+Launch volumes, lists that need phone numbers on every row, and anything above
+50,000 rows. It also assumes a person builds the table. Agents like Claude
+Code can call Clay's API and MCP server, but they can't build tables through
+them.
+
+If cost is the problem, two directions are worth a look. For emails and phone
+numbers only, a waterfall provider like FullEnrich charges per result found,
+5.5 cents per email and 55 cents per mobile. For full Clay-style tables,
+[pipe0](https://pipe0.com) runs the same kind of enrichment sheets, built by
+you or by the agent you already use, at 6 to 12 times lower cost, with plans
+from $49 a month.
