@@ -22,7 +22,7 @@ clients automatically through dynamic client registration.
 <Callout>
   API keys do not work for the MCP server. They keep working for the REST API. If your client
   configuration sends an `Authorization` header with an API key, remove the header and reconnect
-  with OAuth.
+  with OAuth. If your client cannot sign in with OAuth at all, use an [MCP token](#clients-without-oauth).
 </Callout>
 
 ## Claude and Cowork
@@ -103,6 +103,65 @@ Any client that supports the streamable HTTP transport and OAuth can connect wit
 ```
 
 The client discovers the OAuth endpoints from the server and starts the sign-in flow on first use.
+
+## Clients without OAuth
+
+Use OAuth whenever your client supports it. If it cannot sign in with OAuth, connect with an MCP token
+instead: a token you create in pipe0 and your client sends in the `Authorization` header.
+
+<Steps>
+<Step>
+Open **API and MCP** in the sidebar. Under the MCP server URL, click **Create a token**.
+</Step>
+<Step>
+Name the token, choose when it expires (up to five years), and copy it. It is shown only once.
+</Step>
+<Step>
+Add the server to your client with the header `Authorization: Bearer <token>`.
+</Step>
+</Steps>
+
+For example, in Cursor:
+
+```json title=".cursor/mcp.json"
+{
+  "mcpServers": {
+    "pipe0": {
+      "url": "https://api.pipe0.com/v1/mcp",
+      "headers": {
+        "Authorization": "Bearer ${env:PIPE0_MCP_TOKEN}"
+      }
+    }
+  }
+}
+```
+
+Cursor reads the token from the `PIPE0_MCP_TOKEN` environment variable, so it stays out of the file.
+
+In Claude Code:
+
+```bash title="Add the pipe0 MCP server with a token"
+claude mcp add --transport http pipe0 https://api.pipe0.com/v1/mcp \
+  --header "Authorization: Bearer <token>"
+```
+
+A client that only runs local (stdio) servers can connect through [`mcp-remote`](https://www.npmjs.com/package/mcp-remote):
+
+```json title="MCP configuration"
+{
+  "mcpServers": {
+    "pipe0": {
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "https://api.pipe0.com/v1/mcp", "--header", "Authorization:${PIPE0_AUTH}"],
+      "env": { "PIPE0_AUTH": "Bearer <token>" }
+    }
+  }
+}
+```
+
+An MCP token acts as you, like an OAuth connection. Treat it like a password: anyone who holds it can
+use pipe0 as you. It appears under **Account > Connected apps**, where you can revoke it at any time.
+When it expires or is revoked, the client gets `401 Unauthorized` and needs a new token.
 
 ## Available tools
 
